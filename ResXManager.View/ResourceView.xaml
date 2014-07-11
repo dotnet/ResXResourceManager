@@ -1,0 +1,469 @@
+﻿<UserControl x:Class="tomenglertde.ResXManager.View.ResourceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="700" d:DataContext="{d:DesignInstance model:ResourceManager}"
+             xmlns:view="clr-namespace:tomenglertde.ResXManager.View"
+             xmlns:dgx="clr-namespace:DataGridExtensions;assembly=DataGridExtensions"
+             xmlns:windows="clr-namespace:System.Windows;assembly=PresentationFramework"
+             xmlns:model="clr-namespace:tomenglertde.ResXManager.Model;assembly=ResXManager.Model"
+             xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
+             x:Name="LayoutRoot"
+             UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
+             DataContextChanged="self_DataContextChanged">
+  <UserControl.Resources>
+
+    <view:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter" />
+    <view:CultureToImageSourceConverter x:Key="CultureToImageSourceConverter" />
+    <view:CultureToImageConverter x:Key="CultureToImageConverter" />
+    <view:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Executing="DeleteCommandConverter_OnExecuting"/>
+    <view:ConfirmedCommandConverter x:Key="CutCommandConverter" Executing="CutCommandConverter_OnExecutingCommandConverter_OnExecuting"/>
+    <view:LanguageColumnFilterConverter x:Key="LanguageColumnFilterConverter"/>
+
+    <Image x:Shared="False" x:Key="CodeReferencesImage" SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/references.png" />
+
+    <Style TargetType="{x:Type Control}" x:Key="SingleSelectElementStyle">
+      <Setter Property="IsEnabled" Value="False" />
+      <Setter Property="Opacity" Value="0.5" />
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding Path=SelectedItems.Count, ElementName=ListBox}" Value="1">
+          <Setter Property="IsEnabled" Value="True" />
+          <Setter Property="Opacity" Value="1" />
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type Control}" x:Key="ToolbarCommandButtonStyle">
+      <Style.Triggers>
+        <Trigger Property="IsEnabled" Value="False">
+          <Setter Property="Opacity" Value="0.5" />
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+
+    <CollectionViewSource x:Key="ResourceEntitiesSource" Source="{Binding FilteredResourceEntities}">
+      <CollectionViewSource.GroupDescriptions>
+        <PropertyGroupDescription PropertyName="ProjectName" />
+      </CollectionViewSource.GroupDescriptions>
+    </CollectionViewSource>
+
+    <CollectionViewSource x:Key="GroupedResourceTableEntriesSource" Source="{Binding ResourceTableEntries}">
+      <CollectionViewSource.GroupDescriptions>
+        <PropertyGroupDescription PropertyName="Owner" />
+      </CollectionViewSource.GroupDescriptions>
+    </CollectionViewSource>
+
+  </UserControl.Resources>
+  <UserControl.InputBindings>
+    <KeyBinding Key="N" Modifiers="Control" Command="{Binding AddNewCommand}" />
+  </UserControl.InputBindings>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto" MinWidth="120" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+    <DockPanel Grid.Column="0">
+      <Grid DockPanel.Dock="Top" Background="{x:Static windows:SystemColors.MenuBrush}">
+        <DockPanel Margin="0,5">
+          <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+            <Decorator Width="16" />
+            <CheckBox VerticalAlignment="Center" IsChecked="{Binding AreAllFilesSelected}" IsThreeState="True" />
+            <Decorator Width="7" />
+          </StackPanel>
+          <Border Background="{x:Static SystemColors.WindowBrush}">
+            <DockPanel>
+              <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Decorator Width="3" />
+                <Path Data="M0,0 L10,0 6,4 6,9 4,9 4,4 Z" Fill="Gray"
+                  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="2,0" />
+              </StackPanel>
+              <TextBox ToolTip="{x:Static properties:Resources.ResourceFilterToolTip}" BorderThickness="0"
+                   Text="{Binding EntityFilter, UpdateSourceTrigger=PropertyChanged}"/>
+            </DockPanel>
+          </Border>
+        </DockPanel>
+      </Grid>
+      <ListBox x:Name="ListBox"
+               ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
+               Margin="5" BorderThickness="0" SelectionMode="Extended"
+               SelectionChanged="ListBox_SelectionChanged"
+               view:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}"
+               >
+        <ListBox.ContextMenu>
+          <ContextMenu>
+            <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand}">
+              <MenuItem.Icon>
+                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
+              </MenuItem.Icon>
+            </MenuItem>
+          </ContextMenu>
+        </ListBox.ContextMenu>
+        <ListBox.ItemTemplate>
+          <DataTemplate DataType="model:ResourceEntity">
+            <DockPanel ToolTip="{Binding Path=Directory, Mode=OneWay}" Margin="5,2" HorizontalAlignment="Stretch">
+              <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" />
+              <Decorator DockPanel.Dock="Left" Width="5" />
+              <TextBlock Background="Transparent" VerticalAlignment="Center">
+                <Run Text="{Binding Path=RelativePath, Mode=OneWay}"/><Run Text="{Binding Path=BaseName, Mode=OneWay}"/>
+              </TextBlock>
+            </DockPanel>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+        <ListBox.GroupStyle>
+          <GroupStyle>
+            <GroupStyle.ContainerStyle>
+              <Style TargetType="{x:Type GroupItem}">
+                <Setter Property="Margin" Value="0,0,0,5" />
+                <Setter Property="Template">
+                  <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                      <StackPanel Background="Transparent"
+                                  MouseLeftButtonDown="ListBoxGroupHeader_OnMouseLeftButtonDown"
+                                  d:DataContext="{d:DesignInstance GroupItem}">
+                        <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" />
+                        <ItemsPresenter />
+                      </StackPanel>
+                    </ControlTemplate>
+                  </Setter.Value>
+                </Setter>
+              </Style>
+            </GroupStyle.ContainerStyle>
+          </GroupStyle>
+        </ListBox.GroupStyle>
+      </ListBox>
+    </DockPanel>
+
+    <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Left" VerticalAlignment="Stretch" />
+
+    <DockPanel Grid.Column="2">
+      <DockPanel DockPanel.Dock="Bottom" Background="{Binding Background, ElementName=DataGrid}">
+        <Button x:Name="DonateButton" DockPanel.Dock="Right" Background="Transparent" BorderBrush="Transparent"
+                BorderThickness="0" ToolTip="{x:Static properties:Resources.DonateButtonToolTip}"
+                Tag="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=TQQR8AKGNHELQ">
+          <Button.Style>
+            <Style TargetType="Button">
+              <Setter Property="Opacity" Value="0.15" />
+              <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                  <BeginStoryboard Name="DonateMouseEnter">
+                    <Storyboard Duration="0:0:0.5" Storyboard.TargetProperty="Opacity">
+                      <DoubleAnimation To="1.0" />
+                    </Storyboard>
+                  </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                  <BeginStoryboard Name="DonateMouseLeave">
+                    <Storyboard Duration="0:0:0.5" Storyboard.TargetProperty="Opacity">
+                      <DoubleAnimation To="0.15" />
+                    </Storyboard>
+                  </BeginStoryboard>
+                </EventTrigger>
+              </Style.Triggers>
+            </Style>
+          </Button.Style>
+          <Image SnapsToDevicePixels="True" Stretch="None"
+                 Source="/ResXManager.View;component/Assets/btn_donate_SM.gif" />
+        </Button>
+        <Grid DataContext="{Binding SelectedItem, ElementName=ListBox}">
+          <Grid.Style>
+            <Style TargetType="Grid">
+              <Setter Property="Visibility" Value="Hidden" />
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="1">
+                  <Setter Property="Visibility" Value="Visible" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </Grid.Style>
+          <TextBlock Margin="5" d:DataContext="{d:DesignInstance model:ResourceEntity}">
+            <Run Text="{Binding Path=BaseName, Mode=OneWay}" FontWeight="Bold" />
+            <Run Text="{Binding Path=Directory, Mode=OneWay}" />
+          </TextBlock>
+        </Grid>
+      </DockPanel>
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="28" MinHeight="28" />
+          <RowDefinition Height="3" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0">
+          <ToolBarTray DockPanel.Dock="Left" Background="{x:Static SystemColors.MenuBarBrush}">
+            <ToolBar x:Name="ToolBar" IsOverflowOpen="False" Background="{x:Static SystemColors.MenuBarBrush}">
+              <Button ToolTip="{x:Static properties:Resources.RefreshViewToolTip}" Click="Refresh_Click">
+                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/refresh.png" />
+              </Button>
+              <Separator />
+              <RadioButton IsChecked="True" GroupName="Grouping" ToolTip="{x:Static properties:Resources.FlatViewToolTip}">
+                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/flat.png" />
+              </RadioButton>
+              <RadioButton x:Name="GroupedViewButton" GroupName="Grouping" ToolTip="{x:Static properties:Resources.GroupedViewToolTip}">
+                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/grouped.png" />
+              </RadioButton>
+              <Separator />
+              <ToggleButton x:Name="ErrorsOnlyFilterButton"
+                            ToolTip="{x:Static properties:Resources.ShowOnlyMissingToolTip}"
+                            Checked="ErrorsOnlyFilter_Changed" Unchecked="ErrorsOnlyFilter_Changed">
+                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/errorFilter.png" />
+              </ToggleButton>
+              <ToggleButton x:Name="ColumnChooserToggleButton"
+                            ToolTip="{x:Static properties:Resources.ChooseColumnsToolTip}">
+                <StackPanel Orientation="Horizontal">
+                  <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/columns.png" />
+                  <Decorator Width="4" />
+                  <Path Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="Black" VerticalAlignment="Center" />
+                </StackPanel>
+              </ToggleButton>
+              <Button ToolTip="{x:Static properties:Resources.AddLanguageToolTip}" Click="AddLanguage_Click">
+                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/addColumns.png" />
+              </Button>
+              <ToggleButton ToolTip="{x:Static properties:Resources.FindCodeReferencesButtonToolTip}"
+                            IsChecked="{Binding IsFindCodeReferencesEnabled, Source={x:Static properties:Settings.Default}, Mode=TwoWay}"
+                            Click="Refresh_Click">
+                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/references.png" />
+              </ToggleButton>
+              <Separator />
+              <Button ToolTip="{x:Static properties:Resources.DeleteToolTip}"
+                      Style="{StaticResource ToolbarCommandButtonStyle}"
+                      Command="{Binding Path=DeleteCommand, Converter={StaticResource DeleteCommandConverter}}">
+                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/delete.png" />
+              </Button>
+              <Button ToolTip="{x:Static properties:Resources.CutToolTip}"
+                      Style="{StaticResource ToolbarCommandButtonStyle}"
+                      Command="{Binding Path=CutCommand, Converter={StaticResource CutCommandConverter}}">
+                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/cut.png" />
+              </Button>
+              <Button ToolTip="{x:Static properties:Resources.CopyToolTip}"
+                      Style="{StaticResource ToolbarCommandButtonStyle}"
+                      Command="{Binding Path=CopyCommand}">
+                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/copy.png" />
+              </Button>
+              <Button ToolTip="{x:Static properties:Resources.PasteToolTip}"
+                      Style="{StaticResource ToolbarCommandButtonStyle}"
+                      Command="{Binding Path=PasteCommand}">
+                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
+              </Button>
+              <Button ToolTip="{x:Static properties:Resources.AddKeyToolTip}"
+                      Style="{StaticResource SingleSelectElementStyle}"
+                      Command="{Binding Path=AddNewCommand}">
+                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/add.png" />
+              </Button>
+              <Separator />
+              <Menu>
+                <MenuItem>
+                  <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                      <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/excel.png" />
+                      <Decorator Width="4" />
+                      <Path Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="Black" VerticalAlignment="Center" />
+                    </StackPanel>
+                  </MenuItem.Header>
+                  <MenuItem Header="Export all" Command="{Binding ExportExcelAllCommand}" />
+                  <MenuItem Header="Export selected" Command="{Binding ExportExcelSelectedCommand}" />
+                  <MenuItem Header="Import" Command="{Binding ImportExcelCommand}" />
+                </MenuItem>
+              </Menu>
+              <Separator />
+              <Button x:Name="LikeButton" ToolTip="{x:Static properties:Resources.LikeButtonToolTip}"
+                      Tag="http://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68">
+                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/like.png" />
+              </Button>
+              <Button x:Name="HelpButton" ToolTip="Documentation"
+                      Tag="https://resxresourcemanager.codeplex.com/documentation">
+                <Grid Width="16" Height="16">
+                  <TextBlock Text="?" FontWeight="Bold" FontSize="16"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Grid>
+              </Button>
+            </ToolBar>
+          </ToolBarTray>
+          <Popup IsOpen="{Binding Path=IsChecked, ElementName=ColumnChooserToggleButton, Mode=OneWay}"
+                 StaysOpen="False"
+                 Placement="Bottom" PlacementTarget="{Binding ElementName=ColumnChooserToggleButton}"
+                 IsKeyboardFocusWithinChanged="ColumnChooserPopup_IsKeyboardFocusWithinChanged"
+                 Opened="ColumnChooserPopup_Opened" KeyDown="ColumnChooserPopup_KeyDown">
+            <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+              <ListBox x:Name="ColumnChooserListBox" ItemsSource="{Binding Columns, ElementName=DataGrid, Converter={StaticResource LanguageColumnFilterConverter} }"
+                       SelectionMode="Multiple" KeyboardNavigation.TabNavigation="Once">
+                <ListBox.ItemTemplate>
+                  <DataTemplate DataType="DataGridColumn">
+                    <DockPanel Margin="2">
+                      <CheckBox DockPanel.Dock="Left"
+                                IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" />
+                      <Decorator DockPanel.Dock="Left" Width="2" />
+                      <Image DockPanel.Dock="Left"
+                             Source="{Binding Path=Header.Language, Converter={StaticResource CultureToImageSourceConverter}, FallbackValue={x:Null}}" />
+                      <Decorator DockPanel.Dock="Left" Width="2" />
+                      <Decorator DockPanel.Dock="Right" Width="3" />
+                      <ContentPresenter Content="{Binding Path=Header}" VerticalAlignment="Center" />
+                    </DockPanel>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                  <Style TargetType="ListBoxItem">
+                    <Setter Property="IsSelected" Value="{Binding Path=Visibility, Converter={StaticResource VisibilityToBooleanConverter}}" />
+                    <Setter Property="Template">
+                      <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                          <ContentPresenter />
+                        </ControlTemplate>
+                      </Setter.Value>
+                    </Setter>
+                  </Style>
+                </ListBox.ItemContainerStyle>
+              </ListBox>
+            </Border>
+          </Popup>
+          <TextBox x:Name="TextBox" AcceptsReturn="True" SpellCheck.IsEnabled="True" />
+        </DockPanel>
+        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
+        <DataGrid Grid.Row="2" x:Name="DataGrid" FrozenColumnCount="1"
+                  HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" Padding="2" BorderThickness="0"
+                  dgx:DataGridFilter.IsAutoFilterEnabled="True" AutoGenerateColumns="False"
+                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
+                  BeginningEdit="DataGrid_BeginningEdit" PreviewKeyDown="DataGrid_PreviewKeyDown"
+                  CellEditEnding="DataGrid_CellEditEnding" CurrentCellChanged="DataGrid_CurrentCellChanged"
+                  SelectedItem="{Binding SelectedEntry, Mode=TwoWay}"
+                  view:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
+          <DataGrid.Resources>
+
+            <ContextMenu x:Key="RowContextMenu">
+              <MenuItem Header="{x:Static properties:Resources.Delete}" Command="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}">
+                <MenuItem.Icon>
+                  <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/delete.png" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{x:Static properties:Resources.Cut}" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}">
+                <MenuItem.Icon>
+                  <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/cut.png" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{x:Static properties:Resources.Copy}" Command="{Binding CopyCommand}">
+                <MenuItem.Icon>
+                  <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/copy.png" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand}">
+                <MenuItem.Icon>
+                  <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem Header="{x:Static properties:Resources.Invariant}" IsCheckable="True"
+                        IsChecked="{Binding Mode=OneWay, Path=SelectedEntry.IsInvariant }"
+                        Command="{Binding ToggleInvariantCommand}" />
+              <MenuItem Header="{x:Static properties:Resources.CopyKeys}" Command="{Binding CopyKeysCommand}" />
+            </ContextMenu>
+
+            <ContextMenu x:Key="NeutralLanguageContextMenu"
+                         ItemsSource="{Binding Source={x:Static Member=model:ResourceManager.SpecificCultures}}">
+              <ContextMenu.ItemContainerStyle>
+                <Style TargetType="MenuItem">
+                  <Setter Property="Header" Value="{Binding Path=DisplayName}" />
+                  <Setter Property="Icon" Value="{Binding Converter={StaticResource CultureToImageConverter}}" />
+                  <EventSetter Event="Click" Handler="NeutralLanguage_Click" />
+                </Style>
+              </ContextMenu.ItemContainerStyle>
+            </ContextMenu>
+
+            <Style TargetType="Grid" x:Key="NeutralLanguageImageContainerStyle">
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Language}" Value="{x:Null}">
+                  <Setter Property="ContextMenu" Value="{StaticResource NeutralLanguageContextMenu}" />
+                  <Setter Property="ToolTip" Value="{x:Static properties:Resources.NeutralLanguageToolTip}" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+
+            <DataTemplate DataType="{x:Type view:LanguageHeader}">
+              <DockPanel>
+                <Grid DockPanel.Dock="Left" Background="Transparent"
+                      Style="{StaticResource NeutralLanguageImageContainerStyle}">
+                  <Image x:Name="neutralImage"
+                         Source="{Binding Path=NeutralResourceLanguage, Source={x:Static properties:Settings.Default}, Converter={StaticResource CultureToImageSourceConverter}}"
+                         Stretch="None" />
+                  <Image x:Name="image"
+                         Source="{Binding Path=Language, Converter={StaticResource CultureToImageSourceConverter}}"
+                         Stretch="None" />
+                </Grid>
+                <Decorator x:Name="padding" DockPanel.Dock="Left" Width="4" />
+                <TextBlock Text="{Binding Path=DisplayName}" TextTrimming="CharacterEllipsis" />
+              </DockPanel>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type view:CommentHeader}">
+              <TextBlock><Run Text="Comment ("/><InlineUIContainer>
+                  <Grid>
+                  <Image x:Name="image" Source="{Binding Path=Language, Converter={StaticResource CultureToImageSourceConverter}}" Stretch="None" Margin="1,2,1,-2"/>
+                </Grid></InlineUIContainer><Run Text=")"/>
+              </TextBlock>
+            </DataTemplate>
+
+            <GroupStyle x:Key="GroupStyle">
+              <GroupStyle.HeaderTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Path=Name}" Margin="5" FontWeight="Bold" />
+                </DataTemplate>
+              </GroupStyle.HeaderTemplate>
+            </GroupStyle>
+
+          </DataGrid.Resources>
+
+          <DataGrid.InputBindings>
+            <KeyBinding Key="Delete" Command="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" />
+            <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}"/>
+            <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}"/>
+            <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}"/>
+            <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand}"/>
+          </DataGrid.InputBindings>
+
+          <DataGrid.ItemsPanel>
+            <ItemsPanelTemplate>
+              <VirtualizingStackPanel ContextMenu="{StaticResource RowContextMenu}" DataContext="{Binding Path=DataContext, ElementName=DataGrid}" />
+            </ItemsPanelTemplate>
+          </DataGrid.ItemsPanel>
+
+          <DataGrid.CellStyle>
+            <Style TargetType="DataGridCell">
+              <Style.Triggers>
+                <MultiDataTrigger>
+                  <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding Path=Column.Header.ColumnType, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static view:ColumnType.Language}"/>
+                    <Condition Binding="{Binding Path=Content.Text, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value=""/>
+                  </MultiDataTrigger.Conditions>
+                  <MultiDataTrigger.Setters>
+                    <Setter Property="Background" Value="LightCoral" />
+                  </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
+
+                <MultiDataTrigger>
+                  <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding Path=Column.Header.ColumnType, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static view:ColumnType.Language}"/>
+                    <Condition Binding="{Binding Path=IsInvariant}" Value="True" />
+                  </MultiDataTrigger.Conditions>
+                  <MultiDataTrigger.Setters>
+                    <Setter Property="Background" Value="LightGray" />
+                  </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
+
+                <Trigger Property="IsSelected" Value="True">
+                  <Setter Property="Background" Value="{x:Static SystemColors.HighlightBrush}" />
+                </Trigger>
+              </Style.Triggers>
+            </Style>
+          </DataGrid.CellStyle>
+
+          <DataGrid.Style>
+            <Style TargetType="DataGrid">
+              <Setter Property="ItemsSource" Value="{Binding ResourceTableEntries}" />
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsChecked, ElementName=GroupedViewButton}" Value="True">
+                  <Setter Property="ItemsSource" Value="{Binding Source={StaticResource GroupedResourceTableEntriesSource}}" />
+                  <Setter Property="dgx:GroupStyleBinding.GroupStyle" Value="{StaticResource GroupStyle}" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </DataGrid.Style>
+        </DataGrid>
+      </Grid>
+    </DockPanel>
+  </Grid>
+</UserControl>

@@ -1,0 +1,570 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DataGridExtensions</name>
+    </assembly>
+    <members>
+        <member name="T:DataGridExtensions.DataGridFilter">
+            <summary>
+            Defines the attached properties that can be set on the data grid level.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilter.GetIsAutoFilterEnabled(System.Windows.Controls.DataGrid)">
+            <summary>
+            Gets if the default filters are atomatically attached to each column.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilter.SetIsAutoFilterEnabled(System.Windows.Controls.DataGrid,System.Boolean)">
+            <summary>
+            Sets if the default filters are atomatically attached to each column. Set to false if you want to control filters by code.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilter.IsAutoFilterEnabledProperty">
+            <summary>
+            Identifies the IsAutoFilterEnabled dependency property
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilter.GetFilter(System.Windows.Controls.DataGrid)">
+            <summary>
+            Filter attached property to attach the DataGridFilterHost instance to the owning DataGrid. 
+            This property is only used by code and is not accessible from XAML.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilter.FilterProperty">
+            <summary>
+            Identifies the Filters dependency property. 
+            This property definition is private, so it's only accessible by code and can't be messed up by invalid bindings.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilter.GetContentFilterFactory(System.Windows.Controls.DataGrid)">
+            <summary>
+            Gets the content filter factory for the data grid filter.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilter.SetContentFilterFactory(System.Windows.Controls.DataGrid,DataGridExtensions.IContentFilterFactory)">
+            <summary>
+            Sets the content filter factory for the data grid filter.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilter.ContentFilterFactoryProperty">
+            <summary>
+            Identifies the ContentFilterFactory dependency property
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilter.GetFilterEvaluationDelay(System.Windows.Controls.DataGrid)">
+            <summary>
+            Gets the delay that is used to throttle filter changes before the filter is applied.
+            </summary>
+            <param name="obj">The data grid</param>
+            <returns>The throttle delay.</returns>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilter.SetFilterEvaluationDelay(System.Windows.Controls.DataGrid,System.TimeSpan)">
+            <summary>
+            Sets the delay that is used to throttle filter changes before the filter is applied.
+            </summary>
+            <param name="obj">The data grid</param>
+            <param name="value">The new throttle delay.</param>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilter.FilterEvaluationDelayProperty">
+            <summary>
+            Identifies the FilterEvaluationDelay dependency property
+            </summary>
+        </member>
+        <member name="P:DataGridExtensions.DataGridFilter.TextColumnFilterTemplateKey">
+            <summary>
+            Template for the filter on a colum represented by a DataGridTextColumn. 
+            </summary>
+        </member>
+        <member name="P:DataGridExtensions.DataGridFilter.CheckBoxColumnFilterTemplateKey">
+            <summary>
+            Template for the filter on a colum represented by a DataGridCheckBoxColumn.
+            </summary>
+        </member>
+        <member name="P:DataGridExtensions.DataGridFilter.ColumnHeaderTemplateKey">
+            <summary>
+            Template for the whole column header.
+            </summary>
+        </member>
+        <member name="P:DataGridExtensions.DataGridFilter.IconTemplateKey">
+            <summary>
+            The filter icon template.
+            </summary>
+        </member>
+        <member name="P:DataGridExtensions.DataGridFilter.IconStyleKey">
+            <summary>
+            The filter icon style.
+            </summary>
+        </member>
+        <member name="P:DataGridExtensions.DataGridFilter.ColumnHeaderSearchCheckBoxStyleKey">
+            <summary>
+            Style for the filter check box in a filtered DataGridCheckBoxColumn.
+            </summary>
+        </member>
+        <member name="P:DataGridExtensions.DataGridFilter.ColumnHeaderSearchTextBoxStyleKey">
+            <summary>
+            Style for the filter text box in a filtered DataGridTextColumn.
+            </summary>
+        </member>
+        <member name="T:DataGridExtensions.DataGridFilterColumn">
+            <summary>
+            Defines the attached properties that can be set on the data grid column level.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterColumn.GetIsFilterVisible(System.Windows.Controls.DataGridColumn)">
+            <summary>
+            Control the visibility of the filter for this column.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterColumn.SetIsFilterVisible(System.Windows.Controls.DataGridColumn,System.Boolean)">
+            <summary>
+            Control the visibility of the filter for this column.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilterColumn.IsFilterVisibleProperty">
+            <summary>
+            Identifies the IsFilterVisible dependency property
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterColumn.GetTemplate(System.Windows.Controls.DataGridColumn)">
+            <summary>
+            Gets the control template for the filter of this column. If the template is null or unset, a default template will be used.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterColumn.SetTemplate(System.Windows.Controls.DataGridColumn,System.Windows.Controls.ControlTemplate)">
+            <summary>
+            Sets the control template for the filter of this column. If the template is null or unset, a default template will be used.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilterColumn.TemplateProperty">
+            <summary>
+            Identifies the Template dependency property.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterColumn.GetFilter(System.Windows.Controls.DataGridColumn)">
+            <summary>
+            Gets the filter expression of the column.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterColumn.SetFilter(System.Windows.Controls.DataGridColumn,System.Object)">
+            <summary>
+            Sets the filter expression of the column.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilterColumn.FilterProperty">
+            <summary>
+            Identifies the Filter dependency property
+            </summary>
+        </member>
+        <member name="T:DataGridExtensions.DataGridFilterHost">
+            <summary>
+            This class hosts all filter columns and handles the filter changes on the data grid level.
+            This class will be attached to the DataGrid.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilterHost.dataGrid">
+            <summary>
+            The data grid this filter is attached to.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilterHost.filterColumnControls">
+            <summary>
+            Filter information about each column.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilterHost.deferFilterEvaluationTimer">
+            <summary>
+            Timer to defer evaluation of the filter until user has stopped typing.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilterHost.filteredColumns">
+            <summary>
+            The columns that we are currently filtering.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterHost.#ctor(System.Windows.Controls.DataGrid)">
+            <summary>
+            Create a new filter host for the given data grid.
+            </summary>
+            <param name="dataGrid">The data grid to filter.</param>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterHost.Clear">
+            <summary>
+            Clear all existing filter conditions.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterHost.Enable(System.Boolean)">
+            <summary>
+            Enables filtering by showing or hiding the filter contols.
+            </summary>
+            <param name="value">if set to <c>true</c>, filters controls are visible and filtering is enabled.</param>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterHost.FilterChanged">
+            <summary>
+            When any filter condition has changed restart the evaluation timer to defer
+            the evaluation until the user has stopped typing.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterHost.AddColumn(DataGridExtensions.DataGridFilterColumnControl)">
+            <summary>
+            Adds a new collumn.
+            </summary>
+            <param name="filterColumn"></param>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterHost.RemoveColumn(DataGridExtensions.DataGridFilterColumnControl)">
+            <summary>
+            Removes an unloaded column.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterHost.CreateContentFilter(System.Object)">
+            <summary>
+            Creates a new content filter.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterHost.EvaluateFilter">
+            <summary>
+            Evaluates the current filters and applies the filtering to the collection view of the items control.
+            </summary>
+        </member>
+        <member name="E:DataGridExtensions.DataGridFilterHost.Filtering">
+            <summary>
+            Occurs before new columns are filtered.
+            </summary>
+        </member>
+        <member name="P:DataGridExtensions.DataGridFilterHost.FilterColumnControls">
+            <summary>
+            Gets a the active filter column controls for this data grid.
+            </summary>
+        </member>
+        <member name="P:DataGridExtensions.DataGridFilterHost.DataGrid">
+            <summary>
+            The data grid this filter is attached to.
+            </summary>
+        </member>
+        <member name="T:DataGridExtensions.DataGridFilterColumnControl">
+            <summary>
+            This class is the control hosting all information needed for filtering of one column.
+            Filtering is enabled by simply adding this control to the header template of the DataGridColumn.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilterColumnControl.columnHeader">
+            <summary>
+            The column header of the column we are filtering. This control must be a child element of the column header.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilterColumnControl.filterHost">
+            <summary>
+            The filter we belong to.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilterColumnControl.activeFilter">
+            <summary>
+            The active filter for this column.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterColumnControl.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DataGridExtensions.DataGridFilterColumnControl"/> class.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilterColumnControl.FilterProperty">
+            <summary>
+            Identifies the Filter dependency property
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterColumnControl.Matches(System.Object)">
+            <summary>
+            Returns true if the given item matches the filter condition for this column.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterColumnControl.ValuesUpdated">
+            <summary>
+            Notification of the filter that the content of the values might have changed.
+            </summary>
+        </member>
+        <member name="F:DataGridExtensions.DataGridFilterColumnControl.CellValueProperty">
+            <summary>
+            Identifies the CellValue dependency property, a private helper property used to evaluate the property path for the list items.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterColumnControl.GetCellContent(System.Object)">
+            <summary>
+            Examines the property path and returns the objects value for this column.
+            Filtering is applied on the SortMemberPath, this is the path used to create the binding.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilterColumnControl.InternalValues">
+            <summary>
+            Gets the cell content of all list items for this column.
+            </summary>
+        </member>
+        <member name="P:DataGridExtensions.DataGridFilterColumnControl.Filter">
+            <summary>
+            The user provided filter (IFilter) or content (usually a string) used to filter this column.
+            If the filter object implements IFilter, it will be used directly as the filter,
+            else the filter object will be passed to the content filter.
+            </summary>
+        </member>
+        <member name="P:DataGridExtensions.DataGridFilterColumnControl.Values">
+            <summary>
+            Returns all distinct visible (filtered) values of this column as string.
+            This can be used to e.g. feed the ItemsSource of an AutoCompleteBox to give a hint to the user what to enter.
+            </summary>
+        </member>
+        <member name="P:DataGridExtensions.DataGridFilterColumnControl.IsFiltered">
+            <summary>
+            Returns a flag indicating whether this column has some filter condition to evaluate or not.
+            If there is no filter condition we don't need to invoke this filter.
+            </summary>
+        </member>
+        <member name="P:DataGridExtensions.DataGridFilterColumnControl.Column">
+            <summary>
+            Gets the column this control is hosting the filter for.
+            </summary>
+        </member>
+        <member name="E:DataGridExtensions.DataGridFilterColumnControl.PropertyChanged">
+            <summary>
+            Occurs when a property value changes.
+            </summary>
+        </member>
+        <member name="T:DataGridExtensions.DataGridFilteringEventArgs">
+            <summary>
+            Notification about additional columns to be filtered.
+            Clients can e.g. use this event to cache/preload column data in a different thread and/or display a wait cursor while filtering.
+            <remarks>
+            Clients may only cancel the processing when e.g. the data grid is about to be unloaded. Canceling the process of filtering 
+            will cause the UI to be inconsistent.
+            </remarks>
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.DataGridFilteringEventArgs.#ctor(System.Collections.Generic.ICollection{System.Windows.Controls.DataGridColumn})">
+            <summary>
+            Initializes a new instance of the <see cref="T:DataGridExtensions.DataGridFilteringEventArgs"/> class.
+            </summary>
+            <param name="columns">The additional columns that will be filtered.</param>
+        </member>
+        <member name="P:DataGridExtensions.DataGridFilteringEventArgs.Columns">
+            <summary>
+            Gets the additional columns that will be filtered.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.ExtensionMethods.Restart(System.Windows.Threading.DispatcherTimer)">
+            <summary>
+            Restarts the specified timer.
+            </summary>
+            <param name="timer">The timer.</param>
+        </member>
+        <member name="M:DataGridExtensions.ExtensionMethods.FindAncestorOrSelf``1(System.Windows.DependencyObject)">
+            <summary>
+            Walks the elements tree and returns the first element that derives from T.
+            </summary>
+            <typeparam name="T">The type to return.</typeparam>
+            <param name="item">The item to start search with.</param>
+            <returns>The element if found; otherwise null.</returns>
+        </member>
+        <member name="T:DataGridExtensions.GroupStyleBinding">
+            <summary>
+            Helper class to support binding to the group style from within a style setter.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.GroupStyleBinding.GetGroupStyle(System.Windows.DependencyObject)">
+            <summary>
+            Gets the group style.
+            </summary>
+            <param name="obj">The object.</param>
+            <returns>The group style.</returns>
+        </member>
+        <member name="M:DataGridExtensions.GroupStyleBinding.SetGroupStyle(System.Windows.DependencyObject,System.Windows.Controls.GroupStyle)">
+            <summary>
+            Sets the group style.
+            </summary>
+            <param name="obj">The object.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="F:DataGridExtensions.GroupStyleBinding.GroupStyleProperty">
+            <summary>
+            Identifies the GroupStyle attached property.
+            </summary>
+        </member>
+        <member name="T:DataGridExtensions.IContentFilter">
+            <summary>
+            Interface to be implemented by content filters.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.IContentFilter.IsMatch(System.Object)">
+            <summary>
+            Determines whether the specified value matches the condition of this filter.
+            </summary>
+            <param name="value">The content.</param>
+            <returns>
+              <c>true</c> if the specified value matches the condition; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:DataGridExtensions.IContentFilterFactory">
+            <summary>
+            Interface to be implemented by a content filter factory.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.IContentFilterFactory.Create(System.Object)">
+            <summary>
+            Creates the content filter for the specified content.
+            </summary>
+            <param name="content">The content to create the filter for.</param>
+            <returns>The new filter.</returns>
+        </member>
+        <member name="T:DataGridExtensions.RegexContentFilter">
+            <summary>
+            A content filter using the content as a regular expression to match the string representation of the value.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.RegexContentFilter.#ctor(System.String,System.Text.RegularExpressions.RegexOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DataGridExtensions.RegexContentFilter"/> class.
+            </summary>
+            <param name="expression">The expression.</param>
+            <param name="regexOptions">The regex options.</param>
+        </member>
+        <member name="M:DataGridExtensions.RegexContentFilter.IsMatch(System.Object)">
+            <summary>
+            Determines whether the specified value matches the condition of this filter.
+            </summary>
+            <param name="value">The content.</param>
+            <returns>
+              <c>true</c> if the specified value matches the condition; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:DataGridExtensions.RegexContentFilterFactory">
+            <summary>
+            Factory to create a <see cref="T:DataGridExtensions.RegexContentFilter"/>
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.RegexContentFilterFactory.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DataGridExtensions.RegexContentFilterFactory"/> class.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.RegexContentFilterFactory.#ctor(System.Text.RegularExpressions.RegexOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DataGridExtensions.RegexContentFilterFactory"/> class.
+            </summary>
+            <param name="regexOptions">The regex options.</param>
+        </member>
+        <member name="M:DataGridExtensions.RegexContentFilterFactory.Create(System.Object)">
+            <summary>
+            Creates the content filter for the specified content.
+            </summary>
+            <param name="content">The content to create the filter for.</param>
+            <returns>
+            The new filter.
+            </returns>
+        </member>
+        <member name="P:DataGridExtensions.RegexContentFilterFactory.RegexOptions">
+            <summary>
+            Gets or sets the regex options.
+            </summary>
+        </member>
+        <member name="T:DataGridExtensions.SimpleContentFilter">
+            <summary>
+            A content filter using a simple "contains" string comparison to match the content and the value.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.SimpleContentFilter.#ctor(System.String,System.StringComparison)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DataGridExtensions.SimpleContentFilter"/> class.
+            </summary>
+            <param name="content">The content.</param>
+            <param name="stringComparison">The string comparison.</param>
+        </member>
+        <member name="M:DataGridExtensions.SimpleContentFilter.IsMatch(System.Object)">
+            <summary>
+            Determines whether the specified value matches the condition of this filter.
+            </summary>
+            <param name="value">The content.</param>
+            <returns>
+              <c>true</c> if the specified value matches the condition; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:DataGridExtensions.SimpleContentFilterFactory">
+            <summary>
+            Factory to create a <see cref="T:DataGridExtensions.SimpleContentFilter"/>
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.SimpleContentFilterFactory.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DataGridExtensions.SimpleContentFilterFactory"/> class.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.SimpleContentFilterFactory.#ctor(System.StringComparison)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DataGridExtensions.SimpleContentFilterFactory"/> class.
+            </summary>
+            <param name="stringComparison">The string comparison to use.</param>
+        </member>
+        <member name="M:DataGridExtensions.SimpleContentFilterFactory.Create(System.Object)">
+            <summary>
+            Creates the content filter for the specified content.
+            </summary>
+            <param name="content">The content to create the filter for.</param>
+            <returns>
+            The new filter.
+            </returns>
+        </member>
+        <member name="P:DataGridExtensions.SimpleContentFilterFactory.StringComparison">
+            <summary>
+            Gets or sets the string comparison.
+            </summary>
+        </member>
+        <member name="T:DataGridExtensions.Tools">
+            <summary>
+            Some usefull tools for data grids.
+            </summary>
+        </member>
+        <member name="M:DataGridExtensions.Tools.GetApplyInitialSorting(System.Windows.Controls.DataGrid)">
+            <summary>
+            Gets the flag to enable the 'apply initial sorting' feature.
+            </summary>
+            <param name="dataGrid">The data grid.</param>
+        </member>
+        <member name="M:DataGridExtensions.Tools.SetApplyInitialSorting(System.Windows.Controls.DataGrid,System.Boolean)">
+            <summary>
+            Sets a flag to enable the 'apply initial sorting' feature.
+            </summary>
+            <param name="dataGrid">The data grid.</param>
+            <param name="value">if set to <c>true</c> the initial sorting will be appied.</param>
+        </member>
+        <member name="F:DataGridExtensions.Tools.ApplyInitialSortingProperty">
+            <summary>
+            Identifies the ApplyInitialSorting dependency property
+            </summary>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
+            </summary>
+        </member>
+    </members>
+</doc>

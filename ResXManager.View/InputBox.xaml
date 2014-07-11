@@ -1,0 +1,27 @@
+﻿<Window x:Class="tomenglertde.ResXManager.View.InputBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Width="300" SizeToContent="Height" WindowStyle="ToolWindow" ResizeMode="NoResize"
+    FocusManager.FocusedElement="{Binding ElementName=TextBox}"
+    DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+  <StackPanel Margin="10">
+    <TextBlock Text="{Binding Prompt}" TextWrapping="Wrap"/>
+    <Decorator Height="10"/>
+    <TextBox x:Name="TextBox" HorizontalAlignment="Stretch" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"/>
+    <Decorator Height="10"/>
+    <Grid HorizontalAlignment="Right" Grid.IsSharedSizeScope="True">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition SharedSizeGroup="A"/>
+        <ColumnDefinition Width="20"/>
+        <ColumnDefinition SharedSizeGroup="A"/>
+      </Grid.ColumnDefinitions>
+      <Grid.Resources>
+        <Style TargetType="{x:Type Button}">
+          <Setter Property="Padding" Value="10,2"/>
+        </Style>
+      </Grid.Resources>
+      <Button Grid.Column="0" Content="OK" IsDefault="True" Click="OK_Click" IsEnabled="{Binding IsInputValid}"/>
+      <Button Grid.Column="2" Content="Cancel" IsCancel="True" />
+    </Grid>
+  </StackPanel>
+</Window>

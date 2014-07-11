@@ -1,0 +1,83 @@
+﻿namespace tomenglertde.ResXManager.Model
+{
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+
+    /// <summary>
+    /// Represents a file associated with a project.
+    /// </summary>
+    public class ProjectFile
+    {
+        private readonly string _filePath;
+        private readonly string _extension;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProjectFile" /> class.
+        /// </summary>
+        /// <param name="filePath">Name of the file.</param>
+        /// <param name="projectName">Name of the project.</param>
+        /// <param name="uniqueProjectName">Unique name of the project file.</param>
+        public ProjectFile(string filePath, string projectName, string uniqueProjectName)
+        {
+            Contract.Requires(!string.IsNullOrEmpty(filePath));
+
+            _filePath = filePath;
+            _extension = Path.GetExtension(_filePath);
+
+            ProjectName = projectName;
+            UniqueProjectName = uniqueProjectName;
+        }
+
+        /// <summary>
+        /// Gets the file name of the file.
+        /// </summary>
+        public string FilePath
+        {
+            get
+            {
+                Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
+
+                return _filePath;
+            }
+        }
+
+        public string Extension
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<string>() != null);
+
+                return _extension;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the project containing the file.
+        /// </summary>
+        public string ProjectName
+        {
+            get;
+            set;
+        }
+
+        public string UniqueProjectName
+        {
+            get;
+            private set;
+        }
+
+        [ContractInvariantMethod]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(!String.IsNullOrEmpty(_filePath));
+            Contract.Invariant(_extension != null);
+        }
+    }
+}

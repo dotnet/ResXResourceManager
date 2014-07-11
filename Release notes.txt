@@ -1,0 +1,130 @@
+1.0.0.41:
+* WI1313: Excel import does not properly handle cells with individual formatting.
+* WI1314: Show the number of references found in code to be able to detect unused resources.
+* WI1315: Add keyboard shortcut for new key and refactor/simplify the whole workflow. 
+* Add shortcuts for cut/copy/paste as well.
+* Add a help button that opens the documentation page.
+1.0.0.40:
+* WI1313: Excel import does not properly handle empty cells.
+* WI1312: Huge performance issues since few versions.
+1.0.0.39:
+* WI1272: Crash when trying to delete an item => Fixed raise condition in list enumerator.
+1.0.0.38:
+* Comment can be set if value is empty.
+* WI1305: Comments are now included in import/export and in copy/cut/paste.
+* WI1294: Context menu does not work in the grouped view.
+* WI1293: Model now has a Save() method.
+* WI1272: Crash when trying to delete an item => Improved error handling for all commands.
+1.0.0.37:
+* Fix some minor selection and refresh issues.
+1.0.0.36
+* WI1238: Excel export: Only export the selected files.
+* WI1243: Preserve the selected projects when refreshing/reloading
+* WI1258: Excel export fails
+* WI1264: Showing files with namespace
+1.0.0.35
+* WI1105: Renaming the resource key is possible, references are not updated.
+* WI1237: Fixed: Top edit field does no spell checking.
+* WI1239: Key column is fixed 
+* WI1240: Copy&Paste refactored, does now copy/cut all selected rows.
+1.0.0.34
+* WI1230: ResX Manager causes errors in TFS team working
+* WI1233: Error opening exported xlsx to Excel 2013
+1.0.0.33
+* WI1228: Resource File Names are Case Sensitive
+* WI1188: Feature Request - Height Adjustable Rows (Excel like editing filed on the top)
+1.0.0.32
+* WI1206: Exporting error
+1.0.0.31
+* WI1165: improved - automatically add keys and languages when importing.
+1.0.0.30
+* WI1165: Excel export and import.
+1.0.0.29
+* WI1164: Allow file creation in the stand alone application
+1.0.0.28
+* WI1157: Make all comments accessible. Comments are hidden by default, and can be made visible by using the "show columns" toolbar button.
+* Fix WI1155.
+1.0.0.27
+* Fix WI1149 & WI1153: Resources not visible
+* Add Feature WI1136: Support .resw files for windows store apps
+1.0.0.26
+* WI1141: Improve message when an xml file fails to load. Ignore projects that fail to load.
+1.0.0.25
+* WI1133: Improve error message
+1.0.0.24
+* WI1121: Improve error messages
+1.0.0.23
+* WI1098: VS Crash after changing filter
+1.0.0.22
+* WI1091: Context menu for copy resource key.
+* WI1090: Enable multi-line paste.
+1.0.0.21
+* WI1060: ResX Manager crashes after update.
+1.0.0.20
+* WI958: Reference something in DGX, so we don't need to load the assembly dynamically.
+* WI1055: Add the possibility to mark items that do not need translation as invariant.
+* WI1056: Support VS 2013
+1.0.0.19
+* Fix WI1046: VS Crash when sorting the table
+* New WI1055: Add possibility to mark items that do not need translation as invariant
+1.0.0.18
+* Enable spell checker (if .Net language pack for the target language is installed)
+* German localization
+* Fix WI1002: Wrong Spanish flag
+* Fix WI993: Details of load errors are shown in the output pane
+1.0.0.17
+* Catch errors and show in output window.
+* Make the language of the comment column selectable.
+* Add a "Like" button.
+1.0.0.16
+* New filter "Show only rows with missing entries" makes it easier to find untranslated entries
+* Support linked items shared by multiple projects (fixes WI980, 982)
+* Fix WI986: Filtering on column doesn't work most of the time
+1.0.0.15
+* Add new languages (works in extension only)
+* Edit multiple projects simultaneously
+* Flat or grouped view of multiple projects
+* Choose what columns to show or hide
+* Extended project/file filter
+1.0.0.14
+* FIX WI909: Added filter for resource files
+* Sort files alphabetically
+1.0.0.13
+* FIX WI889: Support legacy language tags (e.g. zh-CHS and zh-CHT)
+1.0.0.12
+* FIX WI821: Re-create designer files after modifying neutral language.
+1.0.0.11
+* FIX WI880: column filters restored.
+1.0.0.10
+* FIX WI871: web forms support (files with nested extension like *.aspx.resx)
+* FIX WI870: Sort by key/Keep sorting - Default sort order now is by key. 
+* FIX WI849/833: Improved auto-refresh when activating the view, + explicit refresh button. 
+* FIX WI821: New strings can be added in the resource manager.
+1.0.0.9
+* Usability improvements
+** DEL key deletes rows
+** Preserve column width and order during session
+** Preserve selection during session
+** Resizable navigation panel
+** Editable comments
+1.0.0.8
+* FIX WI801: Extensions does not find ResX in Solution Folders
+* Improve keyboard navigation: Ctrl-Return starts editing without overwriting the content of a cell.
+* Improve multi-line editing: Return navigates instead of adding a new line. Ctrl-Return inserts a new line.
+1.0.0.7
+* Import/Export tables also with multi-line text in cells.
+1.0.0.6
+* Show the comment of the neutral language file
+* Import/Export tables via clipboard
+1.0.0.5
+* VisualStudio Extension: Support VS 2012
+1.0.0.4
+* Delete: Allow to delete multiple rows and correctly update display.
+* Improve context menus.
+* Show tooltip how to change the neutral language icon.
+1.0.0.3
+* Show an icon for the neutral language, too.
+1.0.0.2
+* Show display name and icon of the languages.
+* Automatic checkout of files upon editing, warn on file access errors.
+* Highlight empty entries.
