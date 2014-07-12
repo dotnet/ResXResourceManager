@@ -138,6 +138,7 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
+    <Compile Include="AddNewKeyCommandConverter.cs" />
     <Compile Include="CommentHeader.cs" />
     <Compile Include="ConfirmedCommandConverter.cs" />
     <Compile Include="CultureToImageConverter.cs" />

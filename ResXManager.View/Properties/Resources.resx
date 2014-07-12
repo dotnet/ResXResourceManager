@@ -218,4 +218,7 @@
   <data name="ConfirmCutItems" xml:space="preserve">
     <value>Cut the selected rows?</value>
   </data>
+  <data name="NewKeyPrompt" xml:space="preserve">
+    <value>Enter new resource key:</value>
+  </data>
 </root>

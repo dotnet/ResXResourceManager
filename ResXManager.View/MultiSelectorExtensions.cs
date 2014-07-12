@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View
 {
     using System.Collections;
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows;
@@ -80,6 +81,7 @@
 
                 // Updating this direction is a rare case, usually happens only once.
                 // Use a very simple approach to update the target - just clear the list and then add all selected again.
+                // Set SelectedIndex to clear the content; maybe listbox is in single selection mode, this will work always.
                 selector.SelectedIndex = -1;
 
                 var bindingSource = (IList)e.NewValue;
@@ -89,10 +91,23 @@
 
                 var bindingTarget = (dynamic)selector;
 
+                var dataGrid = selector as DataGrid;
+                if (dataGrid != null)
+                {
+                    dataGrid.CommitEdit();
+                }
+
                 if (bindingSource.Count == 1)
                 {
-                    // Special handling, maybe listbox is in single selection mode, so this will work in either case.
                     var selectedItem = bindingSource[0];
+
+                    if (!selector.Items.Contains(selectedItem))
+                    {
+                        // The item is not present, e.g. because of filtering, and can't be selected at this time.
+                        bindingSource.Clear();
+                        return;
+                    }
+
                     selector.SelectedItem = selectedItem;
 
                     bindingTarget.ScrollIntoView(selectedItem);
@@ -115,11 +130,19 @@
                 }
                 else
                 {
-                    var selectedItems = (IList) bindingTarget.SelectedItems;
+                    var selectedItems = (IList)bindingTarget.SelectedItems;
 
                     foreach (var item in bindingSource)
                     {
-                        selectedItems.Add(item);
+                        if (selector.Items.Contains(item))
+                        {
+                            selectedItems.Add(item);
+                        }
+                        else
+                        {
+                            // The item is not present, e.g. because of filtering, and can't be selected at this time.
+                            bindingSource.Remove(item);
+                        }
                     }
                 }
             }

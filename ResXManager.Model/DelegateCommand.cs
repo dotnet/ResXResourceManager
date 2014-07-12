@@ -61,7 +61,7 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DelegateCommand{T}"/> class.
+        /// Initializes a new instance of the <see cref="DelegateCommand"/> class.
         /// </summary>
         /// <param name="canExecuteCallback">The default can execute callback.</param>
         /// <param name="executeCallback">The default execute callback.</param>
@@ -114,7 +114,7 @@
         /// Gets or sets the predicate to handle the ICommand.CanExecute method.
         /// If unset, ICommand.CanExecute will always return true if ExecuteCallback is set.
         /// </summary>
-        private Func<bool> CanExecuteCallback
+        public Func<bool> CanExecuteCallback
         {
             get;
             set;
@@ -124,7 +124,7 @@
         /// Gets or sets the action to handle the ICommand.Execute method.
         /// If unset, ICommand.CanExecute will always return false.
         /// </summary>
-        private Action ExecuteCallback
+        public Action ExecuteCallback
         {
             get;
             set;

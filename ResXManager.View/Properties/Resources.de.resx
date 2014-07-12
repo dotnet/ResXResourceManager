@@ -210,4 +210,7 @@
   <data name="ConfirmCutItems" xml:space="preserve">
     <value>Möchten sie die ausgewählten Einträge ausschneiden?</value>
   </data>
+  <data name="NewKeyPrompt" xml:space="preserve">
+    <value>Geben sie einen neuen Schlüssel ein:</value>
+  </data>
 </root>

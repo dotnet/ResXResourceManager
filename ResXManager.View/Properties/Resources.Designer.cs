@@ -311,6 +311,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter new resource key:.
+        /// </summary>
+        public static string NewKeyPrompt {
+            get {
+                return ResourceManager.GetString("NewKeyPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter the new language id:.
         /// </summary>
         public static string NewLanguageIdPrompt {

@@ -31,7 +31,7 @@
 
         private ObservableCompositeCollection<ResourceTableEntry> _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>();
         private IList<ResourceTableEntry> _selectedTableEntries = new List<ResourceTableEntry>();
-        
+
         private ResourceTableEntry _selectedEntry;
         private string _entityFilter;
 
@@ -161,7 +161,7 @@
             get
             {
                 return _entityFilter;
-                
+
             }
             set
             {
@@ -283,6 +283,17 @@
             }
         }
 
+        public void AddNewKey(ResourceEntity entity, string key)
+        {
+            if (!entity.CanEdit(null))
+                return;
+
+            var entry = entity.Add(key);
+
+            _selectedTableEntries = new List<ResourceTableEntry> { entry };
+            OnPropertyChanged(() => SelectedTableEntries);
+        }
+
         public bool CanEdit(ResourceEntity resourceEntity, CultureInfo language)
         {
             Contract.Requires(resourceEntity != null);
@@ -352,6 +363,7 @@
 
         private void AddNew()
         {
+
             if (_selectedEntities.Count != 1)
                 return;
 
