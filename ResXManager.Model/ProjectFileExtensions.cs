@@ -92,7 +92,6 @@
             return ResourceManager.IsValidLanguageName(languageName) ? Path.GetFileNameWithoutExtension(name) : name;
         }
 
-
         public static string GetLanguageFileName(this ProjectFile projectFile, CultureInfo language)
         {
             Contract.Requires(projectFile != null);
@@ -120,6 +119,13 @@
             Contract.Requires(projectFile != null);
 
             return projectFile.GetBaseName().EndsWith(".Designer", StringComparison.OrdinalIgnoreCase); 
+        }
+
+        public static bool IsVisualBasicFile(this ProjectFile projectFile)
+        {
+            Contract.Requires(projectFile != null);
+
+            return Path.GetExtension(projectFile.FilePath).Equals(".vb", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

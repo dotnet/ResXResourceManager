@@ -57,28 +57,33 @@
                     entry.CodeReferences.Clear();
                 }
 
-                var sourceFilesContent = sourceFiles.Select(file => new SourceFile { File=file, Lines=ReadAllLines(file)}).ToArray();
+                var sourceFilesContent = sourceFiles.Select(file => new { ProjectFile=file, Lines=ReadAllLines(file)}).ToArray();
                 var entriesByBaseName = resourceTableEntries.GroupBy(entry => entry.Owner.BaseName);
 
                 foreach (var baseNameGroup in entriesByBaseName.AsParallel())
                 {
                     var baseName = baseNameGroup.Key;
 
-                    foreach (var sourceFile in sourceFilesContent)
+                    foreach (var source in sourceFilesContent)
                     {
                         var lineNumber = 1;
+                        Contract.Assume(source != null);
+                        var projectFile = source.ProjectFile;
 
-                        foreach (var line in sourceFile.Lines)
+                        var stringComparison = projectFile.IsVisualBasicFile() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
+                        Contract.Assume(source.Lines != null);
+                        foreach (var line in source.Lines)
                         {
-                            var baseNameIndexes = IndexesOfWords(line, baseName).ToArray();
+                            var baseNameIndexes = IndexesOfWords(line, baseName, stringComparison).ToArray();
                             if (baseNameIndexes.Length > 0)
                             {
                                 foreach (var entry in baseNameGroup)
                                 {
-                                    var keyNameIndexes = IndexesOfWords(line, entry.Key).ToArray();
+                                    var keyNameIndexes = IndexesOfWords(line, entry.Key, stringComparison).ToArray();
                                     if (keyNameIndexes.Length > 0)
                                     {
-                                        entry.CodeReferences.Add(new CodeReference(sourceFile.File, GetLineSegments(line, baseNameIndexes, baseName.Length, keyNameIndexes, entry.Key.Length), lineNumber));
+                                        entry.CodeReferences.Add(new CodeReference(projectFile, GetLineSegments(line, baseNameIndexes, baseName.Length, keyNameIndexes, entry.Key.Length), lineNumber));
                                     }
                                 }
                             }
@@ -93,13 +98,13 @@
             }
         }
 
-        private static IList<string> GetLineSegments(string line, IEnumerable<int> firstIndexes, int firstLength, IEnumerable<int> secondIndexes, int secondLength)
+        private static IList<string> GetLineSegments(string line, IEnumerable<int> firstStartIndexes, int firstLength, IEnumerable<int> secondStartIndexes, int secondLength)
         {
-            Contract.Requires(firstIndexes != null);
-            Contract.Requires(secondIndexes != null);
+            Contract.Requires(firstStartIndexes != null);
+            Contract.Requires(secondStartIndexes != null);
 
-            var firstPoints = firstIndexes.Select(index => new {Start = index, End = index + firstLength});
-            var secondPoints = secondIndexes.Select(index => new { Start = index, End = index + secondLength });
+            var firstPoints = firstStartIndexes.Select(index => new {Start = index, End = index + firstLength});
+            var secondPoints = secondStartIndexes.Select(index => new { Start = index, End = index + secondLength });
 
             var combinations = firstPoints.SelectMany(
                 firstPoint => secondPoints.Select(
@@ -112,14 +117,9 @@
 
             var match = combinations.OrderBy(item => item.Distance).First();
 
-            if (match.First.Start < match.Second.Start)
-            {
-                return GetLineSegments(line, match.First.Start, match.First.End, match.Second.Start, match.Second.End);
-            }
-            else
-            {
-                return GetLineSegments(line, match.Second.Start, match.Second.End, match.First.Start, match.First.End);
-            }
+            return match.First.Start < match.Second.Start
+                ? GetLineSegments(line, match.First.Start, match.First.End, match.Second.Start, match.Second.End)
+                : GetLineSegments(line, match.Second.Start, match.Second.End, match.First.Start, match.First.End);
         }
 
         [ContractVerification(false)]
@@ -135,22 +135,22 @@
             };
         }
 
-        private static IEnumerable<int> IndexesOfWords(string line, string word)
+        private static IEnumerable<int> IndexesOfWords(string line, string word, StringComparison stringComparison)
         {
             var startIndex = 0;
 
             while (true)
             {
-                startIndex = line.IndexOf(word, startIndex, StringComparison.Ordinal);
+                startIndex = line.IndexOf(word, startIndex, stringComparison);
 
                 if (startIndex < 0)
                     yield break;
 
                 var endIndex = startIndex + word.Length;
 
-                if ((startIndex <= 0) || (IsNonWordChar(line[startIndex - 1])))
+                if ((startIndex <= 0) || IsNonWordChar(line[startIndex - 1]))
                 {
-                    if ((endIndex >= line.Length) || (IsNonWordChar(line[endIndex])))
+                    if ((endIndex >= line.Length) || IsNonWordChar(line[endIndex]))
                     {
                         yield return startIndex;
                     }
@@ -179,13 +179,5 @@
 
             return new string[0];
         }
-
-        class SourceFile
-        {
-            public ProjectFile File { get; set; }
-
-            public string[] Lines { get; set; }
-        }
-
     }
 }
