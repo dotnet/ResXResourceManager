@@ -138,6 +138,10 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
+    <Compile Include="AddNewKeyCommandConverter.cs" />
+    <Compile Include="CodeReferencesToolTip.xaml.cs">
+      <DependentUpon>CodeReferencesToolTip.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CommentHeader.cs" />
     <Compile Include="ConfirmedCommandConverter.cs" />
     <Compile Include="CultureToImageConverter.cs" />
@@ -172,6 +176,10 @@
     <Compile Include="WaitCursor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="CodeReferencesToolTip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="InputBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

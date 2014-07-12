@@ -218,4 +218,10 @@
   <data name="ConfirmCutItems" xml:space="preserve">
     <value>Cut the selected rows?</value>
   </data>
+  <data name="NewKeyPrompt" xml:space="preserve">
+    <value>Enter new resource key:</value>
+  </data>
+  <data name="NoCodeReferencesToolTip" xml:space="preserve">
+    <value>No code references have been found by this algorithm. Nevertheless there might exist indirect references to this string.</value>
+  </data>
 </root>

@@ -229,7 +229,7 @@
             return false;
         }
 
-        private static bool AddLanguage(ResourceEntity entity, CultureInfo language)
+        private bool AddLanguage(ResourceEntity entity, CultureInfo language)
         {
             Contract.Requires(entity != null);
             Contract.Requires(language != null);
@@ -258,7 +258,7 @@
             return true;
         }
 
-        private static void AddProjectItems(ResourceEntity entity, ResourceLanguage neutralLanguage, string languageFileName)
+        private void AddProjectItems(ResourceEntity entity, ResourceLanguage neutralLanguage, string languageFileName)
         {
             Contract.Requires(entity != null);
             Contract.Requires(neutralLanguage != null);
@@ -278,7 +278,8 @@
 
                 if (projectFile == null)
                 {
-                    projectFile = new DteProjectFile(languageFileName, containingProject.Name, containingProject.UniqueName, projectItem);
+                    var solutionFolder = Path.GetDirectoryName(_dte.Solution.FullName);
+                    projectFile = new DteProjectFile(languageFileName, solutionFolder, containingProject.Name, containingProject.UniqueName, projectItem);
                 }
                 else
                 {
@@ -335,7 +336,7 @@
                 if (_view == null)
                     return;
 
-                var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || p.IsSourceCodeFile()).Cast<ProjectFile>().ToArray();
+                var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || p.IsSourceCodeOrContentFile()).Cast<ProjectFile>().ToArray();
 
                 // The solution events are not reliable, so we check the solution on every load/unload of our window.
                 // To avoid loosing the scope every time this method is called we only call load if we detect changes.
@@ -349,7 +350,7 @@
 
                 if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
                 {
-                    CodeReferences.BeginFind(_resourceManager.ResourceEntities, projectFiles);
+                    CodeReference.BeginFind(_resourceManager.ResourceEntities, projectFiles);
                 }
             }
             catch (Exception ex)

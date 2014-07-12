@@ -30,6 +30,8 @@
 
         public ResourceView()
         {
+            Instance = this;
+
             if (HardReferenceToDgx == null) // just use this...
             {
                 Trace.WriteLine("HardReferenceToDgx failed");
@@ -87,6 +89,11 @@
             {
                 return ViewModel.Languages;
             }
+        }
+
+        internal static ResourceView Instance
+        {
+            get; private set;
         }
 
         private void self_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -173,16 +180,18 @@
 
             if (columns.Count == 0)
             {
-                columns.Add(new DataGridTextColumn
+                var keyColumn = new DataGridTextColumn
                 {
                     Header = new ColumnHeader(Properties.Resources.Key, ColumnType.Key),
                     Binding = new Binding(@"Key") { ValidatesOnExceptions = true },
                     Width = 200,
                     CanUserReorder = false,
-                });
+                };
+
+                columns.Add(keyColumn);
 
                 var elementStyle = new Style();
-                elementStyle.Setters.Add(new Setter(ToolTipProperty, Properties.Resources.CodeReferencesToolTip));
+                elementStyle.Setters.Add(new Setter(ToolTipProperty, new CodeReferencesToolTip()));
                 elementStyle.Setters.Add(new Setter(HorizontalAlignmentProperty, HorizontalAlignment.Center));
 
                 var headerStyle = new Style();
@@ -194,7 +203,7 @@
                     Header = new ColumnHeader(FindResource("CodeReferencesImage"), ColumnType.Other),
                     HeaderStyle = headerStyle,
                     ElementStyle = elementStyle,
-                    Binding = new Binding(@"CodeReferences"),
+                    Binding = new Binding(@"CodeReferences.Count"),
                     CanUserReorder = false,
                     CanUserResize = false,
                     IsReadOnly = true,
@@ -434,7 +443,7 @@
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used via XAML!")]
-        private void CutCommandConverter_OnExecutingCommandConverter_OnExecuting(object sender, CancelEventArgs e)
+        private void CutCommandConverter_OnExecuting(object sender, CancelEventArgs e)
         {
             if (MessageBox.Show(Properties.Resources.ConfirmCutItems, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 e.Cancel = true;

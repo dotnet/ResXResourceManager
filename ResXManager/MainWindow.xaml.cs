@@ -11,17 +11,14 @@
     using System.Linq;
     using System.Windows;
     using System.Windows.Forms;
-
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Properties;
-    using tomenglertde.ResXManager.View;
-
     using MessageBox = System.Windows.MessageBox;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    [ContractVerification(false)]   // Too many warnings from generated code.
+    [ContractVerification(false)] // Too many warnings from generated code.
     public partial class MainWindow
     {
         public MainWindow()
@@ -34,17 +31,18 @@
             get { return (string)GetValue(FolderProperty); }
             set { SetValue(FolderProperty, value); }
         }
+
         /// <summary>
         /// Identifies the Folder dependency property
         /// </summary>
         public static readonly DependencyProperty FolderProperty =
-            DependencyProperty.Register("Folder", typeof(string), typeof(MainWindow));
+            DependencyProperty.Register("Folder", typeof (string), typeof (MainWindow));
 
         internal ResourceManager ViewModel
         {
             get
             {
-                return (ResourceManager)DataContext;
+                return (ResourceManager) DataContext;
             }
         }
 
@@ -73,7 +71,7 @@
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "CA is wrong about this!")]
         private void Browse_Click(object sender, RoutedEventArgs e)
         {
-            using (var dlg = new FolderBrowserDialog { SelectedPath = Settings.StartupFolder })
+            using (var dlg = new FolderBrowserDialog {SelectedPath = Settings.StartupFolder})
             {
                 if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                     return;
@@ -97,7 +95,7 @@
             ViewModel.Load(sourceFiles);
             if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
             {
-                CodeReferences.BeginFind(ViewModel.ResourceEntities, sourceFiles);
+                CodeReference.BeginFind(ViewModel.ResourceEntities, sourceFiles);
             }
         }
 
@@ -163,7 +161,7 @@
 
                     File.WriteAllText(languageFileName, View.Properties.Resources.EmptyResxTemplate);
 
-                    entity.AddLanguage(new ProjectFile(languageFileName, entity.ProjectName, null));
+                    entity.AddLanguage(new ProjectFile(languageFileName, Folder, entity.ProjectName, null));
 
                     return true;
                 }

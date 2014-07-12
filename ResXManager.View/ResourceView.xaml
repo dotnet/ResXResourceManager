@@ -7,6 +7,7 @@
              xmlns:windows="clr-namespace:System.Windows;assembly=PresentationFramework"
              xmlns:model="clr-namespace:tomenglertde.ResXManager.Model;assembly=ResXManager.Model"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              x:Name="LayoutRoot"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
              DataContextChanged="self_DataContextChanged">
@@ -15,9 +16,10 @@
     <view:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter" />
     <view:CultureToImageSourceConverter x:Key="CultureToImageSourceConverter" />
     <view:CultureToImageConverter x:Key="CultureToImageConverter" />
-    <view:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Executing="DeleteCommandConverter_OnExecuting"/>
-    <view:ConfirmedCommandConverter x:Key="CutCommandConverter" Executing="CutCommandConverter_OnExecutingCommandConverter_OnExecuting"/>
-    <view:LanguageColumnFilterConverter x:Key="LanguageColumnFilterConverter"/>
+    <view:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Executing="DeleteCommandConverter_OnExecuting" />
+    <view:ConfirmedCommandConverter x:Key="CutCommandConverter" Executing="CutCommandConverter_OnExecuting" />
+    <view:LanguageColumnFilterConverter x:Key="LanguageColumnFilterConverter" />
+    <view:AddNewKeyCommandConverter x:Key="AddNewKeyCommandConverter" />
 
     <Image x:Shared="False" x:Key="CodeReferencesImage" SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/references.png" />
 
@@ -54,7 +56,7 @@
 
   </UserControl.Resources>
   <UserControl.InputBindings>
-    <KeyBinding Key="N" Modifiers="Control" Command="{Binding AddNewCommand}" />
+    <KeyBinding Key="N" Modifiers="Control" Command="{Binding Converter={StaticResource AddNewKeyCommandConverter}}" />
   </UserControl.InputBindings>
   <Grid>
     <Grid.ColumnDefinitions>
@@ -75,10 +77,10 @@
               <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                 <Decorator Width="3" />
                 <Path Data="M0,0 L10,0 6,4 6,9 4,9 4,4 Z" Fill="Gray"
-                  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="2,0" />
+                      VerticalAlignment="Center" HorizontalAlignment="Right" Margin="2,0" />
               </StackPanel>
               <TextBox ToolTip="{x:Static properties:Resources.ResourceFilterToolTip}" BorderThickness="0"
-                   Text="{Binding EntityFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                       Text="{Binding EntityFilter, UpdateSourceTrigger=PropertyChanged}" />
             </DockPanel>
           </Border>
         </DockPanel>
@@ -87,8 +89,7 @@
                ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
                Margin="5" BorderThickness="0" SelectionMode="Extended"
                SelectionChanged="ListBox_SelectionChanged"
-               view:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}"
-               >
+               view:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}" >
         <ListBox.ContextMenu>
           <ContextMenu>
             <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand}">
@@ -245,7 +246,7 @@
               </Button>
               <Button ToolTip="{x:Static properties:Resources.AddKeyToolTip}"
                       Style="{StaticResource SingleSelectElementStyle}"
-                      Command="{Binding Path=AddNewCommand}">
+                      Command="{Binding Converter={StaticResource AddNewKeyCommandConverter}}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/add.png" />
               </Button>
               <Separator />

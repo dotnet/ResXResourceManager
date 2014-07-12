@@ -13,7 +13,7 @@
       <StackPanel DockPanel.Dock ="Right" Orientation="Horizontal" Background="{x:Static SystemColors.ControlBrush}" ToolTip="{x:Static properties:Resources.SourceFiles_ToolTip}">
         <TextBlock Text="{x:Static properties:Resources.SourceFiles}" VerticalAlignment="Center"/>
         <TextBlock Text=" "/>
-        <TextBox Text="{Binding Path=SourceFiles, Source={x:Static properties:Settings.Default}}" Width="120" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding Path=SourceFiles, Source={x:Static properties:Settings.Default}}" Width="180" VerticalAlignment="Center"/>
       </StackPanel>
       <Menu>
         <MenuItem>

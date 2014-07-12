@@ -311,11 +311,29 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter new resource key:.
+        /// </summary>
+        public static string NewKeyPrompt {
+            get {
+                return ResourceManager.GetString("NewKeyPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter the new language id:.
         /// </summary>
         public static string NewLanguageIdPrompt {
             get {
                 return ResourceManager.GetString("NewLanguageIdPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No code references have been found by this algorithm. Nevertheless there might exist indirect references to this string..
+        /// </summary>
+        public static string NoCodeReferencesToolTip {
+            get {
+                return ResourceManager.GetString("NoCodeReferencesToolTip", resourceCulture);
             }
         }
         
