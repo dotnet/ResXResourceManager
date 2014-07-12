@@ -37,7 +37,7 @@ namespace tomenglertde.ResXManager.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(".cs;.vb;.xaml")]
+        [global::System.Configuration.DefaultSettingValueAttribute(".cs;.vb;.xaml;.cshtml;.aspx;.ascx")]
         public string SourceFiles {
             get {
                 return ((string)(this["SourceFiles"]));
