@@ -213,4 +213,7 @@
   <data name="NewKeyPrompt" xml:space="preserve">
     <value>Geben sie einen neuen Schlüssel ein:</value>
   </data>
+  <data name="NoCodeReferencesToolTip" xml:space="preserve">
+    <value>Dieser Algorithmus hat keine Referenzen im Code gefunden. Es könnten aber noch indirekte Referenzen für diesen Text geben.</value>
+  </data>
 </root>

@@ -7,6 +7,7 @@
              xmlns:windows="clr-namespace:System.Windows;assembly=PresentationFramework"
              xmlns:model="clr-namespace:tomenglertde.ResXManager.Model;assembly=ResXManager.Model"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              x:Name="LayoutRoot"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
              DataContextChanged="self_DataContextChanged">

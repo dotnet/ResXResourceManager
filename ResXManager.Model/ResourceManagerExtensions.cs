@@ -54,7 +54,7 @@
                 solutionFolder = Directory.GetCurrentDirectory();
 
             var allProjectFiles = Directory.EnumerateFiles(solutionFolder, "*.*", SearchOption.AllDirectories)
-                .Select(filePath => new ProjectFile(filePath, @"<unknown>", null))
+                .Select(filePath => new ProjectFile(filePath, solutionFolder, @"<unknown>", null))
                 .Where(file => file.IsResourceFile() || isSourceFileCallback(file))
                 .ToArray();
 

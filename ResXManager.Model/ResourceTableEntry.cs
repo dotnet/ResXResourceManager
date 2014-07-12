@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -15,11 +16,11 @@
         private readonly ResourceEntity _owner;
         private readonly IDictionary<string, ResourceLanguage> _languages;
         private readonly ResourceLanguage _neutralLanguage;
+        private readonly IList<CodeReference> _codeReferences = new List<CodeReference>();
 
         private string _key;
         private ResourceTableValues _values;
         private ResourceTableValues _comments;
-        private int? _codeReferences;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceTableEntry" /> class.
@@ -180,20 +181,11 @@
             }
         }
 
-        public int? CodeReferences
+        public IList<CodeReference> CodeReferences
         {
             get
             {
                 return _codeReferences;
-            }
-            set
-            {
-
-                if (_codeReferences == value)
-                    return;
-                
-                _codeReferences = value;
-                OnPropertyChanged(() => CodeReferences);
             }
         }
 

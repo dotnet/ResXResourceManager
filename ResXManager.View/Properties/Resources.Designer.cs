@@ -329,6 +329,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No code references have been found by this algorithm. Nevertheless there might exist indirect references to this string..
+        /// </summary>
+        public static string NoCodeReferencesToolTip {
+            get {
+                return ResourceManager.GetString("NoCodeReferencesToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Paste (Ctrl+V).
         /// </summary>
         public static string Paste {

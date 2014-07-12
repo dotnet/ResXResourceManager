@@ -53,7 +53,7 @@
         {
             Contract.Requires(allSourceFiles != null);
 
-            CodeReferences.StopFind();
+            CodeReference.StopFind();
 
             var resourceFilesByDirectory = allSourceFiles
                 .Where(file => file.IsResourceFile())
@@ -285,6 +285,9 @@
 
         public void AddNewKey(ResourceEntity entity, string key)
         {
+            Contract.Requires(entity != null);
+            Contract.Requires(!String.IsNullOrEmpty(key));
+
             if (!entity.CanEdit(null))
                 return;
 

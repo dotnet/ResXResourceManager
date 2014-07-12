@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
+    using System.IO;
     using System.Linq;
     using EnvDTE;
 
@@ -25,11 +26,13 @@
 
             var items = new Dictionary<string, DteProjectFile>();
 
+            var solutionFolder = Path.GetDirectoryName(solution.FullName);
+
             foreach (var project in solution.GetProjects(trace))
             {
                 trace.WriteLine("Loading project " + project.Name);
 
-                project.ProjectItems.GetProjectFiles(items, trace);
+                project.ProjectItems.GetProjectFiles(solutionFolder, items, trace);
             }
 
             return items.Values;
@@ -52,13 +55,13 @@
         }
 
 
-        public static bool IsSourceCodeFile(this DteProjectFile projectFile)
+        public static bool IsSourceCodeOrContentFile(this DteProjectFile projectFile)
         {
             Contract.Requires(projectFile != null);
 
             var itemType = projectFile.GetItemType();
 
-            return (itemType == "Compile") || (itemType == "Page");
+            return (itemType == "Compile") || (itemType == "Page") || (itemType == "Content");
         }
 
         /// <summary>
@@ -92,7 +95,7 @@
             }
         }
 
-        private static void GetProjectFiles(this ProjectItems projectItems, IDictionary<string, DteProjectFile> items, OutputWindowTracer trace)
+        private static void GetProjectFiles(this ProjectItems projectItems, string solutionFolder, IDictionary<string, DteProjectFile> items, OutputWindowTracer trace)
         {
             Contract.Requires(items != null);
 
@@ -104,7 +107,7 @@
                 try
                 {
                     var projectItem = projectItems.Item(i);
-                    projectItem.GetProjectFiles(items, trace);
+                    projectItem.GetProjectFiles(solutionFolder, items, trace);
                 }
                 catch
                 {
@@ -113,7 +116,7 @@
             }
         }
 
-        private static void GetProjectFiles(this ProjectItem projectItem, IDictionary<string, DteProjectFile> items, OutputWindowTracer trace)
+        private static void GetProjectFiles(this ProjectItem projectItem, string solutionFolder, IDictionary<string, DteProjectFile> items, OutputWindowTracer trace)
         {
             Contract.Requires(projectItem != null);
             Contract.Requires(items != null);
@@ -135,16 +138,16 @@
                     }
                     else
                     {
-                        items.Add(fileName, new DteProjectFile(fileName, project.Name, project.UniqueName, projectItem));
+                        items.Add(fileName, new DteProjectFile(fileName, solutionFolder, project.Name, project.UniqueName, projectItem));
                     }
                 }
             }
 
-            projectItem.ProjectItems.GetProjectFiles(items, trace);
+            projectItem.ProjectItems.GetProjectFiles(solutionFolder, items, trace);
 
             if (projectItem.SubProject != null) 
             {
-                projectItem.SubProject.ProjectItems.GetProjectFiles(items, trace);
+                projectItem.SubProject.ProjectItems.GetProjectFiles(solutionFolder, items, trace);
             }
         }
 

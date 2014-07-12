@@ -191,7 +191,7 @@
                 columns.Add(keyColumn);
 
                 var elementStyle = new Style();
-                elementStyle.Setters.Add(new Setter(ToolTipProperty, Properties.Resources.CodeReferencesToolTip));
+                elementStyle.Setters.Add(new Setter(ToolTipProperty, new CodeReferencesToolTip()));
                 elementStyle.Setters.Add(new Setter(HorizontalAlignmentProperty, HorizontalAlignment.Center));
 
                 var headerStyle = new Style();
@@ -203,7 +203,7 @@
                     Header = new ColumnHeader(FindResource("CodeReferencesImage"), ColumnType.Other),
                     HeaderStyle = headerStyle,
                     ElementStyle = elementStyle,
-                    Binding = new Binding(@"CodeReferences"),
+                    Binding = new Binding(@"CodeReferences.Count"),
                     CanUserReorder = false,
                     CanUserResize = false,
                     IsReadOnly = true,
