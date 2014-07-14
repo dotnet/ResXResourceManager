@@ -91,6 +91,7 @@ namespace tomenglertde.ResXManager.View
         public static IEnumerable<T> VisualDescendants<T>(this DependencyObject item) where T : DependencyObject
         {
             Contract.Requires(item != null);
+            Contract.Ensures(Contract.Result<IEnumerable<T>>() != null);
 
             var numberOfChildren = VisualTreeHelper.GetChildrenCount(item);
             for (var i = 0; i < numberOfChildren; i++)
@@ -116,6 +117,7 @@ namespace tomenglertde.ResXManager.View
         public static IEnumerable<T> VisualDescendantsAndSelf<T>(this T item) where T : DependencyObject
         {
             Contract.Requires(item != null);
+            Contract.Ensures(Contract.Result<IEnumerable<T>>() != null);
 
             yield return item;
 

@@ -16,7 +16,7 @@
         private readonly ResourceEntity _owner;
         private readonly IDictionary<string, ResourceLanguage> _languages;
         private readonly ResourceLanguage _neutralLanguage;
-        private readonly IList<CodeReference> _codeReferences = new List<CodeReference>();
+        private IList<CodeReference> _codeReferences;
 
         private string _key;
         private ResourceTableValues _values;
@@ -186,6 +186,14 @@
             get
             {
                 return _codeReferences;
+            }
+            internal set
+            {
+                if (_codeReferences == value)
+                    return;
+
+                _codeReferences = value;
+                OnPropertyChanged(() => CodeReferences);
             }
         }
 

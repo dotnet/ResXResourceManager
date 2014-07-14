@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
@@ -54,7 +55,7 @@
             {
                 foreach (var entry in resourceTableEntries)
                 {
-                    entry.CodeReferences.Clear();
+                    entry.CodeReferences = null;
                 }
 
                 var sourceFilesContent = sourceFiles.Select(file => new { ProjectFile=file, Lines=ReadAllLines(file)}).ToArray();
@@ -83,13 +84,23 @@
                                     var keyNameIndexes = IndexesOfWords(line, entry.Key, stringComparison).ToArray();
                                     if (keyNameIndexes.Length > 0)
                                     {
-                                        entry.CodeReferences.Add(new CodeReference(projectFile, GetLineSegments(line, baseNameIndexes, baseName.Length, keyNameIndexes, entry.Key.Length), lineNumber));
+                                        var codeReferences = entry.CodeReferences ?? (entry.CodeReferences = new ObservableCollection<CodeReference>());
+
+                                        codeReferences.Add(new CodeReference(projectFile, GetLineSegments(line, baseNameIndexes, baseName.Length, keyNameIndexes, entry.Key.Length), lineNumber));
                                     }
                                 }
                             }
 
                             lineNumber += 1;
                         }
+                    }
+                }
+
+                foreach (var entry in resourceTableEntries)
+                {
+                    if (entry.CodeReferences == null)
+                    {
+                        entry.CodeReferences = new CodeReference[0];
                     }
                 }
             }
