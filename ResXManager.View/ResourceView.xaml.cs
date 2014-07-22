@@ -93,7 +93,8 @@
 
         internal static ResourceView Instance
         {
-            get; private set;
+            get;
+            private set;
         }
 
         private void self_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -190,28 +191,7 @@
 
                 columns.Add(keyColumn);
 
-                var elementStyle = new Style();
-                elementStyle.Setters.Add(new Setter(ToolTipProperty, new CodeReferencesToolTip()));
-                elementStyle.Setters.Add(new Setter(HorizontalAlignmentProperty, HorizontalAlignment.Center));
-
-                var headerStyle = new Style();
-                headerStyle.Setters.Add(new Setter(ToolTipProperty, Properties.Resources.CodeReferencesToolTip));
-                headerStyle.Setters.Add(new Setter(HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
-
-                var codeReferencesColumn = new DataGridTextColumn
-                {
-                    Header = new ColumnHeader(FindResource("CodeReferencesImage"), ColumnType.Other),
-                    HeaderStyle = headerStyle,
-                    ElementStyle = elementStyle,
-                    Binding = new Binding(@"CodeReferences.Count"),
-                    CanUserReorder = false,
-                    CanUserResize = false,
-                    IsReadOnly = true,
-                };
-
-                codeReferencesColumn.SetIsFilterVisible(false);
-                BindingOperations.SetBinding(codeReferencesColumn, DataGridColumn.VisibilityProperty, new Binding(@"IsFindCodeReferencesEnabled") { Source = Settings.Default, Converter = new BooleanToVisibilityConverter() });
-                columns.Add(codeReferencesColumn);
+                columns.Add(CreateCodeReferencesColumn());
             }
 
             var languages = Languages.ToArray();
@@ -230,6 +210,35 @@
             {
                 AddLanguageColumn(columns, language);
             }
+        }
+
+        private DataGridTextColumn CreateCodeReferencesColumn()
+        {
+            var elementStyle = new Style();
+            elementStyle.Setters.Add(new Setter(ToolTipProperty, new CodeReferencesToolTip()));
+            elementStyle.Setters.Add(new Setter(ToolTipService.ShowDurationProperty, int.MaxValue));
+            elementStyle.Setters.Add(new Setter(HorizontalAlignmentProperty, HorizontalAlignment.Center));
+
+            var columnHeader = new ColumnHeader(FindResource("CodeReferencesImage"), ColumnType.Other)
+            {
+                ToolTip = Properties.Resources.CodeReferencesToolTip,
+                HorizontalContentAlignment = HorizontalAlignment.Center
+            };
+
+            var column = new DataGridTextColumn
+            {
+                Header = columnHeader,
+                ElementStyle = elementStyle,
+                Binding = new Binding(@"CodeReferences.Count"),
+                CanUserReorder = false,
+                CanUserResize = false,
+                IsReadOnly = true,
+            };
+
+            column.SetIsFilterVisible(false);
+            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, new Binding(@"IsFindCodeReferencesEnabled") { Source = Settings.Default, Converter = new BooleanToVisibilityConverter() });
+
+            return column;
         }
 
         private void AddLanguageColumn(ICollection<DataGridColumn> columns, CultureInfo language)
