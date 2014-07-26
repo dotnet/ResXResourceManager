@@ -187,6 +187,12 @@
             }
         }
 
+        public bool IsNeutralLanguage
+        {
+            get;
+            internal set;
+        }
+
         private static bool IsStringType(XElement entry)
         {
             Contract.Requires(entry != null);
@@ -220,7 +226,12 @@
             if (GetValue(key) == value)
                 return true;
 
-            return SetNodeData(key, value, node => node.Text = value);
+            return SetNodeData(key, node => node.Text = value);
+        }
+
+        public void ForceValue(string key, string value)
+        {
+            SetNodeData(key, node => node.Text = value);
         }
 
         private void OnChanged()
@@ -272,10 +283,10 @@
             if (GetComment(key) == value)
                 return true;
 
-            return SetNodeData(key, value, node => node.Comment = value);
+            return SetNodeData(key, node => node.Comment = value);
         }
 
-        private bool SetNodeData(string key, string value, Action<Node> updateCallback)
+        private bool SetNodeData(string key, Action<Node> updateCallback)
         {
             Contract.Requires(key != null);
             Contract.Requires(updateCallback != null);
@@ -289,13 +300,19 @@
 
                 if (!_nodes.TryGetValue(key, out node) || (node == null))
                 {
-                    if (value == null)
-                        return true;
-
                     node = CreateNode(key);
                 }
 
                 updateCallback(node);
+
+                if (!IsNeutralLanguage)
+                {
+                    if (string.IsNullOrEmpty(node.Text) && string.IsNullOrEmpty(node.Comment))
+                    {
+                        node.Element.Remove();
+                        _nodes.Remove(key);
+                    }
+                }
 
                 HasChanges = true;
                 OnChanged();

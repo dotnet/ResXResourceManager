@@ -26,10 +26,7 @@
 
         internal static ImageSource Convert(object value)
         {
-            var culture = value as CultureInfo;
-
-            if (culture == null)
-                culture = Settings.Default.NeutralResourceLanguage;
+            var culture = value as CultureInfo ?? Settings.Default.NeutralResourceLanguage;
 
             Contract.Assume(culture != null);
 

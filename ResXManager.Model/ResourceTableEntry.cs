@@ -44,6 +44,7 @@
             Contract.Assume(languages.Any());
             _neutralLanguage = languages.First().Value;
             Contract.Assume(_neutralLanguage != null);
+            _neutralLanguage.IsNeutralLanguage = true;
         }
 
         private void InitTableValues()

@@ -93,6 +93,7 @@
             var sourceFiles = ResourceManagerExtensions.GetAllSourceFiles(Folder, file => sourceFileExtensions.Contains(file.Extension, StringComparer.OrdinalIgnoreCase));
 
             ViewModel.Load(sourceFiles);
+
             if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
             {
                 CodeReference.BeginFind(ViewModel.ResourceEntities, sourceFiles);
