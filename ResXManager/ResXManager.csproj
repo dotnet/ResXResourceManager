@@ -35,8 +35,8 @@
     <SupportUrl>http://resxresourcemanager.codeplex.com</SupportUrl>
     <ProductName>ResX Resource Manager</ProductName>
     <PublisherName>tom-englert.de</PublisherName>
-    <ApplicationRevision>41</ApplicationRevision>
-    <ApplicationVersion>1.0.0.41</ApplicationVersion>
+    <ApplicationRevision>42</ApplicationRevision>
+    <ApplicationVersion>1.0.0.42</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>

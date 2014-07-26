@@ -1,3 +1,7 @@
+1.0.0.42:
+* WI1325: Empty cell does not remove "data" tag in code behind. => Empty nodes are removed, except for the neutral language.
+* WI1319: Can not add new keys in V1.0.0.41 => Restored input dialog for new keys, since inline editing conflicts with filtering.
+* WI1320: List of unused Resources: Support for Web projects. => Web projects and attribute references are supported.
 1.0.0.41:
 * WI1313: Excel import does not properly handle cells with individual formatting.
 * WI1314: Show the number of references found in code to be able to detect unused resources.

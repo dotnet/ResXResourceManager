@@ -231,6 +231,8 @@
 
         public void ForceValue(string key, string value)
         {
+            Contract.Requires(key != null);
+
             SetNodeData(key, node => node.Text = value);
         }
 
