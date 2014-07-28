@@ -1,3 +1,5 @@
+1.0.0.43:
+* WI1327: ArgumentException when starting VS (occurred when ResXManager window is open but no solution is loaded)
 1.0.0.42:
 * WI1325: Empty cell does not remove "data" tag in code behind. => Empty nodes are removed, except for the neutral language.
 * WI1319: Can not add new keys in V1.0.0.41 => Restored input dialog for new keys, since inline editing conflicts with filtering.
