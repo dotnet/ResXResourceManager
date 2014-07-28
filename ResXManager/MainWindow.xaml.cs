@@ -90,7 +90,7 @@
                 .Select(s => s.Trim())
                 .ToArray();
 
-            var sourceFiles = ResourceManagerExtensions.GetAllSourceFiles(Folder, file => sourceFileExtensions.Contains(file.Extension, StringComparer.OrdinalIgnoreCase));
+            var sourceFiles = new DirectoryInfo(Folder).GetAllSourceFiles(file => sourceFileExtensions.Contains(file.Extension, StringComparer.OrdinalIgnoreCase));
 
             ViewModel.Load(sourceFiles);
 

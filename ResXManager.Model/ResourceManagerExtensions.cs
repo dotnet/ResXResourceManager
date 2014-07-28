@@ -39,22 +39,13 @@
             return (culture == null) ? string.Empty : "." + culture.Name;
         }
 
-        public static void Load(this ResourceManager resourceManager, string solutionFolder)
+        public static IList<ProjectFile> GetAllSourceFiles(this DirectoryInfo solutionFolder, Func<ProjectFile, bool> isSourceFileCallback)
         {
-            Contract.Requires(resourceManager != null);
-
-            resourceManager.Load(GetAllSourceFiles(solutionFolder, file => false));
-        }
-
-        public static IList<ProjectFile> GetAllSourceFiles(string solutionFolder, Func<ProjectFile, bool> isSourceFileCallback)
-        {
+            Contract.Requires(solutionFolder != null);
             Contract.Requires(isSourceFileCallback != null);
 
-            if (string.IsNullOrEmpty(solutionFolder))
-                solutionFolder = Directory.GetCurrentDirectory();
-
-            var allProjectFiles = Directory.EnumerateFiles(solutionFolder, "*.*", SearchOption.AllDirectories)
-                .Select(filePath => new ProjectFile(filePath, solutionFolder, @"<unknown>", null))
+            var allProjectFiles = solutionFolder.EnumerateFiles("*.*", SearchOption.AllDirectories)
+                .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
                 .Where(file => file.IsResourceFile() || isSourceFileCallback(file))
                 .ToArray();
 

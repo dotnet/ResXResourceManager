@@ -85,7 +85,7 @@
                 if (_dte == null)
                     return;
 
-                Solution_Changed();
+                ReloadSolution();
 
                 AppDomain.CurrentDomain.AssemblyResolve -= AppDomain_AssemblyResolve;
             }
@@ -148,9 +148,16 @@
 
         void view_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (true.Equals(e.NewValue))
+            if (!true.Equals(e.NewValue))
+                return;
+
+            try
             {
-                Solution_Changed();
+                ReloadSolution();
+            }
+            catch (Exception ex)
+            {
+                _trace.TraceError(ex.ToString());
             }
         }
 
@@ -310,11 +317,11 @@
             // WE have saved the files - update the finger print so we don't reload unnecessarily
             _solutionFingerPrint = GetFingerprint(GetProjectFiles());
 
-            foreach (var projectItem in ((DteProjectFile)e.Language.ProjectFile).ProjectItems)
-            {
-                if (projectItem == null)
-                    continue;
+            var projectItems = ((DteProjectFile)e.Language.ProjectFile).ProjectItems
+                .Where(projectItem => projectItem != null);
 
+            foreach (var projectItem in projectItems)
+            {
                 if (projectItem.IsOpen && (projectItem.Document != null))
                 {
                     projectItem.Document.Close();
@@ -333,30 +340,35 @@
         {
             try
             {
-                if (_view == null)
-                    return;
-
-                var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || p.IsSourceCodeOrContentFile()).Cast<ProjectFile>().ToArray();
-
-                // The solution events are not reliable, so we check the solution on every load/unload of our window.
-                // To avoid loosing the scope every time this method is called we only call load if we detect changes.
-                var fingerPrint = GetFingerprint(projectFiles);
-
-                if (!forceReload && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
-                    return;
-
-                _solutionFingerPrint = fingerPrint;
-                _resourceManager.Load(projectFiles);
-
-                if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
-                {
-                    CodeReference.BeginFind(_resourceManager.ResourceEntities, projectFiles);
-                }
+                ReloadSolution(forceReload);
             }
             catch (Exception ex)
             {
                 _trace.TraceError(ex.ToString());
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ResourceLoadingError, ex.Message));
+            }
+        }
+
+        private void ReloadSolution(bool forceReload = false)
+        {
+            if (_view == null)
+                return;
+
+            var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || p.IsSourceCodeOrContentFile()).Cast<ProjectFile>().ToArray();
+
+            // The solution events are not reliable, so we check the solution on every load/unload of our window.
+            // To avoid loosing the scope every time this method is called we only call load if we detect changes.
+            var fingerPrint = GetFingerprint(projectFiles);
+
+            if (!forceReload && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            _solutionFingerPrint = fingerPrint;
+            _resourceManager.Load(projectFiles);
+
+            if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
+            {
+                CodeReference.BeginFind(_resourceManager.ResourceEntities, projectFiles);
             }
         }
 

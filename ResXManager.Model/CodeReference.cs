@@ -52,6 +52,11 @@
         public int LineNumber { get; private set; }
         public ProjectFile ProjectFile { get; private set; }
         public IList<string> LineSegments { get; private set; }
+        private bool IsValid
+        {
+            get;
+            set;
+        }
 
         public static void StopFind()
         {
@@ -74,12 +79,6 @@
 
             _backgroundThread = new Thread(() => FindCodeReferences(sourceFiles, resourceTableEntries)) { IsBackground = true, Priority = ThreadPriority.Lowest };
             _backgroundThread.Start();
-        }
-
-        private bool IsValid
-        {
-            get;
-            set;
         }
 
         public static void FindCodeReferences(IEnumerable<ProjectFile> projectFiles, IList<ResourceTableEntry> resourceTableEntries)
@@ -112,7 +111,7 @@
                 foreach (var sourceFile in sourceFiles.Where(file => file.FileKind != FileKind.Undefined))
                 {
                     Contract.Assume(sourceFile != null);
-                    FindCodeReferences(sourceFile, @"StringResource", resourceTableEntries);
+                    FindCodeReferences(sourceFile, @"StringResourceKey", resourceTableEntries);
                 }
 
                 foreach (var entry in resourceTableEntries.Where(entry => entry.CodeReferences == null))
