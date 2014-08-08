@@ -298,6 +298,9 @@
             {
                 entity.AddLanguage(projectFile);
             }
+
+            // WE have saved the files - update the finger print so we don't reload unnecessarily
+            _solutionFingerPrint = GetFingerprint(GetProjectFiles());
         }
 
         [Localizable(false)]
