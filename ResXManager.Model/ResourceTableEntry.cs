@@ -225,7 +225,8 @@
 
             public int GetHashCode(ResourceTableEntry obj)
             {
-                Contract.Requires(obj != null);
+                if (obj == null)
+                    throw new ArgumentNullException("obj");
 
                 return obj.Owner.GetHashCode() + obj.Key.GetHashCode();
             }

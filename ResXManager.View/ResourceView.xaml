@@ -422,6 +422,16 @@
             </ItemsPanelTemplate>
           </DataGrid.ItemsPanel>
 
+          <DataGrid.RowStyle>
+            <Style TargetType="DataGridRow">
+              <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                  <Setter Property="Background" Value="{x:Static SystemColors.HighlightBrush}" />
+                </Trigger>
+              </Style.Triggers>
+            </Style>
+          </DataGrid.RowStyle>
+
           <DataGrid.CellStyle>
             <Style TargetType="DataGridCell">
               <Style.Triggers>
