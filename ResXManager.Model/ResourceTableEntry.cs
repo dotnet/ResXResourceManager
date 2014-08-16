@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -10,7 +9,7 @@
     /// <summary>
     /// Represents one entry in the resource table.
     /// </summary>
-    public class ResourceTableEntry : ObservableObject, IEquatable<ResourceTableEntry>
+    public class ResourceTableEntry : ObservableObject
     {
         private const string InvariantKey = "@Invariant";
         private readonly ResourceEntity _owner;
@@ -208,67 +207,37 @@
             OnPropertyChanged(() => Comment);
         }
 
-        #region IEquatable implementation
-
-        /// <summary>
-        /// Returns a hash code for this instance.
-        /// </summary>
-        /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
-        /// </returns>
-        public override int GetHashCode()
+        class Comparer : IEqualityComparer<ResourceTableEntry>
         {
-            return Owner.GetHashCode() + Key.GetHashCode();
+            public static readonly Comparer Default = new Comparer();
+
+            public bool Equals(ResourceTableEntry x, ResourceTableEntry y)
+            {
+                if (ReferenceEquals(x, y))
+                    return true;
+                if (ReferenceEquals(x, null))
+                    return false;
+                if (ReferenceEquals(y, null))
+                    return false;
+
+                return x.Owner.Equals(y.Owner) && x.Key.Equals(y.Key);
+            }
+
+            public int GetHashCode(ResourceTableEntry obj)
+            {
+                Contract.Requires(obj != null);
+
+                return obj.Owner.GetHashCode() + obj.Key.GetHashCode();
+            }
         }
 
-        /// <summary>
-        /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
-        /// </summary>
-        /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.</returns>
-        public override bool Equals(object obj)
+        public static IEqualityComparer<ResourceTableEntry> EqualityComparer
         {
-            return Equals(obj as ResourceTableEntry);
+            get
+            {
+                return Comparer.Default;
+            }
         }
-
-        /// <summary>
-        /// Determines whether the specified <see cref="ResourceTableEntry"/> is equal to this instance.
-        /// </summary>
-        /// <param name="other">The <see cref="ResourceTableEntry"/> to compare with this instance.</param>
-        /// <returns><c>true</c> if the specified <see cref="ResourceTableEntry"/> is equal to this instance; otherwise, <c>false</c>.</returns>
-        public bool Equals(ResourceTableEntry other)
-        {
-            return InternalEquals(this, other);
-        }
-
-        private static bool InternalEquals(ResourceTableEntry left, ResourceTableEntry right)
-        {
-            if (ReferenceEquals(left, right))
-                return true;
-            if (ReferenceEquals(left, null))
-                return false;
-            if (ReferenceEquals(right, null))
-                return false;
-
-            return left.Owner.Equals(right.Owner) && left.Key.Equals(right.Key);
-        }
-
-        /// <summary>
-        /// Implements the operator ==.
-        /// </summary>
-        public static bool operator ==(ResourceTableEntry left, ResourceTableEntry right)
-        {
-            return InternalEquals(left, right);
-        }
-        /// <summary>
-        /// Implements the operator !=.
-        /// </summary>
-        public static bool operator !=(ResourceTableEntry left, ResourceTableEntry right)
-        {
-            return !InternalEquals(left, right);
-        }
-
-        #endregion
 
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]

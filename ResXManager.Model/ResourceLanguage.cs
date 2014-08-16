@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
@@ -12,7 +11,6 @@
     using System.Windows;
     using System.Xml;
     using System.Xml.Linq;
-
     using tomenglertde.ResXManager.Model.Properties;
 
     /// <summary>
@@ -100,7 +98,7 @@
             {
                 try
                 {
-                    return _languageName.ToCulture();  
+                    return _languageName.ToCulture();
                 }
                 catch (InvalidOperationException)
                 { }

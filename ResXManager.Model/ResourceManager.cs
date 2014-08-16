@@ -609,7 +609,11 @@
             var selectedTableEntries = _selectedTableEntries.ToArray();
 
             _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>(_selectedEntities.Select(entity => (IList)entity.Entries).ToArray());
-            _selectedTableEntries = _resourceEntities.SelectMany(entity => entity.Entries).Where(selectedTableEntries.Contains).Where(_resourceTableEntries.Contains).ToList();
+
+            _selectedTableEntries = _resourceEntities.SelectMany(entity => entity.Entries)
+                .Where(item => selectedTableEntries.Contains(item, ResourceTableEntry.EqualityComparer))
+                .Where(item => _resourceTableEntries.Contains(item, ResourceTableEntry.EqualityComparer))
+                .ToList();
 
             OnPropertyChanged(() => ResourceTableEntries);
             OnPropertyChanged(() => SelectedTableEntries);
