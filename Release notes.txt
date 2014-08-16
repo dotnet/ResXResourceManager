@@ -1,3 +1,6 @@
+1.0.0.44:
+* WI1334: Delete is deleting too much. (after changing the key, an item stays selected without selection being visible)
+* WI1329: Crash when adding new resource file (try to avoid unnecesary refresh while adding new resource file)
 1.0.0.43:
 * WI1327: ArgumentException when starting VS (occurred when ResXManager window is open but no solution is loaded)
 1.0.0.42:
