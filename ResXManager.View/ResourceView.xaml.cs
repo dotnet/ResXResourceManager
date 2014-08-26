@@ -256,7 +256,7 @@
             };
 
             commentColumn.EnableMultilineEditing();
-            commentColumn.EnableSpellChecker(language);
+            commentColumn.EnableSpellchecker(language);
 
             columns.Add(commentColumn);
 
@@ -273,7 +273,7 @@
             };
 
             column.EnableMultilineEditing();
-            column.EnableSpellChecker(language);
+            column.EnableSpellchecker(language);
 
             columns.Add(column);
 

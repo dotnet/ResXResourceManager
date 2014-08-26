@@ -12,7 +12,7 @@ namespace tomenglertde.ResXManager.View
     using System.Windows.Media;
     using tomenglertde.ResXManager.View.Properties;
 
-    internal static class ExtensionMethods
+    public static class ExtensionMethods
     {
         public static void EnableMultilineEditing(this DataGridBoundColumn column)
         {
@@ -25,7 +25,7 @@ namespace tomenglertde.ResXManager.View
             column.EditingElementStyle = textBoxStyle;
         }
 
-        public static void EnableSpellChecker(this DataGridBoundColumn column, CultureInfo language)
+        public static void EnableSpellchecker(this DataGridBoundColumn column, CultureInfo language)
         {
             Contract.Requires(column != null);
 

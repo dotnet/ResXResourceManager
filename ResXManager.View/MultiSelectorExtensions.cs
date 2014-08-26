@@ -1,13 +1,14 @@
 ﻿namespace tomenglertde.ResXManager.View
 {
+    using System;
     using System.Collections;
-    using System.Diagnostics;
+    using System.Collections.Specialized;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
-    using System.Windows.Input;
     using tomenglertde.ResXManager.Model;
 
     /// <summary>
@@ -22,18 +23,17 @@
     /// Since there is no common interface for ListBox and DataGrid, the SelectionBinding is implemented via reflection/dynamics, so it will
     /// work on any FrameworkElement that has the SelectedItems, SelectedItem and SelectedItemIndex properties and the SelectionChanged event.
     /// </remarks>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Use the same term as in System.Windows.Controls.Primitives.MultiSelector")]
+    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Use the same term as in System.Windows.Controls.Primitives.MultiSelector")]
     public static class MultiSelectorExtensions
     {
-        // Simple recursion blocking. Change events should appear only on the UI thread, so a static bool will do the job.
-        private static bool _selectionBindingIsUpdatingTarget;
+        private static readonly IList EmptyObjectArray = new object[0];
 
         /// <summary>
         /// Gets the value of the <see cref="SelectionBindingProperty"/> property.
         /// </summary>
         /// <param name="obj">The object to attach to.</param>
         /// <returns>The current selection.</returns>
-        public static IList GetSelectionBinding(DependencyObject obj)
+        public static IList GetSelectionBinding(this Selector obj)
         {
             Contract.Requires(obj != null);
             return (IList)obj.GetValue(SelectionBindingProperty);
@@ -43,7 +43,7 @@
         /// </summary>
         /// <param name="obj">The object to attach to.</param>
         /// <param name="value">The new selection.</param>
-        public static void SetSelectionBinding(DependencyObject obj, IList value)
+        public static void SetSelectionBinding(this Selector obj, IList value)
         {
             Contract.Requires(obj != null);
             obj.SetValue(SelectionBindingProperty, value);
@@ -55,126 +55,284 @@
         /// </summary>
         /// <example>
         /// If your view model has two properties "AnyList Items { get; }" and "IList SelectedItems { get; set; }" your XAML looks like this:
+        /// <para/>
         /// <code><![CDATA[
         /// <ListBox ItemsSource="{Binding Path=Items}" core:MultiSelectorExtensions.SelectionBinding="{Binding Path=SelectedItems}"/>
         /// ]]></code>
         /// </example>
         public static readonly DependencyProperty SelectionBindingProperty =
-            DependencyProperty.RegisterAttached("SelectionBinding", typeof(IList), typeof(MultiSelectorExtensions), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, SelectionBinding_Changed));
+            DependencyProperty.RegisterAttached("SelectionBinding", typeof(IList), typeof(MultiSelectorExtensions), new FrameworkPropertyMetadata(EmptyObjectArray, SelectionBinding_Changed));
 
-        [ContractVerification(false)] // Contracts get confused by dynamic variables.
+        private static readonly DependencyProperty SelectionSynchronizerProperty =
+            DependencyProperty.RegisterAttached("SelectionSynchronizer", typeof(SelectionSynchronizer), typeof(MultiSelectorExtensions));
+
         private static void SelectionBinding_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            Contract.Requires(d != null);
+            Contract.Requires(e != null);
+
             // The selector is the target of the binding, and the ViewModel property is the source.
+            var synchronizer = (SelectionSynchronizer)d.GetValue(SelectionSynchronizerProperty);
 
-            var selector = d as Selector;
-            if (selector == null)
-                return;
-
-            _selectionBindingIsUpdatingTarget = true;
-
-            try
+            if (synchronizer != null)
             {
-                // Simply remove and add again, so we don't need to track if we have already attached the event.
-                selector.SelectionChanged -= selector_SelectionChanged;
-                selector.SelectionChanged += selector_SelectionChanged;
-
-                // Updating this direction is a rare case, usually happens only once.
-                // Use a very simple approach to update the target - just clear the list and then add all selected again.
-                // Set SelectedIndex to clear the content; maybe listbox is in single selection mode, this will work always.
-                selector.SelectedIndex = -1;
-
-                var bindingSource = (IList)e.NewValue;
-
-                if (bindingSource == null)
+                if (synchronizer.IsUpdating)
                     return;
 
-                var bindingTarget = (dynamic)selector;
-
-                var dataGrid = selector as DataGrid;
-                if (dataGrid != null)
-                {
-                    dataGrid.CommitEdit();
-                }
-
-                if (bindingSource.Count == 1)
-                {
-                    var selectedItem = bindingSource[0];
-
-                    if (!selector.Items.Contains(selectedItem))
-                    {
-                        // The item is not present, e.g. because of filtering, and can't be selected at this time.
-                        bindingSource.Clear();
-                        return;
-                    }
-
-                    selector.SelectedItem = selectedItem;
-
-                    bindingTarget.ScrollIntoView(selectedItem);
-
-                    if (selector.IsKeyboardFocusWithin)
-                    {
-                        selector.BeginInvoke(() =>
-                        {
-                            var container = selector.ItemContainerGenerator.ContainerFromItem(selectedItem) as FrameworkElement;
-                            if (container == null)
-                                return;
-
-                            var child = container.VisualDescendantsAndSelf().FirstOrDefault(item => item.Focusable);
-                            if (child != null)
-                            {
-                                child.Focus();
-                            }
-                        });
-                    }
-                }
-                else
-                {
-                    var selectedItems = (IList)bindingTarget.SelectedItems;
-
-                    foreach (var item in bindingSource)
-                    {
-                        if (selector.Items.Contains(item))
-                        {
-                            selectedItems.Add(item);
-                        }
-                        else
-                        {
-                            // The item is not present, e.g. because of filtering, and can't be selected at this time.
-                            bindingSource.Remove(item);
-                        }
-                    }
-                }
+                synchronizer.Dispose();
             }
-            finally
+
+            d.SetValue(SelectionSynchronizerProperty, new SelectionSynchronizer((Selector)d, (IList)e.NewValue));
+        }
+
+        private static void CommitEdit(this Selector selector)
+        {
+            var dataGrid = selector as DataGrid;
+            if (dataGrid != null)
             {
-                _selectionBindingIsUpdatingTarget = false;
+                dataGrid.CommitEdit();
             }
         }
 
-        private static void selector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private static IList GetSelectedItems(this Selector selector)
         {
-            if (_selectionBindingIsUpdatingTarget)
-                return;
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<IList>() != null);
 
-            var selector = sender as DependencyObject;
+            var selectedItems = (IList)((dynamic)selector).SelectedItems;
+            Contract.Assume(selectedItems != null);
+            return selectedItems;
+        }
 
-            if (selector == null)
-                return;
+        private static void ScrollIntoView(this Selector selector, object selectedItem)
+        {
+            Contract.Requires(selector != null);
 
-            var itemList = selector.GetValue(SelectionBindingProperty) as IList;
+            ((dynamic)selector).ScrollIntoView(selectedItem);
+        }
 
-            if (itemList == null)
-                return;
+        private static void BeginSetFocus(this ItemsControl selector, object selectedItem)
+        {
+            Contract.Requires(selector != null);
 
-            if (e.RemovedItems != null)
+            selector.BeginInvoke(() =>
             {
-                itemList.RemoveRange(e.RemovedItems);
+                var container = selector.ItemContainerGenerator.ContainerFromItem(selectedItem) as FrameworkElement;
+                if (container == null)
+                    return;
+
+                var child = container.VisualDescendantsAndSelf().FirstOrDefault(item => item.Focusable);
+                if (child != null)
+                {
+                    child.Focus();
+                }
+            });
+        }
+
+        private static void ClearSourceSelection(this Selector selector)
+        {
+            var sourceSelection = selector.GetSelectionBinding();
+
+            if (sourceSelection.IsFixedSize || sourceSelection.IsReadOnly)
+            {
+                selector.SetSelectionBinding(EmptyObjectArray);
+            }
+            else
+            {
+                sourceSelection.Clear();
+            }
+        }
+
+        private static bool All(this IEnumerable items, Func<object, bool> condition)
+        {
+            Contract.Requires(items != null);
+
+            return Enumerable.All(items.Cast<object>(), condition);
+        }
+
+        private static void SynchronizeWithSource(this Selector selector, IList sourceSelection)
+        {
+            var selectedItems = selector.GetSelectedItems();
+
+            if ((selectedItems.Count == sourceSelection.Count) && sourceSelection.All(selectedItems.Contains))
+                return;
+
+            selector.CommitEdit();
+
+            // Clear the selection.
+            selector.SelectedIndex = -1;
+
+            if (sourceSelection.Count == 1)
+            {
+                selector.SelectSingleItem(sourceSelection);
+            }
+            else
+            {
+                selector.AddItemsToSelection(sourceSelection);
+            }
+        }
+
+        private static void AddItemsToSelection(this Selector selector, IList itemsToSelect)
+        {
+            var isSourceInvalid = false;
+            var selectedItems = selector.GetSelectedItems();
+
+            foreach (var item in itemsToSelect)
+            {
+                if (selector.Items.Contains(item))
+                {
+                    selectedItems.Add(item);
+                }
+                else
+                {
+                    // The item is not present, e.g. because of filtering, and can't be selected at this time.
+                    if (itemsToSelect.IsFixedSize || itemsToSelect.IsReadOnly)
+                    {
+                        isSourceInvalid = true;
+                    }
+                    else
+                    {
+                        itemsToSelect.Remove(item);
+                    }
+                }
             }
 
-            if (e.AddedItems != null)
+            if (isSourceInvalid)
             {
-                itemList.AddRange(e.AddedItems);
+                selector.SetSelectionBinding(ArrayList.Adapter(selector.GetSelectedItems()));
+            }
+        }
+
+        private static void SelectSingleItem(this Selector selector, IList sourceSelection)
+        {
+            Contract.Requires(selector != null);
+            Contract.Requires(sourceSelection != null);
+            Contract.Requires(sourceSelection.Count == 1);
+
+            // Special handling, maybe listbox is in single selection mode where we can't call selectedItems.Add().
+            var selectedItem = sourceSelection[0];
+
+            // The item is not present, e.g. because of filtering, and can't be selected at this time.
+            if (!selector.Items.Contains(selectedItem))
+            {
+                selector.ClearSourceSelection();
+            }
+            else
+            {
+                selector.SelectedItem = selectedItem;
+                selector.ScrollIntoView(selectedItem);
+
+                if (selector.IsKeyboardFocusWithin)
+                {
+                    selector.BeginSetFocus(selectedItem);
+                }
+            }
+        }
+
+        private sealed class SelectionSynchronizer : IDisposable
+        {
+            private readonly Selector _selector;
+            private readonly INotifyCollectionChanged _observableSourceSelection;
+
+            public SelectionSynchronizer(Selector selector, IList sourceSelection)
+            {
+                Contract.Requires(selector != null);
+
+                _selector = selector;
+                selector.SynchronizeWithSource(sourceSelection);
+
+                selector.SelectionChanged += Selector_SelectionChanged;
+
+                if (sourceSelection.IsFixedSize || sourceSelection.IsReadOnly)
+                    return;
+
+                _observableSourceSelection = sourceSelection as INotifyCollectionChanged;
+
+                if (_observableSourceSelection != null)
+                {
+                    _observableSourceSelection.CollectionChanged += SourceSelection_CollectionChanged;
+                }
+            }
+
+            internal bool IsUpdating
+            {
+                get;
+                private set;
+            }
+
+            private void SourceSelection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+            {
+                if (IsUpdating)
+                    return;
+
+                IsUpdating = true;
+
+                try
+                {
+                    var selectedItems = _selector.GetSelectedItems();
+
+                    switch (e.Action)
+                    {
+                        case NotifyCollectionChangedAction.Reset:
+                            _selector.SynchronizeWithSource((IList)sender);
+                            break;
+
+                        case NotifyCollectionChangedAction.Add:
+                        case NotifyCollectionChangedAction.Remove:
+                        case NotifyCollectionChangedAction.Replace:
+                            selectedItems.RemoveRange(e.OldItems ?? EmptyObjectArray);
+                            _selector.AddItemsToSelection(e.NewItems ?? EmptyObjectArray);
+                            break;
+                    }
+                }
+                finally
+                {
+                    IsUpdating = false;
+                }
+            }
+
+            private void Selector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+            {
+                if (IsUpdating)
+                    return;
+
+                IsUpdating = true;
+
+                try
+                {
+                    var sourceSelection = _selector.GetSelectionBinding();
+
+                    if (sourceSelection.IsFixedSize || sourceSelection.IsReadOnly)
+                    {
+                        _selector.SetSelectionBinding(ArrayList.Adapter(_selector.GetSelectedItems()));
+                    }
+                    else
+                    {
+                        sourceSelection.RemoveRange(e.RemovedItems ?? EmptyObjectArray);
+                        sourceSelection.AddRange(e.AddedItems ?? EmptyObjectArray);
+                    }
+                }
+                finally
+                {
+                    IsUpdating = false;
+                }
+            }
+
+            public void Dispose()
+            {
+                _selector.SelectionChanged -= Selector_SelectionChanged;
+
+                if (_observableSourceSelection != null)
+                {
+                    _observableSourceSelection.CollectionChanged -= SourceSelection_CollectionChanged;
+                }
+            }
+
+            [ContractInvariantMethod]
+            [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+            private void ObjectInvariant()
+            {
+                Contract.Invariant(_selector != null);
             }
         }
     }
