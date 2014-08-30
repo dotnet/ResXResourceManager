@@ -1,7 +1,6 @@
-﻿namespace tomenglertde.ResXManager.View
+﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
     using System.Globalization;
-
     using tomenglertde.ResXManager.View.Properties;
 
     public class LanguageHeader : ILanguageColumnHeader

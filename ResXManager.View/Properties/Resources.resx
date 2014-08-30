@@ -224,4 +224,19 @@
   <data name="NoCodeReferencesToolTip" xml:space="preserve">
     <value>No code references have been found by this algorithm. Nevertheless there might exist indirect references to this string.</value>
   </data>
+  <data name="HelpButtonToolTip" xml:space="preserve">
+    <value>Documentation</value>
+  </data>
+  <data name="ExportExcelAll" xml:space="preserve">
+    <value>Export all</value>
+  </data>
+  <data name="ExportExcelSelection" xml:space="preserve">
+    <value>Export selection</value>
+  </data>
+  <data name="ImportExcel" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="CommentColumnHeader" xml:space="preserve">
+    <value>Comment</value>
+  </data>
 </root>

@@ -1,34 +1,34 @@
 ﻿<Window x:Class="tomenglertde.ResXManager.MainWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:model="clr-namespace:tomenglertde.ResXManager.Model;assembly=ResXManager.Model"
-    xmlns:view="clr-namespace:tomenglertde.ResXManager.View;assembly=ResXManager.View"
-    xmlns:properties="clr-namespace:tomenglertde.ResXManager.Properties"
-    Title="ResX Resource Manager" Height="750" Width="1024" Icon="/ResXManager;component/ResourceManager.ico">
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:model="clr-namespace:tomenglertde.ResXManager.Model;assembly=ResXManager.Model"
+        xmlns:properties="clr-namespace:tomenglertde.ResXManager.Properties"
+        xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals;assembly=ResXManager.View"
+        Title="ResX Resource Manager" Height="750" Width="1024" Icon="/ResXManager;component/ResourceManager.ico">
   <Window.DataContext>
-    <model:ResourceManager/>
+    <model:ResourceManager />
   </Window.DataContext>
   <DockPanel>
     <DockPanel DockPanel.Dock="Top">
-      <StackPanel DockPanel.Dock ="Right" Orientation="Horizontal" Background="{x:Static SystemColors.ControlBrush}" ToolTip="{x:Static properties:Resources.SourceFiles_ToolTip}">
-        <TextBlock Text="{x:Static properties:Resources.SourceFiles}" VerticalAlignment="Center"/>
-        <TextBlock Text=" "/>
-        <TextBox Text="{Binding Path=SourceFiles, Source={x:Static properties:Settings.Default}}" Width="180" VerticalAlignment="Center"/>
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Background="{x:Static SystemColors.ControlBrush}" ToolTip="{x:Static properties:Resources.SourceFiles_ToolTip}">
+        <TextBlock Text="{x:Static properties:Resources.SourceFiles}" VerticalAlignment="Center" />
+        <TextBlock Text=" " />
+        <TextBox Text="{Binding Path=SourceFiles, Source={x:Static properties:Settings.Default}}" Width="180" VerticalAlignment="Center" />
       </StackPanel>
       <Menu>
         <MenuItem>
           <MenuItem.Header>
             <TextBlock Margin="3">
-            <Run Text="Directory:" TextBlock.FontWeight="Bold"/>
-            <Run Text="{Binding Path=Folder, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+              <Run Text="Directory:" TextBlock.FontWeight="Bold" />
+              <Run Text="{Binding Path=Folder, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" />
             </TextBlock>
           </MenuItem.Header>
-          <MenuItem Header="Browse" Click="Browse_Click"/>
+          <MenuItem Header="Browse" Click="Browse_Click" />
         </MenuItem>
       </Menu>
     </DockPanel>
 
-    <view:ResourceView NavigateClick="ResourceView_NavigateClick" BeginEditing="ResourceView_BeginEditing" ReloadRequested="ResourceView_ReloadRequested" />
+    <visuals:ResourceView NavigateClick="ResourceView_NavigateClick" BeginEditing="ResourceView_BeginEditing" ReloadRequested="ResourceView_ReloadRequested" />
 
   </DockPanel>
 </Window>

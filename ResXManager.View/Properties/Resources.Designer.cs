@@ -106,6 +106,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comment.
+        /// </summary>
+        public static string CommentColumnHeader {
+            get {
+                return ResourceManager.GetString("CommentColumnHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cut the selected rows?.
         /// </summary>
         public static string ConfirmCutItems {
@@ -230,6 +239,24 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export all.
+        /// </summary>
+        public static string ExportExcelAll {
+            get {
+                return ResourceManager.GetString("ExportExcelAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export selection.
+        /// </summary>
+        public static string ExportExcelSelection {
+            get {
+                return ResourceManager.GetString("ExportExcelSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The file &apos;{0}&apos; already exists. Do you want to overwrite it?.
         /// </summary>
         public static string FileExistsPrompt {
@@ -262,6 +289,24 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string GroupedViewToolTip {
             get {
                 return ResourceManager.GetString("GroupedViewToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Documentation.
+        /// </summary>
+        public static string HelpButtonToolTip {
+            get {
+                return ResourceManager.GetString("HelpButtonToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        public static string ImportExcel {
+            get {
+                return ResourceManager.GetString("ImportExcel", resourceCulture);
             }
         }
         

@@ -1,11 +1,10 @@
-﻿namespace tomenglertde.ResXManager.View
+﻿namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
-    using System.Collections;
-    using System.ComponentModel;
     using System.Globalization;
     using System.Windows.Controls;
     using System.Windows.Data;
+    using tomenglertde.ResXManager.View.ColumnHeaders;
 
     public class LanguageColumnFilterConverter : IValueConverter
     {

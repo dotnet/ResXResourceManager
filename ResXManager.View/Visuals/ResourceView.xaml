@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="tomenglertde.ResXManager.View.ResourceView"
+﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.ResourceView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="700" d:DataContext="{d:DesignInstance model:ResourceManager}"
@@ -7,19 +7,22 @@
              xmlns:windows="clr-namespace:System.Windows;assembly=PresentationFramework"
              xmlns:model="clr-namespace:tomenglertde.ResXManager.Model;assembly=ResXManager.Model"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
+             xmlns:columnHeaders="clr-namespace:tomenglertde.ResXManager.View.ColumnHeaders"
+             xmlns:tools="clr-namespace:tomenglertde.ResXManager.View.Tools"
              x:Name="LayoutRoot"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
              DataContextChanged="self_DataContextChanged">
   <UserControl.Resources>
 
-    <view:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter" />
-    <view:CultureToImageSourceConverter x:Key="CultureToImageSourceConverter" />
-    <view:CultureToImageConverter x:Key="CultureToImageConverter" />
-    <view:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Executing="DeleteCommandConverter_OnExecuting" />
-    <view:ConfirmedCommandConverter x:Key="CutCommandConverter" Executing="CutCommandConverter_OnExecuting" />
-    <view:LanguageColumnFilterConverter x:Key="LanguageColumnFilterConverter" />
-    <view:AddNewKeyCommandConverter x:Key="AddNewKeyCommandConverter" />
+    <converters:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter" />
+    <converters:CultureToImageSourceConverter x:Key="CultureToImageSourceConverter" />
+    <converters:CultureToImageConverter x:Key="CultureToImageConverter" />
+    <converters:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Executing="DeleteCommandConverter_OnExecuting" />
+    <converters:ConfirmedCommandConverter x:Key="CutCommandConverter" Executing="CutCommandConverter_OnExecuting" />
+    <converters:LanguageColumnFilterConverter x:Key="LanguageColumnFilterConverter" />
+    <converters:AddNewKeyCommandConverter x:Key="AddNewKeyCommandConverter" />
+    <converters:DataGridToSelectionScopeConverter x:Key="DataGridToSelectionScopeConverter"/>
 
     <Image x:Shared="False" x:Key="CodeReferencesImage" SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/references.png" />
 
@@ -89,7 +92,7 @@
                ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
                Margin="5" BorderThickness="0" SelectionMode="Extended"
                SelectionChanged="ListBox_SelectionChanged"
-               view:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}" >
+               tools:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}" >
         <ListBox.ContextMenu>
           <ContextMenu>
             <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand}">
@@ -259,9 +262,9 @@
                       <Path Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="Black" VerticalAlignment="Center" />
                     </StackPanel>
                   </MenuItem.Header>
-                  <MenuItem Header="Export all" Command="{Binding ExportExcelAllCommand}" />
-                  <MenuItem Header="Export selected" Command="{Binding ExportExcelSelectedCommand}" />
-                  <MenuItem Header="Import" Command="{Binding ImportExcelCommand}" />
+                  <MenuItem Header="{x:Static properties:Resources.ExportExcelAll}" Command="{Binding ExportExcelAllCommand}" />
+                  <MenuItem Header="{x:Static properties:Resources.ExportExcelSelection}" Command="{Binding ExportExcelSelectedCommand}" CommandParameter="{Binding ElementName=DataGrid, Converter={StaticResource DataGridToSelectionScopeConverter}}" />
+                  <MenuItem Header="{x:Static properties:Resources.ImportExcel}" Command="{Binding ImportExcelCommand}" />
                 </MenuItem>
               </Menu>
               <Separator />
@@ -269,7 +272,7 @@
                       Tag="http://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/like.png" />
               </Button>
-              <Button x:Name="HelpButton" ToolTip="Documentation"
+              <Button x:Name="HelpButton" ToolTip="{x:Static properties:Resources.HelpButtonToolTip}"
                       Tag="https://resxresourcemanager.codeplex.com/documentation">
                 <Grid Width="16" Height="16">
                   <TextBlock Text="?" FontWeight="Bold" FontSize="16"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -324,7 +327,7 @@
                   BeginningEdit="DataGrid_BeginningEdit" PreviewKeyDown="DataGrid_PreviewKeyDown"
                   CellEditEnding="DataGrid_CellEditEnding" CurrentCellChanged="DataGrid_CurrentCellChanged"
                   SelectedItem="{Binding SelectedEntry, Mode=TwoWay}"
-                  view:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
+                  tools:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
           <DataGrid.Resources>
 
             <ContextMenu x:Key="RowContextMenu">
@@ -374,7 +377,7 @@
               </Style.Triggers>
             </Style>
 
-            <DataTemplate DataType="{x:Type view:LanguageHeader}">
+            <DataTemplate DataType="{x:Type columnHeaders:LanguageHeader}">
               <DockPanel>
                 <Grid DockPanel.Dock="Left" Background="Transparent"
                       Style="{StaticResource NeutralLanguageImageContainerStyle}">
@@ -390,8 +393,8 @@
               </DockPanel>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type view:CommentHeader}">
-              <TextBlock><Run Text="Comment ("/><InlineUIContainer>
+            <DataTemplate DataType="{x:Type columnHeaders:CommentHeader}">
+              <TextBlock><Run Text="{x:Static properties:Resources.CommentColumnHeader}"/><Run Text=" ("/><InlineUIContainer>
                   <Grid>
                   <Image x:Name="image" Source="{Binding Path=Language, Converter={StaticResource CultureToImageSourceConverter}}" Stretch="None" Margin="1,2,1,-2"/>
                 </Grid></InlineUIContainer><Run Text=")"/>
@@ -437,7 +440,7 @@
               <Style.Triggers>
                 <MultiDataTrigger>
                   <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding Path=Column.Header.ColumnType, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static view:ColumnType.Language}"/>
+                    <Condition Binding="{Binding Path=Column.Header.ColumnType, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static columnHeaders:ColumnType.Language}"/>
                     <Condition Binding="{Binding Path=Content.Text, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value=""/>
                   </MultiDataTrigger.Conditions>
                   <MultiDataTrigger.Setters>
@@ -447,7 +450,7 @@
 
                 <MultiDataTrigger>
                   <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding Path=Column.Header.ColumnType, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static view:ColumnType.Language}"/>
+                    <Condition Binding="{Binding Path=Column.Header.ColumnType, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static columnHeaders:ColumnType.Language}"/>
                     <Condition Binding="{Binding Path=IsInvariant}" Value="True" />
                   </MultiDataTrigger.Conditions>
                   <MultiDataTrigger.Setters>

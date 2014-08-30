@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View
+﻿namespace tomenglertde.ResXManager.View.Controls
 {
     /// <summary>
     /// Interaction logic for CodeReferencesToolTip.xaml

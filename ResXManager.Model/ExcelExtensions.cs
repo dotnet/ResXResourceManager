@@ -11,7 +11,7 @@
 
     public static partial class ResourceEntityExtensions
     {
-        public static void ExportExcel(this ResourceManager resourceManager, string filePath, IEnumerable<ResourceEntity> selectedEntities)
+        public static void ExportExcel(this ResourceManager resourceManager, string filePath, IResourceScope scope)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(filePath != null);
@@ -20,7 +20,15 @@
             {
                 var workbookPart = package.AddWorkbookPart();
 
-                var entities = GetEntities(resourceManager, selectedEntities);
+                var entitiesQuery = GetEntities(resourceManager);
+
+                if (scope != null)
+                {
+                    var entitiesInScope = scope.Entries.Select(entry => entry.Owner).Distinct().ToArray();
+                    entitiesQuery = entitiesQuery.Where(entity => entitiesInScope.Contains(entity.ResourceEntity));
+                }
+
+                var entities = entitiesQuery.ToArray();
 
                 workbookPart.Workbook = new Workbook().AppendItem(entities.Aggregate(new Sheets(), (seed, item) => seed.AppendItem(item.CreateSheet())));
 
@@ -28,7 +36,7 @@
                 {
                     Contract.Assume(item != null);
 
-                    workbookPart.AddNewPart<WorksheetPart>(item.Id).Worksheet = new Worksheet().AppendItem(item.GetDataRows().Aggregate(new SheetData(), AppendRow));
+                    workbookPart.AddNewPart<WorksheetPart>(item.Id).Worksheet = new Worksheet().AppendItem(item.GetDataRows(scope).Aggregate(new SheetData(), AppendRow));
                 }
             }
         }
@@ -69,7 +77,7 @@
                 var workbook = workbookPart.Workbook;
                 IList<SharedStringItem> sharedStrings = workbookPart.GetSharedStrings();
 
-                var entities = GetEntities(resourceManager, null);
+                var entities = GetEntities(resourceManager).ToArray();
 
                 foreach (Sheet sheet in workbook.Sheets)
                 {
@@ -211,28 +219,44 @@
             return result;
         }
 
-        private static IEnumerable<string> GetLanguageColumnHeaders(string language)
+        private static IEnumerable<string> GetLanguageColumnHeaders(this ResourceLanguage language, IResourceScope scope)
         {
-            yield return CommentHeaderPrefix + language;
-            yield return language;
+            Contract.Requires(language != null);
+
+            var languageName = language.Name;
+
+            if ((scope == null) || scope.Comments.Contains(language.Culture))
+                yield return CommentHeaderPrefix + languageName;
+
+            if ((scope == null) || scope.Languages.Contains(language.Culture))
+                yield return languageName;
         }
 
-        private static IEnumerable<string> GetLanguageDataColumns(this ResourceTableEntry entry, string language)
+        private static IEnumerable<string> GetLanguageDataColumns(this ResourceTableEntry entry, ResourceLanguage language, IResourceScope scope)
         {
-            yield return entry.Comments[language];
-            yield return entry.Values[language];
+            Contract.Requires(entry != null);
+            Contract.Requires(language != null);
+
+            var languageName = language.Name;
+
+            if ((scope == null) || scope.Comments.Contains(language.Culture))
+                yield return entry.Comments[languageName];
+
+            if ((scope == null) || scope.Languages.Contains(language.Culture))
+                yield return entry.Values[languageName];
         }
 
         /// <summary>
         ///     Gets the text tables header line as an enumerable so we can use it with "Concat".
         /// </summary>
         /// <param name="entity">The entity.</param>
+        /// <param name="scope"></param>
         /// <returns>The header line.</returns>
-        public static IEnumerable<IEnumerable<string>> GetHeaderRows(this ResourceEntity entity)
+        public static IEnumerable<IEnumerable<string>> GetHeaderRows(this ResourceEntity entity, IResourceScope scope)
         {
             Contract.Requires(entity != null);
 
-            var languageColumns = entity.Languages.SelectMany(l => GetLanguageColumnHeaders(l.Name));
+            var languageColumns = entity.Languages.SelectMany(lang => lang.GetLanguageColumnHeaders(scope));
 
             yield return FixedColumnHeaders.Concat(languageColumns);
         }
@@ -241,12 +265,17 @@
         ///     Gets the text tables data lines.
         /// </summary>
         /// <param name="entity">The entity.</param>
+        /// <param name="scope"></param>
         /// <returns>The data lines.</returns>
-        public static IEnumerable<IEnumerable<string>> GetDataRows(this ResourceEntity entity)
+        public static IEnumerable<IEnumerable<string>> GetDataRows(this ResourceEntity entity, IResourceScope scope)
         {
             Contract.Requires(entity != null);
 
-            return entity.Entries.Select(entity.GetDataRow);
+            var entries = (scope != null) 
+                ? scope.Entries.Where(entry => entry.Owner == entity) 
+                : entity.Entries;
+
+            return entries.Select(entry => entity.GetDataRow(entry, scope));
         }
 
         /// <summary>
@@ -254,13 +283,14 @@
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <param name="entry">The entry for which to generate the line.</param>
+        /// <param name="scope"></param>
         /// <returns>The columns of this line.</returns>
-        private static IEnumerable<string> GetDataRow(this ResourceEntity entity, ResourceTableEntry entry)
+        private static IEnumerable<string> GetDataRow(this ResourceEntity entity, ResourceTableEntry entry, IResourceScope scope)
         {
             Contract.Requires(entity != null);
             Contract.Requires(entry != null);
 
-            return (new[] { entry.Key }).Concat(entity.Languages.SelectMany(l => entry.GetLanguageDataColumns(l.Name)));
+            return (new[] { entry.Key }).Concat(entity.Languages.SelectMany(l => entry.GetLanguageDataColumns(l, scope)));
         }
 
         public static TContainer AppendItem<TContainer, TItem>(this TContainer container, TItem item)
@@ -271,19 +301,17 @@
             return container;
         }
 
-        private static ICollection<Entity> GetEntities(ResourceManager resourceManager, IEnumerable<ResourceEntity> selectedEntities)
+        private static IEnumerable<Entity> GetEntities(ResourceManager resourceManager)
         {
             Contract.Requires(resourceManager != null);
-            Contract.Ensures(Contract.Result<ICollection<Entity>>() != null);
+            Contract.Ensures(Contract.Result<IEnumerable<Entity>>() != null);
 
             var uniqueNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             return resourceManager.ResourceEntities
                 .OrderBy(entity => entity.ProjectName)
                 .ThenBy(entity => entity.BaseName)
-                .Select((entity, index) => new Entity(entity, index, uniqueNames))
-                .Where(entity => (selectedEntities == null) || selectedEntities.Contains(entity.ResourceEntity))
-                .ToArray();
+                .Select((entity, index) => new Entity(entity, index, uniqueNames));
         }
 
         class Entity
@@ -360,7 +388,6 @@
                 }
             }
 
-
             public string Id
             {
                 get;
@@ -377,11 +404,11 @@
                 };
             }
 
-            public IEnumerable<IEnumerable<string>> GetDataRows()
+            public IEnumerable<IEnumerable<string>> GetDataRows(IResourceScope scope)
             {
                 Contract.Ensures(Contract.Result<IEnumerable<IEnumerable<string>>>() != null);
 
-                return _resourceEntity.GetHeaderRows().Concat(_resourceEntity.GetDataRows());
+                return _resourceEntity.GetHeaderRows(scope).Concat(_resourceEntity.GetDataRows(scope));
             }
 
             [ContractInvariantMethod]

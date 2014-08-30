@@ -16,7 +16,7 @@
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
     using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View;
+    using tomenglertde.ResXManager.View.Visuals;
     using VSLangProj;
     using Process = System.Diagnostics.Process;
 

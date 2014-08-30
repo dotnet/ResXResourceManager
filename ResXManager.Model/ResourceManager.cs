@@ -161,7 +161,6 @@
             get
             {
                 return _entityFilter;
-
             }
             set
             {
@@ -219,7 +218,9 @@
         {
             get
             {
-                return new DelegateCommand(() => _selectedEntities.Any(), () => ExportExcel(_selectedEntities));
+                return new DelegateCommand<IResourceScope>(
+                    scope => scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()), 
+                    ExportExcel);
             }
         }
 
@@ -448,7 +449,7 @@
             items.ForEach(item => item.IsInvariant = newValue);
         }
 
-        private void ExportExcel(IEnumerable<ResourceEntity> selectedItems)
+        private void ExportExcel(IResourceScope scope)
         {
             var dlg = new SaveFileDialog
             {
@@ -464,7 +465,7 @@
 
             try
             {
-                this.ExportExcel(dlg.FileName, selectedItems);
+                this.ExportExcel(dlg.FileName, scope);
             }
             catch (Exception ex)
             {

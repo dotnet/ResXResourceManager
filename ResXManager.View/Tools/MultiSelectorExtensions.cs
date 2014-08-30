@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View
+﻿namespace tomenglertde.ResXManager.View.Tools
 {
     using System;
     using System.Collections;
@@ -69,7 +69,6 @@
         private static void SelectionBinding_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Contract.Requires(d != null);
-            Contract.Requires(e != null);
 
             // The selector is the target of the binding, and the ViewModel property is the source.
             var synchronizer = (SelectionSynchronizer)d.GetValue(SelectionSynchronizerProperty);
@@ -131,6 +130,8 @@
 
         private static void ClearSourceSelection(this Selector selector)
         {
+            Contract.Requires(selector != null);
+
             var sourceSelection = selector.GetSelectionBinding();
 
             if (sourceSelection.IsFixedSize || sourceSelection.IsReadOnly)
@@ -146,12 +147,16 @@
         private static bool All(this IEnumerable items, Func<object, bool> condition)
         {
             Contract.Requires(items != null);
+            Contract.Requires(condition != null);
 
             return Enumerable.All(items.Cast<object>(), condition);
         }
 
         private static void SynchronizeWithSource(this Selector selector, IList sourceSelection)
         {
+            Contract.Requires(selector != null);
+            Contract.Requires(sourceSelection != null);
+
             var selectedItems = selector.GetSelectedItems();
 
             if ((selectedItems.Count == sourceSelection.Count) && sourceSelection.All(selectedItems.Contains))
@@ -174,6 +179,9 @@
 
         private static void AddItemsToSelection(this Selector selector, IList itemsToSelect)
         {
+            Contract.Requires(selector != null);
+            Contract.Requires(itemsToSelect != null);
+
             var isSourceInvalid = false;
             var selectedItems = selector.GetSelectedItems();
 
@@ -237,6 +245,7 @@
             public SelectionSynchronizer(Selector selector, IList sourceSelection)
             {
                 Contract.Requires(selector != null);
+                Contract.Requires(sourceSelection != null);
 
                 _selector = selector;
                 selector.SynchronizeWithSource(sourceSelection);

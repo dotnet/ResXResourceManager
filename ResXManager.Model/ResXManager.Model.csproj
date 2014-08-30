@@ -157,6 +157,7 @@
     <Compile Include="PropertySupport.cs" />
     <Compile Include="ResourceEntityExtensions.cs" />
     <Compile Include="ResourceManagerExtensions.cs" />
+    <Compile Include="IResourceScope.cs" />
     <Compile Include="ResourceTableEntry.cs" />
     <Compile Include="ResourceEntity.cs" />
     <Compile Include="ResourceLanguage.cs" />

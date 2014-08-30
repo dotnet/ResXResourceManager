@@ -1,4 +1,4 @@
-namespace tomenglertde.ResXManager.View
+namespace tomenglertde.ResXManager.View.Tools
 {
     using System;
     using System.Collections.Generic;

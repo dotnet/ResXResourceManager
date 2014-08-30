@@ -1,8 +1,9 @@
-﻿namespace tomenglertde.ResXManager.View
+﻿namespace tomenglertde.ResXManager.View.Controls
 {
     using System;
     using System.Diagnostics.Contracts;
     using System.Windows;
+    using tomenglertde.ResXManager.View.Tools;
 
     /// <summary>
     /// Input box shows a prompt to enter a string.

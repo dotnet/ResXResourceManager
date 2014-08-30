@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View
+﻿namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
     using System.ComponentModel;

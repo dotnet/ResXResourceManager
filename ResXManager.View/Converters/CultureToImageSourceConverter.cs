@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View
+﻿namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
     using System.Diagnostics.Contracts;
@@ -7,7 +7,6 @@
     using System.Windows.Data;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-
     using tomenglertde.ResXManager.View.Properties;
 
     public class CultureToImageSourceConverter : IValueConverter

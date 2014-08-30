@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View
+﻿namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
     using System.Diagnostics.Contracts;
@@ -7,6 +7,8 @@
     using System.Windows;
     using System.Windows.Data;
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.Controls;
+    using tomenglertde.ResXManager.View.Visuals;
 
     public class AddNewKeyCommandConverter : IValueConverter
     {

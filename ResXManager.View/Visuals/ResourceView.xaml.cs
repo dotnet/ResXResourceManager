@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View
+﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System;
     using System.Collections.Generic;
@@ -15,7 +15,10 @@
     using System.Windows.Markup;
     using DataGridExtensions;
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.ColumnHeaders;
+    using tomenglertde.ResXManager.View.Controls;
     using tomenglertde.ResXManager.View.Properties;
+    using tomenglertde.ResXManager.View.Tools;
 
     /// <summary>
     /// Interaction logic for ResourceView.xaml
@@ -38,6 +41,8 @@
             }
 
             InitializeComponent();
+
+            BindingOperations.SetBinding(this, EntityFilterProperty, new Binding("DataContext.EntityFilter") { Source = this });
         }
 
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing
@@ -104,7 +109,6 @@
             {
                 oldValue.LanguageChanging -= ResourceManager_LanguageChanging;
                 oldValue.LanguageChanged -= ResourceManager_LanguageChanged;
-                BindingOperations.ClearBinding(this, EntityFilterProperty);
             }
 
             var newValue = e.NewValue as ResourceManager;
@@ -113,7 +117,6 @@
                 newValue.LanguageChanging += ResourceManager_LanguageChanging;
                 newValue.LanguageChanged += ResourceManager_LanguageChanged;
                 newValue.EntityFilter = Settings.Default.ResourceFilter;
-                BindingOperations.SetBinding(this, EntityFilterProperty, new Binding("EntityFilter") { Source = newValue });
             }
         }
 
@@ -275,6 +278,9 @@
             column.EnableMultilineEditing();
             column.EnableSpellchecker(language);
 
+            DependencyPropertyDescriptor.FromProperty(DataGridColumn.VisibilityProperty, typeof(DataGridColumn))
+                .AddValueChanged(column, DataGrid_ColumnVisibilityChanged);
+
             columns.Add(column);
 
             if (language == null)
@@ -403,19 +409,40 @@
 
             if (button.IsChecked.GetValueOrDefault())
             {
-                var languageCount = Languages.Count();
-                DataGrid.SetIsAutoFilterEnabled(false);
-                DataGrid.Items.Filter = row =>
-                {
-                    var entry = (ResourceTableEntry)row;
-                    return !entry.IsInvariant && ((entry.Values.Keys.Count() < languageCount) || entry.Values.Values.Any(string.IsNullOrEmpty));
-                };
+                UpdateErrorsOnlyFilter();
             }
             else
             {
                 DataGrid.Items.Filter = null;
                 DataGrid.SetIsAutoFilterEnabled(true);
             }
+        }
+
+        private void DataGrid_ColumnVisibilityChanged(object source, EventArgs e)
+        {
+            if (ErrorsOnlyFilterButton.IsChecked.GetValueOrDefault())
+            {
+                this.BeginInvoke(UpdateErrorsOnlyFilter);
+            }
+        }
+
+        private void UpdateErrorsOnlyFilter()
+        {
+            var visibleLanguageKeys = DataGrid.Columns
+                .Where(column => column.Visibility == Visibility.Visible)
+                .Select(column => column.Header)
+                .OfType<LanguageHeader>()
+                .Select(header => header.Language.ToLanguageKey())
+                .ToArray();
+
+
+            DataGrid.SetIsAutoFilterEnabled(false);
+            DataGrid.Items.Filter = row =>
+            {
+                var entry = (ResourceTableEntry) row;
+                var values = visibleLanguageKeys.Select(key => entry.Values[key]);
+                return !entry.IsInvariant && values.Any(string.IsNullOrEmpty);
+            };
         }
 
         private void DataGrid_CurrentCellChanged(object sender, EventArgs e)
