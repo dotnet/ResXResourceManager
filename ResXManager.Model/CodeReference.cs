@@ -196,8 +196,8 @@
             if ((middle == ".") && !right.StartsWith(".", StringComparison.Ordinal))
                 return true;
 
-            // C++: like C#, but -> instead of .
-            if ((middle == "->") && !right.StartsWith("->", StringComparison.Ordinal))
+            // C++: like C#, but :: instead of .
+            if ((middle == "::") && !right.StartsWith("::", StringComparison.Ordinal) && !right.StartsWith("->", StringComparison.Ordinal))
                 return true;
 
             // ASP: <%$ Resources: Class, Key %>
