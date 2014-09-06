@@ -172,7 +172,7 @@
         /// Determines whether this is a valid declaration where the position of the class name is before the key.
         /// </summary>
         /// <param name="left">The left text segment.</param>
-        /// <param name="middle">The middle text segemnt.</param>
+        /// <param name="middle">The middle text segment.</param>
         /// <param name="right">The right text segment.</param>
         /// <returns>
         /// True if this is a valid declaration where the position of the class name is before the key.
