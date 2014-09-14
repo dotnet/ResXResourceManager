@@ -129,6 +129,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Interactivity" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
@@ -140,6 +141,8 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
+    <Compile Include="Behaviors\PopupFocusManagerBehavior.cs" />
+    <Compile Include="Behaviors\ZoomFontSizeOnMouseWheelBehavior.cs" />
     <Compile Include="Converters\AddNewKeyCommandConverter.cs" />
     <Compile Include="Visuals\CodeReferencesToolTip.xaml.cs">
       <DependentUpon>CodeReferencesToolTip.xaml</DependentUpon>

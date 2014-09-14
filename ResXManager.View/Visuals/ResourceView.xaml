@@ -10,6 +10,8 @@
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:columnHeaders="clr-namespace:tomenglertde.ResXManager.View.ColumnHeaders"
              xmlns:tools="clr-namespace:tomenglertde.ResXManager.View.Tools"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:tomenglertde.ResXManager.View.Behaviors"
              x:Name="LayoutRoot"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
              DataContextChanged="self_DataContextChanged">
@@ -282,11 +284,12 @@
           </ToolBarTray>
           <Popup IsOpen="{Binding Path=IsChecked, ElementName=ColumnChooserToggleButton, Mode=OneWay}"
                  StaysOpen="False"
-                 Placement="Bottom" PlacementTarget="{Binding ElementName=ColumnChooserToggleButton}"
-                 IsKeyboardFocusWithinChanged="ColumnChooserPopup_IsKeyboardFocusWithinChanged"
-                 Opened="ColumnChooserPopup_Opened" KeyDown="ColumnChooserPopup_KeyDown">
+                 Placement="Bottom" PlacementTarget="{Binding ElementName=ColumnChooserToggleButton}">
+            <i:Interaction.Behaviors>
+              <behaviors:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=ColumnChooserToggleButton}"/>
+            </i:Interaction.Behaviors>
             <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-              <ListBox x:Name="ColumnChooserListBox" ItemsSource="{Binding Columns, ElementName=DataGrid, Converter={StaticResource LanguageColumnFilterConverter} }"
+              <ListBox ItemsSource="{Binding Columns, ElementName=DataGrid, Converter={StaticResource LanguageColumnFilterConverter} }"
                        SelectionMode="Multiple" KeyboardNavigation.TabNavigation="Once">
                 <ListBox.ItemTemplate>
                   <DataTemplate DataType="DataGridColumn">
@@ -476,6 +479,10 @@
               </Style.Triggers>
             </Style>
           </DataGrid.Style>
+          
+          <i:Interaction.Behaviors>
+            <behaviors:ZoomFontSizeOnMouseWheelBehavior/>
+          </i:Interaction.Behaviors>
         </DataGrid>
       </Grid>
     </DockPanel>

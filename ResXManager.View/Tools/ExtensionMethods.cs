@@ -4,6 +4,7 @@ namespace tomenglertde.ResXManager.View.Tools
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
@@ -114,17 +115,107 @@ namespace tomenglertde.ResXManager.View.Tools
             }
         }
 
-        public static IEnumerable<T> VisualDescendantsAndSelf<T>(this T item) where T : DependencyObject
+        public static IEnumerable<T> VisualDescendantsAndSelf<T>(this DependencyObject item) where T : DependencyObject
         {
             Contract.Requires(item != null);
             Contract.Ensures(Contract.Result<IEnumerable<T>>() != null);
 
-            yield return item;
+            var target = item as T;
+            if (target != null)
+                yield return target;
 
             foreach (var x in item.VisualDescendants<T>())
             {
                 yield return x;
             }
         }
+
+        /// <summary>
+        /// Returns an enumeration of elements that contain this element, and the ancestors of this element.
+        /// </summary>
+        /// <param name="self">The starting element.</param>
+        /// <returns>The ancestor list.</returns>
+        public static IEnumerable<DependencyObject> AncestorsAndSelf(this DependencyObject self)
+        {
+            Contract.Requires(self != null);
+            Contract.Ensures(Contract.Result<IEnumerable<DependencyObject>>() != null);
+
+            while (self != null)
+            {
+                yield return self;
+                self = LogicalTreeHelper.GetParent(self) ?? VisualTreeHelper.GetParent(self);
+            }
+        }
+
+        /// <summary>
+        /// Returns an enumeration of the ancestor elements of this element.
+        /// </summary>
+        /// <param name="self">The starting element.</param>
+        /// <returns>The ancestor list.</returns>
+        public static IEnumerable<DependencyObject> Ancestors(this DependencyObject self)
+        {
+            Contract.Requires(self != null);
+            Contract.Ensures(Contract.Result<IEnumerable<DependencyObject>>() != null);
+
+            return self.AncestorsAndSelf().Skip(1);
+        }
+
+        /// <summary>
+        /// Returns the first element in the ancestor list that implements the type of the type parameter.
+        /// </summary>
+        /// <typeparam name="T">The type of element to return.</typeparam>
+        /// <param name="self">The starting element.</param>
+        /// <returns>The first element matching the criteria, or null if no element was found.</returns>
+        public static T TryFindAncestorOrSelf<T>(this DependencyObject self) where T : DependencyObject
+        {
+            Contract.Requires(self != null);
+
+            return self.AncestorsAndSelf().OfType<T>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Returns the first element in the ancestor list that implements the type of the type parameter.
+        /// </summary>
+        /// <typeparam name="T">The type of element to return.</typeparam>
+        /// <param name="self">The starting element.</param>
+        /// <param name="match">The predicate to match.</param>
+        /// <returns>The first element matching the criteria, or null if no element was found.</returns>
+        public static T TryFindAncestorOrSelf<T>(this DependencyObject self, Func<T, bool> match) where T : DependencyObject
+        {
+            Contract.Requires(self != null);
+            Contract.Requires(match != null);
+
+            return self.AncestorsAndSelf().OfType<T>().FirstOrDefault(match);
+        }
+
+        /// <summary>
+        /// Returns the first element in the ancestor list that implements the type of the type parameter.
+        /// </summary>
+        /// <typeparam name="T">The type of element to return.</typeparam>
+        /// <param name="self">The starting element.</param>
+        /// <returns>The first element matching the criteria, or null if no element was found.</returns>
+        public static T TryFindAncestor<T>(this DependencyObject self) where T : DependencyObject
+        {
+            Contract.Requires(self != null);
+
+            return self.Ancestors().OfType<T>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Returns the first element in the ancestor list that implements the type of the type parameter.
+        /// </summary>
+        /// <typeparam name="T">The type of element to return.</typeparam>
+        /// <param name="self">The starting element.</param>
+        /// <param name="match">The predicate to match.</param>
+        /// <returns>The first element matching the criteria, or null if no element was found.</returns>
+        public static T TryFindAncestor<T>(this DependencyObject self, Func<T, bool> match) where T : DependencyObject
+        {
+            Contract.Requires(self != null);
+            Contract.Requires(match != null);
+
+            return self.Ancestors().OfType<T>().FirstOrDefault(match);
+        }
+
+
     }
 }

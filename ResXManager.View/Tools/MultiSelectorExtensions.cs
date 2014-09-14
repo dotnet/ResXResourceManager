@@ -120,7 +120,7 @@
                 if (container == null)
                     return;
 
-                var child = container.VisualDescendantsAndSelf().FirstOrDefault(item => item.Focusable);
+                var child = container.VisualDescendantsAndSelf<UIElement>().FirstOrDefault(item => item.Focusable);
                 if (child != null)
                 {
                     child.Focus();

@@ -337,31 +337,6 @@
             ToolBar.IsEnabled = true;
         }
 
-        private void ColumnChooserPopup_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (e.NewValue.Equals(false))
-            {
-                ColumnChooserToggleButton.IsChecked = false;
-            }
-        }
-
-        private void ColumnChooserPopup_Opened(object sender, EventArgs e)
-        {
-            Dispatcher.BeginInvoke(new Action(() => ColumnChooserListBox.Focus()));
-        }
-
-        private void ColumnChooserPopup_KeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.Key)
-            {
-                case Key.Escape:
-                case Key.Enter:
-                case Key.Tab:
-                    ColumnChooserToggleButton.Focus();
-                    break;
-            }
-        }
-
         private void AddLanguage_Click(object sender, RoutedEventArgs e)
         {
             var inputBox = new InputBox
@@ -439,7 +414,7 @@
             DataGrid.SetIsAutoFilterEnabled(false);
             DataGrid.Items.Filter = row =>
             {
-                var entry = (ResourceTableEntry) row;
+                var entry = (ResourceTableEntry)row;
                 var values = visibleLanguageKeys.Select(key => entry.Values[key]);
                 return !entry.IsInvariant && values.Any(string.IsNullOrEmpty);
             };
