@@ -6,8 +6,9 @@
 
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
+    using tomenglertde.ResXManager.Model;
 
-    internal class OutputWindowTracer
+    internal class OutputWindowTracer : ITracer
     {
         private const string NewLine = "\r\n";
         private readonly IServiceProvider _serviceProvider;

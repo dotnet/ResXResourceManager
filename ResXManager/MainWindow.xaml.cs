@@ -19,7 +19,7 @@
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     [ContractVerification(false)] // Too many warnings from generated code.
-    public partial class MainWindow
+    public partial class MainWindow : ITracer
     {
         public MainWindow()
         {
@@ -96,7 +96,7 @@
 
             if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
             {
-                CodeReference.BeginFind(ViewModel.ResourceEntities, sourceFiles);
+                CodeReference.BeginFind(ViewModel.ResourceEntities, sourceFiles, this);
             }
         }
 
@@ -201,6 +201,16 @@
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        public void TraceError(string value)
+        {
+            Trace.TraceError(value);
+        }
+
+        public void WriteLine(string value)
+        {
+            Trace.TraceInformation(value);
         }
     }
 }

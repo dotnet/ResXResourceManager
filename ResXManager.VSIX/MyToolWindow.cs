@@ -384,7 +384,7 @@
 
             if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
             {
-                CodeReference.BeginFind(_resourceManager.ResourceEntities, projectFiles);
+                CodeReference.BeginFind(_resourceManager.ResourceEntities, projectFiles, _trace);
             }
         }
 

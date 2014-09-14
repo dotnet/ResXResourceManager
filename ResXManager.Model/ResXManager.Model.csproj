@@ -140,6 +140,7 @@
     <Compile Include="ExcelRange.cs" />
     <Compile Include="CodeReference.cs" />
     <Compile Include="GlobalExtensions.cs" />
+    <Compile Include="ITracer.cs" />
     <Compile Include="LanguageEventArgs.cs" />
     <Compile Include="ListCollectionViewListAdapter.cs" />
     <Compile Include="NullCommand.cs" />

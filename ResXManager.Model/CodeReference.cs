@@ -40,7 +40,6 @@
             {
                 LineSegments = line.GetSegments(match.BaseNameRange.Start, match.BaseNameRange.End, match.KeyNameRange.Start, match.KeyNameRange.End);
                 IsValid = IsValidClassValueDeclaration(LineSegments.GetTrimmedSegment(0), LineSegments.GetTrimmedSegment(2), LineSegments.GetTrimmedSegment(4));
-
             }
             else
             {
@@ -67,7 +66,7 @@
             _backgroundThread = null;
         }
 
-        public static void BeginFind(IEnumerable<ResourceEntity> resourceEntities, IEnumerable<ProjectFile> allSourceFiles)
+        public static void BeginFind(IEnumerable<ResourceEntity> resourceEntities, IEnumerable<ProjectFile> allSourceFiles, ITracer tracer)
         {
             Contract.Requires(resourceEntities != null);
             Contract.Requires(allSourceFiles != null);
@@ -77,11 +76,11 @@
             var sourceFiles = allSourceFiles.Where(item => !item.IsResourceFile() && !item.IsDesignerFile()).ToArray();
             var resourceTableEntries = resourceEntities.SelectMany(entity => entity.Entries).ToArray();
 
-            _backgroundThread = new Thread(() => FindCodeReferences(sourceFiles, resourceTableEntries)) { IsBackground = true, Priority = ThreadPriority.Lowest };
+            _backgroundThread = new Thread(() => FindCodeReferences(sourceFiles, resourceTableEntries, tracer)) { IsBackground = true, Priority = ThreadPriority.Lowest };
             _backgroundThread.Start();
         }
 
-        public static void FindCodeReferences(IEnumerable<ProjectFile> projectFiles, IList<ResourceTableEntry> resourceTableEntries)
+        public static void FindCodeReferences(IEnumerable<ProjectFile> projectFiles, IList<ResourceTableEntry> resourceTableEntries, ITracer tracer)
         {
             Contract.Requires(projectFiles != null);
             Contract.Requires(resourceTableEntries != null);
@@ -96,22 +95,22 @@
                 var sourceFiles = projectFiles.Select(file => new FileInfo(file, file.ReadAllLines())).ToArray();
                 var entriesByBaseName = resourceTableEntries.GroupBy(entry => entry.Owner.BaseName);
 
-                foreach (var entryiesGroup in entriesByBaseName.AsParallel())
+                foreach (var entriesGroup in entriesByBaseName.AsParallel())
                 {
-                    var baseName = entryiesGroup.Key;
-                    var tableEntries = entryiesGroup.ToArray();
+                    var baseName = entriesGroup.Key;
+                    var tableEntries = entriesGroup.ToArray();
 
                     foreach (var sourceFile in sourceFiles)
                     {
                         Contract.Assume(sourceFile != null);
-                        FindCodeReferences(sourceFile, baseName, tableEntries);
+                        FindCodeReferences(sourceFile, baseName, tableEntries, tracer);
                     }
                 }
 
                 foreach (var sourceFile in sourceFiles.Where(file => file.FileKind != FileKind.Undefined))
                 {
                     Contract.Assume(sourceFile != null);
-                    FindCodeReferences(sourceFile, @"StringResourceKey", resourceTableEntries);
+                    FindCodeReferences(sourceFile, @"StringResourceKey", resourceTableEntries, tracer);
                 }
 
                 foreach (var entry in resourceTableEntries.Where(entry => entry.CodeReferences == null))
@@ -124,47 +123,61 @@
             }
         }
 
-        private static void FindCodeReferences(FileInfo source, string baseName, IList<ResourceTableEntry> entries)
+        private static void FindCodeReferences(FileInfo source, string baseName, IList<ResourceTableEntry> entries, ITracer tracer)
         {
             Contract.Requires(source != null);
             Contract.Requires(baseName != null);
             Contract.Requires(entries != null);
 
-            var lineNumber = 1;
-
-            var projectFile = source.ProjectFile;
-
-            var fileKind = source.FileKind;
-
-            var stringComparison = (fileKind == FileKind.VisualBasic) ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-
-            foreach (var line in source.Lines)
+            try
             {
-                Contract.Assume(line != null);
+                var lineNumber = 1;
 
-                if (line.IsCommentLine(fileKind))
-                    continue;
+                var projectFile = source.ProjectFile;
 
-                var baseNameIndexes = line.IndexesOfWords(baseName, stringComparison).ToArray();
-                if (baseNameIndexes.Length > 0)
+                var fileKind = source.FileKind;
+
+                var stringComparison = (fileKind == FileKind.VisualBasic) ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
+                foreach (var line in source.Lines)
                 {
-                    foreach (var entry in entries)
+                    Contract.Assume(line != null);
+
+                    if (line.IsCommentLine(fileKind))
+                        continue;
+
+                    var baseNameIndexes = line.IndexesOfWords(baseName, stringComparison).ToArray();
+                    if (baseNameIndexes.Length > 0)
                     {
-                        var keyNameIndexes = line.IndexesOfWords(entry.Key, stringComparison).ToArray();
-                        if (keyNameIndexes.Length > 0)
+                        foreach (var entry in entries)
                         {
-                            var codeReference = new CodeReference(projectFile, lineNumber, line, baseNameIndexes, baseName.Length, keyNameIndexes, entry.Key.Length);
+                            var keyNameIndexes = line.IndexesOfWords(entry.Key, stringComparison).ToArray();
+                            if (keyNameIndexes.Length > 0)
+                            {
+                                try
+                                {
+                                    var codeReference = new CodeReference(projectFile, lineNumber, line, baseNameIndexes, baseName.Length, keyNameIndexes, entry.Key.Length);
 
-                            if (!codeReference.IsValid)
-                                continue;
+                                    if (!codeReference.IsValid)
+                                        continue;
 
-                            var codeReferences = entry.CodeReferences ?? (entry.CodeReferences = new ObservableCollection<CodeReference>());
-                            codeReferences.Add(codeReference);
+                                    var codeReferences = entry.CodeReferences ?? (entry.CodeReferences = new ObservableCollection<CodeReference>());
+                                    codeReferences.Add(codeReference);
+                                }
+                                catch (Exception ex) // Should not happen, but was reported by someone.
+                                {
+                                    tracer.TraceError(string.Format("Error detecting code reference in file {0}, line {1} for {2}.{3}\n{4}", projectFile.FilePath, lineNumber, baseName, entry.Key, ex));
+                                }
+                            }
                         }
                     }
-                }
 
-                lineNumber += 1;
+                    lineNumber += 1;
+                }
+            }
+            catch (Exception ex) // Should not happen, but was reported by someone.
+            {
+                tracer.TraceError(string.Format("Error detecting code reference in file {0} for {1}\n{2}", source.ProjectFile.FilePath, baseName, ex));
             }
         }
 
@@ -333,13 +346,18 @@
             return (segments[index] ?? String.Empty).Trim();
         }
 
-        [ContractVerification(false)]
         public static IList<string> GetSegments(this string line, int x0, int x1, int x2, int x3)
         {
+            Contract.Requires(line != null);
+            Contract.Requires(0 <= x0);
+            Contract.Requires(x0 <= x1);
+            Contract.Requires(x1 <= x2);
+            Contract.Requires(x2 <= x3);
+            Contract.Requires(x3 <= line.Length);
+
             Contract.Ensures(Contract.Result<IList<string>>() != null);
             Contract.Ensures(Contract.Result<IList<string>>().Count == 5);
             Contract.Ensures(Contract.Result<IList<string>>().All(x => x != null));
-
 
             return new[]
             {
@@ -368,7 +386,7 @@
 
                 var endIndex = startIndex + word.Length;
 
-                if ((startIndex <= 0) || IsNonWordChar(line[startIndex - 1]))
+                if ((startIndex == 0) || IsNonWordChar(line[startIndex - 1]))
                 {
                     if ((endIndex >= line.Length) || IsNonWordChar(line[endIndex]))
                     {
