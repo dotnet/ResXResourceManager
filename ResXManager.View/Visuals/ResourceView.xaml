@@ -425,7 +425,10 @@
 
           <DataGrid.ItemsPanel>
             <ItemsPanelTemplate>
-              <VirtualizingStackPanel ContextMenu="{StaticResource RowContextMenu}" DataContext="{Binding Path=DataContext, ElementName=DataGrid}" >
+              <VirtualizingStackPanel 
+                ContextMenu="{StaticResource RowContextMenu}" 
+                DataContext="{Binding Path=DataContext, ElementName=DataGrid}" 
+                TextElement.FontSize="{Binding Path=TextFontSize, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" >
                 <i:Interaction.Behaviors>
                   <behaviors:ZoomFontSizeOnMouseWheelBehavior />
                 </i:Interaction.Behaviors>

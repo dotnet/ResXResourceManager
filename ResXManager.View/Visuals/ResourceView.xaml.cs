@@ -77,6 +77,14 @@
         private static readonly DependencyProperty EntityFilterProperty =
             DependencyProperty.Register("EntityFilter", typeof(string), typeof(ResourceView), new FrameworkPropertyMetadata(null, (sender, e) => Settings.Default.ResourceFilter = (string)e.NewValue));
 
+        public double TextFontSize
+        {
+            get { return (double)GetValue(TextFontSizeProperty); }
+            set { SetValue(TextFontSizeProperty, value); }
+        }
+        public static readonly DependencyProperty TextFontSizeProperty =
+            DependencyProperty.Register("TextFontSize", typeof (double), typeof (ResourceView), new UIPropertyMetadata(12.0));
+
         private ResourceManager ViewModel
         {
             get

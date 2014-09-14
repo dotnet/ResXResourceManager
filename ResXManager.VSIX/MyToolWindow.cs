@@ -26,6 +26,10 @@
     [Guid("79664857-03bf-4bca-aa54-ec998b3328f8")]
     public sealed class MyToolWindow : ToolWindowPane
     {
+        private const string CATEGORY_FONTS_AND_COLORS = "FontsAndColors";
+        private const string PAGE_TEXT_EDITOR = "TextEditor";
+        private const string PROPERTY_FONT_SIZE = "FontSize";
+
         private DTE _dte;
         private ResourceView _view;
         private ResourceManager _resourceManager;
@@ -84,6 +88,15 @@
                 _dte = (DTE)GetService(typeof(DTE));
                 if (_dte == null)
                     return;
+
+                try
+                {
+                    var properties = _dte.Properties[CATEGORY_FONTS_AND_COLORS, PAGE_TEXT_EDITOR];
+                    var fontSize = Convert.ToDouble(properties.Item(PROPERTY_FONT_SIZE).Value);
+                    // Default in VS is 10, but looks like 12 in WPF
+                    _view.TextFontSize = fontSize * 1.2;
+                }
+                catch { }
 
                 ReloadSolution();
 

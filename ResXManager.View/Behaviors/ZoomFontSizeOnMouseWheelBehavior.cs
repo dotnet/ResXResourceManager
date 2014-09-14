@@ -8,7 +8,7 @@
 
     public class ZoomFontSizeOnMouseWheelBehavior : Behavior<FrameworkElement>
     {
-        private double _initialFontSize;
+        private double? _initialFontSize;
         private double _zoom = 1.0;
 
         protected override void OnAttached()
@@ -16,7 +16,6 @@
             base.OnAttached();
 
             AssociatedObject.PreviewMouseWheel += AssociatedObject_PreviewMouseWheel;
-            _initialFontSize = TextElement.GetFontSize(AssociatedObject);
         }
 
         protected override void OnDetaching()
@@ -44,7 +43,19 @@
 
             _zoom = Math.Max(0.5, Math.Min(5, _zoom));
 
-            TextElement.SetFontSize(AssociatedObject, _initialFontSize * _zoom);
+            if (!_initialFontSize.HasValue)
+            {
+                _initialFontSize = TextElement.GetFontSize(AssociatedObject);
+            }
+
+            var effectiveZoom = Math.Round(_zoom, 1);
+
+            TextElement.SetFontSize(AssociatedObject, _initialFontSize.Value * effectiveZoom);
+
+            if (Math.Abs(1.0 - effectiveZoom) < 0.1)
+            {
+                _initialFontSize = null;
+            }
         }
     }
 }
