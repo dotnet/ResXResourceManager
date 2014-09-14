@@ -28,9 +28,6 @@
     {
         private static readonly DependencyProperty HardReferenceToDgx = DataGridFilterColumn.FilterProperty;
 
-        private DataGridTextColumn _neutralLanguageColumn;
-        private DataGridTextColumn _neutralCommentColumn;
-
         public ResourceView()
         {
             Instance = this;
@@ -88,14 +85,6 @@
             }
         }
 
-        private IEnumerable<CultureInfo> Languages
-        {
-            get
-            {
-                return ViewModel.Languages;
-            }
-        }
-
         internal static ResourceView Instance
         {
             get;
@@ -107,14 +96,14 @@
             var oldValue = e.OldValue as ResourceManager;
             if (oldValue != null)
             {
-                oldValue.LanguageChanging -= ResourceManager_LanguageChanging;
+                oldValue.Loaded -= ResourceManager_Loaded;
                 oldValue.LanguageChanged -= ResourceManager_LanguageChanged;
             }
 
             var newValue = e.NewValue as ResourceManager;
             if (newValue != null)
             {
-                newValue.LanguageChanging += ResourceManager_LanguageChanging;
+                newValue.Loaded += ResourceManager_Loaded;
                 newValue.LanguageChanged += ResourceManager_LanguageChanged;
                 newValue.EntityFilter = Settings.Default.ResourceFilter;
             }
@@ -123,16 +112,6 @@
         private void NeutralLanguage_Click(object sender, RoutedEventArgs e)
         {
             Settings.Default.NeutralResourceLanguage = (CultureInfo)(((MenuItem)sender).DataContext);
-
-            if (_neutralLanguageColumn != null)
-            {
-                _neutralLanguageColumn.Header = new LanguageHeader(null);
-            }
-
-            if (_neutralCommentColumn != null)
-            {
-                _neutralCommentColumn.Header = new CommentHeader(null);
-            }
         }
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
@@ -143,14 +122,9 @@
             }
         }
 
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ResourceManager_Loaded(object sender, EventArgs e)
         {
-            SetupColumns();
-        }
-
-        private void ResourceManager_LanguageChanging(object sender, LanguageChangingEventArgs e)
-        {
-            SetupColumns();
+            DataGrid.SetupColumns(ViewModel.Languages);
         }
 
         private void ResourceManager_LanguageChanged(object sender, LanguageChangedEventArgs e)
@@ -178,165 +152,6 @@
                 }));
         }
 
-        private void SetupColumns()
-        {
-            var columns = DataGrid.Columns;
-
-            if (columns.Count == 0)
-            {
-                var keyColumn = new DataGridTextColumn
-                {
-                    Header = new ColumnHeader(Properties.Resources.Key, ColumnType.Key),
-                    Binding = new Binding(@"Key") { ValidatesOnExceptions = true },
-                    Width = 200,
-                    CanUserReorder = false,
-                };
-
-                columns.Add(keyColumn);
-
-                columns.Add(CreateCodeReferencesColumn());
-            }
-
-            var languages = Languages.ToArray();
-            var languageColumns = columns.Skip(2).ToArray();
-
-            var disconnectedColumns = languageColumns.Where(col => languages.All(language => !Equals(((ILanguageColumnHeader)col.Header).Language, language)));
-
-            foreach (var column in disconnectedColumns)
-            {
-                columns.Remove(column);
-            }
-
-            var addedColumns = languages.Where(language => languageColumns.All(col => !Equals(((ILanguageColumnHeader)col.Header).Language, language)));
-
-            foreach (var language in addedColumns)
-            {
-                AddLanguageColumn(columns, language);
-            }
-        }
-
-        private DataGridTextColumn CreateCodeReferencesColumn()
-        {
-            var elementStyle = new Style();
-            elementStyle.Setters.Add(new Setter(ToolTipProperty, new CodeReferencesToolTip()));
-            elementStyle.Setters.Add(new Setter(ToolTipService.ShowDurationProperty, int.MaxValue));
-            elementStyle.Setters.Add(new Setter(HorizontalAlignmentProperty, HorizontalAlignment.Center));
-
-            var columnHeader = new ColumnHeader(FindResource("CodeReferencesImage"), ColumnType.Other)
-            {
-                ToolTip = Properties.Resources.CodeReferencesToolTip,
-                HorizontalContentAlignment = HorizontalAlignment.Center
-            };
-
-            var column = new DataGridTextColumn
-            {
-                Header = columnHeader,
-                ElementStyle = elementStyle,
-                Binding = new Binding(@"CodeReferences.Count"),
-                CanUserReorder = false,
-                CanUserResize = false,
-                IsReadOnly = true,
-            };
-
-            column.SetIsFilterVisible(false);
-            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, new Binding(@"IsFindCodeReferencesEnabled") { Source = Settings.Default, Converter = new BooleanToVisibilityConverter() });
-
-            return column;
-        }
-
-        private void AddLanguageColumn(ICollection<DataGridColumn> columns, CultureInfo language)
-        {
-            var key = language != null ? @"." + language : string.Empty;
-
-            var isFirstCommentColumn = !columns.Any(col => col.Header is CommentHeader);
-
-            var commentColumn = new DataGridTextColumn
-            {
-                Header = new CommentHeader(language),
-                Binding = new Binding(@"Comments[" + key + @"]"),
-                Width = 300,
-                Visibility = isFirstCommentColumn ? Visibility.Visible : Visibility.Hidden
-            };
-
-            commentColumn.EnableMultilineEditing();
-            commentColumn.EnableSpellchecker(language);
-
-            columns.Add(commentColumn);
-
-            if (language == null)
-            {
-                _neutralCommentColumn = commentColumn;
-            }
-
-            var column = new DataGridTextColumn
-            {
-                Header = new LanguageHeader(language),
-                Binding = new Binding(@"Values[" + key + @"]"),
-                Width = 300,
-            };
-
-            column.EnableMultilineEditing();
-            column.EnableSpellchecker(language);
-
-            DependencyPropertyDescriptor.FromProperty(DataGridColumn.VisibilityProperty, typeof(DataGridColumn))
-                .AddValueChanged(column, DataGrid_ColumnVisibilityChanged);
-
-            columns.Add(column);
-
-            if (language == null)
-            {
-                _neutralLanguageColumn = column;
-            }
-        }
-
-        private void DataGrid_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            // Ctrl+Enter on a cell should start editing the cell without clearing the content.
-
-            var dependencyObject = e.OriginalSource as DependencyObject;
-
-            if (dependencyObject.IsChildOfEditingElement())
-                return;
-
-            var key = e.Key;
-            if ((key != Key.Return) || (!Key.LeftCtrl.IsKeyDown() && !Key.RightCtrl.IsKeyDown()))
-                return;
-
-            var grid = (DataGrid)sender;
-
-            grid.BeginEdit();
-            e.Handled = true;
-        }
-
-        private void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
-        {
-            var entry = (ResourceTableEntry)e.Row.Item;
-            var resourceEntity = entry.Owner;
-
-            var language = resourceEntity.Languages.First().Culture;
-
-            var languageHeader = e.Column.Header as ILanguageColumnHeader;
-            if (languageHeader != null)
-            {
-                language = languageHeader.Language;
-            }
-
-            if (!resourceEntity.CanEdit(language))
-            {
-                e.Cancel = true;
-            }
-
-            if (!e.Cancel)
-            {
-                ToolBar.IsEnabled = false;
-            }
-        }
-
-        private void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {
-            ToolBar.IsEnabled = true;
-        }
-
         private void AddLanguage_Click(object sender, RoutedEventArgs e)
         {
             var inputBox = new InputBox
@@ -347,102 +162,14 @@
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
 
-            var languages = Languages.Where(l => l != null).Select(l => l.ToString()).ToArray();
+            var languages = ViewModel.Languages.Where(l => l != null).Select(l => l.ToString()).ToArray();
 
             inputBox.TextChanged += (_, args) =>
                 inputBox.IsInputValid = !languages.Contains(args.Text, StringComparer.OrdinalIgnoreCase) && ResourceManager.IsValidLanguageName(args.Text);
 
             if (inputBox.ShowDialog() == true)
             {
-                AddLanguageColumn(DataGrid.Columns, new CultureInfo(inputBox.Text));
-            }
-        }
-
-        private void ListBoxGroupHeader_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            var visual = (FrameworkElement)sender;
-            var group = (CollectionViewGroup)visual.DataContext;
-
-            ListBox.BeginInit();
-
-            if ((Keyboard.Modifiers & ModifierKeys.Control) == 0)
-            {
-                ListBox.SelectedItems.Clear();
-            }
-
-            foreach (var item in group.Items)
-            {
-                ListBox.SelectedItems.Add(item);
-            }
-
-            ListBox.EndInit();
-        }
-
-        private void ErrorsOnlyFilter_Changed(object sender, EventArgs e)
-        {
-            var button = (ToggleButton)sender;
-
-            if (button.IsChecked.GetValueOrDefault())
-            {
-                UpdateErrorsOnlyFilter();
-            }
-            else
-            {
-                DataGrid.Items.Filter = null;
-                DataGrid.SetIsAutoFilterEnabled(true);
-            }
-        }
-
-        private void DataGrid_ColumnVisibilityChanged(object source, EventArgs e)
-        {
-            if (ErrorsOnlyFilterButton.IsChecked.GetValueOrDefault())
-            {
-                this.BeginInvoke(UpdateErrorsOnlyFilter);
-            }
-        }
-
-        private void UpdateErrorsOnlyFilter()
-        {
-            var visibleLanguageKeys = DataGrid.Columns
-                .Where(column => column.Visibility == Visibility.Visible)
-                .Select(column => column.Header)
-                .OfType<LanguageHeader>()
-                .Select(header => header.Language.ToLanguageKey())
-                .ToArray();
-
-
-            DataGrid.SetIsAutoFilterEnabled(false);
-            DataGrid.Items.Filter = row =>
-            {
-                var entry = (ResourceTableEntry)row;
-                var values = visibleLanguageKeys.Select(key => entry.Values[key]);
-                return !entry.IsInvariant && values.Any(string.IsNullOrEmpty);
-            };
-        }
-
-        private void DataGrid_CurrentCellChanged(object sender, EventArgs e)
-        {
-            var currentCell = DataGrid.CurrentCell;
-            var column = currentCell.Column as DataGridBoundColumn;
-            if (column == null)
-                return;
-
-            var header = column.Header as ILanguageColumnHeader;
-            if (header != null)
-            {
-                TextBox.IsEnabled = true;
-                TextBox.DataContext = currentCell.Item;
-
-                var ieftLanguageTag = (header.Language ?? Settings.Default.NeutralResourceLanguage).IetfLanguageTag;
-                TextBox.Language = XmlLanguage.GetLanguage(ieftLanguageTag);
-
-                BindingOperations.SetBinding(TextBox, TextBox.TextProperty, column.Binding);
-            }
-            else
-            {
-                TextBox.IsEnabled = false;
-                TextBox.DataContext = null;
-                BindingOperations.ClearBinding(TextBox, TextBox.TextProperty);
+                DataGrid.Columns.AddLanguageColumn(new CultureInfo(inputBox.Text));
             }
         }
 

@@ -7,6 +7,10 @@
     {
         private readonly CultureInfo _culture;
 
+        public LanguageHeader()
+        {
+        }
+
         public LanguageHeader(CultureInfo culture)
         {
             _culture = culture;

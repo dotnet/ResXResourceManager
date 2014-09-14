@@ -1,8 +1,7 @@
 ﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.ResourceView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="700" d:DataContext="{d:DesignInstance model:ResourceManager}"
-             xmlns:view="clr-namespace:tomenglertde.ResXManager.View"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="700"
              xmlns:dgx="clr-namespace:DataGridExtensions;assembly=DataGridExtensions"
              xmlns:windows="clr-namespace:System.Windows;assembly=PresentationFramework"
              xmlns:model="clr-namespace:tomenglertde.ResXManager.Model;assembly=ResXManager.Model"
@@ -14,7 +13,8 @@
              xmlns:behaviors="clr-namespace:tomenglertde.ResXManager.View.Behaviors"
              x:Name="LayoutRoot"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
-             DataContextChanged="self_DataContextChanged">
+             DataContextChanged="self_DataContextChanged"
+             d:DataContext="{d:DesignInstance model:ResourceManager}">
   <UserControl.Resources>
 
     <converters:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter" />
@@ -24,7 +24,7 @@
     <converters:ConfirmedCommandConverter x:Key="CutCommandConverter" Executing="CutCommandConverter_OnExecuting" />
     <converters:LanguageColumnFilterConverter x:Key="LanguageColumnFilterConverter" />
     <converters:AddNewKeyCommandConverter x:Key="AddNewKeyCommandConverter" />
-    <converters:DataGridToSelectionScopeConverter x:Key="DataGridToSelectionScopeConverter"/>
+    <converters:DataGridToSelectionScopeConverter x:Key="DataGridToSelectionScopeConverter" />
 
     <Image x:Shared="False" x:Key="CodeReferencesImage" SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/references.png" />
 
@@ -93,8 +93,7 @@
       <ListBox x:Name="ListBox"
                ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
                Margin="5" BorderThickness="0" SelectionMode="Extended"
-               SelectionChanged="ListBox_SelectionChanged"
-               tools:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}" >
+               tools:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}">
         <ListBox.ContextMenu>
           <ContextMenu>
             <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand}">
@@ -110,7 +109,7 @@
               <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" />
               <Decorator DockPanel.Dock="Left" Width="5" />
               <TextBlock Background="Transparent" VerticalAlignment="Center">
-                <Run Text="{Binding Path=RelativePath, Mode=OneWay}"/><Run Text="{Binding Path=BaseName, Mode=OneWay}"/>
+                <Run Text="{Binding Path=RelativePath, Mode=OneWay}" /><Run Text="{Binding Path=BaseName, Mode=OneWay}" />
               </TextBlock>
             </DockPanel>
           </DataTemplate>
@@ -123,9 +122,10 @@
                 <Setter Property="Template">
                   <Setter.Value>
                     <ControlTemplate TargetType="{x:Type GroupItem}">
-                      <StackPanel Background="Transparent"
-                                  MouseLeftButtonDown="ListBoxGroupHeader_OnMouseLeftButtonDown"
-                                  d:DataContext="{d:DesignInstance GroupItem}">
+                      <StackPanel Background="Transparent" d:DataContext="{d:DesignInstance GroupItem}">
+                        <i:Interaction.Behaviors>
+                          <behaviors:SelectGroupOnGroupHeaderClickBehavior/>
+                        </i:Interaction.Behaviors>
                         <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" />
                         <ItemsPresenter />
                       </StackPanel>
@@ -208,8 +208,7 @@
               </RadioButton>
               <Separator />
               <ToggleButton x:Name="ErrorsOnlyFilterButton"
-                            ToolTip="{x:Static properties:Resources.ShowOnlyMissingToolTip}"
-                            Checked="ErrorsOnlyFilter_Changed" Unchecked="ErrorsOnlyFilter_Changed">
+                            ToolTip="{x:Static properties:Resources.ShowOnlyMissingToolTip}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/errorFilter.png" />
               </ToggleButton>
               <ToggleButton x:Name="ColumnChooserToggleButton"
@@ -277,7 +276,7 @@
               <Button x:Name="HelpButton" ToolTip="{x:Static properties:Resources.HelpButtonToolTip}"
                       Tag="https://resxresourcemanager.codeplex.com/documentation">
                 <Grid Width="16" Height="16">
-                  <TextBlock Text="?" FontWeight="Bold" FontSize="16"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                  <TextBlock Text="?" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" />
                 </Grid>
               </Button>
             </ToolBar>
@@ -286,7 +285,7 @@
                  StaysOpen="False"
                  Placement="Bottom" PlacementTarget="{Binding ElementName=ColumnChooserToggleButton}">
             <i:Interaction.Behaviors>
-              <behaviors:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=ColumnChooserToggleButton}"/>
+              <behaviors:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=ColumnChooserToggleButton}" />
             </i:Interaction.Behaviors>
             <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
               <ListBox ItemsSource="{Binding Columns, ElementName=DataGrid, Converter={StaticResource LanguageColumnFilterConverter} }"
@@ -320,15 +319,17 @@
               </ListBox>
             </Border>
           </Popup>
-          <TextBox x:Name="TextBox" AcceptsReturn="True" SpellCheck.IsEnabled="True" />
+          <TextBox x:Name="TextBox" AcceptsReturn="True" SpellCheck.IsEnabled="True">
+            <i:Interaction.Behaviors>
+              <behaviors:SynchronizeTextBoxWithDataGridCellBehavior DataGrid="{Binding ElementName=DataGrid}" />
+            </i:Interaction.Behaviors>
+          </TextBox>
         </DockPanel>
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
         <DataGrid Grid.Row="2" x:Name="DataGrid" FrozenColumnCount="1"
                   HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" Padding="2" BorderThickness="0"
                   dgx:DataGridFilter.IsAutoFilterEnabled="True" AutoGenerateColumns="False"
                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
-                  BeginningEdit="DataGrid_BeginningEdit" PreviewKeyDown="DataGrid_PreviewKeyDown"
-                  CellEditEnding="DataGrid_CellEditEnding" CurrentCellChanged="DataGrid_CurrentCellChanged"
                   SelectedItem="{Binding SelectedEntry, Mode=TwoWay}"
                   tools:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
           <DataGrid.Resources>
@@ -416,15 +417,19 @@
 
           <DataGrid.InputBindings>
             <KeyBinding Key="Delete" Command="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" />
-            <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}"/>
-            <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}"/>
-            <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}"/>
-            <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand}"/>
+            <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
+            <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
+            <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
+            <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand}" />
           </DataGrid.InputBindings>
 
           <DataGrid.ItemsPanel>
             <ItemsPanelTemplate>
-              <VirtualizingStackPanel ContextMenu="{StaticResource RowContextMenu}" DataContext="{Binding Path=DataContext, ElementName=DataGrid}" />
+              <VirtualizingStackPanel ContextMenu="{StaticResource RowContextMenu}" DataContext="{Binding Path=DataContext, ElementName=DataGrid}" >
+                <i:Interaction.Behaviors>
+                  <behaviors:ZoomFontSizeOnMouseWheelBehavior />
+                </i:Interaction.Behaviors>
+              </VirtualizingStackPanel>
             </ItemsPanelTemplate>
           </DataGrid.ItemsPanel>
 
@@ -443,8 +448,8 @@
               <Style.Triggers>
                 <MultiDataTrigger>
                   <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding Path=Column.Header.ColumnType, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static columnHeaders:ColumnType.Language}"/>
-                    <Condition Binding="{Binding Path=Content.Text, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value=""/>
+                    <Condition Binding="{Binding Path=Column.Header.ColumnType, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static columnHeaders:ColumnType.Language}" />
+                    <Condition Binding="{Binding Path=Content.Text, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value="" />
                   </MultiDataTrigger.Conditions>
                   <MultiDataTrigger.Setters>
                     <Setter Property="Background" Value="LightCoral" />
@@ -453,7 +458,7 @@
 
                 <MultiDataTrigger>
                   <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding Path=Column.Header.ColumnType, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static columnHeaders:ColumnType.Language}"/>
+                    <Condition Binding="{Binding Path=Column.Header.ColumnType, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static columnHeaders:ColumnType.Language}" />
                     <Condition Binding="{Binding Path=IsInvariant}" Value="True" />
                   </MultiDataTrigger.Conditions>
                   <MultiDataTrigger.Setters>
@@ -479,9 +484,13 @@
               </Style.Triggers>
             </Style>
           </DataGrid.Style>
-          
+
           <i:Interaction.Behaviors>
-            <behaviors:ZoomFontSizeOnMouseWheelBehavior/>
+            <behaviors:DataGridBeginEditOnCtrlEnterBehavior />
+            <behaviors:ShowErrorsOnlyBehavior ToggleButton="{Binding ElementName=ErrorsOnlyFilterButton}" />
+            <behaviors:DataGridDisableTargetWhileEditingBehavior Target="{Binding ElementName=ToolBar}" />
+            <behaviors:DataGridTryBeginEditBehavior />
+            <behaviors:UpdateNeutralColumnHeadersBehavior/>
           </i:Interaction.Behaviors>
         </DataGrid>
       </Grid>

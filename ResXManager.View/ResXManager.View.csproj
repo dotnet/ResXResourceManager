@@ -29,7 +29,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\CodeContracts.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
     <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
     <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
@@ -141,9 +141,17 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
+    <Compile Include="Behaviors\DataGridBeginEditOnCtrlEnterBehavior.cs" />
+    <Compile Include="Behaviors\DataGridDisableTargetWhileEditingBehavior.cs" />
+    <Compile Include="Behaviors\DataGridTryBeginEditBehavior.cs" />
     <Compile Include="Behaviors\PopupFocusManagerBehavior.cs" />
+    <Compile Include="Behaviors\SelectGroupOnGroupHeaderClickBehavior.cs" />
+    <Compile Include="Behaviors\ShowErrorsOnlyBehavior.cs" />
+    <Compile Include="Behaviors\SynchronizeTextBoxWithDataGridCellBehavior.cs" />
+    <Compile Include="Behaviors\UpdateNeutralColumnHeadersBehavior.cs" />
     <Compile Include="Behaviors\ZoomFontSizeOnMouseWheelBehavior.cs" />
     <Compile Include="Converters\AddNewKeyCommandConverter.cs" />
+    <Compile Include="Tools\ColumnManager.cs" />
     <Compile Include="Visuals\CodeReferencesToolTip.xaml.cs">
       <DependentUpon>CodeReferencesToolTip.xaml</DependentUpon>
     </Compile>

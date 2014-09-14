@@ -7,6 +7,10 @@
     {
         private readonly CultureInfo _culture;
 
+        public CommentHeader()
+        {
+        }
+
         public CommentHeader(CultureInfo culture)
         {
             _culture = culture;

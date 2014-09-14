@@ -1,11 +1,12 @@
 ﻿namespace tomenglertde.ResXManager.View.Behaviors
 {
     using System;
-    using System.Windows.Controls;
+    using System.Windows;
+    using System.Windows.Documents;
     using System.Windows.Input;
     using System.Windows.Interactivity;
 
-    public class ZoomFontSizeOnMouseWheelBehavior : Behavior<Control>
+    public class ZoomFontSizeOnMouseWheelBehavior : Behavior<FrameworkElement>
     {
         private double _initialFontSize;
         private double _zoom = 1.0;
@@ -15,7 +16,7 @@
             base.OnAttached();
 
             AssociatedObject.PreviewMouseWheel += AssociatedObject_PreviewMouseWheel;
-            _initialFontSize = AssociatedObject.FontSize;
+            _initialFontSize = TextElement.GetFontSize(AssociatedObject);
         }
 
         protected override void OnDetaching()
@@ -43,7 +44,7 @@
 
             _zoom = Math.Max(0.5, Math.Min(5, _zoom));
 
-            AssociatedObject.FontSize = _initialFontSize * _zoom;
+            TextElement.SetFontSize(AssociatedObject, _initialFontSize * _zoom);
         }
     }
 }

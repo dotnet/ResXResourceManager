@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Behaviors
 {
     using System;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls.Primitives;
@@ -65,10 +66,16 @@
             }
         }
 
-        void Popup_Opened(object sender, System.EventArgs e)
+        void Popup_Opened(object sender, EventArgs e)
         {
+            Contract.Requires(sender != null);
+
             var popup = (Popup)sender;
-            var focusable = popup.Child.VisualDescendantsAndSelf<UIElement>().FirstOrDefault(item => item.Focusable);
+            var child = popup.Child;
+            if (child == null)
+                return;
+
+            var focusable = child.VisualDescendantsAndSelf<UIElement>().FirstOrDefault(item => item.Focusable);
             if (focusable != null)
             {
                 Dispatcher.BeginInvoke(new Action(() => focusable.Focus()));

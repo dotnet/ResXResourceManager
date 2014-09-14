@@ -35,9 +35,9 @@
         private ResourceTableEntry _selectedEntry;
         private string _entityFilter;
 
-        public event EventHandler<LanguageChangingEventArgs> LanguageChanging;
         public event EventHandler<LanguageChangedEventArgs> LanguageChanged;
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
+        public event EventHandler<EventArgs> Loaded;
 
         public ResourceManager()
         {
@@ -314,6 +314,13 @@
             return !args.Cancel;
         }
 
+        protected virtual void OnLoaded()
+        {
+            var handler = Loaded;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
         private bool CanAddNew()
         {
             return SelectedEntities.Count == 1;
@@ -529,6 +536,7 @@
             OnPropertyChanged(() => SelectedEntities);
 
             OnSelectedEntitiesChanged();
+            OnLoaded();
         }
 
         private IEnumerable<ResourceEntity> GetResourceEntities(IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory)
@@ -583,12 +591,6 @@
             if (!CanEdit(e.Entity, e.Language))
             {
                 e.Cancel = true;
-                return;
-            }
-
-            if (LanguageChanging != null)
-            {
-                LanguageChanging(this, e);
             }
         }
 
