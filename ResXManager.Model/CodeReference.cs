@@ -166,7 +166,7 @@
                                 }
                                 catch (Exception ex) // Should not happen, but was reported by someone.
                                 {
-                                    tracer.TraceError(string.Format("Error detecting code reference in file {0}, line {1} for {2}.{3}\n{4}", projectFile.FilePath, lineNumber, baseName, entry.Key, ex));
+                                    tracer.TraceError("Error detecting code reference in file {0}, line {1} for {2}.{3}\n{4}", projectFile.FilePath, lineNumber, baseName, entry.Key, ex);
                                 }
                             }
                         }
@@ -177,7 +177,7 @@
             }
             catch (Exception ex) // Should not happen, but was reported by someone.
             {
-                tracer.TraceError(string.Format("Error detecting code reference in file {0} for {1}\n{2}", source.ProjectFile.FilePath, baseName, ex));
+                tracer.TraceError("Error detecting code reference in file {0} for {1}\n{2}", source.ProjectFile.FilePath, baseName, ex);
             }
         }
 

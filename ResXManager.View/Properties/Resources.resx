@@ -239,4 +239,13 @@
   <data name="CommentColumnHeader" xml:space="preserve">
     <value>Comment</value>
   </data>
+  <data name="LanguageConfiguration_Description" xml:space="preserve">
+    <value>This is an overview of the languages supported by the system. It shows the specific languages (e.g. 'en-US') grouped by their neutral language (e.g. 'en'). To change the flag displayed for a neutral language, double click the specific language with the desired flag.</value>
+  </data>
+  <data name="ShellTabHeader_Main" xml:space="preserve">
+    <value>Main</value>
+  </data>
+  <data name="ShellTabHeader_Languages" xml:space="preserve">
+    <value>Languages</value>
+  </data>
 </root>

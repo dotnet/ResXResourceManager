@@ -10,13 +10,13 @@
     public class NeutralCultureCountyOverrides
     {
         private static readonly CultureInfo[] AllSpecificCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
-        private readonly Dictionary<CultureInfo, CultureInfo> _overrides;
+        private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().ToDictionary(item => item.Key, item => item.Value));
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly NeutralCultureCountyOverrides Default = new NeutralCultureCountyOverrides();
 
         private NeutralCultureCountyOverrides()
         {
-            _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().ToDictionary(item => item.Key, item => item.Value));
         }
 
         public event EventHandler<CultureOverrideEventArgs> OverrideChanged;
@@ -64,6 +64,8 @@
 
         private static CultureInfo GetDefaultSpecificCulture(CultureInfo neutralCulture)
         {
+            Contract.Requires(neutralCulture != null);
+
             var cultureName = neutralCulture.Name;
             var specificCultures = AllSpecificCultures.Where(c => (c != null) && ((c.Parent.Name == cultureName) || (c.Parent.IetfLanguageTag == cultureName))).ToArray();
 
@@ -76,6 +78,7 @@
                 ?? specificCultures.FirstOrDefault(c => c.Name.Split('-').Last().StartsWith(cultureName.Substring(0, 1), StringComparison.OrdinalIgnoreCase))
                     // If nothing else matches, use the first.
                 ?? specificCultures.FirstOrDefault();
+
             return specificCulture;
         }
 

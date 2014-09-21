@@ -329,6 +329,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This is an overview of the languages supported by the system. It shows the specific languages (e.g. &apos;en-US&apos;) grouped by their neutral language (e.g. &apos;en&apos;). To change the flag displayed for a neutral language, double click the specific language with the desired flag..
+        /// </summary>
+        public static string LanguageConfiguration_Description {
+            get {
+                return ResourceManager.GetString("LanguageConfiguration_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Like it? Support the project by writing a short review!.
         /// </summary>
         public static string LikeButtonToolTip {
@@ -415,6 +424,24 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string ResourceFilterToolTip {
             get {
                 return ResourceManager.GetString("ResourceFilterToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Languages.
+        /// </summary>
+        public static string ShellTabHeader_Languages {
+            get {
+                return ResourceManager.GetString("ShellTabHeader_Languages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Main.
+        /// </summary>
+        public static string ShellTabHeader_Main {
+            get {
+                return ResourceManager.GetString("ShellTabHeader_Main", resourceCulture);
             }
         }
         

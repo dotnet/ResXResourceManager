@@ -5,6 +5,7 @@
              xmlns:model="http://schemas.tom-englert.de/xaml/ResXManager"
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
+             xmlns:Properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              d:DataContext="{d:DesignInstance model:ResourceManager}">
   <UserControl.Resources>
     <converters:CultureToImageSourceConverter x:Key="CultureToImageSourceConverter" />
@@ -12,7 +13,7 @@
     <ControlTemplate x:Key="LanguageControlTemplate">
       <StackPanel Orientation="Horizontal" Margin="0,2" d:DataContext="{d:DesignInstance globalization:CultureInfo}">
         <Decorator Width="2" />
-        <Image Source="{Binding Converter={StaticResource CultureToImageSourceConverter}}" />
+        <Image Width="16" Height="16" Source="{Binding Converter={StaticResource CultureToImageSourceConverter}}" />
         <Decorator Width="5" />
         <TextBlock Text="{Binding Name}" FontWeight="Bold" />
         <Decorator Width="5" />
@@ -40,7 +41,7 @@
   </UserControl.Resources>
   <DockPanel>
     <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="5" Foreground="Gray"
-               Text="This is an overview of the languages supported by the system. It shows the specific languages (e.g. 'en-US') grouped by their neutral language (e.g. 'en'). To change the flag displayed for a neutral language, double click the specific language with the desired flag." />
+               Text="{x:Static Properties:Resources.LanguageConfiguration_Description}" />
     <ListBox x:Name="ListBox"
              ItemsSource="{Binding Source={StaticResource CollectionViewSource}}"
              ItemTemplate="{StaticResource LanguageDataTemplate}"

@@ -97,7 +97,7 @@
                 try
                 {
                     var properties = _dte.Properties[CATEGORY_FONTS_AND_COLORS, PAGE_TEXT_EDITOR];
-                    var fontSize = Convert.ToDouble(properties.Item(PROPERTY_FONT_SIZE).Value);
+                    var fontSize = Convert.ToDouble(properties.Item(PROPERTY_FONT_SIZE).Value, CultureInfo.InvariantCulture);
                     // Default in VS is 10, but looks like 12 in WPF
                     _view.SetValue(ResourceView.TextFontSizeProperty, fontSize * 1.2);
                 }
@@ -441,7 +441,7 @@
 
             if (!File.Exists(filePath))
             {
-                _trace.TraceError(string.Format(CultureInfo.CurrentCulture, @"File not found: {0}", filePath));
+                _trace.TraceError(@"File not found: {0}", filePath);
                 return null;
             }
 

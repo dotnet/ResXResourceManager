@@ -6,10 +6,10 @@
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties">
   <Grid Background="{x:Static SystemColors.WindowBrush}">
     <TabControl TabStripPlacement="Bottom" Margin="-1" Padding="0"  BorderThickness="1" >
-      <TabItem Header="Main">
+      <TabItem Header="{x:Static properties:Resources.ShellTabHeader_Main}">
         <visuals:ResourceView />
       </TabItem>
-      <TabItem Header="Languages">
+      <TabItem Header="{x:Static properties:Resources.ShellTabHeader_Languages}">
         <visuals:LanguageConfiguration/>
       </TabItem>
     </TabControl>
