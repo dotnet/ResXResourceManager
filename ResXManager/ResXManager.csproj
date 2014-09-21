@@ -32,11 +32,11 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>https://resxresourcemanager.codeplex.com/releases/clickonce/</InstallUrl>
-    <SupportUrl>http://resxresourcemanager.codeplex.com</SupportUrl>
+    <SupportUrl>https://resxresourcemanager.codeplex.com</SupportUrl>
     <ProductName>ResX Resource Manager</ProductName>
     <PublisherName>tom-englert.de</PublisherName>
-    <ApplicationRevision>45</ApplicationRevision>
-    <ApplicationVersion>1.0.0.45</ApplicationVersion>
+    <ApplicationRevision>46</ApplicationRevision>
+    <ApplicationVersion>1.0.0.46</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -153,7 +153,7 @@
     <ManifestCertificateThumbprint>F79FAD6A759A2525B8E3A49F79BDDCCF17ACA57A</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>ResXManager_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>ResXManager_Key.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -231,7 +231,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="ResXManager_TemporaryKey.pfx" />
+    <None Include="ResXManager_Key.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj">
