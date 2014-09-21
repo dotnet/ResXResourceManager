@@ -26,7 +26,7 @@
 
             var items = new Dictionary<string, DteProjectFile>();
 
-            var solutionFolder = Path.GetDirectoryName(solution.FullName);
+            var solutionFolder = solution.GetSolutionFolder();
 
             foreach (var project in solution.GetProjects(trace))
             {
@@ -36,6 +36,26 @@
             }
 
             return items.Values;
+        }
+
+        private static string GetSolutionFolder(this _Solution solution)
+        {
+            Contract.Requires(solution != null);
+
+            try
+            {
+                var fullName = solution.FullName;
+
+                if (!string.IsNullOrEmpty(fullName))
+                {
+                    return Path.GetDirectoryName(fullName);
+                }
+            }
+            catch
+            {
+            }
+
+            return string.Empty;
         }
 
         public static string GetItemType(this DteProjectFile projectFile)

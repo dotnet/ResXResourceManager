@@ -1,3 +1,19 @@
+1.0.0.46:
+* WI1368: Some of the country flags are mixed up: Refined algorithm to lookup default flag for neutral culture; add overview of langauges, flags for neutral cultures are editable.
+* WI1358: Add possibility to increase the font size: Default font size follows VS text size, supports zoom with "ctrl+mouse wheel" like in the VS text editor. 
+* WI1361: Visual Studio 2012 crashes when turning on "Detect code references".
+1.0.0.45:
+* WI1337: Export selection exports only selected lines and columns.
+* WI1338/1339: "Show only lines with missing strings" filters only the visible columns.
+1.0.0.44:
+* WI1334: Delete is deleting too much. (after changing the key, an item stays selected without selection being visible)
+* WI1329: Crash when adding new resource file (try to avoid unnecesary refresh while adding new resource file)
+1.0.0.43:
+* WI1327: ArgumentException when starting VS (occurred when ResXManager window is open but no solution is loaded)
+1.0.0.42:
+* WI1325: Empty cell does not remove "data" tag in code behind. => Empty nodes are removed, except for the neutral language.
+* WI1319: Can not add new keys in V1.0.0.41 => Restored input dialog for new keys, since inline editing conflicts with filtering.
+* WI1320: List of unused Resources: Support for Web projects. => Web projects and attribute references are supported.
 1.0.0.41:
 * WI1313: Excel import does not properly handle cells with individual formatting.
 * WI1314: Show the number of references found in code to be able to detect unused resources.

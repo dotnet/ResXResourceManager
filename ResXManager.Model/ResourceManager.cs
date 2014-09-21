@@ -35,9 +35,10 @@
         private ResourceTableEntry _selectedEntry;
         private string _entityFilter;
 
-        public event EventHandler<LanguageChangingEventArgs> LanguageChanging;
-        public event EventHandler<LanguageChangedEventArgs> LanguageChanged;
+        public event EventHandler<LanguageEventArgs> LanguageSaved;
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
+        public event EventHandler<EventArgs> Loaded;
+        public event EventHandler<EventArgs> ReloadRequested;
 
         public ResourceManager()
         {
@@ -161,7 +162,6 @@
             get
             {
                 return _entityFilter;
-
             }
             set
             {
@@ -219,7 +219,9 @@
         {
             get
             {
-                return new DelegateCommand(() => _selectedEntities.Any(), () => ExportExcel(_selectedEntities));
+                return new DelegateCommand<IResourceScope>(
+                    scope => scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()), 
+                    ExportExcel);
             }
         }
 
@@ -252,6 +254,14 @@
             get
             {
                 return new DelegateCommand(() => _selectedTableEntries.Any(), ToggleInvariant);
+            }
+        }
+
+        public ICommand ReloadCommand
+        {
+            get
+            {
+                return new DelegateCommand(OnReloadRequested);
             }
         }
 
@@ -448,7 +458,7 @@
             items.ForEach(item => item.IsInvariant = newValue);
         }
 
-        private void ExportExcel(IEnumerable<ResourceEntity> selectedItems)
+        private void ExportExcel(IResourceScope scope)
         {
             var dlg = new SaveFileDialog
             {
@@ -464,7 +474,7 @@
 
             try
             {
-                this.ExportExcel(dlg.FileName, selectedItems);
+                this.ExportExcel(dlg.FileName, scope);
             }
             catch (Exception ex)
             {
@@ -505,6 +515,27 @@
             Clipboard.SetText(string.Join(Environment.NewLine, selectedKeys));
         }
 
+        private void OnLoaded()
+        {
+            var handler = Loaded;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+        private void OnLanguageSaved(LanguageEventArgs e)
+        {
+            var handler = LanguageSaved;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        private void OnReloadRequested()
+        {
+            var handler = ReloadRequested;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
         private void InternalLoad(IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory)
         {
             Contract.Requires(resourceFilesByDirectory != null);
@@ -528,6 +559,7 @@
             OnPropertyChanged(() => SelectedEntities);
 
             OnSelectedEntitiesChanged();
+            OnLoaded();
         }
 
         private IEnumerable<ResourceEntity> GetResourceEntities(IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory)
@@ -582,21 +614,29 @@
             if (!CanEdit(e.Entity, e.Language))
             {
                 e.Cancel = true;
-                return;
-            }
-
-            if (LanguageChanging != null)
-            {
-                LanguageChanging(this, e);
             }
         }
 
         private void ResourceEntity_LanguageChanged(object sender, LanguageChangedEventArgs e)
         {
-            if (LanguageChanged != null)
-            {
-                LanguageChanged(this, e);
-            }
+            // Defer save to avoid repeated file access
+            Dispatcher.BeginInvoke(new Action(
+                delegate
+                {
+                    try
+                    {
+                        if (!e.Language.HasChanges)
+                            return;
+
+                        e.Language.Save();
+
+                        OnLanguageSaved(e);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, Resources.Title);
+                    }
+                }));
         }
 
         private void SelectedEntities_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -609,7 +649,11 @@
             var selectedTableEntries = _selectedTableEntries.ToArray();
 
             _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>(_selectedEntities.Select(entity => (IList)entity.Entries).ToArray());
-            _selectedTableEntries = _resourceEntities.SelectMany(entity => entity.Entries).Where(selectedTableEntries.Contains).Where(_resourceTableEntries.Contains).ToList();
+
+            _selectedTableEntries = _resourceEntities.SelectMany(entity => entity.Entries)
+                .Where(item => selectedTableEntries.Contains(item, ResourceTableEntry.EqualityComparer))
+                .Where(item => _resourceTableEntries.Contains(item, ResourceTableEntry.EqualityComparer))
+                .ToList();
 
             OnPropertyChanged(() => ResourceTableEntries);
             OnPropertyChanged(() => SelectedTableEntries);

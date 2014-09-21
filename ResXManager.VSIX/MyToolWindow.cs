@@ -11,12 +11,15 @@
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
     using EnvDTE;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
     using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View;
+    using tomenglertde.ResXManager.View.Tools;
+    using tomenglertde.ResXManager.View.Visuals;
     using VSLangProj;
     using Process = System.Diagnostics.Process;
 
@@ -26,8 +29,12 @@
     [Guid("79664857-03bf-4bca-aa54-ec998b3328f8")]
     public sealed class MyToolWindow : ToolWindowPane
     {
+        private const string CATEGORY_FONTS_AND_COLORS = "FontsAndColors";
+        private const string PAGE_TEXT_EDITOR = "TextEditor";
+        private const string PROPERTY_FONT_SIZE = "FontSize";
+
         private DTE _dte;
-        private ResourceView _view;
+        private Control _view;
         private ResourceManager _resourceManager;
         private string _solutionFingerPrint;
         private readonly OutputWindowTracer _trace;
@@ -68,13 +75,15 @@
                 AppDomain.CurrentDomain.AssemblyResolve += AppDomain_AssemblyResolve;
 
                 _resourceManager = new ResourceManager();
-                _view = new ResourceView { DataContext = _resourceManager };
+                _resourceManager.BeginEditing += ResourceManager_BeginEditing;
+                _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
+                _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
+
+                _view = new Shell { DataContext = _resourceManager };
                 _view.Loaded += view_Loaded;
-                _view.NavigateClick += view_NavigateClick;
-                _view.BeginEditing += view_BeginEditing;
-                _view.ReloadRequested += view_ReloadRequested;
-                _view.LanguageSaved += view_LanguageSaved;
                 _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
+
+                EventManager.RegisterClassHandler(typeof(ResourceView), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
 
                 // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
                 // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
@@ -85,7 +94,16 @@
                 if (_dte == null)
                     return;
 
-                Solution_Changed();
+                try
+                {
+                    var properties = _dte.Properties[CATEGORY_FONTS_AND_COLORS, PAGE_TEXT_EDITOR];
+                    var fontSize = Convert.ToDouble(properties.Item(PROPERTY_FONT_SIZE).Value, CultureInfo.InvariantCulture);
+                    // Default in VS is 10, but looks like 12 in WPF
+                    _view.SetValue(ResourceView.TextFontSizeProperty, fontSize * 1.2);
+                }
+                catch { }
+
+                ReloadSolution();
 
                 AppDomain.CurrentDomain.AssemblyResolve -= AppDomain_AssemblyResolve;
             }
@@ -133,14 +151,18 @@
             Solution_Changed();
         }
 
-        private void view_NavigateClick(object sender, RoutedEventArgs e)
+        private void Navigate_Click(object sender, RoutedEventArgs e)
         {
-            var source = e.Source as FrameworkElement;
+            var source = e.OriginalSource as FrameworkElement;
             if (source == null)
                 return;
 
+            var button = source.TryFindAncestorOrSelf<ButtonBase>();
+            if (button == null)
+                return;
+
             var url = source.Tag as string;
-            if (string.IsNullOrEmpty(url))
+            if (string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                 return;
 
             CreateWebBrowser(url);
@@ -148,9 +170,16 @@
 
         void view_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (true.Equals(e.NewValue))
+            if (!true.Equals(e.NewValue))
+                return;
+
+            try
             {
-                Solution_Changed();
+                ReloadSolution();
+            }
+            catch (Exception ex)
+            {
+                _trace.TraceError(ex.ToString());
             }
         }
 
@@ -173,7 +202,7 @@
             Process.Start(url);
         }
 
-        private void view_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
+        private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
         {
             if (!CanEdit(e.Entity, e.Language))
             {
@@ -291,6 +320,9 @@
             {
                 entity.AddLanguage(projectFile);
             }
+
+            // WE have saved the files - update the finger print so we don't reload unnecessarily
+            _solutionFingerPrint = GetFingerprint(GetProjectFiles());
         }
 
         [Localizable(false)]
@@ -300,21 +332,21 @@
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
 
-        private void view_ReloadRequested(object sender, EventArgs e)
+        private void ResourceManager_ReloadRequested(object sender, EventArgs e)
         {
             Solution_Changed(true);
         }
 
-        private void view_LanguageSaved(object sender, LanguageEventArgs e)
+        private void ResourceManager_LanguageSaved(object sender, LanguageEventArgs e)
         {
             // WE have saved the files - update the finger print so we don't reload unnecessarily
             _solutionFingerPrint = GetFingerprint(GetProjectFiles());
 
-            foreach (var projectItem in ((DteProjectFile)e.Language.ProjectFile).ProjectItems)
-            {
-                if (projectItem == null)
-                    continue;
+            var projectItems = ((DteProjectFile)e.Language.ProjectFile).ProjectItems
+                .Where(projectItem => projectItem != null);
 
+            foreach (var projectItem in projectItems)
+            {
                 if (projectItem.IsOpen && (projectItem.Document != null))
                 {
                     projectItem.Document.Close();
@@ -333,30 +365,35 @@
         {
             try
             {
-                if (_view == null)
-                    return;
-
-                var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || p.IsSourceCodeOrContentFile()).Cast<ProjectFile>().ToArray();
-
-                // The solution events are not reliable, so we check the solution on every load/unload of our window.
-                // To avoid loosing the scope every time this method is called we only call load if we detect changes.
-                var fingerPrint = GetFingerprint(projectFiles);
-
-                if (!forceReload && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
-                    return;
-
-                _solutionFingerPrint = fingerPrint;
-                _resourceManager.Load(projectFiles);
-
-                if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
-                {
-                    CodeReference.BeginFind(_resourceManager.ResourceEntities, projectFiles);
-                }
+                ReloadSolution(forceReload);
             }
             catch (Exception ex)
             {
                 _trace.TraceError(ex.ToString());
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ResourceLoadingError, ex.Message));
+            }
+        }
+
+        private void ReloadSolution(bool forceReload = false)
+        {
+            if (_view == null)
+                return;
+
+            var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || p.IsSourceCodeOrContentFile()).Cast<ProjectFile>().ToArray();
+
+            // The solution events are not reliable, so we check the solution on every load/unload of our window.
+            // To avoid loosing the scope every time this method is called we only call load if we detect changes.
+            var fingerPrint = GetFingerprint(projectFiles);
+
+            if (!forceReload && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            _solutionFingerPrint = fingerPrint;
+            _resourceManager.Load(projectFiles);
+
+            if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
+            {
+                CodeReference.BeginFind(_resourceManager.ResourceEntities, projectFiles, _trace);
             }
         }
 
@@ -404,7 +441,7 @@
 
             if (!File.Exists(filePath))
             {
-                _trace.TraceError(string.Format(CultureInfo.CurrentCulture, @"File not found: {0}", filePath));
+                _trace.TraceError(@"File not found: {0}", filePath);
                 return null;
             }
 

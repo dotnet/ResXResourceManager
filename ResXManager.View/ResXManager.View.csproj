@@ -12,6 +12,7 @@
     <AssemblyName>ResXManager.View</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -29,7 +30,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\CodeContracts.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
     <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
     <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
@@ -117,9 +118,9 @@
     <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DataGridExtensions, Version=1.0.14.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
+    <Reference Include="DataGridExtensions, Version=1.0.15.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DataGridExtensions.1.0.14.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
+      <HintPath>..\packages\DataGridExtensions.1.0.15.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -129,6 +130,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Interactivity" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
@@ -140,24 +142,40 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
-    <Compile Include="AddNewKeyCommandConverter.cs" />
-    <Compile Include="CodeReferencesToolTip.xaml.cs">
+    <Compile Include="Behaviors\DataGridBeginEditOnCtrlEnterBehavior.cs" />
+    <Compile Include="Behaviors\DataGridDisableTargetWhileEditingBehavior.cs" />
+    <Compile Include="Behaviors\DataGridTryBeginEditBehavior.cs" />
+    <Compile Include="Behaviors\PopupFocusManagerBehavior.cs" />
+    <Compile Include="Behaviors\SelectGroupOnGroupHeaderClickBehavior.cs" />
+    <Compile Include="Behaviors\ShowErrorsOnlyBehavior.cs" />
+    <Compile Include="Behaviors\SynchronizeTextBoxWithDataGridCellBehavior.cs" />
+    <Compile Include="Behaviors\UpdateNeutralColumnHeadersBehavior.cs" />
+    <Compile Include="Behaviors\ZoomFontSizeOnMouseWheelBehavior.cs" />
+    <Compile Include="ColumnHeaders\LanguageColumnHeader.cs" />
+    <Compile Include="Converters\AddNewKeyCommandConverter.cs" />
+    <Compile Include="Tools\ColumnManager.cs" />
+    <Compile Include="Tools\CultureOverrideEventArgs.cs" />
+    <Compile Include="Tools\NeutralCultureCountyOverrides.cs" />
+    <Compile Include="Visuals\CodeReferencesToolTip.xaml.cs">
       <DependentUpon>CodeReferencesToolTip.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CommentHeader.cs" />
-    <Compile Include="ConfirmedCommandConverter.cs" />
-    <Compile Include="CultureToImageConverter.cs" />
-    <Compile Include="CultureToImageSourceConverter.cs" />
-    <Compile Include="IColumnHeader.cs" />
-    <Compile Include="InputBox.xaml.cs">
+    <Compile Include="ColumnHeaders\CommentHeader.cs" />
+    <Compile Include="Converters\ConfirmedCommandConverter.cs" />
+    <Compile Include="Converters\CultureToImageConverter.cs" />
+    <Compile Include="Converters\CultureToImageSourceConverter.cs" />
+    <Compile Include="Converters\DataGridToSelectionScopeConverter.cs" />
+    <Compile Include="ColumnHeaders\IColumnHeader.cs" />
+    <Compile Include="Visuals\LanguageConfiguration.xaml.cs">
+      <DependentUpon>LanguageConfiguration.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Visuals\InputBox.xaml.cs">
       <DependentUpon>InputBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ItemsControlFilterBinding.cs" />
-    <Compile Include="ColumnHeader.cs" />
-    <Compile Include="LanguageColumnFilterConverter.cs" />
-    <Compile Include="LanguageHeader.cs" />
-    <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="MultiSelectorExtensions.cs" />
+    <Compile Include="ColumnHeaders\ColumnHeader.cs" />
+    <Compile Include="Converters\LanguageColumnFilterConverter.cs" />
+    <Compile Include="ColumnHeaders\LanguageHeader.cs" />
+    <Compile Include="Tools\ExtensionMethods.cs" />
+    <Compile Include="Tools\MultiSelectorExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -169,24 +187,35 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="ResourceView.xaml.cs">
+    <Compile Include="Visuals\ResourceView.xaml.cs">
       <DependentUpon>ResourceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.cs" />
-    <Compile Include="TextEventArgs.cs" />
-    <Compile Include="VisibilityToBooleanConverter.cs" />
-    <Compile Include="WaitCursor.cs" />
+    <Compile Include="Tools\TextEventArgs.cs" />
+    <Compile Include="Converters\VisibilityToBooleanConverter.cs" />
+    <Compile Include="Tools\WaitCursor.cs" />
+    <Compile Include="Visuals\Shell.xaml.cs">
+      <DependentUpon>Shell.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="CodeReferencesToolTip.xaml">
+    <Page Include="Visuals\CodeReferencesToolTip.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="InputBox.xaml">
+    <Page Include="Visuals\LanguageConfiguration.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\InputBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ResourceView.xaml">
+    <Page Include="Visuals\ResourceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\Shell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -289,7 +318,6 @@
     <Resource Include="Flags\er.gif" />
     <Resource Include="Flags\es.gif" />
     <Resource Include="Flags\et.gif" />
-    <Resource Include="Flags\fam.gif" />
     <Resource Include="Flags\fi.gif" />
     <Resource Include="Flags\fj.gif" />
     <Resource Include="Flags\fk.gif" />
@@ -513,6 +541,7 @@
   <ItemGroup>
     <Resource Include="Assets\references.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

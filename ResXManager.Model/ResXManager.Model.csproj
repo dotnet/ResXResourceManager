@@ -28,7 +28,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\CodeContracts.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
     <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
     <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
@@ -140,6 +140,7 @@
     <Compile Include="ExcelRange.cs" />
     <Compile Include="CodeReference.cs" />
     <Compile Include="GlobalExtensions.cs" />
+    <Compile Include="ITracer.cs" />
     <Compile Include="LanguageEventArgs.cs" />
     <Compile Include="ListCollectionViewListAdapter.cs" />
     <Compile Include="NullCommand.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="PropertySupport.cs" />
     <Compile Include="ResourceEntityExtensions.cs" />
     <Compile Include="ResourceManagerExtensions.cs" />
+    <Compile Include="IResourceScope.cs" />
     <Compile Include="ResourceTableEntry.cs" />
     <Compile Include="ResourceEntity.cs" />
     <Compile Include="ResourceLanguage.cs" />

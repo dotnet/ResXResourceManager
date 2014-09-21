@@ -216,4 +216,28 @@
   <data name="NoCodeReferencesToolTip" xml:space="preserve">
     <value>Dieser Algorithmus hat keine Referenzen im Code gefunden. Es könnten aber noch indirekte Referenzen für diesen Text geben.</value>
   </data>
+  <data name="CommentColumnHeader" xml:space="preserve">
+    <value>Kommentar</value>
+  </data>
+  <data name="ExportExcelAll" xml:space="preserve">
+    <value>Alles exportieren</value>
+  </data>
+  <data name="ExportExcelSelection" xml:space="preserve">
+    <value>Auswahl exportieren</value>
+  </data>
+  <data name="HelpButtonToolTip" xml:space="preserve">
+    <value>Dokumentation</value>
+  </data>
+  <data name="ImportExcel" xml:space="preserve">
+    <value>Importieren</value>
+  </data>
+  <data name="LanguageConfiguration_Description" xml:space="preserve">
+    <value>Dies ist eine Übersicht über die Sprachen, die vom System unterstützt werden. Die spezifischen Sprachen (z.B. 'en-US') werden nach den neutralen Sprache (z.B. 'en') gruppiert dargestellt. Um die Flagge für eine neutrale Sprache zu ändern, doppelklicken sie auf die gewünschte spezifische Sprache.</value>
+  </data>
+  <data name="ShellTabHeader_Languages" xml:space="preserve">
+    <value>Sprachen</value>
+  </data>
+  <data name="ShellTabHeader_Main" xml:space="preserve">
+    <value>Hauptansicht</value>
+  </data>
 </root>

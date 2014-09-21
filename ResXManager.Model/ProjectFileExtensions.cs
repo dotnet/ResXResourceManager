@@ -127,5 +127,12 @@
 
             return Path.GetExtension(projectFile.FilePath).Equals(".vb", StringComparison.OrdinalIgnoreCase);
         }
+
+        public static bool IsCSharpFile(this ProjectFile projectFile)
+        {
+            Contract.Requires(projectFile != null);
+
+            return Path.GetExtension(projectFile.FilePath).Equals(".cs", StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

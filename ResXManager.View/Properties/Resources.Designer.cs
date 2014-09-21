@@ -106,6 +106,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comment.
+        /// </summary>
+        public static string CommentColumnHeader {
+            get {
+                return ResourceManager.GetString("CommentColumnHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cut the selected rows?.
         /// </summary>
         public static string ConfirmCutItems {
@@ -230,6 +239,24 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export all.
+        /// </summary>
+        public static string ExportExcelAll {
+            get {
+                return ResourceManager.GetString("ExportExcelAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export selection.
+        /// </summary>
+        public static string ExportExcelSelection {
+            get {
+                return ResourceManager.GetString("ExportExcelSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The file &apos;{0}&apos; already exists. Do you want to overwrite it?.
         /// </summary>
         public static string FileExistsPrompt {
@@ -266,6 +293,24 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Documentation.
+        /// </summary>
+        public static string HelpButtonToolTip {
+            get {
+                return ResourceManager.GetString("HelpButtonToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        public static string ImportExcel {
+            get {
+                return ResourceManager.GetString("ImportExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invariant.
         /// </summary>
         public static string Invariant {
@@ -280,6 +325,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string Key {
             get {
                 return ResourceManager.GetString("Key", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is an overview of the languages supported by the system. It shows the specific languages (e.g. &apos;en-US&apos;) grouped by their neutral language (e.g. &apos;en&apos;). To change the flag displayed for a neutral language, double click the specific language with the desired flag..
+        /// </summary>
+        public static string LanguageConfiguration_Description {
+            get {
+                return ResourceManager.GetString("LanguageConfiguration_Description", resourceCulture);
             }
         }
         
@@ -370,6 +424,24 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string ResourceFilterToolTip {
             get {
                 return ResourceManager.GetString("ResourceFilterToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Languages.
+        /// </summary>
+        public static string ShellTabHeader_Languages {
+            get {
+                return ResourceManager.GetString("ShellTabHeader_Languages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Main.
+        /// </summary>
+        public static string ShellTabHeader_Main {
+            get {
+                return ResourceManager.GetString("ShellTabHeader_Main", resourceCulture);
             }
         }
         
