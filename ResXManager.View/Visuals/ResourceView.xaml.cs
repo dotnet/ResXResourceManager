@@ -44,7 +44,7 @@
             set { SetValue(TextFontSizeProperty, value); }
         }
         public static readonly DependencyProperty TextFontSizeProperty =
-            DependencyProperty.Register("TextFontSize", typeof (double), typeof (ResourceView), new UIPropertyMetadata(12.0));
+            DependencyProperty.RegisterAttached("TextFontSize", typeof (double), typeof (ResourceView), new FrameworkPropertyMetadata(12.0, FrameworkPropertyMetadataOptions.Inherits));
 
         private ResourceManager ViewModel
         {

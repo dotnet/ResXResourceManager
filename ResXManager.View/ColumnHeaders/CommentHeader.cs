@@ -3,28 +3,19 @@
     using System.Globalization;
     using tomenglertde.ResXManager.View.Properties;
 
-    public class CommentHeader : ILanguageColumnHeader
+    public class CommentHeader : LanguageColumnHeader
     {
-        private readonly CultureInfo _culture;
-
         public CommentHeader()
+            : base(null)
         {
         }
 
         public CommentHeader(CultureInfo culture)
+            : base(culture)
         {
-            _culture = culture;
         }
 
-        public CultureInfo Language
-        {
-            get
-            {
-                return _culture;
-            }
-        }
-
-        public ColumnType ColumnType
+        public override ColumnType ColumnType
         {
             get
             {

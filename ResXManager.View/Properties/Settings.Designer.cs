@@ -58,5 +58,17 @@ namespace tomenglertde.ResXManager.View.Properties {
                 this["IsFindCodeReferencesEnabled"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("en=en-US")]
+        public string NeutralCultureCountyOverrides {
+            get {
+                return ((string)(this["NeutralCultureCountyOverrides"]));
+            }
+            set {
+                this["NeutralCultureCountyOverrides"] = value;
+            }
+        }
     }
 }

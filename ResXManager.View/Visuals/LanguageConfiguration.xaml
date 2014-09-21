@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.LanguageConfiguration"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
+             xmlns:model="http://schemas.tom-englert.de/xaml/ResXManager"
+             xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
+             xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
+             d:DataContext="{d:DesignInstance model:ResourceManager}">
+  <UserControl.Resources>
+    <converters:CultureToImageSourceConverter x:Key="CultureToImageSourceConverter" />
+
+    <ControlTemplate x:Key="LanguageControlTemplate">
+      <StackPanel Orientation="Horizontal" Margin="0,2" d:DataContext="{d:DesignInstance globalization:CultureInfo}">
+        <Decorator Width="2" />
+        <Image Source="{Binding Converter={StaticResource CultureToImageSourceConverter}}" />
+        <Decorator Width="5" />
+        <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+        <Decorator Width="5" />
+        <TextBlock Text="{Binding DisplayName}" />
+        <Decorator Width="10" />
+      </StackPanel>
+    </ControlTemplate>
+
+    <DataTemplate x:Key="LanguageDataTemplate" DataType="{x:Type globalization:CultureInfo}">
+      <Control Template="{StaticResource LanguageControlTemplate}" MouseDoubleClick="Language_MouseDoubleClick" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="LanguageGroupHeaderDataTemplate" DataType="{x:Type CollectionViewGroup}">
+      <Border Margin="0,5,0,0" Background="LightGray">
+        <Control Template="{StaticResource LanguageControlTemplate}" DataContext="{Binding Name}" />
+      </Border>
+    </DataTemplate>
+
+    <CollectionViewSource x:Key="CollectionViewSource" Source="{Binding SpecificCultures}">
+      <CollectionViewSource.GroupDescriptions>
+        <PropertyGroupDescription PropertyName="Parent" />
+      </CollectionViewSource.GroupDescriptions>
+    </CollectionViewSource>
+
+  </UserControl.Resources>
+  <DockPanel>
+    <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="5" Foreground="Gray"
+               Text="This is an overview of the languages supported by the system. It shows the specific languages (e.g. 'en-US') grouped by their neutral language (e.g. 'en'). To change the flag displayed for a neutral language, double click the specific language with the desired flag." />
+    <ListBox x:Name="ListBox"
+             ItemsSource="{Binding Source={StaticResource CollectionViewSource}}"
+             ItemTemplate="{StaticResource LanguageDataTemplate}"
+             ScrollViewer.VerticalScrollBarVisibility="Disabled">
+      <ListBox.GroupStyle>
+        <GroupStyle HeaderTemplate="{StaticResource LanguageGroupHeaderDataTemplate}">
+          <GroupStyle.Panel>
+            <ItemsPanelTemplate>
+              <WrapPanel Orientation="Vertical" />
+            </ItemsPanelTemplate>
+          </GroupStyle.Panel>
+        </GroupStyle>
+      </ListBox.GroupStyle>
+    </ListBox>
+  </DockPanel>
+</UserControl>

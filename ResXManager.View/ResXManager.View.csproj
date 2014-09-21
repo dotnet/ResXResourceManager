@@ -12,6 +12,7 @@
     <AssemblyName>ResXManager.View</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -150,8 +151,11 @@
     <Compile Include="Behaviors\SynchronizeTextBoxWithDataGridCellBehavior.cs" />
     <Compile Include="Behaviors\UpdateNeutralColumnHeadersBehavior.cs" />
     <Compile Include="Behaviors\ZoomFontSizeOnMouseWheelBehavior.cs" />
+    <Compile Include="ColumnHeaders\LanguageColumnHeader.cs" />
     <Compile Include="Converters\AddNewKeyCommandConverter.cs" />
     <Compile Include="Tools\ColumnManager.cs" />
+    <Compile Include="Tools\CultureOverrideEventArgs.cs" />
+    <Compile Include="Tools\NeutralCultureCountyOverrides.cs" />
     <Compile Include="Visuals\CodeReferencesToolTip.xaml.cs">
       <DependentUpon>CodeReferencesToolTip.xaml</DependentUpon>
     </Compile>
@@ -161,6 +165,9 @@
     <Compile Include="Converters\CultureToImageSourceConverter.cs" />
     <Compile Include="Converters\DataGridToSelectionScopeConverter.cs" />
     <Compile Include="ColumnHeaders\IColumnHeader.cs" />
+    <Compile Include="Visuals\LanguageConfiguration.xaml.cs">
+      <DependentUpon>LanguageConfiguration.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Visuals\InputBox.xaml.cs">
       <DependentUpon>InputBox.xaml</DependentUpon>
     </Compile>
@@ -187,9 +194,16 @@
     <Compile Include="Tools\TextEventArgs.cs" />
     <Compile Include="Converters\VisibilityToBooleanConverter.cs" />
     <Compile Include="Tools\WaitCursor.cs" />
+    <Compile Include="Visuals\Shell.xaml.cs">
+      <DependentUpon>Shell.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Visuals\CodeReferencesToolTip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\LanguageConfiguration.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -198,6 +212,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Visuals\ResourceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\Shell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -300,7 +318,6 @@
     <Resource Include="Flags\er.gif" />
     <Resource Include="Flags\es.gif" />
     <Resource Include="Flags\et.gif" />
-    <Resource Include="Flags\fam.gif" />
     <Resource Include="Flags\fi.gif" />
     <Resource Include="Flags\fj.gif" />
     <Resource Include="Flags\fk.gif" />

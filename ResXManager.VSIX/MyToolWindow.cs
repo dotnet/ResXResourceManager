@@ -11,6 +11,7 @@
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using EnvDTE;
     using Microsoft.VisualStudio;
@@ -33,7 +34,7 @@
         private const string PROPERTY_FONT_SIZE = "FontSize";
 
         private DTE _dte;
-        private ResourceView _view;
+        private Control _view;
         private ResourceManager _resourceManager;
         private string _solutionFingerPrint;
         private readonly OutputWindowTracer _trace;
@@ -78,7 +79,7 @@
                 _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
                 _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
 
-                _view = new ResourceView { DataContext = _resourceManager };
+                _view = new Shell { DataContext = _resourceManager };
                 _view.Loaded += view_Loaded;
                 _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
 
@@ -98,7 +99,7 @@
                     var properties = _dte.Properties[CATEGORY_FONTS_AND_COLORS, PAGE_TEXT_EDITOR];
                     var fontSize = Convert.ToDouble(properties.Item(PROPERTY_FONT_SIZE).Value);
                     // Default in VS is 10, but looks like 12 in WPF
-                    _view.TextFontSize = fontSize * 1.2;
+                    _view.SetValue(ResourceView.TextFontSizeProperty, fontSize * 1.2);
                 }
                 catch { }
 

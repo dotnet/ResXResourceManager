@@ -28,7 +28,7 @@
       </Menu>
     </DockPanel>
 
-    <visuals:ResourceView />
+    <visuals:Shell />
 
   </DockPanel>
 </Window>

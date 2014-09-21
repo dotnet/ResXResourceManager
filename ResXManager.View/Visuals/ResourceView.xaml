@@ -143,33 +143,6 @@
 
     <DockPanel Grid.Column="2">
       <DockPanel DockPanel.Dock="Bottom" Background="{Binding Background, ElementName=DataGrid}">
-        <Button x:Name="DonateButton" DockPanel.Dock="Right" Background="Transparent" BorderBrush="Transparent"
-                BorderThickness="0" ToolTip="{x:Static properties:Resources.DonateButtonToolTip}"
-                Tag="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=TQQR8AKGNHELQ">
-          <Button.Style>
-            <Style TargetType="Button">
-              <Setter Property="Opacity" Value="0.15" />
-              <Style.Triggers>
-                <EventTrigger RoutedEvent="MouseEnter">
-                  <BeginStoryboard Name="DonateMouseEnter">
-                    <Storyboard Duration="0:0:0.5" Storyboard.TargetProperty="Opacity">
-                      <DoubleAnimation To="1.0" />
-                    </Storyboard>
-                  </BeginStoryboard>
-                </EventTrigger>
-                <EventTrigger RoutedEvent="MouseLeave">
-                  <BeginStoryboard Name="DonateMouseLeave">
-                    <Storyboard Duration="0:0:0.5" Storyboard.TargetProperty="Opacity">
-                      <DoubleAnimation To="0.15" />
-                    </Storyboard>
-                  </BeginStoryboard>
-                </EventTrigger>
-              </Style.Triggers>
-            </Style>
-          </Button.Style>
-          <Image SnapsToDevicePixels="True" Stretch="None"
-                 Source="/ResXManager.View;component/Assets/btn_donate_SM.gif" />
-        </Button>
         <Grid DataContext="{Binding SelectedItem, ElementName=ListBox}">
           <Grid.Style>
             <Style TargetType="Grid">
