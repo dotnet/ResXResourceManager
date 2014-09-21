@@ -150,7 +150,7 @@
     <ApplicationIcon>ResourceManager.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>F79FAD6A759A2525B8E3A49F79BDDCCF17ACA57A</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>9C26F94AB34E6BDCC4CA231A83DD0200EAB8627E</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>ResXManager_Key.pfx</ManifestKeyFile>
