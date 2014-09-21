@@ -11,11 +11,13 @@
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Windows;
+    using System.Windows.Controls.Primitives;
     using EnvDTE;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.Tools;
     using tomenglertde.ResXManager.View.Visuals;
     using VSLangProj;
     using Process = System.Diagnostics.Process;
@@ -72,13 +74,15 @@
                 AppDomain.CurrentDomain.AssemblyResolve += AppDomain_AssemblyResolve;
 
                 _resourceManager = new ResourceManager();
+                _resourceManager.BeginEditing += ResourceManager_BeginEditing;
+                _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
+                _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
+
                 _view = new ResourceView { DataContext = _resourceManager };
                 _view.Loaded += view_Loaded;
-                _view.NavigateClick += view_NavigateClick;
-                _view.BeginEditing += view_BeginEditing;
-                _view.ReloadRequested += view_ReloadRequested;
-                _view.LanguageSaved += view_LanguageSaved;
                 _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
+
+                EventManager.RegisterClassHandler(typeof(ResourceView), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
 
                 // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
                 // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
@@ -146,14 +150,18 @@
             Solution_Changed();
         }
 
-        private void view_NavigateClick(object sender, RoutedEventArgs e)
+        private void Navigate_Click(object sender, RoutedEventArgs e)
         {
-            var source = e.Source as FrameworkElement;
+            var source = e.OriginalSource as FrameworkElement;
             if (source == null)
                 return;
 
+            var button = source.TryFindAncestorOrSelf<ButtonBase>();
+            if (button == null)
+                return;
+
             var url = source.Tag as string;
-            if (string.IsNullOrEmpty(url))
+            if (string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                 return;
 
             CreateWebBrowser(url);
@@ -193,7 +201,7 @@
             Process.Start(url);
         }
 
-        private void view_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
+        private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
         {
             if (!CanEdit(e.Entity, e.Language))
             {
@@ -323,12 +331,12 @@
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
 
-        private void view_ReloadRequested(object sender, EventArgs e)
+        private void ResourceManager_ReloadRequested(object sender, EventArgs e)
         {
             Solution_Changed(true);
         }
 
-        private void view_LanguageSaved(object sender, LanguageEventArgs e)
+        private void ResourceManager_LanguageSaved(object sender, LanguageEventArgs e)
         {
             // WE have saved the files - update the finger print so we don't reload unnecessarily
             _solutionFingerPrint = GetFingerprint(GetProjectFiles());

@@ -10,10 +10,10 @@
     using System.IO;
     using System.Linq;
     using System.Windows;
-    using System.Windows.Forms;
+    using System.Windows.Controls.Primitives;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Properties;
-    using MessageBox = System.Windows.MessageBox;
+    using tomenglertde.ResXManager.View.Tools;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -24,6 +24,8 @@
         public MainWindow()
         {
             InitializeComponent();
+
+            EventManager.RegisterClassHandler(typeof(MainWindow), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
         }
 
         public string Folder
@@ -71,7 +73,7 @@
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "CA is wrong about this!")]
         private void Browse_Click(object sender, RoutedEventArgs e)
         {
-            using (var dlg = new FolderBrowserDialog {SelectedPath = Settings.StartupFolder})
+            using (var dlg = new System.Windows.Forms.FolderBrowserDialog { SelectedPath = Settings.StartupFolder })
             {
                 if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                     return;
@@ -108,20 +110,24 @@
             }
         }
 
-        private void ResourceView_NavigateClick(object sender, RoutedEventArgs e)
+        private static void Navigate_Click(object sender, RoutedEventArgs e)
         {
-            var source = e.Source as FrameworkElement;
+            var source = e.OriginalSource as FrameworkElement;
             if (source == null)
                 return;
 
+            var button = source.TryFindAncestorOrSelf<ButtonBase>();
+            if (button == null)
+                return;
+
             var url = source.Tag as string;
-            if (string.IsNullOrEmpty(url))
+            if (string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                 return;
 
             Process.Start(url);
         }
 
-        private void ResourceView_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
+        private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
         {
             if (!CanEdit(e.Entity, e.Language))
             {
@@ -191,7 +197,7 @@
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
 
-        private void ResourceView_ReloadRequested(object sender, EventArgs e)
+        private void ResourceManager_ReloadRequested(object sender, EventArgs e)
         {
             try
             {

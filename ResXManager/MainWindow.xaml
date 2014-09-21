@@ -6,7 +6,7 @@
         xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals;assembly=ResXManager.View"
         Title="ResX Resource Manager" Height="750" Width="1024" Icon="/ResXManager;component/ResourceManager.ico">
   <Window.DataContext>
-    <model:ResourceManager />
+    <model:ResourceManager BeginEditing="ResourceManager_BeginEditing" ReloadRequested="ResourceManager_ReloadRequested" />
   </Window.DataContext>
   <DockPanel>
     <DockPanel DockPanel.Dock="Top">
@@ -28,7 +28,7 @@
       </Menu>
     </DockPanel>
 
-    <visuals:ResourceView NavigateClick="ResourceView_NavigateClick" BeginEditing="ResourceView_BeginEditing" ReloadRequested="ResourceView_ReloadRequested" />
+    <visuals:ResourceView />
 
   </DockPanel>
 </Window>

@@ -35,9 +35,10 @@
         private ResourceTableEntry _selectedEntry;
         private string _entityFilter;
 
-        public event EventHandler<LanguageChangedEventArgs> LanguageChanged;
+        public event EventHandler<LanguageEventArgs> LanguageSaved;
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
         public event EventHandler<EventArgs> Loaded;
+        public event EventHandler<EventArgs> ReloadRequested;
 
         public ResourceManager()
         {
@@ -256,6 +257,14 @@
             }
         }
 
+        public ICommand ReloadCommand
+        {
+            get
+            {
+                return new DelegateCommand(OnReloadRequested);
+            }
+        }
+
         public bool? AreAllFilesSelected
         {
             get
@@ -312,13 +321,6 @@
             eventHandler(this, args);
 
             return !args.Cancel;
-        }
-
-        protected virtual void OnLoaded()
-        {
-            var handler = Loaded;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
         }
 
         private bool CanAddNew()
@@ -513,6 +515,27 @@
             Clipboard.SetText(string.Join(Environment.NewLine, selectedKeys));
         }
 
+        private void OnLoaded()
+        {
+            var handler = Loaded;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+        private void OnLanguageSaved(LanguageEventArgs e)
+        {
+            var handler = LanguageSaved;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        private void OnReloadRequested()
+        {
+            var handler = ReloadRequested;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
         private void InternalLoad(IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory)
         {
             Contract.Requires(resourceFilesByDirectory != null);
@@ -596,10 +619,24 @@
 
         private void ResourceEntity_LanguageChanged(object sender, LanguageChangedEventArgs e)
         {
-            if (LanguageChanged != null)
-            {
-                LanguageChanged(this, e);
-            }
+            // Defer save to avoid repeated file access
+            Dispatcher.BeginInvoke(new Action(
+                delegate
+                {
+                    try
+                    {
+                        if (!e.Language.HasChanges)
+                            return;
+
+                        e.Language.Save();
+
+                        OnLanguageSaved(e);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, Resources.Title);
+                    }
+                }));
         }
 
         private void SelectedEntities_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

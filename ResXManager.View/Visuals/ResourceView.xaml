@@ -196,7 +196,7 @@
         <DockPanel Grid.Row="0">
           <ToolBarTray DockPanel.Dock="Left" Background="{x:Static SystemColors.MenuBarBrush}">
             <ToolBar x:Name="ToolBar" IsOverflowOpen="False" Background="{x:Static SystemColors.MenuBarBrush}">
-              <Button ToolTip="{x:Static properties:Resources.RefreshViewToolTip}" Click="Refresh_Click">
+              <Button ToolTip="{x:Static properties:Resources.RefreshViewToolTip}" Command="{Binding ReloadCommand}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/refresh.png" />
               </Button>
               <Separator />
@@ -224,7 +224,7 @@
               </Button>
               <ToggleButton ToolTip="{x:Static properties:Resources.FindCodeReferencesButtonToolTip}"
                             IsChecked="{Binding IsFindCodeReferencesEnabled, Source={x:Static properties:Settings.Default}, Mode=TwoWay}"
-                            Click="Refresh_Click">
+                            Command="{Binding ReloadCommand}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/references.png" />
               </ToggleButton>
               <Separator />
@@ -425,9 +425,9 @@
 
           <DataGrid.ItemsPanel>
             <ItemsPanelTemplate>
-              <VirtualizingStackPanel 
-                ContextMenu="{StaticResource RowContextMenu}" 
-                DataContext="{Binding Path=DataContext, ElementName=DataGrid}" 
+              <VirtualizingStackPanel
+                ContextMenu="{StaticResource RowContextMenu}"
+                DataContext="{Binding Path=DataContext, ElementName=DataGrid}"
                 TextElement.FontSize="{Binding Path=TextFontSize, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" >
                 <i:Interaction.Behaviors>
                   <behaviors:ZoomFontSizeOnMouseWheelBehavior />

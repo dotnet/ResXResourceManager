@@ -57,7 +57,7 @@
                 {
                     Title = Properties.Resources.Title,
                     Prompt = Properties.Resources.NewKeyPrompt,
-                    Owner = Window.GetWindow(ResourceView.Instance),
+                    Owner = Application.Current.MainWindow,
                     WindowStartupLocation = WindowStartupLocation.CenterOwner
                 };
 
