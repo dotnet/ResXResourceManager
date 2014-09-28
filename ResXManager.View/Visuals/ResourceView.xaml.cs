@@ -9,6 +9,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
+    using System.Windows.Interactivity;
     using DataGridExtensions;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Controls;
@@ -21,14 +22,9 @@
     [ContractVerification(false)]   // Too many warnings from generated code.
     public partial class ResourceView
     {
-        private static readonly DependencyProperty HardReferenceToDgx = DataGridFilterColumn.FilterProperty;
-
         public ResourceView()
         {
-            if (HardReferenceToDgx == null) // just use this...
-            {
-                Trace.WriteLine("HardReferenceToDgx failed");
-            }
+            References.Resolve(this);
 
             InitializeComponent();
 
@@ -113,6 +109,25 @@
         {
             if (MessageBox.Show(Properties.Resources.ConfirmCutItems, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 e.Cancel = true;
+        }
+
+        /// <summary>
+        /// Assemblies ony referenced via reflection (XAML) can cause problems at runtime, sometimes they are not correctly installed
+        /// by the VSIX installer. Add some code references to avoid this problem by forcing the assemblies to be loaded before the XAML is loaded.
+        /// </summary>
+        static class References
+        {
+            private static readonly DependencyProperty HardReferenceToDgx = DataGridFilterColumn.FilterProperty;
+
+            public static void Resolve(DependencyObject view)
+            {
+                if (HardReferenceToDgx == null) // just use this to avoid warnings...
+                {
+                    Trace.WriteLine("HardReferenceToDgx failed");
+                }
+
+                Interaction.GetBehaviors(view);
+            }
         }
     }
 }
