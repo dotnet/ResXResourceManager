@@ -68,9 +68,12 @@
             {
                 _trace.WriteLine(Resources.IntroMessage);
 
-                var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var executingAssembly = Assembly.GetExecutingAssembly();
+
+                var folder = Path.GetDirectoryName(executingAssembly.Location);
                 if (folder != null)
                     _trace.WriteLine(string.Format(CultureInfo.CurrentCulture, Resources.AssemblyLocation, folder));
+                _trace.WriteLine(string.Format(CultureInfo.CurrentCulture,  Resources.Version, new AssemblyName(executingAssembly.FullName).Version));
 
                 AppDomain.CurrentDomain.AssemblyResolve += AppDomain_AssemblyResolve;
 

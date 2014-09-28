@@ -154,4 +154,7 @@ See output window for details.</value>
   <data name="AssemblyLocation" xml:space="preserve">
     <value>Assembly location: {0}</value>
   </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version: {0}</value>
+  </data>
 </root>

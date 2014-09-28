@@ -89,8 +89,5 @@
                 ToggleButton.IsChecked = false;
             }
         }
-
-
-
     }
 }

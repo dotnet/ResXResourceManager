@@ -204,13 +204,13 @@
             Contract.Requires(middle != null);
             Contract.Requires(right != null);
 
-            // C#, VB, cshtml: "Resources.Key" or "Properties.Resources.Key", but not: "Resources.Key.Something" or "Resources.Something.Key" (could be e.g. some namespace declaration)
+            // C#, VB, cshtml: "Resources.Key", or "Properties.Resources.Key", or "Resources.Key.Substring(..)", but not "Resources.Something.Key" (could be e.g. some namespace declaration)
             // XAML: {x:Static properties:Resources.Key}" IsCheckable="True"
-            if ((middle == ".") && !right.StartsWith(".", StringComparison.Ordinal))
+            if (middle == ".")
                 return true;
 
             // C++: like C#, but :: instead of .
-            if ((middle == "::") && !right.StartsWith("::", StringComparison.Ordinal) && !right.StartsWith("->", StringComparison.Ordinal))
+            if ((middle == "::") && !right.StartsWith("::", StringComparison.Ordinal))
                 return true;
 
             // ASP: <%$ Resources: Class, Key %>

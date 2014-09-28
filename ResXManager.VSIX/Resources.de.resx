@@ -130,4 +130,7 @@ Mehr Details finden sich im Ausgabefenster.</value>
   <data name="AssemblyLocation" xml:space="preserve">
     <value>Installationsverzeichnis: {0}</value>
   </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version: {0}</value>
+  </data>
 </root>
