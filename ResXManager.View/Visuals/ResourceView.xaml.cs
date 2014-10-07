@@ -50,7 +50,17 @@
             }
         }
 
-        private void self_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+
+            if (e.Property == DataContextProperty)
+            {
+                DataContext_Changed(e);
+            }
+        }
+
+        private void DataContext_Changed(DependencyPropertyChangedEventArgs e)
         {
             var oldValue = e.OldValue as ResourceManager;
             if (oldValue != null)
@@ -86,14 +96,14 @@
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
 
-            var languages = ViewModel.Languages.Where(l => l != null).Select(l => l.ToString()).ToArray();
+            var languages = ViewModel.Languages.Where(l => l.Culture != null).Select(l => l.Culture.ToString()).ToArray();
 
             inputBox.TextChanged += (_, args) =>
                 inputBox.IsInputValid = !languages.Contains(args.Text, StringComparer.OrdinalIgnoreCase) && ResourceManager.IsValidLanguageName(args.Text);
 
             if (inputBox.ShowDialog() == true)
             {
-                DataGrid.Columns.AddLanguageColumn(new CultureInfo(inputBox.Text));
+                DataGrid.Columns.AddLanguageColumn(new CultureKey(new CultureInfo(inputBox.Text)));
             }
         }
 

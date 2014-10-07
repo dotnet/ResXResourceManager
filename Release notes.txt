@@ -1,5 +1,5 @@
 1.0.0.46:
-* WI1368: Some of the country flags are mixed up: Refined algorithm to lookup default flag for neutral culture; add overview of langauges, flags for neutral cultures are editable.
+* WI1368: Some of the country flags are mixed up: Refined algorithm to lookup default flag for neutral culture; add overview of languages, flags for neutral cultures are editable.
 * WI1358: Add possibility to increase the font size: Default font size follows VS text size, supports zoom with "ctrl+mouse wheel" like in the VS text editor. 
 * WI1361: Visual Studio 2012 crashes when turning on "Detect code references".
 1.0.0.45:

@@ -19,7 +19,7 @@
     /// </summary>
     public class ResourceEntity : IComparable<ResourceEntity>, IComparable, IEquatable<ResourceEntity>
     {
-        private readonly IDictionary<string, ResourceLanguage> _languages;
+        private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly ResourceManager _owner;
         private readonly string _projectName;
         private readonly string _baseName;
@@ -47,11 +47,11 @@
 
             var languageQuery =
                 from file in files
-                let languageName = file.GetLanguageName()
-                orderby languageName
-                select new ResourceLanguage(languageName, file);
+                let cultureKey = file.GetCultureKey()
+                orderby cultureKey
+                select new ResourceLanguage(cultureKey, file);
 
-            _languages = languageQuery.ToDictionary(language => language.Name, StringComparer.OrdinalIgnoreCase);
+            _languages = languageQuery.ToDictionary(language => language.CultureKey);
 
             foreach (var language in _languages.Values)
             {
@@ -61,7 +61,7 @@
                 language.Changing += language_Changing;
             }
 
-            var entriesQuery = _languages.Values.SelectMany(language => language.Keys)
+            var entriesQuery = _languages.Values.SelectMany(language => language.ResourceKeys)
                 .Distinct()
                 .OrderBy(key => key.ToUpper(CultureInfo.CurrentCulture))
                 .Select(key => new ResourceTableEntry(this, key, _languages));
@@ -164,6 +164,7 @@
             {
                 Contract.Ensures(Contract.Result<IEnumerable<ResourceLanguage>>() != null);
                 Contract.Ensures(Contract.Result<IEnumerable<ResourceLanguage>>().Any());
+
                 return _languages.Values;
             }
         }
@@ -238,13 +239,13 @@
         {
             Contract.Requires(file != null);
 
-            var languageName = file.GetLanguageName();
-            var language = new ResourceLanguage(languageName, file);
+            var cultureKey = file.GetCultureKey();
+            var resourceLanguage = new ResourceLanguage(cultureKey, file);
 
-            language.Changed += language_Changed;
-            language.Changing += language_Changing;
+            resourceLanguage.Changed += language_Changed;
+            resourceLanguage.Changing += language_Changing;
 
-            _languages.Add(languageName, language);
+            _languages.Add(cultureKey, resourceLanguage);
         }
 
         public override string ToString()

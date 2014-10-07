@@ -223,13 +223,13 @@
         {
             Contract.Requires(language != null);
 
-            var languageName = language.Name;
+            var cultureKeyName = language.CultureKey.ToString();
 
-            if ((scope == null) || scope.Comments.Contains(language.Culture))
-                yield return CommentHeaderPrefix + languageName;
+            if ((scope == null) || scope.Comments.Contains(language.CultureKey))
+                yield return CommentHeaderPrefix + cultureKeyName;
 
-            if ((scope == null) || scope.Languages.Contains(language.Culture))
-                yield return languageName;
+            if ((scope == null) || scope.Languages.Contains(language.CultureKey))
+                yield return cultureKeyName;
         }
 
         private static IEnumerable<string> GetLanguageDataColumns(this ResourceTableEntry entry, ResourceLanguage language, IResourceScope scope)
@@ -237,13 +237,13 @@
             Contract.Requires(entry != null);
             Contract.Requires(language != null);
 
-            var languageName = language.Name;
+            var cultureKey = language.CultureKey;
 
-            if ((scope == null) || scope.Comments.Contains(language.Culture))
-                yield return entry.Comments[languageName];
+            if ((scope == null) || scope.Comments.Contains(cultureKey))
+                yield return entry.Comments.GetValue(cultureKey);
 
-            if ((scope == null) || scope.Languages.Contains(language.Culture))
-                yield return entry.Values[languageName];
+            if ((scope == null) || scope.Languages.Contains(cultureKey))
+                yield return entry.Values.GetValue(cultureKey);
         }
 
         /// <summary>

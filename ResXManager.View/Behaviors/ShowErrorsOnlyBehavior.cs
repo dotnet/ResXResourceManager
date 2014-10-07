@@ -1,9 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Behaviors
 {
     using System;
-    using System.Collections;
-    using System.Collections.Specialized;
-    using System.ComponentModel;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -15,8 +12,6 @@
 
     public class ShowErrorsOnlyBehavior : Behavior<DataGrid>
     {
-        private static readonly IList EmptyList = new object[0];
-        private static readonly DependencyPropertyDescriptor VisibilityPropertyDescriptor = DependencyPropertyDescriptor.FromProperty(DataGridColumn.VisibilityProperty, typeof(DataGridColumn));
         public ToggleButton ToggleButton
         {
             get { return (ToggleButton)GetValue(ToggleButtonProperty); }
@@ -31,35 +26,15 @@
         protected override void OnAttached()
         {
             base.OnAttached();
-            
-            DataGrid.Columns.CollectionChanged += Columns_CollectionChanged;
+
+            DataGrid.AddHandler(ColumnVisibilityChangedEventBehavior.ColumnVisibilityChangedEvent, (RoutedEventHandler)DataGrid_ColumnVisibilityChanged);
         }
 
         protected override void OnDetaching()
         {
             base.OnDetaching();
 
-            DataGrid.Columns.CollectionChanged -= Columns_CollectionChanged;
-        }
-
-        private void Columns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    foreach (DataGridColumn column in e.NewItems ?? EmptyList)
-                    {
-                        VisibilityPropertyDescriptor.AddValueChanged(column, DataGrid_ColumnVisibilityChanged);
-                    }
-                    break;
-
-                case NotifyCollectionChangedAction.Remove:
-                    foreach (DataGridColumn column in e.OldItems ?? EmptyList)
-                    {
-                        VisibilityPropertyDescriptor.RemoveValueChanged(column, DataGrid_ColumnVisibilityChanged);
-                    }
-                    break;
-            }
+            DataGrid.RemoveHandler(ColumnVisibilityChangedEventBehavior.ColumnVisibilityChangedEvent, (RoutedEventHandler)DataGrid_ColumnVisibilityChanged);
         }
 
         private DataGrid DataGrid
@@ -104,7 +79,7 @@
             }
         }
 
-        private void DataGrid_ColumnVisibilityChanged(object source, EventArgs e)
+        private void DataGrid_ColumnVisibilityChanged(object source, RoutedEventArgs e)
         {
             if (ToggleButton == null)
                 return;
@@ -120,18 +95,18 @@
             if (DataGrid == null)
                 return;
 
-            var visibleLanguageKeys = DataGrid.Columns
+            var visibleLanguages = DataGrid.Columns
                 .Where(column => column.Visibility == Visibility.Visible)
                 .Select(column => column.Header)
                 .OfType<LanguageHeader>()
-                .Select(header => header.Language.ToLanguageKey())
+                .Select(header => header.CultureKey)
                 .ToArray();
 
             DataGrid.SetIsAutoFilterEnabled(false);
             DataGrid.Items.Filter = row =>
             {
                 var entry = (ResourceTableEntry)row;
-                var values = visibleLanguageKeys.Select(key => entry.Values[key]);
+                var values = visibleLanguages.Select(lang => entry.Values.GetValue(lang));
                 return !entry.IsInvariant && values.Any(string.IsNullOrEmpty);
             };
         }

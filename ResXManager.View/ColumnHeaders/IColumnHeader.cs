@@ -1,6 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
-    using System.Globalization;
+    using tomenglertde.ResXManager.Model;
 
     public interface IColumnHeader
     {
@@ -9,7 +9,7 @@
 
     public interface ILanguageColumnHeader : IColumnHeader
     {
-        CultureInfo Language { get; }
+        CultureKey CultureKey { get; }
     }
 
     public enum ColumnType

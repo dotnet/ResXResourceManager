@@ -1,33 +1,32 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
-    using System.Globalization;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Tools;
 
     public abstract class LanguageColumnHeader : ObservableObject, ILanguageColumnHeader
     {
-        private readonly CultureInfo _culture;
+        private readonly CultureKey _cultureKey;
 
-        protected LanguageColumnHeader(CultureInfo culture)
+        protected LanguageColumnHeader(CultureKey cultureKey)
         {
-            _culture = culture;
+            _cultureKey = cultureKey;
 
             NeutralCultureCountyOverrides.Default.OverrideChanged += NeutralCultureCountyOverrides_OverrideChanged;
         }
 
         void NeutralCultureCountyOverrides_OverrideChanged(object sender, CultureOverrideEventArgs e)
         {
-            if (e.NeutralCulture.Equals(_culture))
+            if (e.NeutralCulture.Equals(_cultureKey.Culture))
             {
-                OnPropertyChanged(() => Language);
+                OnPropertyChanged(() => CultureKey);
             }
         }
 
-        public CultureInfo Language
+        public CultureKey CultureKey
         {
             get
             {
-                return _culture;
+                return _cultureKey;
             }
         }
 

@@ -61,14 +61,14 @@
     public class LanguageChangingEventArgs : CancelEventArgs
     {
         private readonly ResourceEntity _entity;
-        private readonly CultureInfo _language;
+        private readonly CultureInfo _culture;
 
-        public LanguageChangingEventArgs(ResourceEntity entity, CultureInfo language)
+        public LanguageChangingEventArgs(ResourceEntity entity, CultureInfo culture)
         {
             Contract.Requires(entity != null);
 
             _entity = entity;
-            _language = language;
+            _culture = culture;
         }
 
         public ResourceEntity Entity
@@ -80,11 +80,11 @@
             }
         }
 
-        public CultureInfo Language
+        public CultureInfo Culture
         {
             get
             {
-                return _language;
+                return _culture;
             }
         }
 

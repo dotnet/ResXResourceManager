@@ -207,26 +207,26 @@
 
         private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
         {
-            if (!CanEdit(e.Entity, e.Language))
+            if (!CanEdit(e.Entity, e.Culture))
             {
                 e.Cancel = true;
             }
         }
 
-        private bool CanEdit(ResourceEntity entity, CultureInfo language)
+        private bool CanEdit(ResourceEntity entity, CultureInfo culture)
         {
             Contract.Requires(entity != null);
 
-            var languages = entity.Languages.Where(lang => (language == null) || language.Equals(lang.Culture)).ToArray();
+            var languages = entity.Languages.Where(lang => (culture == null) || culture.Equals(lang.Culture)).ToArray();
 
             if (!languages.Any())
             {
                 try
                 {
                     // because entity.Languages.Any() => languages can only be empty if language != null!
-                    Contract.Assume(language != null);
+                    Contract.Assume(culture != null);
 
-                    return AddLanguage(entity, language);
+                    return AddLanguage(entity, culture);
                 }
                 catch (Exception ex)
                 {
@@ -261,19 +261,19 @@
             return false;
         }
 
-        private bool AddLanguage(ResourceEntity entity, CultureInfo language)
+        private bool AddLanguage(ResourceEntity entity, CultureInfo culture)
         {
             Contract.Requires(entity != null);
-            Contract.Requires(language != null);
+            Contract.Requires(culture != null);
 
-            var message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasNoResourceFile, language.DisplayName);
+            var message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasNoResourceFile, culture.DisplayName);
 
             if (MessageBox.Show(message, Resources.ToolWindowTitle, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return false;
 
             var neutralLanguage = entity.Languages.First();
 
-            var languageFileName = neutralLanguage.ProjectFile.GetLanguageFileName(language);
+            var languageFileName = neutralLanguage.ProjectFile.GetLanguageFileName(culture);
 
             if (File.Exists(languageFileName))
             {

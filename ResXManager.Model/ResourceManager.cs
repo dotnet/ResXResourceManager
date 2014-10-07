@@ -22,7 +22,9 @@
     /// </summary>
     public class ResourceManager : ObservableObject
     {
-        private static readonly string[] SortedCultureNames = GetSortedCultureNames();
+        private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
+        private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
+
         private readonly DispatcherThrottle _selectedEntitiesChangeThrottle;
 
         private ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
@@ -107,11 +109,11 @@
             }
         }
 
-        public IEnumerable<CultureInfo> Languages
+        public IEnumerable<CultureKey> Languages
         {
             get
             {
-                return ResourceEntities.SelectMany(entity => entity.Languages).Distinct().Select(lang => lang.Culture);
+                return ResourceEntities.SelectMany(entity => entity.Languages).Distinct().Select(lang => lang.CultureKey);
             }
         }
 
@@ -153,7 +155,7 @@
         {
             get
             {
-                return CultureInfo.GetCultures(CultureTypes.SpecificCultures).OrderBy(c => c.DisplayName);
+                return _specificCultures;
             }
         }
 
@@ -307,7 +309,7 @@
             OnPropertyChanged(() => SelectedTableEntries);
         }
 
-        public bool CanEdit(ResourceEntity resourceEntity, CultureInfo language)
+        public bool CanEdit(ResourceEntity resourceEntity, CultureInfo culture)
         {
             Contract.Requires(resourceEntity != null);
 
@@ -316,7 +318,7 @@
             if (eventHandler == null)
                 return true;
 
-            var args = new ResourceBeginEditingEventArgs(resourceEntity, language);
+            var args = new ResourceBeginEditingEventArgs(resourceEntity, culture);
 
             eventHandler(this, args);
 
@@ -611,7 +613,7 @@
 
         private void ResourceEntity_LanguageChanging(object sender, LanguageChangingEventArgs e)
         {
-            if (!CanEdit(e.Entity, e.Language))
+            if (!CanEdit(e.Entity, e.Culture))
             {
                 e.Cancel = true;
             }
@@ -662,7 +664,7 @@
 
         public static bool IsValidLanguageName(string languageName)
         {
-            return Array.BinarySearch(SortedCultureNames, languageName, StringComparer.OrdinalIgnoreCase) >= 0;
+            return Array.BinarySearch(_sortedCultureNames, languageName, StringComparer.OrdinalIgnoreCase) >= 0;
         }
 
         private static string[] GetSortedCultureNames()
@@ -678,6 +680,16 @@
 
             return cultureNames;
         }
+
+        private static CultureInfo[] GetSpecificCultures()
+        {
+            var specificCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+            var neutralCultures = CultureInfo.GetCultures(CultureTypes.NeutralCultures);
+            var missingCultures = neutralCultures.Where(c => !Equals(c, CultureInfo.InvariantCulture)).Except(specificCultures.Select(c => c.Parent).Distinct());
+
+            return specificCultures.OrderBy(c => c.DisplayName).Concat(missingCultures.OrderBy(c => c.DisplayName)).ToArray();
+        }
+
 
         private void ApplyEntityFilter(string value)
         {

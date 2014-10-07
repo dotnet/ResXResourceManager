@@ -7,6 +7,7 @@
     using System.Windows.Data;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
+    using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
@@ -42,7 +43,7 @@
 
         internal static ImageSource Convert(object value)
         {
-            var culture = value as CultureInfo ?? Settings.Default.NeutralResourceLanguage;
+            var culture = value as CultureInfo ?? (value as CultureKey).Maybe().Return(c => c.Culture) ?? Settings.Default.NeutralResourceLanguage;
 
             Contract.Assume(culture != null);
 

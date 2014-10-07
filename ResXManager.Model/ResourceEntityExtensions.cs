@@ -5,7 +5,6 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
-
     using tomenglertde.ResXManager.Model.Properties;
 
     public enum ImportResult
@@ -53,16 +52,20 @@
             return result;
         }
 
-        private static IEnumerable<string> GetTextTableLanguageColumnHeaders(this string language)
+        private static IEnumerable<string> GetTextTableLanguageColumnHeaders(this ResourceLanguage language)
         {
-            yield return CommentHeaderPrefix + language;
-            yield return language;
+            Contract.Requires(language != null);
+
+            var cultureName = language.CultureKey.ToString();
+
+            yield return CommentHeaderPrefix + cultureName;
+            yield return cultureName;
         }
 
-        private static IEnumerable<string> GetTextTableDataColumns(this ResourceTableEntry entry, string language)
+        private static IEnumerable<string> GetTextTableDataColumns(this ResourceTableEntry entry, CultureKey cultureKey)
         {
-            yield return Quoted(entry.Comments[language]);
-            yield return Quoted(entry.Values[language]);
+            yield return Quoted(entry.Comments.GetValue(cultureKey));
+            yield return Quoted(entry.Values.GetValue(cultureKey));
         }
 
         /// <summary>
@@ -74,7 +77,7 @@
         {
             Contract.Requires(languages != null);
 
-            var languageColumns = languages.SelectMany(l => l.Name.GetTextTableLanguageColumnHeaders());
+            var languageColumns = languages.SelectMany(l => l.GetTextTableLanguageColumnHeaders());
 
             yield return string.Join(ColumnSeparator, FixedColumnHeaders.Concat(languageColumns).Concat(TerminatorColumnHeaders));
         }
@@ -106,11 +109,11 @@
             Contract.Requires(entry != null);
             Contract.Requires(languages != null);
 
-            return (new[] { entry.Key }).Concat(languages.SelectMany(l => entry.GetTextTableDataColumns(l.Name)));
+            return (new[] { entry.Key }).Concat(languages.SelectMany(l => entry.GetTextTableDataColumns(l.CultureKey)));
         }
 
         /// <summary>
-        /// Quotes the string if neccesary.
+        /// Quotes the string if necessary.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The properly quoted string.</returns>
@@ -127,7 +130,7 @@
             return value;
         }
 
-        private static CultureInfo ExtractLanguage(this string dataColumnHeader)
+        private static CultureInfo ExtractCulture(this string dataColumnHeader)
         {
             Contract.Requires(dataColumnHeader != null);
 
@@ -144,34 +147,34 @@
             return dataColumnHeader.StartsWith(CommentHeaderPrefix, StringComparison.OrdinalIgnoreCase) ? ColumnKind.Comment : ColumnKind.Data;
         }
 
-        private static string GetEntryData(this ResourceTableEntry entry, CultureInfo language, ColumnKind columnKind)
+        private static string GetEntryData(this ResourceTableEntry entry, CultureInfo culture, ColumnKind columnKind)
         {
             Contract.Requires(entry != null);
 
             switch (columnKind)
             {
                 case ColumnKind.Data:
-                    return entry.Values[language.ToLanguageKey()];
+                    return entry.Values.GetValue(culture);
 
                 case ColumnKind.Comment:
-                    return entry.Comments[language.ToLanguageKey()];
+                    return entry.Comments.GetValue(culture);
 
                 default:
                     throw new InvalidOperationException("Invalid Column Kind");
             }
         }
 
-        private static bool SetEntryData(this ResourceTableEntry entry, CultureInfo language, ColumnKind columnKind, string text)
+        private static bool SetEntryData(this ResourceTableEntry entry, CultureInfo culture, ColumnKind columnKind, string text)
         {
             Contract.Requires(entry != null);
 
             switch (columnKind)
             {
                 case ColumnKind.Data:
-                    return entry.Values.SetValue(language.ToLanguageKey(), text);
+                    return entry.Values.SetValue(culture, text);
 
                 case ColumnKind.Comment:
-                    return entry.Comments.SetValue(language.ToLanguageKey(), text);
+                    return entry.Comments.SetValue(culture, text);
 
                 default:
                     throw new InvalidOperationException("Invalid Column Kind");
@@ -203,7 +206,7 @@
             Contract.Requires(fixedColumnHeaders != null);
             Contract.Requires(lines != null);
 
-            var headerColumns = GetHeaderColmns(lines, fixedColumnHeaders);
+            var headerColumns = GetHeaderColumns(lines, fixedColumnHeaders);
 
             var fixedColumnHeadersCount = fixedColumnHeaders.Count;
             var emptyColumnCount = GetEmptyColumnCount(lines);
@@ -217,7 +220,7 @@
 
             dataColumnCount = dataColumnHeaders.Length;
 
-            if (!VerifyLanguages(entity, dataColumnHeaders))
+            if (!VerifyCultures(entity, dataColumnHeaders))
                 return ImportResult.None;
 
             var mappings = lines.Skip(1)
@@ -228,10 +231,10 @@
                         mapping.Key,
                         Entry = entity.Entries.SingleOrDefault(e => e.Key == mapping.Key) ?? entity.Add(mapping.Key),
                         Text = column,
-                        Language = dataColumnHeaders[index].ExtractLanguage(),
+                        Culture = dataColumnHeaders[index].ExtractCulture(),
                         ColumnKind = dataColumnHeaders[index].GetColumnKind()
                     }))
-                .Select(mapping => new { mapping.Entry, mapping.Text, mapping.Language, mapping.ColumnKind, OriginalText = mapping.Entry.GetEntryData(mapping.Language, mapping.ColumnKind) })
+                .Select(mapping => new { mapping.Entry, mapping.Text, mapping.Culture, mapping.ColumnKind, OriginalText = mapping.Entry.GetEntryData(mapping.Culture, mapping.ColumnKind) })
                 .ToArray();
 
             var changes = mappings
@@ -239,7 +242,7 @@
                 .ToArray();
 
             var acceptedChanges = changes
-                .TakeWhile(change => change.Entry.SetEntryData(change.Language, change.ColumnKind, change.Text))
+                .TakeWhile(change => change.Entry.SetEntryData(change.Culture, change.ColumnKind, change.Text))
                 .ToArray();
 
             if (acceptedChanges.Length == changes.Length)
@@ -249,7 +252,7 @@
         }
 
         [ContractVerification(false)]
-        private static IList<string> GetHeaderColmns(IEnumerable<IList<string>> lines, ICollection<string> fixedColumnHeaders)
+        private static IList<string> GetHeaderColumns(IEnumerable<IList<string>> lines, ICollection<string> fixedColumnHeaders)
         {
             Contract.Ensures(Contract.Result<IList<string>>() != null);
 
@@ -266,7 +269,7 @@
             return headerColumns;
         }
 
-        private static bool VerifyLanguages(ResourceEntity entity, IList<string> dataColumns)
+        private static bool VerifyCultures(ResourceEntity entity, IList<string> dataColumns)
         {
             Contract.Requires(entity != null);
             Contract.Requires(dataColumns != null);
@@ -274,7 +277,7 @@
             if (dataColumns.Distinct().Count() != dataColumns.Count())
                 throw new InvalidOperationException(Resources.ImportDuplicateLanguageError);
 
-            var languages = dataColumns.Select(data => data.ExtractLanguage()).Distinct().ToArray();
+            var languages = dataColumns.Select(data => data.ExtractCulture()).Distinct().ToArray();
 
             var undefinedLanguages = languages.Where(outer => entity.Languages.All(inner => !Equals(outer, inner.Culture))).ToArray();
 

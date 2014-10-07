@@ -7,36 +7,32 @@
     using System.IO;
     using System.Linq;
 
+    /// <summary>
+    /// Resource manager specific extension methods.
+    /// </summary>
     public static class ResourceManagerExtensions
     {
         /// <summary>
-        /// Converts the culture name to the corresponding culture. An optional '.' prefix is removed before conversion.
+        /// Converts the culture key name to the corresponding culture. The key name is the ieft language tag with an optional '.' prefix.
         /// </summary>
-        /// <param name="languageKey">Name of the culture, optionally preceded with a '.'.</param>
-        /// <returns>The culture, or <c>null</c> if the conversion fails.</returns>
-        public static CultureInfo ToCulture(this string languageKey)
+        /// <param name="cultureKeyName">Key name of the culture, optionally prefixed with a '.'.</param>
+        /// <returns>
+        /// The culture, or <c>null</c> if the key name is empty.
+        /// </returns>
+        /// <exception cref="System.InvalidOperationException">Error parsing language:  + cultureKeyName</exception>
+        public static CultureInfo ToCulture(this string cultureKeyName)
         {
             try
             {
-                return string.IsNullOrEmpty(languageKey) ? null : CultureInfo.GetCultureInfo(languageKey.TrimStart('.'));
+                cultureKeyName = cultureKeyName.Maybe().Return(c => c.TrimStart('.'));
+                
+                return string.IsNullOrEmpty(cultureKeyName) ? null : CultureInfo.GetCultureInfo(cultureKeyName);
             }
             catch (ArgumentException)
             {
             }
 
-            throw new InvalidOperationException("Error parsing language: " + languageKey);
-        }
-
-        /// <summary>
-        /// Converts the culture to the corresponding language key.
-        /// </summary>
-        /// <param name="culture">The culture.</param>
-        /// <returns>The key.</returns>
-        public static string ToLanguageKey(this CultureInfo culture)
-        {
-            Contract.Ensures(Contract.Result<string>() != null);
-
-            return (culture == null) ? string.Empty : "." + culture.Name;
+            throw new InvalidOperationException("Error parsing language: " + cultureKeyName);
         }
 
         public static IList<ProjectFile> GetAllSourceFiles(this DirectoryInfo solutionFolder, Func<ProjectFile, bool> isSourceFileCallback)

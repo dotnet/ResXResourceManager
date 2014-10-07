@@ -9,13 +9,15 @@
     using System.Windows.Controls;
     using System.Windows.Data;
     using DataGridExtensions;
+    using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.Behaviors;
     using tomenglertde.ResXManager.View.ColumnHeaders;
     using tomenglertde.ResXManager.View.Controls;
     using tomenglertde.ResXManager.View.Properties;
 
     public static class ColumnManager
     {
-        public static void SetupColumns(this DataGrid dataGrid, IEnumerable<CultureInfo> languages)
+        public static void SetupColumns(this DataGrid dataGrid, IEnumerable<CultureKey> languages)
         {
             Contract.Requires(dataGrid != null);
             Contract.Requires(languages != null);
@@ -39,16 +41,16 @@
 
             var languageColumns = columns.Skip(2).ToArray();
 
-            var disconnectedColumns = languageColumns.Where(col => languages.All(language => !Equals(((ILanguageColumnHeader)col.Header).Language, language)));
+            var disconnectedColumns = languageColumns.Where(col => languages.All(language => !Equals(col.GetCultureKey(), language)));
 
             foreach (var column in disconnectedColumns)
             {
                 columns.Remove(column);
             }
 
-            var addedColumns = languages.Where(language => languageColumns.All(col => !Equals(((ILanguageColumnHeader)col.Header).Language, language)));
+            var addedLanguages = languages.Where(language => languageColumns.All(col => !Equals(col.GetCultureKey(), language)));
 
-            foreach (var language in addedColumns)
+            foreach (var language in addedLanguages)
             {
                 AddLanguageColumn(columns, language);
             }
@@ -57,6 +59,7 @@
         private static DataGridColumn CreateCodeReferencesColumn(FrameworkElement dataGrid)
         {
             Contract.Requires(dataGrid != null);
+
             var elementStyle = new Style();
             elementStyle.Setters.Add(new Setter(FrameworkElement.ToolTipProperty, new CodeReferencesToolTip()));
             elementStyle.Setters.Add(new Setter(ToolTipService.ShowDurationProperty, Int32.MaxValue));
@@ -84,34 +87,37 @@
             return column;
         }
 
-        public static void AddLanguageColumn(this ICollection<DataGridColumn> columns, CultureInfo language)
+        public static void AddLanguageColumn(this ICollection<DataGridColumn> columns, CultureKey cultureKey)
         {
             Contract.Requires(columns != null);
-            var key = language != null ? @"." + language : String.Empty;
-
-            var isFirstCommentColumn = !columns.Any(col => col.Header is CommentHeader);
+            var key = cultureKey.ToString(".");
 
             var commentColumn = new DataGridTextColumn
             {
-                Header = new CommentHeader(language),
+                Header = new CommentHeader(cultureKey),
                 Binding = new Binding(@"Comments[" + key + @"]"),
                 Width = 300,
-                Visibility = isFirstCommentColumn ? Visibility.Visible : Visibility.Hidden
             };
 
-            commentColumn.EnableMultilineEditing();
-            commentColumn.EnableSpellchecker(language);
-            columns.Add(commentColumn);
+            AddLanguageColumn(columns, cultureKey, commentColumn);
 
             var column = new DataGridTextColumn
             {
-                Header = new LanguageHeader(language),
+                Header = new LanguageHeader(cultureKey),
                 Binding = new Binding(@"Values[" + key + @"]"),
                 Width = 300,
             };
 
+            AddLanguageColumn(columns, cultureKey, column);
+        }
+
+        private static void AddLanguageColumn(ICollection<DataGridColumn> columns, CultureKey cultureKey, DataGridBoundColumn column)
+        {
+            Contract.Requires(columns != null);
+            Contract.Requires(column != null);
+
             column.EnableMultilineEditing();
-            column.EnableSpellchecker(language);
+            column.EnableSpellchecker(cultureKey.Culture);
             columns.Add(column);
         }
     }

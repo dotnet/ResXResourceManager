@@ -1,6 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
-    using System.Globalization;
+    using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
     public class LanguageHeader : LanguageColumnHeader
@@ -10,8 +10,8 @@
         {
         }
 
-        public LanguageHeader(CultureInfo culture)
-            : base(culture)
+        public LanguageHeader(CultureKey cultureKey)
+            : base(cultureKey)
         {
         }
 
@@ -19,7 +19,7 @@
         {
             get
             {
-                return (Language != null) ? Language.DisplayName : Resources.Neutral;
+                return (CultureKey.Culture != null) ? CultureKey.Culture.DisplayName : Resources.Neutral;
             }
         }
 

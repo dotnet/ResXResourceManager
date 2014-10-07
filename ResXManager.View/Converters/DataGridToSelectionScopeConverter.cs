@@ -42,33 +42,33 @@
                 }
             }
 
-            public IEnumerable<CultureInfo> Languages
+            public IEnumerable<CultureKey> Languages
             {
                 get
                 {
-                    if (_dataGrid == null) 
-                      return Enumerable.Empty<CultureInfo>() ;
+                    if (_dataGrid == null)
+                        return Enumerable.Empty<CultureKey>();
 
                     return _dataGrid.Columns
                         .Where(col => col.Visibility == Visibility.Visible)
                         .Select(col => col.Header)
                         .OfType<LanguageHeader>()
-                        .Select(hdr => hdr.Language);
+                        .Select(hdr => hdr.CultureKey);
                 }
             }
 
-            public IEnumerable<CultureInfo> Comments
+            public IEnumerable<CultureKey> Comments
             {
                 get
                 {
                     if (_dataGrid == null)
-                        return Enumerable.Empty<CultureInfo>();
+                        return Enumerable.Empty<CultureKey>();
 
                     return _dataGrid.Columns
                         .Where(col => col.Visibility == Visibility.Visible)
                         .Select(col => col.Header)
                         .OfType<CommentHeader>()
-                        .Select(hdr => hdr.Language);
+                        .Select(hdr => hdr.CultureKey);
                 }
             }
         }

@@ -13,7 +13,7 @@
     {
         private const string InvariantKey = "@Invariant";
         private readonly ResourceEntity _owner;
-        private readonly IDictionary<string, ResourceLanguage> _languages;
+        private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly ResourceLanguage _neutralLanguage;
         private IList<CodeReference> _codeReferences;
 
@@ -27,7 +27,7 @@
         /// <param name="owner">The owner.</param>
         /// <param name="key">The resource key.</param>
         /// <param name="languages">The localized values.</param>
-        internal ResourceTableEntry(ResourceEntity owner, string key, IDictionary<string, ResourceLanguage> languages)
+        internal ResourceTableEntry(ResourceEntity owner, string key, IDictionary<CultureKey, ResourceLanguage> languages)
         {
             Contract.Requires(owner != null);
             Contract.Requires(!String.IsNullOrEmpty(key));

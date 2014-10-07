@@ -24,22 +24,24 @@
 
         private readonly XDocument _document;
         private readonly XElement _documentRoot;
-        private readonly string _languageName;
         private readonly ProjectFile _file;
         private readonly IEnumerable<XElement> _data;
         private readonly IDictionary<string, Node> _nodes;
+        private readonly CultureKey _cultureKey;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceLanguage"/> class.
+        /// Initializes a new instance of the <see cref="ResourceLanguage" /> class.
         /// </summary>
-        /// <param name="languageName">Name of the language.</param>
+        /// <param name="cultureKey">The culture key.</param>
         /// <param name="file">The .resx file having all the localization.</param>
-        internal ResourceLanguage(string languageName, ProjectFile file)
+        /// <exception cref="System.InvalidOperationException">
+        /// </exception>
+        internal ResourceLanguage(CultureKey cultureKey, ProjectFile file)
         {
-            Contract.Requires(languageName != null);
+            Contract.Requires(cultureKey != null);
             Contract.Requires(file != null);
 
-            _languageName = languageName;
+            _cultureKey = cultureKey;
             _file = file;
 
             try
@@ -78,32 +80,13 @@
         public event EventHandler Changed;
 
         /// <summary>
-        /// Gets the name of this language; an emtpy string denotes the default language.
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return _languageName;
-            }
-        }
-
-        /// <summary>
         /// Gets the culture of this language.
         /// </summary>
         public CultureInfo Culture
         {
             get
             {
-                try
-                {
-                    return _languageName.ToCulture();
-                }
-                catch (InvalidOperationException)
-                { }
-
-                return null;
+                return _cultureKey.Culture;
             }
         }
 
@@ -114,22 +97,14 @@
         {
             get
             {
-                if (string.IsNullOrEmpty(_languageName))
-                    return Resources.Neutral;
-
-                var culture = Culture;
-
-                if (culture != null)
-                    return culture.DisplayName;
-
-                return _languageName;
+                return Culture.Maybe().Return(l => l.DisplayName, Resources.Neutral);
             }
         }
 
         /// <summary>
         /// Gets all the resource keys defined in this language.
         /// </summary>
-        public IEnumerable<string> Keys
+        public IEnumerable<string> ResourceKeys
         {
             get
             {
@@ -189,6 +164,14 @@
         {
             get;
             internal set;
+        }
+
+        public CultureKey CultureKey
+        {
+            get
+            {
+                return _cultureKey;
+            }
         }
 
         private static bool IsStringType(XElement entry)
@@ -576,7 +559,7 @@
         /// </returns>
         public override int GetHashCode()
         {
-            return Name.ToUpperInvariant().GetHashCode();
+            return CultureKey.GetHashCode();
         }
 
         /// <summary>
@@ -610,7 +593,7 @@
             if (ReferenceEquals(right, null))
                 return false;
 
-            return left.Name.Equals(right.Name, StringComparison.OrdinalIgnoreCase);
+            return Equals(left.CultureKey, right.CultureKey);
         }
 
         /// <summary>
@@ -638,8 +621,8 @@
             Contract.Invariant(_document != null);
             Contract.Invariant(_documentRoot != null);
             Contract.Invariant(_file != null);
-            Contract.Invariant(_languageName != null);
             Contract.Invariant(_nodes != null);
+            Contract.Invariant(_cultureKey != null);
         }
     }
 }

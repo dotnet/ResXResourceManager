@@ -63,7 +63,7 @@
                 TextBox.IsEnabled = true;
                 TextBox.DataContext = currentCell.Item;
 
-                var ieftLanguageTag = (header.Language ?? Settings.Default.NeutralResourceLanguage ?? CultureInfo.InvariantCulture).IetfLanguageTag;
+                var ieftLanguageTag = (header.CultureKey.Culture ?? Settings.Default.NeutralResourceLanguage ?? CultureInfo.InvariantCulture).IetfLanguageTag;
                 TextBox.Language = XmlLanguage.GetLanguage(ieftLanguageTag);
 
                 BindingOperations.SetBinding(TextBox, TextBox.TextProperty, column.Binding);

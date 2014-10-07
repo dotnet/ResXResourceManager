@@ -34,15 +34,15 @@
             var entry = (ResourceTableEntry)dataGridRow.Item;
             var resourceEntity = entry.Owner;
 
-            var language = resourceEntity.Languages.First().Culture;
+            var cultureKey = resourceEntity.Languages.First().CultureKey;
 
             var languageHeader = e.Column.Header as ILanguageColumnHeader;
             if (languageHeader != null)
             {
-                language = languageHeader.Language;
+                cultureKey = languageHeader.CultureKey;
             }
 
-            if (!resourceEntity.CanEdit(language))
+            if (!resourceEntity.CanEdit(cultureKey.Culture))
             {
                 e.Cancel = true;
             }

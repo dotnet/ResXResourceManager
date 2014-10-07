@@ -41,10 +41,9 @@
             return ResourceManager.IsValidLanguageName(languageName);
         }
 
-        public static string GetLanguageName(this ProjectFile projectFile)
+        public static CultureKey GetCultureKey(this ProjectFile projectFile)
         {
             Contract.Requires(projectFile != null);
-            Contract.Ensures(Contract.Result<string>() != null);
 
             var extension = projectFile.Extension;
             var filePath = projectFile.FilePath;
@@ -52,23 +51,25 @@
             if (Resx.Equals(extension, StringComparison.OrdinalIgnoreCase))
             {
                 var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
-                var languageName = Path.GetExtension(fileNameWithoutExtension) ?? string.Empty;
+                var cultureName = Path.GetExtension(fileNameWithoutExtension).TrimStart('.');
 
-                if ((languageName.Length > 0) && !ResourceManager.IsValidLanguageName(languageName.TrimStart('.')))
-                    return string.Empty;
+                if (string.IsNullOrEmpty(cultureName))
+                    return null;
 
-                return languageName;
+                if (!ResourceManager.IsValidLanguageName(cultureName))
+                    return null;
+
+                return new CultureKey(cultureName);
             }
 
             if (Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
             {
-                var languageName = Path.GetFileName(Path.GetDirectoryName(filePath)) ?? string.Empty;
+                var cultureName = Path.GetFileName(Path.GetDirectoryName(filePath));
 
-                if (!ResourceManager.IsValidLanguageName(languageName))
-                    throw new ArgumentException(
-                        @"Invalid file. File name does not conform to the pattern '.\<languangeName>\<basename>.resx'");
+                if ((cultureName == null) || !ResourceManager.IsValidLanguageName(cultureName))
+                    throw new ArgumentException(@"Invalid file. File name does not conform to the pattern '.\<cultureName>\<basename>.resw'");
 
-                return "." + languageName;
+                return new CultureKey(cultureName);
             }
 
             throw new InvalidOperationException("Unsupported file format: " + extension);
@@ -92,10 +93,10 @@
             return ResourceManager.IsValidLanguageName(languageName) ? Path.GetFileNameWithoutExtension(name) : name;
         }
 
-        public static string GetLanguageFileName(this ProjectFile projectFile, CultureInfo language)
+        public static string GetLanguageFileName(this ProjectFile projectFile, CultureInfo culture)
         {
             Contract.Requires(projectFile != null);
-            Contract.Requires(language != null);
+            Contract.Requires(culture != null);
             Contract.Ensures(Contract.Result<string>() != null);
 
             var extension = projectFile.Extension;
@@ -103,12 +104,12 @@
 
             if (Resx.Equals(extension, StringComparison.OrdinalIgnoreCase))
             {
-                return Path.ChangeExtension(filePath, language.ToString()) + @".resx";
+                return Path.ChangeExtension(filePath, culture.ToString()) + @".resx";
             }
 
             if (Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
             {
-                return Path.Combine(projectFile.GetBaseDirectory(), language.ToString(), Path.GetFileName(filePath));
+                return Path.Combine(projectFile.GetBaseDirectory(), culture.ToString(), Path.GetFileName(filePath));
             }
 
             throw new InvalidOperationException("Extension not supported: " + extension);

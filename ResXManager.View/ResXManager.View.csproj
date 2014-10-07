@@ -142,6 +142,7 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
+    <Compile Include="Behaviors\ColumnVisibilityChangedEventBehavior.cs" />
     <Compile Include="Behaviors\DataGridBeginEditOnCtrlEnterBehavior.cs" />
     <Compile Include="Behaviors\DataGridDisableTargetWhileEditingBehavior.cs" />
     <Compile Include="Behaviors\DataGridTryBeginEditBehavior.cs" />

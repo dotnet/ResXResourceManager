@@ -12,12 +12,12 @@
             get;
         }
 
-        IEnumerable<CultureInfo> Languages
+        IEnumerable<CultureKey> Languages
         {
             get;
         }
 
-        IEnumerable<CultureInfo> Comments
+        IEnumerable<CultureKey> Comments
         {
             get;
         }
@@ -35,20 +35,20 @@
             }
         }
 
-        IEnumerable<CultureInfo> IResourceScope.Languages
+        IEnumerable<CultureKey> IResourceScope.Languages
         {
             get
             {
-                Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
+                Contract.Ensures(Contract.Result<IEnumerable<CultureKey>>() != null);
                 throw new System.NotImplementedException();
             }
         }
 
-        IEnumerable<CultureInfo> IResourceScope.Comments
+        IEnumerable<CultureKey> IResourceScope.Comments
         {
             get
             {
-                Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
+                Contract.Ensures(Contract.Result<IEnumerable<CultureKey>>() != null);
                 throw new System.NotImplementedException();
             }
         }

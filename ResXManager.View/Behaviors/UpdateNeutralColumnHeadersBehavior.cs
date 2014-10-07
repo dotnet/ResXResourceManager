@@ -44,7 +44,7 @@
 
             var neutralLanguageColumn = AssociatedObject.Columns
                 .Select(col => new {Column = col, Header = col.Header as T})
-                .Where(item => (item.Header != null) && (item.Header.Language == null))
+                .Where(item => (item.Header != null) && (item.Header.CultureKey == null))
                 .Select(item => item.Column)
                 .FirstOrDefault();
 

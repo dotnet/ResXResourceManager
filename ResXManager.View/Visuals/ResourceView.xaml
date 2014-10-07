@@ -13,7 +13,6 @@
              xmlns:behaviors="clr-namespace:tomenglertde.ResXManager.View.Behaviors"
              x:Name="LayoutRoot"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
-             DataContextChanged="self_DataContextChanged"
              d:DataContext="{d:DesignInstance model:ResourceManager}">
   <UserControl.Resources>
 
@@ -124,7 +123,7 @@
                     <ControlTemplate TargetType="{x:Type GroupItem}">
                       <StackPanel Background="Transparent" d:DataContext="{d:DesignInstance GroupItem}">
                         <i:Interaction.Behaviors>
-                          <behaviors:SelectGroupOnGroupHeaderClickBehavior/>
+                          <behaviors:SelectGroupOnGroupHeaderClickBehavior />
                         </i:Interaction.Behaviors>
                         <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" />
                         <ItemsPresenter />
@@ -270,7 +269,7 @@
                                 IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" />
                       <Decorator DockPanel.Dock="Left" Width="2" />
                       <Image DockPanel.Dock="Left"
-                             Source="{Binding Path=Header.Language, Converter={StaticResource CultureToImageSourceConverter}, FallbackValue={x:Null}}" />
+                             Source="{Binding Path=Header.CultureKey, Converter={StaticResource CultureToImageSourceConverter}, FallbackValue={x:Null}}" />
                       <Decorator DockPanel.Dock="Left" Width="2" />
                       <Decorator DockPanel.Dock="Right" Width="3" />
                       <ContentPresenter Content="{Binding Path=Header}" VerticalAlignment="Center" />
@@ -362,7 +361,7 @@
                          Source="{Binding Path=NeutralResourceLanguage, Source={x:Static properties:Settings.Default}, Converter={StaticResource CultureToImageSourceConverter}}"
                          Stretch="None" />
                   <Image x:Name="image"
-                         Source="{Binding Path=Language, Converter={StaticResource CultureToImageSourceConverter}}"
+                         Source="{Binding Path=CultureKey, Converter={StaticResource CultureToImageSourceConverter}}"
                          Stretch="None" />
                 </Grid>
                 <Decorator x:Name="padding" DockPanel.Dock="Left" Width="4" />
@@ -373,7 +372,7 @@
             <DataTemplate DataType="{x:Type columnHeaders:CommentHeader}">
               <TextBlock><Run Text="{x:Static properties:Resources.CommentColumnHeader}"/><Run Text=" ("/><InlineUIContainer>
                   <Grid>
-                  <Image x:Name="image" Source="{Binding Path=Language, Converter={StaticResource CultureToImageSourceConverter}}" Stretch="None" Margin="1,2,1,-2"/>
+                  <Image x:Name="image" Source="{Binding Path=CultureKey, Converter={StaticResource CultureToImageSourceConverter}}" Stretch="None" Margin="1,2,1,-2"/>
                 </Grid></InlineUIContainer><Run Text=")"/>
               </TextBlock>
             </DataTemplate>
@@ -401,7 +400,7 @@
               <VirtualizingStackPanel
                 ContextMenu="{StaticResource RowContextMenu}"
                 DataContext="{Binding Path=DataContext, ElementName=DataGrid}"
-                TextElement.FontSize="{Binding Path=TextFontSize, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" >
+                TextElement.FontSize="{Binding Path=TextFontSize, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}">
                 <i:Interaction.Behaviors>
                   <behaviors:ZoomFontSizeOnMouseWheelBehavior />
                 </i:Interaction.Behaviors>
@@ -466,7 +465,8 @@
             <behaviors:ShowErrorsOnlyBehavior ToggleButton="{Binding ElementName=ErrorsOnlyFilterButton}" />
             <behaviors:DataGridDisableTargetWhileEditingBehavior Target="{Binding ElementName=ToolBar}" />
             <behaviors:DataGridTryBeginEditBehavior />
-            <behaviors:UpdateNeutralColumnHeadersBehavior/>
+            <behaviors:UpdateNeutralColumnHeadersBehavior />
+            <behaviors:ColumnVisibilityChangedEventBehavior />
           </i:Interaction.Behaviors>
         </DataGrid>
       </Grid>
