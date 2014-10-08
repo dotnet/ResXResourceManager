@@ -44,6 +44,7 @@
         public static CultureKey GetCultureKey(this ProjectFile projectFile)
         {
             Contract.Requires(projectFile != null);
+            Contract.Ensures(Contract.Result<CultureKey>() != null);
 
             var extension = projectFile.Extension;
             var filePath = projectFile.FilePath;
@@ -54,10 +55,10 @@
                 var cultureName = Path.GetExtension(fileNameWithoutExtension).TrimStart('.');
 
                 if (string.IsNullOrEmpty(cultureName))
-                    return null;
+                    return new CultureKey();
 
                 if (!ResourceManager.IsValidLanguageName(cultureName))
-                    return null;
+                    return new CultureKey();
 
                 return new CultureKey(cultureName);
             }

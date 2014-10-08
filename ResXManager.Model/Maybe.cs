@@ -26,17 +26,21 @@
             where TTarget : class
         {
             Contract.Requires(selector != null);
+
             return new Maybe<TTarget>((_source == null) ? null : selector(_source));
         }
 
         public TTarget Return<TTarget>(Func<T, TTarget> selector)
         {
-            return Return<TTarget>(selector, default(TTarget));
+            Contract.Requires(selector != null);
+
+            return Return(selector, default(TTarget));
         }
 
         public TTarget Return<TTarget>(Func<T, TTarget> selector, TTarget fallbackValue)
         {
             Contract.Requires(selector != null);
+
             return (_source == null) ? fallbackValue : selector(_source);
         }
 

@@ -7,7 +7,6 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Interactivity;
-    using tomenglertde.ResXManager.View.Tools;
 
     public class ColumnVisibilityChangedEventBehavior : Behavior<DataGrid>
     {
@@ -37,14 +36,14 @@
                 case NotifyCollectionChangedAction.Add:
                     foreach (DataGridColumn column in e.NewItems ?? EmptyList)
                     {
-                        VisibilityPropertyDescriptor.AddValueChanged(column, DataGrid_ColumnVisibilityChanged);
+                        VisibilityPropertyDescriptor.AddValueChanged(column, DataGridColumnVisibility_Changed);
                     }
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
                     foreach (DataGridColumn column in e.OldItems ?? EmptyList)
                     {
-                        VisibilityPropertyDescriptor.RemoveValueChanged(column, DataGrid_ColumnVisibilityChanged);
+                        VisibilityPropertyDescriptor.RemoveValueChanged(column, DataGridColumnVisibility_Changed);
                     }
                     break;
             }
@@ -58,11 +57,13 @@
             }
         }
 
-        private void DataGrid_ColumnVisibilityChanged(object source, EventArgs e)
+        private void DataGridColumnVisibility_Changed(object source, EventArgs e)
         {
             var args = new RoutedEventArgs(ColumnVisibilityChangedEvent, source);
+            var dataGrid = DataGrid;
 
-            DataGrid.RaiseEvent(args);
+            if (dataGrid != null)
+                dataGrid.RaiseEvent(args);
         }
     }
 }

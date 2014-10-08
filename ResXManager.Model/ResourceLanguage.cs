@@ -97,7 +97,9 @@
         {
             get
             {
-                return Culture.Maybe().Return(l => l.DisplayName, Resources.Neutral);
+                Contract.Ensures(Contract.Result<string>() != null);
+
+                return Culture.Maybe().Return(l => l.DisplayName) ?? Resources.Neutral;
             }
         }
 
@@ -170,6 +172,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<CultureKey>() != null);
+
                 return _cultureKey;
             }
         }

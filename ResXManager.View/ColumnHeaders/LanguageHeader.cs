@@ -1,18 +1,20 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
+    using System.Diagnostics.Contracts;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
     public class LanguageHeader : LanguageColumnHeader
     {
         public LanguageHeader()
-            : base(null)
+            : base(new CultureKey())
         {
         }
 
         public LanguageHeader(CultureKey cultureKey)
             : base(cultureKey)
         {
+            Contract.Requires(cultureKey != null);
         }
 
         public string DisplayName

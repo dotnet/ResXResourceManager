@@ -684,10 +684,13 @@
         private static CultureInfo[] GetSpecificCultures()
         {
             var specificCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
-            var neutralCultures = CultureInfo.GetCultures(CultureTypes.NeutralCultures);
-            var missingCultures = neutralCultures.Where(c => !Equals(c, CultureInfo.InvariantCulture)).Except(specificCultures.Select(c => c.Parent).Distinct());
+            var allNeutralCultures = CultureInfo.GetCultures(CultureTypes.NeutralCultures).Where(c => !Equals(c, CultureInfo.InvariantCulture));
+            Contract.Assume(specificCultures != null);
+            var referencedNeutralCultures = specificCultures.Select(c => c.Parent);
 
-            return specificCultures.OrderBy(c => c.DisplayName).Concat(missingCultures.OrderBy(c => c.DisplayName)).ToArray();
+            var missingNeutralCultures = allNeutralCultures.Except(referencedNeutralCultures);
+
+            return specificCultures.OrderBy(c => c.DisplayName).Concat(missingNeutralCultures.OrderBy(c => c.DisplayName)).ToArray();
         }
 
 
