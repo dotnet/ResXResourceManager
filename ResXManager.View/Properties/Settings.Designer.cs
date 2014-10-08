@@ -70,5 +70,29 @@ namespace tomenglertde.ResXManager.View.Properties {
                 this["NeutralCultureCountyOverrides"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(".")]
+        public string VisibleCommentColumns {
+            get {
+                return ((string)(this["VisibleCommentColumns"]));
+            }
+            set {
+                this["VisibleCommentColumns"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HiddenLanguageColumns {
+            get {
+                return ((string)(this["HiddenLanguageColumns"]));
+            }
+            set {
+                this["HiddenLanguageColumns"] = value;
+            }
+        }
     }
 }

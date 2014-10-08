@@ -22,6 +22,9 @@
             Contract.Requires(dataGrid != null);
             Contract.Requires(languages != null);
 
+            dataGrid.RemoveHandler(ColumnVisibilityChangedEventBehavior.ColumnVisibilityChangedEvent, (RoutedEventHandler)DataGrid_ColumnVisibilityChanged);
+            dataGrid.AddHandler(ColumnVisibilityChangedEventBehavior.ColumnVisibilityChangedEvent, (RoutedEventHandler)DataGrid_ColumnVisibilityChanged);
+
             var columns = dataGrid.Columns;
 
             if (columns.Count == 0)
@@ -90,13 +93,16 @@
         public static void AddLanguageColumn(this ICollection<DataGridColumn> columns, CultureKey cultureKey)
         {
             Contract.Requires(columns != null);
+            Contract.Requires(cultureKey != null);
             var key = cultureKey.ToString(".");
+            var settings = Settings.Default;
 
             var commentColumn = new DataGridTextColumn
             {
                 Header = new CommentHeader(cultureKey),
                 Binding = new Binding(@"Comments[" + key + @"]"),
                 Width = 300,
+                Visibility = settings.VisibleCommentColumns.Split(',').Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Visible : Visibility.Hidden
             };
 
             AddLanguageColumn(columns, cultureKey, commentColumn);
@@ -106,6 +112,7 @@
                 Header = new LanguageHeader(cultureKey),
                 Binding = new Binding(@"Values[" + key + @"]"),
                 Width = 300,
+                Visibility = settings.HiddenLanguageColumns.Split(',').Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Hidden : Visibility.Visible
             };
 
             AddLanguageColumn(columns, cultureKey, column);
@@ -114,11 +121,32 @@
         private static void AddLanguageColumn(ICollection<DataGridColumn> columns, CultureKey cultureKey, DataGridBoundColumn column)
         {
             Contract.Requires(columns != null);
+            Contract.Requires(cultureKey != null);
             Contract.Requires(column != null);
 
             column.EnableMultilineEditing();
             column.EnableSpellchecker(cultureKey.Culture);
             columns.Add(column);
+        }
+
+        private static void DataGrid_ColumnVisibilityChanged(object sender, RoutedEventArgs e)
+        {
+            Contract.Requires(sender != null);
+
+            var dataGrid = (DataGrid)sender;
+            var settings = Settings.Default;
+
+            settings.VisibleCommentColumns = string.Join(",", dataGrid.Columns
+                .Where(col => col.Visibility == Visibility.Visible)
+                .Select(col => col.Header)
+                .OfType<CommentHeader>()
+                .Select(hdr => hdr.CultureKey.ToString(".")));
+
+            settings.HiddenLanguageColumns = string.Join(",", dataGrid.Columns
+                .Where(col => col.Visibility != Visibility.Visible)
+                .Select(col => col.Header)
+                .OfType<LanguageHeader>()
+                .Select(hdr => hdr.CultureKey.ToString(".")));
         }
     }
 }

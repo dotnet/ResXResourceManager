@@ -14,5 +14,11 @@
     <Setting Name="NeutralCultureCountyOverrides" Type="System.String" Scope="User">
       <Value Profile="(Default)">en=en-US</Value>
     </Setting>
+    <Setting Name="VisibleCommentColumns" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.</Value>
+    </Setting>
+    <Setting Name="HiddenLanguageColumns" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
