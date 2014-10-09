@@ -225,6 +225,7 @@
 
             var mappings = lines.Skip(1)
                 .Select(columns => new { Key = columns[0], TextColumns = columns.Skip(fixedColumnHeadersCount).Take(dataColumnCount).ToArray() })
+                .Where(mapping => !string.IsNullOrEmpty(mapping.Key))
                 .SelectMany(mapping => mapping.TextColumns.Select((column, index) =>
                     new
                     {
