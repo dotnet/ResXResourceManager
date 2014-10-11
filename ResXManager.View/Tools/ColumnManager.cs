@@ -152,16 +152,22 @@
         private static string UpdateColumnSettings<T>(string current, DataGrid dataGrid, Func<DataGridColumn, bool> includePredicate)
             where T : LanguageColumnHeaderBase
         {
+            Contract.Requires(current != null);
+            Contract.Requires(dataGrid != null);
+            Contract.Requires(includePredicate != null);
+
             return string.Join(",", current.Split(',')
                 .Concat(GetColumnKeys<T>(dataGrid, includePredicate))
                 .Except(GetColumnKeys<T>(dataGrid, col => !includePredicate(col)))
                 .Distinct());
-
         }
 
         private static IEnumerable<string> GetColumnKeys<T>(DataGrid dataGrid, Func<DataGridColumn, bool> predicate)
             where T : LanguageColumnHeaderBase
         {
+            Contract.Requires(dataGrid != null);
+            Contract.Requires(predicate != null);
+
             return dataGrid.Columns
                 .Where(predicate)
                 .Select(col => col.Header)
