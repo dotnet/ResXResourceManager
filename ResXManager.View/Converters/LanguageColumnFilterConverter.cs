@@ -8,10 +8,7 @@
 
     public class LanguageColumnFilterConverter : IValueConverter
     {
-        public LanguageColumnFilterConverter()
-        {
-                
-        }
+        public static readonly IValueConverter Default = new LanguageColumnFilterConverter();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

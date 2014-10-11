@@ -85,7 +85,8 @@
 
             solutionFolder = solutionFolder.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             filePath = filePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-            if (solutionFolder.Last() != Path.DirectorySeparatorChar)
+
+            if ((solutionFolder.Count() == 0) || (solutionFolder.Last() != Path.DirectorySeparatorChar))
             {
                 solutionFolder += Path.DirectorySeparatorChar;
             }

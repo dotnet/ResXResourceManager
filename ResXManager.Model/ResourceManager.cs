@@ -109,7 +109,7 @@
             }
         }
 
-        public IEnumerable<CultureKey> Languages
+        public IEnumerable<CultureKey> CultureKeys
         {
             get
             {
@@ -222,7 +222,7 @@
             get
             {
                 return new DelegateCommand<IResourceScope>(
-                    scope => scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()), 
+                    scope => scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()),
                     ExportExcel);
             }
         }
@@ -557,7 +557,6 @@
 
             OnPropertyChanged(() => ResourceEntities);
             OnPropertyChanged(() => FilteredResourceEntities);
-            OnPropertyChanged(() => Languages);
             OnPropertyChanged(() => SelectedEntities);
 
             OnSelectedEntitiesChanged();

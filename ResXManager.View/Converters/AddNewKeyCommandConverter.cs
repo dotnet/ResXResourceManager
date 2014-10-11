@@ -8,10 +8,11 @@
     using System.Windows.Data;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Controls;
-    using tomenglertde.ResXManager.View.Visuals;
 
     public class AddNewKeyCommandConverter : IValueConverter
     {
+        public static readonly IValueConverter Default = new AddNewKeyCommandConverter();
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var resourceManager = value as ResourceManager;

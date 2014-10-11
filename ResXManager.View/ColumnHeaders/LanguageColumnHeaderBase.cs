@@ -1,20 +1,35 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
+    using System.ComponentModel;
     using System.Diagnostics.Contracts;
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
-    public abstract class LanguageColumnHeader : ObservableObject, ILanguageColumnHeader
+    public abstract class LanguageColumnHeaderBase : ObservableObject, ILanguageColumnHeader
     {
+        private static readonly string _neutralResourceLanguagePropertyName = PropertySupport.ExtractPropertyName(() => Settings.Default.NeutralResourceLanguage);
         private readonly CultureKey _cultureKey;
 
-        protected LanguageColumnHeader(CultureKey cultureKey)
+        protected LanguageColumnHeaderBase(CultureKey cultureKey)
         {
             Contract.Requires(cultureKey != null);
 
             _cultureKey = cultureKey;
 
             NeutralCultureCountyOverrides.Default.OverrideChanged += NeutralCultureCountyOverrides_OverrideChanged;
+            Settings.Default.PropertyChanged += Settings_PropertyChanged;
+        }
+
+        void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != _neutralResourceLanguagePropertyName)
+                return;
+
+            if (_cultureKey.Culture == null)
+            {
+                OnPropertyChanged(() => CultureKey);
+            }
         }
 
         void NeutralCultureCountyOverrides_OverrideChanged(object sender, CultureOverrideEventArgs e)

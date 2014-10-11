@@ -11,9 +11,7 @@
     {
         private readonly CultureInfo _culture;
 
-        public CultureKey()
-        {
-        }
+        public static readonly CultureKey Neutral = new CultureKey((CultureInfo)null);
 
         public CultureKey(string cultureName)
         {
@@ -109,15 +107,6 @@
         /// <summary>
         /// Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
         /// </summary>
-        /// <param name="obj">An object to compare with this instance.</param>
-        public int CompareTo(object obj)
-        {
-            return Compare(this, obj as CultureKey);
-        }
-
-        /// <summary>
-        /// Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
-        /// </summary>
         /// <param name="other">An object to compare with this instance.</param>
         public int CompareTo(CultureKey other)
         {
@@ -166,7 +155,5 @@
         }
 
         #endregion
- 
-
-    }
+ }
 }

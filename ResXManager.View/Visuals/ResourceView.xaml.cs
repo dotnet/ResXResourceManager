@@ -83,7 +83,7 @@
 
         private void ResourceManager_Loaded(object sender, EventArgs e)
         {
-            DataGrid.SetupColumns(ViewModel.Languages);
+            DataGrid.SetupColumns(ViewModel.CultureKeys);
         }
 
         private void AddLanguage_Click(object sender, RoutedEventArgs e)
@@ -96,10 +96,13 @@
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
 
-            var languages = ViewModel.Languages.Where(l => l.Culture != null).Select(l => l.Culture.ToString()).ToArray();
+            var cultureNames = ViewModel.CultureKeys
+                .Select(c => c.Culture)
+                .Where(c => c != null)
+                .Select(c => c.ToString()).ToArray();
 
             inputBox.TextChanged += (_, args) =>
-                inputBox.IsInputValid = !languages.Contains(args.Text, StringComparer.OrdinalIgnoreCase) && ResourceManager.IsValidLanguageName(args.Text);
+                inputBox.IsInputValid = !cultureNames.Contains(args.Text, StringComparer.OrdinalIgnoreCase) && ResourceManager.IsValidLanguageName(args.Text);
 
             if (inputBox.ShowDialog() == true)
             {

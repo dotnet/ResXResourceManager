@@ -12,6 +12,8 @@
 
     public class DataGridToSelectionScopeConverter : IValueConverter
     {
+        public static readonly IValueConverter Default = new DataGridToSelectionScopeConverter();
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return new DataGridSelectionScope(value as DataGrid);

@@ -134,6 +134,7 @@
     <Reference Include="System.Core" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 8\Common7\IDE\PublicAssemblies\VSLangProj.dll</HintPath>

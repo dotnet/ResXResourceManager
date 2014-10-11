@@ -187,7 +187,6 @@
         /// <param name="entity">The entity.</param>
         /// <param name="text">The text.</param>
         /// <returns>The <see cref="ImportResult"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public static ImportResult ImportTextTable(this ResourceEntity entity, string text)
         {
             Contract.Requires(entity != null);
@@ -197,6 +196,9 @@
 
             var lines = ReadLines(text).ToArray();
 
+            if (!lines.Any())
+                return ImportResult.All;
+
             return entity.ImportTable(FixedColumnHeaders, lines);
         }
 
@@ -205,6 +207,7 @@
             Contract.Requires(entity != null);
             Contract.Requires(fixedColumnHeaders != null);
             Contract.Requires(lines != null);
+            Contract.Requires(lines.Any());
 
             var headerColumns = GetHeaderColumns(lines, fixedColumnHeaders);
 
@@ -256,6 +259,7 @@
         private static IList<string> GetHeaderColumns(IEnumerable<IList<string>> lines, ICollection<string> fixedColumnHeaders)
         {
             Contract.Ensures(Contract.Result<IList<string>>() != null);
+            Contract.Ensures(lines.Count() == Contract.OldValue(lines.Count()));
 
             var headerColumns = lines.First();
 
@@ -411,6 +415,7 @@
         {
             Contract.Requires(lines != null);
             Contract.Requires(lines.Any());
+            Contract.Ensures(lines.Count() == Contract.OldValue(lines.Count()));
 
             var emptyColumnCount = Enumerable.Range(0, lines.First().Count())
                 .Skip(2)

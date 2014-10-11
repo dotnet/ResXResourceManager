@@ -10,6 +10,8 @@
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
+    using System.Windows;
+    using System.Windows.Interactivity;
     using System.Windows.Threading;
 
     /// <summary>
@@ -601,6 +603,24 @@
             }
 
             return value;
+        }
+
+        public static T ForceBehavior<T>(this DependencyObject item)
+            where T: Behavior, new()
+        {
+            var behaviors = Interaction.GetBehaviors(item);
+
+            var behavior = behaviors.OfType<T>().FirstOrDefault();
+            if (behavior != null)
+                return behavior;
+
+            behavior = new T();
+
+
+            behaviors.Add(behavior);
+
+            return behavior;
+            
         }
     }
 }

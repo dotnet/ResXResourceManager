@@ -55,10 +55,10 @@
                 var cultureName = Path.GetExtension(fileNameWithoutExtension).TrimStart('.');
 
                 if (string.IsNullOrEmpty(cultureName))
-                    return new CultureKey();
+                    return CultureKey.Neutral;
 
                 if (!ResourceManager.IsValidLanguageName(cultureName))
-                    return new CultureKey();
+                    return CultureKey.Neutral;
 
                 return new CultureKey(cultureName);
             }
@@ -84,7 +84,7 @@
             var extension = projectFile.Extension;
             var filePath = projectFile.FilePath;
 
-            if (!Resx.Equals(extension, StringComparison.OrdinalIgnoreCase)) 
+            if (!Resx.Equals(extension, StringComparison.OrdinalIgnoreCase))
                 return Path.GetFileNameWithoutExtension(filePath);
 
             var name = Path.GetFileNameWithoutExtension(filePath);
@@ -120,7 +120,7 @@
         {
             Contract.Requires(projectFile != null);
 
-            return projectFile.GetBaseName().EndsWith(".Designer", StringComparison.OrdinalIgnoreCase); 
+            return projectFile.GetBaseName().EndsWith(".Designer", StringComparison.OrdinalIgnoreCase);
         }
 
         public static bool IsVisualBasicFile(this ProjectFile projectFile)

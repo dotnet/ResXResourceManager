@@ -3,11 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
+    using System.Windows.Media.Imaging;
     using DataGridExtensions;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Behaviors;
@@ -17,13 +17,17 @@
 
     public static class ColumnManager
     {
-        public static void SetupColumns(this DataGrid dataGrid, IEnumerable<CultureKey> languages)
+        private static readonly BitmapImage _codeReferencesImage = new BitmapImage(new Uri("/ResXManager.View;component/Assets/references.png", UriKind.RelativeOrAbsolute));
+
+        public static void SetupColumns(this DataGrid dataGrid, IEnumerable<CultureKey> cultureKeys)
         {
             Contract.Requires(dataGrid != null);
-            Contract.Requires(languages != null);
+            Contract.Requires(cultureKeys != null);
 
-            dataGrid.RemoveHandler(ColumnVisibilityChangedEventBehavior.ColumnVisibilityChangedEvent, (RoutedEventHandler)DataGrid_ColumnVisibilityChanged);
-            dataGrid.AddHandler(ColumnVisibilityChangedEventBehavior.ColumnVisibilityChangedEvent, (RoutedEventHandler)DataGrid_ColumnVisibilityChanged);
+            var dataGridEvents = dataGrid.GetAdditionalEvents();
+
+            dataGridEvents.ColumnVisibilityChanged -= DataGrid_ColumnVisibilityChanged;
+            dataGridEvents.ColumnVisibilityChanged += DataGrid_ColumnVisibilityChanged;
 
             var columns = dataGrid.Columns;
 
@@ -44,19 +48,24 @@
 
             var languageColumns = columns.Skip(2).ToArray();
 
-            var disconnectedColumns = languageColumns.Where(col => languages.All(language => !Equals(col.GetCultureKey(), language)));
+            var disconnectedColumns = languageColumns.Where(col => cultureKeys.All(cultureKey => !Equals(col.GetCultureKey(), cultureKey)));
 
             foreach (var column in disconnectedColumns)
             {
                 columns.Remove(column);
             }
 
-            var addedLanguages = languages.Where(language => languageColumns.All(col => !Equals(col.GetCultureKey(), language)));
+            var addedLanguages = cultureKeys.Where(language => languageColumns.All(col => !Equals(col.GetCultureKey(), language)));
 
             foreach (var language in addedLanguages)
             {
                 AddLanguageColumn(columns, language);
             }
+        }
+
+        private static Image CreateCodeReferencesImage()
+        {
+            return new Image { Source= _codeReferencesImage, SnapsToDevicePixels=true };
         }
 
         private static DataGridColumn CreateCodeReferencesColumn(FrameworkElement dataGrid)
@@ -68,7 +77,7 @@
             elementStyle.Setters.Add(new Setter(ToolTipService.ShowDurationProperty, Int32.MaxValue));
             elementStyle.Setters.Add(new Setter(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Center));
 
-            var columnHeader = new ColumnHeader(dataGrid.FindResource("CodeReferencesImage"), ColumnType.Other)
+            var columnHeader = new ColumnHeader(CreateCodeReferencesImage(), ColumnType.Other)
             {
                 ToolTip = Resources.CodeReferencesToolTip,
                 HorizontalContentAlignment = HorizontalAlignment.Center
@@ -129,7 +138,7 @@
             columns.Add(column);
         }
 
-        private static void DataGrid_ColumnVisibilityChanged(object sender, RoutedEventArgs e)
+        private static void DataGrid_ColumnVisibilityChanged(object sender, EventArgs e)
         {
             Contract.Requires(sender != null);
 

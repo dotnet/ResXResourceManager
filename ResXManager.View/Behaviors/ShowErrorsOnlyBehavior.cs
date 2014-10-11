@@ -9,6 +9,7 @@
     using DataGridExtensions;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
+    using tomenglertde.ResXManager.View.Tools;
 
     public class ShowErrorsOnlyBehavior : Behavior<DataGrid>
     {
@@ -27,14 +28,14 @@
         {
             base.OnAttached();
 
-            DataGrid.AddHandler(ColumnVisibilityChangedEventBehavior.ColumnVisibilityChangedEvent, (RoutedEventHandler)DataGrid_ColumnVisibilityChanged);
+            DataGrid.GetAdditionalEvents().ColumnVisibilityChanged += DataGrid_ColumnVisibilityChanged;
         }
 
         protected override void OnDetaching()
         {
             base.OnDetaching();
 
-            DataGrid.RemoveHandler(ColumnVisibilityChangedEventBehavior.ColumnVisibilityChangedEvent, (RoutedEventHandler)DataGrid_ColumnVisibilityChanged);
+            DataGrid.GetAdditionalEvents().ColumnVisibilityChanged -= DataGrid_ColumnVisibilityChanged;
         }
 
         private DataGrid DataGrid
@@ -79,7 +80,7 @@
             }
         }
 
-        private void DataGrid_ColumnVisibilityChanged(object source, RoutedEventArgs e)
+        private void DataGrid_ColumnVisibilityChanged(object source, EventArgs e)
         {
             if (ToggleButton == null)
                 return;

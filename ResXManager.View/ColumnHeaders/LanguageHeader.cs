@@ -4,13 +4,8 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
-    public class LanguageHeader : LanguageColumnHeader
+    public class LanguageHeader : LanguageColumnHeaderBase
     {
-        public LanguageHeader()
-            : base(new CultureKey())
-        {
-        }
-
         public LanguageHeader(CultureKey cultureKey)
             : base(cultureKey)
         {
@@ -21,7 +16,9 @@
         {
             get
             {
-                return (CultureKey.Culture != null) ? CultureKey.Culture.DisplayName : Resources.Neutral;
+                Contract.Ensures(Contract.Result<string>() != null);
+
+                return CultureKey.Culture.Maybe().Return(c => c.DisplayName) ?? Resources.Neutral;
             }
         }
 

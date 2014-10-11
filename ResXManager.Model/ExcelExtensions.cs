@@ -75,11 +75,11 @@
                 var workbookPart = package.WorkbookPart;
 
                 var workbook = workbookPart.Workbook;
-                IList<SharedStringItem> sharedStrings = workbookPart.GetSharedStrings();
+                var sharedStrings = workbookPart.GetSharedStrings();
 
                 var entities = GetEntities(resourceManager).ToArray();
 
-                foreach (Sheet sheet in workbook.Sheets)
+                foreach (var sheet in workbook.Sheets.OfType<Sheet>())
                 {
                     var resourceEntity = FindResourceEntity(entities, sheet);
 
@@ -95,6 +95,8 @@
                     var rows = sheetData.OfType<Row>().ToArray();
 
                     var data = (IList<IList<string>>)rows.Select(row => row.OfType<Cell>().GetRowContent(sharedStrings)).ToArray();
+                    if (data.Count == 0)
+                        return ImportResult.None;
 
                     var result = resourceEntity.ImportTable(FixedColumnHeaders, data);
 

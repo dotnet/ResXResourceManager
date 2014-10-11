@@ -48,7 +48,7 @@
         {
             Contract.Requires(action != null);
 
-            if (_source == null)
+            if (_source != null)
             {
                 action(_source);
             }

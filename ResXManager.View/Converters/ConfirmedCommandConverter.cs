@@ -28,7 +28,7 @@
             var e = new CancelEventArgs();
 
             var handler = Executing;
-            if (handler != null) 
+            if (handler != null)
                 handler(this, e);
 
             return e.Cancel;

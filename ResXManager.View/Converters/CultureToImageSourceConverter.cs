@@ -13,7 +13,9 @@
 
     public class CultureToImageSourceConverter : IValueConverter
     {
-        private static readonly string[] ExistingFlags =
+        public static readonly IValueConverter Default = new CultureToImageSourceConverter();
+
+        private static readonly string[] _existingFlags =
         {
             "ad", "ae", "af", "ag", "ai", "al", "am", "an", "ao", "ar", "as", "at", "au", "aw", "ax", "az", "ba", "bb", "bd", "be", "bf",
             "bg", "bh", "bi", "bj", "bm", "bn", "bo", "br", "bs", "bt", "bv", "bw", "by", "bz", "ca", "cc", "cd", "cf", "cg", "ch", "ci",
@@ -58,9 +60,12 @@
             }
 
             var cultureParts = cultureName.Split('-');
+            if (!cultureParts.Any())
+                return null;
+
             var key = cultureParts.Last();
 
-            if (Array.BinarySearch(ExistingFlags, key, StringComparer.OrdinalIgnoreCase) < 0)
+            if (Array.BinarySearch(_existingFlags, key, StringComparer.OrdinalIgnoreCase) < 0)
                 return null;
 
             var resourcePath = string.Format(CultureInfo.InvariantCulture, @"/ResXManager.View;component/Flags/{0}.gif", key);

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="700"
              xmlns:dgx="clr-namespace:DataGridExtensions;assembly=DataGridExtensions"
              xmlns:windows="clr-namespace:System.Windows;assembly=PresentationFramework"
-             xmlns:model="clr-namespace:tomenglertde.ResXManager.Model;assembly=ResXManager.Model"
+             xmlns:model="urn:ResXManager.Model"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:columnHeaders="clr-namespace:tomenglertde.ResXManager.View.ColumnHeaders"
@@ -16,16 +16,8 @@
              d:DataContext="{d:DesignInstance model:ResourceManager}">
   <UserControl.Resources>
 
-    <converters:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter" />
-    <converters:CultureToImageSourceConverter x:Key="CultureToImageSourceConverter" />
-    <converters:CultureToImageConverter x:Key="CultureToImageConverter" />
     <converters:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Executing="DeleteCommandConverter_OnExecuting" />
     <converters:ConfirmedCommandConverter x:Key="CutCommandConverter" Executing="CutCommandConverter_OnExecuting" />
-    <converters:LanguageColumnFilterConverter x:Key="LanguageColumnFilterConverter" />
-    <converters:AddNewKeyCommandConverter x:Key="AddNewKeyCommandConverter" />
-    <converters:DataGridToSelectionScopeConverter x:Key="DataGridToSelectionScopeConverter" />
-
-    <Image x:Shared="False" x:Key="CodeReferencesImage" SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/references.png" />
 
     <Style TargetType="{x:Type Control}" x:Key="SingleSelectElementStyle">
       <Setter Property="IsEnabled" Value="False" />
@@ -60,7 +52,7 @@
 
   </UserControl.Resources>
   <UserControl.InputBindings>
-    <KeyBinding Key="N" Modifiers="Control" Command="{Binding Converter={StaticResource AddNewKeyCommandConverter}}" />
+    <KeyBinding Key="N" Modifiers="Control" Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}" />
   </UserControl.InputBindings>
   <Grid>
     <Grid.ColumnDefinitions>
@@ -222,7 +214,7 @@
               </Button>
               <Button ToolTip="{x:Static properties:Resources.AddKeyToolTip}"
                       Style="{StaticResource SingleSelectElementStyle}"
-                      Command="{Binding Converter={StaticResource AddNewKeyCommandConverter}}">
+                      Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/add.png" />
               </Button>
               <Separator />
@@ -236,7 +228,7 @@
                     </StackPanel>
                   </MenuItem.Header>
                   <MenuItem Header="{x:Static properties:Resources.ExportExcelAll}" Command="{Binding ExportExcelAllCommand}" />
-                  <MenuItem Header="{x:Static properties:Resources.ExportExcelSelection}" Command="{Binding ExportExcelSelectedCommand}" CommandParameter="{Binding ElementName=DataGrid, Converter={StaticResource DataGridToSelectionScopeConverter}}" />
+                  <MenuItem Header="{x:Static properties:Resources.ExportExcelSelection}" Command="{Binding ExportExcelSelectedCommand}" CommandParameter="{Binding ElementName=DataGrid, Converter={x:Static converters:DataGridToSelectionScopeConverter.Default}}" />
                   <MenuItem Header="{x:Static properties:Resources.ImportExcel}" Command="{Binding ImportExcelCommand}" />
                 </MenuItem>
               </Menu>
@@ -260,7 +252,7 @@
               <behaviors:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=ColumnChooserToggleButton}" />
             </i:Interaction.Behaviors>
             <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-              <ListBox ItemsSource="{Binding Columns, ElementName=DataGrid, Converter={StaticResource LanguageColumnFilterConverter} }"
+              <ListBox ItemsSource="{Binding Columns, ElementName=DataGrid, Converter={x:Static converters:LanguageColumnFilterConverter.Default} }"
                        SelectionMode="Multiple" KeyboardNavigation.TabNavigation="Once">
                 <ListBox.ItemTemplate>
                   <DataTemplate DataType="DataGridColumn">
@@ -269,7 +261,7 @@
                                 IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" />
                       <Decorator DockPanel.Dock="Left" Width="2" />
                       <Image DockPanel.Dock="Left"
-                             Source="{Binding Path=Header.CultureKey, Converter={StaticResource CultureToImageSourceConverter}, FallbackValue={x:Null}}" />
+                             Source="{Binding Path=Header.CultureKey, Converter={x:Static converters:CultureToImageSourceConverter.Default}, FallbackValue={x:Null}}" />
                       <Decorator DockPanel.Dock="Left" Width="2" />
                       <Decorator DockPanel.Dock="Right" Width="3" />
                       <ContentPresenter Content="{Binding Path=Header}" VerticalAlignment="Center" />
@@ -278,7 +270,7 @@
                 </ListBox.ItemTemplate>
                 <ListBox.ItemContainerStyle>
                   <Style TargetType="ListBoxItem">
-                    <Setter Property="IsSelected" Value="{Binding Path=Visibility, Converter={StaticResource VisibilityToBooleanConverter}}" />
+                    <Setter Property="IsSelected" Value="{Binding Path=Visibility, Converter={x:Static converters:VisibilityToBooleanConverter.Default}}" />
                     <Setter Property="Template">
                       <Setter.Value>
                         <ControlTemplate TargetType="ListBoxItem">
@@ -338,7 +330,7 @@
               <ContextMenu.ItemContainerStyle>
                 <Style TargetType="MenuItem">
                   <Setter Property="Header" Value="{Binding Path=DisplayName}" />
-                  <Setter Property="Icon" Value="{Binding Converter={StaticResource CultureToImageConverter}}" />
+                  <Setter Property="Icon" Value="{Binding Converter={x:Static converters:CultureToImageConverter.Default}}" />
                   <EventSetter Event="Click" Handler="NeutralLanguage_Click" />
                 </Style>
               </ContextMenu.ItemContainerStyle>
@@ -358,10 +350,10 @@
                 <Grid DockPanel.Dock="Left" Background="Transparent"
                       Style="{StaticResource NeutralLanguageImageContainerStyle}">
                   <Image x:Name="neutralImage"
-                         Source="{Binding Path=NeutralResourceLanguage, Source={x:Static properties:Settings.Default}, Converter={StaticResource CultureToImageSourceConverter}}"
+                         Source="{Binding Path=NeutralResourceLanguage, Source={x:Static properties:Settings.Default}, Converter={x:Static converters:CultureToImageSourceConverter.Default}}"
                          Stretch="None" />
                   <Image x:Name="image"
-                         Source="{Binding Path=CultureKey, Converter={StaticResource CultureToImageSourceConverter}}"
+                         Source="{Binding Path=CultureKey, Converter={x:Static converters:CultureToImageSourceConverter.Default}}"
                          Stretch="None" />
                 </Grid>
                 <Decorator x:Name="padding" DockPanel.Dock="Left" Width="4" />
@@ -372,7 +364,7 @@
             <DataTemplate DataType="{x:Type columnHeaders:CommentHeader}">
               <TextBlock><Run Text="{x:Static properties:Resources.CommentColumnHeader}"/><Run Text=" ("/><InlineUIContainer>
                   <Grid>
-                  <Image x:Name="image" Source="{Binding Path=CultureKey, Converter={StaticResource CultureToImageSourceConverter}}" Stretch="None" Margin="1,2,1,-2"/>
+                  <Image x:Name="image" Source="{Binding Path=CultureKey, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" Stretch="None" Margin="1,2,1,-2"/>
                 </Grid></InlineUIContainer><Run Text=")"/>
               </TextBlock>
             </DataTemplate>
@@ -465,8 +457,6 @@
             <behaviors:ShowErrorsOnlyBehavior ToggleButton="{Binding ElementName=ErrorsOnlyFilterButton}" />
             <behaviors:DataGridDisableTargetWhileEditingBehavior Target="{Binding ElementName=ToolBar}" />
             <behaviors:DataGridTryBeginEditBehavior />
-            <behaviors:UpdateNeutralColumnHeadersBehavior />
-            <behaviors:ColumnVisibilityChangedEventBehavior />
           </i:Interaction.Behaviors>
         </DataGrid>
       </Grid>

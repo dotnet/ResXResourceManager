@@ -4,13 +4,8 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
-    public class CommentHeader : LanguageColumnHeader
+    public class CommentHeader : LanguageColumnHeaderBase
     {
-        public CommentHeader()
-            : base(new CultureKey())
-        {
-        }
-
         public CommentHeader(CultureKey cultureKey)
             : base(cultureKey)
         {

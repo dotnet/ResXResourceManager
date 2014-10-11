@@ -142,7 +142,7 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
-    <Compile Include="Behaviors\ColumnVisibilityChangedEventBehavior.cs" />
+    <Compile Include="Tools\DataGridEventsProvider.cs" />
     <Compile Include="Behaviors\DataGridBeginEditOnCtrlEnterBehavior.cs" />
     <Compile Include="Behaviors\DataGridDisableTargetWhileEditingBehavior.cs" />
     <Compile Include="Behaviors\DataGridTryBeginEditBehavior.cs" />
@@ -150,9 +150,8 @@
     <Compile Include="Behaviors\SelectGroupOnGroupHeaderClickBehavior.cs" />
     <Compile Include="Behaviors\ShowErrorsOnlyBehavior.cs" />
     <Compile Include="Behaviors\SynchronizeTextBoxWithDataGridCellBehavior.cs" />
-    <Compile Include="Behaviors\UpdateNeutralColumnHeadersBehavior.cs" />
     <Compile Include="Behaviors\ZoomFontSizeOnMouseWheelBehavior.cs" />
-    <Compile Include="ColumnHeaders\LanguageColumnHeader.cs" />
+    <Compile Include="ColumnHeaders\LanguageColumnHeaderBase.cs" />
     <Compile Include="Converters\AddNewKeyCommandConverter.cs" />
     <Compile Include="Tools\ColumnManager.cs" />
     <Compile Include="Tools\CultureOverrideEventArgs.cs" />
