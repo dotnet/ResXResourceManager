@@ -65,7 +65,7 @@
 
         private static Image CreateCodeReferencesImage()
         {
-            return new Image { Source= _codeReferencesImage, SnapsToDevicePixels=true };
+            return new Image { Source = _codeReferencesImage, SnapsToDevicePixels = true };
         }
 
         private static DataGridColumn CreateCodeReferencesColumn(FrameworkElement dataGrid)
@@ -145,17 +145,28 @@
             var dataGrid = (DataGrid)sender;
             var settings = Settings.Default;
 
-            settings.VisibleCommentColumns = string.Join(",", dataGrid.Columns
-                .Where(col => col.Visibility == Visibility.Visible)
-                .Select(col => col.Header)
-                .OfType<CommentHeader>()
-                .Select(hdr => hdr.CultureKey.ToString(".")));
+            settings.VisibleCommentColumns = UpdateColumnSettings<CommentHeader>(settings.VisibleCommentColumns, dataGrid, col => col.Visibility == Visibility.Visible);
+            settings.HiddenLanguageColumns  = UpdateColumnSettings<LanguageHeader>(settings.HiddenLanguageColumns, dataGrid, col => col.Visibility != Visibility.Visible);
+        }
 
-            settings.HiddenLanguageColumns = string.Join(",", dataGrid.Columns
-                .Where(col => col.Visibility != Visibility.Visible)
+        private static string UpdateColumnSettings<T>(string current, DataGrid dataGrid, Func<DataGridColumn, bool> includePredicate)
+            where T : LanguageColumnHeaderBase
+        {
+            return string.Join(",", current.Split(',')
+                .Concat(GetColumnKeys<T>(dataGrid, includePredicate))
+                .Except(GetColumnKeys<T>(dataGrid, col => !includePredicate(col)))
+                .Distinct());
+
+        }
+
+        private static IEnumerable<string> GetColumnKeys<T>(DataGrid dataGrid, Func<DataGridColumn, bool> predicate)
+            where T : LanguageColumnHeaderBase
+        {
+            return dataGrid.Columns
+                .Where(predicate)
                 .Select(col => col.Header)
-                .OfType<LanguageHeader>()
-                .Select(hdr => hdr.CultureKey.ToString(".")));
+                .OfType<T>()
+                .Select(hdr => hdr.CultureKey.ToString("."));
         }
     }
 }
