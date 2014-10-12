@@ -134,20 +134,21 @@
 
     <DockPanel Grid.Column="2">
       <DockPanel DockPanel.Dock="Bottom" Background="{Binding Background, ElementName=DataGrid}">
-        <Grid DataContext="{Binding SelectedItem, ElementName=ListBox}">
+        <Grid DataContext="{Binding SelectedItem, ElementName=DataGrid}">
           <Grid.Style>
             <Style TargetType="Grid">
               <Setter Property="Visibility" Value="Hidden" />
               <Style.Triggers>
-                <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="1">
+                <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=DataGrid}" Value="1">
                   <Setter Property="Visibility" Value="Visible" />
                 </DataTrigger>
               </Style.Triggers>
             </Style>
           </Grid.Style>
-          <TextBlock Margin="5" d:DataContext="{d:DesignInstance model:ResourceEntity}">
-            <Run Text="{Binding Path=BaseName, Mode=OneWay}" FontWeight="Bold" />
-            <Run Text="{Binding Path=Directory, Mode=OneWay}" />
+          <TextBlock Margin="5" d:DataContext="{d:DesignInstance model:ResourceTableEntry}">
+            <Run Text="{Binding Path=Key, Mode=OneWay}" FontWeight="Bold" /><Run Text=": "/>
+            <Run Text="{Binding Path=Owner.BaseName, Mode=OneWay}" FontWeight="Bold" />
+            (<Run Text="{Binding Path=Owner.Directory, Mode=OneWay}" />)
           </TextBlock>
         </Grid>
       </DockPanel>

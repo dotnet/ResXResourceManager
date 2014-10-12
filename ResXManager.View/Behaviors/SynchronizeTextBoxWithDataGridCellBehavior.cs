@@ -53,7 +53,8 @@
             Contract.Requires(sender != null);
 
             var textBox = TextBox;
-            Contract.Assume(textBox != null);
+            if (textBox == null)
+                return;
 
             var dataGrid = (DataGrid)sender;
             var currentCell = dataGrid.CurrentCell;
