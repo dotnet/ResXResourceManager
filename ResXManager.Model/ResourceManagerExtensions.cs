@@ -39,8 +39,12 @@
         {
             Contract.Requires(solutionFolder != null);
             Contract.Requires(isSourceFileCallback != null);
+            Contract.Ensures(Contract.Result<IList<ProjectFile>>() != null);
 
-            var allProjectFiles = solutionFolder.EnumerateFiles("*.*", SearchOption.AllDirectories)
+            var fileInfos = solutionFolder.EnumerateFiles("*.*", SearchOption.AllDirectories);
+            Contract.Assume(fileInfos != null);
+
+            var allProjectFiles = fileInfos
                 .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
                 .Where(file => file.IsResourceFile() || isSourceFileCallback(file))
                 .ToArray();
@@ -49,14 +53,15 @@
 
             foreach (var directoryFiles in fileNamesByDirectory)
             {
-                if ((directoryFiles == null) || (directoryFiles.Key == null))
+                if ((directoryFiles == null) || string.IsNullOrEmpty(directoryFiles.Key))
                     continue;
 
                 var directory = new DirectoryInfo(directoryFiles.Key);
                 var projectName = FindProjectName(directory);
 
-                foreach (var file in directoryFiles.Where(file => file != null))
+                foreach (var file in directoryFiles)
                 {
+                    Contract.Assume(file != null);
                     file.ProjectName = projectName;
                 }
             }

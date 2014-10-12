@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Behaviors
 {
     using System;
+    using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Documents;
     using System.Windows.Input;
@@ -14,6 +15,7 @@
         protected override void OnAttached()
         {
             base.OnAttached();
+            Contract.Assume(AssociatedObject != null);
 
             AssociatedObject.PreviewMouseWheel += AssociatedObject_PreviewMouseWheel;
         }
@@ -21,6 +23,7 @@
         protected override void OnDetaching()
         {
             base.OnDetaching();
+            Contract.Assume(AssociatedObject != null);
 
             AssociatedObject.PreviewMouseWheel -= AssociatedObject_PreviewMouseWheel;
         }

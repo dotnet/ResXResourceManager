@@ -63,14 +63,19 @@
                 };
 
                 inputBox.TextChanged += (_, args) =>
-                    inputBox.IsInputValid = !resourceFile.Entries.Any(entry => entry.Key.Equals(args.Text, StringComparison.OrdinalIgnoreCase));
+                    inputBox.IsInputValid = !string.IsNullOrWhiteSpace(args.Text) && !resourceFile.Entries.Any(entry => entry.Key.Equals(args.Text, StringComparison.OrdinalIgnoreCase));
 
                 if (inputBox.ShowDialog() != true)
                     return;
 
+                var key = inputBox.Text;
+                Contract.Assume(!string.IsNullOrWhiteSpace(key));
+                key = key.Trim();
+                Contract.Assume(!string.IsNullOrEmpty(key));
+
                 try
                 {
-                    _resourceManager.AddNewKey(resourceFile, inputBox.Text);
+                    _resourceManager.AddNewKey(resourceFile, key);
                 }
                 catch (Exception ex)
                 {

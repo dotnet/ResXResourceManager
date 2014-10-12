@@ -18,7 +18,10 @@
 
             using (var package = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook))
             {
+                Contract.Assume(package != null);
+
                 var workbookPart = package.AddWorkbookPart();
+                Contract.Assume(workbookPart != null);
 
                 var entitiesQuery = GetEntities(resourceManager);
 
@@ -36,7 +39,9 @@
                 {
                     Contract.Assume(item != null);
 
-                    workbookPart.AddNewPart<WorksheetPart>(item.Id).Worksheet = new Worksheet().AppendItem(item.GetDataRows(scope).Aggregate(new SheetData(), AppendRow));
+                    var worksheetPart = workbookPart.AddNewPart<WorksheetPart>(item.Id);
+                    Contract.Assume(worksheetPart != null);
+                    worksheetPart.Worksheet = new Worksheet().AppendItem(item.GetDataRows(scope).Aggregate(new SheetData(), AppendRow));
                 }
             }
         }
@@ -72,14 +77,21 @@
 
             using (var package = SpreadsheetDocument.Open(filePath, false))
             {
+                Contract.Assume(package != null);
                 var workbookPart = package.WorkbookPart;
+                Contract.Assume(workbookPart != null);
 
                 var workbook = workbookPart.Workbook;
+                Contract.Assume(workbook != null);
+
                 var sharedStrings = workbookPart.GetSharedStrings();
 
                 var entities = GetEntities(resourceManager).ToArray();
 
-                foreach (var sheet in workbook.Sheets.OfType<Sheet>())
+                var sheets = workbook.Sheets;
+                Contract.Assume(sheets != null);
+
+                foreach (var sheet in sheets.OfType<Sheet>())
                 {
                     var resourceEntity = FindResourceEntity(entities, sheet);
 
@@ -87,7 +99,11 @@
                         return ImportResult.Partial;
 
                     var worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id);
-                    var sheetData = worksheetPart.Worksheet.ChildElements.OfType<SheetData>().FirstOrDefault();
+                    var sheetData = worksheetPart.Maybe()
+                        .Select(x => x.Worksheet)
+                        .Select(x => x.ChildElements)
+                        .Select(x => x.OfType<SheetData>())
+                        .Return(x => x.FirstOrDefault());
 
                     if (sheetData == null)
                         continue;
@@ -182,8 +198,12 @@
                             var stringItem = sharedStrings[index];
                             if (stringItem != null)
                             {
-                                var content = stringItem.Descendants<OpenXmlLeafTextElement>().Select(element => element.Text);
-                                text = string.Concat(content);
+                                var descendants = stringItem.Descendants<OpenXmlLeafTextElement>();
+                                if (descendants != null)
+                                {
+                                    var content = descendants.Select(element => element.Text);
+                                    text = string.Concat(content);
+                                }
                             }
                         }
                     }
@@ -210,6 +230,7 @@
 
             foreach (var cell in cells)
             {
+                Contract.Assume(cell != null);
                 var columnIndex = new ExcelRange(cell.CellReference).StartColumnIndex;
 
                 while (result.Count < columnIndex)
@@ -272,6 +293,7 @@
         public static IEnumerable<IEnumerable<string>> GetDataRows(this ResourceEntity entity, IResourceScope scope)
         {
             Contract.Requires(entity != null);
+            Contract.Ensures(Contract.Result<IEnumerable<IEnumerable<string>>>() != null);
 
             var entries = (scope != null) 
                 ? scope.Entries.Where(entry => entry.Owner == entity) 

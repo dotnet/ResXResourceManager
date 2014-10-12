@@ -1,5 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Behaviors
 {
+    using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Interactivity;
@@ -20,7 +21,8 @@
         protected override void OnAttached()
         {
             base.OnAttached();
-            
+            Contract.Assume(AssociatedObject != null);
+
             AssociatedObject.PreparingCellForEdit += DataGrid_PreparingCellForEdit;
             AssociatedObject.CellEditEnding += DataGrid_CellEditEnding;
         }
@@ -28,6 +30,7 @@
         protected override void OnDetaching()
         {
             base.OnDetaching();
+            Contract.Assume(AssociatedObject != null);
 
             AssociatedObject.PreparingCellForEdit -= DataGrid_PreparingCellForEdit;
             AssociatedObject.CellEditEnding -= DataGrid_CellEditEnding;

@@ -110,6 +110,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
+
                 return _nodes.Keys;
             }
         }
@@ -330,6 +332,8 @@
 
         internal bool RenameKey(string oldKey, string newKey)
         {
+            Contract.Requires(!string.IsNullOrEmpty(newKey));
+
             Node node;
 
             if (!OnChanging())
@@ -403,7 +407,9 @@
 
             public Node(ResourceLanguage owner, XElement element)
             {
+                Contract.Requires(owner != null);
                 Contract.Requires(element != null);
+
                 _element = element;
                 _owner = owner;
             }
@@ -413,6 +419,7 @@
                 get
                 {
                     Contract.Ensures(Contract.Result<XElement>() != null);
+
                     return _element;
                 }
             }
@@ -539,7 +546,7 @@
                 var nameAttribute = entry.Attribute(@"name");
                 if (nameAttribute == null)
                 {
-                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileNameAttributeMissingError, _owner._file.FilePath));
+                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileNameAttributeMissingError, _owner.ProjectFile.FilePath));
                 }
 
                 return nameAttribute;
@@ -550,6 +557,7 @@
             private void ObjectInvariant()
             {
                 Contract.Invariant(_element != null);
+                Contract.Invariant(_owner != null);
             }
         }
 

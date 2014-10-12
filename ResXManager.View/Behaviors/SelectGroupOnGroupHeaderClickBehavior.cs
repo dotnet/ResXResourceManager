@@ -14,6 +14,7 @@
         protected override void OnAttached()
         {
             base.OnAttached();
+            Contract.Assume(AssociatedObject != null);
 
             AssociatedObject.MouseLeftButtonDown += GroupHeader_OnMouseLeftButtonDown;
         }
@@ -21,6 +22,7 @@
         protected override void OnDetaching()
         {
             base.OnDetaching();
+            Contract.Assume(AssociatedObject != null);
 
             AssociatedObject.MouseLeftButtonDown -= GroupHeader_OnMouseLeftButtonDown;
         }
@@ -31,7 +33,7 @@
 
             var visual = (FrameworkElement)sender;
             var group = visual.DataContext as CollectionViewGroup;
-            if (group == null)
+            if ((group == null) || (group.Items == null))
                 return;
 
             var selector = visual.TryFindAncestor<Selector>();

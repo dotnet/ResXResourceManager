@@ -135,12 +135,20 @@
 
         public string RelativePath
         {
-            get { return _relativePath; }
+            get
+            {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return _relativePath;
+            }
         }
 
         public string DisplayName
         {
-            get { return _displayName; }
+            get
+            {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return _displayName;
+            }
         }
 
         /// <summary>
@@ -163,8 +171,6 @@
             get
             {
                 Contract.Ensures(Contract.Result<IEnumerable<ResourceLanguage>>() != null);
-                Contract.Ensures(Contract.Result<IEnumerable<ResourceLanguage>>().Any());
-
                 return _languages.Values;
             }
         }
@@ -207,28 +213,17 @@
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
 
-            var firstLanguage = _languages.First().Value;
+            if (!_languages.Any() || !_languages.Values.Any())
+                return null;
+
+            var firstLanguage = _languages.Values.First();
             Contract.Assume(firstLanguage != null);
+            
             firstLanguage.ForceValue(key, string.Empty); // force an entry in the neutral language resource file.
             var resourceTableEntry = new ResourceTableEntry(this, key, _languages);
             _resourceTableEntries.Add(resourceTableEntry);
 
             return resourceTableEntry;
-        }
-
-        public ResourceTableEntry AddNewKey()
-        {
-            var keyTemplate = Resources.AddNewItemTemplate;
-            var key = keyTemplate;
-            var index = 1;
-
-            while (Entries.Any(item => item.Key.Equals(key, StringComparison.OrdinalIgnoreCase)))
-            {
-                key = string.Format(CultureInfo.InvariantCulture, "{0}_{1}", keyTemplate, index);
-                index += 1;
-            }
-
-            return Add(key);
         }
 
         /// <summary>
@@ -415,8 +410,6 @@
         {
             Contract.Invariant(_owner != null);
             Contract.Invariant(_languages != null);
-            Contract.Invariant(_languages.Any());
-            Contract.Invariant(_languages.Values.Any());
             Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(!String.IsNullOrEmpty(_projectName));
             Contract.Invariant(!String.IsNullOrEmpty(_baseName));

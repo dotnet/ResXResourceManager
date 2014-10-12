@@ -107,9 +107,6 @@
                 if (dynamicPart != null)
                     dynamicPart.CollectionChanged += parts_CollectionChanged;
 
-                if (item == null)
-                    throw new ArgumentNullException("item");
-
                 // If this new part contains items and someone registered for changes, raise change events
                 if ((item.Count > 0) && (CollectionChanged != null))
                 {
@@ -304,6 +301,7 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<IList<IList>>() != null);
                 return _content;
             }
         }
@@ -534,7 +532,7 @@
         /// Gets a value indicating whether the <see cref="T:System.Collections.IList"/> has a fixed size.
         /// </summary>
         /// <returns>true if the <see cref="T:System.Collections.IList"/> has a fixed size; otherwise, false.</returns>
-        public bool IsFixedSize
+        bool IList.IsFixedSize
         {
             get
             {
@@ -580,10 +578,6 @@
 
         void ICollection.CopyTo(Array array, int index)
         {
-            if (array == null)
-                throw new ArgumentNullException("array");
-            if (index < 0)
-                throw new ArgumentOutOfRangeException("index");
             if (index + array.Length < Count)
                 throw new ArgumentException("array is too small");
             if (array.Rank != 1)
@@ -595,31 +589,6 @@
                 array.SetValue(item, index++);
             }
         }
-
-        /// <summary>
-        /// Gets a value indicating whether access to the <see cref="T:System.Collections.ICollection"/> is synchronized (thread safe).
-        /// </summary>
-        /// <returns>true if access to the <see cref="T:System.Collections.ICollection"/> is synchronized (thread safe); otherwise, false.</returns>
-        public bool IsSynchronized
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Gets an object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection"/>.
-        /// </summary>
-        /// <returns>An object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection"/>.</returns>
-        public object SyncRoot
-        {
-            get
-            {
-                return this;
-            }
-        }
-
 
         int ICollection.Count
         {

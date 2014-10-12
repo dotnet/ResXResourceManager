@@ -33,11 +33,12 @@
         private const string PAGE_TEXT_EDITOR = "TextEditor";
         private const string PROPERTY_FONT_SIZE = "FontSize";
 
-        private DTE _dte;
-        private Control _view;
-        private ResourceManager _resourceManager;
-        private string _solutionFingerPrint;
+        private readonly ResourceManager _resourceManager = new ResourceManager();
+        private readonly Control _view;
         private readonly OutputWindowTracer _trace;
+
+        private DTE _dte;
+        private string _solutionFingerPrint;
 
         /// <summary>
         /// Standard constructor for the tool window.
@@ -45,8 +46,6 @@
         public MyToolWindow()
             : base(null)
         {
-            Contract.Ensures(BitmapIndex == 1);
-
             // Set the window title reading it from the resources.
             Caption = Resources.ToolWindowTitle;
 
@@ -57,6 +56,14 @@
             BitmapIndex = 1;
 
             _trace = new OutputWindowTracer(this);
+
+            _resourceManager.BeginEditing += ResourceManager_BeginEditing;
+            _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
+            _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
+
+            _view = new Shell { DataContext = _resourceManager };
+            _view.Loaded += view_Loaded;
+            _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -71,20 +78,17 @@
                 var executingAssembly = Assembly.GetExecutingAssembly();
 
                 var folder = Path.GetDirectoryName(executingAssembly.Location);
-                if (folder != null)
-                    _trace.WriteLine(string.Format(CultureInfo.CurrentCulture, Resources.AssemblyLocation, folder));
-                _trace.WriteLine(string.Format(CultureInfo.CurrentCulture,  Resources.Version, new AssemblyName(executingAssembly.FullName).Version));
+                _trace.WriteLine(Resources.AssemblyLocation, folder);
+                _trace.WriteLine(Resources.Version, new AssemblyName(executingAssembly.FullName).Version);
 
                 AppDomain.CurrentDomain.AssemblyResolve += AppDomain_AssemblyResolve;
 
-                _resourceManager = new ResourceManager();
-                _resourceManager.BeginEditing += ResourceManager_BeginEditing;
-                _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
-                _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
-
-                _view = new Shell { DataContext = _resourceManager };
-                _view.Loaded += view_Loaded;
-                _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
+                _dte = (DTE)GetService(typeof(DTE));
+                if (_dte == null)
+                {
+                    _trace.TraceError("Error getting DTE service.");
+                    return;
+                }
 
                 EventManager.RegisterClassHandler(typeof(ResourceView), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
 
@@ -93,18 +97,7 @@
                 // the object returned by the Content property.
                 Content = _view;
 
-                _dte = (DTE)GetService(typeof(DTE));
-                if (_dte == null)
-                    return;
-
-                try
-                {
-                    var properties = _dte.Properties[CATEGORY_FONTS_AND_COLORS, PAGE_TEXT_EDITOR];
-                    var fontSize = Convert.ToDouble(properties.Item(PROPERTY_FONT_SIZE).Value, CultureInfo.InvariantCulture);
-                    // Default in VS is 10, but looks like 12 in WPF
-                    _view.SetValue(ResourceView.TextFontSizeProperty, fontSize * 1.2);
-                }
-                catch { }
+                SetFontSize(_dte, _view);
 
                 ReloadSolution();
 
@@ -114,6 +107,29 @@
             {
                 _trace.TraceError(ex.ToString());
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
+            }
+        }
+
+        private static void SetFontSize(DTE dte, Control view)
+        {
+            Contract.Requires(dte != null);
+            Contract.Requires(view != null);
+            try
+            {
+                var fontSize = dte.Maybe()
+                    .Select(x => x.Properties[CATEGORY_FONTS_AND_COLORS, PAGE_TEXT_EDITOR])
+                    .Select(x => x.Item(PROPERTY_FONT_SIZE))
+                    .Select(x => x.Value)
+                    .Return(x => Convert.ToDouble(x, CultureInfo.InvariantCulture));
+
+                if (fontSize > 1)
+                {
+                    // Default in VS is 10, but looks like 12 in WPF
+                    view.SetValue(ResourceView.TextFontSizeProperty, fontSize * 1.2);
+                }
+            }
+            catch
+            {
             }
         }
 
@@ -189,6 +205,8 @@
         [Localizable(false)]
         private void CreateWebBrowser(string url)
         {
+            Contract.Requires(url != null);
+
             var webBrowsingService = (IVsWebBrowsingService)GetService(typeof(SVsWebBrowsingService));
             if (webBrowsingService != null)
             {
@@ -266,22 +284,29 @@
             Contract.Requires(entity != null);
             Contract.Requires(culture != null);
 
+            var resourceLanguages = entity.Languages;
+            if (!resourceLanguages.Any())
+                return false;
+
             var message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasNoResourceFile, culture.DisplayName);
 
             if (MessageBox.Show(message, Resources.ToolWindowTitle, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return false;
 
-            var neutralLanguage = entity.Languages.First();
+            var neutralLanguage = resourceLanguages.First();
+            Contract.Assume(neutralLanguage != null);
 
             var languageFileName = neutralLanguage.ProjectFile.GetLanguageFileName(culture);
-
+            
             if (File.Exists(languageFileName))
             {
                 if (MessageBox.Show(string.Format(CultureInfo.CurrentCulture, View.Properties.Resources.FileExistsPrompt, languageFileName), Resources.ToolWindowTitle, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                     return false;
             }
 
-            Directory.CreateDirectory(Path.GetDirectoryName(languageFileName));
+            var directoryName = Path.GetDirectoryName(languageFileName);
+            if (!string.IsNullOrEmpty(directoryName))
+                Directory.CreateDirectory(directoryName);
 
             File.WriteAllText(languageFileName, View.Properties.Resources.EmptyResxTemplate);
 
@@ -294,9 +319,14 @@
         {
             Contract.Requires(entity != null);
             Contract.Requires(neutralLanguage != null);
-            Contract.Requires(languageFileName != null);
+            Contract.Requires(!string.IsNullOrEmpty(languageFileName));
 
             DteProjectFile projectFile = null;
+            if (_dte == null)
+                return;
+            var solution = _dte.Solution;
+            if (solution == null)
+                return;
 
             foreach (var neutralLanguageProjectItem in ((DteProjectFile)neutralLanguage.ProjectFile).ProjectItems.OfType<ProjectItem>())
             {
@@ -307,15 +337,20 @@
                 Contract.Assume(projectItem != null);
 
                 var containingProject = projectItem.ContainingProject;
+                Contract.Assume(containingProject != null);
+
+                var projectName = containingProject.Name;
+                Contract.Assume(projectName != null);
 
                 if (projectFile == null)
                 {
-                    var solutionFolder = Path.GetDirectoryName(_dte.Solution.FullName);
-                    projectFile = new DteProjectFile(languageFileName, solutionFolder, containingProject.Name, containingProject.UniqueName, projectItem);
+                    var solutionFolder = Path.GetDirectoryName(solution.FullName);
+                    Contract.Assume(solutionFolder != null);
+                    projectFile = new DteProjectFile(languageFileName, solutionFolder, projectName, containingProject.UniqueName, projectItem);
                 }
                 else
                 {
-                    projectFile.AddProject(containingProject.Name, projectItem);
+                    projectFile.AddProject(projectName, projectItem);
                 }
             }
 
@@ -350,6 +385,8 @@
 
             foreach (var projectItem in projectItems)
             {
+                Contract.Assume(projectItem != null);
+
                 if (projectItem.IsOpen && (projectItem.Document != null))
                 {
                     projectItem.Document.Close();
@@ -379,9 +416,6 @@
 
         private void ReloadSolution(bool forceReload = false)
         {
-            if (_view == null)
-                return;
-
             var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || p.IsSourceCodeOrContentFile()).Cast<ProjectFile>().ToArray();
 
             // The solution events are not reliable, so we check the solution on every load/unload of our window.
@@ -402,7 +436,7 @@
 
         private IEnumerable<DteProjectFile> GetProjectFiles()
         {
-            if ((_dte == null) || (_view == null))
+            if (_dte == null)
                 return Enumerable.Empty<DteProjectFile>();
 
             var solution = _dte.Solution;
@@ -427,17 +461,16 @@
 
         private Assembly AppDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            if (folder == null)
-                return null;
             if (args.Name == null)
                 return null;
 
             var assemblySimpleName = new AssemblyName(args.Name).Name;
+            Contract.Assume(assemblySimpleName != null);
 
             if (assemblySimpleName.EndsWith(@".resources", StringComparison.OrdinalIgnoreCase))
                 return null;
 
+            var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var filePath = Path.Combine(folder, assemblySimpleName + ".dll");
 
             _trace.WriteLine(string.Format(CultureInfo.CurrentCulture, @"Resolve assembly {0} => {1}", args.Name, filePath));
@@ -464,6 +497,8 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
+            Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(_view != null);
             Contract.Invariant(_trace != null);
         }
     }

@@ -14,7 +14,9 @@
         {
             var collectionViewSource = new CollectionViewSource() { Source = value };
             var collectionView = collectionViewSource.View;
-            collectionView.Filter = Filter;
+            if (collectionView != null)
+                collectionView.Filter = Filter;
+
             return collectionView;
         }
 

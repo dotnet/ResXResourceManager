@@ -238,6 +238,7 @@
                         Culture = dataColumnHeaders[index].ExtractCulture(),
                         ColumnKind = dataColumnHeaders[index].GetColumnKind()
                     }))
+                .Where(mapping => mapping.Entry != null)
                 .Select(mapping => new { mapping.Entry, mapping.Text, mapping.Culture, mapping.ColumnKind, OriginalText = mapping.Entry.GetEntryData(mapping.Culture, mapping.ColumnKind) })
                 .ToArray();
 
@@ -415,7 +416,6 @@
         {
             Contract.Requires(lines != null);
             Contract.Requires(lines.Any());
-            Contract.Ensures(lines.Count() == Contract.OldValue(lines.Count()));
 
             var emptyColumnCount = Enumerable.Range(0, lines.First().Count())
                 .Skip(2)

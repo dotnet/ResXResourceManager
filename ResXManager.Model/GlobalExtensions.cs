@@ -225,6 +225,7 @@
         public static string GetDescription(this ICustomAttributeProvider item)
         {
             Contract.Requires(item != null);
+            Contract.Ensures(Contract.Result<string>() != null);
 
             var description = item.TryGetDescription();
 
@@ -269,36 +270,7 @@
 
             var assemblyDirectory = Path.GetDirectoryName(new Uri(assemblyName.CodeBase).LocalPath);
 
-            return (assemblyDirectory != null) && assemblyDirectory.StartsWith(programFolder, StringComparison.OrdinalIgnoreCase);
-        }
-
-        /// <summary>
-        /// Gets the match group named 'key', e.g. in a regular expression like <![CDATA["(?<key>\\w+)=('(?<value>.*?)')"]]>.
-        /// </summary>
-        /// <param name="match">The <see cref="Match"/>.</param>
-        /// <returns></returns>
-        public static string GetKey(this Match match)
-        {
-            Contract.Requires(match != null);
-            Contract.Ensures(!String.IsNullOrEmpty(Contract.Result<string>()));
-
-            var result = match.GetGroupValue("key");
-            Contract.Assume(!String.IsNullOrEmpty(result));
-
-            return result;
-        }
-
-        /// <summary>
-        /// Gets the match group named 'value', e.g. in a regular expression like <![CDATA["(?<key>\\w+)=('(?<value>.*?)')"]]>.
-        /// </summary>
-        /// <param name="match">The <see cref="Match"/>.</param>
-        /// <returns></returns>
-        public static string GetValue(this Match match)
-        {
-            Contract.Requires(match != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
-            return match.GetGroupValue("value");
+            return assemblyDirectory.StartsWith(programFolder, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -432,6 +404,7 @@
         public static string QuoteSpaces(this string value)
         {
             Contract.Requires(value != null);
+            Contract.Ensures(Contract.Result<string>() != null);
 
             value = value.Trim();
 
@@ -463,6 +436,7 @@
         public static IEnumerable<KeyValuePair<TValue, TKey>> Transpose<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> items)
         {
             Contract.Requires(items != null);
+            Contract.Ensures(Contract.Result<IEnumerable<KeyValuePair<TValue, TKey>>>() != null);
 
             return items.Select(item => new KeyValuePair<TValue, TKey>(item.Value, item.Key));
         }
@@ -583,6 +557,7 @@
         public static string ReplaceInvalidFileNameChars(this string value, string replacement)
         {
             Contract.Requires(value != null);
+            Contract.Ensures(Contract.Result<string>() != null);
 
             if (value.Length <= 0)
                 return value;
@@ -608,7 +583,10 @@
         public static T ForceBehavior<T>(this DependencyObject item)
             where T: Behavior, new()
         {
+            Contract.Ensures(Contract.Result<T>() != null);
+
             var behaviors = Interaction.GetBehaviors(item);
+            Contract.Assume(behaviors != null);
 
             var behavior = behaviors.OfType<T>().FirstOrDefault();
             if (behavior != null)
@@ -620,7 +598,6 @@
             behaviors.Add(behavior);
 
             return behavior;
-            
         }
     }
 }

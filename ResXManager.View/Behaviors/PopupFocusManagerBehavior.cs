@@ -29,6 +29,8 @@
         {
             get
             {
+                Contract.Ensures((AssociatedObject == null) || (Contract.Result<Popup>() != null));
+
                 return AssociatedObject;
             }
         }
@@ -36,6 +38,7 @@
         protected override void OnAttached()
         {
             base.OnAttached();
+            Contract.Assume(AssociatedObject != null);
 
             Popup.IsKeyboardFocusWithinChanged += Popup_IsKeyboardFocusWithinChanged;
             Popup.Opened += Popup_Opened;
@@ -45,6 +48,7 @@
         protected override void OnDetaching()
         {
             base.OnDetaching();
+            Contract.Assume(AssociatedObject != null);
 
             Popup.IsKeyboardFocusWithinChanged -= Popup_IsKeyboardFocusWithinChanged;
             Popup.Opened -= Popup_Opened;

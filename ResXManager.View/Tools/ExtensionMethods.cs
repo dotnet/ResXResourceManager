@@ -75,6 +75,9 @@ namespace tomenglertde.ResXManager.View.Tools
             {
                 // Return without Ctrl: Forward to parent, grid should move focused cell down.
                 var parent = (FrameworkElement)editingElement.Parent;
+                if (parent == null)
+                    return;
+
                 var args = new KeyEventArgs(e.KeyboardDevice, e.InputSource, e.Timestamp, Key.Return)
                 {
                     RoutedEvent = UIElement.KeyDownEvent

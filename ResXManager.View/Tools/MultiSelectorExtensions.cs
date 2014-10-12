@@ -81,7 +81,10 @@
                 synchronizer.Dispose();
             }
 
-            d.SetValue(SelectionSynchronizerProperty, new SelectionSynchronizer((Selector)d, (IList)e.NewValue));
+            var sourceSelection = (IList)e.NewValue;
+            Contract.Assume(sourceSelection != null);
+
+            d.SetValue(SelectionSynchronizerProperty, new SelectionSynchronizer((Selector)d, sourceSelection));
         }
 
         private static void CommitEdit(this Selector selector)
@@ -283,7 +286,9 @@
                     switch (e.Action)
                     {
                         case NotifyCollectionChangedAction.Reset:
-                            _selector.SynchronizeWithSource((IList)sender);
+                            var sourceSelection = (IList)sender;
+                            Contract.Assume(sourceSelection != null);
+                            _selector.SynchronizeWithSource(sourceSelection);
                             break;
 
                         case NotifyCollectionChangedAction.Add:

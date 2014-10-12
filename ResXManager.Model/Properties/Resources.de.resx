@@ -170,7 +170,4 @@
   <data name="Neutral">
     <value>Neutral</value>
   </data>
-  <data name="AddNewItemTemplate" xml:space="preserve">
-    <value>Neu</value>
-  </data>
 </root>

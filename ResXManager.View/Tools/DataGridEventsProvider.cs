@@ -21,6 +21,7 @@
         public static IDataGridEventsProvider GetAdditionalEvents(this DataGrid dataGrid)
         {
             Contract.Requires(dataGrid != null);
+            Contract.Ensures(Contract.Result<IDataGridEventsProvider>() != null);
 
             var eventsProvider = dataGrid.GetValue(DataGridEventsProviderProperty) as IDataGridEventsProvider;
             if (eventsProvider != null)
@@ -53,6 +54,7 @@
 
                 foreach (var column in dataGrid.Columns)
                 {
+                    Contract.Assume(column != null);
                     _visibilityPropertyDescriptor.AddValueChanged(column, DataGridColumnVisibility_Changed);
                 }
             }
@@ -66,6 +68,7 @@
                     case NotifyCollectionChangedAction.Add:
                         foreach (DataGridColumn column in e.NewItems ?? _emptyList)
                         {
+                            Contract.Assume(column != null);
                             _visibilityPropertyDescriptor.AddValueChanged(column, DataGridColumnVisibility_Changed);
                         }
                         break;
@@ -73,6 +76,7 @@
                     case NotifyCollectionChangedAction.Remove:
                         foreach (DataGridColumn column in e.OldItems ?? _emptyList)
                         {
+                            Contract.Assume(column != null);
                             _visibilityPropertyDescriptor.RemoveValueChanged(column, DataGridColumnVisibility_Changed);
                         }
                         break;
@@ -80,10 +84,12 @@
                     case NotifyCollectionChangedAction.Replace:
                         foreach (DataGridColumn column in e.OldItems ?? _emptyList)
                         {
+                            Contract.Assume(column != null);
                             _visibilityPropertyDescriptor.RemoveValueChanged(column, DataGridColumnVisibility_Changed);
                         }
                         foreach (DataGridColumn column in e.NewItems ?? _emptyList)
                         {
+                            Contract.Assume(column != null);
                             _visibilityPropertyDescriptor.AddValueChanged(column, DataGridColumnVisibility_Changed);
                         }
                         break;

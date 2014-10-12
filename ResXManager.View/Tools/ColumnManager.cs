@@ -55,11 +55,12 @@
                 columns.Remove(column);
             }
 
-            var addedLanguages = cultureKeys.Where(language => languageColumns.All(col => !Equals(col.GetCultureKey(), language)));
+            var addedcultureKeys = cultureKeys.Where(cultureKey => languageColumns.All(col => !Equals(col.GetCultureKey(), cultureKey)));
 
-            foreach (var language in addedLanguages)
+            foreach (var cultureKey in addedcultureKeys)
             {
-                AddLanguageColumn(columns, language);
+                Contract.Assume(cultureKey != null);
+                AddLanguageColumn(columns, cultureKey);
             }
         }
 
@@ -103,15 +104,15 @@
         {
             Contract.Requires(columns != null);
             Contract.Requires(cultureKey != null);
+
             var key = cultureKey.ToString(".");
-            var settings = Settings.Default;
 
             var commentColumn = new DataGridTextColumn
             {
                 Header = new CommentHeader(cultureKey),
                 Binding = new Binding(@"Comments[" + key + @"]"),
                 Width = 300,
-                Visibility = settings.VisibleCommentColumns.Split(',').Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Visible : Visibility.Hidden
+                Visibility = VisibleCommentColumns.Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Visible : Visibility.Hidden
             };
 
             AddLanguageColumn(columns, cultureKey, commentColumn);
@@ -121,7 +122,7 @@
                 Header = new LanguageHeader(cultureKey),
                 Binding = new Binding(@"Values[" + key + @"]"),
                 Width = 300,
-                Visibility = settings.HiddenLanguageColumns.Split(',').Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Hidden : Visibility.Visible
+                Visibility = HiddenLanguageColumns.Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Hidden : Visibility.Visible
             };
 
             AddLanguageColumn(columns, cultureKey, column);
@@ -143,23 +144,24 @@
             Contract.Requires(sender != null);
 
             var dataGrid = (DataGrid)sender;
-            var settings = Settings.Default;
 
-            settings.VisibleCommentColumns = UpdateColumnSettings<CommentHeader>(settings.VisibleCommentColumns, dataGrid, col => col.Visibility == Visibility.Visible);
-            settings.HiddenLanguageColumns  = UpdateColumnSettings<LanguageHeader>(settings.HiddenLanguageColumns, dataGrid, col => col.Visibility != Visibility.Visible);
+            VisibleCommentColumns = UpdateColumnSettings<CommentHeader>(VisibleCommentColumns, dataGrid, col => col.Visibility == Visibility.Visible);
+            HiddenLanguageColumns  = UpdateColumnSettings<LanguageHeader>(HiddenLanguageColumns, dataGrid, col => col.Visibility != Visibility.Visible);
         }
 
-        private static string UpdateColumnSettings<T>(string current, DataGrid dataGrid, Func<DataGridColumn, bool> includePredicate)
+        private static IEnumerable<string> UpdateColumnSettings<T>(IEnumerable<string> current, DataGrid dataGrid, Func<DataGridColumn, bool> includePredicate)
             where T : LanguageColumnHeaderBase
         {
             Contract.Requires(current != null);
             Contract.Requires(dataGrid != null);
             Contract.Requires(includePredicate != null);
+            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
 
-            return string.Join(",", current.Split(',')
-                .Concat(GetColumnKeys<T>(dataGrid, includePredicate))
-                .Except(GetColumnKeys<T>(dataGrid, col => !includePredicate(col)))
-                .Distinct());
+            Func<DataGridColumn, bool> excludePredicate = col => !includePredicate(col);
+
+            return current.Concat(GetColumnKeys<T>(dataGrid, includePredicate))
+                .Except(GetColumnKeys<T>(dataGrid, excludePredicate))
+                .Distinct();
         }
 
         private static IEnumerable<string> GetColumnKeys<T>(DataGrid dataGrid, Func<DataGridColumn, bool> predicate)
@@ -173,6 +175,38 @@
                 .Select(col => col.Header)
                 .OfType<T>()
                 .Select(hdr => hdr.CultureKey.ToString("."));
+        }
+
+        private static IEnumerable<string> VisibleCommentColumns
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
+
+                return (Settings.Default.VisibleCommentColumns ?? string.Empty).Split(',');
+            }
+            set
+            {
+                Contract.Requires(value != null);
+
+                Settings.Default.VisibleCommentColumns = string.Join(",", value);
+            }
+        }
+
+        private static IEnumerable<string> HiddenLanguageColumns
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
+
+                return (Settings.Default.HiddenLanguageColumns ?? string.Empty).Split(',');
+            }
+            set
+            {
+                Contract.Requires(value != null);
+
+                Settings.Default.HiddenLanguageColumns = string.Join(",", value);
+            }
         }
     }
 }

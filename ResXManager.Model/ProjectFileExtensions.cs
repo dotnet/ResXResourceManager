@@ -20,7 +20,10 @@
             var extension = projectFile.Extension;
             var filePath = projectFile.FilePath;
 
-            return Path.GetDirectoryName(Resw.Equals(extension, StringComparison.OrdinalIgnoreCase) ? Path.GetDirectoryName(filePath) : filePath);
+            var directoryName = Path.GetDirectoryName(Resw.Equals(extension, StringComparison.OrdinalIgnoreCase) ? Path.GetDirectoryName(filePath) : filePath);
+            Contract.Assume(!string.IsNullOrEmpty(directoryName));
+
+            return directoryName;
         }
 
         public static bool IsResourceFile(this ProjectFile projectFile)
@@ -36,7 +39,7 @@
             if (!Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            var languageName = Path.GetFileName(Path.GetDirectoryName(filePath)) ?? string.Empty;
+            var languageName = Path.GetFileName(Path.GetDirectoryName(filePath));
 
             return ResourceManager.IsValidLanguageName(languageName);
         }
@@ -67,7 +70,7 @@
             {
                 var cultureName = Path.GetFileName(Path.GetDirectoryName(filePath));
 
-                if ((cultureName == null) || !ResourceManager.IsValidLanguageName(cultureName))
+                if (!ResourceManager.IsValidLanguageName(cultureName))
                     throw new ArgumentException(@"Invalid file. File name does not conform to the pattern '.\<cultureName>\<basename>.resw'");
 
                 return new CultureKey(cultureName);
@@ -88,7 +91,7 @@
                 return Path.GetFileNameWithoutExtension(filePath);
 
             var name = Path.GetFileNameWithoutExtension(filePath);
-            var innerExtension = Path.GetExtension(name) ?? string.Empty;
+            var innerExtension = Path.GetExtension(name);
             var languageName = innerExtension.TrimStart('.');
 
             return ResourceManager.IsValidLanguageName(languageName) ? Path.GetFileNameWithoutExtension(name) : name;
@@ -98,7 +101,7 @@
         {
             Contract.Requires(projectFile != null);
             Contract.Requires(culture != null);
-            Contract.Ensures(Contract.Result<string>() != null);
+            Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
 
             var extension = projectFile.Extension;
             var filePath = projectFile.FilePath;
@@ -110,7 +113,9 @@
 
             if (Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
             {
-                return Path.Combine(projectFile.GetBaseDirectory(), culture.ToString(), Path.GetFileName(filePath));
+                var languageFileName = Path.Combine(projectFile.GetBaseDirectory(), culture.ToString(), Path.GetFileName(filePath));
+                Contract.Assume(!string.IsNullOrEmpty(languageFileName));
+                return languageFileName;
             }
 
             throw new InvalidOperationException("Extension not supported: " + extension);

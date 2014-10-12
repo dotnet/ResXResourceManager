@@ -24,7 +24,7 @@
         public ProjectFile(string filePath, string rootFolder, string projectName, string uniqueProjectName)
         {
             Contract.Requires(!string.IsNullOrEmpty(filePath));
-            Contract.Requires(!String.IsNullOrEmpty(rootFolder));
+            Contract.Requires(rootFolder != null);
 
             _filePath = filePath;
             RelativeFilePath = GetRelativePath(rootFolder, filePath);
@@ -80,7 +80,7 @@
 
         private static string GetRelativePath(string solutionFolder, string filePath)
         {
-            Contract.Requires(!String.IsNullOrEmpty(solutionFolder));
+            Contract.Requires(solutionFolder != null);
             Contract.Requires(filePath != null);
 
             solutionFolder = solutionFolder.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);

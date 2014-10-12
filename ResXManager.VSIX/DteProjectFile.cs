@@ -22,7 +22,7 @@
             : base(filePath, rootFolder, projectName, uniqueProjectName)
         {
             Contract.Requires(!string.IsNullOrEmpty(filePath));
-            Contract.Requires(!string.IsNullOrEmpty(rootFolder));
+            Contract.Requires(rootFolder != null);
             Contract.Requires(projectItem != null);
 
             _projectItems.Add(projectItem);

@@ -38,7 +38,11 @@
             _key = key;
             _languages = languages;
 
-            InitTableValues();
+            _values = new ResourceTableValues(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
+            _values.ValueChanged += Values_ValueChanged;
+
+            _comments = new ResourceTableValues(_languages, lang => lang.GetComment(_key), (lang, value) => lang.SetComment(_key, value));
+            _comments.ValueChanged += Comments_ValueChanged;
 
             Contract.Assume(languages.Any());
             _neutralLanguage = languages.First().Value;
@@ -46,17 +50,13 @@
             _neutralLanguage.IsNeutralLanguage = true;
         }
 
-        private void InitTableValues()
+        private void ResetTableValues()
         {
-            if (_values != null)
-                _values.ValueChanged -= Values_ValueChanged;
-
+            _values.ValueChanged -= Values_ValueChanged;
             _values = new ResourceTableValues(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
             _values.ValueChanged += Values_ValueChanged;
 
-            if (_comments != null)
-                _comments.ValueChanged -= Comments_ValueChanged;
-
+            _comments.ValueChanged -= Comments_ValueChanged;
             _comments = new ResourceTableValues(_languages, lang => lang.GetComment(_key), (lang, value) => lang.SetComment(_key, value));
             _comments.ValueChanged += Comments_ValueChanged;
         }
@@ -77,7 +77,7 @@
         {
             get
             {
-                Contract.Ensures(!String.IsNullOrEmpty(Contract.Result<string>()));
+                Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
                 return _key;
             }
             set
@@ -97,12 +97,13 @@
 
                 foreach (var language in resourceLanguages)
                 {
+                    Contract.Assume(language != null);
                     language.RenameKey(_key, value);
                 }
 
                 _key = value;
 
-                InitTableValues();
+                ResetTableValues();
                 OnPropertyChanged("Key");
             }
         }
@@ -236,6 +237,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<IEqualityComparer<ResourceTableEntry>>() != null);
+
                 return Comparer.Default;
             }
         }

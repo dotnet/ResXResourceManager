@@ -61,15 +61,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New.
-        /// </summary>
-        internal static string AddNewItemTemplate {
-            get {
-                return ResourceManager.GetString("AddNewItemTemplate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Clipboard is empty..
         /// </summary>
         internal static string ClipboardIsEmpty {

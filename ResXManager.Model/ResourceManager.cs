@@ -78,6 +78,7 @@
 
             foreach (var resourceLanguage in changedResourceLanguages)
             {
+                Contract.Assume(resourceLanguage != null);
                 resourceLanguage.Save();
             }
         }
@@ -113,6 +114,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<IEnumerable<CultureKey>>() != null);
+
                 return ResourceEntities.SelectMany(entity => entity.Languages).Distinct().Select(lang => lang.CultureKey);
             }
         }
@@ -155,6 +158,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
+
                 return _specificCultures;
             }
         }
@@ -181,6 +186,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(CanCutOrCopy, CopySelected);
             }
         }
@@ -189,15 +196,9 @@
         {
             get
             {
-                return new DelegateCommand(CanCutOrCopy, CutSelected);
-            }
-        }
+                Contract.Ensures(Contract.Result<ICommand>() != null);
 
-        public ICommand AddNewCommand
-        {
-            get
-            {
-                return new DelegateCommand(CanAddNew, AddNew);
+                return new DelegateCommand(CanCutOrCopy, CutSelected);
             }
         }
 
@@ -205,6 +206,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(CanDelete, DeleteSelected);
             }
         }
@@ -213,6 +216,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(CanPaste, Paste);
             }
         }
@@ -221,6 +226,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand<IResourceScope>(
                     scope => scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()),
                     ExportExcel);
@@ -231,6 +238,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(() => ExportExcel(null));
             }
         }
@@ -239,6 +248,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(ImportExcel);
             }
         }
@@ -247,6 +258,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(() => _selectedTableEntries.Any(), CopyKeys);
             }
         }
@@ -255,6 +268,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(() => _selectedTableEntries.Any(), ToggleInvariant);
             }
         }
@@ -263,6 +278,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(OnReloadRequested);
             }
         }
@@ -304,6 +321,8 @@
                 return;
 
             var entry = entity.Add(key);
+            if (entry == null)
+                return;
 
             _selectedTableEntries = new List<ResourceTableEntry> { entry };
             OnPropertyChanged(() => SelectedTableEntries);
@@ -374,23 +393,6 @@
 
             var entries = selectedItems.Cast<ResourceTableEntry>().ToArray();
             Clipboard.SetText(entries.ToTextTable());
-        }
-
-        private void AddNew()
-        {
-
-            if (_selectedEntities.Count != 1)
-                return;
-
-            var entity = _selectedEntities[0];
-
-            if (!entity.CanEdit(null))
-                return;
-
-            var entry = entity.AddNewKey();
-
-            _selectedTableEntries = new List<ResourceTableEntry> { entry };
-            OnPropertyChanged(() => SelectedTableEntries);
         }
 
         public void DeleteSelected()
@@ -682,9 +684,9 @@
 
         private static CultureInfo[] GetSpecificCultures()
         {
-            var specificCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
-            var allNeutralCultures = CultureInfo.GetCultures(CultureTypes.NeutralCultures).Where(c => !Equals(c, CultureInfo.InvariantCulture));
-            Contract.Assume(specificCultures != null);
+            var specificCultures = GetCultures(CultureTypes.SpecificCultures);
+            var allNeutralCultures = GetCultures(CultureTypes.NeutralCultures).Where(c => !Equals(c, CultureInfo.InvariantCulture));
+
             var referencedNeutralCultures = specificCultures.Select(c => c.Parent);
 
             var missingNeutralCultures = allNeutralCultures.Except(referencedNeutralCultures);
@@ -692,16 +694,24 @@
             return specificCultures.OrderBy(c => c.DisplayName).Concat(missingNeutralCultures.OrderBy(c => c.DisplayName)).ToArray();
         }
 
+        private static CultureInfo[] GetCultures(CultureTypes types)
+        {
+            Contract.Ensures(Contract.Result<CultureInfo[]>() != null);
+
+            var cultures = CultureInfo.GetCultures(types);
+            Contract.Assume(cultures != null);
+            return cultures;
+        }
 
         private void ApplyEntityFilter(string value)
         {
             _entityFilter = value;
 
-            if (!string.IsNullOrEmpty(_entityFilter))
+            if (!string.IsNullOrEmpty(value))
             {
                 try
                 {
-                    var regex = new Regex(_entityFilter, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    var regex = new Regex(value, RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     _filteredResourceEntities.Filter = item => regex.Match(item.ToString()).Success;
                     return;
                 }

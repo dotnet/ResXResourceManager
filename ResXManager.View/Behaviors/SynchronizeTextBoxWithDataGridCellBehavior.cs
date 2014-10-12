@@ -42,6 +42,8 @@
         {
             get
             {
+                Contract.Ensures((AssociatedObject == null) || (Contract.Result<TextBox>() != null));
+
                 return AssociatedObject;
             }
         }
@@ -49,6 +51,9 @@
         private void DataGrid_CurrentCellChanged(object sender, EventArgs e)
         {
             Contract.Requires(sender != null);
+
+            var textBox = TextBox;
+            Contract.Assume(textBox != null);
 
             var dataGrid = (DataGrid)sender;
             var currentCell = dataGrid.CurrentCell;
@@ -60,19 +65,19 @@
             var header = column.Header as ILanguageColumnHeader;
             if (header != null)
             {
-                TextBox.IsEnabled = true;
-                TextBox.DataContext = currentCell.Item;
+                textBox.IsEnabled = true;
+                textBox.DataContext = currentCell.Item;
 
                 var ieftLanguageTag = (header.CultureKey.Culture ?? Settings.Default.NeutralResourceLanguage ?? CultureInfo.InvariantCulture).IetfLanguageTag;
-                TextBox.Language = XmlLanguage.GetLanguage(ieftLanguageTag);
+                textBox.Language = XmlLanguage.GetLanguage(ieftLanguageTag);
 
-                BindingOperations.SetBinding(TextBox, TextBox.TextProperty, column.Binding);
+                BindingOperations.SetBinding(textBox, TextBox.TextProperty, column.Binding);
             }
             else
             {
-                TextBox.IsEnabled = false;
-                TextBox.DataContext = null;
-                BindingOperations.ClearBinding(TextBox, TextBox.TextProperty);
+                textBox.IsEnabled = false;
+                textBox.DataContext = null;
+                BindingOperations.ClearBinding(textBox, TextBox.TextProperty);
             }
         }
     }

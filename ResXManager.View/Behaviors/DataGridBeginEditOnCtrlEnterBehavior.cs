@@ -1,5 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Behaviors
 {
+    using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -11,6 +12,7 @@
         protected override void OnAttached()
         {
             base.OnAttached();
+            Contract.Assume(AssociatedObject != null);
 
             AssociatedObject.PreviewKeyDown += DataGrid_PreviewKeyDown;
         }
@@ -18,6 +20,7 @@
         protected override void OnDetaching()
         {
             base.OnDetaching();
+            Contract.Assume(AssociatedObject != null);
 
             AssociatedObject.PreviewKeyDown -= DataGrid_PreviewKeyDown;
         }
@@ -36,7 +39,7 @@
                 return;
 
             var dataGrid = (DataGrid)sender;
-
+            Contract.Assume(dataGrid != null);
             dataGrid.BeginEdit();
             e.Handled = true;
         }

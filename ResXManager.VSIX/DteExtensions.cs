@@ -5,7 +5,6 @@
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
-    using EnvDTE;
 
     using tomenglertde.ResXManager.Model;
 
@@ -17,7 +16,7 @@
         /// <param name="solution">The solution.</param>
         /// <param name="trace">The tracer.</param>
         /// <returns>The file names of all files.</returns>
-        public static IEnumerable<DteProjectFile> GetProjectFiles(this Solution solution, OutputWindowTracer trace)
+        public static IEnumerable<DteProjectFile> GetProjectFiles(this EnvDTE.Solution solution, OutputWindowTracer trace)
         {
             Contract.Requires(solution != null);
             Contract.Requires(solution.Projects != null);
@@ -30,6 +29,8 @@
 
             foreach (var project in solution.GetProjects(trace))
             {
+                Contract.Assume(project != null);   
+
                 trace.WriteLine("Loading project " + project.Name);
 
                 project.ProjectItems.GetProjectFiles(solutionFolder, items, trace);
@@ -38,9 +39,11 @@
             return items.Values;
         }
 
-        private static string GetSolutionFolder(this _Solution solution)
+        private static string GetSolutionFolder(this EnvDTE._Solution solution)
         {
             Contract.Requires(solution != null);
+            Contract.Ensures(Contract.Result<string>() != null);
+            Contract.Ensures(solution.Projects == Contract.OldValue(solution.Projects));
 
             try
             {
@@ -68,7 +71,7 @@
             if (properties == null)
                 return string.Empty;
 
-            return properties.OfType<Property>()
+            return properties.OfType<EnvDTE.Property>()
                 .Where(p => p.Name == "ItemType")
                 .Select(p => p.Value as string)
                 .FirstOrDefault() ?? string.Empty;
@@ -90,11 +93,12 @@
         /// <param name="solution">The solution.</param>
         /// <param name="trace">The tracer.</param>
         /// <returns>The projects.</returns>
-        private static IEnumerable<EnvDTE.Project> GetProjects(this _Solution solution, OutputWindowTracer trace)
+        private static IEnumerable<EnvDTE.Project> GetProjects(this EnvDTE._Solution solution, OutputWindowTracer trace)
         {
             Contract.Requires(solution != null);
             Contract.Requires(solution.Projects != null);
             Contract.Requires(trace != null);
+            Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.Project>>() != null);
 
             var projects = solution.Projects;
 
@@ -115,8 +119,9 @@
             }
         }
 
-        private static void GetProjectFiles(this ProjectItems projectItems, string solutionFolder, IDictionary<string, DteProjectFile> items, OutputWindowTracer trace)
+        private static void GetProjectFiles(this EnvDTE.ProjectItems projectItems, string solutionFolder, IDictionary<string, DteProjectFile> items, OutputWindowTracer trace)
         {
+            Contract.Requires(solutionFolder != null);
             Contract.Requires(items != null);
 
             if (projectItems == null)
@@ -127,6 +132,7 @@
                 try
                 {
                     var projectItem = projectItems.Item(i);
+                    Contract.Assume(projectItem != null);
                     projectItem.GetProjectFiles(solutionFolder, items, trace);
                 }
                 catch
@@ -136,16 +142,18 @@
             }
         }
 
-        private static void GetProjectFiles(this ProjectItem projectItem, string solutionFolder, IDictionary<string, DteProjectFile> items, OutputWindowTracer trace)
+        private static void GetProjectFiles(this EnvDTE.ProjectItem projectItem, string solutionFolder, IDictionary<string, DteProjectFile> items, OutputWindowTracer trace)
         {
             Contract.Requires(projectItem != null);
+            Contract.Requires(solutionFolder != null);
             Contract.Requires(items != null);
+
 
             if (projectItem.FileCount > 0)
             {
                 var fileName = TryGetFileName(projectItem);
 
-                if (fileName != null)
+                if (!string.IsNullOrEmpty(fileName))
                 {
                     var project = projectItem.ContainingProject;
                     Contract.Assume(project != null);
@@ -154,6 +162,8 @@
                     if (items.TryGetValue(fileName, out projectFile))
                     {
                         Contract.Assume(projectFile != null);
+                        Contract.Assume(project.Name != null);
+
                         projectFile.AddProject(project.Name, projectItem);
                     }
                     else
@@ -171,7 +181,7 @@
             }
         }
 
-        private static string TryGetFileName(this ProjectItem projectItem)
+        private static string TryGetFileName(this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
 

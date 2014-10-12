@@ -18,12 +18,16 @@
             Contract.Requires(line != null);
             Contract.Requires(baseNameIndexes != null);
             Contract.Requires(keyNameIndexes != null);
+            Contract.Requires(baseNameIndexes.Any());
+            Contract.Requires(keyNameIndexes.Any());
+            Contract.Requires(baseNameLength > 0);
+            Contract.Requires(keyNameLength > 0);
 
             ProjectFile = projectFile;
             LineNumber = lineNumber;
 
-            var baseNameRanges = baseNameIndexes.Select(index => new { Start = index, End = index + baseNameLength });
-            var keyNameRanges = keyNameIndexes.Select(index => new { Start = index, End = index + keyNameLength });
+            var baseNameRanges = baseNameIndexes.Select(index => new Range(index, index + baseNameLength));
+            var keyNameRanges = keyNameIndexes.Select(index => new Range(index, index + keyNameLength));
 
             var combinations = baseNameRanges.SelectMany(
                 baseNameRange => keyNameRanges.Select(
@@ -32,18 +36,27 @@
                         BaseNameRange = baseNameRange,
                         KeyNameRange = keyNameRange,
                         Distance = Math.Min(Math.Abs(baseNameRange.End - keyNameRange.Start), Math.Abs(baseNameRange.Start - keyNameRange.End))
-                    }));
+                    })).ToArray();
 
-            var match = combinations.OrderBy(item => item.Distance).First();
+            Contract.Assume(combinations.Any()); // because baseNameIndexes.Any() && keyNameIndexes.Any()
+            var matches = combinations.OrderBy(item => item.Distance);
+            Contract.Assume(matches.Any()); // because combinations.Any()
+            var match = matches.First();
+            Contract.Assume(match != null);
 
-            if (match.BaseNameRange.Start < match.KeyNameRange.Start)
+            var matchedBaseNameRange = match.BaseNameRange;
+            var matchedKeyNameRange = match.KeyNameRange;
+            Contract.Assume(matchedBaseNameRange != null);
+            Contract.Assume(matchedKeyNameRange != null);
+
+            if (matchedBaseNameRange.Start < matchedKeyNameRange.Start)
             {
-                LineSegments = line.GetSegments(match.BaseNameRange.Start, match.BaseNameRange.End, match.KeyNameRange.Start, match.KeyNameRange.End);
+                LineSegments = line.GetSegments(matchedBaseNameRange.Start, matchedBaseNameRange.End, matchedKeyNameRange.Start, matchedKeyNameRange.End);
                 IsValid = IsValidClassValueDeclaration(LineSegments.GetTrimmedSegment(0), LineSegments.GetTrimmedSegment(2), LineSegments.GetTrimmedSegment(4));
             }
             else
             {
-                LineSegments = line.GetSegments(match.KeyNameRange.Start, match.KeyNameRange.End, match.BaseNameRange.Start, match.BaseNameRange.End);
+                LineSegments = line.GetSegments(matchedKeyNameRange.Start, matchedKeyNameRange.End, matchedBaseNameRange.Start, matchedBaseNameRange.End);
                 IsValid = IsValidValueClassDeclaration(LineSegments.GetTrimmedSegment(0), LineSegments.GetTrimmedSegment(2), LineSegments.GetTrimmedSegment(4));
             }
         }
@@ -89,6 +102,7 @@
             {
                 foreach (var entry in resourceTableEntries)
                 {
+                    Contract.Assume(entry != null);
                     entry.CodeReferences = null;
                 }
 
@@ -97,7 +111,9 @@
 
                 foreach (var entriesGroup in entriesByBaseName.AsParallel())
                 {
+                    Contract.Assume(entriesGroup != null);
                     var baseName = entriesGroup.Key;
+                    Contract.Assume(baseName != null);
                     var tableEntries = entriesGroup.ToArray();
 
                     foreach (var sourceFile in sourceFiles)
@@ -115,6 +131,7 @@
 
                 foreach (var entry in resourceTableEntries.Where(entry => entry.CodeReferences == null))
                 {
+                    Contract.Assume(entry != null);
                     entry.CodeReferences = new CodeReference[0];
                 }
             }
@@ -324,6 +341,36 @@
             }
 
         }
+
+        class Range
+        {
+            public Range(int start, int end)
+            {
+                Contract.Requires(start < end);
+                Start = start;
+                End = end;
+            }
+
+            public int Start
+            {
+                get;
+                private set;
+            }
+
+            public int End
+            {
+                get;
+                private set;
+            }
+
+            [ContractInvariantMethod]
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+            private void ObjectInvariant()
+            {
+                Contract.Invariant(Start < End);
+            }
+
+        }
     }
 
     enum FileKind
@@ -349,17 +396,17 @@
         public static IList<string> GetSegments(this string line, int x0, int x1, int x2, int x3)
         {
             Contract.Requires(line != null);
-            Contract.Requires(0 <= x0);
-            Contract.Requires(x0 <= x1);
-            Contract.Requires(x1 <= x2);
-            Contract.Requires(x2 <= x3);
-            Contract.Requires(x3 <= line.Length);
-
             Contract.Ensures(Contract.Result<IList<string>>() != null);
             Contract.Ensures(Contract.Result<IList<string>>().Count == 5);
             Contract.Ensures(Contract.Result<IList<string>>().All(x => x != null));
 
-            return new[]
+            Contract.Assume(0 <= x0);
+            Contract.Assume(x0 <= x1);
+            Contract.Assume(x1 <= x2);
+            Contract.Assume(x2 <= x3);
+            Contract.Assume(x3 <= line.Length);
+
+            IList<string> segments = new[]
             {
                 line.Substring(0, x0).TrimStart(),
                 line.Substring(x0, x1 - x0),
@@ -367,6 +414,10 @@
                 line.Substring(x2, x3 - x2),
                 line.Substring(x3).TrimEnd()
             };
+
+            Contract.Assume(segments.Count == 5);
+
+            return segments;
         }
 
         public static IEnumerable<int> IndexesOfWords(this string line, string word, StringComparison stringComparison)

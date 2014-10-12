@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Behaviors
 {
     using System;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -27,6 +28,7 @@
         protected override void OnAttached()
         {
             base.OnAttached();
+            Contract.Assume(AssociatedObject != null);
 
             DataGrid.GetAdditionalEvents().ColumnVisibilityChanged += DataGrid_ColumnVisibilityChanged;
         }
@@ -34,6 +36,7 @@
         protected override void OnDetaching()
         {
             base.OnDetaching();
+            Contract.Assume(AssociatedObject != null);
 
             DataGrid.GetAdditionalEvents().ColumnVisibilityChanged -= DataGrid_ColumnVisibilityChanged;
         }
@@ -42,6 +45,7 @@
         {
             get
             {
+                Contract.Ensures((AssociatedObject == null) || (Contract.Result<DataGrid>() != null));
                 return AssociatedObject;
             }
         }
@@ -82,10 +86,12 @@
 
         private void DataGrid_ColumnVisibilityChanged(object source, EventArgs e)
         {
-            if (ToggleButton == null)
+            var toggleButton = ToggleButton;
+
+            if (toggleButton == null)
                 return;
 
-            if (ToggleButton.IsChecked.GetValueOrDefault())
+            if (toggleButton.IsChecked.GetValueOrDefault())
             {
                 this.BeginInvoke(UpdateErrorsOnlyFilter);
             }

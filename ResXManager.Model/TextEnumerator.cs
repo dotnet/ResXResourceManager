@@ -101,6 +101,7 @@
         public string TakeUntil(Func<char, bool> predicate)
         {
             Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<string>() != null);
 
             var text = new StringBuilder();
 
@@ -121,6 +122,7 @@
         public string Take(Func<char, char, int> chunkCounter)
         {
             Contract.Requires(chunkCounter != null);
+            Contract.Ensures(Contract.Result<string>() != null);
 
             var text = new StringBuilder();
 

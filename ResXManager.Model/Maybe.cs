@@ -8,6 +8,8 @@
         public static Maybe<T> Maybe<T>(this T source)
             where T: class
         {
+            Contract.Ensures(Contract.Result<Maybe<T>>() != null);
+
             return new Maybe<T>(source);
         }
     }
@@ -26,6 +28,7 @@
             where TTarget : class
         {
             Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Maybe<TTarget>>() != null);
 
             return new Maybe<TTarget>((_source == null) ? null : selector(_source));
         }
@@ -47,6 +50,7 @@
         public Maybe<T> Do(Action<T> action)
         {
             Contract.Requires(action != null);
+            Contract.Ensures(Contract.Result<Maybe<T>>() != null);
 
             if (_source != null)
             {
@@ -59,6 +63,7 @@
         public Maybe<T> If(Func<T, bool> condition)
         {
             Contract.Requires(condition != null);
+            Contract.Ensures(Contract.Result<Maybe<T>>() != null);
 
             if ((_source != null) && (condition(_source)))
             {
@@ -67,7 +72,5 @@
 
             return new Maybe<T>(null);
         }
-
-
     }
 }

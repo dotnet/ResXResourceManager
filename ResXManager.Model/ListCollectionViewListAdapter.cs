@@ -12,6 +12,7 @@
     /// Adapter for a <see cref="ListCollectionView"/> that exposes the content as a readonly collection with an IList interface.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1035:ICollectionImplementationsHaveStronglyTypedMembers", Justification = "ListCollectionView is not strongly typed."), SuppressMessage("Microsoft.Design", "CA1039:ListsAreStronglyTyped", Justification = "ListCollectionView is not strongly typed.")]
+    [ContractVerification(false)] // Simply forwarding inner list.
     public sealed class ListCollectionViewListAdapter : IList, INotifyPropertyChanged, INotifyCollectionChanged
     {
         private readonly ListCollectionView _collectionView;
@@ -62,6 +63,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<ListCollectionView>() != null);
+
                 return _collectionView;
             }
         }
@@ -70,19 +72,24 @@
         {
             get
             {
-                var count = _collectionView.Count;
-                Contract.Assume(count >= 0);
-                return count;
+                return _collectionView.Count;
             }
         }
+
         object ICollection.SyncRoot
         {
-            get { return _collectionView; }
+            get
+            {
+                return _collectionView;
+            }
         }
 
         bool ICollection.IsSynchronized
         {
-            get { return false; }
+            get
+            {
+                return false;
+            }
         }
 
         int IList.Add(object value)
@@ -138,12 +145,18 @@
 
         public bool IsReadOnly
         {
-            get { return true; }
+            get
+            {
+                return true;
+            }
         }
 
         public bool IsFixedSize
         {
-            get { return false; }
+            get
+            {
+                return false;
+            }
         }
 
         private static void ReadOnlyNotSupported()
@@ -153,18 +166,30 @@
 
         public event PropertyChangedEventHandler PropertyChanged
         {
-            add { ((INotifyPropertyChanged)_collectionView).PropertyChanged += value; }
-            remove { ((INotifyPropertyChanged)_collectionView).PropertyChanged -= value; }
+            add
+            {
+                ((INotifyPropertyChanged)_collectionView).PropertyChanged += value;
+            }
+            remove
+            {
+                ((INotifyPropertyChanged)_collectionView).PropertyChanged -= value;
+            }
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged
         {
-            add { ((INotifyCollectionChanged)_collectionView).CollectionChanged += value; }
-            remove { ((INotifyCollectionChanged)_collectionView).CollectionChanged -= value; }
+            add
+            {
+                ((INotifyCollectionChanged)_collectionView).CollectionChanged += value;
+            }
+            remove
+            {
+                ((INotifyCollectionChanged)_collectionView).CollectionChanged -= value;
+            }
         }
 
         [ContractInvariantMethod]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_collectionView != null);

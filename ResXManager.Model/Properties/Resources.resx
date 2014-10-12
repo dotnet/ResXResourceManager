@@ -172,7 +172,4 @@
   <data name="LanguageNotDefinedError" xml:space="preserve">
     <value>Language is not defined: {0}</value>
   </data>
-  <data name="AddNewItemTemplate" xml:space="preserve">
-    <value>New</value>
-  </data>
 </root>
