@@ -347,6 +347,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Multiple selection..
+        /// </summary>
+        public static string MultipleSelection {
+            get {
+                return ResourceManager.GetString("MultipleSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Neutral.
         /// </summary>
         public static string Neutral {
@@ -388,6 +397,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string NoCodeReferencesToolTip {
             get {
                 return ResourceManager.GetString("NoCodeReferencesToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No selection..
+        /// </summary>
+        public static string NoSelection {
+            get {
+                return ResourceManager.GetString("NoSelection", resourceCulture);
             }
         }
         

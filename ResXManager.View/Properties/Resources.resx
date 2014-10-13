@@ -248,4 +248,10 @@
   <data name="ShellTabHeader_Languages" xml:space="preserve">
     <value>Languages</value>
   </data>
+  <data name="NoSelection" xml:space="preserve">
+    <value>No selection.</value>
+  </data>
+  <data name="MultipleSelection" xml:space="preserve">
+    <value>Multiple selection.</value>
+  </data>
 </root>

@@ -240,4 +240,10 @@
   <data name="ShellTabHeader_Main" xml:space="preserve">
     <value>Hauptansicht</value>
   </data>
+  <data name="NoSelection" xml:space="preserve">
+    <value>Keine Auswahl.</value>
+  </data>
+  <data name="MultipleSelection" xml:space="preserve">
+    <value>Mehrfachauswahl.</value>
+  </data>
 </root>

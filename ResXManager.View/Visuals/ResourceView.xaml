@@ -134,23 +134,37 @@
 
     <DockPanel Grid.Column="2">
       <DockPanel DockPanel.Dock="Bottom" Background="{Binding Background, ElementName=DataGrid}">
-        <Grid DataContext="{Binding SelectedItem, ElementName=DataGrid}">
-          <Grid.Style>
-            <Style TargetType="Grid">
-              <Setter Property="Visibility" Value="Hidden" />
-              <Style.Triggers>
+        <Control DataContext="{Binding SelectedItem, ElementName=DataGrid}" >
+          <Control.Template>
+            <ControlTemplate>
+              <Border BorderThickness="0,0.7,0,0" BorderBrush="{x:Static SystemColors.ControlDarkBrush}">
+                <ContentControl x:Name="footerContent" Foreground="Gray" Margin="5" >
+                  <TextBlock Text="{x:Static properties:Resources.MultipleSelection}"/>
+                </ContentControl>
+              </Border>
+              <ControlTemplate.Triggers>
                 <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=DataGrid}" Value="1">
-                  <Setter Property="Visibility" Value="Visible" />
+                  <Setter Property="Content" TargetName="footerContent">
+                    <Setter.Value>
+                      <TextBlock d:DataContext="{d:DesignInstance model:ResourceTableEntry}">
+                        <Run Text="{Binding Path=Key, Mode=OneWay}" Foreground="Black"/>:
+                        <Run Text="{Binding Path=Owner.BaseName, Mode=OneWay}" FontWeight="Bold" />
+                        (<Run Text="{Binding Path=Owner.Directory, Mode=OneWay}" />)
+                      </TextBlock>
+                    </Setter.Value>
+                  </Setter>
                 </DataTrigger>
-              </Style.Triggers>
-            </Style>
-          </Grid.Style>
-          <TextBlock Margin="5" d:DataContext="{d:DesignInstance model:ResourceTableEntry}">
-            <Run Text="{Binding Path=Key, Mode=OneWay}" FontWeight="Bold" /><Run Text=": "/>
-            <Run Text="{Binding Path=Owner.BaseName, Mode=OneWay}" FontWeight="Bold" />
-            (<Run Text="{Binding Path=Owner.Directory, Mode=OneWay}" />)
-          </TextBlock>
-        </Grid>
+                <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=DataGrid}" Value="0">
+                  <Setter Property="Content" TargetName="footerContent">
+                    <Setter.Value>
+                      <TextBlock Text="{x:Static properties:Resources.NoSelection}"/>
+                    </Setter.Value>
+                  </Setter>
+                </DataTrigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Control.Template>
+        </Control >
       </DockPanel>
       <Grid>
         <Grid.RowDefinitions>
