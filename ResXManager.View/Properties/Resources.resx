@@ -158,7 +158,7 @@
     <value>Paste rows (Ctrl+V)</value>
   </data>
   <data name="AddKeyToolTip" xml:space="preserve">
-    <value>Add new key (Ctrl+N)</value>
+    <value>Add new key (Shift+Insert)</value>
   </data>
   <data name="LikeButtonToolTip" xml:space="preserve">
     <value>Like it? Support the project by writing a short review!</value>

@@ -58,6 +58,7 @@
   </UserControl.Resources>
   <UserControl.InputBindings>
     <KeyBinding Key="N" Modifiers="Control" Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}" />
+    <KeyBinding Key="Insert" Modifiers="Shift" Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}" />
   </UserControl.InputBindings>
   <Grid>
     <Grid.ColumnDefinitions>
