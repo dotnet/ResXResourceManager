@@ -1,3 +1,10 @@
+1.0.0.47:
+* WI1384: "Add new key" shortcut not working - added "Shift+Ins" as alternative shortcut.
+* WI1359: Save column settings; visible/hidden columns are persisted during sessions.
+* WI1374: System.ArgumentException: Cannot add instance of type 'PopupFocusManagerBehavior' to a collection of type 'BehaviorCollection'; 
+* WI1375: Detect code references not detecting...; relax detection criteria.
+* WI1375: Flat View - show Project/Resx File Path on row hover; is shown in the status bar.
+* WI1381: Error in import from excel - Precondition failed: !string.IsNullOrEmpty(key); skip columns with data but empty key.
 1.0.0.46:
 * WI1368: Some of the country flags are mixed up: Refined algorithm to lookup default flag for neutral culture; add overview of languages, flags for neutral cultures are editable.
 * WI1358: Add possibility to increase the font size: Default font size follows VS text size, supports zoom with "ctrl+mouse wheel" like in the VS text editor. 
