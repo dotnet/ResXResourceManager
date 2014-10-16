@@ -41,6 +41,7 @@
 
     <CollectionViewSource x:Key="ResourceEntitiesSource" Source="{Binding FilteredResourceEntities}">
       <CollectionViewSource.SortDescriptions>
+        <componentModel:SortDescription PropertyName="RelativePath"/>
         <componentModel:SortDescription PropertyName="BaseName"/>
       </CollectionViewSource.SortDescriptions>
       <CollectionViewSource.GroupDescriptions>
@@ -147,7 +148,7 @@
                 </ContentControl>
               </Border>
               <ControlTemplate.Triggers>
-                <MultiDataTrigger> 
+                <MultiDataTrigger>
                   <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding SelectedItems.Count, ElementName=DataGrid}" Value="0"/>
                     <Condition Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="0"/>
