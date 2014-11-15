@@ -10,7 +10,6 @@
     using DataGridExtensions;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
-    using tomenglertde.ResXManager.View.Tools;
 
     public class ShowErrorsOnlyBehavior : Behavior<DataGrid>
     {

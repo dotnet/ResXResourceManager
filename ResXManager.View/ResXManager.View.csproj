@@ -140,9 +140,9 @@
     <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DataGridExtensions, Version=1.0.15.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
+    <Reference Include="DataGridExtensions, Version=1.0.18.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DataGridExtensions.1.0.15.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
+      <HintPath>..\packages\DataGridExtensions.1.0.18.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -152,7 +152,9 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Interactivity" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\DataGridExtensions.1.0.18.0\lib\net40-Client\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
@@ -164,9 +166,6 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
-    <Compile Include="Tools\DataGridEventsProvider.cs" />
-    <Compile Include="Behaviors\DataGridBeginEditOnCtrlEnterBehavior.cs" />
-    <Compile Include="Behaviors\DataGridDisableTargetWhileEditingBehavior.cs" />
     <Compile Include="Behaviors\DataGridTryBeginEditBehavior.cs" />
     <Compile Include="Behaviors\PopupFocusManagerBehavior.cs" />
     <Compile Include="Behaviors\SelectGroupOnGroupHeaderClickBehavior.cs" />

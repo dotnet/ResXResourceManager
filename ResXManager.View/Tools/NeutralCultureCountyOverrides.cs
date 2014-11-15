@@ -84,6 +84,8 @@
 
         private static IEnumerable<KeyValuePair<CultureInfo, CultureInfo>> ReadSettings()
         {
+            Contract.Ensures(Contract.Result<IEnumerable<KeyValuePair<CultureInfo, CultureInfo>>>() != null);
+
             var neutralCultureCountryOverrides = (Settings.Default.NeutralCultureCountyOverrides ?? string.Empty).Split(',');
 
             foreach (var item in neutralCultureCountryOverrides)

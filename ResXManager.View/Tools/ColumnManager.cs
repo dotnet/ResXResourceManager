@@ -2,15 +2,17 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
+    using System.Windows.Input;
     using System.Windows.Media.Imaging;
+    using System.Windows.Threading;
     using DataGridExtensions;
     using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Behaviors;
     using tomenglertde.ResXManager.View.ColumnHeaders;
     using tomenglertde.ResXManager.View.Controls;
     using tomenglertde.ResXManager.View.Properties;
@@ -89,6 +91,7 @@
                 Header = columnHeader,
                 ElementStyle = elementStyle,
                 Binding = new Binding(@"CodeReferences.Count"),
+                Width = DataGridLength.SizeToHeader,
                 CanUserReorder = false,
                 CanUserResize = false,
                 IsReadOnly = true,
@@ -111,7 +114,8 @@
             {
                 Header = new CommentHeader(cultureKey),
                 Binding = new Binding(@"Comments[" + key + @"]"),
-                Width = 300,
+                MinWidth = 50,
+                Width = new DataGridLength(1, DataGridLengthUnitType.Star),
                 Visibility = VisibleCommentColumns.Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Visible : Visibility.Hidden
             };
 
@@ -121,7 +125,8 @@
             {
                 Header = new LanguageHeader(cultureKey),
                 Binding = new Binding(@"Values[" + key + @"]"),
-                Width = 300,
+                MinWidth = 50,
+                Width = new DataGridLength(2, DataGridLengthUnitType.Star),
                 Visibility = HiddenLanguageColumns.Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Hidden : Visibility.Visible
             };
 
@@ -146,7 +151,7 @@
             var dataGrid = (DataGrid)sender;
 
             VisibleCommentColumns = UpdateColumnSettings<CommentHeader>(VisibleCommentColumns, dataGrid, col => col.Visibility == Visibility.Visible);
-            HiddenLanguageColumns  = UpdateColumnSettings<LanguageHeader>(HiddenLanguageColumns, dataGrid, col => col.Visibility != Visibility.Visible);
+            HiddenLanguageColumns = UpdateColumnSettings<LanguageHeader>(HiddenLanguageColumns, dataGrid, col => col.Visibility != Visibility.Visible);
         }
 
         private static IEnumerable<string> UpdateColumnSettings<T>(IEnumerable<string> current, DataGrid dataGrid, Func<DataGridColumn, bool> includePredicate)

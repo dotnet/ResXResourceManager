@@ -82,6 +82,7 @@
         {
             Contract.Requires(solutionFolder != null);
             Contract.Requires(filePath != null);
+            Contract.Ensures(Contract.Result<string>() != null);
 
             solutionFolder = solutionFolder.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             filePath = filePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);

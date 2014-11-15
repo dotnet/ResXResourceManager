@@ -328,7 +328,7 @@
             OnPropertyChanged(() => SelectedTableEntries);
         }
 
-        public bool CanEdit(ResourceEntity resourceEntity, CultureInfo culture)
+        private bool CanEdit(ResourceEntity resourceEntity, CultureInfo culture)
         {
             Contract.Requires(resourceEntity != null);
 
