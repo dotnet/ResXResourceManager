@@ -39,6 +39,7 @@
 
         private DTE _dte;
         private string _solutionFingerPrint;
+        private string _currentSolutionFullName;
 
         /// <summary>
         /// Standard constructor for the tool window.
@@ -425,8 +426,16 @@
             if (!forceReload && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
                 return;
 
+            var solutionFullName = _dte.Maybe().Select(d => d.Solution).Return(s => s.FullName);
+
             _solutionFingerPrint = fingerPrint;
             _resourceManager.Load(projectFiles);
+
+            if (!string.Equals(solutionFullName, _currentSolutionFullName, StringComparison.OrdinalIgnoreCase))
+            {
+                _currentSolutionFullName = solutionFullName;
+                _resourceManager.AreAllFilesSelected = true;
+            }
 
             if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
             {

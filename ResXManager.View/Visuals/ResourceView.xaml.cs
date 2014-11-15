@@ -10,6 +10,7 @@
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Interactivity;
+    using System.Windows.Threading;
     using DataGridExtensions;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Controls;
@@ -48,6 +49,13 @@
             {
                 return (ResourceManager)DataContext;
             }
+        }
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+
+            this.BeginInvoke(DispatcherPriority.Background, () => ListBox.SelectAll());
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
