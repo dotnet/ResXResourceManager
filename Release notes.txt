@@ -1,3 +1,7 @@
+1.0.0.48:
+* WI1388: Support VS2014 (CTP)
+* WI1378: Select first .resx file in list when opening window => select all, not only first.
+* WI1359: Improved column sizing experience.
 1.0.0.47:
 * WI1384: "Add new key" shortcut not working - added "Shift+Ins" as alternative shortcut.
 * WI1359: Save column settings; visible/hidden columns are persisted during sessions.
