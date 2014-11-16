@@ -246,4 +246,7 @@
   <data name="MultipleSelection" xml:space="preserve">
     <value>Mehrfachauswahl.</value>
   </data>
+  <data name="SelectedTotalToolTip" xml:space="preserve">
+    <value>Ausgewählt/Gesamt</value>
+  </data>
 </root>

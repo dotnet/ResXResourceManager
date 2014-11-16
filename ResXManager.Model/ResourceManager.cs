@@ -101,7 +101,7 @@
             }
         }
 
-        public IEnumerable<ResourceTableEntry> ResourceTableEntries
+        public ICollection<ResourceTableEntry> ResourceTableEntries
         {
             get
             {
@@ -653,10 +653,9 @@
 
             _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>(_selectedEntities.Select(entity => (IList)entity.Entries).ToArray());
 
-            _selectedTableEntries = _resourceEntities.SelectMany(entity => entity.Entries)
+            _selectedTableEntries = new ObservableCollection<ResourceTableEntry>(_resourceEntities.SelectMany(entity => entity.Entries)
                 .Where(item => selectedTableEntries.Contains(item, ResourceTableEntry.EqualityComparer))
-                .Where(item => _resourceTableEntries.Contains(item, ResourceTableEntry.EqualityComparer))
-                .ToList();
+                .Where(item => _resourceTableEntries.Contains(item, ResourceTableEntry.EqualityComparer)));
 
             OnPropertyChanged(() => ResourceTableEntries);
             OnPropertyChanged(() => SelectedTableEntries);
