@@ -9,24 +9,17 @@
     <model:ResourceManager BeginEditing="ResourceManager_BeginEditing" ReloadRequested="ResourceManager_ReloadRequested" />
   </Window.DataContext>
   <DockPanel>
-    <DockPanel DockPanel.Dock="Top">
-      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Background="{x:Static SystemColors.ControlBrush}" ToolTip="{x:Static properties:Resources.SourceFiles_ToolTip}">
-        <TextBlock Text="{x:Static properties:Resources.SourceFiles}" VerticalAlignment="Center" />
-        <TextBlock Text=" " />
-        <TextBox Text="{Binding Path=SourceFiles, Source={x:Static properties:Settings.Default}}" Width="180" VerticalAlignment="Center" />
-      </StackPanel>
-      <Menu>
-        <MenuItem>
-          <MenuItem.Header>
-            <TextBlock Margin="3">
+    <Menu  DockPanel.Dock="Top">
+      <MenuItem>
+        <MenuItem.Header>
+          <TextBlock Margin="3">
               <Run Text="Directory:" TextBlock.FontWeight="Bold" />
               <Run Text="{Binding Path=Folder, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" />
-            </TextBlock>
-          </MenuItem.Header>
-          <MenuItem Header="Browse" Click="Browse_Click" />
-        </MenuItem>
-      </Menu>
-    </DockPanel>
+          </TextBlock>
+        </MenuItem.Header>
+        <MenuItem Header="Browse" Click="Browse_Click" />
+      </MenuItem>
+    </Menu>
 
     <visuals:Shell />
 

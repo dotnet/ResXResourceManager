@@ -9,6 +9,9 @@
       <TabItem Header="{x:Static properties:Resources.ShellTabHeader_Main}" Padding="8,3">
         <visuals:ResourceView />
       </TabItem>
+      <TabItem Header="Configuration">
+        <visuals:Configuration/>
+      </TabItem>
       <TabItem Header="{x:Static properties:Resources.ShellTabHeader_Languages}" Padding="8,3">
         <visuals:LanguageConfiguration />
       </TabItem>

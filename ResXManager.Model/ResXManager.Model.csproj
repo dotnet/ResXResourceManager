@@ -179,6 +179,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="PropertyDependencyAttribute.cs" />
     <Compile Include="PropertySupport.cs" />
     <Compile Include="ResourceEntityExtensions.cs" />
@@ -190,6 +195,8 @@
     <Compile Include="ResourceManager.cs" />
     <Compile Include="ResourceTableValues.cs" />
     <Compile Include="ResourceBeginEditingEventArgs.cs" />
+    <Compile Include="Properties\Settings.cs" />
+    <Compile Include="SourceFileFilter.cs" />
     <Compile Include="TextEnumerator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -198,6 +205,11 @@
     </None>
     <None Include="..\Key.snk">
       <Link>Key.snk</Link>
+    </None>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

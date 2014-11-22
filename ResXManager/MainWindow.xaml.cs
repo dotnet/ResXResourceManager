@@ -87,12 +87,7 @@
 
         private void Load()
         {
-            var sourceFileExtensions = Settings.SourceFiles
-                .Split(';')
-                .Select(s => s.Trim())
-                .ToArray();
-
-            var sourceFiles = new DirectoryInfo(Folder).GetAllSourceFiles(file => sourceFileExtensions.Contains(file.Extension, StringComparer.OrdinalIgnoreCase));
+            var sourceFiles = new DirectoryInfo(Folder).GetAllSourceFiles();
 
             ViewModel.Load(sourceFiles);
 

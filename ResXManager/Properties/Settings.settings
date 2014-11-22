@@ -5,8 +5,5 @@
     <Setting Name="StartupFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="SourceFiles" Type="System.String" Scope="User">
-      <Value Profile="(Default)">.cs;.vb;.xaml;.cshtml;.aspx;.ascx</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

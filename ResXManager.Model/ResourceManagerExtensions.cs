@@ -7,11 +7,14 @@
     using System.IO;
     using System.Linq;
 
+    using tomenglertde.ResXManager.Model.Properties;
+
     /// <summary>
     /// Resource manager specific extension methods.
     /// </summary>
     public static class ResourceManagerExtensions
     {
+        public static Settings Settings = Settings.Default ;
         /// <summary>
         /// Converts the culture key name to the corresponding culture. The key name is the ieft language tag with an optional '.' prefix.
         /// </summary>
@@ -25,7 +28,7 @@
             try
             {
                 cultureKeyName = cultureKeyName.Maybe().Return(c => c.TrimStart('.'));
-                
+
                 return string.IsNullOrEmpty(cultureKeyName) ? null : CultureInfo.GetCultureInfo(cultureKeyName);
             }
             catch (ArgumentException)
@@ -35,18 +38,19 @@
             throw new InvalidOperationException("Error parsing language: " + cultureKeyName);
         }
 
-        public static IList<ProjectFile> GetAllSourceFiles(this DirectoryInfo solutionFolder, Func<ProjectFile, bool> isSourceFileCallback)
+        public static IList<ProjectFile> GetAllSourceFiles(this DirectoryInfo solutionFolder)
         {
             Contract.Requires(solutionFolder != null);
-            Contract.Requires(isSourceFileCallback != null);
             Contract.Ensures(Contract.Result<IList<ProjectFile>>() != null);
 
             var fileInfos = solutionFolder.EnumerateFiles("*.*", SearchOption.AllDirectories);
             Contract.Assume(fileInfos != null);
 
+            var sourceFileFilter = new SourceFileFilter();
+
             var allProjectFiles = fileInfos
                 .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
-                .Where(file => file.IsResourceFile() || isSourceFileCallback(file))
+                .Where(file => file.IsResourceFile() || sourceFileFilter.IsSourceFile(file.RelativeFilePath))
                 .ToArray();
 
             var fileNamesByDirectory = allProjectFiles.GroupBy(file => file.GetBaseDirectory()).ToArray();

@@ -140,9 +140,9 @@
     <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DataGridExtensions, Version=1.0.18.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
+    <Reference Include="DataGridExtensions, Version=1.0.19.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DataGridExtensions.1.0.18.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
+      <HintPath>..\packages\DataGridExtensions.1.0.19.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -153,7 +153,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\DataGridExtensions.1.0.18.0\lib\net40-Client\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\DataGridExtensions.1.0.19.0\lib\net40-Client\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
@@ -186,6 +186,9 @@
     <Compile Include="Converters\CultureToImageSourceConverter.cs" />
     <Compile Include="Converters\DataGridToSelectionScopeConverter.cs" />
     <Compile Include="ColumnHeaders\IColumnHeader.cs" />
+    <Compile Include="Visuals\Configuration.xaml.cs">
+      <DependentUpon>Configuration.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Visuals\LanguageConfiguration.xaml.cs">
       <DependentUpon>LanguageConfiguration.xaml</DependentUpon>
     </Compile>
@@ -221,6 +224,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Visuals\CodeReferencesToolTip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\Configuration.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

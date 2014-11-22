@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace tomenglertde.ResXManager.Properties {
+namespace tomenglertde.ResXManager.Model.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -25,13 +25,25 @@ namespace tomenglertde.ResXManager.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string StartupFolder {
+        [global::System.Configuration.DefaultSettingValueAttribute("(\\.cs|\\.vb|\\.xaml|\\.cshtml|\\.aspx|\\.ascx)$")]
+        public string DetectCodeReferences_Include {
             get {
-                return ((string)(this["StartupFolder"]));
+                return ((string)(this["DetectCodeReferences_Include"]));
             }
             set {
-                this["StartupFolder"] = value;
+                this["DetectCodeReferences_Include"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DetectCodeReferences_Exclude {
+            get {
+                return ((string)(this["DetectCodeReferences_Exclude"]));
+            }
+            set {
+                this["DetectCodeReferences_Exclude"] = value;
             }
         }
     }
