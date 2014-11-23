@@ -74,8 +74,48 @@
 
         public string RelativeFilePath
         {
-            get; 
+            get;
             private set;
+        }
+
+        public virtual string Content
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<string>() != null);
+
+                return File.ReadAllText(FilePath);
+            }
+            set
+            {
+                Contract.Requires(value != null);
+
+                File.WriteAllText(FilePath, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the file associated with this instance can be written.
+        /// </summary>
+        public virtual bool IsWritable
+        {
+            get
+            {
+                try
+                {
+                    if ((File.GetAttributes(FilePath) & (FileAttributes.ReadOnly | FileAttributes.System)) != 0)
+                        return false;
+
+                    using (File.Open(FilePath, FileMode.Open, FileAccess.Write))
+                    {
+                        return true;
+                    }
+                }
+                catch (IOException) { }
+                catch (UnauthorizedAccessException) { }
+
+                return false;
+            }
         }
 
         private static string GetRelativePath(string solutionFolder, string filePath)

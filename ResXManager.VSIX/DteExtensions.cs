@@ -29,7 +29,7 @@
 
             foreach (var project in solution.GetProjects(trace))
             {
-                Contract.Assume(project != null);   
+                Contract.Assume(project != null);
 
                 trace.WriteLine("Loading project " + project.Name);
 
@@ -76,7 +76,6 @@
                 .Select(p => p.Value as string)
                 .FirstOrDefault() ?? string.Empty;
         }
-
 
         public static bool IsSourceCodeOrContentFile(this DteProjectFile projectFile)
         {
@@ -175,7 +174,7 @@
 
             projectItem.ProjectItems.GetProjectFiles(solutionFolder, items, trace);
 
-            if (projectItem.SubProject != null) 
+            if (projectItem.SubProject != null)
             {
                 projectItem.SubProject.ProjectItems.GetProjectFiles(solutionFolder, items, trace);
             }
@@ -195,6 +194,67 @@
             }
 
             return null;
+        }
+
+        public static string TryGetContent(this EnvDTE.ProjectItem projectItem)
+        {
+            Contract.Requires(projectItem != null);
+
+            if (!projectItem.IsOpen)
+                return null;
+
+            var document = projectItem.Document;
+            if (document == null)
+                return null;
+
+            return TryGetContent(document);
+        }
+
+        [ContractVerification(false)]
+        private static string TryGetContent(EnvDTE.Document document)
+        {
+            try
+            {
+                var textDocument = (EnvDTE.TextDocument)document.Object("TextDocument");
+                return textDocument.CreateEditPoint().GetText(textDocument.EndPoint);
+            }
+            catch
+            {
+            }
+
+            return null;
+        }
+
+        public static bool TrySetContent(this EnvDTE.ProjectItem projectItem, string text)
+        {
+            Contract.Requires(projectItem != null);
+            Contract.Requires(text != null);
+
+            if (!projectItem.IsOpen)
+                return false;
+
+            var document = projectItem.Document;
+            if (document == null)
+                return false;
+
+            return TrySetContent(text, document);
+        }
+
+        [ContractVerification(false)]
+        private static bool TrySetContent(string text, EnvDTE.Document document)
+        {
+            try
+            {
+                var textDocument = (EnvDTE.TextDocument) document.Object("TextDocument");
+                textDocument.CreateEditPoint().ReplaceText(textDocument.EndPoint, text, 0);
+                document.Save();
+                return true;
+            }
+            catch
+            {
+            }
+
+            return false;
         }
     }
 }

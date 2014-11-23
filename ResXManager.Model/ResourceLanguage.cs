@@ -46,7 +46,7 @@
 
             try
             {
-                _document = XDocument.Load(file.FilePath);
+                _document = XDocument.Parse(file.Content);
                 _documentRoot = _document.Root;
             }
             catch (XmlException ex)
@@ -113,30 +113,6 @@
                 Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
 
                 return _nodes.Keys;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the file associated with this instance can be written.
-        /// </summary>
-        public bool IsWritable
-        {
-            get
-            {
-                try
-                {
-                    if ((File.GetAttributes(_file.FilePath) & (FileAttributes.ReadOnly | FileAttributes.System)) != 0)
-                        return false;
-
-                    using (File.Open(_file.FilePath, FileMode.Open, FileAccess.Write))
-                    {
-                        return true;
-                    }
-                }
-                catch (IOException) { }
-                catch (UnauthorizedAccessException) { }
-
-                return false;
             }
         }
 
@@ -250,7 +226,7 @@
         /// <exception cref="UnauthorizedAccessException"></exception>
         public void Save()
         {
-            _document.Save(_file.FilePath);
+            _file.Content = _document.ToString();
 
             HasChanges = false;
         }

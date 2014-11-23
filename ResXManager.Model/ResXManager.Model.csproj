@@ -157,6 +157,7 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
+    <Compile Include="ComObject.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="DispatcherThrottle.cs" />
     <Compile Include="ExcelExtensions.cs" />

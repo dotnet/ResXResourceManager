@@ -4,7 +4,7 @@
     using System.Diagnostics.Contracts;
     using System.Text.RegularExpressions;
 
-    internal class SourceFileFilter
+    public class SourceFileFilter
     {
         private readonly string _includeSourceFilePattern = (ResourceManagerExtensions.Settings.DetectCodeReferences_Include ?? String.Empty).Trim();
         private readonly string _excludeSourceFilePattern = (ResourceManagerExtensions.Settings.DetectCodeReferences_Exclude ?? String.Empty).Trim();
@@ -19,6 +19,8 @@
 
         public bool IsSourceFile(string fileName)
         {
+            Contract.Requires(fileName != null);
+
             var isSourceFile = (String.IsNullOrEmpty(_includeSourceFilePattern) || _includeSourceFileExpression.Match(fileName).Success)
                                && (String.IsNullOrEmpty(_excludeSourceFilePattern) || !_excludeSourceFileExpression.Match(fileName).Success);
 

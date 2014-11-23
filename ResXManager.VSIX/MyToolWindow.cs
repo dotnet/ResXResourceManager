@@ -269,7 +269,7 @@
             }
 
             // if file is not under source control, we get an OK even if the file is read only!
-            var lockedFiles = languages.Where(l => !l.IsWritable).Select(l => l.FileName).ToArray();
+            var lockedFiles = languages.Where(l => !l.ProjectFile.IsWritable).Select(l => l.FileName).ToArray();
 
             if (!lockedFiles.Any())
                 return true;
@@ -388,11 +388,6 @@
             {
                 Contract.Assume(projectItem != null);
 
-                if (projectItem.IsOpen && (projectItem.Document != null))
-                {
-                    projectItem.Document.Close();
-                }
-
                 var vsProjectItem = projectItem.Object as VSProjectItem;
 
                 if (vsProjectItem != null)
@@ -417,13 +412,17 @@
 
         private void ReloadSolution(bool forceReload = false)
         {
-            var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || p.IsSourceCodeOrContentFile()).Cast<ProjectFile>().ToArray();
+            var sourceFileFilter = new SourceFileFilter();
+
+            var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || (p.IsSourceCodeOrContentFile() && sourceFileFilter.IsSourceFile(p.RelativeFilePath))).Cast<ProjectFile>().ToArray();
 
             // The solution events are not reliable, so we check the solution on every load/unload of our window.
             // To avoid loosing the scope every time this method is called we only call load if we detect changes.
             var fingerPrint = GetFingerprint(projectFiles);
 
-            if (!forceReload && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
+            if (!forceReload 
+                && !projectFiles.OfType<DteProjectFile>().Where(p => p.IsResourceFile()).Any(p => p.HasChanges) 
+                && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
                 return;
 
             var solutionFullName = _dte.Maybe().Select(d => d.Solution).Return(s => s.FullName);

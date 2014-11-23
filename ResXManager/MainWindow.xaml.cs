@@ -174,7 +174,7 @@
             }
             else
             {
-                var lockedFiles = languages.Where(l => !l.IsWritable).Select(l => l.FileName).ToArray();
+                var lockedFiles = languages.Where(l => !l.ProjectFile.IsWritable).Select(l => l.FileName).ToArray();
 
                 if (!lockedFiles.Any())
                     return true;
