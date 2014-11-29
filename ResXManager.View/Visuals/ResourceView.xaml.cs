@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System;
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -116,20 +115,6 @@
             {
                 DataGrid.Columns.AddLanguageColumn(new CultureKey(new CultureInfo(inputBox.Text)));
             }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used via XAML!")]
-        private void DeleteCommandConverter_OnExecuting(object sender, CancelEventArgs e)
-        {
-            if (MessageBox.Show(Properties.Resources.ConfirmDeleteItems, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-                e.Cancel = true;
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used via XAML!")]
-        private void CutCommandConverter_OnExecuting(object sender, CancelEventArgs e)
-        {
-            if (MessageBox.Show(Properties.Resources.ConfirmCutItems, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-                e.Cancel = true;
         }
 
         /// <summary>

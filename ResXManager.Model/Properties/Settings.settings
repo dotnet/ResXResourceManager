@@ -8,5 +8,8 @@
     <Setting Name="DetectCodeReferences_Exclude" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="KeepFileContentSorted" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

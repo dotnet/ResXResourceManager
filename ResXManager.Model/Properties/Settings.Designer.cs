@@ -46,5 +46,17 @@ namespace tomenglertde.ResXManager.Model.Properties {
                 this["DetectCodeReferences_Exclude"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool KeepFileContentSorted {
+            get {
+                return ((bool)(this["KeepFileContentSorted"]));
+            }
+            set {
+                this["KeepFileContentSorted"] = value;
+            }
+        }
     }
 }

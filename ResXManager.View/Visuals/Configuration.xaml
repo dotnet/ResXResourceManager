@@ -3,8 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="800"
              xmlns:model="urn:ResXManager.Model"
+             xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
+             xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
+             d:DataContext="{d:DesignInstance model:ResourceManager}"
              Background="White">
   <UserControl.Resources>
+
+    <converters:ConfirmedCommandConverter x:Key="SortNodesByKeyCommandConverter" Query="{x:Static properties:Resources.SortNodesByKey_Confirmation}" />
 
     <Style TargetType="Control" x:Key="ControlWithErrorToolTipStyle">
       <Style.Triggers>
@@ -24,6 +29,7 @@
           </DataTemplate>
         </Setter.Value>
       </Setter>
+      <Setter Property="Grid.IsSharedSizeScope" Value="True"/>
     </Style>
 
     <Style TargetType="HeaderedContentControl" x:Key="PropertyStyle">
@@ -46,18 +52,48 @@
 
   </UserControl.Resources>
 
-  <Grid Margin="10" IsSharedSizeScope="True">
-    <HeaderedContentControl Header="Detect Code References" Style="{StaticResource GroupStyle}">
+  <StackPanel Margin="10" HorizontalAlignment="Left">
+    <HeaderedContentControl Header="{x:Static properties:Resources.DetectCodeReferences_Header}" Style="{StaticResource GroupStyle}">
       <StackPanel>
-        <HeaderedContentControl Header="Include files:" Style="{StaticResource PropertyStyle}">
-          <TextBox Style="{StaticResource ControlWithErrorToolTipStyle}"
+        <HeaderedContentControl Header="{x:Static properties:Resources.DetectCodeReferences_Scan}" Style="{StaticResource PropertyStyle}">
+          <TextBox Style="{StaticResource ControlWithErrorToolTipStyle}" MinWidth="500"
                    Text="{Binding DetectCodeReferences_Include, Source={x:Static model:Settings.Default}, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"/>
         </HeaderedContentControl>
-        <HeaderedContentControl Header="Exclude files:" Style="{StaticResource PropertyStyle}">
-          <TextBox Style="{StaticResource ControlWithErrorToolTipStyle}"
+        <HeaderedContentControl Header="{x:Static properties:Resources.DetectCodeReferences_Exclude}" Style="{StaticResource PropertyStyle}">
+          <TextBox Style="{StaticResource ControlWithErrorToolTipStyle}" MinWidth="500"
                    Text="{Binding DetectCodeReferences_Exclude, Source={x:Static model:Settings.Default}, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"/>
         </HeaderedContentControl>
       </StackPanel>
     </HeaderedContentControl>
-  </Grid>
+    
+    <Decorator Height="10"/>
+
+    <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_General}" Style="{StaticResource GroupStyle}">
+      <DockPanel Margin="10">
+        <Button DockPanel.Dock="Right" Padding="5,2" 
+                Content="{x:Static properties:Resources.SortAllFilesNow}" 
+                Command="{Binding SortNodesByKeyCommand, Converter={StaticResource SortNodesByKeyCommandConverter}}"
+                IsEnabled="{Binding IsChecked, ElementName=SortNodesByKey}"/>
+        <Decorator Width="50" DockPanel.Dock="Right"/>
+        <CheckBox x:Name="SortNodesByKey" FontWeight="DemiBold" VerticalAlignment="Center" IsChecked="{Binding KeepFileContentSorted ,Source={x:Static model:Settings.Default}}"
+                  Content="{x:Static properties:Resources.SortNodesByKey}" />
+      </DockPanel>
+    </HeaderedContentControl>
+
+    <Decorator Height="10"/>
+    
+    
+<!--
+    <HeaderedContentControl Header="File creation" Style="{StaticResource GroupStyle}">
+      <StackPanel>
+        <CheckBox Content ="Create all resource files when adding a new resource language" Margin="10,5" FontWeight="Bold"/>
+        <HeaderedContentControl Header="Fill :" Style="{StaticResource PropertyStyle}">
+          <TextBox Style="{StaticResource ControlWithErrorToolTipStyle}"
+                   Text="{Binding DetectCodeReferences_Exclude, Source={x:Static model:Settings.Default}, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"/>
+        </HeaderedContentControl>
+      </StackPanel>
+    </HeaderedContentControl>-->
+
+
+  </StackPanel>
 </UserControl>

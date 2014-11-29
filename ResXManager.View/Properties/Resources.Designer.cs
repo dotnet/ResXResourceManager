@@ -115,6 +115,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        public static string Configuration_General {
+            get {
+                return ResourceManager.GetString("Configuration_General", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cut the selected rows?.
         /// </summary>
         public static string ConfirmCutItems {
@@ -192,6 +201,33 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string DeleteToolTip {
             get {
                 return ResourceManager.GetString("DeleteToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exclude files:.
+        /// </summary>
+        public static string DetectCodeReferences_Exclude {
+            get {
+                return ResourceManager.GetString("DetectCodeReferences_Exclude", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Detect Code References.
+        /// </summary>
+        public static string DetectCodeReferences_Header {
+            get {
+                return ResourceManager.GetString("DetectCodeReferences_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scan files:.
+        /// </summary>
+        public static string DetectCodeReferences_Scan {
+            get {
+                return ResourceManager.GetString("DetectCodeReferences_Scan", resourceCulture);
             }
         }
         
@@ -478,6 +514,33 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string ShowOnlyMissingToolTip {
             get {
                 return ResourceManager.GetString("ShowOnlyMissingToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sort all files now.
+        /// </summary>
+        public static string SortAllFilesNow {
+            get {
+                return ResourceManager.GetString("SortAllFilesNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When saving a RESX file, sort the content by the key, if the file was sorted before..
+        /// </summary>
+        public static string SortNodesByKey {
+            get {
+                return ResourceManager.GetString("SortNodesByKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to sort all nodes of all resource files by the key?.
+        /// </summary>
+        public static string SortNodesByKey_Confirmation {
+            get {
+                return ResourceManager.GetString("SortNodesByKey_Confirmation", resourceCulture);
             }
         }
         

@@ -17,8 +17,8 @@
              d:DataContext="{d:DesignInstance model:ResourceManager}">
   <UserControl.Resources>
 
-    <converters:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Executing="DeleteCommandConverter_OnExecuting" />
-    <converters:ConfirmedCommandConverter x:Key="CutCommandConverter" Executing="CutCommandConverter_OnExecuting" />
+    <converters:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Query="{x:Static properties:Resources.ConfirmDeleteItems}" />
+    <converters:ConfirmedCommandConverter x:Key="CutCommandConverter" Query="{x:Static properties:Resources.ConfirmCutItems}" />
 
     <Style TargetType="{x:Type Control}" x:Key="SingleSelectElementStyle">
       <Setter Property="IsEnabled" Value="False" />

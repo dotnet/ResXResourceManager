@@ -257,4 +257,25 @@
   <data name="SelectedTotalToolTip" xml:space="preserve">
     <value>Selected/Total</value>
   </data>
+  <data name="SortNodesByKey_Confirmation" xml:space="preserve">
+    <value>Do you want to sort all nodes of all resource files by the key?</value>
+  </data>
+  <data name="DetectCodeReferences_Header" xml:space="preserve">
+    <value>Detect Code References</value>
+  </data>
+  <data name="DetectCodeReferences_Scan" xml:space="preserve">
+    <value>Scan files:</value>
+  </data>
+  <data name="DetectCodeReferences_Exclude" xml:space="preserve">
+    <value>Exclude files:</value>
+  </data>
+  <data name="Configuration_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="SortAllFilesNow" xml:space="preserve">
+    <value>Sort all files now</value>
+  </data>
+  <data name="SortNodesByKey" xml:space="preserve">
+    <value>When saving a RESX file, sort the content by the key, if the file was sorted before.</value>
+  </data>
 </root>

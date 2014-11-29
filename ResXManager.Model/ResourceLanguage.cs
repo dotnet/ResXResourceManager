@@ -25,9 +25,9 @@
         private readonly XDocument _document;
         private readonly XElement _documentRoot;
         private readonly ProjectFile _file;
-        private readonly IEnumerable<XElement> _data;
         private readonly IDictionary<string, Node> _nodes;
         private readonly CultureKey _cultureKey;
+        private bool _isFileContentSortedByKey;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceLanguage" /> class.
@@ -57,9 +57,9 @@
             if (_documentRoot == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileError, file.FilePath));
 
-            _data = _documentRoot.Elements(@"data");
+            var data = _documentRoot.Elements(@"data");
 
-            var elements = _data
+            var elements = data
                 .Where(IsStringType)
                 .Select(item => new Node(this, item))
                 .Where(item => !item.Key.StartsWith(@">>", StringComparison.OrdinalIgnoreCase))
@@ -74,6 +74,8 @@
                 var duplicateKeys = string.Join(@", ", elements.GroupBy(item => item.Key).Where(group => group.Count() > 1).Select(group => Quote + group.Key + Quote));
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.DuplicateKeyError, file.FilePath, duplicateKeys), ex);
             }
+
+            _isFileContentSortedByKey = _nodes.Keys.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).SequenceEqual(_nodes.Keys);
         }
 
         public event EventHandler<CancelEventArgs> Changing;
@@ -199,6 +201,15 @@
             SetNodeData(key, node => node.Text = value);
         }
 
+        public void SortNodesByKey()
+        {
+            if (_isFileContentSortedByKey)
+                return;
+            
+            _isFileContentSortedByKey = true;
+            Save();
+        }
+
         private void OnChanged()
         {
             if (Changed != null)
@@ -226,6 +237,22 @@
         /// <exception cref="UnauthorizedAccessException"></exception>
         public void Save()
         {
+            if (_isFileContentSortedByKey && Settings.Default.KeepFileContentSorted)
+            {
+                var nodes = _documentRoot.Elements(@"data").ToArray();
+
+                foreach (var item in nodes)
+                {
+                    Contract.Assume(item != null);
+                    item.Remove();
+                }
+
+                foreach (var item in nodes.OrderBy(node => node.TryGetAttribute("name").TrimStart('>'), StringComparer.OrdinalIgnoreCase))
+                {
+                    _documentRoot.Add(item);
+                }
+            }
+
             _file.Content = _document.ToString();
 
             HasChanges = false;
@@ -605,7 +632,6 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_data != null);
             Contract.Invariant(_document != null);
             Contract.Invariant(_documentRoot != null);
             Contract.Invariant(_file != null);

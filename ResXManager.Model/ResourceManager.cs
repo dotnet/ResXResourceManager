@@ -284,6 +284,17 @@
             }
         }
 
+        public ICommand SortNodesByKeyCommand
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
+                return new DelegateCommand(SortNodesByKey);
+            }
+
+        }
+
         public bool? AreAllFilesSelected
         {
             get
@@ -517,6 +528,15 @@
             var selectedKeys = _selectedTableEntries.Select(item => item.Key);
 
             Clipboard.SetText(string.Join(Environment.NewLine, selectedKeys));
+        }
+
+        private void SortNodesByKey()
+        {
+            foreach (var language in _resourceEntities.SelectMany(entity => entity.Languages))
+            {
+                Contract.Assume(language != null);
+                language.SortNodesByKey();
+            }
         }
 
         private void OnLoaded()

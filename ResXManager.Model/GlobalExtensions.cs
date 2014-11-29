@@ -13,6 +13,7 @@
     using System.Windows;
     using System.Windows.Interactivity;
     using System.Windows.Threading;
+    using System.Xml.Linq;
 
     /// <summary>
     /// Various extension methods to help generating better code.
@@ -598,6 +599,15 @@
             behaviors.Add(behavior);
 
             return behavior;
+        }
+
+        public static string TryGetAttribute(this XElement element, string name)
+        {
+            Contract.Requires(element != null);
+            Contract.Requires(name != null);
+            Contract.Ensures(Contract.Result<string>() != null);
+
+            return element.Attribute(name).Maybe().Return(x => x.Value, string.Empty);
         }
     }
 }
