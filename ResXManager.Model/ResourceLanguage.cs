@@ -26,21 +26,24 @@
         private readonly XElement _documentRoot;
         private readonly ProjectFile _file;
         private readonly IDictionary<string, Node> _nodes;
+        private readonly ConfigurationBase _configuration;
         private readonly CultureKey _cultureKey;
-        private bool _isFileContentSortedByKey;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceLanguage" /> class.
         /// </summary>
+        /// <param name="configuration">The configuration.</param>
         /// <param name="cultureKey">The culture key.</param>
         /// <param name="file">The .resx file having all the localization.</param>
         /// <exception cref="System.InvalidOperationException">
         /// </exception>
-        internal ResourceLanguage(CultureKey cultureKey, ProjectFile file)
+        internal ResourceLanguage(ConfigurationBase configuration, CultureKey cultureKey, ProjectFile file)
         {
+            Contract.Requires(configuration != null);
             Contract.Requires(cultureKey != null);
             Contract.Requires(file != null);
 
+            _configuration = configuration;
             _cultureKey = cultureKey;
             _file = file;
 
@@ -74,8 +77,6 @@
                 var duplicateKeys = string.Join(@", ", elements.GroupBy(item => item.Key).Where(group => group.Count() > 1).Select(group => Quote + group.Key + Quote));
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.DuplicateKeyError, file.FilePath, duplicateKeys), ex);
             }
-
-            _isFileContentSortedByKey = _nodes.Keys.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).SequenceEqual(_nodes.Keys);
         }
 
         public event EventHandler<CancelEventArgs> Changing;
@@ -203,31 +204,27 @@
 
         public void SortNodesByKey()
         {
-            if (_isFileContentSortedByKey)
-                return;
-            
-            _isFileContentSortedByKey = true;
-            Save();
+            Save(true);
         }
 
         private void OnChanged()
         {
-            if (Changed != null)
+            var handler = Changed;
+            if (handler != null)
             {
-                Changed(this, EventArgs.Empty);
+                handler(this, EventArgs.Empty);
             }
         }
 
         private bool OnChanging()
         {
-            if (Changing != null)
-            {
-                var eventArgs = new CancelEventArgs();
-                Changing(this, eventArgs);
-                return !eventArgs.Cancel;
-            }
+            var handler = Changing;
+            if (handler == null)
+                return true;
 
-            return true;
+            var eventArgs = new CancelEventArgs();
+            handler(this, eventArgs);
+            return !eventArgs.Cancel;
         }
 
         /// <summary>
@@ -235,9 +232,9 @@
         /// </summary>
         /// <exception cref="IOException"></exception>
         /// <exception cref="UnauthorizedAccessException"></exception>
-        public void Save()
+        public void Save(bool forceSortFileContent = false)
         {
-            if (_isFileContentSortedByKey && Settings.Default.KeepFileContentSorted)
+            if (forceSortFileContent || _configuration.SortFileContentOnSave)
             {
                 var nodes = _documentRoot.Elements(@"data").ToArray();
 
@@ -636,6 +633,7 @@
             Contract.Invariant(_documentRoot != null);
             Contract.Invariant(_file != null);
             Contract.Invariant(_nodes != null);
+            Contract.Invariant(_configuration != null);
             Contract.Invariant(_cultureKey != null);
         }
     }

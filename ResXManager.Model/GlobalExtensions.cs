@@ -601,10 +601,11 @@
             return behavior;
         }
 
+        [ContractVerification(false)]
         public static string TryGetAttribute(this XElement element, string name)
         {
             Contract.Requires(element != null);
-            Contract.Requires(name != null);
+            Contract.Requires(!String.IsNullOrEmpty(name));
             Contract.Ensures(Contract.Result<string>() != null);
 
             return element.Attribute(name).Maybe().Return(x => x.Value, string.Empty);

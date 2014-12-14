@@ -2,39 +2,34 @@
 {
     using System;
     using System.Diagnostics.Contracts;
-    using System.Text.RegularExpressions;
+    using System.Linq;
 
     public class SourceFileFilter
     {
-        private readonly string _includeSourceFilePattern = (ResourceManagerExtensions.Settings.DetectCodeReferences_Include ?? String.Empty).Trim();
-        private readonly string _excludeSourceFilePattern = (ResourceManagerExtensions.Settings.DetectCodeReferences_Exclude ?? String.Empty).Trim();
-        private readonly Regex _includeSourceFileExpression;
-        private readonly Regex _excludeSourceFileExpression;
+        private readonly string[] _extensions;
 
-        public SourceFileFilter()
+        public SourceFileFilter(ConfigurationBase configuration)
         {
-            _includeSourceFileExpression = new Regex(_includeSourceFilePattern);
-            _excludeSourceFileExpression = new Regex(_excludeSourceFilePattern);
+            Contract.Requires(configuration != null);
+
+            _extensions = configuration.CodeReferences
+                .Items.SelectMany(item => item.ParseExtensions())
+                .Distinct()
+                .ToArray();
         }
 
-        public bool IsSourceFile(string fileName)
+        public bool IsSourceFile(ProjectFile file)
         {
-            Contract.Requires(fileName != null);
+            Contract.Requires(file != null);
 
-            var isSourceFile = (String.IsNullOrEmpty(_includeSourceFilePattern) || _includeSourceFileExpression.Match(fileName).Success)
-                               && (String.IsNullOrEmpty(_excludeSourceFilePattern) || !_excludeSourceFileExpression.Match(fileName).Success);
-
-            return isSourceFile;
+            return _extensions.Contains(file.Extension, StringComparer.OrdinalIgnoreCase);
         }
 
         [ContractInvariantMethod]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_includeSourceFilePattern != null);
-            Contract.Invariant(_includeSourceFileExpression != null);
-            Contract.Invariant(_excludeSourceFilePattern != null);
-            Contract.Invariant(_excludeSourceFileExpression != null);
+            Contract.Invariant(_extensions != null);
         }
     }
 }

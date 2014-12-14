@@ -21,6 +21,8 @@
     [ContractVerification(false)] // Too many warnings from generated code.
     public partial class MainWindow : ITracer
     {
+        private readonly Configuration _configuration = new Configuration();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -38,13 +40,13 @@
         /// Identifies the Folder dependency property
         /// </summary>
         public static readonly DependencyProperty FolderProperty =
-            DependencyProperty.Register("Folder", typeof (string), typeof (MainWindow));
+            DependencyProperty.Register("Folder", typeof(string), typeof(MainWindow));
 
         internal ResourceManager ViewModel
         {
             get
             {
-                return (ResourceManager) DataContext;
+                return (ResourceManager)DataContext;
             }
         }
 
@@ -54,6 +56,11 @@
 
             try
             {
+                var resourceManager = new ResourceManager(_configuration);
+                resourceManager.BeginEditing += ResourceManager_BeginEditing;
+                resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
+                DataContext = resourceManager;
+
                 if (!string.IsNullOrEmpty(Settings.StartupFolder))
                 {
                     Folder = Settings.StartupFolder;
@@ -87,13 +94,13 @@
 
         private void Load()
         {
-            var sourceFiles = new DirectoryInfo(Folder).GetAllSourceFiles();
+            var sourceFiles = new DirectoryInfo(Folder).GetAllSourceFiles(_configuration);
 
             ViewModel.Load(sourceFiles);
 
             if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
             {
-                CodeReference.BeginFind(ViewModel.ResourceEntities, sourceFiles, this);
+                CodeReference.BeginFind(ViewModel, sourceFiles, this);
             }
         }
 

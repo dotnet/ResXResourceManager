@@ -171,6 +171,7 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
+    <Compile Include="Configuration.cs" />
     <Compile Include="DteExtensions.cs" />
     <Compile Include="DteProjectFile.cs" />
     <Compile Include="MyToolWindow.cs" />

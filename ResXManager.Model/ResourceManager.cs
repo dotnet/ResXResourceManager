@@ -26,6 +26,7 @@
         private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
 
         private readonly DispatcherThrottle _selectedEntitiesChangeThrottle;
+        private readonly ConfigurationBase _configuration;
 
         private ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
         private ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
@@ -42,8 +43,9 @@
         public event EventHandler<EventArgs> Loaded;
         public event EventHandler<EventArgs> ReloadRequested;
 
-        public ResourceManager()
+        public ResourceManager(ConfigurationBase configuration)
         {
+            _configuration = configuration;
             _selectedEntitiesChangeThrottle = new DispatcherThrottle(OnSelectedEntitiesChanged);
             _filteredResourceEntities = new ListCollectionViewListAdapter(new ListCollectionView(_resourceEntities));
         }
@@ -323,6 +325,16 @@
             }
         }
 
+        public ConfigurationBase Configuration
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ConfigurationBase>() != null);
+
+                return _configuration;
+            }
+        }
+
         public void AddNewKey(ResourceEntity entity, string key)
         {
             Contract.Requires(entity != null);
@@ -353,11 +365,6 @@
             eventHandler(this, args);
 
             return !args.Cancel;
-        }
-
-        private bool CanAddNew()
-        {
-            return SelectedEntities.Count == 1;
         }
 
         private bool CanDelete()
@@ -753,6 +760,7 @@
             Contract.Invariant(_selectedTableEntries != null);
             Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(_selectedEntitiesChangeThrottle != null);
+            Contract.Invariant(_configuration != null);
         }
     }
 }

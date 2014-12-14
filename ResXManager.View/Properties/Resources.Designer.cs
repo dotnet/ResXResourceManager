@@ -527,7 +527,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When saving a RESX file, sort the content by the key, if the file was sorted before..
+        ///   Looks up a localized string similar to When saving a RESX file, sort the XML data nodes by the key..
         /// </summary>
         public static string SortNodesByKey {
             get {
@@ -536,7 +536,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do you want to sort all nodes of all resource files by the key?.
+        ///   Looks up a localized string similar to Do you want to sort all nodes of all resource files by the key now?.
         /// </summary>
         public static string SortNodesByKey_Confirmation {
             get {

@@ -5,6 +5,8 @@
              xmlns:model="urn:ResXManager.Model"
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              d:DataContext="{d:DesignInstance model:ResourceManager}"
              Background="White">
   <UserControl.Resources>
@@ -53,21 +55,7 @@
   </UserControl.Resources>
 
   <StackPanel Margin="10" HorizontalAlignment="Left">
-    <HeaderedContentControl Header="{x:Static properties:Resources.DetectCodeReferences_Header}" Style="{StaticResource GroupStyle}">
-      <StackPanel>
-        <HeaderedContentControl Header="{x:Static properties:Resources.DetectCodeReferences_Scan}" Style="{StaticResource PropertyStyle}">
-          <TextBox Style="{StaticResource ControlWithErrorToolTipStyle}" MinWidth="500"
-                   Text="{Binding DetectCodeReferences_Include, Source={x:Static model:Settings.Default}, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"/>
-        </HeaderedContentControl>
-        <HeaderedContentControl Header="{x:Static properties:Resources.DetectCodeReferences_Exclude}" Style="{StaticResource PropertyStyle}">
-          <TextBox Style="{StaticResource ControlWithErrorToolTipStyle}" MinWidth="500"
-                   Text="{Binding DetectCodeReferences_Exclude, Source={x:Static model:Settings.Default}, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"/>
-        </HeaderedContentControl>
-      </StackPanel>
-    </HeaderedContentControl>
     
-    <Decorator Height="10"/>
-
     <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_General}" Style="{StaticResource GroupStyle}">
       <DockPanel Margin="10">
         <Button DockPanel.Dock="Right" Padding="5,2" 
@@ -75,15 +63,34 @@
                 Command="{Binding SortNodesByKeyCommand, Converter={StaticResource SortNodesByKeyCommandConverter}}"
                 IsEnabled="{Binding IsChecked, ElementName=SortNodesByKey}"/>
         <Decorator Width="50" DockPanel.Dock="Right"/>
-        <CheckBox x:Name="SortNodesByKey" FontWeight="DemiBold" VerticalAlignment="Center" IsChecked="{Binding KeepFileContentSorted ,Source={x:Static model:Settings.Default}}"
+        <CheckBox x:Name="SortNodesByKey" FontWeight="DemiBold" VerticalAlignment="Center" IsChecked="{Binding Configuration.SortFileContentOnSave}"
                   Content="{x:Static properties:Resources.SortNodesByKey}" />
       </DockPanel>
     </HeaderedContentControl>
 
     <Decorator Height="10"/>
-    
-    
-<!--
+
+    <HeaderedContentControl Header="{x:Static properties:Resources.DetectCodeReferences_Header}" Style="{StaticResource GroupStyle}">
+      <DataGrid ItemsSource="{Binding Configuration.CodeReferences.Items}" 
+                RowEditEnding="CodeReferencesConfiguration_RowEditEnding" 
+                CellEditEnding="CodeReferencesConfiguration_CellEditEnding"
+                AutoGenerateColumns="False"
+                Margin="10" MinHeight="50"  MaxHeight="250">
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="File Extensions" Binding="{Binding Extensions}" Width="2*" />
+          <DataGridTextColumn Header="Expression" Binding="{Binding Expression}" Width="3*" />
+          <DataGridCheckBoxColumn Header="Case Sens." Binding="{Binding IsCaseSensitive}" Width="*" />
+          <DataGridTextColumn Header="Comment Token" Binding="{Binding SingleLineComment}" Width="3*"/>
+        </DataGrid.Columns>
+        <i:Interaction.Behaviors>
+          <dgx:ExtendedStarSizeBehavior/>
+        </i:Interaction.Behaviors>
+      </DataGrid>
+    </HeaderedContentControl>
+
+    <Decorator Height="10"/>
+
+    <!--
     <HeaderedContentControl Header="File creation" Style="{StaticResource GroupStyle}">
       <StackPanel>
         <CheckBox Content ="Create all resource files when adding a new resource language" Margin="10,5" FontWeight="Bold"/>

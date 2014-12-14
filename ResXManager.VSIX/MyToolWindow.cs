@@ -33,13 +33,14 @@
         private const string PAGE_TEXT_EDITOR = "TextEditor";
         private const string PROPERTY_FONT_SIZE = "FontSize";
 
-        private readonly ResourceManager _resourceManager = new ResourceManager();
-        private readonly Control _view;
         private readonly OutputWindowTracer _trace;
 
         private DTE _dte;
+        private ResourceManager _resourceManager;
+        private Control _view;
         private string _solutionFingerPrint;
         private string _currentSolutionFullName;
+        private Configuration _configuration;
 
         /// <summary>
         /// Standard constructor for the tool window.
@@ -57,14 +58,6 @@
             BitmapIndex = 1;
 
             _trace = new OutputWindowTracer(this);
-
-            _resourceManager.BeginEditing += ResourceManager_BeginEditing;
-            _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
-            _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
-
-            _view = new Shell { DataContext = _resourceManager };
-            _view.Loaded += view_Loaded;
-            _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -76,6 +69,25 @@
             {
                 _trace.WriteLine(Resources.IntroMessage);
 
+                _dte = (DTE)GetService(typeof(DTE));
+                if (_dte == null)
+                {
+                    _trace.TraceError("Error getting DTE service.");
+                    return;
+                }
+
+                _configuration = new Configuration(_dte);
+
+                _resourceManager = new ResourceManager(_configuration);
+
+                _resourceManager.BeginEditing += ResourceManager_BeginEditing;
+                _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
+                _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
+
+                _view = new Shell { DataContext = _resourceManager };
+                _view.Loaded += view_Loaded;
+                _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
+
                 var executingAssembly = Assembly.GetExecutingAssembly();
 
                 var folder = Path.GetDirectoryName(executingAssembly.Location);
@@ -83,13 +95,6 @@
                 _trace.WriteLine(Resources.Version, new AssemblyName(executingAssembly.FullName).Version);
 
                 AppDomain.CurrentDomain.AssemblyResolve += AppDomain_AssemblyResolve;
-
-                _dte = (DTE)GetService(typeof(DTE));
-                if (_dte == null)
-                {
-                    _trace.TraceError("Error getting DTE service.");
-                    return;
-                }
 
                 EventManager.RegisterClassHandler(typeof(ResourceView), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
 
@@ -412,9 +417,13 @@
 
         private void ReloadSolution(bool forceReload = false)
         {
-            var sourceFileFilter = new SourceFileFilter();
+            Contract.Assume(_configuration != null);
+            Contract.Assume(_dte != null);
 
-            var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || (p.IsSourceCodeOrContentFile() && sourceFileFilter.IsSourceFile(p.RelativeFilePath))).Cast<ProjectFile>().ToArray();
+            var solution = _dte.Solution;
+            var sourceFileFilter = new SourceFileFilter(_configuration);
+            
+            var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || (p.IsSourceCodeOrContentFile() && sourceFileFilter.IsSourceFile(p))).Cast<ProjectFile>().ToArray();
 
             // The solution events are not reliable, so we check the solution on every load/unload of our window.
             // To avoid loosing the scope every time this method is called we only call load if we detect changes.
@@ -425,9 +434,11 @@
                 && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
                 return;
 
-            var solutionFullName = _dte.Maybe().Select(d => d.Solution).Return(s => s.FullName);
+            var solutionFullName = solution.Maybe().Return(s => s.FullName);
 
             _solutionFingerPrint = fingerPrint;
+
+            Contract.Assume(_resourceManager != null);
             _resourceManager.Load(projectFiles);
 
             if (!string.Equals(solutionFullName, _currentSolutionFullName, StringComparison.OrdinalIgnoreCase))
@@ -438,7 +449,7 @@
 
             if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
             {
-                CodeReference.BeginFind(_resourceManager.ResourceEntities, projectFiles, _trace);
+                CodeReference.BeginFind(_resourceManager, projectFiles, _trace);
             }
         }
 
@@ -505,8 +516,6 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_resourceManager != null);
-            Contract.Invariant(_view != null);
             Contract.Invariant(_trace != null);
         }
     }

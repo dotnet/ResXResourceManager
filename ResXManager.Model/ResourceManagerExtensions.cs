@@ -14,7 +14,6 @@
     /// </summary>
     public static class ResourceManagerExtensions
     {
-        public static Settings Settings = Settings.Default ;
         /// <summary>
         /// Converts the culture key name to the corresponding culture. The key name is the ieft language tag with an optional '.' prefix.
         /// </summary>
@@ -38,19 +37,20 @@
             throw new InvalidOperationException("Error parsing language: " + cultureKeyName);
         }
 
-        public static IList<ProjectFile> GetAllSourceFiles(this DirectoryInfo solutionFolder)
+        public static IList<ProjectFile> GetAllSourceFiles(this DirectoryInfo solutionFolder, ConfigurationBase configuration)
         {
             Contract.Requires(solutionFolder != null);
+            Contract.Requires(configuration != null);
             Contract.Ensures(Contract.Result<IList<ProjectFile>>() != null);
 
             var fileInfos = solutionFolder.EnumerateFiles("*.*", SearchOption.AllDirectories);
             Contract.Assume(fileInfos != null);
 
-            var sourceFileFilter = new SourceFileFilter();
+            var sourceFileFilter = new SourceFileFilter(configuration);
 
             var allProjectFiles = fileInfos
                 .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
-                .Where(file => file.IsResourceFile() || sourceFileFilter.IsSourceFile(file.RelativeFilePath))
+                .Where(file => file.IsResourceFile() || sourceFileFilter.IsSourceFile(file))
                 .ToArray();
 
             var fileNamesByDirectory = allProjectFiles.GroupBy(file => file.GetBaseDirectory()).ToArray();

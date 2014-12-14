@@ -353,7 +353,6 @@
                 _resourceEntity = resourceEntity;
 
                 var name = GetSheetName(resourceEntity, uniqueNames);
-
                 _name = name;
 
                 Id = "Id" + index + 1;
@@ -364,6 +363,7 @@
             {
                 Contract.Requires(resourceEntity != null);
                 Contract.Requires(uniqueNames != null);
+                Contract.Ensures(Contract.Result<string>() != null);
 
                 var name = string.Join("|", resourceEntity.ProjectName, resourceEntity.BaseName);
 

@@ -258,7 +258,7 @@
     <value>Selected/Total</value>
   </data>
   <data name="SortNodesByKey_Confirmation" xml:space="preserve">
-    <value>Do you want to sort all nodes of all resource files by the key?</value>
+    <value>Do you want to sort all nodes of all resource files by the key now?</value>
   </data>
   <data name="DetectCodeReferences_Header" xml:space="preserve">
     <value>Detect Code References</value>
@@ -276,6 +276,6 @@
     <value>Sort all files now</value>
   </data>
   <data name="SortNodesByKey" xml:space="preserve">
-    <value>When saving a RESX file, sort the content by the key, if the file was sorted before.</value>
+    <value>When saving a RESX file, sort the XML data nodes by the key.</value>
   </data>
 </root>

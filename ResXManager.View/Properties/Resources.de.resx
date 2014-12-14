@@ -250,7 +250,7 @@
     <value>Ausgewählt/Gesamt</value>
   </data>
   <data name="SortNodesByKey" xml:space="preserve">
-    <value>Beim Speichern RESX-Dateien nach Schlüssel sortieren, wenn sie schon sortiert waren.</value>
+    <value>Beim Speichern den Inhalt von RESX-Dateien nach Schlüssel sortieren.</value>
   </data>
   <data name="SortAllFilesNow" xml:space="preserve">
     <value>Alle Dateien jetzt sortieren</value>
@@ -268,6 +268,6 @@
     <value>Ausschließen:</value>
   </data>
   <data name="SortNodesByKey_Confirmation" xml:space="preserve">
-    <value>Möchten sie den Inhalt aller Ressourcen-Dateien nach Schlüssel sortieren?</value>
+    <value>Möchten sie jetzt den Inhalt aller Ressourcen-Dateien nach Schlüssel sortieren?</value>
   </data>
 </root>
