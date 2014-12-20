@@ -79,6 +79,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Case Sens..
+        /// </summary>
+        public static string CaseSensitive {
+            get {
+                return ResourceManager.GetString("CaseSensitive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Choose columns.
         /// </summary>
         public static string ChooseColumnsToolTip {
@@ -115,11 +124,38 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comment Token.
+        /// </summary>
+        public static string CommentToken {
+            get {
+                return ResourceManager.GetString("CommentToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
         public static string Configuration_General {
             get {
                 return ResourceManager.GetString("Configuration_General", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load &amp; Save.
+        /// </summary>
+        public static string Configuration_LoadSaveHeader {
+            get {
+                return ResourceManager.GetString("Configuration_LoadSaveHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scope.
+        /// </summary>
+        public static string ConfigurationScopeHeader {
+            get {
+                return ResourceManager.GetString("ConfigurationScopeHeader", resourceCulture);
             }
         }
         
@@ -241,6 +277,24 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your are editing the default configuration. If you want to change settings that apply only to a specific solution, just open the solution..
+        /// </summary>
+        public static string EditDefaultConfigurationNotification {
+            get {
+                return ResourceManager.GetString("EditDefaultConfigurationNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are editing the configuration specific for the active solution. If you want to edit the default configuration, just close the solution..
+        /// </summary>
+        public static string EditSolutionConfigurationNotification {
+            get {
+                return ResourceManager.GetString("EditSolutionConfigurationNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
         ///&lt;root&gt;
         ///  &lt;!-- 
@@ -298,6 +352,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string FileExistsPrompt {
             get {
                 return ResourceManager.GetString("FileExistsPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Extensions.
+        /// </summary>
+        public static string FileExtensions {
+            get {
+                return ResourceManager.GetString("FileExtensions", resourceCulture);
             }
         }
         
@@ -410,6 +473,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Neutral Resources Language:.
+        /// </summary>
+        public static string NeutralResourceLanguageHeader {
+            get {
+                return ResourceManager.GetString("NeutralResourceLanguageHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter new resource key:.
         /// </summary>
         public static string NewKeyPrompt {
@@ -469,6 +541,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string RefreshViewToolTip {
             get {
                 return ResourceManager.GetString("RefreshViewToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Regular Expression.
+        /// </summary>
+        public static string RegularExpression {
+            get {
+                return ResourceManager.GetString("RegularExpression", resourceCulture);
             }
         }
         

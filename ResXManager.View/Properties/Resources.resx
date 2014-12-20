@@ -278,4 +278,31 @@
   <data name="SortNodesByKey" xml:space="preserve">
     <value>When saving a RESX file, sort the XML data nodes by the key.</value>
   </data>
+  <data name="EditDefaultConfigurationNotification" xml:space="preserve">
+    <value>Your are editing the default configuration. If you want to change settings that apply only to a specific solution, just open the solution.</value>
+  </data>
+  <data name="EditSolutionConfigurationNotification" xml:space="preserve">
+    <value>You are editing the configuration specific for the active solution. If you want to edit the default configuration, just close the solution.</value>
+  </data>
+  <data name="NeutralResourceLanguageHeader" xml:space="preserve">
+    <value>Neutral Resources Language:</value>
+  </data>
+  <data name="ConfigurationScopeHeader" xml:space="preserve">
+    <value>Scope</value>
+  </data>
+  <data name="Configuration_LoadSaveHeader" xml:space="preserve">
+    <value>Load &amp; Save</value>
+  </data>
+  <data name="FileExtensions" xml:space="preserve">
+    <value>File Extensions</value>
+  </data>
+  <data name="RegularExpression" xml:space="preserve">
+    <value>Regular Expression</value>
+  </data>
+  <data name="CaseSensitive" xml:space="preserve">
+    <value>Case Sens.</value>
+  <comment>@Invariant</comment></data>
+  <data name="CommentToken" xml:space="preserve">
+    <value>Comment Token</value>
+  </data>
 </root>

@@ -270,4 +270,28 @@
   <data name="SortNodesByKey_Confirmation" xml:space="preserve">
     <value>Möchten sie jetzt den Inhalt aller Ressourcen-Dateien nach Schlüssel sortieren?</value>
   </data>
+  <data name="CommentToken" xml:space="preserve">
+    <value>Kommentarzeichen</value>
+  </data>
+  <data name="Configuration_LoadSaveHeader" xml:space="preserve">
+    <value>Laden &amp; Speichern</value>
+  </data>
+  <data name="ConfigurationScopeHeader" xml:space="preserve">
+    <value>Ziel</value>
+  </data>
+  <data name="FileExtensions" xml:space="preserve">
+    <value>Dateierweiterung</value>
+  </data>
+  <data name="NeutralResourceLanguageHeader" xml:space="preserve">
+    <value>Standardsprache:</value>
+  </data>
+  <data name="RegularExpression" xml:space="preserve">
+    <value>Regulärer Ausdruck</value>
+  </data>
+  <data name="EditSolutionConfigurationNotification" xml:space="preserve">
+    <value>Sie bearbeiten die projektmappenspezifischen Einstellungen. Um die Standardeinstellungen zu bearbeiten schließen sie die Projektmappe.</value>
+  </data>
+  <data name="EditDefaultConfigurationNotification" xml:space="preserve">
+    <value>Sie bearbeiten die Standardeinstellungen. Wenn sie projektmappenspezifischen Einstellungen bearbeiten möchten öffnen sie eine Projektmappe.</value>
+  </data>
 </root>

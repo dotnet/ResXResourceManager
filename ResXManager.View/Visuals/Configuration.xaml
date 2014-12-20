@@ -9,10 +9,16 @@
              xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
              d:DataContext="{d:DesignInstance model:ResourceManager}"
-             Background="White" MinWidth="800">
+             Background="LightGray" Width="800">
   <UserControl.Resources>
 
     <converters:ConfirmedCommandConverter x:Key="SortNodesByKeyCommandConverter" Query="{x:Static properties:Resources.SortNodesByKey_Confirmation}" />
+
+    <Style x:Key="LabelStyle">
+      <Setter Property="TextElement.Foreground" Value="DarkSlateGray" />
+      <Setter Property="TextElement.FontWeight" Value="DemiBold" />
+      <Setter Property="FrameworkElement.VerticalAlignment" Value="Center" />
+    </Style>
 
     <Style TargetType="Control" x:Key="ControlWithErrorToolTipStyle">
       <Style.Triggers>
@@ -44,7 +50,7 @@
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition SharedSizeGroup="LeftColum" />
                 </Grid.ColumnDefinitions>
-                <ContentPresenter ContentSource="Header" VerticalAlignment="Center" TextElement.FontWeight="DemiBold" />
+                <ContentPresenter ContentSource="Header" Style="{StaticResource LabelStyle}" />
               </Grid>
               <ContentPresenter VerticalAlignment="Center" />
             </DockPanel>
@@ -53,27 +59,21 @@
       </Setter>
     </Style>
 
-    <Style x:Key="LabelStyle">
-      <Setter Property="TextElement.Foreground" Value="DarkSlateGray" />
-      <Setter Property="TextElement.FontWeight" Value="DemiBold" />
-      <Setter Property="FrameworkElement.VerticalAlignment" Value="Center" />
-    </Style>
-
   </UserControl.Resources>
 
   <StackPanel Margin="10" HorizontalAlignment="Left">
 
-    <HeaderedContentControl Header="Scope" Style="{StaticResource GroupStyle}" Visibility="{Binding Configuration.IsScopeSupported, Converter={x:Static converters:BooleanToVisibilityConverter.Default}}">
+    <HeaderedContentControl Header="{x:Static properties:Resources.ConfigurationScopeHeader}" Style="{StaticResource GroupStyle}" Visibility="{Binding Configuration.IsScopeSupported, Converter={x:Static converters:BooleanToVisibilityConverter.Default}}">
       <Control>
         <Control.Template>
           <ControlTemplate>
             <Border x:Name="Background" Background="Yellow">
-              <TextBlock x:Name="Text" Margin="10" Text="Your are editing the default configuration. If you want to change settings that apply only to a specific solution, just open the solution." />
+              <TextBlock x:Name="Text" Margin="10" TextWrapping="Wrap" Text="{x:Static properties:Resources.EditDefaultConfigurationNotification}" />
             </Border>
             <ControlTemplate.Triggers>
               <DataTrigger Binding="{Binding Configuration.Scope}" Value="{x:Static model:ConfigurationScope.Solution}">
                 <Setter TargetName="Background" Property="Background" Value="Orange" />
-                <Setter TargetName="Text" Property="Text" Value="You are editing the configuration specific for the active solution. If you want to edit the default configuration, just close the solution." />
+                <Setter TargetName="Text" Property="Text" Value="{x:Static properties:Resources.EditSolutionConfigurationNotification}" />
               </DataTrigger>
             </ControlTemplate.Triggers>
           </ControlTemplate>
@@ -84,7 +84,7 @@
     <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_General}" Style="{StaticResource GroupStyle}">
       <StackPanel Margin="10">
         <StackPanel Orientation="Horizontal">
-          <TextBlock Text="Neutral Resources Language:" Style="{StaticResource LabelStyle}" />
+          <TextBlock Text="{x:Static properties:Resources.NeutralResourceLanguageHeader}" Style="{StaticResource LabelStyle}" />
           <Decorator Width="5" />
           <ComboBox Width="175" ItemsSource="{Binding Source={x:Static Member=model:ResourceManager.SpecificCultures}}" SelectedItem="{Binding Configuration.NeutralResourcesLanguage}">
             <ComboBox.ItemTemplate>
@@ -103,7 +103,7 @@
 
     <Decorator Height="5" />
 
-    <HeaderedContentControl Header="Load &amp; Save" Style="{StaticResource GroupStyle}">
+    <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_LoadSaveHeader}" Style="{StaticResource GroupStyle}">
       <StackPanel Margin="10">
         <DockPanel>
           <Button DockPanel.Dock="Right" Padding="5,2"
@@ -125,12 +125,12 @@
                 CellEditEnding="CodeReferencesConfiguration_CellEditEnding"
                 AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False"
                 HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
-                Margin="10" MinHeight="50" MaxHeight="250">
+                Margin="10" MinHeight="50" MaxHeight="250" MinWidth="700">
         <DataGrid.Columns>
-          <DataGridTextColumn Header="File Extensions" Binding="{Binding Extensions}" Width="2*" HeaderStyle="{StaticResource LabelStyle}" />
-          <DataGridTextColumn Header="Expression" Binding="{Binding Expression}" Width="5*" HeaderStyle="{StaticResource LabelStyle}" />
-          <DataGridCheckBoxColumn Header="Case Sens." Binding="{Binding IsCaseSensitive}" Width="*" HeaderStyle="{StaticResource LabelStyle}" />
-          <DataGridTextColumn Header="Comment Token" Binding="{Binding SingleLineComment}" Width="2*" HeaderStyle="{StaticResource LabelStyle}" />
+          <DataGridTextColumn Header="{x:Static properties:Resources.FileExtensions}" Binding="{Binding Extensions}" Width="2*" HeaderStyle="{StaticResource LabelStyle}" />
+          <DataGridTextColumn Header="{x:Static properties:Resources.RegularExpression}" Binding="{Binding Expression}" Width="5*" HeaderStyle="{StaticResource LabelStyle}" />
+          <DataGridCheckBoxColumn Header="{x:Static properties:Resources.CaseSensitive}" Binding="{Binding IsCaseSensitive}" Width="*" HeaderStyle="{StaticResource LabelStyle}" />
+          <DataGridTextColumn Header="{x:Static properties:Resources.CommentToken}" Binding="{Binding SingleLineComment}" Width="2*" HeaderStyle="{StaticResource LabelStyle}" />
         </DataGrid.Columns>
         <i:Interaction.Behaviors>
           <dgx:ExtendedStarSizeBehavior />
