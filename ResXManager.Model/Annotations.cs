@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Diagnostics;
 
 #pragma warning disable 1591
@@ -26,7 +27,7 @@ namespace JetBrains.Annotations
     [AttributeUsage(
       AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
       AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.Event)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class CanBeNullAttribute : Attribute { }
 
     /// <summary>
@@ -40,7 +41,7 @@ namespace JetBrains.Annotations
     [AttributeUsage(
       AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
       AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.Event)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class NotNullAttribute : Attribute { }
 
     /// <summary>
@@ -49,7 +50,7 @@ namespace JetBrains.Annotations
     [AttributeUsage(
       AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
       AttributeTargets.Delegate | AttributeTargets.Field)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class ItemNotNullAttribute : Attribute { }
 
     /// <summary>
@@ -58,7 +59,7 @@ namespace JetBrains.Annotations
     [AttributeUsage(
       AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
       AttributeTargets.Delegate | AttributeTargets.Field)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class ItemCanBeNullAttribute : Attribute { }
 
     /// <summary>
@@ -75,7 +76,7 @@ namespace JetBrains.Annotations
     /// </code></example>
     [AttributeUsage(
       AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Delegate)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class StringFormatMethodAttribute : Attribute
     {
         /// <param name="formatParameterName">
@@ -94,7 +95,7 @@ namespace JetBrains.Annotations
     /// Specify fields of which type should be used as values for this parameter.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Field)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class ValueProviderAttribute : Attribute
     {
         public ValueProviderAttribute(string name)
@@ -118,7 +119,7 @@ namespace JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.Parameter)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class InvokerParameterNameAttribute : Attribute { }
 
     /// <summary>
@@ -158,7 +159,7 @@ namespace JetBrains.Annotations
     /// </list>
     /// </example>
     [AttributeUsage(AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
     {
         public NotifyPropertyChangedInvocatorAttribute() { }
@@ -214,7 +215,7 @@ namespace JetBrains.Annotations
     /// </code></item>
     /// </list></examples>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class ContractAnnotationAttribute : Attribute
     {
         public ContractAnnotationAttribute([NotNull] string contract)
@@ -240,7 +241,7 @@ namespace JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.All)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class LocalizationRequiredAttribute : Attribute
     {
         public LocalizationRequiredAttribute() : this(true) { }
@@ -273,7 +274,7 @@ namespace JetBrains.Annotations
     /// </code></example>
     [AttributeUsage(
       AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Struct)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class CannotApplyEqualityOperatorAttribute : Attribute { }
 
     /// <summary>
@@ -288,7 +289,7 @@ namespace JetBrains.Annotations
     /// </code></example>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     [BaseTypeRequired(typeof(Attribute))]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class BaseTypeRequiredAttribute : Attribute
     {
         public BaseTypeRequiredAttribute([NotNull] Type baseType)
@@ -306,7 +307,7 @@ namespace JetBrains.Annotations
     /// will not be marked as unused (as well as by other usage inspections)
     /// </summary>
     [AttributeUsage(AttributeTargets.All)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class UsedImplicitlyAttribute : Attribute
     {
         public UsedImplicitlyAttribute()
@@ -335,7 +336,7 @@ namespace JetBrains.Annotations
     /// (as well as by other usage inspections)
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.GenericParameter)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class MeansImplicitUseAttribute : Attribute
     {
         public MeansImplicitUseAttribute()
@@ -361,6 +362,7 @@ namespace JetBrains.Annotations
     }
 
     [Flags]
+    [GeneratedCode("RESHARPER", "9.0")]
     public enum ImplicitUseKindFlags
     {
         Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
@@ -382,6 +384,7 @@ namespace JetBrains.Annotations
     /// with <see cref="MeansImplicitUseAttribute"/> or <see cref="UsedImplicitlyAttribute"/>
     /// </summary>
     [Flags]
+    [GeneratedCode("RESHARPER", "9.0")]
     public enum ImplicitUseTargetFlags
     {
         Default = Itself,
@@ -397,7 +400,7 @@ namespace JetBrains.Annotations
     /// which should not be removed and so is treated as used
     /// </summary>
     [MeansImplicitUse]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class PublicAPIAttribute : Attribute
     {
         public PublicAPIAttribute() { }
@@ -417,7 +420,7 @@ namespace JetBrains.Annotations
     /// while the method is executed
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class InstantHandleAttribute : Attribute { }
 
     /// <summary>
@@ -432,7 +435,7 @@ namespace JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class PureAttribute : Attribute { }
 
     /// <summary>
@@ -440,7 +443,7 @@ namespace JetBrains.Annotations
     /// Path can be relative or absolute, starting from web root (~)
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public class PathReferenceAttribute : Attribute
     {
         public PathReferenceAttribute() { }
@@ -453,7 +456,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcAreaMasterLocationFormatAttribute : Attribute
     {
         public AspMvcAreaMasterLocationFormatAttribute(string format)
@@ -465,7 +468,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcAreaPartialViewLocationFormatAttribute : Attribute
     {
         public AspMvcAreaPartialViewLocationFormatAttribute(string format)
@@ -477,7 +480,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcAreaViewLocationFormatAttribute : Attribute
     {
         public AspMvcAreaViewLocationFormatAttribute(string format)
@@ -489,7 +492,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcMasterLocationFormatAttribute : Attribute
     {
         public AspMvcMasterLocationFormatAttribute(string format)
@@ -501,7 +504,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcPartialViewLocationFormatAttribute : Attribute
     {
         public AspMvcPartialViewLocationFormatAttribute(string format)
@@ -513,7 +516,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcViewLocationFormatAttribute : Attribute
     {
         public AspMvcViewLocationFormatAttribute(string format)
@@ -531,7 +534,7 @@ namespace JetBrains.Annotations
     /// <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcActionAttribute : Attribute
     {
         public AspMvcActionAttribute() { }
@@ -549,7 +552,7 @@ namespace JetBrains.Annotations
     /// <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcAreaAttribute : PathReferenceAttribute
     {
         public AspMvcAreaAttribute() { }
@@ -568,7 +571,7 @@ namespace JetBrains.Annotations
     /// <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String, String)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcControllerAttribute : Attribute
     {
         public AspMvcControllerAttribute() { }
@@ -585,7 +588,7 @@ namespace JetBrains.Annotations
     /// for custom wrappers similar to <c>System.Web.Mvc.Controller.View(String, String)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcMasterAttribute : Attribute { }
 
     /// <summary>
@@ -593,7 +596,7 @@ namespace JetBrains.Annotations
     /// for custom wrappers similar to <c>System.Web.Mvc.Controller.View(String, Object)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcModelTypeAttribute : Attribute { }
 
     /// <summary>
@@ -603,14 +606,14 @@ namespace JetBrains.Annotations
     /// <c>System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcPartialViewAttribute : PathReferenceAttribute { }
 
     /// <summary>
     /// ASP.NET MVC attribute. Allows disabling inspections for MVC views within a class or a method
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcSupressViewErrorAttribute : Attribute { }
 
     /// <summary>
@@ -619,7 +622,7 @@ namespace JetBrains.Annotations
     /// <c>System.Web.Mvc.Html.DisplayExtensions.DisplayForModel(HtmlHelper, String)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcDisplayTemplateAttribute : Attribute { }
 
     /// <summary>
@@ -628,7 +631,7 @@ namespace JetBrains.Annotations
     /// <c>System.Web.Mvc.Html.EditorExtensions.EditorForModel(HtmlHelper, String)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcEditorTemplateAttribute : Attribute { }
 
     /// <summary>
@@ -637,7 +640,7 @@ namespace JetBrains.Annotations
     /// <c>System.ComponentModel.DataAnnotations.UIHintAttribute(System.String)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcTemplateAttribute : Attribute { }
 
     /// <summary>
@@ -647,7 +650,7 @@ namespace JetBrains.Annotations
     /// <c>System.Web.Mvc.Controller.View(Object)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcViewAttribute : PathReferenceAttribute { }
 
     /// <summary>
@@ -662,12 +665,12 @@ namespace JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMvcActionSelectorAttribute : Attribute { }
 
     [AttributeUsage(
       AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Field)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class HtmlElementAttributesAttribute : Attribute
     {
         public HtmlElementAttributesAttribute() { }
@@ -681,7 +684,7 @@ namespace JetBrains.Annotations
 
     [AttributeUsage(
       AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class HtmlAttributeValueAttribute : Attribute
     {
         public HtmlAttributeValueAttribute([NotNull] string name)
@@ -699,14 +702,14 @@ namespace JetBrains.Annotations
     /// <c>System.Web.WebPages.WebPageBase.RenderSection(String)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class RazorSectionAttribute : Attribute { }
 
     /// <summary>
     /// Indicates how method invocation affects content of the collection
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class CollectionAccessAttribute : Attribute
     {
         public CollectionAccessAttribute(CollectionAccessType collectionAccessType)
@@ -718,6 +721,7 @@ namespace JetBrains.Annotations
     }
 
     [Flags]
+    [GeneratedCode("RESHARPER", "9.0")]
     public enum CollectionAccessType
     {
         /// <summary>Method does not use or modify content of the collection</summary>
@@ -736,7 +740,7 @@ namespace JetBrains.Annotations
     /// <see cref="AssertionConditionAttribute"/> attribute
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AssertionMethodAttribute : Attribute { }
 
     /// <summary>
@@ -745,7 +749,7 @@ namespace JetBrains.Annotations
     /// the attribute is the assertion type.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AssertionConditionAttribute : Attribute
     {
         public AssertionConditionAttribute(AssertionConditionType conditionType)
@@ -760,6 +764,7 @@ namespace JetBrains.Annotations
     /// Specifies assertion type. If the assertion method argument satisfies the condition,
     /// then the execution continues. Otherwise, execution is assumed to be halted
     /// </summary>
+    [GeneratedCode("RESHARPER", "9.0")]
     public enum AssertionConditionType
     {
         /// <summary>Marked parameter should be evaluated to true</summary>
@@ -778,7 +783,7 @@ namespace JetBrains.Annotations
     /// </summary>
     [Obsolete("Use [ContractAnnotation('=> halt')] instead")]
     [AttributeUsage(AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class TerminatesProgramAttribute : Attribute { }
 
     /// <summary>
@@ -787,21 +792,21 @@ namespace JetBrains.Annotations
     /// of delegate type by analyzing LINQ method chains.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class LinqTunnelAttribute : Attribute { }
 
     /// <summary>
     /// Indicates that IEnumerable, passed as parameter, is not enumerated.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class NoEnumerationAttribute : Attribute { }
 
     /// <summary>
     /// Indicates that parameter is regular expression pattern.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class RegexPatternAttribute : Attribute { }
 
     /// <summary>
@@ -810,7 +815,7 @@ namespace JetBrains.Annotations
     /// type resolve.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class XamlItemsControlAttribute : Attribute { }
 
     /// <summary>
@@ -823,11 +828,11 @@ namespace JetBrains.Annotations
     /// marked with the <see cref="XamlItemsControlAttribute"/> attribute.
     /// </remarks>
     [AttributeUsage(AttributeTargets.Property)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class XamlItemBindingOfItemsControlAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspChildControlTypeAttribute : Attribute
     {
         public AspChildControlTypeAttribute(string tagName, Type controlType)
@@ -841,19 +846,19 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspDataFieldAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspDataFieldsAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Property)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspMethodPropertyAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspRequiredAttributeAttribute : Attribute
     {
         public AspRequiredAttributeAttribute([NotNull] string attribute)
@@ -865,7 +870,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Property)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class AspTypePropertyAttribute : Attribute
     {
         public bool CreateConstructorReferences { get; private set; }
@@ -877,7 +882,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class RazorImportNamespaceAttribute : Attribute
     {
         public RazorImportNamespaceAttribute(string name)
@@ -889,7 +894,7 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class RazorInjectionAttribute : Attribute
     {
         public RazorInjectionAttribute(string type, string fieldName)
@@ -903,23 +908,23 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class RazorHelperCommonAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Property)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class RazorLayoutAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class RazorWriteLiteralMethodAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Method)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class RazorWriteMethodAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Parameter)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class RazorWriteMethodParameterAttribute : Attribute { }
 
     /// <summary>
@@ -929,6 +934,6 @@ namespace JetBrains.Annotations
     /// The attribute must be mentioned in your member reordering patterns.
     /// </remarks>
     [AttributeUsage(AttributeTargets.All)]
-    [Conditional("JETBRAINS_ANNOTATIONS")]
+    [Conditional("JETBRAINS_ANNOTATIONS"), GeneratedCode("RESHARPER", "9.0")]
     public sealed class NoReorder : Attribute { }
 }

@@ -190,8 +190,8 @@
     <Compile Include="Converters\CultureToImageSourceConverter.cs" />
     <Compile Include="Converters\DataGridToSelectionScopeConverter.cs" />
     <Compile Include="ColumnHeaders\IColumnHeader.cs" />
-    <Compile Include="Visuals\Configuration.xaml.cs">
-      <DependentUpon>Configuration.xaml</DependentUpon>
+    <Compile Include="Visuals\ConfigurationEditor.xaml.cs">
+      <DependentUpon>ConfigurationEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Visuals\LanguageConfiguration.xaml.cs">
       <DependentUpon>LanguageConfiguration.xaml</DependentUpon>
@@ -231,7 +231,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Visuals\Configuration.xaml">
+    <Page Include="Visuals\ConfigurationEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

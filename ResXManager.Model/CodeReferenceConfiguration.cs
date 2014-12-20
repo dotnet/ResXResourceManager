@@ -9,6 +9,7 @@ namespace tomenglertde.ResXManager.Model
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -64,6 +65,7 @@ namespace tomenglertde.ResXManager.Model
     {
         private ObservableCollection<CodeReferenceConfigurationItem> _items = new ObservableCollection<CodeReferenceConfigurationItem>();
 
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Must be serializable")]
         [DataMember(Name = "Items")]
         public ObservableCollection<CodeReferenceConfigurationItem> Items
         {

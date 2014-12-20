@@ -8,9 +8,9 @@
     /// <summary>
     /// Interaction logic for Configuration.xaml
     /// </summary>
-    public partial class Configuration
+    public partial class ConfigurationEditor
     {
-        public Configuration()
+        public ConfigurationEditor()
         {
             InitializeComponent();
         }

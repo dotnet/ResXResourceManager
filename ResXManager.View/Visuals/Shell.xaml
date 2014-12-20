@@ -10,7 +10,7 @@
         <visuals:ResourceView />
       </TabItem>
       <TabItem Header="Configuration">
-        <visuals:Configuration HorizontalAlignment="Left" />
+        <visuals:ConfigurationEditor HorizontalAlignment="Left" />
       </TabItem>
       <TabItem Header="{x:Static properties:Resources.ShellTabHeader_Languages}" Padding="8,3">
         <visuals:LanguageConfiguration />

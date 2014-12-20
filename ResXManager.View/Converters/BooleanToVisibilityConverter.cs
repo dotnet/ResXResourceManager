@@ -4,6 +4,6 @@
 
     public static class BooleanToVisibilityConverter
     {
-        public static IValueConverter Default = new System.Windows.Controls.BooleanToVisibilityConverter();
+        public static readonly IValueConverter Default = new System.Windows.Controls.BooleanToVisibilityConverter();
     }
 }

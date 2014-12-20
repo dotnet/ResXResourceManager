@@ -232,7 +232,18 @@
         /// </summary>
         /// <exception cref="IOException"></exception>
         /// <exception cref="UnauthorizedAccessException"></exception>
-        public void Save(bool forceSortFileContent = false)
+        public void Save()
+        {
+            Save(false);
+        }
+
+        /// <summary>
+        /// Saves this instance to the resource file.
+        /// </summary>
+        /// <param name="forceSortFileContent">if set to <c>true</c> to force sorting the file content.</param>
+        /// <exception cref="IOException"></exception>
+        /// <exception cref="UnauthorizedAccessException"></exception>
+        public void Save(bool forceSortFileContent)
         {
             if (forceSortFileContent || _resourceManager.Configuration.SortFileContentOnSave)
             {

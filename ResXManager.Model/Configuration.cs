@@ -1,8 +1,10 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces", Justification = "Works fine with this")]
     public class Configuration : ConfigurationBase
     {
         private CodeReferenceConfiguration _codeReferences;
