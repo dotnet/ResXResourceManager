@@ -241,29 +241,11 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Exclude files:.
-        /// </summary>
-        public static string DetectCodeReferences_Exclude {
-            get {
-                return ResourceManager.GetString("DetectCodeReferences_Exclude", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Detect Code References.
         /// </summary>
         public static string DetectCodeReferences_Header {
             get {
                 return ResourceManager.GetString("DetectCodeReferences_Header", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Scan files:.
-        /// </summary>
-        public static string DetectCodeReferences_Scan {
-            get {
-                return ResourceManager.GetString("DetectCodeReferences_Scan", resourceCulture);
             }
         }
         

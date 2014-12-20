@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -255,17 +255,11 @@
   <data name="SortAllFilesNow" xml:space="preserve">
     <value>Alle Dateien jetzt sortieren</value>
   </data>
-  <data name="DetectCodeReferences_Scan" xml:space="preserve">
-    <value>Scannen:</value>
-  </data>
   <data name="Configuration_General" xml:space="preserve">
     <value>Allgemein</value>
   </data>
   <data name="DetectCodeReferences_Header" xml:space="preserve">
     <value>Referenzen im Quellcode erkennen</value>
-  </data>
-  <data name="DetectCodeReferences_Exclude" xml:space="preserve">
-    <value>Ausschließen:</value>
   </data>
   <data name="SortNodesByKey_Confirmation" xml:space="preserve">
     <value>Möchten sie jetzt den Inhalt aller Ressourcen-Dateien nach Schlüssel sortieren?</value>
