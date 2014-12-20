@@ -13,6 +13,7 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
     using tomenglertde.ResXManager.View.Controls;
+    using tomenglertde.ResXManager.View.Converters;
     using tomenglertde.ResXManager.View.Properties;
 
     public static class ColumnManager
@@ -98,7 +99,7 @@
             };
 
             column.SetIsFilterVisible(false);
-            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, new Binding(@"IsFindCodeReferencesEnabled") { Source = Settings.Default, Converter = new BooleanToVisibilityConverter() });
+            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, new Binding(@"IsFindCodeReferencesEnabled") { Source = Settings.Default, Converter = Converters.BooleanToVisibilityConverter.Default });
 
             return column;
         }
@@ -110,7 +111,15 @@
             Contract.Requires(cultureKey != null);
 
             var key = cultureKey.ToString(".");
-            var culture = cultureKey.Culture ?? resourceManager.Configuration.NeutralResourcesLanguage;
+
+            var culture = cultureKey.Culture;
+            var languageBinding = culture != null
+                ? new Binding { Source = culture }
+                : new Binding("Configuration.NeutralResourcesLanguage") { Source = resourceManager};
+
+            languageBinding.Converter = CultureToXmlLanguageConverter.Default;
+            // It's important to explicitly set the converter culture here, else we will get a binding error, because here the source for the converter culture is the target of the binding.
+            languageBinding.ConverterCulture = CultureInfo.InvariantCulture;
 
             var commentColumn = new DataGridTextColumn
             {
@@ -121,7 +130,7 @@
                 Visibility = VisibleCommentColumns.Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Visible : Visibility.Hidden
             };
 
-            columns.AddLanguageColumn(culture, commentColumn);
+            columns.AddLanguageColumn(commentColumn, languageBinding);
 
             var column = new DataGridTextColumn
             {
@@ -132,17 +141,17 @@
                 Visibility = HiddenLanguageColumns.Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Hidden : Visibility.Visible
             };
 
-            columns.AddLanguageColumn(culture, column);
+            columns.AddLanguageColumn(column, languageBinding);
         }
 
-        private static void AddLanguageColumn(this ICollection<DataGridColumn> columns, CultureInfo culture, DataGridBoundColumn column)
+        private static void AddLanguageColumn(this ICollection<DataGridColumn> columns, DataGridBoundColumn column, Binding languageBinding)
         {
             Contract.Requires(columns != null);
-            Contract.Requires(culture != null);
+            Contract.Requires(languageBinding != null);
             Contract.Requires(column != null);
 
             column.EnableMultilineEditing();
-            column.EnableSpellchecker(culture);
+            column.EnableSpellchecker(languageBinding);
             columns.Add(column);
         }
 

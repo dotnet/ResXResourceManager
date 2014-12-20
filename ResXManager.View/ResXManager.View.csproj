@@ -175,6 +175,7 @@
     <Compile Include="ColumnHeaders\LanguageColumnHeaderBase.cs" />
     <Compile Include="Converters\AddNewKeyCommandConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\CultureToXmlLanguageConverter.cs" />
     <Compile Include="Tools\ColumnManager.cs" />
     <Compile Include="Tools\CultureOverrideEventArgs.cs" />
     <Compile Include="Tools\NeutralCultureCountyOverrides.cs" />

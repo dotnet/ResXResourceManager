@@ -8,8 +8,8 @@ namespace tomenglertde.ResXManager.View.Tools
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
+    using System.Windows.Data;
     using System.Windows.Input;
-    using System.Windows.Markup;
     using System.Windows.Media;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
@@ -41,14 +41,13 @@ namespace tomenglertde.ResXManager.View.Tools
             column.EditingElementStyle = textBoxStyle;
         }
 
-        public static void EnableSpellchecker(this DataGridBoundColumn column, CultureInfo culture)
+        public static void EnableSpellchecker(this DataGridBoundColumn column, Binding languageBinding)
         {
             Contract.Requires(column != null);
 
             var textBoxStyle = new Style(typeof(TextBox), column.EditingElementStyle);
             textBoxStyle.Setters.Add(new Setter(SpellCheck.IsEnabledProperty, true));
-            var ieftLanguageTag = (culture ?? CultureInfo.InvariantCulture).IetfLanguageTag;
-            textBoxStyle.Setters.Add(new Setter(FrameworkElement.LanguageProperty, XmlLanguage.GetLanguage(ieftLanguageTag)));
+            textBoxStyle.Setters.Add(new Setter(FrameworkElement.LanguageProperty, languageBinding));
             textBoxStyle.Seal();
             column.EditingElementStyle = textBoxStyle;
         }
