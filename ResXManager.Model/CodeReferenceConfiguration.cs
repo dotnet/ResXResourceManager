@@ -88,13 +88,11 @@ namespace tomenglertde.ResXManager.Model
                 var value = new CodeReferenceConfiguration();
 
                 value.Add(".cs,.xaml", true, @"\W($File.$Key)\W", "//");
+                value.Add(".cs", true, "ResourceManager.GetString\\(\"($Key)\"\\)", "//");
+                value.Add(".cs", true, "typeof\\(($File)\\).+\"($Key)\"|\"($Key)\".+typeof\\(($File)\\)", "//");
                 value.Add(".vb", false, @"\W($Key)\W", "'");
                 value.Add(".cpp,.c,.hxx,.h", true, @"\W($File::$Key)\W", "//");
                 value.Add(".cshtml;.aspx;.ascx", true, @"<%\$\s+Resources:\s*($File)\s*,\s*($Key)\s*%>", null);
-                value.Add(".cs", true, "ResourceManager.GetString\\(\"($Key)\"\\)", "//");
-                value.Add(".vb", false, "ResourceManager.GetString\\(\"($Key)\"\\)", "'");
-                value.Add(".cs", true, "typeof\\(($File)\\).+\"($Key)\"|\"($Key)\".+typeof\\(($File)\\)", "//");
-                value.Add(".vb", false, "typeof\\(($File)\\).+\"($Key)\"|\"($Key)\".+typeof\\(($File)\\)", "'");
 
                 return value;
             }

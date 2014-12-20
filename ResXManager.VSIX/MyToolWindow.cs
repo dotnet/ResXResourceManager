@@ -34,13 +34,12 @@
         private const string PROPERTY_FONT_SIZE = "FontSize";
 
         private readonly OutputWindowTracer _trace;
+        private readonly ResourceManager _resourceManager;
+        private readonly Control _view;
 
         private DTE _dte;
-        private ResourceManager _resourceManager;
-        private Control _view;
         private string _solutionFingerPrint;
         private string _currentSolutionFullName;
-        private Configuration _configuration;
 
         /// <summary>
         /// Standard constructor for the tool window.
@@ -58,6 +57,17 @@
             BitmapIndex = 1;
 
             _trace = new OutputWindowTracer(this);
+
+            _resourceManager = new ResourceManager();
+
+            _resourceManager.BeginEditing += ResourceManager_BeginEditing;
+            _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
+            _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
+
+            _view = new Shell { DataContext = _resourceManager };
+            _view.Loaded += view_Loaded;
+            _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
+            _view.Track(UIElement.IsMouseOverProperty).Changed += view_IsMouseOverChanged;
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -75,18 +85,6 @@
                     _trace.TraceError("Error getting DTE service.");
                     return;
                 }
-
-                _configuration = new Configuration(_dte);
-
-                _resourceManager = new ResourceManager(_configuration);
-
-                _resourceManager.BeginEditing += ResourceManager_BeginEditing;
-                _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
-                _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
-
-                _view = new Shell { DataContext = _resourceManager };
-                _view.Loaded += view_Loaded;
-                _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
 
                 var executingAssembly = Assembly.GetExecutingAssembly();
 
@@ -193,9 +191,24 @@
             CreateWebBrowser(url);
         }
 
-        void view_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void view_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (!true.Equals(e.NewValue))
+                return;
+
+            try
+            {
+                ReloadSolution();
+            }
+            catch (Exception ex)
+            {
+                _trace.TraceError(ex.ToString());
+            }
+        }
+
+        private void view_IsMouseOverChanged(object sender, EventArgs e)
+        {
+            if (!_view.IsMouseOver)
                 return;
 
             try
@@ -417,11 +430,12 @@
 
         private void ReloadSolution(bool forceReload = false)
         {
-            Contract.Assume(_configuration != null);
             Contract.Assume(_dte != null);
 
+            var configuration = new Configuration(_dte);
+
             var solution = _dte.Solution;
-            var sourceFileFilter = new SourceFileFilter(_configuration);
+            var sourceFileFilter = new SourceFileFilter(configuration);
             
             var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || (p.IsSourceCodeOrContentFile() && sourceFileFilter.IsSourceFile(p))).Cast<ProjectFile>().ToArray();
 
@@ -438,8 +452,7 @@
 
             _solutionFingerPrint = fingerPrint;
 
-            Contract.Assume(_resourceManager != null);
-            _resourceManager.Load(projectFiles);
+            _resourceManager.Load(projectFiles, configuration);
 
             if (!string.Equals(solutionFullName, _currentSolutionFullName, StringComparison.OrdinalIgnoreCase))
             {
@@ -517,6 +530,8 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_trace != null);
+            Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(_view != null);
         }
     }
 }

@@ -610,5 +610,53 @@
 
             return element.Attribute(name).Maybe().Return(x => x.Value, string.Empty);
         }
+
+        public static DependencyPropertyEventWrapper<T> Track<T>(this T dependencyObject, DependencyProperty property)
+            where T:DependencyObject
+        {
+            Contract.Requires(dependencyObject != null);
+            Contract.Requires(property != null);
+            Contract.Ensures(Contract.Result<DependencyPropertyEventWrapper<T>>() != null);
+
+            return new DependencyPropertyEventWrapper<T>(dependencyObject, property);
+        }
+    }
+
+    public class DependencyPropertyEventWrapper<T>
+    {
+        private readonly T _dependencyObject;
+        private readonly DependencyPropertyDescriptor _dependencyPropertyDescriptor;
+
+        public DependencyPropertyEventWrapper(T dependencyObject, DependencyProperty property)
+        {
+            Contract.Requires(dependencyObject != null);
+            Contract.Requires(property != null);
+
+            _dependencyObject = dependencyObject;
+            _dependencyPropertyDescriptor = DependencyPropertyDescriptor.FromProperty(property, typeof(T));
+            Contract.Assume(_dependencyPropertyDescriptor != null);
+        }
+
+        public event EventHandler Changed
+        {
+            add
+            {
+                Contract.Requires(value != null);
+                _dependencyPropertyDescriptor.AddValueChanged(_dependencyObject, value);
+            }
+            remove
+            {
+                Contract.Requires(value != null);
+                _dependencyPropertyDescriptor.RemoveValueChanged(_dependencyObject, value);
+            }
+        }
+
+        [ContractInvariantMethod]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_dependencyObject != null);
+            Contract.Invariant(_dependencyPropertyDescriptor != null);
+        }
     }
 }

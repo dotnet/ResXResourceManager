@@ -301,7 +301,7 @@
                                 IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" />
                       <Decorator DockPanel.Dock="Left" Width="2" />
                       <Image DockPanel.Dock="Left"
-                             Source="{Binding Path=Header.CultureKey, Converter={x:Static converters:CultureToImageSourceConverter.Default}, FallbackValue={x:Null}}" />
+                             Source="{Binding Path=Header.DisplayCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}, FallbackValue={x:Null}}" />
                       <Decorator DockPanel.Dock="Left" Width="2" />
                       <Decorator DockPanel.Dock="Right" Width="3" />
                       <ContentPresenter Content="{Binding Path=Header}" VerticalAlignment="Center" />
@@ -389,12 +389,8 @@
               <DockPanel>
                 <Grid DockPanel.Dock="Left" Background="Transparent"
                       Style="{StaticResource NeutralLanguageImageContainerStyle}">
-                  <Image x:Name="neutralImage"
-                         Source="{Binding Path=NeutralResourceLanguage, Source={x:Static properties:Settings.Default}, Converter={x:Static converters:CultureToImageSourceConverter.Default}}"
-                         Stretch="None" />
-                  <Image x:Name="image"
-                         Source="{Binding Path=CultureKey, Converter={x:Static converters:CultureToImageSourceConverter.Default}}"
-                         Stretch="None" />
+                  <Image x:Name="image" Stretch="None" 
+                         Source="{Binding Path=EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
                 </Grid>
                 <Decorator x:Name="padding" DockPanel.Dock="Left" Width="4" />
                 <TextBlock Text="{Binding Path=DisplayName}" TextTrimming="CharacterEllipsis" />
@@ -404,7 +400,8 @@
             <DataTemplate DataType="{x:Type columnHeaders:CommentHeader}">
               <TextBlock><Run Text="{x:Static properties:Resources.CommentColumnHeader}"/><Run Text=" ("/><InlineUIContainer>
                   <Grid>
-                  <Image x:Name="image" Source="{Binding Path=CultureKey, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" Stretch="None" Margin="1,2,1,-2"/>
+                  <Image x:Name="image" Stretch="None" Margin="1,2,1,-2"
+                         Source="{Binding Path=EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
                 </Grid></InlineUIContainer><Run Text=")"/>
               </TextBlock>
             </DataTemplate>

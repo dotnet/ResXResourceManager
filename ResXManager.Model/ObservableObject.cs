@@ -6,6 +6,7 @@
     using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
     using System.Windows.Threading;
+    using JetBrains.Annotations;
 
     /// <summary>
     /// Base class implementing INotifyPropertyChanged. 
@@ -19,6 +20,7 @@
         /// Raises the <see cref="PropertyChanged"/> event for the property identified by the specified property expression.
         /// </summary>
         /// <param name="propertyExpression">The expression identifying the property.</param>
+        [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged<T>(Expression<Func<T>> propertyExpression)
         {
             Contract.Requires(propertyExpression != null);

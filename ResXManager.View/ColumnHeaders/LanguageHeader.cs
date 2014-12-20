@@ -6,9 +6,10 @@
 
     public class LanguageHeader : LanguageColumnHeaderBase
     {
-        public LanguageHeader(CultureKey cultureKey)
-            : base(cultureKey)
+        public LanguageHeader(ResourceManager resourceManager, CultureKey cultureKey)
+            : base(resourceManager, cultureKey)
         {
+            Contract.Requires(resourceManager != null);
             Contract.Requires(cultureKey != null);
         }
 

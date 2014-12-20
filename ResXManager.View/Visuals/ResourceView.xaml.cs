@@ -85,7 +85,7 @@
 
         private void NeutralLanguage_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Default.NeutralResourceLanguage = (CultureInfo)(((MenuItem)sender).DataContext);
+            ViewModel.Configuration.NeutralResourcesLanguage = (CultureInfo)(((MenuItem)sender).DataContext);
         }
 
         private void ResourceManager_Loaded(object sender, EventArgs e)
@@ -113,7 +113,7 @@
 
             if (inputBox.ShowDialog() == true)
             {
-                DataGrid.Columns.AddLanguageColumn(new CultureKey(new CultureInfo(inputBox.Text)));
+                DataGrid.Columns.AddLanguageColumn(ViewModel, new CultureKey(new CultureInfo(inputBox.Text)));
             }
         }
 

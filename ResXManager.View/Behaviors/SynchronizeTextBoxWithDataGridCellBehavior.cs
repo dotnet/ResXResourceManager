@@ -2,14 +2,12 @@
 {
     using System;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Interactivity;
     using System.Windows.Markup;
     using tomenglertde.ResXManager.View.ColumnHeaders;
-    using tomenglertde.ResXManager.View.Properties;
 
     public class SynchronizeTextBoxWithDataGridCellBehavior : Behavior<TextBox>
     {
@@ -69,7 +67,7 @@
                 textBox.IsEnabled = true;
                 textBox.DataContext = currentCell.Item;
 
-                var ieftLanguageTag = (header.CultureKey.Culture ?? Settings.Default.NeutralResourceLanguage ?? CultureInfo.InvariantCulture).IetfLanguageTag;
+                var ieftLanguageTag = header.EffectiveCulture.IetfLanguageTag;
                 textBox.Language = XmlLanguage.GetLanguage(ieftLanguageTag);
 
                 BindingOperations.SetBinding(textBox, TextBox.TextProperty, column.Binding);

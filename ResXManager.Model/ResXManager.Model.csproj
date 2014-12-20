@@ -158,8 +158,11 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
+    <Compile Include="Annotations.cs" />
     <Compile Include="CodeReferenceConfiguration.cs" />
     <Compile Include="ComObject.cs" />
+    <Compile Include="Configuration.cs" />
+    <Compile Include="ConfigurationScope.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="DispatcherThrottle.cs" />
     <Compile Include="ExcelExtensions.cs" />
@@ -197,6 +200,7 @@
     <Compile Include="ResourceBeginEditingEventArgs.cs" />
     <Compile Include="SourceFileFilter.cs" />
     <Compile Include="TextEnumerator.cs" />
+    <Compile Include="XmlConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\CodeContracts.ruleset">

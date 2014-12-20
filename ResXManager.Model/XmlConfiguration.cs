@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager
+﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
     using System.Diagnostics;
@@ -16,7 +16,7 @@
         /// <summary>
         /// The default namespace used in the XML file.
         /// </summary>
-        public const string DefaultNamespace = "urn:tomenglertde/Configuration/1/0";
+        public const string DefaultNamespace = "urn:tom-englert.de/Configuration/1/0";
         /// <summary>
         /// The name of the root node.
         /// </summary>
@@ -37,6 +37,15 @@
         private readonly XNamespace _namespace;
         private readonly XName _valueName;
         private readonly XName _keyName;
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmlConfiguration"/> class.
+        /// </summary>
+        public XmlConfiguration()
+            : this(null)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlConfiguration" /> class.

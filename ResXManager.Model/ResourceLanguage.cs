@@ -26,24 +26,24 @@
         private readonly XElement _documentRoot;
         private readonly ProjectFile _file;
         private readonly IDictionary<string, Node> _nodes;
-        private readonly ConfigurationBase _configuration;
+        private readonly ResourceManager _resourceManager;
         private readonly CultureKey _cultureKey;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceLanguage" /> class.
         /// </summary>
-        /// <param name="configuration">The configuration.</param>
+        /// <param name="resourceManager">The resource manager.</param>
         /// <param name="cultureKey">The culture key.</param>
         /// <param name="file">The .resx file having all the localization.</param>
         /// <exception cref="System.InvalidOperationException">
         /// </exception>
-        internal ResourceLanguage(ConfigurationBase configuration, CultureKey cultureKey, ProjectFile file)
+        internal ResourceLanguage(ResourceManager resourceManager, CultureKey cultureKey, ProjectFile file)
         {
-            Contract.Requires(configuration != null);
+            Contract.Requires(resourceManager != null);
             Contract.Requires(cultureKey != null);
             Contract.Requires(file != null);
 
-            _configuration = configuration;
+            _resourceManager = resourceManager;
             _cultureKey = cultureKey;
             _file = file;
 
@@ -234,7 +234,7 @@
         /// <exception cref="UnauthorizedAccessException"></exception>
         public void Save(bool forceSortFileContent = false)
         {
-            if (forceSortFileContent || _configuration.SortFileContentOnSave)
+            if (forceSortFileContent || _resourceManager.Configuration.SortFileContentOnSave)
             {
                 var nodes = _documentRoot.Elements(@"data").ToArray();
 
@@ -633,7 +633,7 @@
             Contract.Invariant(_documentRoot != null);
             Contract.Invariant(_file != null);
             Contract.Invariant(_nodes != null);
-            Contract.Invariant(_configuration != null);
+            Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_cultureKey != null);
         }
     }

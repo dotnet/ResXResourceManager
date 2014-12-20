@@ -1,38 +1,37 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
-    using System.ComponentModel;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
     public abstract class LanguageColumnHeaderBase : ObservableObject, ILanguageColumnHeader
     {
-        private static readonly string _neutralResourceLanguagePropertyName = PropertySupport.ExtractPropertyName(() => Settings.Default.NeutralResourceLanguage);
         private readonly CultureKey _cultureKey;
+        private readonly PropertyBinding<CultureInfo> _neutralResourcesLanguageBinding;
 
-        protected LanguageColumnHeaderBase(CultureKey cultureKey)
+        protected LanguageColumnHeaderBase(ResourceManager resourceManager, CultureKey cultureKey)
         {
+            Contract.Requires(resourceManager != null);
             Contract.Requires(cultureKey != null);
 
             _cultureKey = cultureKey;
+            _neutralResourcesLanguageBinding = new PropertyBinding<CultureInfo>(resourceManager, "Configuration.NeutralResourcesLanguage");
+            _neutralResourcesLanguageBinding.ValueChanged += NeutralResourcesLanguage_Changed;
 
             NeutralCultureCountyOverrides.Default.OverrideChanged += NeutralCultureCountyOverrides_OverrideChanged;
-            Settings.Default.PropertyChanged += Settings_PropertyChanged;
         }
 
-        void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void NeutralResourcesLanguage_Changed(object sender, PropertyBindingValueChangedEventArgs<CultureInfo> e)
         {
-            if (e.PropertyName != _neutralResourceLanguagePropertyName)
-                return;
-
             if (_cultureKey.Culture == null)
             {
                 OnPropertyChanged(() => CultureKey);
+                OnPropertyChanged(() => EffectiveCulture);
             }
         }
 
-        void NeutralCultureCountyOverrides_OverrideChanged(object sender, CultureOverrideEventArgs e)
+        private void NeutralCultureCountyOverrides_OverrideChanged(object sender, CultureOverrideEventArgs e)
         {
             if (e.NeutralCulture.Equals(_cultureKey.Culture))
             {
@@ -44,9 +43,15 @@
         {
             get
             {
-                Contract.Ensures(Contract.Result<CultureKey>() != null);
-
                 return _cultureKey;
+            }
+        }
+
+        public CultureInfo EffectiveCulture
+        {
+            get
+            {
+                return _cultureKey.Culture ?? _neutralResourcesLanguageBinding.Value ?? CultureInfo.InvariantCulture;
             }
         }
 
@@ -60,6 +65,7 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_cultureKey != null);
+            Contract.Invariant(_neutralResourcesLanguageBinding != null);
         }
     }
 }

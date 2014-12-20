@@ -26,7 +26,7 @@
         private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
 
         private readonly DispatcherThrottle _selectedEntitiesChangeThrottle;
-        private readonly ConfigurationBase _configuration;
+        private Configuration _configuration = new Configuration();
 
         private ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
         private ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
@@ -43,9 +43,8 @@
         public event EventHandler<EventArgs> Loaded;
         public event EventHandler<EventArgs> ReloadRequested;
 
-        public ResourceManager(ConfigurationBase configuration)
+        public ResourceManager()
         {
-            _configuration = configuration;
             _selectedEntitiesChangeThrottle = new DispatcherThrottle(OnSelectedEntitiesChanged);
             _filteredResourceEntities = new ListCollectionViewListAdapter(new ListCollectionView(_resourceEntities));
         }
@@ -54,11 +53,15 @@
         /// Loads all resources from the specified project files.
         /// </summary>
         /// <param name="allSourceFiles">All resource x files.</param>
-        public void Load(IList<ProjectFile> allSourceFiles)
+        /// <param name="configuration"></param>
+        public void Load(IList<ProjectFile> allSourceFiles, Configuration configuration)
         {
             Contract.Requires(allSourceFiles != null);
+            Contract.Requires(configuration != null);
 
             CodeReference.StopFind();
+
+            Configuration = configuration;
 
             var resourceFilesByDirectory = allSourceFiles
                 .Where(file => file.IsResourceFile())
@@ -325,13 +328,20 @@
             }
         }
 
-        public ConfigurationBase Configuration
+        public Configuration Configuration
         {
             get
             {
-                Contract.Ensures(Contract.Result<ConfigurationBase>() != null);
+                Contract.Ensures(Contract.Result<Configuration>() != null);
 
                 return _configuration;
+            }
+            set
+            {
+                if (Equals(value, _configuration))
+                    return;
+                _configuration = value;
+                OnPropertyChanged(() => Configuration);
             }
         }
 

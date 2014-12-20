@@ -37,7 +37,7 @@
             throw new InvalidOperationException("Error parsing language: " + cultureKeyName);
         }
 
-        public static IList<ProjectFile> GetAllSourceFiles(this DirectoryInfo solutionFolder, ConfigurationBase configuration)
+        public static IList<ProjectFile> GetAllSourceFiles(this DirectoryInfo solutionFolder, Configuration configuration)
         {
             Contract.Requires(solutionFolder != null);
             Contract.Requires(configuration != null);

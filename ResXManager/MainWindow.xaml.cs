@@ -56,7 +56,7 @@
 
             try
             {
-                var resourceManager = new ResourceManager(_configuration);
+                var resourceManager = new ResourceManager();
                 resourceManager.BeginEditing += ResourceManager_BeginEditing;
                 resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
                 DataContext = resourceManager;
@@ -96,7 +96,7 @@
         {
             var sourceFiles = new DirectoryInfo(Folder).GetAllSourceFiles(_configuration);
 
-            ViewModel.Load(sourceFiles);
+            ViewModel.Load(sourceFiles, _configuration);
 
             if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
             {

@@ -49,7 +49,7 @@
                 from file in files
                 let cultureKey = file.GetCultureKey()
                 orderby cultureKey
-                select new ResourceLanguage(owner.Configuration, cultureKey, file);
+                select new ResourceLanguage(owner, cultureKey, file);
 
             _languages = languageQuery.ToDictionary(language => language.CultureKey);
 
@@ -235,7 +235,7 @@
             Contract.Requires(file != null);
 
             var cultureKey = file.GetCultureKey();
-            var resourceLanguage = new ResourceLanguage(_owner.Configuration, cultureKey, file);
+            var resourceLanguage = new ResourceLanguage(_owner, cultureKey, file);
 
             resourceLanguage.Changed += language_Changed;
             resourceLanguage.Changing += language_Changing;

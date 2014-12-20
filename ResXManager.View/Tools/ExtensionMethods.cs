@@ -13,7 +13,6 @@ namespace tomenglertde.ResXManager.View.Tools
     using System.Windows.Media;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
-    using tomenglertde.ResXManager.View.Properties;
 
     public static class ExtensionMethods
     {
@@ -48,7 +47,7 @@ namespace tomenglertde.ResXManager.View.Tools
 
             var textBoxStyle = new Style(typeof(TextBox), column.EditingElementStyle);
             textBoxStyle.Setters.Add(new Setter(SpellCheck.IsEnabledProperty, true));
-            var ieftLanguageTag = (culture ?? Settings.Default.NeutralResourceLanguage ?? CultureInfo.InvariantCulture).IetfLanguageTag;
+            var ieftLanguageTag = (culture ?? CultureInfo.InvariantCulture).IetfLanguageTag;
             textBoxStyle.Setters.Add(new Setter(FrameworkElement.LanguageProperty, XmlLanguage.GetLanguage(ieftLanguageTag)));
             textBoxStyle.Seal();
             column.EditingElementStyle = textBoxStyle;

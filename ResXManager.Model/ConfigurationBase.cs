@@ -3,50 +3,108 @@
     using System;
     using System.ComponentModel;
     using System.Diagnostics.Contracts;
+    using System.IO;
     using System.Linq.Expressions;
+    using System.Windows;
 
-    [ContractClass(typeof(ConfigurationBaseContract))]
-    public abstract class ConfigurationBase : ObservableObject
+    /// <summary>
+    /// Handle global persistence.
+    /// </summary>
+    public class ConfigurationBase : ObservableObject
     {
-        private CodeReferenceConfiguration _codeReferences;
+        private const string FileName = "Configuration.xml";
+        private static readonly string _directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "tom-englert.de", "ResXManager");
 
-        public CodeReferenceConfiguration CodeReferences
+        private readonly string _filePath;
+        private readonly XmlConfiguration _configuration;
+
+        public ConfigurationBase()
+        {
+            Contract.Assume(!string.IsNullOrEmpty(_directory));
+
+            _filePath = Path.Combine(_directory, FileName);
+
+            try
+            {
+                Directory.CreateDirectory(_directory);
+
+                using (var reader = new StreamReader(File.OpenRead(_filePath)))
+                {
+                    _configuration = new XmlConfiguration(reader);
+                    return;
+                }
+            }
+            catch
+            {
+            }
+            
+            _configuration = new XmlConfiguration();
+        }
+
+        public virtual bool IsScopeSupported
         {
             get
             {
-                Contract.Ensures(Contract.Result<CodeReferenceConfiguration>() != null);
-
-                return _codeReferences ?? (_codeReferences = GetValue(() => CodeReferences) ?? CodeReferenceConfiguration.Default);
+                return false;
             }
         }
 
-        public bool SortFileContentOnSave
+        public virtual ConfigurationScope Scope
         {
             get
             {
-                return GetValue(() => SortFileContentOnSave);
-            }
-            set
-            {
-                SetValue(value, () => SortFileContentOnSave);
+                return ConfigurationScope.Global;
             }
         }
 
-        public void PersistCodeReferences()
-        {
-            SetValue(CodeReferences, () => CodeReferences);
-        }
-
-        protected abstract T GetValue<T>(Expression<Func<T>> propertyExpression);
-
-        protected abstract void SetValue<T>(T value, Expression<Func<T>> propertyExpression);
-
-        protected static string GetKey<T>(Expression<Func<T>> propertyExpression)
+        protected virtual T GetValue<T>(Expression<Func<T>> propertyExpression)
         {
             Contract.Requires(propertyExpression != null);
-            Contract.Ensures(Contract.Result<string>() != null);
 
-            return GetKey(PropertySupport.ExtractPropertyName(propertyExpression));
+            var key = PropertySupport.ExtractPropertyName(propertyExpression);
+
+            try
+            {
+                return ConvertFromString<T>(_configuration.GetValue(key));
+            }
+            catch (InvalidCastException)
+            {
+            }
+            return default(T);
+        }
+
+        protected void SetValue<T>(T value, Expression<Func<T>> propertyExpression)
+        {
+            Contract.Requires(propertyExpression != null);
+
+            if (Equals(GetValue(propertyExpression), value))
+                return;
+
+            InternalSetValue(value, propertyExpression);
+        }
+
+        protected virtual void InternalSetValue<T>(T value, Expression<Func<T>> propertyExpression)
+        {
+            Contract.Requires(propertyExpression != null);
+
+            var propertyName = PropertySupport.ExtractPropertyName(propertyExpression);
+            var key = propertyName;
+
+            try
+            {
+                _configuration.SetValue(key, ConvertToString<T>(value));
+
+                using (var writer = new StreamWriter(File.Create(_filePath)))
+                {
+                    _configuration.Save(writer);
+                }
+
+                OnPropertyChanged(propertyName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fatal error writing configuration file: " + _filePath + " - " + ex.Message);
+            }
         }
 
         protected static T ConvertFromString<T>(string value)
@@ -73,14 +131,6 @@
             return typeConverter.ConvertToInvariantString(value);
         }
 
-        protected static string GetKey(string propertyName)
-        {
-            Contract.Requires(propertyName != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
-            return "RESX_" + propertyName;
-        }
-
         private static TypeConverter GetTypeConverter(Type type)
         {
             Contract.Requires(type != null);
@@ -92,23 +142,14 @@
 
             return typeConverter;
         }
-    }
 
-    [ContractClassFor(typeof(ConfigurationBase))]
-    abstract class ConfigurationBaseContract : ConfigurationBase
-    {
-        protected override T GetValue<T>(Expression<Func<T>> propertyExpression)
+        [ContractInvariantMethod]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
         {
-            Contract.Requires(propertyExpression != null);
-
-            throw new NotImplementedException();
-        }
-
-        protected override void SetValue<T>(T value, Expression<Func<T>> propertyExpression)
-        {
-            Contract.Requires(propertyExpression != null);
-
-            throw new NotImplementedException();
+            Contract.Invariant(_configuration != null);
+            Contract.Invariant(!String.IsNullOrEmpty(_filePath));
+            Contract.Invariant(!String.IsNullOrEmpty(_directory));
         }
     }
 }

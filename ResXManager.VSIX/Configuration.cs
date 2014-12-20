@@ -3,10 +3,9 @@
     using System;
     using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
-    using EnvDTE;
     using tomenglertde.ResXManager.Model;
 
-    internal class Configuration : ConfigurationBase
+    internal class Configuration : Model.Configuration
     {
         private readonly EnvDTE.DTE _dte;
 
@@ -17,29 +16,42 @@
             _dte = dte;
         }
 
+        public override bool IsScopeSupported
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public override ConfigurationScope Scope
+        {
+            get
+            {
+                var solution = _dte.Solution;
+                
+                return (solution != null) && !string.IsNullOrEmpty(solution.FullName) && (solution.Globals != null) 
+                    ? ConfigurationScope.Solution
+                    : ConfigurationScope.Global;
+            }
+        }
+
         protected override T GetValue<T>(Expression<Func<T>> propertyExpression)
         {
-            var key = GetKey(propertyExpression);
+            T value;
 
-            return GetValue<T>(key);
+            return TryGetValue(GetKey(PropertySupport.ExtractPropertyName(propertyExpression)), out value) ? value : base.GetValue(propertyExpression);
         }
 
-        private T GetValue<T>(string key)
+        private bool TryGetValue<T>(string key, out T value)
         {
-            T value;
+            value = default(T);
             var solution = _dte.Solution;
 
-            if ((solution != null) && !string.IsNullOrEmpty(solution.FullName) && TryGetValue(solution.Globals, key, out value))
-                return value;
-
-            if (TryGetValue(_dte.Globals, key, out value))
-                return value;
-
-            return default(T);
+            return (solution != null) && !string.IsNullOrEmpty(solution.FullName) && TryGetValue(solution.Globals, key, ref value);
         }
 
-
-        private bool TryGetValue<T>(EnvDTE.Globals globals, string key, out T value)
+        private static bool TryGetValue<T>(EnvDTE.Globals globals, string key, ref T value)
         {
             try
             {
@@ -53,35 +65,33 @@
             {
             }
 
-            value = default(T);
             return false;
         }
 
-        protected override void SetValue<T>(T value, Expression<Func<T>> propertyExpression)
+        protected override void InternalSetValue<T>(T value, Expression<Func<T>> propertyExpression)
         {
-            var propertyName = PropertySupport.ExtractPropertyName(propertyExpression);
-
-            var key = GetKey(propertyName);
-
-            if (Equals(GetValue<T>(key), value))
-                return;
-
             var solution = _dte.Solution;
 
-            var globals = (solution != null) && !string.IsNullOrEmpty(solution.FullName) ? solution.Globals : _dte.Globals;
+            if ((solution != null) && !string.IsNullOrEmpty(solution.FullName) && (solution.Globals != null))
+            {
+                var globals = solution.Globals;
+                var propertyName = PropertySupport.ExtractPropertyName(propertyExpression);
+                var key = GetKey(propertyName);
 
-            Contract.Assume(globals != null);
-            SetValue(globals, key, ConvertToString<T>(value));
+                globals[key] = ConvertToString<T>(value);
+                globals.VariablePersists[key] = true;
 
-            OnPropertyChanged(propertyName);
+                OnPropertyChanged(propertyName);
+            }
+            else
+            {
+                base.InternalSetValue(value, propertyExpression);
+            }
         }
 
-        private static void SetValue(EnvDTE.Globals globals, string key, string value)
+        private static string GetKey(string propertyName)
         {
-            Contract.Requires(globals != null);
-
-            globals[key] = value;
-            globals.VariablePersists[key] = true;
+            return "RESX_" + propertyName;
         }
 
         [ContractInvariantMethod]

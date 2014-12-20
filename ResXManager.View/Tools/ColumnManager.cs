@@ -2,15 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
-    using System.Windows.Input;
     using System.Windows.Media.Imaging;
-    using System.Windows.Threading;
     using DataGridExtensions;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
@@ -27,6 +25,8 @@
             Contract.Requires(cultureKeys != null);
 
             var dataGridEvents = dataGrid.GetAdditionalEvents();
+            var resourceManager = (ResourceManager)dataGrid.DataContext;
+            Contract.Assume(resourceManager != null);
 
             dataGridEvents.ColumnVisibilityChanged -= DataGrid_ColumnVisibilityChanged;
             dataGridEvents.ColumnVisibilityChanged += DataGrid_ColumnVisibilityChanged;
@@ -62,7 +62,7 @@
             foreach (var cultureKey in addedcultureKeys)
             {
                 Contract.Assume(cultureKey != null);
-                AddLanguageColumn(columns, cultureKey);
+                columns.AddLanguageColumn(resourceManager, cultureKey);
             }
         }
 
@@ -103,44 +103,46 @@
             return column;
         }
 
-        public static void AddLanguageColumn(this ICollection<DataGridColumn> columns, CultureKey cultureKey)
+        public static void AddLanguageColumn(this ICollection<DataGridColumn> columns, ResourceManager resourceManager, CultureKey cultureKey)
         {
             Contract.Requires(columns != null);
+            Contract.Requires(resourceManager != null);
             Contract.Requires(cultureKey != null);
 
             var key = cultureKey.ToString(".");
+            var culture = cultureKey.Culture ?? resourceManager.Configuration.NeutralResourcesLanguage;
 
             var commentColumn = new DataGridTextColumn
             {
-                Header = new CommentHeader(cultureKey),
+                Header = new CommentHeader(resourceManager, cultureKey),
                 Binding = new Binding(@"Comments[" + key + @"]"),
                 MinWidth = 50,
                 Width = new DataGridLength(1, DataGridLengthUnitType.Star),
                 Visibility = VisibleCommentColumns.Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Visible : Visibility.Hidden
             };
 
-            AddLanguageColumn(columns, cultureKey, commentColumn);
+            columns.AddLanguageColumn(culture, commentColumn);
 
             var column = new DataGridTextColumn
             {
-                Header = new LanguageHeader(cultureKey),
+                Header = new LanguageHeader(resourceManager, cultureKey),
                 Binding = new Binding(@"Values[" + key + @"]"),
                 MinWidth = 50,
                 Width = new DataGridLength(2, DataGridLengthUnitType.Star),
                 Visibility = HiddenLanguageColumns.Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Hidden : Visibility.Visible
             };
 
-            AddLanguageColumn(columns, cultureKey, column);
+            columns.AddLanguageColumn(culture, column);
         }
 
-        private static void AddLanguageColumn(ICollection<DataGridColumn> columns, CultureKey cultureKey, DataGridBoundColumn column)
+        private static void AddLanguageColumn(this ICollection<DataGridColumn> columns, CultureInfo culture, DataGridBoundColumn column)
         {
             Contract.Requires(columns != null);
-            Contract.Requires(cultureKey != null);
+            Contract.Requires(culture != null);
             Contract.Requires(column != null);
 
             column.EnableMultilineEditing();
-            column.EnableSpellchecker(cultureKey.Culture);
+            column.EnableSpellchecker(culture);
             columns.Add(column);
         }
 

@@ -8,7 +8,7 @@
     {
         private readonly string[] _extensions;
 
-        public SourceFileFilter(ConfigurationBase configuration)
+        public SourceFileFilter(Configuration configuration)
         {
             Contract.Requires(configuration != null);
 
