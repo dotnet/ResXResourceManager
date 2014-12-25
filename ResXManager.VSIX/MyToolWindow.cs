@@ -437,14 +437,14 @@
             var solution = _dte.Solution;
             var sourceFileFilter = new SourceFileFilter(configuration);
             
-            var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || sourceFileFilter.IsSourceFile(p)).Cast<ProjectFile>().ToArray();
+            var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || sourceFileFilter.IsSourceFile(p)).ToArray();
 
             // The solution events are not reliable, so we check the solution on every load/unload of our window.
             // To avoid loosing the scope every time this method is called we only call load if we detect changes.
             var fingerPrint = GetFingerprint(projectFiles);
 
             if (!forceReload 
-                && !projectFiles.OfType<DteProjectFile>().Where(p => p.IsResourceFile()).Any(p => p.HasChanges) 
+                && !projectFiles.Where(p => p.IsResourceFile()).Any(p => p.HasChanges) 
                 && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
                 return;
 
@@ -478,7 +478,7 @@
             return solution.GetProjectFiles(_trace);
         }
 
-        private static string GetFingerprint(IEnumerable<ProjectFile> allFiles)
+        private static string GetFingerprint(IEnumerable<DteProjectFile> allFiles)
         {
             Contract.Requires(allFiles != null);
 

@@ -54,7 +54,8 @@
         /// </summary>
         /// <param name="allSourceFiles">All resource x files.</param>
         /// <param name="configuration"></param>
-        public void Load(IList<ProjectFile> allSourceFiles, Configuration configuration)
+        public void Load<T>(IList<T> allSourceFiles, Configuration configuration)
+            where T: ProjectFile
         {
             Contract.Requires(allSourceFiles != null);
             Contract.Requires(configuration != null);
