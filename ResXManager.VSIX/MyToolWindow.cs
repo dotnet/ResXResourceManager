@@ -437,7 +437,7 @@
             var solution = _dte.Solution;
             var sourceFileFilter = new SourceFileFilter(configuration);
             
-            var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || (p.IsSourceCodeOrContentFile() && sourceFileFilter.IsSourceFile(p))).Cast<ProjectFile>().ToArray();
+            var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || sourceFileFilter.IsSourceFile(p)).Cast<ProjectFile>().ToArray();
 
             // The solution events are not reliable, so we check the solution on every load/unload of our window.
             // To avoid loosing the scope every time this method is called we only call load if we detect changes.

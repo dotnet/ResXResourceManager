@@ -61,31 +61,6 @@
             return string.Empty;
         }
 
-        public static string GetItemType(this DteProjectFile projectFile)
-        {
-            Contract.Requires(projectFile != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
-            var properties = projectFile.ProjectItems.First().Properties;
-
-            if (properties == null)
-                return string.Empty;
-
-            return properties.OfType<EnvDTE.Property>()
-                .Where(p => p.Name == "ItemType")
-                .Select(p => p.Value as string)
-                .FirstOrDefault() ?? string.Empty;
-        }
-
-        public static bool IsSourceCodeOrContentFile(this DteProjectFile projectFile)
-        {
-            Contract.Requires(projectFile != null);
-
-            var itemType = projectFile.GetItemType();
-
-            return (itemType == "Compile") || (itemType == "Page") || (itemType == "Content");
-        }
-
         /// <summary>
         /// Gets the projects of the solution, ignoring the ones that fail to load.
         /// </summary>
