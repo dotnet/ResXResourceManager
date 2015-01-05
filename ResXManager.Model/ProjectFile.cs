@@ -5,6 +5,7 @@
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// Represents a file associated with a project.
@@ -90,7 +91,7 @@
             {
                 Contract.Requires(value != null);
 
-                File.WriteAllText(FilePath, value);
+                File.WriteAllText(FilePath, value, Encoding.UTF8);
             }
         }
 
@@ -127,7 +128,7 @@
             solutionFolder = solutionFolder.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             filePath = filePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 
-            if ((solutionFolder.Count() == 0) || (solutionFolder.Last() != Path.DirectorySeparatorChar))
+            if (!solutionFolder.Any() || (solutionFolder.Last() != Path.DirectorySeparatorChar))
             {
                 solutionFolder += Path.DirectorySeparatorChar;
             }

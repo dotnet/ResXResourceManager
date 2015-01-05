@@ -1,4 +1,6 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿using System.Text;
+
+namespace tomenglertde.ResXManager.Model
 {
     using System;
     using System.Collections.Generic;
@@ -261,7 +263,9 @@
                 }
             }
 
-            _file.Content = _document.ToString();
+            var declaration = new XDeclaration("1.0", "utf-8", "yes");
+
+            _file.Content = declaration + Environment.NewLine + _document;
 
             HasChanges = false;
         }
