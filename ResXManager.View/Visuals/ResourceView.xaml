@@ -41,6 +41,7 @@
 
     <CollectionViewSource x:Key="ResourceEntitiesSource" Source="{Binding FilteredResourceEntities}">
       <CollectionViewSource.SortDescriptions>
+        <componentModel:SortDescription PropertyName="ProjectName"/>
         <componentModel:SortDescription PropertyName="RelativePath"/>
         <componentModel:SortDescription PropertyName="BaseName"/>
       </CollectionViewSource.SortDescriptions>

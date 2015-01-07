@@ -14,7 +14,9 @@
     using System.Windows;
     using System.Windows.Data;
     using System.Windows.Input;
+
     using Microsoft.Win32;
+
     using tomenglertde.ResXManager.Model.Properties;
 
     /// <summary>
