@@ -243,7 +243,7 @@
                 .ToArray();
 
             var changes = mappings
-                .Where(mapping => mapping.OriginalText != mapping.Text)
+                .Where(mapping => (mapping.OriginalText != mapping.Text) && !string.IsNullOrEmpty(mapping.Text))
                 .ToArray();
 
             var acceptedChanges = changes
