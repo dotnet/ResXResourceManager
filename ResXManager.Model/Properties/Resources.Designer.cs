@@ -146,6 +146,24 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The language &quot;{0}&quot; can&apos;t be edited. The operation was aborted..
+        /// </summary>
+        internal static string ImportLanguageNotEditable {
+            get {
+                return ResourceManager.GetString("ImportLanguageNotEditable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The sheet &quot;{0}&quot; can&apos;t be imported; there is no matching resource file in the solution..
+        /// </summary>
+        internal static string ImportMapSheetError {
+            get {
+                return ResourceManager.GetString("ImportMapSheetError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A normalized table is expected..
         /// </summary>
         internal static string ImportNormalizedTableExpected {

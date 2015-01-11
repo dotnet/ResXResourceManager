@@ -1,4 +1,3 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -172,5 +171,11 @@
   </data>
   <data name="LanguageNotDefinedError" xml:space="preserve">
     <value>Language is not defined: {0}</value>
+  </data>
+  <data name="ImportLanguageNotEditable" xml:space="preserve">
+    <value>The language "{0}" can't be edited. The operation was aborted.</value>
+  </data>
+  <data name="ImportMapSheetError" xml:space="preserve">
+    <value>The sheet "{0}" can't be imported; there is no matching resource file in the solution.</value>
   </data>
 </root>

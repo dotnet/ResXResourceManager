@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -169,5 +169,11 @@
   </data>
   <data name="Neutral">
     <value>Neutral</value>
+  </data>
+  <data name="ImportLanguageNotEditable" xml:space="preserve">
+    <value>Die Sprache "{0}" kann nicht bearbeitet werden. Der Vorgang wurde abgebrochen.</value>
+  </data>
+  <data name="ImportMapSheetError" xml:space="preserve">
+    <value>Das Arbeitsblatt "{0}" kann nicht importiert werden; es gibt keine passende Ressource in der Umgebung.</value>
   </data>
 </root>

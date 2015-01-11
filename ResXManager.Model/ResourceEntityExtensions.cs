@@ -5,14 +5,8 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
-    using tomenglertde.ResXManager.Model.Properties;
 
-    public enum ImportResult
-    {
-        None,
-        Partial,
-        All
-    }
+    using tomenglertde.ResXManager.Model.Properties;
 
     public enum ColumnKind
     {
@@ -186,23 +180,22 @@
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <param name="text">The text.</param>
-        /// <returns>The <see cref="ImportResult"/>.</returns>
-        public static ImportResult ImportTextTable(this ResourceEntity entity, string text)
+        public static void ImportTextTable(this ResourceEntity entity, string text)
         {
             Contract.Requires(entity != null);
 
             if (string.IsNullOrEmpty(text))
-                throw new InvalidOperationException(Resources.ClipboardIsEmpty);
+                throw new ImportException(Resources.ClipboardIsEmpty);
 
             var lines = ReadLines(text).ToArray();
 
             if (!lines.Any())
-                return ImportResult.All;
+                return;
 
-            return entity.ImportTable(FixedColumnHeaders, lines);
+            entity.ImportTable(FixedColumnHeaders, lines);
         }
 
-        public static ImportResult ImportTable(this ResourceEntity entity, ICollection<string> fixedColumnHeaders, IList<IList<string>> lines)
+        public static void ImportTable(this ResourceEntity entity, ICollection<string> fixedColumnHeaders, IList<IList<string>> lines)
         {
             Contract.Requires(entity != null);
             Contract.Requires(fixedColumnHeaders != null);
@@ -223,8 +216,7 @@
 
             dataColumnCount = dataColumnHeaders.Length;
 
-            if (!VerifyCultures(entity, dataColumnHeaders))
-                return ImportResult.None;
+            VerifyCultures(entity, dataColumnHeaders);
 
             var mappings = lines.Skip(1)
                 .Select(columns => new { Key = columns[0], TextColumns = columns.Skip(fixedColumnHeadersCount).Take(dataColumnCount).ToArray() })
@@ -251,9 +243,9 @@
                 .ToArray();
 
             if (acceptedChanges.Length == changes.Length)
-                return ImportResult.All;
+                return;
 
-            return acceptedChanges.Length > 0 ? ImportResult.Partial : ImportResult.None;
+            throw new ImportException(acceptedChanges.Length > 0 ? Resources.ImportFailedPartiallyError : Resources.ImportFailedError);
         }
 
         [ContractVerification(false)]
@@ -267,28 +259,32 @@
             var fixedColumnHeadersCount = fixedColumnHeaders.Count;
 
             if (headerColumns.Count() <= fixedColumnHeadersCount)
-                throw new InvalidOperationException(Resources.ImportColumnMismatchError);
+                throw new ImportException(Resources.ImportColumnMismatchError);
 
             if (!headerColumns.Take(fixedColumnHeadersCount).SequenceEqual(fixedColumnHeaders))
-                throw new InvalidOperationException(Resources.ImportHeaderMismatchError);
+                throw new ImportException(Resources.ImportHeaderMismatchError);
 
             return headerColumns;
         }
 
-        private static bool VerifyCultures(ResourceEntity entity, IList<string> dataColumns)
+        private static void VerifyCultures(ResourceEntity entity, IList<string> dataColumns)
         {
             Contract.Requires(entity != null);
             Contract.Requires(dataColumns != null);
 
             if (dataColumns.Distinct().Count() != dataColumns.Count())
-                throw new InvalidOperationException(Resources.ImportDuplicateLanguageError);
+                throw new ImportException(Resources.ImportDuplicateLanguageError);
 
             var languages = dataColumns.Select(data => data.ExtractCulture()).Distinct().ToArray();
 
             var undefinedLanguages = languages.Where(outer => entity.Languages.All(inner => !Equals(outer, inner.Culture))).ToArray();
 
-            return undefinedLanguages
-                .All(entity.CanEdit);
+            var lockedLanguage = undefinedLanguages.FirstOrDefault(language => !entity.CanEdit(language));
+
+            if (lockedLanguage == null)
+                return;
+
+            throw new ImportException(string.Format(CultureInfo.CurrentCulture, Resources.ImportLanguageNotEditable, lockedLanguage));
         }
 
         private static IEnumerable<IList<string>> ReadLines(string text)
@@ -312,12 +308,12 @@
             }
 
             if (!lines.Any())
-                throw new InvalidOperationException(Resources.ImportParseEmptyTextError);
+                throw new ImportException(Resources.ImportParseEmptyTextError);
 
             var headerColumns = lines.First();
 
             if (lines.Any(columns => columns.Count() != headerColumns.Count()))
-                throw new InvalidOperationException(Resources.ImportNormalizedTableExpected);
+                throw new ImportException(Resources.ImportNormalizedTableExpected);
 
             return lines;
         }
@@ -340,7 +336,7 @@
 
                 if (!IsLineFeed(textEnumerator.Current))
                 {
-                    throw new InvalidOperationException(Resources.ImportInconsistentDoubleQuoteError);
+                    throw new ImportException(Resources.ImportInconsistentDoubleQuoteError);
                 }
 
                 textEnumerator.SkipWhile(IsLineFeed);

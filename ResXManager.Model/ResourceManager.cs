@@ -457,27 +457,15 @@
 
             try
             {
-                switch (entity.ImportTextTable(Clipboard.GetText()))
-                {
-                    case ImportResult.Partial:
-                        MessageBox.Show(Resources.ImportFailedPartiallyError, Resources.Title);
-                        break;
-
-                    case ImportResult.None:
-                        MessageBox.Show(Resources.ImportFailedError, Resources.Title);
-                        break;
-
-                    case ImportResult.All:
-                        return;
-
-                    default:
-                        throw new InvalidOperationException(@"Undefined import result.");
-
-                }
+                entity.ImportTextTable(Clipboard.GetText());
+            }
+            catch (ImportException ex)
+            {
+                MessageBox.Show(ex.Message, Resources.Title);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, Resources.Title);
+                MessageBox.Show(ex.ToString(), Resources.Title);
             }
         }
 
@@ -530,16 +518,20 @@
                 Multiselect = false
             };
 
-            if (dlg.ShowDialog() == true)
+            if (dlg.ShowDialog() != true)
+                return;
+
+            try
             {
-                try
-                {
-                    this.ImportExcel(dlg.FileName);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                this.ImportExcel(dlg.FileName);
+            }
+            catch (ImportException ex)
+            {
+                MessageBox.Show(ex.Message, Resources.Title);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Title);
             }
         }
 
