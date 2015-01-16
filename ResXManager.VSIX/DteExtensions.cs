@@ -67,7 +67,7 @@
         /// <param name="solution">The solution.</param>
         /// <param name="trace">The tracer.</param>
         /// <returns>The projects.</returns>
-        private static IEnumerable<EnvDTE.Project> GetProjects(this EnvDTE._Solution solution, OutputWindowTracer trace)
+        private static IEnumerable<EnvDTE.Project> GetProjects(this EnvDTE._Solution solution, ITracer trace)
         {
             Contract.Requires(solution != null);
             Contract.Requires(solution.Projects != null);

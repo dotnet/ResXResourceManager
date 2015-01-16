@@ -19,7 +19,6 @@
     /// <summary>
     /// Interaction logic for ResourceView.xaml
     /// </summary>
-    [ContractVerification(false)]   // Too many warnings from generated code.
     public partial class ResourceView
     {
         public ResourceView()
@@ -85,12 +84,22 @@
 
         private void NeutralLanguage_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.Configuration.NeutralResourcesLanguage = (CultureInfo)(((MenuItem)sender).DataContext);
+            Contract.Requires(sender != null);
+
+            var viewModel = ViewModel;
+            if (viewModel == null)
+                return;
+
+            viewModel.Configuration.NeutralResourcesLanguage = (CultureInfo)(((MenuItem)sender).DataContext);
         }
 
         private void ResourceManager_Loaded(object sender, EventArgs e)
         {
-            DataGrid.SetupColumns(ViewModel.CultureKeys);
+            var viewModel = ViewModel;
+            if (viewModel == null)
+                return;
+
+            DataGrid.SetupColumns(viewModel.CultureKeys);
         }
 
         private void AddLanguage_Click(object sender, RoutedEventArgs e)
@@ -103,7 +112,11 @@
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
 
-            var cultureNames = ViewModel.CultureKeys
+            var viewModel = ViewModel;
+            if (viewModel == null)
+                return;
+
+            var cultureNames = viewModel.CultureKeys
                 .Select(c => c.Culture)
                 .Where(c => c != null)
                 .Select(c => c.ToString()).ToArray();
@@ -113,7 +126,7 @@
 
             if (inputBox.ShowDialog() == true)
             {
-                DataGrid.Columns.AddLanguageColumn(ViewModel, new CultureKey(new CultureInfo(inputBox.Text)));
+                DataGrid.Columns.AddLanguageColumn(viewModel, new CultureKey(new CultureInfo(inputBox.Text)));
             }
         }
 
@@ -123,11 +136,11 @@
         /// </summary>
         static class References
         {
-            private static readonly DependencyProperty HardReferenceToDgx = DataGridFilterColumn.FilterProperty;
+            private static readonly DependencyProperty _hardReferenceToDgx = DataGridFilterColumn.FilterProperty;
 
             public static void Resolve(DependencyObject view)
             {
-                if (HardReferenceToDgx == null) // just use this to avoid warnings...
+                if (_hardReferenceToDgx == null) // just use this to avoid warnings...
                 {
                     Trace.WriteLine("HardReferenceToDgx failed");
                 }
@@ -135,5 +148,13 @@
                 Interaction.GetBehaviors(view);
             }
         }
+
+        [ContractInvariantMethod]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(DataGrid != null);
+        }
+
     }
 }
