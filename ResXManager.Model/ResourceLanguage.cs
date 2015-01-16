@@ -263,7 +263,7 @@ namespace tomenglertde.ResXManager.Model
                 }
             }
 
-            var declaration = new XDeclaration("1.0", "utf-8", "yes");
+            const string declaration = @"<?xml version=""1.0"" encoding=""utf-8""?>"; 
 
             _file.Content = declaration + Environment.NewLine + _document;
 
