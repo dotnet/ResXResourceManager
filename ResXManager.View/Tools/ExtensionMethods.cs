@@ -2,6 +2,7 @@ namespace tomenglertde.ResXManager.View.Tools
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
@@ -30,26 +31,38 @@ namespace tomenglertde.ResXManager.View.Tools
             return column.GetCultureKey().Maybe().Return(c => c.Culture);
         }
 
-        public static void EnableMultilineEditing(this DataGridBoundColumn column)
+        public static void SetEditingElementStyle(this DataGridBoundColumn column, Binding languageBinding, Binding flowDirectionBinding)
         {
             Contract.Requires(column != null);
 
             var textBoxStyle = new Style(typeof(TextBox), column.EditingElementStyle);
-            textBoxStyle.Setters.Add(new EventSetter(UIElement.PreviewKeyDownEvent, (KeyEventHandler)EditingElement_PreviewKeyDown));
-            textBoxStyle.Setters.Add(new Setter(TextBoxBase.AcceptsReturnProperty, true));
+            var setters = textBoxStyle.Setters;
+
+            setters.Add(new EventSetter(UIElement.PreviewKeyDownEvent, (KeyEventHandler)EditingElement_PreviewKeyDown));
+            setters.Add(new Setter(TextBoxBase.AcceptsReturnProperty, true));
+
+            setters.Add(new Setter(SpellCheck.IsEnabledProperty, true));
+            setters.Add(new Setter(FrameworkElement.LanguageProperty, languageBinding));
+
+            setters.Add(new Setter(FrameworkElement.FlowDirectionProperty, flowDirectionBinding));
+
             textBoxStyle.Seal();
+
             column.EditingElementStyle = textBoxStyle;
         }
 
-        public static void EnableSpellchecker(this DataGridBoundColumn column, Binding languageBinding)
+        public static void SetElementStyle(this DataGridBoundColumn column, Binding languageBinding, Binding flowDirectionBinding)
         {
             Contract.Requires(column != null);
 
-            var textBoxStyle = new Style(typeof(TextBox), column.EditingElementStyle);
-            textBoxStyle.Setters.Add(new Setter(SpellCheck.IsEnabledProperty, true));
-            textBoxStyle.Setters.Add(new Setter(FrameworkElement.LanguageProperty, languageBinding));
-            textBoxStyle.Seal();
-            column.EditingElementStyle = textBoxStyle;
+            var elementStyle = new Style(typeof(TextBlock), column.ElementStyle);
+            var setters = elementStyle.Setters;
+
+            setters.Add(new Setter(FrameworkElement.LanguageProperty, languageBinding));
+            setters.Add(new Setter(FrameworkElement.FlowDirectionProperty, flowDirectionBinding));
+
+            elementStyle.Seal();
+            column.ElementStyle = elementStyle;
         }
 
         private static void EditingElement_PreviewKeyDown(object sender, KeyEventArgs e)
