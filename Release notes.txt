@@ -1,3 +1,8 @@
+1.0.0.50:
+* WI1404: Improve error messages when Excel import fails
+* WI1407: XML declaration being improperly removed from saved resource file
+* WI1412: Paste should not clear existing text
+* WI1413: Support for RTL languages
 1.0.0.49:
 * Added configuration page to support more features. 
 * Detect code references algorithm is now fully configurable.
