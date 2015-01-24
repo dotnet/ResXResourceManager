@@ -101,18 +101,29 @@
             if (projectItems == null)
                 return;
 
-            for (var i = 1; i <= projectItems.Count; i++)
+            try
             {
-                try
+                var index = 1;
+
+                // Must use forach here! See https://connect.microsoft.com/VisualStudio/feedback/details/1093318/resource-files-falsely-enumerated-as-part-of-project
+                foreach (var projectItem in projectItems.OfType<EnvDTE.ProjectItem>())
                 {
-                    var projectItem = projectItems.Item(i);
                     Contract.Assume(projectItem != null);
-                    projectItem.GetProjectFiles(solutionFolder, items, trace);
+                    try
+                    {
+                        projectItem.GetProjectFiles(solutionFolder, items, trace);
+                    }
+                    catch
+                    {
+                        trace.TraceError("Error loading project item #{0}.", index);
+                    }
+
+                    index += 1;
                 }
-                catch
-                {
-                    trace.TraceError("Error loading project item #" + i);
-                }
+            }
+            catch
+            {
+                trace.TraceError("Error loading a project item.");
             }
         }
 
@@ -121,7 +132,6 @@
             Contract.Requires(projectItem != null);
             Contract.Requires(solutionFolder != null);
             Contract.Requires(items != null);
-
 
             if (projectItem.FileCount > 0)
             {
@@ -220,7 +230,7 @@
         {
             try
             {
-                var textDocument = (EnvDTE.TextDocument) document.Object("TextDocument");
+                var textDocument = (EnvDTE.TextDocument)document.Object("TextDocument");
                 textDocument.CreateEditPoint().ReplaceText(textDocument.EndPoint, text, 0);
                 document.Save();
                 return true;
