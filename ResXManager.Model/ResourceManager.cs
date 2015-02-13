@@ -632,13 +632,10 @@
 
                         var resourceEntity = new ResourceEntity(this, projectName, baseName, directoryName, files.ToArray());
 
-                        if (resourceEntity.Entries.Any())
-                        {
-                            resourceEntity.LanguageChanging += ResourceEntity_LanguageChanging;
-                            resourceEntity.LanguageChanged += ResourceEntity_LanguageChanged;
+                        resourceEntity.LanguageChanging += ResourceEntity_LanguageChanging;
+                        resourceEntity.LanguageChanged += ResourceEntity_LanguageChanged;
 
-                            yield return resourceEntity;
-                        }
+                        yield return resourceEntity;
                     }
                 }
             }
