@@ -16,6 +16,8 @@
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
+    using TomsToolbox.Wpf;
+
     /// <summary>
     /// Interaction logic for ResourceView.xaml
     /// </summary>

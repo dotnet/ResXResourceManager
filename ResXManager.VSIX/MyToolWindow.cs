@@ -20,6 +20,10 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Tools;
     using tomenglertde.ResXManager.View.Visuals;
+
+    using TomsToolbox.Core;
+    using TomsToolbox.Wpf;
+
     using VSLangProj;
     using Process = System.Diagnostics.Process;
 

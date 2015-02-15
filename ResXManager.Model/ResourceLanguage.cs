@@ -15,6 +15,8 @@ namespace tomenglertde.ResXManager.Model
     using System.Xml.Linq;
     using tomenglertde.ResXManager.Model.Properties;
 
+    using TomsToolbox.Core;
+
     /// <summary>
     /// Represents a set of localized resources.
     /// </summary>

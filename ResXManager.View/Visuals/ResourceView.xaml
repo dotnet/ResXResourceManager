@@ -12,6 +12,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:tomenglertde.ResXManager.View.Behaviors"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:wpf="clr-namespace:TomsToolbox.Wpf;assembly=TomsToolbox.Wpf"
              x:Name="LayoutRoot"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
              d:DataContext="{d:DesignInstance model:ResourceManager}">
@@ -91,7 +92,7 @@
       <ListBox x:Name="ListBox"
                ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
                Margin="5" BorderThickness="0" SelectionMode="Extended"
-               tools:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}">
+               wpf:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}">
         <ListBox.ContextMenu>
           <ContextMenu>
             <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand}">
@@ -336,7 +337,7 @@
                   dgx:DataGridFilter.IsAutoFilterEnabled="True" AutoGenerateColumns="False"
                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
                   SelectedItem="{Binding SelectedEntry, Mode=TwoWay}"
-                  tools:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
+                  wpf:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
           <DataGrid.Resources>
 
             <ContextMenu x:Key="RowContextMenu">

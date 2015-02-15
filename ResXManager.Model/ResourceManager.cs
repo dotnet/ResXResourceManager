@@ -19,6 +19,10 @@
 
     using tomenglertde.ResXManager.Model.Properties;
 
+    using TomsToolbox.Desktop;
+    using TomsToolbox.ObservableCollections;
+    using TomsToolbox.Wpf;
+
     /// <summary>
     /// Represents all resources found in a folder and its's sub folders.
     /// </summary>
@@ -32,7 +36,7 @@
 
         private ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
         private ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
-        private ListCollectionViewListAdapter _filteredResourceEntities;
+        private ListCollectionViewListAdapter<ResourceEntity> _filteredResourceEntities;
 
         private ObservableCompositeCollection<ResourceTableEntry> _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>();
         private IList<ResourceTableEntry> _selectedTableEntries = new List<ResourceTableEntry>();
@@ -48,7 +52,7 @@
         public ResourceManager()
         {
             _selectedEntitiesChangeThrottle = new DispatcherThrottle(OnSelectedEntitiesChanged);
-            _filteredResourceEntities = new ListCollectionViewListAdapter(new ListCollectionView(_resourceEntities));
+            _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
         }
 
         /// <summary>
@@ -96,6 +100,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<IEnumerable<ResourceEntity>>() != null);
+
                 return _resourceEntities;
             }
         }
@@ -105,6 +110,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<IList>() != null);
+
                 return _filteredResourceEntities;
             }
         }
@@ -114,6 +120,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<IEnumerable<ResourceTableEntry>>() != null);
+
                 return _resourceTableEntries;
             }
         }
@@ -133,6 +140,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<IList<ResourceEntity>>() != null);
+
                 return _selectedEntities;
             }
         }
@@ -142,6 +150,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<IList<ResourceTableEntry>>() != null);
+
                 return _selectedTableEntries;
             }
         }
@@ -581,7 +590,7 @@
                 .ThenBy(e => e.BaseName);
 
             _resourceEntities = new ObservableCollection<ResourceEntity>(entities);
-            _filteredResourceEntities = new ListCollectionViewListAdapter(new ListCollectionView(_resourceEntities));
+            _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
             if (!string.IsNullOrEmpty(_entityFilter))
                 ApplyEntityFilter(_entityFilter);
 
@@ -680,7 +689,7 @@
         {
             var selectedTableEntries = _selectedTableEntries.ToArray();
 
-            _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>(_selectedEntities.Select(entity => (IList)entity.Entries).ToArray());
+            _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>(_selectedEntities.Select(entity => entity.Entries).ToArray());
 
             _selectedTableEntries = new ObservableCollection<ResourceTableEntry>(_resourceEntities.SelectMany(entity => entity.Entries)
                 .Where(item => selectedTableEntries.Contains(item, ResourceTableEntry.EqualityComparer))
@@ -740,7 +749,7 @@
                 try
                 {
                     var regex = new Regex(value, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                    _filteredResourceEntities.Filter = item => regex.Match(item.ToString()).Success;
+                    _filteredResourceEntities.CollectionView.Filter = item => regex.Match(item.ToString()).Success;
                     return;
                 }
                 catch (ArgumentException)
@@ -748,7 +757,7 @@
                 }
             }
 
-            _filteredResourceEntities.Filter = null;
+            _filteredResourceEntities.CollectionView.Filter = null;
         }
 
         [ContractInvariantMethod]

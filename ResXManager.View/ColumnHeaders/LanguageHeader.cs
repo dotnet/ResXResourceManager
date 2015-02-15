@@ -4,6 +4,8 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
+    using TomsToolbox.Core;
+
     public class LanguageHeader : LanguageColumnHeaderBase
     {
         public LanguageHeader(ResourceManager resourceManager, CultureKey cultureKey)

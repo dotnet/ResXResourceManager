@@ -169,7 +169,7 @@
         }
 
         /// <summary>
-        /// Saves the xml stream to the specified writer.
+        /// Saves the XML stream to the specified writer.
         /// </summary>
         /// <param name="writer">The writer.</param>
         public void Save(TextWriter writer)
@@ -180,7 +180,7 @@
         }
 
         /// <summary>
-        /// Saves the xml stream to the file with the specified file name.
+        /// Saves the XML stream to the file with the specified file name.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         public void Save(string fileName)

@@ -5,6 +5,8 @@
     using System.Linq.Expressions;
     using tomenglertde.ResXManager.Model;
 
+    using TomsToolbox.Core;
+
     internal class Configuration : Model.Configuration
     {
         private readonly EnvDTE.DTE _dte;

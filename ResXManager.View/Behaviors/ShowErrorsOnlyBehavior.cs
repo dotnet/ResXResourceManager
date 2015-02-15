@@ -11,6 +11,8 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
+    using TomsToolbox.Wpf;
+
     public class ShowErrorsOnlyBehavior : Behavior<DataGrid>
     {
         public ToggleButton ToggleButton

@@ -9,6 +9,8 @@
     using System.Windows.Interactivity;
     using tomenglertde.ResXManager.View.Tools;
 
+    using TomsToolbox.Wpf;
+
     public class PopupFocusManagerBehavior : Behavior<Popup>
     {
         /// <summary>
@@ -79,7 +81,7 @@
             if (child == null)
                 return;
 
-            var focusable = child.VisualDescendantsAndSelf<UIElement>().FirstOrDefault(item => item.Focusable);
+            var focusable = child.VisualDescendantsAndSelf().OfType<UIElement>().FirstOrDefault(item => item.Focusable);
             if (focusable != null)
             {
                 Dispatcher.BeginInvoke(new Action(() => focusable.Focus()));

@@ -7,6 +7,9 @@
     using System.Linq.Expressions;
     using System.Windows;
 
+    using TomsToolbox.Core;
+    using TomsToolbox.Desktop;
+
     /// <summary>
     /// Handle global persistence.
     /// </summary>

@@ -5,6 +5,8 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Tools;
 
+    using TomsToolbox.Desktop;
+
     public abstract class LanguageColumnHeaderBase : ObservableObject, ILanguageColumnHeader
     {
         private readonly CultureKey _cultureKey;

@@ -6,6 +6,8 @@
     using System.Diagnostics.Contracts;
     using System.Linq;
 
+    using TomsToolbox.Desktop;
+
     /// <summary>
     /// Represents one entry in the resource table.
     /// </summary>

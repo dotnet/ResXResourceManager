@@ -6,8 +6,12 @@
     using System.Linq;
     using System.Windows;
     using System.Windows.Data;
+    using System.Windows.Input;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Controls;
+
+    using TomsToolbox.Wpf;
 
     public class AddNewKeyCommandConverter : IValueConverter
     {
@@ -17,7 +21,7 @@
         {
             var resourceManager = value as ResourceManager;
 
-            return resourceManager == null ? NullCommand.Default : new AddNewKeyCommand(resourceManager);
+            return resourceManager == null ? (ICommand)NullCommand.Default : new AddNewKeyCommand(resourceManager);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

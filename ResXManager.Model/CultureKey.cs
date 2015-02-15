@@ -4,6 +4,8 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    using TomsToolbox.Core;
+
     /// <summary>
     /// A class encapsulating a <see cref="CultureInfo"/>, usable as a key to a dictionary to allow also indexing a <c>null</c> <see cref="CultureInfo"/>.
     /// </summary>

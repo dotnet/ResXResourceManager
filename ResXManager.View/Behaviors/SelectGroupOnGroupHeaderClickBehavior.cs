@@ -9,6 +9,8 @@
     using System.Windows.Interactivity;
     using tomenglertde.ResXManager.View.Tools;
 
+    using TomsToolbox.Wpf;
+
     public class SelectGroupOnGroupHeaderClickBehavior : Behavior<FrameworkElement>
     {
         protected override void OnAttached()

@@ -9,6 +9,8 @@
 
     using tomenglertde.ResXManager.Model.Properties;
 
+    using TomsToolbox.Core;
+
     /// <summary>
     /// Resource manager specific extension methods.
     /// </summary>

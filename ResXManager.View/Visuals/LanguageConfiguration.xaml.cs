@@ -7,6 +7,8 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Tools;
 
+    using TomsToolbox.Core;
+
     /// <summary>
     /// Interaction logic for FlagConfiguration.xaml
     /// </summary>

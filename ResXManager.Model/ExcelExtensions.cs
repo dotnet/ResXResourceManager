@@ -11,6 +11,8 @@
 
     using tomenglertde.ResXManager.Model.Properties;
 
+    using TomsToolbox.Core;
+
     public static partial class ResourceEntityExtensions
     {
         public static void ExportExcel(this ResourceManager resourceManager, string filePath, IResourceScope scope)

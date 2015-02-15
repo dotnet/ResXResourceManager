@@ -8,6 +8,8 @@
     using EnvDTE;
     using tomenglertde.ResXManager.Model;
 
+    using TomsToolbox.Core;
+
     internal class DteProjectFile : ProjectFile
     {
         private readonly List<ProjectItem> _projectItems = new List<ProjectItem>();

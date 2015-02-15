@@ -107,7 +107,6 @@
             {
                 Contract.Invariant(_owner != null);
             }
-
         }
 
         [ContractInvariantMethod]
