@@ -108,7 +108,6 @@
                 // Must use forach here! See https://connect.microsoft.com/VisualStudio/feedback/details/1093318/resource-files-falsely-enumerated-as-part-of-project
                 foreach (var projectItem in projectItems.OfType<EnvDTE.ProjectItem>())
                 {
-                    Contract.Assume(projectItem != null);
                     try
                     {
                         projectItem.GetProjectFiles(solutionFolder, items, trace);

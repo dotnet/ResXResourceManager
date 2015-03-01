@@ -21,6 +21,8 @@
     <SccProvider>SAK</SccProvider>
     <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
     <IsWebBootstrapper>true</IsWebBootstrapper>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -35,13 +37,11 @@
     <SupportUrl>https://resxresourcemanager.codeplex.com</SupportUrl>
     <ProductName>ResX Resource Manager</ProductName>
     <PublisherName>tom-englert.de</PublisherName>
-    <ApplicationRevision>50</ApplicationRevision>
-    <ApplicationVersion>1.0.0.50</ApplicationVersion>
+    <ApplicationRevision>51</ApplicationRevision>
+    <ApplicationVersion>1.0.0.51</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>

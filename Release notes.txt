@@ -1,3 +1,7 @@
+1.0.0.51:
+* WI1420: Extend/fix default code reference detection patterns.
+* WI1421: Visibility of new added resource files.
+* WI1425: Improve keyboard navigation.
 1.0.0.50:
 * WI1404: Improve error messages when Excel import fails
 * WI1407: XML declaration being improperly removed from saved resource file
