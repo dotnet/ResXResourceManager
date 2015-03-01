@@ -39,6 +39,7 @@
         </Setter.Value>
       </Setter>
       <Setter Property="Grid.IsSharedSizeScope" Value="True" />
+      <Setter Property="Focusable" Value="False"/>
     </Style>
 
     <Style TargetType="HeaderedContentControl" x:Key="PropertyStyle">
@@ -57,6 +58,7 @@
           </ControlTemplate>
         </Setter.Value>
       </Setter>
+      <Setter Property="Focusable" Value="False"/>
     </Style>
 
   </UserControl.Resources>
@@ -64,7 +66,7 @@
   <StackPanel Margin="10" HorizontalAlignment="Left">
 
     <HeaderedContentControl Header="{x:Static properties:Resources.ConfigurationScopeHeader}" Style="{StaticResource GroupStyle}" Visibility="{Binding Configuration.IsScopeSupported, Converter={x:Static converters:BooleanToVisibilityConverter.Default}}">
-      <Control>
+      <Control Focusable="False">
         <Control.Template>
           <ControlTemplate>
             <Border x:Name="Background" Background="Yellow">
@@ -105,12 +107,12 @@
 
     <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_LoadSaveHeader}" Style="{StaticResource GroupStyle}">
       <StackPanel Margin="10">
-        <DockPanel>
-          <Button DockPanel.Dock="Right" Padding="5,2"
+        <DockPanel KeyboardNavigation.TabNavigation="Local">
+          <Button DockPanel.Dock="Right" Padding="5,2" TabIndex="1"
                   Content="{x:Static properties:Resources.SortAllFilesNow}"
                   Command="{Binding SortNodesByKeyCommand, Converter={StaticResource SortNodesByKeyCommandConverter}}" />
           <Decorator Width="50" DockPanel.Dock="Right" />
-          <CheckBox IsChecked="{Binding Configuration.SortFileContentOnSave}"
+          <CheckBox IsChecked="{Binding Configuration.SortFileContentOnSave}" TabIndex="0"
                     Style="{StaticResource LabelStyle}"
                     Content="{x:Static properties:Resources.SortNodesByKey}" />
         </DockPanel>

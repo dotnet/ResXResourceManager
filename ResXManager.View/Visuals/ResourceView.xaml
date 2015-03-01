@@ -8,7 +8,6 @@
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:columnHeaders="clr-namespace:tomenglertde.ResXManager.View.ColumnHeaders"
-             xmlns:tools="clr-namespace:tomenglertde.ResXManager.View.Tools"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:tomenglertde.ResXManager.View.Behaviors"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
@@ -62,7 +61,7 @@
     <KeyBinding Key="N" Modifiers="Control" Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}" />
     <KeyBinding Key="Insert" Modifiers="Shift" Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}" />
   </UserControl.InputBindings>
-  <Grid>
+  <Grid FocusManager.FocusedElement="{Binding ElementName=DataGrid}">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto" MinWidth="120" />
       <ColumnDefinition Width="Auto" />
@@ -105,7 +104,7 @@
         <ListBox.ItemTemplate>
           <DataTemplate DataType="model:ResourceEntity">
             <DockPanel ToolTip="{Binding Path=Directory, Mode=OneWay}" Margin="5,2" HorizontalAlignment="Stretch">
-              <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" />
+              <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Focusable="False"/>
               <Decorator DockPanel.Dock="Left" Width="5" />
               <TextBlock Background="Transparent" VerticalAlignment="Center">
                 <Run Text="{Binding Path=RelativePath, Mode=OneWay}" /><Run Text="{Binding Path=BaseName, Mode=OneWay}" />
@@ -146,10 +145,10 @@
           <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" ToolTip="{x:Static properties:Resources.SelectedTotalToolTip}">
             <Run Text="{Binding SelectedTableEntries.Count, Mode=OneWay}"/><Run Text="/"/><Run Text="{Binding ResourceTableEntries.Count, Mode=OneWay}"/><Run Text="  "/>
           </TextBlock>
-          <Control>
+          <Control Focusable="False">
             <Control.Template>
               <ControlTemplate>
-                <ContentControl x:Name="footerContent" Foreground="Gray" Margin="5" >
+                <ContentControl x:Name="footerContent" Foreground="Gray" Margin="5" Focusable="False">
                   <TextBlock Text="{x:Static properties:Resources.MultipleSelection}"/>
                 </ContentControl>
                 <ControlTemplate.Triggers>
@@ -201,7 +200,7 @@
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0">
           <ToolBarTray DockPanel.Dock="Left" Background="{x:Static SystemColors.MenuBarBrush}">
-            <ToolBar x:Name="ToolBar" IsOverflowOpen="False" Background="{x:Static SystemColors.MenuBarBrush}">
+            <ToolBar x:Name="ToolBar" IsOverflowOpen="False" Background="{x:Static SystemColors.MenuBarBrush}" KeyboardNavigation.TabNavigation="Continue">
               <Button ToolTip="{x:Static properties:Resources.RefreshViewToolTip}" Command="{Binding ReloadCommand}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/refresh.png" />
               </Button>
@@ -438,7 +437,7 @@
               </VirtualizingStackPanel>
             </ItemsPanelTemplate>
           </DataGrid.ItemsPanel>
-
+          
           <DataGrid.RowStyle>
             <Style TargetType="DataGridRow">
               <Style.Triggers>

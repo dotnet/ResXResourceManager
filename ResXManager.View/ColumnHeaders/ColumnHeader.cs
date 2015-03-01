@@ -8,6 +8,7 @@
         {
             Content = content;
             ColumnType = columnType;
+            Focusable = false;
         }
 
         public ColumnType ColumnType

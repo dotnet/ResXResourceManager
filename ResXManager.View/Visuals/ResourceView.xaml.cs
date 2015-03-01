@@ -10,7 +10,9 @@
     using System.Windows.Data;
     using System.Windows.Interactivity;
     using System.Windows.Threading;
+
     using DataGridExtensions;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Controls;
     using tomenglertde.ResXManager.View.Properties;
@@ -41,7 +43,7 @@
             set { SetValue(TextFontSizeProperty, value); }
         }
         public static readonly DependencyProperty TextFontSizeProperty =
-            DependencyProperty.RegisterAttached("TextFontSize", typeof (double), typeof (ResourceView), new FrameworkPropertyMetadata(12.0, FrameworkPropertyMetadataOptions.Inherits));
+            DependencyProperty.RegisterAttached("TextFontSize", typeof(double), typeof(ResourceView), new FrameworkPropertyMetadata(12.0, FrameworkPropertyMetadataOptions.Inherits));
 
         private ResourceManager ViewModel
         {
@@ -133,7 +135,7 @@
         }
 
         /// <summary>
-        /// Assemblies ony referenced via reflection (XAML) can cause problems at runtime, sometimes they are not correctly installed
+        /// Assemblies only referenced via reflection (XAML) can cause problems at runtime, sometimes they are not correctly installed
         /// by the VSIX installer. Add some code references to avoid this problem by forcing the assemblies to be loaded before the XAML is loaded.
         /// </summary>
         static class References
@@ -157,6 +159,5 @@
         {
             Contract.Invariant(DataGrid != null);
         }
-
     }
 }
