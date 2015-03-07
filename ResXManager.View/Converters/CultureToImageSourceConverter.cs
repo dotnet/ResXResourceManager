@@ -7,12 +7,15 @@
     using System.Windows.Data;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
+    using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
     public class CultureToImageSourceConverter : IValueConverter
     {
-        private static readonly string[] ExistingFlags =
+        public static readonly IValueConverter Default = new CultureToImageSourceConverter();
+
+        private static readonly string[] _existingFlags =
         {
             "ad", "ae", "af", "ag", "ai", "al", "am", "an", "ao", "ar", "as", "at", "au", "aw", "ax", "az", "ba", "bb", "bd", "be", "bf",
             "bg", "bh", "bi", "bj", "bm", "bn", "bo", "br", "bs", "bt", "bv", "bw", "by", "bz", "ca", "cc", "cd", "cf", "cg", "ch", "ci",
@@ -42,9 +45,9 @@
 
         internal static ImageSource Convert(object value)
         {
-            var culture = value as CultureInfo ?? Settings.Default.NeutralResourceLanguage;
-
-            Contract.Assume(culture != null);
+            var culture = value as CultureInfo;
+            if (culture == null)
+                return null;
 
             var cultureName = culture.Name;
 
@@ -57,9 +60,12 @@
             }
 
             var cultureParts = cultureName.Split('-');
+            if (!cultureParts.Any())
+                return null;
+
             var key = cultureParts.Last();
 
-            if (Array.BinarySearch(ExistingFlags, key, StringComparer.OrdinalIgnoreCase) < 0)
+            if (Array.BinarySearch(_existingFlags, key, StringComparer.OrdinalIgnoreCase) < 0)
                 return null;
 
             var resourcePath = string.Format(CultureInfo.InvariantCulture, @"/ResXManager.View;component/Flags/{0}.gif", key);

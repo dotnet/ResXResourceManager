@@ -8,16 +8,15 @@
 
     public class LanguageColumnFilterConverter : IValueConverter
     {
-        public LanguageColumnFilterConverter()
-        {
-                
-        }
+        public static readonly IValueConverter Default = new LanguageColumnFilterConverter();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var collectionViewSource = new CollectionViewSource() { Source = value };
             var collectionView = collectionViewSource.View;
-            collectionView.Filter = Filter;
+            if (collectionView != null)
+                collectionView.Filter = Filter;
+
             return collectionView;
         }
 

@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Behaviors
 {
     using System;
+    using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Documents;
     using System.Windows.Input;
@@ -9,11 +10,12 @@
     public class ZoomFontSizeOnMouseWheelBehavior : Behavior<FrameworkElement>
     {
         private double? _initialFontSize;
-        private double _zoom = 1.0;
+        private int _zoomOffset;
 
         protected override void OnAttached()
         {
             base.OnAttached();
+            Contract.Assume(AssociatedObject != null);
 
             AssociatedObject.PreviewMouseWheel += AssociatedObject_PreviewMouseWheel;
         }
@@ -21,6 +23,7 @@
         protected override void OnDetaching()
         {
             base.OnDetaching();
+            Contract.Assume(AssociatedObject != null);
 
             AssociatedObject.PreviewMouseWheel -= AssociatedObject_PreviewMouseWheel;
         }
@@ -32,29 +35,24 @@
 
             e.Handled = true;
 
-            if (e.Delta > 0)
-            {
-                _zoom *= 1.1;
-            }
-            else
-            {
-                _zoom /= 1.1;
-            }
-
-            _zoom = Math.Max(0.5, Math.Min(5, _zoom));
+            var newZoomOffset = _zoomOffset + Math.Sign(e.Delta);
 
             if (!_initialFontSize.HasValue)
             {
                 _initialFontSize = TextElement.GetFontSize(AssociatedObject);
             }
 
-            var effectiveZoom = Math.Round(_zoom, 1);
+            var newFontSize = _initialFontSize.Value + newZoomOffset;
 
-            TextElement.SetFontSize(AssociatedObject, _initialFontSize.Value * effectiveZoom);
-
-            if (Math.Abs(1.0 - effectiveZoom) < 0.1)
+            if ((newFontSize >= 4) && (newFontSize < 48))
             {
-                _initialFontSize = null;
+                _zoomOffset = newZoomOffset;
+                TextElement.SetFontSize(AssociatedObject, newFontSize);
+
+                if (newZoomOffset == 0)
+                {
+                    _initialFontSize = null;
+                }
             }
         }
     }

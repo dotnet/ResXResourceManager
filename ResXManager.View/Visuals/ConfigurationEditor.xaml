@@ -1,0 +1,158 @@
+﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.ConfigurationEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="600"
+             xmlns:model="urn:ResXManager.Model"
+             xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
+             xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
+             xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
+             d:DataContext="{d:DesignInstance model:ResourceManager}"
+             Background="LightGray" Width="800">
+  <UserControl.Resources>
+
+    <converters:ConfirmedCommandConverter x:Key="SortNodesByKeyCommandConverter" Query="{x:Static properties:Resources.SortNodesByKey_Confirmation}" />
+
+    <Style x:Key="LabelStyle">
+      <Setter Property="TextElement.Foreground" Value="DarkSlateGray" />
+      <Setter Property="TextElement.FontWeight" Value="DemiBold" />
+      <Setter Property="FrameworkElement.VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style TargetType="Control" x:Key="ControlWithErrorToolTipStyle">
+      <Style.Triggers>
+        <Trigger Property="Validation.HasError" Value="True">
+          <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+
+    <Style TargetType="HeaderedContentControl" x:Key="GroupStyle">
+      <Setter Property="HeaderTemplate">
+        <Setter.Value>
+          <DataTemplate>
+            <Border Background="{x:Static SystemColors.ControlBrush}">
+              <TextBlock Text="{Binding}" Margin="3" FontWeight="Bold" />
+            </Border>
+          </DataTemplate>
+        </Setter.Value>
+      </Setter>
+      <Setter Property="Grid.IsSharedSizeScope" Value="True" />
+      <Setter Property="Focusable" Value="False"/>
+    </Style>
+
+    <Style TargetType="HeaderedContentControl" x:Key="PropertyStyle">
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="{x:Type HeaderedContentControl}">
+            <DockPanel Margin="5">
+              <Grid DockPanel.Dock="Left" Margin="5,0">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition SharedSizeGroup="LeftColum" />
+                </Grid.ColumnDefinitions>
+                <ContentPresenter ContentSource="Header" Style="{StaticResource LabelStyle}" />
+              </Grid>
+              <ContentPresenter VerticalAlignment="Center" />
+            </DockPanel>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+      <Setter Property="Focusable" Value="False"/>
+    </Style>
+
+  </UserControl.Resources>
+
+  <StackPanel Margin="10" HorizontalAlignment="Left">
+
+    <HeaderedContentControl Header="{x:Static properties:Resources.ConfigurationScopeHeader}" Style="{StaticResource GroupStyle}" Visibility="{Binding Configuration.IsScopeSupported, Converter={x:Static converters:BooleanToVisibilityConverter.Default}}">
+      <Control Focusable="False">
+        <Control.Template>
+          <ControlTemplate>
+            <Border x:Name="Background" Background="Yellow">
+              <TextBlock x:Name="Text" Margin="10" TextWrapping="Wrap" Text="{x:Static properties:Resources.EditDefaultConfigurationNotification}" />
+            </Border>
+            <ControlTemplate.Triggers>
+              <DataTrigger Binding="{Binding Configuration.Scope}" Value="{x:Static model:ConfigurationScope.Solution}">
+                <Setter TargetName="Background" Property="Background" Value="Orange" />
+                <Setter TargetName="Text" Property="Text" Value="{x:Static properties:Resources.EditSolutionConfigurationNotification}" />
+              </DataTrigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Control.Template>
+      </Control>
+    </HeaderedContentControl>
+
+    <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_General}" Style="{StaticResource GroupStyle}">
+      <StackPanel Margin="10">
+        <StackPanel Orientation="Horizontal">
+          <TextBlock Text="{x:Static properties:Resources.NeutralResourceLanguageHeader}" Style="{StaticResource LabelStyle}" />
+          <Decorator Width="5" />
+          <ComboBox Width="175" ItemsSource="{Binding Source={x:Static Member=model:ResourceManager.SpecificCultures}}" SelectedItem="{Binding Configuration.NeutralResourcesLanguage}">
+            <ComboBox.ItemTemplate>
+              <DataTemplate DataType="globalization:CultureInfo">
+                <DockPanel>
+                  <Image DockPanel.Dock="Left" Stretch="None" Source="{Binding Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+                  <Decorator DockPanel.Dock="Left" Width="5" />
+                  <TextBlock Text="{Binding Path=DisplayName}" />
+                </DockPanel>
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+        </StackPanel>
+      </StackPanel>
+    </HeaderedContentControl>
+
+    <Decorator Height="5" />
+
+    <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_LoadSaveHeader}" Style="{StaticResource GroupStyle}">
+      <StackPanel Margin="10">
+        <DockPanel KeyboardNavigation.TabNavigation="Local">
+          <Button DockPanel.Dock="Right" Padding="5,2" TabIndex="1"
+                  Content="{x:Static properties:Resources.SortAllFilesNow}"
+                  Command="{Binding SortNodesByKeyCommand, Converter={StaticResource SortNodesByKeyCommandConverter}}" />
+          <Decorator Width="50" DockPanel.Dock="Right" />
+          <CheckBox IsChecked="{Binding Configuration.SortFileContentOnSave}" TabIndex="0"
+                    Style="{StaticResource LabelStyle}"
+                    Content="{x:Static properties:Resources.SortNodesByKey}" />
+        </DockPanel>
+      </StackPanel>
+    </HeaderedContentControl>
+
+    <Decorator Height="5" />
+
+    <HeaderedContentControl Header="{x:Static properties:Resources.DetectCodeReferences_Header}" Style="{StaticResource GroupStyle}">
+      <DataGrid ItemsSource="{Binding Configuration.CodeReferences.Items}"
+                RowEditEnding="CodeReferencesConfiguration_RowEditEnding"
+                CellEditEnding="CodeReferencesConfiguration_CellEditEnding"
+                AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False"
+                HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
+                Margin="10" MinHeight="50" MaxHeight="250" MinWidth="700">
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="{x:Static properties:Resources.FileExtensions}" Binding="{Binding Extensions}" Width="2*" HeaderStyle="{StaticResource LabelStyle}" />
+          <DataGridTextColumn Header="{x:Static properties:Resources.RegularExpression}" Binding="{Binding Expression}" Width="5*" HeaderStyle="{StaticResource LabelStyle}" />
+          <DataGridCheckBoxColumn Header="{x:Static properties:Resources.CaseSensitive}" Binding="{Binding IsCaseSensitive}" Width="*" HeaderStyle="{StaticResource LabelStyle}" />
+          <DataGridTextColumn Header="{x:Static properties:Resources.CommentToken}" Binding="{Binding SingleLineComment}" Width="2*" HeaderStyle="{StaticResource LabelStyle}" />
+        </DataGrid.Columns>
+        <i:Interaction.Behaviors>
+          <dgx:ExtendedStarSizeBehavior />
+        </i:Interaction.Behaviors>
+      </DataGrid>
+    </HeaderedContentControl>
+
+    <Decorator Height="10" />
+
+    <!--
+    <HeaderedContentControl Header="File creation" Style="{StaticResource GroupStyle}">
+      <StackPanel>
+        <CheckBox Content ="Create all resource files when adding a new resource language" Margin="10,5" FontWeight="Bold"/>
+        <HeaderedContentControl Header="Fill :" Style="{StaticResource PropertyStyle}">
+          <TextBox Style="{StaticResource ControlWithErrorToolTipStyle}"
+                   Text="{Binding DetectCodeReferences_Exclude, Source={x:Static model:Settings.Default}, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"/>
+        </HeaderedContentControl>
+      </StackPanel>
+    </HeaderedContentControl>-->
+
+
+  </StackPanel>
+</UserControl>

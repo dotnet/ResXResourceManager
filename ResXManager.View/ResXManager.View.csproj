@@ -63,7 +63,18 @@
     <CodeContractsCacheAnalysisResults>True</CodeContractsCacheAnalysisResults>
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
     <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
-    <CodeContractsAnalysisWarningLevel>2</CodeContractsAnalysisWarningLevel>
+    <CodeContractsAnalysisWarningLevel>3</CodeContractsAnalysisWarningLevel>
+    <CodeContractsAssertsToContractsCheckBox>True</CodeContractsAssertsToContractsCheckBox>
+    <CodeContractsRedundantTests>True</CodeContractsRedundantTests>
+    <CodeContractsMissingPublicRequiresAsWarnings>True</CodeContractsMissingPublicRequiresAsWarnings>
+    <CodeContractsMissingPublicEnsuresAsWarnings>False</CodeContractsMissingPublicEnsuresAsWarnings>
+    <CodeContractsSuggestAssumptionsForCallees>False</CodeContractsSuggestAssumptionsForCallees>
+    <CodeContractsNecessaryEnsures>True</CodeContractsNecessaryEnsures>
+    <CodeContractsSuggestReadonly>True</CodeContractsSuggestReadonly>
+    <CodeContractsSQLServerOption />
+    <CodeContractsSkipAnalysisIfCannotConnectToCache>False</CodeContractsSkipAnalysisIfCannotConnectToCache>
+    <CodeContractsFailBuildOnWarnings>False</CodeContractsFailBuildOnWarnings>
+    <CodeContractsBeingOptimisticOnExternal>True</CodeContractsBeingOptimisticOnExternal>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -78,7 +89,7 @@
     <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
     <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
     <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
-    <CodeContractsRunCodeAnalysis>True</CodeContractsRunCodeAnalysis>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
     <CodeContractsNonNullObligations>True</CodeContractsNonNullObligations>
     <CodeContractsBoundsObligations>True</CodeContractsBoundsObligations>
     <CodeContractsArithmeticObligations>True</CodeContractsArithmeticObligations>
@@ -107,6 +118,17 @@
     <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
     <CodeContractsAnalysisWarningLevel>2</CodeContractsAnalysisWarningLevel>
     <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsAssertsToContractsCheckBox>True</CodeContractsAssertsToContractsCheckBox>
+    <CodeContractsRedundantTests>True</CodeContractsRedundantTests>
+    <CodeContractsMissingPublicRequiresAsWarnings>True</CodeContractsMissingPublicRequiresAsWarnings>
+    <CodeContractsMissingPublicEnsuresAsWarnings>False</CodeContractsMissingPublicEnsuresAsWarnings>
+    <CodeContractsSuggestAssumptionsForCallees>False</CodeContractsSuggestAssumptionsForCallees>
+    <CodeContractsNecessaryEnsures>True</CodeContractsNecessaryEnsures>
+    <CodeContractsSuggestReadonly>True</CodeContractsSuggestReadonly>
+    <CodeContractsSQLServerOption />
+    <CodeContractsSkipAnalysisIfCannotConnectToCache>False</CodeContractsSkipAnalysisIfCannotConnectToCache>
+    <CodeContractsFailBuildOnWarnings>False</CodeContractsFailBuildOnWarnings>
+    <CodeContractsBeingOptimisticOnExternal>True</CodeContractsBeingOptimisticOnExternal>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -118,21 +140,46 @@
     <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DataGridExtensions, Version=1.0.15.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
+    <Reference Include="DataGridExtensions, Version=1.0.21.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DataGridExtensions.1.0.15.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
+      <HintPath>..\packages\DataGridExtensions.1.0.21.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
+    <Reference Include="JetBrains.Annotations">
+      <HintPath>..\packages\JetBrains.Annotations.8.0.5.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Interactivity" />
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="TomsToolbox.Core, Version=1.0.2.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\TomsToolbox.Core.1.0.2.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="TomsToolbox.Desktop, Version=1.0.2.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.2.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.2.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.2.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
+    </Reference>
+    <Reference Include="TomsToolbox.Wpf, Version=1.0.2.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\TomsToolbox.Wpf.1.0.2.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -142,20 +189,21 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
-    <Compile Include="Behaviors\DataGridBeginEditOnCtrlEnterBehavior.cs" />
-    <Compile Include="Behaviors\DataGridDisableTargetWhileEditingBehavior.cs" />
     <Compile Include="Behaviors\DataGridTryBeginEditBehavior.cs" />
     <Compile Include="Behaviors\PopupFocusManagerBehavior.cs" />
     <Compile Include="Behaviors\SelectGroupOnGroupHeaderClickBehavior.cs" />
     <Compile Include="Behaviors\ShowErrorsOnlyBehavior.cs" />
     <Compile Include="Behaviors\SynchronizeTextBoxWithDataGridCellBehavior.cs" />
-    <Compile Include="Behaviors\UpdateNeutralColumnHeadersBehavior.cs" />
     <Compile Include="Behaviors\ZoomFontSizeOnMouseWheelBehavior.cs" />
-    <Compile Include="ColumnHeaders\LanguageColumnHeader.cs" />
+    <Compile Include="ColumnHeaders\LanguageColumnHeaderBase.cs" />
     <Compile Include="Converters\AddNewKeyCommandConverter.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\CultureToXmlLanguageConverter.cs" />
     <Compile Include="Tools\ColumnManager.cs" />
     <Compile Include="Tools\CultureOverrideEventArgs.cs" />
     <Compile Include="Tools\NeutralCultureCountyOverrides.cs" />
+    <Compile Include="Tools\PropertyBinding.cs" />
+    <Compile Include="Tools\PropertyBindingValueChangedEventArgs.cs" />
     <Compile Include="Visuals\CodeReferencesToolTip.xaml.cs">
       <DependentUpon>CodeReferencesToolTip.xaml</DependentUpon>
     </Compile>
@@ -165,6 +213,9 @@
     <Compile Include="Converters\CultureToImageSourceConverter.cs" />
     <Compile Include="Converters\DataGridToSelectionScopeConverter.cs" />
     <Compile Include="ColumnHeaders\IColumnHeader.cs" />
+    <Compile Include="Visuals\ConfigurationEditor.xaml.cs">
+      <DependentUpon>ConfigurationEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Visuals\LanguageConfiguration.xaml.cs">
       <DependentUpon>LanguageConfiguration.xaml</DependentUpon>
     </Compile>
@@ -175,7 +226,6 @@
     <Compile Include="Converters\LanguageColumnFilterConverter.cs" />
     <Compile Include="ColumnHeaders\LanguageHeader.cs" />
     <Compile Include="Tools\ExtensionMethods.cs" />
-    <Compile Include="Tools\MultiSelectorExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -200,6 +250,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Visuals\CodeReferencesToolTip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\ConfigurationEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

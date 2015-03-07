@@ -149,5 +149,14 @@ namespace tomenglertde.ResXManager.VSIX {
                 return ResourceManager.GetString("ToolWindowTitle", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version: {0}.
+        /// </summary>
+        internal static string Version {
+            get {
+                return ResourceManager.GetString("Version", resourceCulture);
+            }
+        }
     }
 }

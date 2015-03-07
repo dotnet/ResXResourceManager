@@ -1,25 +1,27 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
-    using System.Globalization;
+    using System.Diagnostics.Contracts;
+    using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
-    public class LanguageHeader : LanguageColumnHeader
-    {
-        public LanguageHeader()
-            : base(null)
-        {
-        }
+    using TomsToolbox.Core;
 
-        public LanguageHeader(CultureInfo culture)
-            : base(culture)
+    public class LanguageHeader : LanguageColumnHeaderBase
+    {
+        public LanguageHeader(ResourceManager resourceManager, CultureKey cultureKey)
+            : base(resourceManager, cultureKey)
         {
+            Contract.Requires(resourceManager != null);
+            Contract.Requires(cultureKey != null);
         }
 
         public string DisplayName
         {
             get
             {
-                return (Language != null) ? Language.DisplayName : Resources.Neutral;
+                Contract.Ensures(Contract.Result<string>() != null);
+
+                return CultureKey.Culture.Maybe().Return(c => c.DisplayName) ?? Resources.Neutral;
             }
         }
 

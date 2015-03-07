@@ -1,18 +1,16 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
-    using System.Globalization;
+    using System.Diagnostics.Contracts;
+    using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
-    public class CommentHeader : LanguageColumnHeader
+    public class CommentHeader : LanguageColumnHeaderBase
     {
-        public CommentHeader()
-            : base(null)
+        public CommentHeader(ResourceManager resourceManager, CultureKey cultureKey)
+            : base(resourceManager, cultureKey)
         {
-        }
-
-        public CommentHeader(CultureInfo culture)
-            : base(culture)
-        {
+            Contract.Requires(resourceManager != null);
+            Contract.Requires(cultureKey != null);
         }
 
         public override ColumnType ColumnType

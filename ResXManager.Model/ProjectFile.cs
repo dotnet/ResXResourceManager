@@ -1,13 +1,11 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// Represents a file associated with a project.
@@ -27,7 +25,7 @@
         public ProjectFile(string filePath, string rootFolder, string projectName, string uniqueProjectName)
         {
             Contract.Requires(!string.IsNullOrEmpty(filePath));
-            Contract.Requires(!String.IsNullOrEmpty(rootFolder));
+            Contract.Requires(rootFolder != null);
 
             _filePath = filePath;
             RelativeFilePath = GetRelativePath(rootFolder, filePath);
@@ -77,18 +75,60 @@
 
         public string RelativeFilePath
         {
-            get; 
+            get;
             private set;
+        }
+
+        public virtual string Content
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<string>() != null);
+
+                return File.ReadAllText(FilePath);
+            }
+            set
+            {
+                Contract.Requires(value != null);
+
+                File.WriteAllText(FilePath, value, Encoding.UTF8);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the file associated with this instance can be written.
+        /// </summary>
+        public virtual bool IsWritable
+        {
+            get
+            {
+                try
+                {
+                    if ((File.GetAttributes(FilePath) & (FileAttributes.ReadOnly | FileAttributes.System)) != 0)
+                        return false;
+
+                    using (File.Open(FilePath, FileMode.Open, FileAccess.Write))
+                    {
+                        return true;
+                    }
+                }
+                catch (IOException) { }
+                catch (UnauthorizedAccessException) { }
+
+                return false;
+            }
         }
 
         private static string GetRelativePath(string solutionFolder, string filePath)
         {
-            Contract.Requires(!String.IsNullOrEmpty(solutionFolder));
+            Contract.Requires(solutionFolder != null);
             Contract.Requires(filePath != null);
+            Contract.Ensures(Contract.Result<string>() != null);
 
             solutionFolder = solutionFolder.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             filePath = filePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-            if (solutionFolder.Last() != Path.DirectorySeparatorChar)
+
+            if (!solutionFolder.Any() || (solutionFolder.Last() != Path.DirectorySeparatorChar))
             {
                 solutionFolder += Path.DirectorySeparatorChar;
             }

@@ -2,31 +2,23 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="700"
-             xmlns:dgx="clr-namespace:DataGridExtensions;assembly=DataGridExtensions"
+             xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              xmlns:windows="clr-namespace:System.Windows;assembly=PresentationFramework"
-             xmlns:model="clr-namespace:tomenglertde.ResXManager.Model;assembly=ResXManager.Model"
+             xmlns:model="urn:ResXManager.Model"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:columnHeaders="clr-namespace:tomenglertde.ResXManager.View.ColumnHeaders"
-             xmlns:tools="clr-namespace:tomenglertde.ResXManager.View.Tools"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:tomenglertde.ResXManager.View.Behaviors"
+             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:wpf="clr-namespace:TomsToolbox.Wpf;assembly=TomsToolbox.Wpf"
              x:Name="LayoutRoot"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
-             DataContextChanged="self_DataContextChanged"
              d:DataContext="{d:DesignInstance model:ResourceManager}">
   <UserControl.Resources>
 
-    <converters:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter" />
-    <converters:CultureToImageSourceConverter x:Key="CultureToImageSourceConverter" />
-    <converters:CultureToImageConverter x:Key="CultureToImageConverter" />
-    <converters:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Executing="DeleteCommandConverter_OnExecuting" />
-    <converters:ConfirmedCommandConverter x:Key="CutCommandConverter" Executing="CutCommandConverter_OnExecuting" />
-    <converters:LanguageColumnFilterConverter x:Key="LanguageColumnFilterConverter" />
-    <converters:AddNewKeyCommandConverter x:Key="AddNewKeyCommandConverter" />
-    <converters:DataGridToSelectionScopeConverter x:Key="DataGridToSelectionScopeConverter" />
-
-    <Image x:Shared="False" x:Key="CodeReferencesImage" SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/references.png" />
+    <converters:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Query="{x:Static properties:Resources.ConfirmDeleteItems}" />
+    <converters:ConfirmedCommandConverter x:Key="CutCommandConverter" Query="{x:Static properties:Resources.ConfirmCutItems}" />
 
     <Style TargetType="{x:Type Control}" x:Key="SingleSelectElementStyle">
       <Setter Property="IsEnabled" Value="False" />
@@ -48,6 +40,11 @@
     </Style>
 
     <CollectionViewSource x:Key="ResourceEntitiesSource" Source="{Binding FilteredResourceEntities}">
+      <CollectionViewSource.SortDescriptions>
+        <componentModel:SortDescription PropertyName="ProjectName"/>
+        <componentModel:SortDescription PropertyName="RelativePath"/>
+        <componentModel:SortDescription PropertyName="BaseName"/>
+      </CollectionViewSource.SortDescriptions>
       <CollectionViewSource.GroupDescriptions>
         <PropertyGroupDescription PropertyName="ProjectName" />
       </CollectionViewSource.GroupDescriptions>
@@ -61,9 +58,10 @@
 
   </UserControl.Resources>
   <UserControl.InputBindings>
-    <KeyBinding Key="N" Modifiers="Control" Command="{Binding Converter={StaticResource AddNewKeyCommandConverter}}" />
+    <KeyBinding Key="N" Modifiers="Control" Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}" />
+    <KeyBinding Key="Insert" Modifiers="Shift" Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}" />
   </UserControl.InputBindings>
-  <Grid>
+  <Grid FocusManager.FocusedElement="{Binding ElementName=DataGrid}">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto" MinWidth="120" />
       <ColumnDefinition Width="Auto" />
@@ -93,7 +91,7 @@
       <ListBox x:Name="ListBox"
                ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
                Margin="5" BorderThickness="0" SelectionMode="Extended"
-               tools:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}">
+               wpf:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}">
         <ListBox.ContextMenu>
           <ContextMenu>
             <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand}">
@@ -106,7 +104,7 @@
         <ListBox.ItemTemplate>
           <DataTemplate DataType="model:ResourceEntity">
             <DockPanel ToolTip="{Binding Path=Directory, Mode=OneWay}" Margin="5,2" HorizontalAlignment="Stretch">
-              <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" />
+              <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Focusable="False"/>
               <Decorator DockPanel.Dock="Left" Width="5" />
               <TextBlock Background="Transparent" VerticalAlignment="Center">
                 <Run Text="{Binding Path=RelativePath, Mode=OneWay}" /><Run Text="{Binding Path=BaseName, Mode=OneWay}" />
@@ -124,7 +122,7 @@
                     <ControlTemplate TargetType="{x:Type GroupItem}">
                       <StackPanel Background="Transparent" d:DataContext="{d:DesignInstance GroupItem}">
                         <i:Interaction.Behaviors>
-                          <behaviors:SelectGroupOnGroupHeaderClickBehavior/>
+                          <behaviors:SelectGroupOnGroupHeaderClickBehavior />
                         </i:Interaction.Behaviors>
                         <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" />
                         <ItemsPresenter />
@@ -142,24 +140,58 @@
     <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Left" VerticalAlignment="Stretch" />
 
     <DockPanel Grid.Column="2">
-      <DockPanel DockPanel.Dock="Bottom" Background="{Binding Background, ElementName=DataGrid}">
-        <Grid DataContext="{Binding SelectedItem, ElementName=ListBox}">
-          <Grid.Style>
-            <Style TargetType="Grid">
-              <Setter Property="Visibility" Value="Hidden" />
-              <Style.Triggers>
-                <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="1">
-                  <Setter Property="Visibility" Value="Visible" />
-                </DataTrigger>
-              </Style.Triggers>
-            </Style>
-          </Grid.Style>
-          <TextBlock Margin="5" d:DataContext="{d:DesignInstance model:ResourceEntity}">
-            <Run Text="{Binding Path=BaseName, Mode=OneWay}" FontWeight="Bold" />
-            <Run Text="{Binding Path=Directory, Mode=OneWay}" />
+      <Border DockPanel.Dock="Bottom" BorderThickness="0,0.7,0,0" BorderBrush="{x:Static SystemColors.ControlDarkBrush}">
+        <DockPanel DockPanel.Dock="Bottom" Background="{Binding Background, ElementName=DataGrid}">
+          <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" ToolTip="{x:Static properties:Resources.SelectedTotalToolTip}">
+            <Run Text="{Binding SelectedTableEntries.Count, Mode=OneWay}"/><Run Text="/"/><Run Text="{Binding ResourceTableEntries.Count, Mode=OneWay}"/><Run Text="  "/>
           </TextBlock>
-        </Grid>
-      </DockPanel>
+          <Control Focusable="False">
+            <Control.Template>
+              <ControlTemplate>
+                <ContentControl x:Name="footerContent" Foreground="Gray" Margin="5" Focusable="False">
+                  <TextBlock Text="{x:Static properties:Resources.MultipleSelection}"/>
+                </ContentControl>
+                <ControlTemplate.Triggers>
+                  <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                      <Condition Binding="{Binding SelectedItems.Count, ElementName=DataGrid}" Value="0"/>
+                      <Condition Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="0"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Content" TargetName="footerContent">
+                      <Setter.Value>
+                        <TextBlock Text="{x:Static properties:Resources.NoSelection}"/>
+                      </Setter.Value>
+                    </Setter>
+                  </MultiDataTrigger>
+                  <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="1">
+                    <Setter Property="DataContext" Value="{Binding SelectedItem, ElementName=ListBox}"/>
+                    <Setter Property="Content" TargetName="footerContent">
+                      <Setter.Value>
+                        <TextBlock d:DataContext="{d:DesignInstance model:ResourceEntity}">
+                        <Run Text="{Binding Path=BaseName, Mode=OneWay}" FontWeight="Bold" />
+                        (<Run Text="{Binding Path=Directory, Mode=OneWay}" />)
+                        </TextBlock>
+                      </Setter.Value>
+                    </Setter>
+                  </DataTrigger>
+                  <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=DataGrid}" Value="1">
+                    <Setter Property="DataContext" Value="{Binding SelectedItem, ElementName=DataGrid}"/>
+                    <Setter Property="Content" TargetName="footerContent">
+                      <Setter.Value>
+                        <TextBlock d:DataContext="{d:DesignInstance model:ResourceTableEntry}">
+                        <Run Text="{Binding Path=Key, Mode=OneWay}" Foreground="Black"/>:
+                        <Run Text="{Binding Path=Owner.BaseName, Mode=OneWay}" FontWeight="Bold" />
+                        (<Run Text="{Binding Path=Owner.Directory, Mode=OneWay}" />)
+                        </TextBlock>
+                      </Setter.Value>
+                    </Setter>
+                  </DataTrigger>
+                </ControlTemplate.Triggers>
+              </ControlTemplate>
+            </Control.Template>
+          </Control >
+        </DockPanel>
+      </Border>
       <Grid>
         <Grid.RowDefinitions>
           <RowDefinition Height="28" MinHeight="28" />
@@ -168,7 +200,7 @@
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0">
           <ToolBarTray DockPanel.Dock="Left" Background="{x:Static SystemColors.MenuBarBrush}">
-            <ToolBar x:Name="ToolBar" IsOverflowOpen="False" Background="{x:Static SystemColors.MenuBarBrush}">
+            <ToolBar x:Name="ToolBar" IsOverflowOpen="False" Background="{x:Static SystemColors.MenuBarBrush}" KeyboardNavigation.TabNavigation="Continue">
               <Button ToolTip="{x:Static properties:Resources.RefreshViewToolTip}" Command="{Binding ReloadCommand}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/refresh.png" />
               </Button>
@@ -223,7 +255,7 @@
               </Button>
               <Button ToolTip="{x:Static properties:Resources.AddKeyToolTip}"
                       Style="{StaticResource SingleSelectElementStyle}"
-                      Command="{Binding Converter={StaticResource AddNewKeyCommandConverter}}">
+                      Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/add.png" />
               </Button>
               <Separator />
@@ -237,13 +269,13 @@
                     </StackPanel>
                   </MenuItem.Header>
                   <MenuItem Header="{x:Static properties:Resources.ExportExcelAll}" Command="{Binding ExportExcelAllCommand}" />
-                  <MenuItem Header="{x:Static properties:Resources.ExportExcelSelection}" Command="{Binding ExportExcelSelectedCommand}" CommandParameter="{Binding ElementName=DataGrid, Converter={StaticResource DataGridToSelectionScopeConverter}}" />
+                  <MenuItem Header="{x:Static properties:Resources.ExportExcelSelection}" Command="{Binding ExportExcelSelectedCommand}" CommandParameter="{Binding ElementName=DataGrid, Converter={x:Static converters:DataGridToSelectionScopeConverter.Default}}" />
                   <MenuItem Header="{x:Static properties:Resources.ImportExcel}" Command="{Binding ImportExcelCommand}" />
                 </MenuItem>
               </Menu>
               <Separator />
               <Button x:Name="LikeButton" ToolTip="{x:Static properties:Resources.LikeButtonToolTip}"
-                      Tag="http://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68">
+                      Tag="http://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68/view/Reviews">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/like.png" />
               </Button>
               <Button x:Name="HelpButton" ToolTip="{x:Static properties:Resources.HelpButtonToolTip}"
@@ -261,7 +293,7 @@
               <behaviors:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=ColumnChooserToggleButton}" />
             </i:Interaction.Behaviors>
             <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-              <ListBox ItemsSource="{Binding Columns, ElementName=DataGrid, Converter={StaticResource LanguageColumnFilterConverter} }"
+              <ListBox ItemsSource="{Binding Columns, ElementName=DataGrid, Converter={x:Static converters:LanguageColumnFilterConverter.Default} }"
                        SelectionMode="Multiple" KeyboardNavigation.TabNavigation="Once">
                 <ListBox.ItemTemplate>
                   <DataTemplate DataType="DataGridColumn">
@@ -270,7 +302,7 @@
                                 IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" />
                       <Decorator DockPanel.Dock="Left" Width="2" />
                       <Image DockPanel.Dock="Left"
-                             Source="{Binding Path=Header.Language, Converter={StaticResource CultureToImageSourceConverter}, FallbackValue={x:Null}}" />
+                             Source="{Binding Path=Header.EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}, FallbackValue={x:Null}}" />
                       <Decorator DockPanel.Dock="Left" Width="2" />
                       <Decorator DockPanel.Dock="Right" Width="3" />
                       <ContentPresenter Content="{Binding Path=Header}" VerticalAlignment="Center" />
@@ -279,7 +311,7 @@
                 </ListBox.ItemTemplate>
                 <ListBox.ItemContainerStyle>
                   <Style TargetType="ListBoxItem">
-                    <Setter Property="IsSelected" Value="{Binding Path=Visibility, Converter={StaticResource VisibilityToBooleanConverter}}" />
+                    <Setter Property="IsSelected" Value="{Binding Path=Visibility, Converter={x:Static converters:VisibilityToBooleanConverter.Default}}" />
                     <Setter Property="Template">
                       <Setter.Value>
                         <ControlTemplate TargetType="ListBoxItem">
@@ -304,7 +336,7 @@
                   dgx:DataGridFilter.IsAutoFilterEnabled="True" AutoGenerateColumns="False"
                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
                   SelectedItem="{Binding SelectedEntry, Mode=TwoWay}"
-                  tools:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
+                  wpf:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
           <DataGrid.Resources>
 
             <ContextMenu x:Key="RowContextMenu">
@@ -339,7 +371,7 @@
               <ContextMenu.ItemContainerStyle>
                 <Style TargetType="MenuItem">
                   <Setter Property="Header" Value="{Binding Path=DisplayName}" />
-                  <Setter Property="Icon" Value="{Binding Converter={StaticResource CultureToImageConverter}}" />
+                  <Setter Property="Icon" Value="{Binding Converter={x:Static converters:CultureToImageConverter.Default}}" />
                   <EventSetter Event="Click" Handler="NeutralLanguage_Click" />
                 </Style>
               </ContextMenu.ItemContainerStyle>
@@ -358,12 +390,8 @@
               <DockPanel>
                 <Grid DockPanel.Dock="Left" Background="Transparent"
                       Style="{StaticResource NeutralLanguageImageContainerStyle}">
-                  <Image x:Name="neutralImage"
-                         Source="{Binding Path=NeutralResourceLanguage, Source={x:Static properties:Settings.Default}, Converter={StaticResource CultureToImageSourceConverter}}"
-                         Stretch="None" />
-                  <Image x:Name="image"
-                         Source="{Binding Path=Language, Converter={StaticResource CultureToImageSourceConverter}}"
-                         Stretch="None" />
+                  <Image x:Name="image" Stretch="None" 
+                         Source="{Binding Path=EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
                 </Grid>
                 <Decorator x:Name="padding" DockPanel.Dock="Left" Width="4" />
                 <TextBlock Text="{Binding Path=DisplayName}" TextTrimming="CharacterEllipsis" />
@@ -373,7 +401,8 @@
             <DataTemplate DataType="{x:Type columnHeaders:CommentHeader}">
               <TextBlock><Run Text="{x:Static properties:Resources.CommentColumnHeader}"/><Run Text=" ("/><InlineUIContainer>
                   <Grid>
-                  <Image x:Name="image" Source="{Binding Path=Language, Converter={StaticResource CultureToImageSourceConverter}}" Stretch="None" Margin="1,2,1,-2"/>
+                  <Image x:Name="image" Stretch="None" Margin="1,2,1,-2"
+                         Source="{Binding Path=EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
                 </Grid></InlineUIContainer><Run Text=")"/>
               </TextBlock>
             </DataTemplate>
@@ -401,14 +430,14 @@
               <VirtualizingStackPanel
                 ContextMenu="{StaticResource RowContextMenu}"
                 DataContext="{Binding Path=DataContext, ElementName=DataGrid}"
-                TextElement.FontSize="{Binding Path=TextFontSize, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" >
+                TextElement.FontSize="{Binding Path=TextFontSize, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}">
                 <i:Interaction.Behaviors>
                   <behaviors:ZoomFontSizeOnMouseWheelBehavior />
                 </i:Interaction.Behaviors>
               </VirtualizingStackPanel>
             </ItemsPanelTemplate>
           </DataGrid.ItemsPanel>
-
+          
           <DataGrid.RowStyle>
             <Style TargetType="DataGridRow">
               <Style.Triggers>
@@ -462,11 +491,11 @@
           </DataGrid.Style>
 
           <i:Interaction.Behaviors>
-            <behaviors:DataGridBeginEditOnCtrlEnterBehavior />
+            <dgx:BeginEditOnCtrlEnterBehavior />
+            <dgx:DisableTargetWhileEditingBehavior Target="{Binding ElementName=ToolBar}" />
+            <dgx:ExtendedStarSizeBehavior/>
             <behaviors:ShowErrorsOnlyBehavior ToggleButton="{Binding ElementName=ErrorsOnlyFilterButton}" />
-            <behaviors:DataGridDisableTargetWhileEditingBehavior Target="{Binding ElementName=ToolBar}" />
             <behaviors:DataGridTryBeginEditBehavior />
-            <behaviors:UpdateNeutralColumnHeadersBehavior/>
           </i:Interaction.Behaviors>
         </DataGrid>
       </Grid>

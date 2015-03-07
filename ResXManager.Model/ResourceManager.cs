@@ -14,20 +14,29 @@
     using System.Windows;
     using System.Windows.Data;
     using System.Windows.Input;
+
     using Microsoft.Win32;
+
     using tomenglertde.ResXManager.Model.Properties;
+
+    using TomsToolbox.Desktop;
+    using TomsToolbox.ObservableCollections;
+    using TomsToolbox.Wpf;
 
     /// <summary>
     /// Represents all resources found in a folder and its's sub folders.
     /// </summary>
     public class ResourceManager : ObservableObject
     {
-        private static readonly string[] SortedCultureNames = GetSortedCultureNames();
+        private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
+        private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
+
         private readonly DispatcherThrottle _selectedEntitiesChangeThrottle;
+        private Configuration _configuration = new Configuration();
 
         private ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
         private ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
-        private ListCollectionViewListAdapter _filteredResourceEntities;
+        private ListCollectionViewListAdapter<ResourceEntity> _filteredResourceEntities;
 
         private ObservableCompositeCollection<ResourceTableEntry> _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>();
         private IList<ResourceTableEntry> _selectedTableEntries = new List<ResourceTableEntry>();
@@ -43,18 +52,23 @@
         public ResourceManager()
         {
             _selectedEntitiesChangeThrottle = new DispatcherThrottle(OnSelectedEntitiesChanged);
-            _filteredResourceEntities = new ListCollectionViewListAdapter(new ListCollectionView(_resourceEntities));
+            _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
         }
 
         /// <summary>
         /// Loads all resources from the specified project files.
         /// </summary>
         /// <param name="allSourceFiles">All resource x files.</param>
-        public void Load(IList<ProjectFile> allSourceFiles)
+        /// <param name="configuration"></param>
+        public void Load<T>(IList<T> allSourceFiles, Configuration configuration)
+            where T: ProjectFile
         {
             Contract.Requires(allSourceFiles != null);
+            Contract.Requires(configuration != null);
 
             CodeReference.StopFind();
+
+            Configuration = configuration;
 
             var resourceFilesByDirectory = allSourceFiles
                 .Where(file => file.IsResourceFile())
@@ -76,6 +90,7 @@
 
             foreach (var resourceLanguage in changedResourceLanguages)
             {
+                Contract.Assume(resourceLanguage != null);
                 resourceLanguage.Save();
             }
         }
@@ -85,6 +100,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<IEnumerable<ResourceEntity>>() != null);
+
                 return _resourceEntities;
             }
         }
@@ -94,24 +110,28 @@
             get
             {
                 Contract.Ensures(Contract.Result<IList>() != null);
+
                 return _filteredResourceEntities;
             }
         }
 
-        public IEnumerable<ResourceTableEntry> ResourceTableEntries
+        public ICollection<ResourceTableEntry> ResourceTableEntries
         {
             get
             {
                 Contract.Ensures(Contract.Result<IEnumerable<ResourceTableEntry>>() != null);
+
                 return _resourceTableEntries;
             }
         }
 
-        public IEnumerable<CultureInfo> Languages
+        public IEnumerable<CultureKey> CultureKeys
         {
             get
             {
-                return ResourceEntities.SelectMany(entity => entity.Languages).Distinct().Select(lang => lang.Culture);
+                Contract.Ensures(Contract.Result<IEnumerable<CultureKey>>() != null);
+
+                return ResourceEntities.SelectMany(entity => entity.Languages).Distinct().Select(lang => lang.CultureKey);
             }
         }
 
@@ -120,6 +140,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<IList<ResourceEntity>>() != null);
+
                 return _selectedEntities;
             }
         }
@@ -129,6 +150,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<IList<ResourceTableEntry>>() != null);
+
                 return _selectedTableEntries;
             }
         }
@@ -153,7 +175,9 @@
         {
             get
             {
-                return CultureInfo.GetCultures(CultureTypes.SpecificCultures).OrderBy(c => c.DisplayName);
+                Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
+
+                return _specificCultures;
             }
         }
 
@@ -179,6 +203,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(CanCutOrCopy, CopySelected);
             }
         }
@@ -187,15 +213,9 @@
         {
             get
             {
-                return new DelegateCommand(CanCutOrCopy, CutSelected);
-            }
-        }
+                Contract.Ensures(Contract.Result<ICommand>() != null);
 
-        public ICommand AddNewCommand
-        {
-            get
-            {
-                return new DelegateCommand(CanAddNew, AddNew);
+                return new DelegateCommand(CanCutOrCopy, CutSelected);
             }
         }
 
@@ -203,6 +223,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(CanDelete, DeleteSelected);
             }
         }
@@ -211,6 +233,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(CanPaste, Paste);
             }
         }
@@ -219,8 +243,10 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand<IResourceScope>(
-                    scope => scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()), 
+                    scope => scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()),
                     ExportExcel);
             }
         }
@@ -229,6 +255,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(() => ExportExcel(null));
             }
         }
@@ -237,6 +265,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(ImportExcel);
             }
         }
@@ -245,6 +275,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(() => _selectedTableEntries.Any(), CopyKeys);
             }
         }
@@ -253,6 +285,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(() => _selectedTableEntries.Any(), ToggleInvariant);
             }
         }
@@ -261,8 +295,21 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(OnReloadRequested);
             }
+        }
+
+        public ICommand SortNodesByKeyCommand
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
+                return new DelegateCommand(SortNodesByKey);
+            }
+
         }
 
         public bool? AreAllFilesSelected
@@ -293,6 +340,23 @@
             }
         }
 
+        public Configuration Configuration
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<Configuration>() != null);
+
+                return _configuration;
+            }
+            set
+            {
+                if (Equals(value, _configuration))
+                    return;
+                _configuration = value;
+                OnPropertyChanged(() => Configuration);
+            }
+        }
+
         public void AddNewKey(ResourceEntity entity, string key)
         {
             Contract.Requires(entity != null);
@@ -302,12 +366,14 @@
                 return;
 
             var entry = entity.Add(key);
+            if (entry == null)
+                return;
 
             _selectedTableEntries = new List<ResourceTableEntry> { entry };
             OnPropertyChanged(() => SelectedTableEntries);
         }
 
-        public bool CanEdit(ResourceEntity resourceEntity, CultureInfo language)
+        private bool CanEdit(ResourceEntity resourceEntity, CultureInfo culture)
         {
             Contract.Requires(resourceEntity != null);
 
@@ -316,16 +382,11 @@
             if (eventHandler == null)
                 return true;
 
-            var args = new ResourceBeginEditingEventArgs(resourceEntity, language);
+            var args = new ResourceBeginEditingEventArgs(resourceEntity, culture);
 
             eventHandler(this, args);
 
             return !args.Cancel;
-        }
-
-        private bool CanAddNew()
-        {
-            return SelectedEntities.Count == 1;
         }
 
         private bool CanDelete()
@@ -374,23 +435,6 @@
             Clipboard.SetText(entries.ToTextTable());
         }
 
-        private void AddNew()
-        {
-
-            if (_selectedEntities.Count != 1)
-                return;
-
-            var entity = _selectedEntities[0];
-
-            if (!entity.CanEdit(null))
-                return;
-
-            var entry = entity.AddNewKey();
-
-            _selectedTableEntries = new List<ResourceTableEntry> { entry };
-            OnPropertyChanged(() => SelectedTableEntries);
-        }
-
         public void DeleteSelected()
         {
             var selectedItems = _selectedTableEntries.ToList();
@@ -422,27 +466,15 @@
 
             try
             {
-                switch (entity.ImportTextTable(Clipboard.GetText()))
-                {
-                    case ImportResult.Partial:
-                        MessageBox.Show(Resources.ImportFailedPartiallyError, Resources.Title);
-                        break;
-
-                    case ImportResult.None:
-                        MessageBox.Show(Resources.ImportFailedError, Resources.Title);
-                        break;
-
-                    case ImportResult.All:
-                        return;
-
-                    default:
-                        throw new InvalidOperationException(@"Undefined import result.");
-
-                }
+                entity.ImportTextTable(Clipboard.GetText());
+            }
+            catch (ImportException ex)
+            {
+                MessageBox.Show(ex.Message, Resources.Title);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, Resources.Title);
+                MessageBox.Show(ex.ToString(), Resources.Title);
             }
         }
 
@@ -495,16 +527,20 @@
                 Multiselect = false
             };
 
-            if (dlg.ShowDialog() == true)
+            if (dlg.ShowDialog() != true)
+                return;
+
+            try
             {
-                try
-                {
-                    this.ImportExcel(dlg.FileName);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                this.ImportExcel(dlg.FileName);
+            }
+            catch (ImportException ex)
+            {
+                MessageBox.Show(ex.Message, Resources.Title);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Title);
             }
         }
 
@@ -513,6 +549,15 @@
             var selectedKeys = _selectedTableEntries.Select(item => item.Key);
 
             Clipboard.SetText(string.Join(Environment.NewLine, selectedKeys));
+        }
+
+        private void SortNodesByKey()
+        {
+            foreach (var language in _resourceEntities.SelectMany(entity => entity.Languages))
+            {
+                Contract.Assume(language != null);
+                language.SortNodesByKey();
+            }
         }
 
         private void OnLoaded()
@@ -545,7 +590,7 @@
                 .ThenBy(e => e.BaseName);
 
             _resourceEntities = new ObservableCollection<ResourceEntity>(entities);
-            _filteredResourceEntities = new ListCollectionViewListAdapter(new ListCollectionView(_resourceEntities));
+            _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
             if (!string.IsNullOrEmpty(_entityFilter))
                 ApplyEntityFilter(_entityFilter);
 
@@ -555,7 +600,6 @@
 
             OnPropertyChanged(() => ResourceEntities);
             OnPropertyChanged(() => FilteredResourceEntities);
-            OnPropertyChanged(() => Languages);
             OnPropertyChanged(() => SelectedEntities);
 
             OnSelectedEntitiesChanged();
@@ -597,13 +641,10 @@
 
                         var resourceEntity = new ResourceEntity(this, projectName, baseName, directoryName, files.ToArray());
 
-                        if (resourceEntity.Entries.Any())
-                        {
-                            resourceEntity.LanguageChanging += ResourceEntity_LanguageChanging;
-                            resourceEntity.LanguageChanged += ResourceEntity_LanguageChanged;
+                        resourceEntity.LanguageChanging += ResourceEntity_LanguageChanging;
+                        resourceEntity.LanguageChanged += ResourceEntity_LanguageChanged;
 
-                            yield return resourceEntity;
-                        }
+                        yield return resourceEntity;
                     }
                 }
             }
@@ -611,7 +652,7 @@
 
         private void ResourceEntity_LanguageChanging(object sender, LanguageChangingEventArgs e)
         {
-            if (!CanEdit(e.Entity, e.Language))
+            if (!CanEdit(e.Entity, e.Culture))
             {
                 e.Cancel = true;
             }
@@ -648,12 +689,11 @@
         {
             var selectedTableEntries = _selectedTableEntries.ToArray();
 
-            _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>(_selectedEntities.Select(entity => (IList)entity.Entries).ToArray());
+            _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>(_selectedEntities.Select(entity => entity.Entries).ToArray());
 
-            _selectedTableEntries = _resourceEntities.SelectMany(entity => entity.Entries)
+            _selectedTableEntries = new ObservableCollection<ResourceTableEntry>(_resourceEntities.SelectMany(entity => entity.Entries)
                 .Where(item => selectedTableEntries.Contains(item, ResourceTableEntry.EqualityComparer))
-                .Where(item => _resourceTableEntries.Contains(item, ResourceTableEntry.EqualityComparer))
-                .ToList();
+                .Where(item => _resourceTableEntries.Contains(item, ResourceTableEntry.EqualityComparer)));
 
             OnPropertyChanged(() => ResourceTableEntries);
             OnPropertyChanged(() => SelectedTableEntries);
@@ -662,7 +702,7 @@
 
         public static bool IsValidLanguageName(string languageName)
         {
-            return Array.BinarySearch(SortedCultureNames, languageName, StringComparer.OrdinalIgnoreCase) >= 0;
+            return Array.BinarySearch(_sortedCultureNames, languageName, StringComparer.OrdinalIgnoreCase) >= 0;
         }
 
         private static string[] GetSortedCultureNames()
@@ -679,16 +719,37 @@
             return cultureNames;
         }
 
+        private static CultureInfo[] GetSpecificCultures()
+        {
+            var specificCultures = GetCultures(CultureTypes.SpecificCultures);
+            var allNeutralCultures = GetCultures(CultureTypes.NeutralCultures).Where(c => !Equals(c, CultureInfo.InvariantCulture));
+
+            var referencedNeutralCultures = specificCultures.Select(c => c.Parent);
+
+            var missingNeutralCultures = allNeutralCultures.Except(referencedNeutralCultures);
+
+            return specificCultures.OrderBy(c => c.DisplayName).Concat(missingNeutralCultures.OrderBy(c => c.DisplayName)).ToArray();
+        }
+
+        private static CultureInfo[] GetCultures(CultureTypes types)
+        {
+            Contract.Ensures(Contract.Result<CultureInfo[]>() != null);
+
+            var cultures = CultureInfo.GetCultures(types);
+            Contract.Assume(cultures != null);
+            return cultures;
+        }
+
         private void ApplyEntityFilter(string value)
         {
             _entityFilter = value;
 
-            if (!string.IsNullOrEmpty(_entityFilter))
+            if (!string.IsNullOrEmpty(value))
             {
                 try
                 {
-                    var regex = new Regex(_entityFilter, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                    _filteredResourceEntities.Filter = item => regex.Match(item.ToString()).Success;
+                    var regex = new Regex(value, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    _filteredResourceEntities.CollectionView.Filter = item => regex.Match(item.ToString()).Success;
                     return;
                 }
                 catch (ArgumentException)
@@ -696,7 +757,7 @@
                 }
             }
 
-            _filteredResourceEntities.Filter = null;
+            _filteredResourceEntities.CollectionView.Filter = null;
         }
 
         [ContractInvariantMethod]
@@ -710,6 +771,7 @@
             Contract.Invariant(_selectedTableEntries != null);
             Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(_selectedEntitiesChangeThrottle != null);
+            Contract.Invariant(_configuration != null);
         }
     }
 }

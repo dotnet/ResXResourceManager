@@ -10,6 +10,8 @@
     /// </summary>
     public class VisibilityToBooleanConverter : IValueConverter
     {
+        public static readonly IValueConverter Default = new VisibilityToBooleanConverter();
+
         /// <summary>
         /// Converts a value.
         /// </summary>

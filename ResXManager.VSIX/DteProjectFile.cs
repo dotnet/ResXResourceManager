@@ -3,8 +3,12 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.IO;
+    using System.Linq;
     using EnvDTE;
     using tomenglertde.ResXManager.Model;
+
+    using TomsToolbox.Core;
 
     internal class DteProjectFile : ProjectFile
     {
@@ -22,7 +26,7 @@
             : base(filePath, rootFolder, projectName, uniqueProjectName)
         {
             Contract.Requires(!string.IsNullOrEmpty(filePath));
-            Contract.Requires(!string.IsNullOrEmpty(rootFolder));
+            Contract.Requires(rootFolder != null);
             Contract.Requires(projectItem != null);
 
             _projectItems.Add(projectItem);
@@ -49,6 +53,68 @@
 
             _projectItems.Add(projectItem);
             ProjectName += @", " + projectName;
+        }
+
+        public override string Content
+        {
+            get
+            {
+                var projectItem = ProjectItem;
+
+                try
+                {
+                    return projectItem.TryGetContent() ?? base.Content;
+                }
+                catch (IOException)
+                {
+                }
+
+                projectItem.Open();
+                return projectItem.TryGetContent() ?? string.Empty;
+            }
+            set
+            {
+                var projectItem = ProjectItem;
+
+                try
+                {
+                    if (!projectItem.TrySetContent(value))
+                    {
+                        base.Content = value;
+                    }
+                }
+                catch (IOException)
+                {
+                }
+
+                projectItem.Open();
+                projectItem.TrySetContent(value);
+            }
+        }
+
+        public override bool IsWritable
+        {
+            get
+            {
+                return ProjectItem.Document.Maybe().Return(d => !d.ReadOnly, base.IsWritable);
+            }
+        }
+
+        public bool HasChanges
+        {
+            get
+            {
+                return ProjectItem.Document.Maybe().Return(d => !d.Saved);
+            }
+        }
+
+        private ProjectItem ProjectItem
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ProjectItem>() != null);
+                return ProjectItems.First();
+            }
         }
 
         [ContractInvariantMethod]

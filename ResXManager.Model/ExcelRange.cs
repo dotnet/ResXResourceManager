@@ -1,13 +1,12 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
 
     public class ExcelRange
     {
-        private static readonly Regex RangeRegex = new Regex(@"((?<sheetName>\w+)|('(?<sheetName>.*?)')!)?\$?(?<startColumn>[A-Z]+)\$?(?<startRow>[0-9]*)(:\$?(?<endColumn>[A-Z]+)\$?(?<endRow>[0-9]*))?");
+        private static readonly Regex RangeRegex = new Regex(@"(((?<sheetName>\w+)|('(?<sheetName>.*?)'))!)?\$?(?<startColumn>[A-Z]+)\$?(?<startRow>[0-9]*)(:\$?(?<endColumn>[A-Z]+)\$?(?<endRow>[0-9]*))?");
 
         public ExcelRange(string definition)
         {

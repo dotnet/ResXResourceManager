@@ -19,7 +19,7 @@
     /// </summary>
     public class ResourceEntity : IComparable<ResourceEntity>, IComparable, IEquatable<ResourceEntity>
     {
-        private readonly IDictionary<string, ResourceLanguage> _languages;
+        private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly ResourceManager _owner;
         private readonly string _projectName;
         private readonly string _baseName;
@@ -47,11 +47,11 @@
 
             var languageQuery =
                 from file in files
-                let languageName = file.GetLanguageName()
-                orderby languageName
-                select new ResourceLanguage(languageName, file);
+                let cultureKey = file.GetCultureKey()
+                orderby cultureKey
+                select new ResourceLanguage(owner, cultureKey, file);
 
-            _languages = languageQuery.ToDictionary(language => language.Name, StringComparer.OrdinalIgnoreCase);
+            _languages = languageQuery.ToDictionary(language => language.CultureKey);
 
             foreach (var language in _languages.Values)
             {
@@ -61,7 +61,7 @@
                 language.Changing += language_Changing;
             }
 
-            var entriesQuery = _languages.Values.SelectMany(language => language.Keys)
+            var entriesQuery = _languages.Values.SelectMany(language => language.ResourceKeys)
                 .Distinct()
                 .OrderBy(key => key.ToUpper(CultureInfo.CurrentCulture))
                 .Select(key => new ResourceTableEntry(this, key, _languages));
@@ -135,12 +135,20 @@
 
         public string RelativePath
         {
-            get { return _relativePath; }
+            get
+            {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return _relativePath;
+            }
         }
 
         public string DisplayName
         {
-            get { return _displayName; }
+            get
+            {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return _displayName;
+            }
         }
 
         /// <summary>
@@ -163,7 +171,6 @@
             get
             {
                 Contract.Ensures(Contract.Result<IEnumerable<ResourceLanguage>>() != null);
-                Contract.Ensures(Contract.Result<IEnumerable<ResourceLanguage>>().Any());
                 return _languages.Values;
             }
         }
@@ -206,28 +213,17 @@
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
 
-            var firstLanguage = _languages.First().Value;
+            if (!_languages.Any() || !_languages.Values.Any())
+                return null;
+
+            var firstLanguage = _languages.Values.First();
             Contract.Assume(firstLanguage != null);
+            
             firstLanguage.ForceValue(key, string.Empty); // force an entry in the neutral language resource file.
             var resourceTableEntry = new ResourceTableEntry(this, key, _languages);
             _resourceTableEntries.Add(resourceTableEntry);
 
             return resourceTableEntry;
-        }
-
-        public ResourceTableEntry AddNewKey()
-        {
-            var keyTemplate = Resources.AddNewItemTemplate;
-            var key = keyTemplate;
-            var index = 1;
-
-            while (Entries.Any(item => item.Key.Equals(key, StringComparison.OrdinalIgnoreCase)))
-            {
-                key = string.Format(CultureInfo.InvariantCulture, "{0}_{1}", keyTemplate, index);
-                index += 1;
-            }
-
-            return Add(key);
         }
 
         /// <summary>
@@ -238,13 +234,13 @@
         {
             Contract.Requires(file != null);
 
-            var languageName = file.GetLanguageName();
-            var language = new ResourceLanguage(languageName, file);
+            var cultureKey = file.GetCultureKey();
+            var resourceLanguage = new ResourceLanguage(_owner, cultureKey, file);
 
-            language.Changed += language_Changed;
-            language.Changing += language_Changing;
+            resourceLanguage.Changed += language_Changed;
+            resourceLanguage.Changing += language_Changing;
 
-            _languages.Add(languageName, language);
+            _languages.Add(cultureKey, resourceLanguage);
         }
 
         public override string ToString()
@@ -414,8 +410,6 @@
         {
             Contract.Invariant(_owner != null);
             Contract.Invariant(_languages != null);
-            Contract.Invariant(_languages.Any());
-            Contract.Invariant(_languages.Values.Any());
             Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(!String.IsNullOrEmpty(_projectName));
             Contract.Invariant(!String.IsNullOrEmpty(_baseName));

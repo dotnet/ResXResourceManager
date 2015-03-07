@@ -1,4 +1,6 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿using System.Text;
+
+namespace tomenglertde.ResXManager.Model
 {
     using System;
     using System.Collections.Generic;
@@ -13,6 +15,8 @@
     using System.Xml.Linq;
     using tomenglertde.ResXManager.Model.Properties;
 
+    using TomsToolbox.Core;
+
     /// <summary>
     /// Represents a set of localized resources.
     /// </summary>
@@ -24,27 +28,32 @@
 
         private readonly XDocument _document;
         private readonly XElement _documentRoot;
-        private readonly string _languageName;
         private readonly ProjectFile _file;
-        private readonly IEnumerable<XElement> _data;
         private readonly IDictionary<string, Node> _nodes;
+        private readonly ResourceManager _resourceManager;
+        private readonly CultureKey _cultureKey;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceLanguage"/> class.
+        /// Initializes a new instance of the <see cref="ResourceLanguage" /> class.
         /// </summary>
-        /// <param name="languageName">Name of the language.</param>
+        /// <param name="resourceManager">The resource manager.</param>
+        /// <param name="cultureKey">The culture key.</param>
         /// <param name="file">The .resx file having all the localization.</param>
-        internal ResourceLanguage(string languageName, ProjectFile file)
+        /// <exception cref="System.InvalidOperationException">
+        /// </exception>
+        internal ResourceLanguage(ResourceManager resourceManager, CultureKey cultureKey, ProjectFile file)
         {
-            Contract.Requires(languageName != null);
+            Contract.Requires(resourceManager != null);
+            Contract.Requires(cultureKey != null);
             Contract.Requires(file != null);
 
-            _languageName = languageName;
+            _resourceManager = resourceManager;
+            _cultureKey = cultureKey;
             _file = file;
 
             try
             {
-                _document = XDocument.Load(file.FilePath);
+                _document = XDocument.Parse(file.Content);
                 _documentRoot = _document.Root;
             }
             catch (XmlException ex)
@@ -55,9 +64,9 @@
             if (_documentRoot == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileError, file.FilePath));
 
-            _data = _documentRoot.Elements(@"data");
+            var data = _documentRoot.Elements(@"data");
 
-            var elements = _data
+            var elements = data
                 .Where(IsStringType)
                 .Select(item => new Node(this, item))
                 .Where(item => !item.Key.StartsWith(@">>", StringComparison.OrdinalIgnoreCase))
@@ -78,32 +87,13 @@
         public event EventHandler Changed;
 
         /// <summary>
-        /// Gets the name of this language; an emtpy string denotes the default language.
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return _languageName;
-            }
-        }
-
-        /// <summary>
         /// Gets the culture of this language.
         /// </summary>
         public CultureInfo Culture
         {
             get
             {
-                try
-                {
-                    return _languageName.ToCulture();
-                }
-                catch (InvalidOperationException)
-                { }
-
-                return null;
+                return _cultureKey.Culture;
             }
         }
 
@@ -114,50 +104,22 @@
         {
             get
             {
-                if (string.IsNullOrEmpty(_languageName))
-                    return Resources.Neutral;
+                Contract.Ensures(Contract.Result<string>() != null);
 
-                var culture = Culture;
-
-                if (culture != null)
-                    return culture.DisplayName;
-
-                return _languageName;
+                return Culture.Maybe().Return(l => l.DisplayName) ?? Resources.Neutral;
             }
         }
 
         /// <summary>
         /// Gets all the resource keys defined in this language.
         /// </summary>
-        public IEnumerable<string> Keys
+        public IEnumerable<string> ResourceKeys
         {
             get
             {
+                Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
+
                 return _nodes.Keys;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the file associated with this instance can be written.
-        /// </summary>
-        public bool IsWritable
-        {
-            get
-            {
-                try
-                {
-                    if ((File.GetAttributes(_file.FilePath) & (FileAttributes.ReadOnly | FileAttributes.System)) != 0)
-                        return false;
-
-                    using (File.Open(_file.FilePath, FileMode.Open, FileAccess.Write))
-                    {
-                        return true;
-                    }
-                }
-                catch (IOException) { }
-                catch (UnauthorizedAccessException) { }
-
-                return false;
             }
         }
 
@@ -189,6 +151,16 @@
         {
             get;
             internal set;
+        }
+
+        public CultureKey CultureKey
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<CultureKey>() != null);
+
+                return _cultureKey;
+            }
         }
 
         private static bool IsStringType(XElement entry)
@@ -234,24 +206,29 @@
             SetNodeData(key, node => node.Text = value);
         }
 
+        public void SortNodesByKey()
+        {
+            Save(true);
+        }
+
         private void OnChanged()
         {
-            if (Changed != null)
+            var handler = Changed;
+            if (handler != null)
             {
-                Changed(this, EventArgs.Empty);
+                handler(this, EventArgs.Empty);
             }
         }
 
         private bool OnChanging()
         {
-            if (Changing != null)
-            {
-                var eventArgs = new CancelEventArgs();
-                Changing(this, eventArgs);
-                return !eventArgs.Cancel;
-            }
+            var handler = Changing;
+            if (handler == null)
+                return true;
 
-            return true;
+            var eventArgs = new CancelEventArgs();
+            handler(this, eventArgs);
+            return !eventArgs.Cancel;
         }
 
         /// <summary>
@@ -261,7 +238,36 @@
         /// <exception cref="UnauthorizedAccessException"></exception>
         public void Save()
         {
-            _document.Save(_file.FilePath);
+            Save(false);
+        }
+
+        /// <summary>
+        /// Saves this instance to the resource file.
+        /// </summary>
+        /// <param name="forceSortFileContent">if set to <c>true</c> to force sorting the file content.</param>
+        /// <exception cref="IOException"></exception>
+        /// <exception cref="UnauthorizedAccessException"></exception>
+        public void Save(bool forceSortFileContent)
+        {
+            if (forceSortFileContent || _resourceManager.Configuration.SortFileContentOnSave)
+            {
+                var nodes = _documentRoot.Elements(@"data").ToArray();
+
+                foreach (var item in nodes)
+                {
+                    Contract.Assume(item != null);
+                    item.Remove();
+                }
+
+                foreach (var item in nodes.OrderBy(node => node.TryGetAttribute("name").TrimStart('>'), StringComparer.OrdinalIgnoreCase))
+                {
+                    _documentRoot.Add(item);
+                }
+            }
+
+            const string declaration = @"<?xml version=""1.0"" encoding=""utf-8""?>"; 
+
+            _file.Content = declaration + Environment.NewLine + _document;
 
             HasChanges = false;
         }
@@ -343,6 +349,8 @@
 
         internal bool RenameKey(string oldKey, string newKey)
         {
+            Contract.Requires(!string.IsNullOrEmpty(newKey));
+
             Node node;
 
             if (!OnChanging())
@@ -416,7 +424,9 @@
 
             public Node(ResourceLanguage owner, XElement element)
             {
+                Contract.Requires(owner != null);
                 Contract.Requires(element != null);
+
                 _element = element;
                 _owner = owner;
             }
@@ -426,6 +436,7 @@
                 get
                 {
                     Contract.Ensures(Contract.Result<XElement>() != null);
+
                     return _element;
                 }
             }
@@ -552,7 +563,7 @@
                 var nameAttribute = entry.Attribute(@"name");
                 if (nameAttribute == null)
                 {
-                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileNameAttributeMissingError, _owner._file.FilePath));
+                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileNameAttributeMissingError, _owner.ProjectFile.FilePath));
                 }
 
                 return nameAttribute;
@@ -563,6 +574,7 @@
             private void ObjectInvariant()
             {
                 Contract.Invariant(_element != null);
+                Contract.Invariant(_owner != null);
             }
         }
 
@@ -576,7 +588,7 @@
         /// </returns>
         public override int GetHashCode()
         {
-            return Name.ToUpperInvariant().GetHashCode();
+            return CultureKey.GetHashCode();
         }
 
         /// <summary>
@@ -610,7 +622,7 @@
             if (ReferenceEquals(right, null))
                 return false;
 
-            return left.Name.Equals(right.Name, StringComparison.OrdinalIgnoreCase);
+            return Equals(left.CultureKey, right.CultureKey);
         }
 
         /// <summary>
@@ -634,12 +646,12 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_data != null);
             Contract.Invariant(_document != null);
             Contract.Invariant(_documentRoot != null);
             Contract.Invariant(_file != null);
-            Contract.Invariant(_languageName != null);
             Contract.Invariant(_nodes != null);
+            Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(_cultureKey != null);
         }
     }
 }

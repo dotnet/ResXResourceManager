@@ -6,56 +6,29 @@
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Threading;
+    using DocumentFormat.OpenXml.Drawing;
 
     public class CodeReference
     {
         private static Thread _backgroundThread;
 
-        private CodeReference(ProjectFile projectFile, int lineNumber, string line, int[] baseNameIndexes, int baseNameLength, int[] keyNameIndexes, int keyNameLength)
+        private CodeReference(ProjectFile projectFile, int lineNumber, IList<string> lineSegemnts)
         {
             Contract.Requires(projectFile != null);
-            Contract.Requires(line != null);
-            Contract.Requires(baseNameIndexes != null);
-            Contract.Requires(keyNameIndexes != null);
+            Contract.Requires(lineSegemnts != null);
 
             ProjectFile = projectFile;
             LineNumber = lineNumber;
-
-            var baseNameRanges = baseNameIndexes.Select(index => new { Start = index, End = index + baseNameLength });
-            var keyNameRanges = keyNameIndexes.Select(index => new { Start = index, End = index + keyNameLength });
-
-            var combinations = baseNameRanges.SelectMany(
-                baseNameRange => keyNameRanges.Select(
-                    keyNameRange => new
-                    {
-                        BaseNameRange = baseNameRange,
-                        KeyNameRange = keyNameRange,
-                        Distance = Math.Min(Math.Abs(baseNameRange.End - keyNameRange.Start), Math.Abs(baseNameRange.Start - keyNameRange.End))
-                    }));
-
-            var match = combinations.OrderBy(item => item.Distance).First();
-
-            if (match.BaseNameRange.Start < match.KeyNameRange.Start)
-            {
-                LineSegments = line.GetSegments(match.BaseNameRange.Start, match.BaseNameRange.End, match.KeyNameRange.Start, match.KeyNameRange.End);
-                IsValid = IsValidClassValueDeclaration(LineSegments.GetTrimmedSegment(0), LineSegments.GetTrimmedSegment(2), LineSegments.GetTrimmedSegment(4));
-            }
-            else
-            {
-                LineSegments = line.GetSegments(match.KeyNameRange.Start, match.KeyNameRange.End, match.BaseNameRange.Start, match.BaseNameRange.End);
-                IsValid = IsValidValueClassDeclaration(LineSegments.GetTrimmedSegment(0), LineSegments.GetTrimmedSegment(2), LineSegments.GetTrimmedSegment(4));
-            }
+            LineSegments = lineSegemnts;
         }
 
         public int LineNumber { get; private set; }
+
         public ProjectFile ProjectFile { get; private set; }
+
         public IList<string> LineSegments { get; private set; }
-        private bool IsValid
-        {
-            get;
-            set;
-        }
 
         public static void StopFind()
         {
@@ -66,22 +39,29 @@
             _backgroundThread = null;
         }
 
-        public static void BeginFind(IEnumerable<ResourceEntity> resourceEntities, IEnumerable<ProjectFile> allSourceFiles, ITracer tracer)
+        public static void BeginFind(ResourceManager resourceManager, IEnumerable<ProjectFile> allSourceFiles, ITracer tracer)
         {
-            Contract.Requires(resourceEntities != null);
+            Contract.Requires(resourceManager != null);
             Contract.Requires(allSourceFiles != null);
 
             StopFind();
 
             var sourceFiles = allSourceFiles.Where(item => !item.IsResourceFile() && !item.IsDesignerFile()).ToArray();
-            var resourceTableEntries = resourceEntities.SelectMany(entity => entity.Entries).ToArray();
+            var resourceTableEntries = resourceManager.ResourceEntities.SelectMany(entity => entity.Entries).ToArray();
+            var configuration = resourceManager.Configuration.CodeReferences;
 
-            _backgroundThread = new Thread(() => FindCodeReferences(sourceFiles, resourceTableEntries, tracer)) { IsBackground = true, Priority = ThreadPriority.Lowest };
+            _backgroundThread = new Thread(() => FindCodeReferences(configuration, sourceFiles, resourceTableEntries, tracer))
+            {
+                IsBackground = true, 
+                Priority = ThreadPriority.Lowest
+            };
+
             _backgroundThread.Start();
         }
 
-        public static void FindCodeReferences(IEnumerable<ProjectFile> projectFiles, IList<ResourceTableEntry> resourceTableEntries, ITracer tracer)
+        public static void FindCodeReferences(CodeReferenceConfiguration configuration, IEnumerable<ProjectFile> projectFiles, IList<ResourceTableEntry> resourceTableEntries, ITracer tracer)
         {
+            Contract.Requires(configuration != null);
             Contract.Requires(projectFiles != null);
             Contract.Requires(resourceTableEntries != null);
 
@@ -89,32 +69,39 @@
             {
                 foreach (var entry in resourceTableEntries)
                 {
+                    Contract.Assume(entry != null);
                     entry.CodeReferences = null;
                 }
 
-                var sourceFiles = projectFiles.Select(file => new FileInfo(file, file.ReadAllLines())).ToArray();
+                var sourceFiles = projectFiles.Select(file => new FileInfo(file)).ToArray();
                 var entriesByBaseName = resourceTableEntries.GroupBy(entry => entry.Owner.BaseName);
 
                 foreach (var entriesGroup in entriesByBaseName.AsParallel())
                 {
+                    Contract.Assume(entriesGroup != null);
                     var baseName = entriesGroup.Key;
+                    Contract.Assume(baseName != null);
                     var tableEntries = entriesGroup.ToArray();
 
                     foreach (var sourceFile in sourceFiles)
                     {
                         Contract.Assume(sourceFile != null);
-                        FindCodeReferences(sourceFile, baseName, tableEntries, tracer);
-                    }
-                }
 
-                foreach (var sourceFile in sourceFiles.Where(file => file.FileKind != FileKind.Undefined))
-                {
-                    Contract.Assume(sourceFile != null);
-                    FindCodeReferences(sourceFile, @"StringResourceKey", resourceTableEntries, tracer);
+                        var configs = configuration.Items
+                            .Where(item => item.ParseExtensions().Contains(sourceFile.ProjectFile.Extension, StringComparer.OrdinalIgnoreCase))
+                            .ToArray();
+
+                        if (!configs.Any())
+                            continue;
+                        
+                        FindCodeReferences(configs, sourceFile, baseName, tableEntries, tracer);
+                    }
                 }
 
                 foreach (var entry in resourceTableEntries.Where(entry => entry.CodeReferences == null))
                 {
+                    Contract.Assume(entry != null);
+                    // Show 0 code references in UI
                     entry.CodeReferences = new CodeReference[0];
                 }
             }
@@ -123,56 +110,57 @@
             }
         }
 
-        private static void FindCodeReferences(FileInfo source, string baseName, IList<ResourceTableEntry> entries, ITracer tracer)
+        private static void FindCodeReferences(IList<CodeReferenceConfigurationItem> configurations, FileInfo source, string baseName, IList<ResourceTableEntry> entries, ITracer tracer)
         {
+            Contract.Requires(configurations != null);
             Contract.Requires(source != null);
             Contract.Requires(baseName != null);
             Contract.Requires(entries != null);
 
             try
             {
-                var lineNumber = 1;
-
                 var projectFile = source.ProjectFile;
 
-                var fileKind = source.FileKind;
-
-                var stringComparison = (fileKind == FileKind.VisualBasic) ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-
-                foreach (var line in source.Lines)
+                foreach (var entry in entries)
                 {
-                    Contract.Assume(line != null);
+                    Contract.Assume(entry != null);
+                    var key = entry.Key;
 
-                    if (line.IsCommentLine(fileKind))
-                        continue;
-
-                    var baseNameIndexes = line.IndexesOfWords(baseName, stringComparison).ToArray();
-                    if (baseNameIndexes.Length > 0)
+                    var parameters = configurations.Select(cfg => new
                     {
-                        foreach (var entry in entries)
+                        StringComparison = cfg.IsCaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase,
+                        Regex = !string.IsNullOrEmpty(cfg.Expression) ? new Regex(cfg.Expression.Replace("$Key", key).Replace("$File", baseName)) : null,
+                        cfg.SingleLineComment
+                    }).ToArray();
+
+                    var lineNumber = 0;
+
+                    foreach (var line in source.Lines)
+                    {
+                        Contract.Assume(line != null);
+                        lineNumber += 1;
+
+                        foreach (var parameter in parameters)
                         {
-                            var keyNameIndexes = line.IndexesOfWords(entry.Key, stringComparison).ToArray();
-                            if (keyNameIndexes.Length > 0)
+                            Contract.Assume(parameter != null);
+                            try
                             {
-                                try
-                                {
-                                    var codeReference = new CodeReference(projectFile, lineNumber, line, baseNameIndexes, baseName.Length, keyNameIndexes, entry.Key.Length);
+                                var match = new CodeMatch(line, key, parameter.Regex, parameter.StringComparison, parameter.SingleLineComment);
+                                if (!match.Success)
+                                    continue;
 
-                                    if (!codeReference.IsValid)
-                                        continue;
+                                var codeReference = new CodeReference(projectFile, lineNumber, match.Segments);
 
-                                    var codeReferences = entry.CodeReferences ?? (entry.CodeReferences = new ObservableCollection<CodeReference>());
-                                    codeReferences.Add(codeReference);
-                                }
-                                catch (Exception ex) // Should not happen, but was reported by someone.
-                                {
-                                    tracer.TraceError("Error detecting code reference in file {0}, line {1} for {2}.{3}\n{4}", projectFile.FilePath, lineNumber, baseName, entry.Key, ex);
-                                }
+                                var codeReferences = entry.CodeReferences ?? (entry.CodeReferences = new ObservableCollection<CodeReference>());
+                                codeReferences.Add(codeReference);
+                                break;
+                            }
+                            catch (Exception ex) // Should not happen, but was reported by someone.
+                            {
+                                tracer.TraceError("Error detecting code reference in file {0}, line {1} for {2}.{3}\n{4}", projectFile.FilePath, lineNumber, baseName, key, ex);
                             }
                         }
                     }
-
-                    lineNumber += 1;
                 }
             }
             catch (Exception ex) // Should not happen, but was reported by someone.
@@ -181,126 +169,97 @@
             }
         }
 
-        /// <summary>
-        /// Determines whether this is a valid declaration where the position of the class name is before the key.
-        /// </summary>
-        /// <param name="left">The left text segment.</param>
-        /// <param name="middle">The middle text segment.</param>
-        /// <param name="right">The right text segment.</param>
-        /// <returns>
-        /// True if this is a valid declaration where the position of the class name is before the key.
-        /// </returns>
-        /// <remarks>
-        /// C#, VB, cshtml: "Resources.Key" or "Properties.Resources.Key" but not: "Resources.Key.Something" or "Resources.Something.Key" (could be e.g. some namespace declaration)<br/>
-        /// XAML: {x:Static properties:Resources.Key}"
-        /// <p/>
-        /// C++: like C#, but -> instead of .
-        /// <p/>
-        /// ASP: &lt;%$ Resources: Class, Key %&gt;
-        /// </remarks>
-        private static bool IsValidClassValueDeclaration(string left, string middle, string right)
+        class CodeMatch
         {
-            Contract.Requires(left != null);
-            Contract.Requires(middle != null);
-            Contract.Requires(right != null);
-
-            // C#, VB, cshtml: "Resources.Key" or "Properties.Resources.Key", but not: "Resources.Key.Something" or "Resources.Something.Key" (could be e.g. some namespace declaration)
-            // XAML: {x:Static properties:Resources.Key}" IsCheckable="True"
-            if ((middle == ".") && !right.StartsWith(".", StringComparison.Ordinal))
-                return true;
-
-            // C++: like C#, but :: instead of .
-            if ((middle == "::") && !right.StartsWith("::", StringComparison.Ordinal) && !right.StartsWith("->", StringComparison.Ordinal))
-                return true;
-
-            // ASP: <%$ Resources: Class, Key %>
-            if (left.EndsWith("Resources:", StringComparison.Ordinal) && (middle == ",") && right.StartsWith("%>", StringComparison.Ordinal))
-                return true;
-
-            // C#, VB (indirect): var str = Properties.Resources.ResourceManager.GetString("Key");
-            if (right.StartsWith("\"", StringComparison.Ordinal) && middle.DropSpaces().Equals(".ResourceManager.GetString(\""))
-                return true;
-
-            return IsValidStringReference(left, middle, middle, right);
-        }
-
-        /// <summary>
-        /// Determines whether this is a valid declaration where the position of the key name is before the class.
-        /// </summary>
-        /// <param name="left">The left text segment.</param>
-        /// <param name="middle">The middle text segemnt.</param>
-        /// <param name="right">The right text segment.</param>
-        /// <returns>
-        /// True if this is a valid declaration where position of the key name is before the class.
-        /// </returns>
-        private static bool IsValidValueClassDeclaration(string left, string middle, string right)
-        {
-            Contract.Requires(left != null);
-            Contract.Requires(middle != null);
-            Contract.Requires(right != null);
-
-            return IsValidStringReference(middle, right, left, middle);
-        }
-
-        /// <summary>
-        /// Determines whether this is a reference where the key is specified as string.
-        /// </summary>
-        /// <param name="beforeClass">The text before the class name.</param>
-        /// <param name="afterClass">The text after the class name.</param>
-        /// <param name="beforeKey">The text before the key.</param>
-        /// <param name="afterKey">The text after the key.</param>
-        /// <returns>
-        /// <c>true</c> if this is a reference where the key is specified as string; otherwise false.
-        /// </returns>
-        /// <remarks>
-        /// In attribute, e.g. [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "Key")]
-        /// <p/>
-        /// In calls, e.g. MyClass.LookupResource("Key", typeof(Resources))
-        /// or MyClass.LookupResource("Key", typeof(Properties.Resources))
-        /// <p/>
-        /// In generic calls e.g. MyClass.LookupResource&lt;Resources&gt;("Key")
-        /// </remarks>
-        private static bool IsValidStringReference(string beforeClass, string afterClass, string beforeKey, string afterKey)
-        {
-            Contract.Requires(beforeClass != null);
-            Contract.Requires(afterClass != null);
-            Contract.Requires(beforeKey != null);
-            Contract.Requires(afterKey != null);
-
-            // Key is specified as string
-            if (!beforeKey.EndsWith("\"", StringComparison.Ordinal) || !afterKey.StartsWith("\"", StringComparison.Ordinal))
-                return false;
-
-            var beforeNoNamespace = beforeClass.DropNamespacePath();
-
-            // class is in a typeof() statement.
-            if (afterClass.StartsWith(")", StringComparison.Ordinal))
+            [ContractVerification(false)] // too many assumptions would be needed...
+            public CodeMatch(string line, string key, Regex regex, StringComparison stringComparison, string singleLineComment)
             {
-                if (beforeNoNamespace.EndsWith("typeof(", StringComparison.Ordinal) || beforeNoNamespace.EndsWith("GetType(", StringComparison.OrdinalIgnoreCase))
-                    return true;
+                Contract.Requires(line != null);
+                Contract.Requires(key != null);
+
+                var indexOfKey = line.IndexOf(key, stringComparison);
+                if (indexOfKey < 0)
+                    return;
+
+                var lastIndex = 0;
+
+                if (regex == null)
+                {
+                    lastIndex = indexOfKey;
+                    var length = key.Length;
+
+                    Segments = new[] { line.Substring(0, lastIndex), line.Substring(lastIndex, length), line.Substring(lastIndex + length) };
+                }
+                else
+                {
+                    line = " " + line + " ";
+
+                    var match = regex.Match(line);
+                    if (!match.Success)
+                        return;
+
+                    if (match.Groups.Count < 2)
+                    {
+                        lastIndex = match.Index;
+                        var length = match.Length;
+
+                        Segments = new[] { line.Substring(0, lastIndex), line.Substring(lastIndex, length), line.Substring(lastIndex + length) };
+                    }
+                    else
+                    {
+                        Segments = new List<string>();
+                        var index = 0;
+                        foreach (var group in match.Groups.Cast<Group>().Skip(1).Where(group => group.Success))
+                        {
+                            Segments.Add(line.Substring(index, group.Index - index));
+                            index = group.Index;
+                            lastIndex = index;
+                            Segments.Add(line.Substring(index, group.Length));
+                            index += group.Length;
+                        }
+
+                        Segments.Add(line.Substring(index));
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(singleLineComment))
+                {
+                    var indexOfComment = line.IndexOf(singleLineComment, stringComparison);
+                    if ((indexOfComment >= 0) && (indexOfComment <= lastIndex))
+                        return;
+                }
+
+                Success = true;
             }
 
+            public bool Success
+            {
+                get;
+                private set;
+            }
 
-            // class is in a generic parameter.
-            return beforeNoNamespace.EndsWith("<", StringComparison.Ordinal) && afterClass.StartsWith(">", StringComparison.Ordinal);
+            public IList<string> Segments
+            {
+                get;
+                private set;
+            }
+
+            [ContractInvariantMethod]
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+            private void ObjectInvariant()
+            {
+                Contract.Invariant(!Success || (Segments != null));
+            }
         }
 
         class FileInfo
         {
-            public FileInfo(ProjectFile projectFile, string[] lines)
+            public FileInfo(ProjectFile projectFile)
             {
                 Contract.Requires(projectFile != null);
-                Contract.Requires(lines != null);
 
                 ProjectFile = projectFile;
-                Lines = lines;
-                FileKind = projectFile.GetFileKind();
-            }
-
-            public FileKind FileKind
-            {
-                get;
-                private set;
+                Lines = projectFile.ReadAllLines();
             }
 
             public ProjectFile ProjectFile
@@ -322,112 +281,11 @@
                 Contract.Invariant(ProjectFile != null);
                 Contract.Invariant(Lines != null);
             }
-
         }
-    }
-
-    enum FileKind
-    {
-        Undefined,
-        VisualBasic,
-        CSharp,
     }
 
     static class CodeReferenceExtensionMethods
     {
-        public static string GetTrimmedSegment(this IList<string> segments, int index)
-        {
-            Contract.Requires(segments != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
-            if ((index < 0) || (index >= segments.Count))
-                return String.Empty;
-
-            return (segments[index] ?? String.Empty).Trim();
-        }
-
-        public static IList<string> GetSegments(this string line, int x0, int x1, int x2, int x3)
-        {
-            Contract.Requires(line != null);
-            Contract.Requires(0 <= x0);
-            Contract.Requires(x0 <= x1);
-            Contract.Requires(x1 <= x2);
-            Contract.Requires(x2 <= x3);
-            Contract.Requires(x3 <= line.Length);
-
-            Contract.Ensures(Contract.Result<IList<string>>() != null);
-            Contract.Ensures(Contract.Result<IList<string>>().Count == 5);
-            Contract.Ensures(Contract.Result<IList<string>>().All(x => x != null));
-
-            return new[]
-            {
-                line.Substring(0, x0).TrimStart(),
-                line.Substring(x0, x1 - x0),
-                line.Substring(x1, x2 - x1),
-                line.Substring(x2, x3 - x2),
-                line.Substring(x3).TrimEnd()
-            };
-        }
-
-        public static IEnumerable<int> IndexesOfWords(this string line, string word, StringComparison stringComparison)
-        {
-            Contract.Requires(line != null);
-            Contract.Requires(word != null);
-            Contract.Ensures(Contract.Result<IEnumerable<int>>() != null);
-
-            var startIndex = 0;
-
-            while (true)
-            {
-                startIndex = line.IndexOf(word, startIndex, stringComparison);
-
-                if (startIndex < 0)
-                    yield break;
-
-                var endIndex = startIndex + word.Length;
-
-                if ((startIndex == 0) || IsNonWordChar(line[startIndex - 1]))
-                {
-                    if ((endIndex >= line.Length) || IsNonWordChar(line[endIndex]))
-                    {
-                        yield return startIndex;
-                    }
-                }
-
-                startIndex = endIndex;
-            }
-        }
-
-        public static bool IsNonWordChar(this char c)
-        {
-            return !IsWordChar(c);
-        }
-
-        private static bool IsWordChar(this char c)
-        {
-            return (Char.IsLetter(c) || Char.IsDigit(c) || (c == '_'));
-        }
-
-        public static string DropSpaces(this string value)
-        {
-            Contract.Requires(value != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
-            return value.Any(Char.IsWhiteSpace) ? new string(value.Where(c => !Char.IsWhiteSpace(c)).ToArray()) : value;
-        }
-
-        public static string DropNamespacePath(this string value)
-        {
-            Contract.Requires(value != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
-            if (value.LastOrDefault() != '.')
-                return value;
-
-            return new string(value.Reverse().SkipWhile(c => c.IsWordChar() || c == '.').SkipWhile(Char.IsWhiteSpace).Reverse().ToArray());
-
-        }
-
         public static string[] ReadAllLines(this ProjectFile file)
         {
             Contract.Requires(file != null);
@@ -441,41 +299,6 @@
             }
 
             return new string[0];
-        }
-
-        public static FileKind GetFileKind(this ProjectFile projectFile)
-        {
-            Contract.Requires(projectFile != null);
-
-            if (projectFile.IsVisualBasicFile())
-                return FileKind.VisualBasic;
-
-            if (projectFile.IsCSharpFile())
-                return FileKind.CSharp;
-
-            return FileKind.Undefined;
-        }
-
-        public static bool IsCommentLine(this string line, FileKind fileKind)
-        {
-            Contract.Requires(line != null);
-
-            if (fileKind == FileKind.Undefined)
-                return false;
-
-            line = line.TrimStart();
-
-            switch (fileKind)
-            {
-                case FileKind.VisualBasic:
-                    return line.StartsWith("'", StringComparison.Ordinal) || line.StartsWith("REM", StringComparison.Ordinal);
-
-                case FileKind.CSharp:
-                    return line.StartsWith("//", StringComparison.Ordinal);
-
-                default:
-                    return false;
-            }
         }
     }
 }

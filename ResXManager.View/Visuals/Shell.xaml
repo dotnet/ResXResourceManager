@@ -4,13 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="800"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties">
-  <Grid Background="{x:Static SystemColors.WindowBrush}">
-    <TabControl TabStripPlacement="Bottom" Margin="-1" Padding="0"  BorderThickness="1" >
-      <TabItem Header="{x:Static properties:Resources.ShellTabHeader_Main}">
-        <visuals:ResourceView />
+  <Grid Background="{x:Static SystemColors.WindowBrush}" FocusManager.FocusedElement="{Binding ElementName=ResourceView}">
+    <TabControl TabStripPlacement="Bottom" Margin="-1" Padding="0" BorderThickness="1">
+      <TabItem Header="{x:Static properties:Resources.ShellTabHeader_Main}" Padding="8,3">
+        <visuals:ResourceView x:Name="ResourceView" />
       </TabItem>
-      <TabItem Header="{x:Static properties:Resources.ShellTabHeader_Languages}">
-        <visuals:LanguageConfiguration/>
+      <TabItem Header="Configuration">
+        <visuals:ConfigurationEditor HorizontalAlignment="Left" />
+      </TabItem>
+      <TabItem Header="{x:Static properties:Resources.ShellTabHeader_Languages}" Padding="8,3">
+        <visuals:LanguageConfiguration />
       </TabItem>
     </TabControl>
     <Button x:Name="DonateButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5,0"

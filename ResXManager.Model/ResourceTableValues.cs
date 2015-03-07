@@ -1,26 +1,23 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
-    using System.Linq;
-
     using tomenglertde.ResXManager.Model.Properties;
 
     /// <summary>
-    /// A dictionary that maps the language to the localized string for a resource table entry with the specified resource key; 
-    /// the language name is the dictionary key and the localized text is the dictionary value.
+    /// An indexer that maps the language to the localized string for a resource table entry with the specified resource key; 
+    /// the language name is the indexer key and the localized text is the indexer value.
     /// </summary>
-    public sealed class ResourceTableValues : IDictionary<string, string>
+    public sealed class ResourceTableValues
     {
-        private readonly IDictionary<string, ResourceLanguage> _languages;
+        private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly Func<ResourceLanguage, string> _getter;
         private readonly Func<ResourceLanguage, string, bool> _setter;
 
-        public ResourceTableValues(IDictionary<string, ResourceLanguage> languages, Func<ResourceLanguage, string> getter, Func<ResourceLanguage, string, bool> setter)
+        public ResourceTableValues(IDictionary<CultureKey, ResourceLanguage> languages, Func<ResourceLanguage, string> getter, Func<ResourceLanguage, string, bool> setter)
         {
             Contract.Requires(languages != null);
             Contract.Requires(getter != null);
@@ -31,41 +28,53 @@
             _setter = setter;
         }
 
-        public string this[string key]
+        public string this[string cultureKey]
         {
             get
             {
-                ResourceLanguage language;
-                if (!_languages.TryGetValue(key, out language))
-                    return null;
-
-                Contract.Assume(language != null);
-
-                return _getter(language);
+                return GetValue(cultureKey.ToCulture());
             }
             set
             {
-                Contract.Assume(key != null);
-                SetValue(key, value);
+                SetValue(cultureKey.ToCulture(), value);
             }
         }
 
-        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes", Justification = "Every indexer throws IndexOutOfRange")]
-        public bool SetValue(string languageName, string value)
+        public string GetValue(CultureInfo culture)
         {
-            Contract.Requires(languageName != null);
+            return GetValue(new CultureKey(culture));
+        }
 
-            var language = _languages[languageName];
-            if (language == null)
-                throw new IndexOutOfRangeException(string.Format(CultureInfo.CurrentCulture, Resources.LanguageNotDefinedError, languageName));
+        public string GetValue(CultureKey cultureKey)
+        {
+            ResourceLanguage language;
+            if (!_languages.TryGetValue(cultureKey, out language))
+                return null;
 
-            if (_setter(language, value))
-            {
-                OnValueChanged();
-                return true;
-            }
+            Contract.Assume(language != null);
 
-            return false;
+            return _getter(language);
+        }
+
+        public bool SetValue(CultureInfo culture, string value)
+        {
+            return SetValue(new CultureKey(culture), value);
+        }
+
+        public bool SetValue(CultureKey cultureKey, string value)
+        {
+            Contract.Requires(cultureKey != null);
+
+            ResourceLanguage language;
+            
+            if (!_languages.TryGetValue(cultureKey, out language))
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.LanguageNotDefinedError, cultureKey.Culture));
+
+            if (!_setter(language, value))
+                return false;
+
+            OnValueChanged();
+            return true;
         }
 
         public event EventHandler ValueChanged;
@@ -77,121 +86,6 @@
                 ValueChanged(this, EventArgs.Empty);
             }
         }
-
-        #region IDictionary<string,string> Members
-
-        void IDictionary<string, string>.Add(string key, string value)
-        {
-            throw new NotImplementedException();
-        }
-
-        [ContractVerification(false)]
-        bool IDictionary<string, string>.ContainsKey(string key)
-        {
-            return _languages.ContainsKey(key);
-        }
-
-        public ICollection<string> Keys
-        {
-            get
-            {
-                return _languages.Keys;
-            }
-        }
-
-        bool IDictionary<string, string>.Remove(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        [ContractVerification(false)]
-        public bool TryGetValue(string key, out string value)
-        {
-            ResourceLanguage language;
-
-            if (!_languages.TryGetValue(key, out language))
-            {
-                value = null;
-                return false;
-            }
-
-            Contract.Assume(language != null);
-
-            return (value = _getter(language)) != null;
-        }
-
-        public ICollection<string> Values
-        {
-            get
-            {
-                return _languages.Values.Select(language => _getter(language)).ToArray();
-            }
-        }
-
-        #endregion
-
-        #region ICollection<KeyValuePair<string,string>> Members
-
-        void ICollection<KeyValuePair<string, string>>.Add(KeyValuePair<string, string> item)
-        {
-            throw new NotImplementedException();
-        }
-
-        void ICollection<KeyValuePair<string, string>>.Clear()
-        {
-            throw new NotImplementedException();
-        }
-
-        bool ICollection<KeyValuePair<string, string>>.Contains(KeyValuePair<string, string> item)
-        {
-            throw new NotImplementedException();
-        }
-
-        void ICollection<KeyValuePair<string, string>>.CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int Count
-        {
-            get
-            {
-                return _languages.Count;
-            }
-        }
-
-        bool ICollection<KeyValuePair<string, string>>.IsReadOnly
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-        bool ICollection<KeyValuePair<string, string>>.Remove(KeyValuePair<string, string> item)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region IEnumerable<KeyValuePair<string,string>> Members
-
-        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
-        {
-            return _languages.Values.Select(language => new KeyValuePair<string, string>(language.Name, _getter(language))).GetEnumerator();
-        }
-
-        #endregion
-
-        #region IEnumerable Members
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        #endregion
 
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]

@@ -9,6 +9,8 @@
     using System.Windows.Interactivity;
     using tomenglertde.ResXManager.View.Tools;
 
+    using TomsToolbox.Wpf;
+
     public class PopupFocusManagerBehavior : Behavior<Popup>
     {
         /// <summary>
@@ -29,6 +31,8 @@
         {
             get
             {
+                Contract.Ensures((AssociatedObject == null) || (Contract.Result<Popup>() != null));
+
                 return AssociatedObject;
             }
         }
@@ -36,6 +40,7 @@
         protected override void OnAttached()
         {
             base.OnAttached();
+            Contract.Assume(AssociatedObject != null);
 
             Popup.IsKeyboardFocusWithinChanged += Popup_IsKeyboardFocusWithinChanged;
             Popup.Opened += Popup_Opened;
@@ -45,6 +50,7 @@
         protected override void OnDetaching()
         {
             base.OnDetaching();
+            Contract.Assume(AssociatedObject != null);
 
             Popup.IsKeyboardFocusWithinChanged -= Popup_IsKeyboardFocusWithinChanged;
             Popup.Opened -= Popup_Opened;
@@ -75,7 +81,7 @@
             if (child == null)
                 return;
 
-            var focusable = child.VisualDescendantsAndSelf<UIElement>().FirstOrDefault(item => item.Focusable);
+            var focusable = child.VisualDescendantsAndSelf().OfType<UIElement>().FirstOrDefault(item => item.Focusable);
             if (focusable != null)
             {
                 Dispatcher.BeginInvoke(new Action(() => focusable.Focus()));
@@ -89,8 +95,5 @@
                 ToggleButton.IsChecked = false;
             }
         }
-
-
-
     }
 }

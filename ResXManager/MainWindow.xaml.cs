@@ -15,12 +15,16 @@
     using tomenglertde.ResXManager.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
+    using TomsToolbox.Wpf;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     [ContractVerification(false)] // Too many warnings from generated code.
     public partial class MainWindow : ITracer
     {
+        private readonly Configuration _configuration = new Configuration();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -38,13 +42,13 @@
         /// Identifies the Folder dependency property
         /// </summary>
         public static readonly DependencyProperty FolderProperty =
-            DependencyProperty.Register("Folder", typeof (string), typeof (MainWindow));
+            DependencyProperty.Register("Folder", typeof(string), typeof(MainWindow));
 
         internal ResourceManager ViewModel
         {
             get
             {
-                return (ResourceManager) DataContext;
+                return (ResourceManager)DataContext;
             }
         }
 
@@ -54,6 +58,11 @@
 
             try
             {
+                var resourceManager = new ResourceManager();
+                resourceManager.BeginEditing += ResourceManager_BeginEditing;
+                resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
+                DataContext = resourceManager;
+
                 if (!string.IsNullOrEmpty(Settings.StartupFolder))
                 {
                     Folder = Settings.StartupFolder;
@@ -87,18 +96,13 @@
 
         private void Load()
         {
-            var sourceFileExtensions = Settings.SourceFiles
-                .Split(';')
-                .Select(s => s.Trim())
-                .ToArray();
+            var sourceFiles = new DirectoryInfo(Folder).GetAllSourceFiles(_configuration);
 
-            var sourceFiles = new DirectoryInfo(Folder).GetAllSourceFiles(file => sourceFileExtensions.Contains(file.Extension, StringComparer.OrdinalIgnoreCase));
-
-            ViewModel.Load(sourceFiles);
+            ViewModel.Load(sourceFiles, _configuration);
 
             if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
             {
-                CodeReference.BeginFind(ViewModel.ResourceEntities, sourceFiles, this);
+                CodeReference.BeginFind(ViewModel, sourceFiles, this);
             }
         }
 
@@ -129,34 +133,34 @@
 
         private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
         {
-            if (!CanEdit(e.Entity, e.Language))
+            if (!CanEdit(e.Entity, e.Culture))
             {
                 e.Cancel = true;
             }
         }
 
-        private bool CanEdit(ResourceEntity entity, CultureInfo language)
+        private bool CanEdit(ResourceEntity entity, CultureInfo culture)
         {
             Contract.Requires(entity != null);
 
             string message;
-            var languages = entity.Languages.Where(lang => (language == null) || language.Equals(lang.Culture)).ToArray();
+            var languages = entity.Languages.Where(lang => (culture == null) || culture.Equals(lang.Culture)).ToArray();
 
             if (!languages.Any())
             {
                 try
                 {
                     // because entity.Languages.Any() => languages can only be empty if language != null!
-                    Contract.Assume(language != null);
+                    Contract.Assume(culture != null);
 
-                    message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.ProjectHasNoResourceFile, language.DisplayName);
+                    message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.ProjectHasNoResourceFile, culture.DisplayName);
 
                     if (MessageBox.Show(message, Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                         return false;
 
                     var neutralLanguage = entity.Languages.First();
 
-                    var languageFileName = neutralLanguage.ProjectFile.GetLanguageFileName(language);
+                    var languageFileName = neutralLanguage.ProjectFile.GetLanguageFileName(culture);
 
                     if (File.Exists(languageFileName))
                     {
@@ -179,7 +183,7 @@
             }
             else
             {
-                var lockedFiles = languages.Where(l => !l.IsWritable).Select(l => l.FileName).ToArray();
+                var lockedFiles = languages.Where(l => !l.ProjectFile.IsWritable).Select(l => l.FileName).ToArray();
 
                 if (!lockedFiles.Any())
                     return true;

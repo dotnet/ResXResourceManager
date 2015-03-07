@@ -12,6 +12,7 @@
         protected override void OnAttached()
         {
             base.OnAttached();
+            Contract.Assume(AssociatedObject != null);
 
             AssociatedObject.BeginningEdit += DataGrid_BeginningEdit;
         }
@@ -19,6 +20,7 @@
         protected override void OnDetaching()
         {
             base.OnDetaching();
+            Contract.Assume(AssociatedObject != null);
 
             AssociatedObject.BeginningEdit -= DataGrid_BeginningEdit;
         }
@@ -34,15 +36,19 @@
             var entry = (ResourceTableEntry)dataGridRow.Item;
             var resourceEntity = entry.Owner;
 
-            var language = resourceEntity.Languages.First().Culture;
+            var resourceLanguages = resourceEntity.Languages;
+            if (!resourceLanguages.Any())
+                return;
+
+            var cultureKey = resourceLanguages.First().CultureKey;
 
             var languageHeader = e.Column.Header as ILanguageColumnHeader;
             if (languageHeader != null)
             {
-                language = languageHeader.Language;
+                cultureKey = languageHeader.CultureKey;
             }
 
-            if (!resourceEntity.CanEdit(language))
+            if (!resourceEntity.CanEdit(cultureKey.Culture))
             {
                 e.Cancel = true;
             }

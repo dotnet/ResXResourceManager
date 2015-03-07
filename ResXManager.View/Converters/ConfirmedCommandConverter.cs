@@ -4,6 +4,7 @@
     using System.ComponentModel;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.Windows;
     using System.Windows.Data;
     using System.Windows.Input;
 
@@ -23,12 +24,23 @@
 
         public event EventHandler<CancelEventArgs> Executing;
 
+        public string Query
+        {
+            get;
+            set;
+        }
+
         private bool QueryCancelExecution()
         {
+            if (!string.IsNullOrEmpty(Query))
+            {
+                return MessageBox.Show(Query, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes;
+            }
+
             var e = new CancelEventArgs();
 
             var handler = Executing;
-            if (handler != null) 
+            if (handler != null)
                 handler(this, e);
 
             return e.Cancel;

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -158,7 +158,7 @@
     <value>Paste rows (Ctrl+V)</value>
   </data>
   <data name="AddKeyToolTip" xml:space="preserve">
-    <value>Add new key (Ctrl+N)</value>
+    <value>Add new key (Shift+Insert)</value>
   </data>
   <data name="LikeButtonToolTip" xml:space="preserve">
     <value>Like it? Support the project by writing a short review!</value>
@@ -247,5 +247,56 @@
   </data>
   <data name="ShellTabHeader_Languages" xml:space="preserve">
     <value>Languages</value>
+  </data>
+  <data name="NoSelection" xml:space="preserve">
+    <value>No selection.</value>
+  </data>
+  <data name="MultipleSelection" xml:space="preserve">
+    <value>Multiple selection.</value>
+  </data>
+  <data name="SelectedTotalToolTip" xml:space="preserve">
+    <value>Selected/Total</value>
+  </data>
+  <data name="SortNodesByKey_Confirmation" xml:space="preserve">
+    <value>Do you want to sort all nodes of all resource files by the key now?</value>
+  </data>
+  <data name="DetectCodeReferences_Header" xml:space="preserve">
+    <value>Detect Code References</value>
+  </data>
+  <data name="Configuration_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="SortAllFilesNow" xml:space="preserve">
+    <value>Sort all files now</value>
+  </data>
+  <data name="SortNodesByKey" xml:space="preserve">
+    <value>When saving a RESX file, sort the XML data nodes by the key.</value>
+  </data>
+  <data name="EditDefaultConfigurationNotification" xml:space="preserve">
+    <value>Your are editing the default configuration. If you want to change settings that apply only to a specific solution, just open the solution.</value>
+  </data>
+  <data name="EditSolutionConfigurationNotification" xml:space="preserve">
+    <value>You are editing the configuration specific for the active solution. If you want to edit the default configuration, just close the solution.</value>
+  </data>
+  <data name="NeutralResourceLanguageHeader" xml:space="preserve">
+    <value>Neutral Resources Language:</value>
+  </data>
+  <data name="ConfigurationScopeHeader" xml:space="preserve">
+    <value>Scope</value>
+  </data>
+  <data name="Configuration_LoadSaveHeader" xml:space="preserve">
+    <value>Load &amp; Save</value>
+  </data>
+  <data name="FileExtensions" xml:space="preserve">
+    <value>File Extensions</value>
+  </data>
+  <data name="RegularExpression" xml:space="preserve">
+    <value>Regular Expression</value>
+  </data>
+  <data name="CaseSensitive" xml:space="preserve">
+    <value>Case Sens.</value>
+  <comment>@Invariant</comment></data>
+  <data name="CommentToken" xml:space="preserve">
+    <value>Comment Token</value>
   </data>
 </root>

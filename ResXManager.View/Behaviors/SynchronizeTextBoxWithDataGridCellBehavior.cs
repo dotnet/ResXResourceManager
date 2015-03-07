@@ -2,14 +2,12 @@
 {
     using System;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Interactivity;
     using System.Windows.Markup;
     using tomenglertde.ResXManager.View.ColumnHeaders;
-    using tomenglertde.ResXManager.View.Properties;
 
     public class SynchronizeTextBoxWithDataGridCellBehavior : Behavior<TextBox>
     {
@@ -42,6 +40,8 @@
         {
             get
             {
+                Contract.Ensures((AssociatedObject == null) || (Contract.Result<TextBox>() != null));
+
                 return AssociatedObject;
             }
         }
@@ -49,6 +49,10 @@
         private void DataGrid_CurrentCellChanged(object sender, EventArgs e)
         {
             Contract.Requires(sender != null);
+
+            var textBox = TextBox;
+            if (textBox == null)
+                return;
 
             var dataGrid = (DataGrid)sender;
             var currentCell = dataGrid.CurrentCell;
@@ -60,19 +64,19 @@
             var header = column.Header as ILanguageColumnHeader;
             if (header != null)
             {
-                TextBox.IsEnabled = true;
-                TextBox.DataContext = currentCell.Item;
+                textBox.IsEnabled = true;
+                textBox.DataContext = currentCell.Item;
 
-                var ieftLanguageTag = (header.Language ?? Settings.Default.NeutralResourceLanguage ?? CultureInfo.InvariantCulture).IetfLanguageTag;
-                TextBox.Language = XmlLanguage.GetLanguage(ieftLanguageTag);
+                var ieftLanguageTag = header.EffectiveCulture.IetfLanguageTag;
+                textBox.Language = XmlLanguage.GetLanguage(ieftLanguageTag);
 
-                BindingOperations.SetBinding(TextBox, TextBox.TextProperty, column.Binding);
+                BindingOperations.SetBinding(textBox, TextBox.TextProperty, column.Binding);
             }
             else
             {
-                TextBox.IsEnabled = false;
-                TextBox.DataContext = null;
-                BindingOperations.ClearBinding(TextBox, TextBox.TextProperty);
+                textBox.IsEnabled = false;
+                textBox.DataContext = null;
+                BindingOperations.ClearBinding(textBox, TextBox.TextProperty);
             }
         }
     }

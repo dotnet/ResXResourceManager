@@ -11,6 +11,8 @@ using System.Windows.Markup;
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(false)]
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
-[assembly: XmlnsDefinition("http://schemas.tom-englert.de/xaml/ResXManager", "tomenglertde.ResXManager.Model")]
+
+[assembly: XmlnsDefinition("urn:ResXManager.Model", "tomenglertde.ResXManager.Model")]
+[assembly: XmlnsDefinition("urn:ResXManager.Model", "tomenglertde.ResXManager.Model.Properties")]
 
 

@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System;
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -9,26 +8,26 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
+    using System.Windows.Interactivity;
+    using System.Windows.Threading;
+
     using DataGridExtensions;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Controls;
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
+    using TomsToolbox.Wpf;
+
     /// <summary>
     /// Interaction logic for ResourceView.xaml
     /// </summary>
-    [ContractVerification(false)]   // Too many warnings from generated code.
     public partial class ResourceView
     {
-        private static readonly DependencyProperty HardReferenceToDgx = DataGridFilterColumn.FilterProperty;
-
         public ResourceView()
         {
-            if (HardReferenceToDgx == null) // just use this...
-            {
-                Trace.WriteLine("HardReferenceToDgx failed");
-            }
+            References.Resolve(this);
 
             InitializeComponent();
 
@@ -44,7 +43,7 @@
             set { SetValue(TextFontSizeProperty, value); }
         }
         public static readonly DependencyProperty TextFontSizeProperty =
-            DependencyProperty.RegisterAttached("TextFontSize", typeof (double), typeof (ResourceView), new FrameworkPropertyMetadata(12.0, FrameworkPropertyMetadataOptions.Inherits));
+            DependencyProperty.RegisterAttached("TextFontSize", typeof(double), typeof(ResourceView), new FrameworkPropertyMetadata(12.0, FrameworkPropertyMetadataOptions.Inherits));
 
         private ResourceManager ViewModel
         {
@@ -54,7 +53,24 @@
             }
         }
 
-        private void self_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+
+            this.BeginInvoke(DispatcherPriority.Background, () => ListBox.SelectAll());
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+
+            if (e.Property == DataContextProperty)
+            {
+                DataContext_Changed(e);
+            }
+        }
+
+        private void DataContext_Changed(DependencyPropertyChangedEventArgs e)
         {
             var oldValue = e.OldValue as ResourceManager;
             if (oldValue != null)
@@ -72,12 +88,22 @@
 
         private void NeutralLanguage_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Default.NeutralResourceLanguage = (CultureInfo)(((MenuItem)sender).DataContext);
+            Contract.Requires(sender != null);
+
+            var viewModel = ViewModel;
+            if (viewModel == null)
+                return;
+
+            viewModel.Configuration.NeutralResourcesLanguage = (CultureInfo)(((MenuItem)sender).DataContext);
         }
 
         private void ResourceManager_Loaded(object sender, EventArgs e)
         {
-            DataGrid.SetupColumns(ViewModel.Languages);
+            var viewModel = ViewModel;
+            if (viewModel == null)
+                return;
+
+            DataGrid.SetupColumns(viewModel.CultureKeys);
         }
 
         private void AddLanguage_Click(object sender, RoutedEventArgs e)
@@ -90,29 +116,48 @@
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
 
-            var languages = ViewModel.Languages.Where(l => l != null).Select(l => l.ToString()).ToArray();
+            var viewModel = ViewModel;
+            if (viewModel == null)
+                return;
+
+            var cultureNames = viewModel.CultureKeys
+                .Select(c => c.Culture)
+                .Where(c => c != null)
+                .Select(c => c.ToString()).ToArray();
 
             inputBox.TextChanged += (_, args) =>
-                inputBox.IsInputValid = !languages.Contains(args.Text, StringComparer.OrdinalIgnoreCase) && ResourceManager.IsValidLanguageName(args.Text);
+                inputBox.IsInputValid = !cultureNames.Contains(args.Text, StringComparer.OrdinalIgnoreCase) && ResourceManager.IsValidLanguageName(args.Text);
 
             if (inputBox.ShowDialog() == true)
             {
-                DataGrid.Columns.AddLanguageColumn(new CultureInfo(inputBox.Text));
+                DataGrid.Columns.AddLanguageColumn(viewModel, new CultureKey(new CultureInfo(inputBox.Text)));
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used via XAML!")]
-        private void DeleteCommandConverter_OnExecuting(object sender, CancelEventArgs e)
+        /// <summary>
+        /// Assemblies only referenced via reflection (XAML) can cause problems at runtime, sometimes they are not correctly installed
+        /// by the VSIX installer. Add some code references to avoid this problem by forcing the assemblies to be loaded before the XAML is loaded.
+        /// </summary>
+        static class References
         {
-            if (MessageBox.Show(Properties.Resources.ConfirmDeleteItems, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-                e.Cancel = true;
+            private static readonly DependencyProperty _hardReferenceToDgx = DataGridFilterColumn.FilterProperty;
+
+            public static void Resolve(DependencyObject view)
+            {
+                if (_hardReferenceToDgx == null) // just use this to avoid warnings...
+                {
+                    Trace.WriteLine("HardReferenceToDgx failed");
+                }
+
+                Interaction.GetBehaviors(view);
+            }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used via XAML!")]
-        private void CutCommandConverter_OnExecuting(object sender, CancelEventArgs e)
+        [ContractInvariantMethod]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
         {
-            if (MessageBox.Show(Properties.Resources.ConfirmCutItems, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-                e.Cancel = true;
+            Contract.Invariant(DataGrid != null);
         }
     }
 }

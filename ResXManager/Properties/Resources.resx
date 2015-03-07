@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -127,11 +127,5 @@ In the standalone version the file is not automatically added to the Visual Stud
     <value>Some files in your project are not writable. You may need to check out the files before editing them:
 
 {0}</value>
-  </data>
-  <data name="SourceFiles" xml:space="preserve">
-    <value>Source files:</value>
-  </data>
-  <data name="SourceFiles_ToolTip" xml:space="preserve">
-    <value>Files with these extensions are scanned for code references</value>
   </data>
 </root>

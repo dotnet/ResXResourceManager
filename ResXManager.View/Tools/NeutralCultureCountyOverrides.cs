@@ -9,7 +9,7 @@
 
     public class NeutralCultureCountyOverrides
     {
-        private static readonly CultureInfo[] AllSpecificCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+        private static readonly CultureInfo[] _allSpecificCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
         private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().ToDictionary(item => item.Key, item => item.Value));
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
@@ -67,7 +67,7 @@
             Contract.Requires(neutralCulture != null);
 
             var cultureName = neutralCulture.Name;
-            var specificCultures = AllSpecificCultures.Where(c => (c != null) && ((c.Parent.Name == cultureName) || (c.Parent.IetfLanguageTag == cultureName))).ToArray();
+            var specificCultures = _allSpecificCultures.Where(c => (c != null) && ((c.Parent.Name == cultureName) || (c.Parent.IetfLanguageTag == cultureName))).ToArray();
 
             var preferredSpecificCultureName = cultureName + @"-" + cultureName.ToUpperInvariant();
 
@@ -84,6 +84,8 @@
 
         private static IEnumerable<KeyValuePair<CultureInfo, CultureInfo>> ReadSettings()
         {
+            Contract.Ensures(Contract.Result<IEnumerable<KeyValuePair<CultureInfo, CultureInfo>>>() != null);
+
             var neutralCultureCountryOverrides = (Settings.Default.NeutralCultureCountyOverrides ?? string.Empty).Split(',');
 
             foreach (var item in neutralCultureCountryOverrides)
@@ -121,7 +123,7 @@
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(AllSpecificCultures != null);
+            Contract.Invariant(_allSpecificCultures != null);
             Contract.Invariant(_overrides != null);
         }
     }

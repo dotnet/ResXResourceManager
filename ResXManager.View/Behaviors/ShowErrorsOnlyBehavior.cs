@@ -1,9 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Behaviors
 {
     using System;
-    using System.Collections;
-    using System.Collections.Specialized;
-    using System.ComponentModel;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -13,10 +11,10 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
+    using TomsToolbox.Wpf;
+
     public class ShowErrorsOnlyBehavior : Behavior<DataGrid>
     {
-        private static readonly IList EmptyList = new object[0];
-        private static readonly DependencyPropertyDescriptor VisibilityPropertyDescriptor = DependencyPropertyDescriptor.FromProperty(DataGridColumn.VisibilityProperty, typeof(DataGridColumn));
         public ToggleButton ToggleButton
         {
             get { return (ToggleButton)GetValue(ToggleButtonProperty); }
@@ -31,41 +29,24 @@
         protected override void OnAttached()
         {
             base.OnAttached();
-            
-            DataGrid.Columns.CollectionChanged += Columns_CollectionChanged;
+            Contract.Assume(AssociatedObject != null);
+
+            DataGrid.GetAdditionalEvents().ColumnVisibilityChanged += DataGrid_ColumnVisibilityChanged;
         }
 
         protected override void OnDetaching()
         {
             base.OnDetaching();
+            Contract.Assume(AssociatedObject != null);
 
-            DataGrid.Columns.CollectionChanged -= Columns_CollectionChanged;
-        }
-
-        private void Columns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    foreach (DataGridColumn column in e.NewItems ?? EmptyList)
-                    {
-                        VisibilityPropertyDescriptor.AddValueChanged(column, DataGrid_ColumnVisibilityChanged);
-                    }
-                    break;
-
-                case NotifyCollectionChangedAction.Remove:
-                    foreach (DataGridColumn column in e.OldItems ?? EmptyList)
-                    {
-                        VisibilityPropertyDescriptor.RemoveValueChanged(column, DataGrid_ColumnVisibilityChanged);
-                    }
-                    break;
-            }
+            DataGrid.GetAdditionalEvents().ColumnVisibilityChanged -= DataGrid_ColumnVisibilityChanged;
         }
 
         private DataGrid DataGrid
         {
             get
             {
+                Contract.Ensures((AssociatedObject == null) || (Contract.Result<DataGrid>() != null));
                 return AssociatedObject;
             }
         }
@@ -106,10 +87,12 @@
 
         private void DataGrid_ColumnVisibilityChanged(object source, EventArgs e)
         {
-            if (ToggleButton == null)
+            var toggleButton = ToggleButton;
+
+            if (toggleButton == null)
                 return;
 
-            if (ToggleButton.IsChecked.GetValueOrDefault())
+            if (toggleButton.IsChecked.GetValueOrDefault())
             {
                 this.BeginInvoke(UpdateErrorsOnlyFilter);
             }
@@ -120,18 +103,18 @@
             if (DataGrid == null)
                 return;
 
-            var visibleLanguageKeys = DataGrid.Columns
+            var visibleLanguages = DataGrid.Columns
                 .Where(column => column.Visibility == Visibility.Visible)
                 .Select(column => column.Header)
                 .OfType<LanguageHeader>()
-                .Select(header => header.Language.ToLanguageKey())
+                .Select(header => header.CultureKey)
                 .ToArray();
 
             DataGrid.SetIsAutoFilterEnabled(false);
             DataGrid.Items.Filter = row =>
             {
                 var entry = (ResourceTableEntry)row;
-                var values = visibleLanguageKeys.Select(key => entry.Values[key]);
+                var values = visibleLanguages.Select(lang => entry.Values.GetValue(lang));
                 return !entry.IsInvariant && values.Any(string.IsNullOrEmpty);
             };
         }

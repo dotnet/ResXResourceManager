@@ -3,11 +3,15 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.Linq;
-    using System.Windows;
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Spreadsheet;
+
+    using tomenglertde.ResXManager.Model.Properties;
+
+    using TomsToolbox.Core;
 
     public static partial class ResourceEntityExtensions
     {
@@ -18,7 +22,10 @@
 
             using (var package = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook))
             {
+                Contract.Assume(package != null);
+
                 var workbookPart = package.AddWorkbookPart();
+                Contract.Assume(workbookPart != null);
 
                 var entitiesQuery = GetEntities(resourceManager);
 
@@ -36,7 +43,9 @@
                 {
                     Contract.Assume(item != null);
 
-                    workbookPart.AddNewPart<WorksheetPart>(item.Id).Worksheet = new Worksheet().AppendItem(item.GetDataRows(scope).Aggregate(new SheetData(), AppendRow));
+                    var worksheetPart = workbookPart.AddNewPart<WorksheetPart>(item.Id);
+                    Contract.Assume(worksheetPart != null);
+                    worksheetPart.Worksheet = new Worksheet().AppendItem(item.GetDataRows(scope).Aggregate(new SheetData(), AppendRow));
                 }
             }
         }
@@ -46,48 +55,32 @@
             Contract.Requires(resourceManager != null);
             Contract.Requires(filePath != null);
 
-            switch (resourceManager.InternalImportExcel(filePath))
-            {
-                case ImportResult.Partial:
-                    MessageBox.Show(Properties.Resources.ImportFailedPartiallyError, Properties.Resources.Title);
-                    break;
-
-                case ImportResult.None:
-                    MessageBox.Show(Properties.Resources.ImportFailedError, Properties.Resources.Title);
-                    break;
-
-                case ImportResult.All:
-                    break;
-
-                default:
-                    throw new InvalidOperationException(@"Undefined import result.");
-
-            }
-        }
-
-        private static ImportResult InternalImportExcel(this ResourceManager resourceManager, string filePath)
-        {
-            Contract.Requires(resourceManager != null);
-            Contract.Requires(filePath != null);
-
             using (var package = SpreadsheetDocument.Open(filePath, false))
             {
+                Contract.Assume(package != null);
                 var workbookPart = package.WorkbookPart;
+                Contract.Assume(workbookPart != null);
 
                 var workbook = workbookPart.Workbook;
-                IList<SharedStringItem> sharedStrings = workbookPart.GetSharedStrings();
+                Contract.Assume(workbook != null);
+
+                var sharedStrings = workbookPart.GetSharedStrings();
 
                 var entities = GetEntities(resourceManager).ToArray();
 
-                foreach (Sheet sheet in workbook.Sheets)
+                var sheets = workbook.Sheets;
+                Contract.Assume(sheets != null);
+
+                foreach (var sheet in sheets.OfType<Sheet>())
                 {
                     var resourceEntity = FindResourceEntity(entities, sheet);
 
-                    if (resourceEntity == null)
-                        return ImportResult.Partial;
-
                     var worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id);
-                    var sheetData = worksheetPart.Worksheet.ChildElements.OfType<SheetData>().FirstOrDefault();
+                    var sheetData = worksheetPart.Maybe()
+                        .Select(x => x.Worksheet)
+                        .Select(x => x.ChildElements)
+                        .Select(x => x.OfType<SheetData>())
+                        .Return(x => x.FirstOrDefault());
 
                     if (sheetData == null)
                         continue;
@@ -95,31 +88,30 @@
                     var rows = sheetData.OfType<Row>().ToArray();
 
                     var data = (IList<IList<string>>)rows.Select(row => row.OfType<Cell>().GetRowContent(sharedStrings)).ToArray();
+                    if (data.Count == 0)
+                        continue;
 
-                    var result = resourceEntity.ImportTable(FixedColumnHeaders, data);
-
-                    switch (result)
-                    {
-                        case ImportResult.None:
-                        case ImportResult.Partial:
-                            return result;
-                    }
+                    resourceEntity.ImportTable(FixedColumnHeaders, data);
                 }
             }
-
-            return ImportResult.All;
         }
 
         private static ResourceEntity FindResourceEntity(this IEnumerable<Entity> entities, Sheet sheet)
         {
             Contract.Requires(entities != null);
             Contract.Requires(sheet != null);
+            Contract.Ensures(Contract.Result<ResourceEntity>() != null);
 
             var name = GetName(sheet);
 
-            return entities.Where(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+            var entity = entities.Where(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                 .Select(item => item.ResourceEntity)
                 .FirstOrDefault();
+
+            if (entity == null)
+                throw new ImportException(string.Format(CultureInfo.CurrentCulture, Resources.ImportMapSheetError, name));
+
+            return entity;
         }
 
         [ContractVerification(false)]
@@ -151,7 +143,7 @@
                 return null;
 
             var stringTable = sharedStringsPart.SharedStringTable;
-            
+
             if (stringTable == null)
                 return null;
 
@@ -180,8 +172,12 @@
                             var stringItem = sharedStrings[index];
                             if (stringItem != null)
                             {
-                                var content = stringItem.Descendants<OpenXmlLeafTextElement>().Select(element => element.Text);
-                                text = string.Concat(content);
+                                var descendants = stringItem.Descendants<OpenXmlLeafTextElement>();
+                                if (descendants != null)
+                                {
+                                    var content = descendants.Select(element => element.Text);
+                                    text = string.Concat(content);
+                                }
                             }
                         }
                     }
@@ -208,6 +204,7 @@
 
             foreach (var cell in cells)
             {
+                Contract.Assume(cell != null);
                 var columnIndex = new ExcelRange(cell.CellReference).StartColumnIndex;
 
                 while (result.Count < columnIndex)
@@ -223,13 +220,13 @@
         {
             Contract.Requires(language != null);
 
-            var languageName = language.Name;
+            var cultureKeyName = language.CultureKey.ToString();
 
-            if ((scope == null) || scope.Comments.Contains(language.Culture))
-                yield return CommentHeaderPrefix + languageName;
+            if ((scope == null) || scope.Comments.Contains(language.CultureKey))
+                yield return CommentHeaderPrefix + cultureKeyName;
 
-            if ((scope == null) || scope.Languages.Contains(language.Culture))
-                yield return languageName;
+            if ((scope == null) || scope.Languages.Contains(language.CultureKey))
+                yield return cultureKeyName;
         }
 
         private static IEnumerable<string> GetLanguageDataColumns(this ResourceTableEntry entry, ResourceLanguage language, IResourceScope scope)
@@ -237,13 +234,13 @@
             Contract.Requires(entry != null);
             Contract.Requires(language != null);
 
-            var languageName = language.Name;
+            var cultureKey = language.CultureKey;
 
-            if ((scope == null) || scope.Comments.Contains(language.Culture))
-                yield return entry.Comments[languageName];
+            if ((scope == null) || scope.Comments.Contains(cultureKey))
+                yield return entry.Comments.GetValue(cultureKey);
 
-            if ((scope == null) || scope.Languages.Contains(language.Culture))
-                yield return entry.Values[languageName];
+            if ((scope == null) || scope.Languages.Contains(cultureKey))
+                yield return entry.Values.GetValue(cultureKey);
         }
 
         /// <summary>
@@ -270,9 +267,10 @@
         public static IEnumerable<IEnumerable<string>> GetDataRows(this ResourceEntity entity, IResourceScope scope)
         {
             Contract.Requires(entity != null);
+            Contract.Ensures(Contract.Result<IEnumerable<IEnumerable<string>>>() != null);
 
-            var entries = (scope != null) 
-                ? scope.Entries.Where(entry => entry.Owner == entity) 
+            var entries = (scope != null)
+                ? scope.Entries.Where(entry => entry.Owner == entity)
                 : entity.Entries;
 
             return entries.Select(entry => entity.GetDataRow(entry, scope));
@@ -329,7 +327,6 @@
                 _resourceEntity = resourceEntity;
 
                 var name = GetSheetName(resourceEntity, uniqueNames);
-
                 _name = name;
 
                 Id = "Id" + index + 1;
@@ -340,6 +337,7 @@
             {
                 Contract.Requires(resourceEntity != null);
                 Contract.Requires(uniqueNames != null);
+                Contract.Ensures(Contract.Result<string>() != null);
 
                 var name = string.Join("|", resourceEntity.ProjectName, resourceEntity.BaseName);
 

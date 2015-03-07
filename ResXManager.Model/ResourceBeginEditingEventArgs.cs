@@ -11,20 +11,20 @@
     public class ResourceBeginEditingEventArgs : CancelEventArgs
     {
         private readonly ResourceEntity _entity;
-        private readonly CultureInfo _language;
+        private readonly CultureInfo _culture;
 
-        public ResourceBeginEditingEventArgs(ResourceEntity entity, CultureInfo language)
+        public ResourceBeginEditingEventArgs(ResourceEntity entity, CultureInfo culture)
         {
             Contract.Requires(entity != null);
             _entity = entity;
-            _language = language;
+            _culture = culture;
         }
 
-        public CultureInfo Language
+        public CultureInfo Culture
         {
             get
             {
-                return _language;
+                return _culture;
             }
         }
 
