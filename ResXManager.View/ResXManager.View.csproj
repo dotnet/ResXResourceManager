@@ -158,6 +158,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Windows.Interactivity">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -237,6 +238,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="References.cs" />
     <Compile Include="Visuals\ResourceView.xaml.cs">
       <DependentUpon>ResourceView.xaml</DependentUpon>
     </Compile>
@@ -246,6 +248,12 @@
     <Compile Include="Tools\WaitCursor.cs" />
     <Compile Include="Visuals\Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Visuals\Translations.xaml.cs">
+      <DependentUpon>Translations.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Visuals\TranslatorConfiguration.xaml.cs">
+      <DependentUpon>TranslatorConfiguration.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -273,11 +281,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Visuals\Translations.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\TranslatorConfiguration.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj">
       <Project>{6AF977DB-2C9F-4D9C-8C2D-CFDDF7E022FC}</Project>
       <Name>ResXManager.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ResXManager.Translate\ResXManager.Translators.csproj">
+      <Project>{d8b0b04f-4273-45db-ae2d-5a91c89e1225}</Project>
+      <Name>ResXManager.Translators</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

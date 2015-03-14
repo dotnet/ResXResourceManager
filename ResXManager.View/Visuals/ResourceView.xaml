@@ -379,7 +379,7 @@
 
             <Style TargetType="Grid" x:Key="NeutralLanguageImageContainerStyle">
               <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=Language}" Value="{x:Null}">
+                <DataTrigger Binding="{Binding Path=CultureKey.Culture}" Value="{x:Null}">
                   <Setter Property="ContextMenu" Value="{StaticResource NeutralLanguageContextMenu}" />
                   <Setter Property="ToolTip" Value="{x:Static properties:Resources.NeutralLanguageToolTip}" />
                 </DataTrigger>

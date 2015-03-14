@@ -1,14 +1,12 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     /// <summary>
-    /// Interaction logic for Shell.xaml
+    /// Interaction logic for Translations.xaml
     /// </summary>
-    public partial class Shell
+    public partial class Translations
     {
-        public Shell()
+        public Translations()
         {
-            References.Resolve(this);
-
             InitializeComponent();
         }
     }

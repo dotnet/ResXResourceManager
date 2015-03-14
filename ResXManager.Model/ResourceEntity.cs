@@ -99,6 +99,7 @@
 
         public event EventHandler<LanguageChangingEventArgs> LanguageChanging;
         public event EventHandler<LanguageChangedEventArgs> LanguageChanged;
+        public event EventHandler<LanguageChangedEventArgs> LanguageAdded;
 
         public ResourceManager Owner
         {
@@ -241,6 +242,8 @@
             resourceLanguage.Changing += language_Changing;
 
             _languages.Add(cultureKey, resourceLanguage);
+
+            OnLanguageAdded(new LanguageChangedEventArgs(this, resourceLanguage));
         }
 
         public override string ToString()
@@ -278,6 +281,13 @@
                 Contract.Assume(language != null);
                 LanguageChanged(this, new LanguageChangedEventArgs(this, language));
             }
+        }
+
+        private void OnLanguageAdded(LanguageChangedEventArgs e)
+        {
+            var handler = LanguageAdded;
+            if (handler != null)
+                handler(this, e);
         }
 
         #region IComparable/IEquatable implementation
