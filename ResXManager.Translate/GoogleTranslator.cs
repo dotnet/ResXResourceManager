@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using System.Windows.Threading;
 
     public class GoogleTranslator : TranslatorBase
     {
@@ -22,7 +21,7 @@
             return false;
         }
 
-        public override void Translate(Dispatcher dispatcher, CultureInfo sourceLanguage, CultureInfo targetLanguage, IList<ITranslationItem> items)
+        public override void Translate(Session session)
         {
         }
     }

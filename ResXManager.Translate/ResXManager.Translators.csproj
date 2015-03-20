@@ -143,6 +143,9 @@
     <Reference Include="JetBrains.Annotations">
       <HintPath>..\packages\JetBrains.Annotations.8.0.5.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
@@ -155,10 +158,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="TomsToolbox.Core">
-      <HintPath>..\packages\TomsToolbox.Core.1.0.2.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Core.1.0.3.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
     </Reference>
     <Reference Include="TomsToolbox.Desktop">
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.2.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.3.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -173,16 +176,24 @@
     <Compile Include="BingTranslator.cs" />
     <Compile Include="CredentialItem.cs" />
     <Compile Include="GoogleTranslator.cs" />
+    <Compile Include="GoogleWebTranslator.cs" />
     <Compile Include="ICredentialItem.cs" />
     <Compile Include="ITranslationMatch.cs" />
     <Compile Include="ITranslationItem.cs" />
     <Compile Include="ITranslator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Service References\BingServiceReference\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Session.cs" />
     <Compile Include="TranslationMatch.cs" />
     <Compile Include="TranslatorBase.cs" />
     <Compile Include="TranslatorHost.cs" />
@@ -196,6 +207,10 @@
     </None>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Service References\BingServiceReference\soap.wsdl" />
     <None Include="Service References\BingServiceReference\soap.xsd">
       <SubType>Designer</SubType>

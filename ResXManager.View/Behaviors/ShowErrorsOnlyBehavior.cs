@@ -7,11 +7,13 @@
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Interactivity;
+
     using DataGridExtensions;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
-    using TomsToolbox.Wpf;
+    using TomsToolbox.Desktop;
 
     public class ShowErrorsOnlyBehavior : Behavior<DataGrid>
     {
@@ -94,7 +96,7 @@
 
             if (toggleButton.IsChecked.GetValueOrDefault())
             {
-                this.BeginInvoke(UpdateErrorsOnlyFilter);
+                Dispatcher.BeginInvoke(UpdateErrorsOnlyFilter);
             }
         }
 

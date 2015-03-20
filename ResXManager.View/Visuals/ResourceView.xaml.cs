@@ -1,24 +1,20 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
-    using System.Windows.Interactivity;
     using System.Windows.Threading;
-
-    using DataGridExtensions;
 
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Controls;
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
-    using TomsToolbox.Wpf;
+    using TomsToolbox.Desktop;
 
     /// <summary>
     /// Interaction logic for ResourceView.xaml
@@ -55,7 +51,7 @@
         {
             base.OnInitialized(e);
 
-            this.BeginInvoke(DispatcherPriority.Background, () => ListBox.SelectAll());
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, () => ListBox.SelectAll());
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)

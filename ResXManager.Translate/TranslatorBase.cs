@@ -2,18 +2,20 @@ namespace tomenglertde.ResXManager.Translators
 {
     using System.Collections.Generic;
     using System.Globalization;
-    using System.Windows.Threading;
+    using System.Runtime.Serialization;
 
     using TomsToolbox.Desktop;
 
+    [DataContract]
     public abstract class TranslatorBase : ObservableObject, ITranslator
     {
         private bool _isEnabled = true;
+        private bool _saveCredentials;
         private readonly string _id;
         private readonly string _displayName;
-        private readonly ICollection<ICredentialItem> _credentials;
+        private readonly IList<ICredentialItem> _credentials;
 
-        protected TranslatorBase(string id, string displayName, ICollection<ICredentialItem> credentials)
+        protected TranslatorBase(string id, string displayName, IList<ICredentialItem> credentials)
         {
             _id = id;
             _displayName = displayName;
@@ -36,6 +38,7 @@ namespace tomenglertde.ResXManager.Translators
             }
         }
 
+        [DataMember]
         public bool IsEnabled
         {
             get
@@ -45,6 +48,19 @@ namespace tomenglertde.ResXManager.Translators
             set
             {
                 SetProperty(ref _isEnabled, value, () => IsEnabled);
+            }
+        }
+
+        [DataMember]
+        public bool SaveCredentials
+        {
+            get
+            {
+                return _saveCredentials;
+            }
+            set
+            {
+                SetProperty(ref _saveCredentials, value, () => SaveCredentials);
             }
         }
 
@@ -58,6 +74,6 @@ namespace tomenglertde.ResXManager.Translators
 
         public abstract bool IsLanguageSupported(CultureInfo culture);
 
-        public abstract void Translate(Dispatcher dispatcher, CultureInfo sourceLanguage, CultureInfo targetLanguage, IList<ITranslationItem> items);
+        public abstract void Translate(Session session);
     }
 }

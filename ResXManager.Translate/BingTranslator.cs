@@ -2,12 +2,11 @@ namespace tomenglertde.ResXManager.Translators
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
+    using System.Runtime.Serialization;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using System.Windows.Threading;
 
     using tomenglertde.ResXManager.Translators.BingServiceReference;
 
@@ -26,7 +25,7 @@ namespace tomenglertde.ResXManager.Translators
             return false;
         }
 
-        public override void Translate(Dispatcher dispatcher, CultureInfo sourceLanguage, CultureInfo targetLanguage, IList<ITranslationItem> items)
+        public override void Translate(Session session)
         {
             try
             {
@@ -46,7 +45,7 @@ namespace tomenglertde.ResXManager.Translators
                         httpRequestProperty.Headers.Add("Authorization", token);
                         OperationContext.Current.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
 
-                        using (var itemsEnumerator = items.GetEnumerator())
+                        using (var itemsEnumerator = session.Items.GetEnumerator())
                         {
                             while (true)
                             {
@@ -56,14 +55,17 @@ namespace tomenglertde.ResXManager.Translators
                                 if (!sourceStrings.Any())
                                     break;
 
-                                var response = client.GetTranslationsArray("", sourceStrings, sourceLanguage.TwoLetterISOLanguageName, targetLanguage.TwoLetterISOLanguageName, 5,
+                                var response = client.GetTranslationsArray("", sourceStrings, session.SourceLanguage.TwoLetterISOLanguageName, session.TargetLanguage.TwoLetterISOLanguageName, 5,
                                     new TranslateOptions()
                                     {
                                         ContentType = "text/plain",
                                         IncludeMultipleMTAlternatives = true
                                     });
 
-                                dispatcher.BeginInvoke(() => ReturnResults(sourceItems, response));
+                                session.Dispatcher.BeginInvoke(() => ReturnResults(sourceItems, response));
+
+                                if (session.IsCancelled)
+                                    break;
                             }
                         }
                     }
@@ -71,23 +73,33 @@ namespace tomenglertde.ResXManager.Translators
             }
             catch (Exception ex)
             {
-                Trace.TraceError(ex.ToString());
+                session.AddMessage("Bing translator reported a problem: " + ex);
             }
         }
 
-        private string ClientSecret
+        [DataMember]
+        public string ClientSecret
         {
             get
             {
-                return Credentials[1].Value;
+                return SaveCredentials ? Credentials[1].Value : null;
+            }
+            set
+            {
+                Credentials[1].Value = value;
             }
         }
 
-        private string ClientId
+        [DataMember]
+        public string ClientId
         {
             get
             {
-                return Credentials[0].Value;
+                return SaveCredentials ? Credentials[0].Value : null;
+            }
+            set
+            {
+                Credentials[0].Value = value;
             }
         }
 
