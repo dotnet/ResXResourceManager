@@ -138,7 +138,7 @@
                 _session.Cancel();
         }
 
-        private void Apply(ICollection<TranslationItem> items)
+        private void Apply(IEnumerable<TranslationItem> items)
         {
             Contract.Requires(items != null);
             Contract.Assume(_targetCulture != null);
@@ -147,7 +147,12 @@
             {
                 Contract.Assume(item != null);
 
-                item.Entry.Values.SetValue(_targetCulture, item.Translation);
+                var entry = item.Entry;
+
+                if (!entry.CanEdit(_targetCulture.Culture))
+                    break;
+
+                entry.Values.SetValue(_targetCulture, item.Translation);
                 Items.Remove(item);
             }
         }
@@ -180,7 +185,7 @@
 
             Items = new ObservableCollection<TranslationItem>(_owner.ResourceTableEntries
                 .Where(entry => !entry.IsInvariant)
-                .Where(entry => string.IsNullOrWhiteSpace(entry.Values[_targetCulture.ToString()]))
+                .Where(entry => string.IsNullOrWhiteSpace(entry.Values.GetValue(_targetCulture)))
                 .Select(entry => new TranslationItem(entry, entry.Values.GetValue(_sourceCulture)))
                 .Where(item => !string.IsNullOrWhiteSpace(item.Source)));
 
