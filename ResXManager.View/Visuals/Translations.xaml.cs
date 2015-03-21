@@ -20,7 +20,11 @@
             if (!true.Equals(e.NewValue))
                 return;
 
-            var row = ((DependencyObject) sender).TryFindAncestor<DataGridRow>();
+            var element = sender as DependencyObject;
+            if (element == null)
+                return;
+
+            var row = element.TryFindAncestor<DataGridRow>();
             if (row != null)
             {
                 row.IsSelected = true;

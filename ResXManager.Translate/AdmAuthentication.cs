@@ -1,7 +1,9 @@
 ﻿namespace tomenglertde.ResXManager.Translators
 {
+    using System;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.IO;
     using System.Net;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Json;
@@ -21,10 +23,21 @@
             Contract.Requires(!string.IsNullOrEmpty(clientSecret));
             Contract.Ensures(Contract.Result<string>() != null);
 
-            var request = CreateRequestDetails(clientId, clientSecret);
-            var token = GetAccessToken(request);
+            try
+            {
+                var request = CreateRequestDetails(clientId, clientSecret);
+                var token = GetAccessToken(request);
 
-            return AuthTokenPrefix + token.AccessToken;
+                return AuthTokenPrefix + token.AccessToken;
+            }
+            catch (WebException ex)
+            {
+                //using (var reader = new StreamReader(ex.Response.GetResponseStream()))
+                //{
+                //    var data = reader.ReadToEnd();
+                //}
+                throw new InvalidOperationException("Authentication Failed", ex);
+            }
         }
 
         private static AdmAccessToken GetAccessToken(string requestDetails)
@@ -42,6 +55,7 @@
 
             using (var webResponse = webRequest.GetResponse())
             {
+
                 var token = (AdmAccessToken)_serializer.ReadObject(webResponse.GetResponseStream());
                 Contract.Assume(token != null);
                 return token;

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
@@ -56,7 +57,7 @@
 
                 foreach (var item in session.Items)
                 {
-                    if (session.IsCancelled)
+                    if (session.IsCanceled)
                         break;
 
                     var translationItem = item;
@@ -111,6 +112,7 @@
             return JsonConvert.DeserializeObject<Response>(json);
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
         [DataContract]
         class ResponseData
         {
@@ -129,6 +131,7 @@
             }
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
         [DataContract]
         class MatchData
         {
@@ -154,7 +157,7 @@
             }
         }
 
-
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
         [DataContract]
         class Response
         {

@@ -33,7 +33,7 @@
 
         public double TextFontSize
         {
-            get { return (double)GetValue(TextFontSizeProperty); }
+            get { return this.GetValue<double>(TextFontSizeProperty); }
             set { SetValue(TextFontSizeProperty, value); }
         }
         public static readonly DependencyProperty TextFontSizeProperty =

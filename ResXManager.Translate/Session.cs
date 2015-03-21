@@ -12,7 +12,7 @@
         private readonly ObservableCollection<string> _internalMessage = new ObservableCollection<string>();
         private readonly IList<string> _messages;
 
-        private bool _isCancelled;
+        private bool _isCanceled;
         private int _progress;
         private bool _isComplete;
 
@@ -47,15 +47,15 @@
             private set;
         }
 
-        public bool IsCancelled
+        public bool IsCanceled
         {
             get
             {
-                return _isCancelled;
+                return _isCanceled;
             }
             private set
             {
-                SetProperty(ref _isCancelled,value, () => IsCancelled);
+                SetProperty(ref _isCanceled,value, () => IsCanceled);
             }
         }
 
@@ -99,7 +99,7 @@
 
         public void Cancel()
         {
-            IsCancelled = true;
+            IsCanceled = true;
         }
 
         [ContractInvariantMethod]

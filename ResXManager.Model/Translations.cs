@@ -19,7 +19,7 @@
 
         private CultureKey _sourceCulture;
         private CultureKey _targetCulture;
-        private ICollection<TranslationItem> _items;
+        private ICollection<TranslationItem> _items = new TranslationItem[0];
         private Session _session;
 
         public Translations(ResourceManager owner)
@@ -70,10 +70,12 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICollection<TranslationItem>>() != null);
                 return _items;
             }
-            set
+            private set
             {
+                Contract.Requires(value != null);
                 SetProperty(ref _items, value, () => Items);
             }
         }
@@ -162,7 +164,7 @@
         {
             get
             {
-                return _session != null && !_session.IsComplete && !_session.IsCancelled;
+                return _session != null && !_session.IsComplete && !_session.IsCanceled;
             }
         }
 
@@ -172,7 +174,7 @@
 
             if ((_sourceCulture == null) || (_targetCulture == null))
             {
-                Items = null;
+                Items = new TranslationItem[0];
                 return;
             }
 
@@ -182,13 +184,23 @@
                 .Where(item => !string.IsNullOrWhiteSpace(item.Source)));
 
             var sourceCulture = _sourceCulture.Culture ?? _owner.Configuration.NeutralResourcesLanguage;
+            var targetCulture = _targetCulture.Culture ?? _owner.Configuration.NeutralResourcesLanguage;
 
             if (Session != null)
                 Session.Cancel();
 
-            Session = new Session(sourceCulture, _targetCulture.Culture, Items.Cast<ITranslationItem>().ToArray());
+            Session = new Session(sourceCulture, targetCulture, Items.Cast<ITranslationItem>().ToArray());
 
             TranslatorHost.Translate(Session);
+        }
+
+        [ContractInvariantMethod]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_owner != null);
+            Contract.Invariant(_selectedItems != null);
+            Contract.Invariant(_items != null);
         }
     }
 }

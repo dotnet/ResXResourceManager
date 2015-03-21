@@ -50,7 +50,7 @@
           <ContentControl Content="Stop" Style="{StaticResource {x:Static wpf:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
       </StackPanel>
-      <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="100">
+      <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="100" HorizontalScrollBarVisibility="Auto">
         <ItemsControl ItemsSource="{Binding Translations.Session.Messages}" Margin="5" Focusable="False"/>
       </ScrollViewer>
     </DockPanel>

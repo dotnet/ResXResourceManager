@@ -37,7 +37,7 @@ namespace tomenglertde.ResXManager.Translators
 
                 if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
                 {
-                    session.Messages.Add("Bing Translator requires client id and secret.");
+                    session.AddMessage("Bing Translator requires client id and secret.");
                     return;
                 }
 
@@ -75,7 +75,7 @@ namespace tomenglertde.ResXManager.Translators
 
                                 session.Dispatcher.BeginInvoke(() => ReturnResults(sourceItems, response));
 
-                                if (session.IsCancelled)
+                                if (session.IsCanceled)
                                     break;
                             }
                         }
