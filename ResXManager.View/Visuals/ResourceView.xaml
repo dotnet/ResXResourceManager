@@ -146,6 +146,21 @@
             <Run Text="{Binding SelectedTableEntries.Count, Mode=OneWay}"/><Run Text="/"/><Run Text="{Binding ResourceTableEntries.Count, Mode=OneWay}"/><Run Text="  "/>
           </TextBlock>
           <Control Focusable="False">
+            <Control.Resources>
+              <DataTemplate DataType="{x:Type model:ResourceEntity}">
+                <TextBlock>
+                  <Run Text="{Binding Path=BaseName, Mode=OneWay}" FontWeight="Bold" />
+                  (<Run Text="{Binding Path=Directory, Mode=OneWay}" />)
+                </TextBlock>
+              </DataTemplate>
+              <DataTemplate DataType="{x:Type model:ResourceTableEntry}">
+                <TextBlock>
+                  <Run Text="{Binding Path=Key, Mode=OneWay}" Foreground="Black"/>:
+                  <Run Text="{Binding Path=Owner.BaseName, Mode=OneWay}" FontWeight="Bold" />
+                  (<Run Text="{Binding Path=Owner.Directory, Mode=OneWay}" />)
+                </TextBlock>
+              </DataTemplate>
+            </Control.Resources>
             <Control.Template>
               <ControlTemplate>
                 <ContentControl x:Name="footerContent" Foreground="Gray" Margin="5" Focusable="False">
@@ -164,27 +179,10 @@
                     </Setter>
                   </MultiDataTrigger>
                   <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="1">
-                    <Setter Property="DataContext" Value="{Binding SelectedItem, ElementName=ListBox}"/>
-                    <Setter Property="Content" TargetName="footerContent">
-                      <Setter.Value>
-                        <TextBlock d:DataContext="{d:DesignInstance model:ResourceEntity}">
-                        <Run Text="{Binding Path=BaseName, Mode=OneWay}" FontWeight="Bold" />
-                        (<Run Text="{Binding Path=Directory, Mode=OneWay}" />)
-                        </TextBlock>
-                      </Setter.Value>
-                    </Setter>
+                    <Setter Property="Content" TargetName="footerContent" Value="{Binding SelectedItem, ElementName=ListBox}"/>
                   </DataTrigger>
                   <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=DataGrid}" Value="1">
-                    <Setter Property="DataContext" Value="{Binding SelectedItem, ElementName=DataGrid}"/>
-                    <Setter Property="Content" TargetName="footerContent">
-                      <Setter.Value>
-                        <TextBlock d:DataContext="{d:DesignInstance model:ResourceTableEntry}">
-                        <Run Text="{Binding Path=Key, Mode=OneWay}" Foreground="Black"/>:
-                        <Run Text="{Binding Path=Owner.BaseName, Mode=OneWay}" FontWeight="Bold" />
-                        (<Run Text="{Binding Path=Owner.Directory, Mode=OneWay}" />)
-                        </TextBlock>
-                      </Setter.Value>
-                    </Setter>
+                    <Setter Property="Content" TargetName="footerContent" Value="{Binding SelectedItem, ElementName=DataGrid}"/>
                   </DataTrigger>
                 </ControlTemplate.Triggers>
               </ControlTemplate>
