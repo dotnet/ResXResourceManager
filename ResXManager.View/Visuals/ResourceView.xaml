@@ -172,11 +172,7 @@
                       <Condition Binding="{Binding SelectedItems.Count, ElementName=DataGrid}" Value="0"/>
                       <Condition Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="0"/>
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Content" TargetName="footerContent">
-                      <Setter.Value>
-                        <TextBlock Text="{x:Static properties:Resources.NoSelection}"/>
-                      </Setter.Value>
-                    </Setter>
+                    <Setter Property="Content" TargetName="footerContent" Value="{x:Static properties:Resources.NoSelection}"/>
                   </MultiDataTrigger>
                   <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="1">
                     <Setter Property="Content" TargetName="footerContent" Value="{Binding SelectedItem, ElementName=ListBox}"/>
