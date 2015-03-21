@@ -27,6 +27,13 @@
             Contract.Requires(owner != null);
 
             _owner = owner;
+            _owner.Loaded += Owner_Loaded;
+        }
+
+        void Owner_Loaded(object sender, System.EventArgs e)
+        {
+            if (SourceCulture == null)
+                SourceCulture = _owner.CultureKeys.FirstOrDefault();
         }
 
         public CultureKey SourceCulture
@@ -99,21 +106,64 @@
             }
         }
 
-        public ICommand ApplyCommand
+        public ICommand ApplyAllCommand
         {
             get
             {
-                return new DelegateCommand(() => SelectedItems.Any(), Apply);
+                return new DelegateCommand(() => IsSessionComplete && Items.Any(), () => Apply(Items));
             }
         }
 
-        private void Apply()
+        public ICommand ApplySelectedCommand
         {
-            foreach (var item in SelectedItems.ToArray())
+            get
             {
+                return new DelegateCommand(() => IsSessionComplete && SelectedItems.Any(), () => Apply(SelectedItems));
+            }
+        }
+
+        public ICommand StopCommand
+        {
+            get
+            {
+                return new DelegateCommand(() => IsSessionRunning, Stop);
+            }
+        }
+
+        private void Stop()
+        {
+            if (_session != null)
+                _session.Cancel();
+        }
+
+        private void Apply(ICollection<TranslationItem> items)
+        {
+            Contract.Requires(items != null);
+            Contract.Assume(_targetCulture != null);
+
+            foreach (var item in items.ToArray())
+            {
+                Contract.Assume(item != null);
+
                 item.Entry.Values.SetValue(_targetCulture, item.Translation);
                 Items.Remove(item);
-            }   
+            }
+        }
+
+        private bool IsSessionComplete
+        {
+            get
+            {
+                return _session != null && _session.IsComplete;
+            }
+        }
+
+        private bool IsSessionRunning
+        {
+            get
+            {
+                return _session != null && !_session.IsComplete && !_session.IsCancelled;
+            }
         }
 
         private void UpdateTargetList()
@@ -128,19 +178,13 @@
 
             Items = new ObservableCollection<TranslationItem>(_owner.ResourceTableEntries
                 .Where(entry => string.IsNullOrWhiteSpace(entry.Values[_targetCulture.ToString()]))
-                .Select(entry => new TranslationItem
-                {
-                    Entry = entry,
-                    Source = entry.Values.GetValue(_sourceCulture)
-                })
+                .Select(entry => new TranslationItem(entry, entry.Values.GetValue(_sourceCulture)))
                 .Where(item => !string.IsNullOrWhiteSpace(item.Source)));
-
-            SelectedItems.AddRange(Items);
 
             var sourceCulture = _sourceCulture.Culture ?? _owner.Configuration.NeutralResourcesLanguage;
 
             if (Session != null)
-                Session.IsCancelled = true;
+                Session.Cancel();
 
             Session = new Session(sourceCulture, _targetCulture.Culture, Items.Cast<ITranslationItem>().ToArray());
 

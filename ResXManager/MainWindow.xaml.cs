@@ -11,9 +11,9 @@
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls.Primitives;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Properties;
-    using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Wpf;
 
@@ -116,17 +116,31 @@
 
         private static void Navigate_Click(object sender, RoutedEventArgs e)
         {
+            string url = null;
+
             var source = e.OriginalSource as FrameworkElement;
-            if (source == null)
-                return;
+            if (source != null)
+            {
+                var button = source.TryFindAncestorOrSelf<ButtonBase>();
+                if (button == null)
+                    return;
 
-            var button = source.TryFindAncestorOrSelf<ButtonBase>();
-            if (button == null)
-                return;
+                url = source.Tag as string;
+                if (string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                    return;
+            }
+            else
+            {
+                var link = e.OriginalSource as System.Windows.Documents.Hyperlink;
+                if (link == null)
+                    return;
 
-            var url = source.Tag as string;
-            if (string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-                return;
+                var navigateUri = link.NavigateUri;
+                if (navigateUri == null)
+                    return;
+
+                url = navigateUri.ToString();
+            }
 
             Process.Start(url);
         }

@@ -1,11 +1,11 @@
 ﻿namespace tomenglertde.ResXManager.Translators
 {
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Net;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Json;
     using System.Text;
-    using System.Threading.Tasks;
     using System.Web;
 
     internal static class AdmAuthentication
@@ -17,6 +17,10 @@
 
         public static string GetAuthToken(string clientId, string clientSecret)
         {
+            Contract.Requires(!string.IsNullOrEmpty(clientId));
+            Contract.Requires(!string.IsNullOrEmpty(clientSecret));
+            Contract.Ensures(Contract.Result<string>() != null);
+
             var request = CreateRequestDetails(clientId, clientSecret);
             var token = GetAccessToken(request);
 
@@ -25,6 +29,9 @@
 
         private static AdmAccessToken GetAccessToken(string requestDetails)
         {
+            Contract.Requires(requestDetails != null);
+            Contract.Ensures(Contract.Result<AdmAccessToken>() != null);
+
             var webRequest = CreateWebRequest();
 
             using (var outputStream = webRequest.GetRequestStream())
@@ -35,7 +42,9 @@
 
             using (var webResponse = webRequest.GetResponse())
             {
-                return (AdmAccessToken)_serializer.ReadObject(webResponse.GetResponseStream());
+                var token = (AdmAccessToken)_serializer.ReadObject(webResponse.GetResponseStream());
+                Contract.Assume(token != null);
+                return token;
             }
         }
 

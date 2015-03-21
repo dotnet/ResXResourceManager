@@ -4,9 +4,9 @@ namespace tomenglertde.ResXManager.Translators
     {
         private readonly ITranslator _translator;
         private readonly string _translatedTranslatedText;
-        private readonly int _rating;
+        private readonly double _rating;
 
-        public TranslationMatch(ITranslator translator, string translatedTranslatedText, int rating)
+        public TranslationMatch(ITranslator translator, string translatedTranslatedText, double rating)
         {
             _translator = translator;
             _translatedTranslatedText = translatedTranslatedText;
@@ -29,7 +29,7 @@ namespace tomenglertde.ResXManager.Translators
             }
         }
 
-        public int Rating
+        public double Rating
         {
             get
             {

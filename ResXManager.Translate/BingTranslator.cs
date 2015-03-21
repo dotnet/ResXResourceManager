@@ -2,6 +2,7 @@ namespace tomenglertde.ResXManager.Translators
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -15,8 +16,10 @@ namespace tomenglertde.ResXManager.Translators
 
     public class BingTranslator : TranslatorBase
     {
+        private static readonly Uri _uri = new Uri("https://datamarket.azure.com/dataset/bing/microsofttranslator");
+
         public BingTranslator()
-            : base("Bing", "Bing", GetCredentials().ToArray())
+            : base("Bing", "Bing", _uri, GetCredentials())
         {
         }
 
@@ -32,6 +35,12 @@ namespace tomenglertde.ResXManager.Translators
                 var clientId = ClientId;
                 var clientSecret = ClientSecret;
 
+                if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
+                {
+                    session.Messages.Add("Bing Translator requires client id and secret.");
+                    return;
+                }
+
                 var token = AdmAuthentication.GetAuthToken(clientId, clientSecret);
 
                 var binding = new BasicHttpBinding();
@@ -43,7 +52,9 @@ namespace tomenglertde.ResXManager.Translators
                     {
                         var httpRequestProperty = new HttpRequestMessageProperty();
                         httpRequestProperty.Headers.Add("Authorization", token);
-                        OperationContext.Current.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
+                        var operationContext = OperationContext.Current;
+                        Contract.Assume(operationContext != null); // because we are inside OperationContextScope
+                        operationContext.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
 
                         using (var itemsEnumerator = session.Items.GetEnumerator())
                         {
@@ -78,6 +89,7 @@ namespace tomenglertde.ResXManager.Translators
         }
 
         [DataMember]
+        [ContractVerification(false)]
         public string ClientSecret
         {
             get
@@ -91,6 +103,7 @@ namespace tomenglertde.ResXManager.Translators
         }
 
         [DataMember]
+        [ContractVerification(false)]
         public string ClientId
         {
             get
@@ -105,22 +118,45 @@ namespace tomenglertde.ResXManager.Translators
 
         private void ReturnResults(IEnumerable<ITranslationItem> items, IEnumerable<GetTranslationsResponse> responses)
         {
+            Contract.Requires(items != null);
+            Contract.Requires(responses != null);
+
             foreach (var tuple in Enumerate.AsTuples(items, responses))
             {
-                var response = tuple.Item2;
-                var translationItem = tuple.Item1;
+                Contract.Assume(tuple != null);
 
-                foreach (var match in response.Translations)
+                var response = tuple.Item2;
+                Contract.Assume(response != null);
+
+                var translationItem = tuple.Item1;
+                Contract.Assume(translationItem != null);
+
+                var translations = response.Translations;
+                Contract.Assume(translations != null);
+
+                foreach (var match in translations)
                 {
-                    translationItem.Results.Add(new TranslationMatch(this, match.TranslatedText, match.Rating));
+                    Contract.Assume(match != null);
+                    translationItem.Results.Add(new TranslationMatch(this, match.TranslatedText, match.Rating / 5.0));
                 }
             }
         }
 
-        private static IEnumerable<ICredentialItem> GetCredentials()
+        private static IList<ICredentialItem> GetCredentials()
         {
-            yield return new CredentialItem("ClientId", "Client ID");
-            yield return new CredentialItem("ClientSecret", "Client Secret");
+            Contract.Ensures(Contract.Result<IList<ICredentialItem>>() != null);
+
+            return new ICredentialItem[]
+            {
+                new CredentialItem("ClientId", "Client ID"),
+                new CredentialItem("ClientSecret", "Client Secret")
+            };
+        }
+
+        [ContractInvariantMethod]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
         }
     }
 }

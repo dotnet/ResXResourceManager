@@ -12,7 +12,7 @@
             get;
         }
 
-        int Rating
+        double Rating
         {
             get;
         }

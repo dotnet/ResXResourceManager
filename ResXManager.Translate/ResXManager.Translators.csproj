@@ -175,8 +175,8 @@
     <Compile Include="AdmAuthentication.cs" />
     <Compile Include="BingTranslator.cs" />
     <Compile Include="CredentialItem.cs" />
+    <Compile Include="MyMemoryTranslator.cs" />
     <Compile Include="GoogleTranslator.cs" />
-    <Compile Include="GoogleWebTranslator.cs" />
     <Compile Include="ICredentialItem.cs" />
     <Compile Include="ITranslationMatch.cs" />
     <Compile Include="ITranslationItem.cs" />
@@ -197,6 +197,7 @@
     <Compile Include="TranslationMatch.cs" />
     <Compile Include="TranslatorBase.cs" />
     <Compile Include="TranslatorHost.cs" />
+    <Compile Include="WebClientExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\CodeContracts.ruleset">

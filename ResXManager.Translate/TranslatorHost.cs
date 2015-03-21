@@ -1,6 +1,5 @@
 ﻿namespace tomenglertde.ResXManager.Translators
 {
-    using System;
     using System.Collections.Specialized;
     using System.Diagnostics.Contracts;
     using System.Threading;
@@ -14,8 +13,8 @@
         public static readonly ITranslator[] Translators = 
         {
             new BingTranslator(),
-            new GoogleTranslator(), 
-            new GoogleWebTranslator(), 
+            // new GoogleTranslator(), 
+            new MyMemoryTranslator(),
         };
 
         static TranslatorHost()
@@ -29,10 +28,11 @@
             try
             {
                 var values = JsonConvert.DeserializeObject<StringDictionary>(configuration);
+                Contract.Assume(values != null);
 
                 foreach (var translator in Translators)
                 {
-                    Contract.Assume(translator != null);
+                    Contract.Assert(translator != null);
 
                     var setting = values[translator.Id];
                     if (string.IsNullOrEmpty(setting))
@@ -50,6 +50,23 @@
             catch // Newtonsoft.Jason has not documented any exceptions...
             {
             }
+        }
+
+        public static void SaveConfiguration()
+        {
+            var settings = Settings.Default;
+
+            var values = new StringDictionary();
+
+            foreach (var translator in Translators)
+            {
+                Contract.Assume(translator != null);
+
+                var json = JsonConvert.SerializeObject(translator);
+                values[translator.Id] = json;
+            }
+
+            settings.Configuration = JsonConvert.SerializeObject(values);
         }
 
         public static void Translate(Session session)
@@ -80,22 +97,6 @@
                     }
                 });
             }
-        }
-
-        public static void SaveConfiguration()
-        {
-            var settings = Settings.Default;
-
-            var values = new StringDictionary();
-
-            foreach (var translator in Translators)
-            {
-                var json = JsonConvert.SerializeObject(translator);
-
-                values[translator.Id] = json;
-            }
-
-            settings.Configuration = JsonConvert.SerializeObject(values);
         }
     }
 }

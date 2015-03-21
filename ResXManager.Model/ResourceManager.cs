@@ -673,7 +673,7 @@
 
             if (!_cultureKeys.Contains(cultureKey))
             {
-                CultureKeys.Add(cultureKey);
+                _cultureKeys.Add(cultureKey);
             }
         }
 
@@ -799,6 +799,7 @@
             Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(_selectedEntitiesChangeThrottle != null);
             Contract.Invariant(_configuration != null);
+            Contract.Invariant(_cultureKeys != null);
         }
     }
 }

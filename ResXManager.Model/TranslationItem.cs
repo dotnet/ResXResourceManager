@@ -3,6 +3,7 @@ namespace tomenglertde.ResXManager.Model
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows.Data;
 
@@ -12,12 +13,19 @@ namespace tomenglertde.ResXManager.Model
 
     public class TranslationItem : ObservableObject, ITranslationItem
     {
+        private readonly ListCollectionView _orderedResults;
         private readonly ObservableCollection<ITranslationMatch> _results = new ObservableCollection<ITranslationMatch>();
-        private string _translation;
-        private ListCollectionView _orderedResults;
 
-        public TranslationItem()
+        private string _translation;
+
+        public TranslationItem(ResourceTableEntry entry, string source)
         {
+            Contract.Requires(entry != null);
+            Contract.Requires(source != null);
+
+            Entry = entry;
+            Source = source;
+
             _results.CollectionChanged += (_, __) => OnPropertyChanged(() => Translation);
             _orderedResults = new ListCollectionView(_results);
             _orderedResults.SortDescriptions.Add(new SortDescription("Rating", ListSortDirection.Descending));
@@ -26,19 +34,21 @@ namespace tomenglertde.ResXManager.Model
         public ResourceTableEntry Entry
         {
             get;
-            set;
+            private set;
         }
 
         public string Source
         {
             get;
-            set;
+            private set;
         }
 
         public IList<ITranslationMatch> Results
         {
             get
             {
+                Contract.Ensures(Contract.Result<IList<ITranslationMatch>>() != null);
+
                 return _results;
             }
         }
@@ -47,7 +57,7 @@ namespace tomenglertde.ResXManager.Model
         {
             get
             {
-                return _orderedResults;   
+                return _orderedResults;
             }
         }
 
@@ -61,6 +71,16 @@ namespace tomenglertde.ResXManager.Model
             {
                 SetProperty(ref _translation, value, () => Translation);
             }
+        }
+
+        [ContractInvariantMethod]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_orderedResults != null);
+            Contract.Invariant(_results != null);
+            Contract.Invariant(Entry != null);
+            Contract.Invariant(Source != null);
         }
     }
 }
