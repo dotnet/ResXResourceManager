@@ -179,15 +179,36 @@
             }
 
             Items = new ObservableCollection<TranslationItem>(_owner.ResourceTableEntries
+                .Where(entry => !entry.IsInvariant)
                 .Where(entry => string.IsNullOrWhiteSpace(entry.Values[_targetCulture.ToString()]))
                 .Select(entry => new TranslationItem(entry, entry.Values.GetValue(_sourceCulture)))
                 .Where(item => !string.IsNullOrWhiteSpace(item.Source)));
 
-            var sourceCulture = _sourceCulture.Culture ?? _owner.Configuration.NeutralResourcesLanguage;
-            var targetCulture = _targetCulture.Culture ?? _owner.Configuration.NeutralResourcesLanguage;
-
             if (Session != null)
                 Session.Cancel();
+
+            foreach (var item in Items)
+            {
+                var targetItem = item;
+                Contract.Assume(targetItem != null);
+
+                var existingTranslations = _owner.ResourceTableEntries
+                    .Where(entry => entry != targetItem.Entry)
+                    .Where(entry => !entry.IsInvariant)
+                    .Where(entry => entry.Values.GetValue(_sourceCulture) == targetItem.Source)
+                    .Select(entry => entry.Values.GetValue(_targetCulture))
+                    .Where(translation => !string.IsNullOrWhiteSpace(translation))
+                    .GroupBy(translation => translation);
+
+                foreach (var translation in existingTranslations)
+                {
+                    Contract.Assume(translation != null);
+                    item.Results.Add(new TranslationMatch(null, translation.Key, translation.Count()));
+                }
+            }
+
+            var sourceCulture = _sourceCulture.Culture ?? _owner.Configuration.NeutralResourcesLanguage;
+            var targetCulture = _targetCulture.Culture ?? _owner.Configuration.NeutralResourcesLanguage;
 
             Session = new Session(sourceCulture, targetCulture, Items.Cast<ITranslationItem>().ToArray());
 

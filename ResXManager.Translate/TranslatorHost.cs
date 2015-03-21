@@ -71,6 +71,8 @@
 
         public static void Translate(Session session)
         {
+            Contract.Requires(session != null);
+
             var translatorCounter = 0;
 
             foreach (var translator in Translators)
@@ -96,6 +98,11 @@
                         }
                     }
                 });
+            }
+
+            if (translatorCounter == 0)
+            {
+                session.IsComplete = true;
             }
         }
     }

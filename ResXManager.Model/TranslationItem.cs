@@ -29,6 +29,7 @@ namespace tomenglertde.ResXManager.Model
             _results.CollectionChanged += (_, __) => OnPropertyChanged(() => Translation);
             _orderedResults = new ListCollectionView(_results);
             _orderedResults.SortDescriptions.Add(new SortDescription("Rating", ListSortDirection.Descending));
+            _orderedResults.SortDescriptions.Add(new SortDescription("Translator.DisplayName", ListSortDirection.Ascending));
         }
 
         public ResourceTableEntry Entry

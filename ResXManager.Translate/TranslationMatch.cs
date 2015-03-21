@@ -1,6 +1,6 @@
 namespace tomenglertde.ResXManager.Translators
 {
-    internal class TranslationMatch : ITranslationMatch
+    public class TranslationMatch : ITranslationMatch
     {
         private readonly ITranslator _translator;
         private readonly string _translatedTranslatedText;
