@@ -24,7 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DB4FD4
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResXManager.Translators", "ResXManager.Translate\ResXManager.Translators.csproj", "{D8B0B04F-4273-45DB-AE2D-5A91C89E1225}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResXManager.Translators", "ResXManager.Translators\ResXManager.Translators.csproj", "{D8B0B04F-4273-45DB-AE2D-5A91C89E1225}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -44,9 +44,9 @@ Global
 		SccProjectUniqueName4 = ResXManager\\ResXManager.csproj
 		SccProjectName4 = ResXManager
 		SccLocalPath4 = ResXManager
-		SccProjectUniqueName5 = ResXManager.Translate\\ResXManager.Translators.csproj
-		SccProjectName5 = ResXManager.Translate
-		SccLocalPath5 = ResXManager.Translate
+		SccProjectUniqueName5 = ResXManager.Translators\\ResXManager.Translators.csproj
+		SccProjectName5 = ResXManager.Translators
+		SccLocalPath5 = ResXManager.Translators
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

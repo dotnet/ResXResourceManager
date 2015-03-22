@@ -247,7 +247,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ResXManager.Translate\ResXManager.Translators.csproj">
+    <ProjectReference Include="..\ResXManager.Translators\ResXManager.Translators.csproj">
       <Project>{D8B0B04F-4273-45DB-AE2D-5A91C89E1225}</Project>
       <Name>ResXManager.Translators</Name>
     </ProjectReference>
