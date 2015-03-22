@@ -58,11 +58,14 @@
                 if (!resourceFile.CanEdit(null))
                     return;
 
+                var application = Application.Current;
+                Contract.Assume(application != null);
+
                 var inputBox = new InputBox
                 {
                     Title = Properties.Resources.Title,
                     Prompt = Properties.Resources.NewKeyPrompt,
-                    Owner = Application.Current.MainWindow,
+                    Owner = application.MainWindow,
                     WindowStartupLocation = WindowStartupLocation.CenterOwner
                 };
 

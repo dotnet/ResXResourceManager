@@ -7,6 +7,8 @@
     {
         public Shell()
         {
+            References.Resolve(this);
+
             InitializeComponent();
         }
     }

@@ -29,7 +29,6 @@
                 return;
 
             var neutralCulture = specificCulture.Parent;
-            Contract.Assume(neutralCulture != null);
 
             NeutralCultureCountyOverrides.Default[neutralCulture] = specificCulture;
             ListBox.Items.Refresh();

@@ -265,7 +265,7 @@ namespace tomenglertde.ResXManager.Model
                 }
             }
 
-            const string declaration = @"<?xml version=""1.0"" encoding=""utf-8""?>"; 
+            const string declaration = @"<?xml version=""1.0"" encoding=""utf-8""?>";
 
             _file.Content = declaration + Environment.NewLine + _document;
 

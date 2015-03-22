@@ -32,10 +32,13 @@
         private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
 
         private readonly DispatcherThrottle _selectedEntitiesChangeThrottle;
+        private readonly Translations _translations;
+
         private Configuration _configuration = new Configuration();
 
         private ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
         private ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
+        private ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
         private ListCollectionViewListAdapter<ResourceEntity> _filteredResourceEntities;
 
         private ObservableCompositeCollection<ResourceTableEntry> _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>();
@@ -53,6 +56,7 @@
         {
             _selectedEntitiesChangeThrottle = new DispatcherThrottle(OnSelectedEntitiesChanged);
             _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
+            _translations = new Translations(this);
         }
 
         /// <summary>
@@ -61,7 +65,7 @@
         /// <param name="allSourceFiles">All resource x files.</param>
         /// <param name="configuration"></param>
         public void Load<T>(IList<T> allSourceFiles, Configuration configuration)
-            where T: ProjectFile
+            where T : ProjectFile
         {
             Contract.Requires(allSourceFiles != null);
             Contract.Requires(configuration != null);
@@ -125,13 +129,13 @@
             }
         }
 
-        public IEnumerable<CultureKey> CultureKeys
+        public ICollection<CultureKey> CultureKeys
         {
             get
             {
                 Contract.Ensures(Contract.Result<IEnumerable<CultureKey>>() != null);
 
-                return ResourceEntities.SelectMany(entity => entity.Languages).Distinct().Select(lang => lang.CultureKey);
+                return _cultureKeys;
             }
         }
 
@@ -196,6 +200,14 @@
 
                 OnPropertyChanged(() => EntityFilter);
                 OnPropertyChanged(() => AreAllFilesSelected);
+            }
+        }
+
+        public Translations Translations
+        {
+            get
+            {
+                return _translations;
             }
         }
 
@@ -598,9 +610,13 @@
             _selectedEntities = new ObservableCollection<ResourceEntity>(_resourceEntities.Where(_selectedEntities.Contains));
             _selectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
 
+            var cultureKeys = _resourceEntities.SelectMany(entity => entity.Languages).Distinct().Select(lang => lang.CultureKey);
+            _cultureKeys = new ObservableCollection<CultureKey>(cultureKeys);
+
             OnPropertyChanged(() => ResourceEntities);
             OnPropertyChanged(() => FilteredResourceEntities);
             OnPropertyChanged(() => SelectedEntities);
+            OnPropertyChanged(() => CultureKeys);
 
             OnSelectedEntitiesChanged();
             OnLoaded();
@@ -643,10 +659,21 @@
 
                         resourceEntity.LanguageChanging += ResourceEntity_LanguageChanging;
                         resourceEntity.LanguageChanged += ResourceEntity_LanguageChanged;
+                        resourceEntity.LanguageAdded += ResourceEntity_LanguageAdded;
 
                         yield return resourceEntity;
                     }
                 }
+            }
+        }
+
+        void ResourceEntity_LanguageAdded(object sender, LanguageChangedEventArgs e)
+        {
+            var cultureKey = e.Language.CultureKey;
+
+            if (!_cultureKeys.Contains(cultureKey))
+            {
+                _cultureKeys.Add(cultureKey);
             }
         }
 
@@ -772,6 +799,7 @@
             Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(_selectedEntitiesChangeThrottle != null);
             Contract.Invariant(_configuration != null);
+            Contract.Invariant(_cultureKeys != null);
         }
     }
 }

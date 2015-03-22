@@ -1,10 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{6AF977DB-2C9F-4D9C-8C2D-CFDDF7E022FC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -12,7 +11,8 @@
     <AssemblyName>ResXManager.Model</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -143,29 +143,33 @@
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
+    <Reference Include="JetBrains.Annotations">
+      <HintPath>..\packages\JetBrains.Annotations.8.0.5.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="TomsToolbox.Core, Version=1.0.2.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.Core.1.0.2.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Core.1.0.3.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.Desktop, Version=1.0.2.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.Desktop, Version=1.0.3.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.2.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.3.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.2.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.3.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.2.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.3.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.Wpf, Version=1.0.2.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.Wpf, Version=1.0.3.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.Wpf.1.0.2.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Wpf.1.0.3.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -176,7 +180,6 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
-    <Compile Include="Annotations.cs" />
     <Compile Include="CodeReferenceConfiguration.cs" />
     <Compile Include="ComObject.cs" />
     <Compile Include="Configuration.cs" />
@@ -210,6 +213,8 @@
     <Compile Include="ResourceBeginEditingEventArgs.cs" />
     <Compile Include="SourceFileFilter.cs" />
     <Compile Include="TextEnumerator.cs" />
+    <Compile Include="TranslationItem.cs" />
+    <Compile Include="Translations.cs" />
     <Compile Include="XmlConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -240,6 +245,12 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ResXManager.Translators\ResXManager.Translators.csproj">
+      <Project>{D8B0B04F-4273-45DB-AE2D-5A91C89E1225}</Project>
+      <Name>ResXManager.Translators</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.Linq;
 
     using TomsToolbox.Desktop;
@@ -198,6 +199,11 @@
                 _codeReferences = value;
                 OnPropertyChanged(() => CodeReferences);
             }
+        }
+
+        public bool CanEdit(CultureInfo culture)
+        {
+            return _owner.CanEdit(culture);
         }
 
         private void Values_ValueChanged(object sender, EventArgs e)

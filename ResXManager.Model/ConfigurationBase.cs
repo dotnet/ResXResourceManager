@@ -139,11 +139,7 @@
             Contract.Requires(type != null);
             Contract.Ensures(Contract.Result<TypeConverter>() != null);
 
-            var typeConverter = TypeDescriptor.GetConverter(type);
-            if (typeConverter == null)
-                throw new InvalidOperationException("No type converter found for type " + type.Name);
-
-            return typeConverter;
+            return TypeDescriptor.GetConverter(type);
         }
 
         [ContractInvariantMethod]

@@ -5,6 +5,8 @@
     using System.Windows;
     using System.Windows.Data;
 
+    using TomsToolbox.Desktop;
+
     /// <summary>
     /// Support binding of elements when the target is not a <see cref="DependencyObject"/>
     /// </summary>
@@ -61,7 +63,7 @@
         /// </summary>
         public T Value
         {
-            get { return (T)_bindingHelper.GetValue(BindingHelper.ValueProperty); }
+            get { return _bindingHelper.GetValue<T>(BindingHelper.ValueProperty); }
             set { _bindingHelper.SetValue(BindingHelper.ValueProperty, value); }
         }
 

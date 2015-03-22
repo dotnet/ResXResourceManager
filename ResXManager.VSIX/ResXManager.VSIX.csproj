@@ -144,6 +144,9 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
+    <Reference Include="JetBrains.Annotations">
+      <HintPath>..\packages\JetBrains.Annotations.8.0.5.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0" />
@@ -158,22 +161,23 @@
     <Reference Include="System.Core" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="TomsToolbox.Core, Version=1.0.2.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.Core.1.0.2.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Core.1.0.3.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.Desktop, Version=1.0.2.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.Desktop, Version=1.0.3.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.2.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.3.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.2.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.3.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.2.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.3.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.Wpf, Version=1.0.2.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.Wpf, Version=1.0.3.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.Wpf.1.0.2.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Wpf.1.0.3.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
