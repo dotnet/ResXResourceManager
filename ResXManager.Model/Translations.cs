@@ -192,6 +192,18 @@
             if (Session != null)
                 Session.Cancel();
 
+            ApplyExistingTranslations();
+
+            var sourceCulture = _sourceCulture.Culture ?? _owner.Configuration.NeutralResourcesLanguage;
+            var targetCulture = _targetCulture.Culture ?? _owner.Configuration.NeutralResourcesLanguage;
+
+            Session = new Session(sourceCulture, targetCulture, Items.Cast<ITranslationItem>().ToArray());
+
+            TranslatorHost.Translate(Session);
+        }
+
+        private void ApplyExistingTranslations()
+        {
             foreach (var item in Items)
             {
                 var targetItem = item;
@@ -211,13 +223,6 @@
                     item.Results.Add(new TranslationMatch(null, translation.Key, translation.Count()));
                 }
             }
-
-            var sourceCulture = _sourceCulture.Culture ?? _owner.Configuration.NeutralResourcesLanguage;
-            var targetCulture = _targetCulture.Culture ?? _owner.Configuration.NeutralResourcesLanguage;
-
-            Session = new Session(sourceCulture, targetCulture, Items.Cast<ITranslationItem>().ToArray());
-
-            TranslatorHost.Translate(Session);
         }
 
         [ContractInvariantMethod]
