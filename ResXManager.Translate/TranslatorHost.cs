@@ -83,9 +83,10 @@
                 if (!local.IsEnabled)
                     continue;
 
+                Interlocked.Increment(ref translatorCounter);
+
                 ThreadPool.QueueUserWorkItem(_ =>
                 {
-                    Interlocked.Increment(ref translatorCounter);
                     try
                     {
                         local.Translate(session);

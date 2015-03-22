@@ -83,6 +83,15 @@
             }
         }
 
+        [PropertyDependency("IsComplete")]
+        public bool IsActive
+        {
+            get
+            {
+                return !IsComplete;
+            }
+        }
+
         public IList<string> Messages
         {
             get

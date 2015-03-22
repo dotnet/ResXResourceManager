@@ -1,3 +1,6 @@
+1.0.0.52:
+* WI1171: Automatic translations.
+* WI1435: Reuse translations.
 1.0.0.51:
 * WI1420: Extend/fix default code reference detection patterns.
 * WI1421: Visibility of new added resource files.

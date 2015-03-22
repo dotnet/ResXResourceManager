@@ -8,7 +8,6 @@
 
     using tomenglertde.ResXManager.Translators;
 
-    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
 
@@ -186,8 +185,9 @@
             Items = new ObservableCollection<TranslationItem>(_owner.ResourceTableEntries
                 .Where(entry => !entry.IsInvariant)
                 .Where(entry => string.IsNullOrWhiteSpace(entry.Values.GetValue(_targetCulture)))
-                .Select(entry => new TranslationItem(entry, entry.Values.GetValue(_sourceCulture)))
-                .Where(item => !string.IsNullOrWhiteSpace(item.Source)));
+                .Select(entry => new { Entry=entry, Source=entry.Values.GetValue(_sourceCulture) })
+                .Where(item => !string.IsNullOrWhiteSpace(item.Source))
+                .Select(item => new TranslationItem(item.Entry, item.Source)));
 
             if (Session != null)
                 Session.Cancel();
