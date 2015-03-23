@@ -197,7 +197,6 @@
     <Compile Include="TranslationMatch.cs" />
     <Compile Include="TranslatorBase.cs" />
     <Compile Include="TranslatorHost.cs" />
-    <Compile Include="WebClientExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\CodeContracts.ruleset">

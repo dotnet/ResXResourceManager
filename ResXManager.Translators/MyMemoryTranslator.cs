@@ -5,6 +5,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Net;
     using System.Runtime.Serialization;
@@ -18,6 +19,7 @@
     public class MyMemoryTranslator : TranslatorBase
     {
         private static readonly Uri _uri = new Uri("http://mymemory.translated.net/doc");
+        private static readonly WebProxy _webProxy = new WebProxy { UseDefaultCredentials = true };
 
         public MyMemoryTranslator()
             : base("MyMemory", "MyMemory", _uri, GetCredentials())
@@ -52,64 +54,68 @@
 
         public override void Translate(Session session)
         {
-            using (var webClient = new WebClient { Encoding = Encoding.UTF8, Proxy = new WebProxy { UseDefaultCredentials = true } })
+            foreach (var item in session.Items)
             {
+                if (session.IsCanceled)
+                    break;
 
-                foreach (var item in session.Items)
+                var translationItem = item;
+                Contract.Assume(translationItem != null);
+
+                try
                 {
-                    if (session.IsCanceled)
-                        break;
+                    var result = TranslateText(translationItem.Source, Key, session.SourceLanguage, session.TargetLanguage);
 
-                    var translationItem = item;
-                    Contract.Assume(translationItem != null);
-
-                    try
+                    session.Dispatcher.BeginInvoke(() =>
                     {
-                        var result = TranslateText(webClient, translationItem.Source, Key, session.SourceLanguage, session.TargetLanguage);
-
-                        session.Dispatcher.BeginInvoke(() =>
+                        if (result.Matches != null)
                         {
-                            if (result.Matches != null)
+                            foreach (var match in result.Matches)
                             {
-                                foreach (var match in result.Matches)
-                                {
-                                    translationItem.Results.Add(new TranslationMatch(this, match.Translation, match.Match * match.Quality / 100.0));
-                                }
+                                translationItem.Results.Add(new TranslationMatch(this, match.Translation, match.Match * match.Quality / 100.0));
                             }
-                            else
-                            {
-                                translationItem.Results.Add(new TranslationMatch(this, result.ResponseData.TranslatedText, result.ResponseData.Match));
-                            }
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        session.AddMessage(ex.Message);
-                        break;
-                    }
+                        }
+                        else
+                        {
+                            translationItem.Results.Add(new TranslationMatch(this, result.ResponseData.TranslatedText, result.ResponseData.Match));
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    session.AddMessage(ex.Message);
+                    break;
                 }
             }
         }
 
-        private static Response TranslateText(WebClient webClient, string input, string key, CultureInfo sourceLanguage, CultureInfo targetLanguage)
+        private static Response TranslateText(string input, string key, CultureInfo sourceLanguage, CultureInfo targetLanguage)
         {
-            Contract.Requires(webClient != null);
             Contract.Requires(input != null);
             Contract.Requires(sourceLanguage != null);
             Contract.Requires(targetLanguage != null);
 
             var url = string.Format(CultureInfo.InvariantCulture,
                 "http://api.mymemory.translated.net/get?q={0}!&langpair={1}|{2}",
-                HttpUtility.UrlEncode(input),
+                HttpUtility.UrlEncode(input, Encoding.UTF8),
                 sourceLanguage.TwoLetterISOLanguageName,
                 targetLanguage.TwoLetterISOLanguageName);
 
             if (!string.IsNullOrEmpty(key))
                 url += string.Format(CultureInfo.InvariantCulture, "&key={0}", HttpUtility.UrlEncode(key));
 
-            var json = webClient.Get(url);
+            var webRequest = (HttpWebRequest)WebRequest.Create(url);
+            webRequest.Proxy = _webProxy;
+            webRequest.ReadWriteTimeout = 5000;
 
-            return JsonConvert.DeserializeObject<Response>(json);
+            using (var webResponse = webRequest.GetResponse())
+            {
+                using (var reader = new StreamReader(webResponse.GetResponseStream(), Encoding.UTF8))
+                {
+                    var json = reader.ReadToEnd();
+                    return JsonConvert.DeserializeObject<Response>(json);
+                }
+            }
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
