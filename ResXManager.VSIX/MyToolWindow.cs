@@ -13,18 +13,21 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
+
     using EnvDTE;
+
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
+
     using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Tools;
     using tomenglertde.ResXManager.View.Visuals;
 
     using TomsToolbox.Core;
     using TomsToolbox.Wpf;
 
     using VSLangProj;
+
     using Process = System.Diagnostics.Process;
 
     /// <summary>
@@ -98,7 +101,7 @@
 
                 AppDomain.CurrentDomain.AssemblyResolve += AppDomain_AssemblyResolve;
 
-                EventManager.RegisterClassHandler(typeof(ResourceView), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
+                EventManager.RegisterClassHandler(typeof(Shell), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
 
                 // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
                 // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
@@ -180,17 +183,31 @@
 
         private void Navigate_Click(object sender, RoutedEventArgs e)
         {
+            string url = null;
+
             var source = e.OriginalSource as FrameworkElement;
-            if (source == null)
-                return;
+            if (source != null)
+            {
+                var button = source.TryFindAncestorOrSelf<ButtonBase>();
+                if (button == null)
+                    return;
 
-            var button = source.TryFindAncestorOrSelf<ButtonBase>();
-            if (button == null)
-                return;
+                url = source.Tag as string;
+                if (string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                    return;
+            }
+            else
+            {
+                var link = e.OriginalSource as System.Windows.Documents.Hyperlink;
+                if (link == null)
+                    return;
 
-            var url = source.Tag as string;
-            if (string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-                return;
+                var navigateUri = link.NavigateUri;
+                if (navigateUri == null)
+                    return;
+
+                url = navigateUri.ToString();
+            }
 
             CreateWebBrowser(url);
         }
