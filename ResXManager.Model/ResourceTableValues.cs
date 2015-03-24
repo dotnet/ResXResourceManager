@@ -47,7 +47,10 @@
 
         public string GetValue(CultureKey cultureKey)
         {
+            Contract.Requires(cultureKey != null);
+
             ResourceLanguage language;
+
             if (!_languages.TryGetValue(cultureKey, out language))
                 return null;
 

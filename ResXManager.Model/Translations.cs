@@ -174,6 +174,9 @@
 
         private void UpdateTargetList()
         {
+            if (Session != null)
+                Session.Cancel();
+
             SelectedItems.Clear();
 
             if ((_sourceCulture == null) || (_targetCulture == null))
@@ -182,15 +185,7 @@
                 return;
             }
 
-            Items = new ObservableCollection<TranslationItem>(_owner.ResourceTableEntries
-                .Where(entry => !entry.IsInvariant)
-                .Where(entry => string.IsNullOrWhiteSpace(entry.Values.GetValue(_targetCulture)))
-                .Select(entry => new { Entry=entry, Source=entry.Values.GetValue(_sourceCulture) })
-                .Where(item => !string.IsNullOrWhiteSpace(item.Source))
-                .Select(item => new TranslationItem(item.Entry, item.Source)));
-
-            if (Session != null)
-                Session.Cancel();
+            GetItemsToTranslate();
 
             ApplyExistingTranslations();
 
@@ -202,8 +197,24 @@
             TranslatorHost.Translate(Session);
         }
 
+        private void GetItemsToTranslate()
+        {
+            Contract.Requires(_sourceCulture != null);
+            Contract.Requires(_targetCulture != null);
+
+            Items = new ObservableCollection<TranslationItem>(_owner.ResourceTableEntries
+                .Where(entry => !entry.IsInvariant)
+                .Where(entry => string.IsNullOrWhiteSpace(entry.Values.GetValue(_targetCulture)))
+                .Select(entry => new {Entry = entry, Source = entry.Values.GetValue(_sourceCulture)})
+                .Where(item => !string.IsNullOrWhiteSpace(item.Source))
+                .Select(item => new TranslationItem(item.Entry, item.Source)));
+        }
+
         private void ApplyExistingTranslations()
         {
+            Contract.Requires(_sourceCulture != null);
+            Contract.Requires(_targetCulture != null);
+
             foreach (var item in Items)
             {
                 var targetItem = item;
