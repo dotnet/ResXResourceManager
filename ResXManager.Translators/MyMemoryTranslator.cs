@@ -6,7 +6,6 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
-    using System.Linq;
     using System.Net;
     using System.Runtime.Serialization;
     using System.Text;
@@ -19,7 +18,6 @@
     public class MyMemoryTranslator : TranslatorBase
     {
         private static readonly Uri _uri = new Uri("http://mymemory.translated.net/doc");
-        private static readonly WebProxy _webProxy = new WebProxy { UseDefaultCredentials = true };
 
         public MyMemoryTranslator()
             : base("MyMemory", "MyMemory", _uri, GetCredentials())
@@ -72,7 +70,7 @@
                         {
                             foreach (var match in result.Matches)
                             {
-                                translationItem.Results.Add(new TranslationMatch(this, match.Translation, match.Match * match.Quality / 100.0));
+                                translationItem.Results.Add(new TranslationMatch(this, match.Translation, match.Match.GetValueOrDefault() * match.Quality.GetValueOrDefault() / 100.0));
                             }
                         }
                         else
@@ -83,7 +81,7 @@
                 }
                 catch (Exception ex)
                 {
-                    session.AddMessage(ex.Message);
+                    session.AddMessage(DisplayName + ": " + ex.Message);
                     break;
                 }
             }
@@ -105,8 +103,7 @@
                 url += string.Format(CultureInfo.InvariantCulture, "&key={0}", HttpUtility.UrlEncode(key));
 
             var webRequest = (HttpWebRequest)WebRequest.Create(url);
-            webRequest.Proxy = _webProxy;
-            webRequest.ReadWriteTimeout = 5000;
+            webRequest.Proxy = WebProxy;
 
             using (var webResponse = webRequest.GetResponse())
             {
@@ -149,14 +146,14 @@
             }
 
             [DataMember(Name = "quality")]
-            public double Quality
+            public double? Quality
             {
                 get;
                 set;
             }
 
             [DataMember(Name = "match")]
-            public double Match
+            public double? Match
             {
                 get;
                 set;

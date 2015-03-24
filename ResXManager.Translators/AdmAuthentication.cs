@@ -17,7 +17,7 @@
 
         private static readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof(AdmAccessToken));
 
-        public static string GetAuthToken(string clientId, string clientSecret)
+        public static string GetAuthToken(IWebProxy webProxy, string clientId, string clientSecret)
         {
             Contract.Requires(!string.IsNullOrEmpty(clientId));
             Contract.Requires(!string.IsNullOrEmpty(clientSecret));
@@ -26,7 +26,7 @@
             try
             {
                 var request = CreateRequestDetails(clientId, clientSecret);
-                var token = GetAccessToken(request);
+                var token = GetAccessToken(webProxy, request);
 
                 return AuthTokenPrefix + token.AccessToken;
             }
@@ -40,12 +40,12 @@
             }
         }
 
-        private static AdmAccessToken GetAccessToken(string requestDetails)
+        private static AdmAccessToken GetAccessToken(IWebProxy webProxy, string requestDetails)
         {
             Contract.Requires(requestDetails != null);
             Contract.Ensures(Contract.Result<AdmAccessToken>() != null);
 
-            var webRequest = CreateWebRequest();
+            var webRequest = CreateWebRequest(webProxy);
 
             using (var outputStream = webRequest.GetRequestStream())
             {
@@ -55,7 +55,6 @@
 
             using (var webResponse = webRequest.GetResponse())
             {
-
                 var token = (AdmAccessToken)_serializer.ReadObject(webResponse.GetResponseStream());
                 Contract.Assume(token != null);
                 return token;
@@ -68,9 +67,10 @@
             return request;
         }
 
-        private static HttpWebRequest CreateWebRequest()
+        private static HttpWebRequest CreateWebRequest(IWebProxy webProxy)
         {
             var webRequest = (HttpWebRequest)WebRequest.Create(DatamarketAccessUri);
+            webRequest.Proxy = webProxy;
             webRequest.ContentType = "application/x-www-form-urlencoded";
             webRequest.Method = "POST";
             return webRequest;

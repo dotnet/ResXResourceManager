@@ -41,7 +41,7 @@ namespace tomenglertde.ResXManager.Translators
                     return;
                 }
 
-                var token = AdmAuthentication.GetAuthToken(clientId, clientSecret);
+                var token = AdmAuthentication.GetAuthToken(WebProxy, clientId, clientSecret);
 
                 var binding = new BasicHttpBinding();
                 var endpointAddress = new EndpointAddress("http://api.microsofttranslator.com/V2/soap.svc");
