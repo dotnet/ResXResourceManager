@@ -165,21 +165,21 @@
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
-    <Reference Include="TomsToolbox.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.Core, Version=1.0.5.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.Core.1.0.3.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Core.1.0.5.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.Desktop, Version=1.0.3.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.Desktop, Version=1.0.5.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.3.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.5.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.3.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.5.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.3.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.5.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.Wpf, Version=1.0.3.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.Wpf, Version=1.0.5.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.Wpf.1.0.3.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Wpf.1.0.5.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>

@@ -123,8 +123,6 @@
 
     <HeaderedContentControl Header="{x:Static properties:Resources.DetectCodeReferences_Header}" Style="{StaticResource GroupStyle}">
       <DataGrid ItemsSource="{Binding Configuration.CodeReferences.Items}"
-                RowEditEnding="CodeReferencesConfiguration_RowEditEnding"
-                CellEditEnding="CodeReferencesConfiguration_CellEditEnding"
                 AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False"
                 HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
                 Margin="10" MinHeight="50" MaxHeight="250" MinWidth="700">

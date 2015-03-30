@@ -139,7 +139,7 @@
             Contract.Requires(type != null);
             Contract.Ensures(Contract.Result<TypeConverter>() != null);
 
-            return TypeDescriptor.GetConverter(type);
+            return type.GetCustomTypeConverter() ?? TypeDescriptor.GetConverter(type);
         }
 
         [ContractInvariantMethod]
