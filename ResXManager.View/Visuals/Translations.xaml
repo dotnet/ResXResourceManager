@@ -9,7 +9,6 @@
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
              xmlns:translators="clr-namespace:tomenglertde.ResXManager.Translators;assembly=ResXManager.Translators"
              xmlns:wpf="urn:TomsToolbox"
-             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:controls="clr-namespace:TomsToolbox.Wpf.Controls;assembly=TomsToolbox.Wpf"
              x:Name="UserControl"
              d:DataContext="{d:DesignInstance model:ResourceManager}" Background="LightGray">
@@ -32,25 +31,25 @@
       <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Bottom">
         <StackPanel.Resources>
           <Style TargetType="Button">
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="15,2"/>
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Padding" Value="15,2" />
           </Style>
         </StackPanel.Resources>
         <Button Command="{Binding Translations.ApplyAllCommand}">
-          <ContentControl Content="Apply All" Style="{StaticResource {x:Static wpf:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_ApplyAll}" Style="{StaticResource {x:Static wpf:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
         <Button Command="{Binding Translations.ApplySelectedCommand}">
-          <ContentControl Content="Apply Selected" Style="{StaticResource {x:Static wpf:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_ApplySelected}" Style="{StaticResource {x:Static wpf:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
         <Button Command="{Binding Translations.RefreshCommand}">
-          <ContentControl Content="Refresh" Style="{StaticResource {x:Static wpf:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_Refresh}" Style="{StaticResource {x:Static wpf:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
         <Button Command="{Binding Translations.StopCommand}">
-          <ContentControl Content="Stop" Style="{StaticResource {x:Static wpf:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_Stop}" Style="{StaticResource {x:Static wpf:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
       </StackPanel>
       <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="100" HorizontalScrollBarVisibility="Auto">
-        <ItemsControl ItemsSource="{Binding Translations.Session.Messages}" Margin="5" Focusable="False"/>
+        <ItemsControl ItemsSource="{Binding Translations.Session.Messages}" Margin="5" Focusable="False" />
       </ScrollViewer>
     </DockPanel>
     <Decorator Height="10" DockPanel.Dock="Bottom" />
@@ -59,8 +58,8 @@
         <visuals:TranslatorConfiguration DockPanel.Dock="Top" IsEnabled="{Binding Translations.Session.IsComplete}" />
         <Decorator Height="10" DockPanel.Dock="Top" />
         <DataGrid ItemsSource="{Binding Translations.Items}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
-              AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
-              IsEnabled="{Binding Translations.Session.IsComplete}" wpf:MultiSelectorExtensions.SelectionBinding="{Binding Translations.SelectedItems}">
+                  AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
+                  IsEnabled="{Binding Translations.Session.IsComplete}" wpf:MultiSelectorExtensions.SelectionBinding="{Binding Translations.SelectedItems}">
           <DataGrid.RowHeaderTemplate>
             <DataTemplate DataType="DataGridRowHeader">
               <CheckBox Style="{StaticResource {x:Static wpf:ResourceKeys.DataGridRowCheckBoxStyle}}" />
@@ -70,7 +69,7 @@
             <DataGridTextColumn Width="*" Binding="{Binding Source}" IsReadOnly="True">
               <DataGridTextColumn.ElementStyle>
                 <Style TargetType="TextBlock">
-                  <Setter Property="ToolTip" Value="{Binding Entry.Key}"/>
+                  <Setter Property="ToolTip" Value="{Binding Entry.Key}" />
                 </Style>
               </DataGridTextColumn.ElementStyle>
               <DataGridTextColumn.HeaderTemplate>
@@ -96,16 +95,17 @@
               <DataGridTemplateColumn.CellTemplate>
                 <DataTemplate DataType="model:TranslationItem">
                   <ComboBox Margin="0" Padding="0" BorderThickness="0" DisplayMemberPath="TranslatedText"
-                        ItemsSource="{Binding OrderedResults}" IsEditable="True"
-                        Text="{Binding Translation}" IsKeyboardFocusWithinChanged="ComboBox_IsKeyboardFocusWithinChanged">
+                            ItemsSource="{Binding OrderedResults}" IsEditable="True"
+                            Text="{Binding Translation, UpdateSourceTrigger=PropertyChanged}" 
+                            IsKeyboardFocusWithinChanged="ComboBox_IsKeyboardFocusWithinChanged">
                     <ComboBox.ItemTemplate>
                       <DataTemplate DataType="translators:ITranslationMatch">
                         <TextBlock>
-                      <Span Foreground="Gray">
-                        <Run Text="{Binding Rating, StringFormat=F2, Mode=OneWay}" />
-                        <Run Text="{Binding Translator.DisplayName, Mode=OneWay}" />:
-                      </Span>
-                      <Run Text="{Binding TranslatedText, Mode=OneWay}" />
+                          <Span Foreground="Gray">
+                            <Run Text="{Binding Rating, StringFormat=F2, Mode=OneWay}" />
+                            <Run Text="{Binding Translator.DisplayName, Mode=OneWay}" />:
+                          </Span>
+                          <Run Text="{Binding TranslatedText, Mode=OneWay}" />
                         </TextBlock>
                       </DataTemplate>
                     </ComboBox.ItemTemplate>
@@ -116,7 +116,7 @@
           </DataGrid.Columns>
         </DataGrid>
       </DockPanel>
-      <controls:LoadingIndicator IsActive="{Binding Translations.Session.IsActive}"/>
+      <controls:LoadingIndicator IsActive="{Binding Translations.Session.IsActive}" />
     </Grid>
   </DockPanel>
 </UserControl>

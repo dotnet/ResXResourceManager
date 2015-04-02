@@ -9,11 +9,11 @@
       <TabItem Header="{x:Static properties:Resources.ShellTabHeader_Main}" Padding="8,3">
         <visuals:ResourceView x:Name="ResourceView" />
       </TabItem>
-      <TabItem Header="Configuration">
-        <visuals:ConfigurationEditor HorizontalAlignment="Left" />
-      </TabItem>
-      <TabItem Header="Translations">
+      <TabItem Header="{x:Static properties:Resources.ShellTabHeader_Translate}">
         <visuals:Translations />
+      </TabItem>
+      <TabItem Header="{x:Static properties:Resources.ShellTabHeader_Configuration}">
+        <visuals:ConfigurationEditor HorizontalAlignment="Left" />
       </TabItem>
       <TabItem Header="{x:Static properties:Resources.ShellTabHeader_Languages}" Padding="8,3">
         <visuals:LanguageConfiguration />

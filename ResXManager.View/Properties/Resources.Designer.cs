@@ -79,6 +79,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authentication.
+        /// </summary>
+        public static string Authentication {
+            get {
+                return ResourceManager.GetString("Authentication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Case Sens..
         /// </summary>
         public static string CaseSensitive {
@@ -298,6 +307,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string EmptyResxTemplate {
             get {
                 return ResourceManager.GetString("EmptyResxTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        public static string Enabled {
+            get {
+                return ResourceManager.GetString("Enabled", resourceCulture);
             }
         }
         
@@ -554,6 +572,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Configuration.
+        /// </summary>
+        public static string ShellTabHeader_Configuration {
+            get {
+                return ResourceManager.GetString("ShellTabHeader_Configuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Languages.
         /// </summary>
         public static string ShellTabHeader_Languages {
@@ -568,6 +595,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string ShellTabHeader_Main {
             get {
                 return ResourceManager.GetString("ShellTabHeader_Main", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Translations.
+        /// </summary>
+        public static string ShellTabHeader_Translate {
+            get {
+                return ResourceManager.GetString("ShellTabHeader_Translate", resourceCulture);
             }
         }
         
@@ -613,6 +649,51 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply All.
+        /// </summary>
+        public static string Translations_ApplyAll {
+            get {
+                return ResourceManager.GetString("Translations_ApplyAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply Selected.
+        /// </summary>
+        public static string Translations_ApplySelected {
+            get {
+                return ResourceManager.GetString("Translations_ApplySelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        public static string Translations_Refresh {
+            get {
+                return ResourceManager.GetString("Translations_Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop.
+        /// </summary>
+        public static string Translations_Stop {
+            get {
+                return ResourceManager.GetString("Translations_Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save credentials (Credentials will be stored as clear text in your local profile!).
+        /// </summary>
+        public static string TranslatorConfiguration_SaveCredentials {
+            get {
+                return ResourceManager.GetString("TranslatorConfiguration_SaveCredentials", resourceCulture);
             }
         }
     }
