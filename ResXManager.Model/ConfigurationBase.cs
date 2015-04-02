@@ -64,6 +64,13 @@
         {
             Contract.Requires(propertyExpression != null);
 
+            return GetValue(propertyExpression, default(T));
+        }
+
+        protected virtual T GetValue<T>(Expression<Func<T>> propertyExpression, T defaultValue)
+        {
+            Contract.Requires(propertyExpression != null);
+
             var key = PropertySupport.ExtractPropertyName(propertyExpression);
 
             try
@@ -73,7 +80,7 @@
             catch (InvalidCastException)
             {
             }
-            return default(T);
+            return defaultValue;
         }
 
         protected void SetValue<T>(T value, Expression<Func<T>> propertyExpression)

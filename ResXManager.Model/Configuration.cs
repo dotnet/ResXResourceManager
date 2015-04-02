@@ -1,5 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -51,6 +52,18 @@
             set
             {
                 SetValue(value, () => NeutralResourcesLanguage);
+            }
+        }
+
+        public StringComparison ResXSortingComparison
+        {
+            get
+            {
+                return GetValue(() => ResXSortingComparison, StringComparison.OrdinalIgnoreCase);
+            }
+            set
+            {
+                SetValue(value, () => ResXSortingComparison);
             }
         }
 

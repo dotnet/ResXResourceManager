@@ -208,7 +208,14 @@ namespace tomenglertde.ResXManager.Model
 
         public void SortNodesByKey()
         {
-            Save(true);
+            try
+            {
+                Save(true);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Resources.Title);
+            }
         }
 
         private void OnChanged()
@@ -249,7 +256,9 @@ namespace tomenglertde.ResXManager.Model
         /// <exception cref="UnauthorizedAccessException"></exception>
         public void Save(bool forceSortFileContent)
         {
-            if (forceSortFileContent || _resourceManager.Configuration.SortFileContentOnSave)
+            var configuration = _resourceManager.Configuration;
+
+            if (forceSortFileContent || configuration.SortFileContentOnSave)
             {
                 var nodes = _documentRoot.Elements(@"data").ToArray();
 
@@ -259,7 +268,10 @@ namespace tomenglertde.ResXManager.Model
                     item.Remove();
                 }
 
-                foreach (var item in nodes.OrderBy(node => node.TryGetAttribute("name").TrimStart('>'), StringComparer.OrdinalIgnoreCase))
+                var stringComparison = configuration.ResXSortingComparison;
+                var comparer = new DelegateComparer<string>((left, right) => string.Compare(left, right, stringComparison));
+
+                foreach (var item in nodes.OrderBy(node => node.TryGetAttribute("name").TrimStart('>'), comparer))
                 {
                     _documentRoot.Add(item);
                 }

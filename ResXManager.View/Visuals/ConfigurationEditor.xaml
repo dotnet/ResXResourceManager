@@ -8,6 +8,8 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
+             xmlns:toms="urn:TomsToolbox"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              d:DataContext="{d:DesignInstance model:ResourceManager}"
              Background="LightGray" Width="800">
   <UserControl.Resources>
@@ -39,7 +41,7 @@
         </Setter.Value>
       </Setter>
       <Setter Property="Grid.IsSharedSizeScope" Value="True" />
-      <Setter Property="Focusable" Value="False"/>
+      <Setter Property="Focusable" Value="False" />
     </Style>
 
     <Style TargetType="HeaderedContentControl" x:Key="PropertyStyle">
@@ -58,7 +60,7 @@
           </ControlTemplate>
         </Setter.Value>
       </Setter>
-      <Setter Property="Focusable" Value="False"/>
+      <Setter Property="Focusable" Value="False" />
     </Style>
 
   </UserControl.Resources>
@@ -106,17 +108,23 @@
     <Decorator Height="5" />
 
     <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_LoadSaveHeader}" Style="{StaticResource GroupStyle}">
-      <StackPanel Margin="10">
-        <DockPanel KeyboardNavigation.TabNavigation="Local">
-          <Button DockPanel.Dock="Right" Padding="5,2" TabIndex="1"
-                  Content="{x:Static properties:Resources.SortAllFilesNow}"
-                  Command="{Binding SortNodesByKeyCommand, Converter={StaticResource SortNodesByKeyCommandConverter}}" />
-          <Decorator Width="50" DockPanel.Dock="Right" />
+      <Grid Margin="10" KeyboardNavigation.TabNavigation="Local">
+        <StackPanel>
           <CheckBox IsChecked="{Binding Configuration.SortFileContentOnSave}" TabIndex="0"
                     Style="{StaticResource LabelStyle}"
                     Content="{x:Static properties:Resources.SortNodesByKey}" />
-        </DockPanel>
-      </StackPanel>
+          <Decorator Height="5" />
+          <StackPanel Orientation="Horizontal">
+            <Decorator Width="22"/>
+            <TextBlock Text="Sort by: " Style="{StaticResource LabelStyle}"/>
+            <ComboBox ItemsSource="{Binding Source={x:Type system:StringComparison}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
+                      SelectedItem="{Binding Configuration.ResXSortingComparison}" Width="175" />
+          </StackPanel>
+        </StackPanel>
+        <Button Padding="5,2" TabIndex="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Content="{x:Static properties:Resources.SortAllFilesNow}"
+                Command="{Binding SortNodesByKeyCommand, Converter={StaticResource SortNodesByKeyCommandConverter}}" />
+      </Grid>
     </HeaderedContentControl>
 
     <Decorator Height="5" />
