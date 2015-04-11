@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
-    using System.ComponentModel;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Windows;
@@ -22,7 +21,7 @@
             throw new NotImplementedException();
         }
 
-        public event EventHandler<CancelEventArgs> Executing;
+        public event EventHandler<ConfirmedCommandEventArgs> Executing;
 
         public string Query
         {
@@ -30,20 +29,22 @@
             set;
         }
 
-        private bool QueryCancelExecution()
+        private void QueryCancelExecution(ConfirmedCommandEventArgs e)
         {
+            Contract.Requires(e != null);
+
             if (!string.IsNullOrEmpty(Query))
             {
-                return MessageBox.Show(Query, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes;
+                if (MessageBox.Show(Query, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                {
+                    e.Cancel = true;
+                    return;
+                }
             }
-
-            var e = new CancelEventArgs();
 
             var handler = Executing;
             if (handler != null)
                 handler(this, e);
-
-            return e.Cancel;
         }
 
         class CommandProxy : ICommand
@@ -61,10 +62,14 @@
 
             public void Execute(object parameter)
             {
-                if (_owner.QueryCancelExecution())
+                var args = new ConfirmedCommandEventArgs { Parameter = parameter };
+                
+                _owner.QueryCancelExecution(args);
+
+                if (args.Cancel)
                     return;
 
-                _command.Execute(parameter);
+                _command.Execute(args.Parameter);
             }
 
             public bool CanExecute(object parameter)

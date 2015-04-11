@@ -18,6 +18,7 @@
 
     public static class ColumnManager
     {
+        private const string NeutralCultureKeyString = ".";
         private static readonly BitmapImage _codeReferencesImage = new BitmapImage(new Uri("/ResXManager.View;component/Assets/references.png", UriKind.RelativeOrAbsolute));
 
         public static void SetupColumns(this DataGrid dataGrid, IEnumerable<CultureKey> cultureKeys)
@@ -104,13 +105,27 @@
             return column;
         }
 
-        public static void AddLanguageColumn(this ICollection<DataGridColumn> columns, ResourceManager resourceManager, CultureKey cultureKey)
+        public static void CreateNewLanguageColumn(this ICollection<DataGridColumn> columns, ResourceManager resourceManager, CultureInfo culture)
+        {
+            Contract.Requires(columns != null);
+            Contract.Requires(resourceManager != null);
+
+            var cultureKey = new CultureKey(culture);
+
+            AddLanguageColumn(columns, resourceManager, cultureKey);
+
+            var key = cultureKey.ToString(NeutralCultureKeyString);
+
+            HiddenLanguageColumns = HiddenLanguageColumns.Where(col => !string.Equals(col, key, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private static void AddLanguageColumn(this ICollection<DataGridColumn> columns, ResourceManager resourceManager, CultureKey cultureKey)
         {
             Contract.Requires(columns != null);
             Contract.Requires(resourceManager != null);
             Contract.Requires(cultureKey != null);
 
-            var key = cultureKey.ToString(".");
+            var key = cultureKey.ToString(NeutralCultureKeyString);
 
             var culture = cultureKey.Culture;
             var languageBinding = culture != null
@@ -196,7 +211,7 @@
                 .Where(predicate)
                 .Select(col => col.Header)
                 .OfType<T>()
-                .Select(hdr => hdr.CultureKey.ToString("."));
+                .Select(hdr => hdr.CultureKey.ToString(NeutralCultureKeyString));
         }
 
         private static IEnumerable<string> VisibleCommentColumns

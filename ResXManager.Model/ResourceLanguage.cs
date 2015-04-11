@@ -181,6 +181,8 @@ namespace tomenglertde.ResXManager.Model
 
         internal string GetValue(string key)
         {
+            Contract.Requires(key != null);
+
             Node node;
 
             if (!_nodes.TryGetValue(key, out node) || (node == null))
@@ -286,6 +288,8 @@ namespace tomenglertde.ResXManager.Model
 
         internal string GetComment(string key)
         {
+            Contract.Requires(key != null);
+
             Node node;
 
             if (!_nodes.TryGetValue(key, out node) || (node == null))
@@ -347,6 +351,8 @@ namespace tomenglertde.ResXManager.Model
 
         private Node CreateNode(string key)
         {
+            Contract.Requires(key != null);
+
             Node node;
             var content = new XElement(@"value");
             content.Add(new XText(string.Empty));
@@ -361,6 +367,7 @@ namespace tomenglertde.ResXManager.Model
 
         internal bool RenameKey(string oldKey, string newKey)
         {
+            Contract.Requires(oldKey != null);
             Contract.Requires(!string.IsNullOrEmpty(newKey));
 
             Node node;
@@ -385,6 +392,8 @@ namespace tomenglertde.ResXManager.Model
 
         internal bool RemoveKey(string key)
         {
+            Contract.Requires(key != null);
+
             if (!OnChanging())
                 return false;
 
@@ -419,6 +428,8 @@ namespace tomenglertde.ResXManager.Model
 
         internal bool KeyExists(string key)
         {
+            Contract.Requires(key != null);
+
             return _nodes.ContainsKey(key);
         }
 

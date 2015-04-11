@@ -10,7 +10,7 @@
     using System.IO;
     using System.Linq;
 
-    using tomenglertde.ResXManager.Model.Properties;
+    using TomsToolbox.Core;
 
     /// <summary>
     /// Represents a logical resource file, e.g. "Resources".
@@ -242,6 +242,7 @@
             resourceLanguage.Changing += language_Changing;
 
             _languages.Add(cultureKey, resourceLanguage);
+            _resourceTableEntries.ForEach(entry => entry.Refresh());
 
             OnLanguageAdded(new LanguageChangedEventArgs(this, resourceLanguage));
         }

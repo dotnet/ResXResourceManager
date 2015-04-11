@@ -129,6 +129,16 @@
 
     <Decorator Height="5" />
 
+    <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_FileCreationHeader}" Style="{StaticResource GroupStyle}">
+      <StackPanel Margin="10" KeyboardNavigation.TabNavigation="Local">
+        <CheckBox IsChecked="{Binding Configuration.AutoCreateNewLanguageFiles}" Content="{x:Static properties:Resources.AutoCreateNewLanguageFiles}" Style="{StaticResource LabelStyle}"/>
+        <Decorator Height="5" />
+        <CheckBox IsChecked="{Binding Configuration.ConfirmAddLanguage}" Content="{x:Static properties:Resources.ConfirmAddLanguage}" Style="{StaticResource LabelStyle}"/>
+      </StackPanel>
+    </HeaderedContentControl>
+
+    <Decorator Height="5" />
+
     <HeaderedContentControl Header="{x:Static properties:Resources.DetectCodeReferences_Header}" Style="{StaticResource GroupStyle}">
       <DataGrid ItemsSource="{Binding Configuration.CodeReferences.Items}"
                 AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False"
@@ -145,20 +155,6 @@
         </i:Interaction.Behaviors>
       </DataGrid>
     </HeaderedContentControl>
-
-    <Decorator Height="10" />
-
-    <!--
-    <HeaderedContentControl Header="File creation" Style="{StaticResource GroupStyle}">
-      <StackPanel>
-        <CheckBox Content ="Create all resource files when adding a new resource language" Margin="10,5" FontWeight="Bold"/>
-        <HeaderedContentControl Header="Fill :" Style="{StaticResource PropertyStyle}">
-          <TextBox Style="{StaticResource ControlWithErrorToolTipStyle}"
-                   Text="{Binding DetectCodeReferences_Exclude, Source={x:Static model:Settings.Default}, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"/>
-        </HeaderedContentControl>
-      </StackPanel>
-    </HeaderedContentControl>-->
-
 
   </StackPanel>
 </UserControl>

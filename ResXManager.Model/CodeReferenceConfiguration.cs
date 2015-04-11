@@ -129,18 +129,14 @@
         private ObservableCollection<CodeReferenceConfigurationItem> _items;
         private ObservablePropertyChangeTracker<CodeReferenceConfigurationItem> _changeTracker;
 
-        public CodeReferenceConfiguration()
-        {
-            CreateCollection();
-        }
-
         [DataMember(Name = "Items")]
         public ObservableCollection<CodeReferenceConfigurationItem> Items
         {
             get
             {
                 Contract.Ensures(Contract.Result<ObservableCollection<CodeReferenceConfigurationItem>>() != null);
-                return _items ?? CreateCollection();
+                CreateCollection();
+                return _items;
             }
         }
 
@@ -148,10 +144,12 @@
         {
             add
             {
+                CreateCollection();
                 _changeTracker.ItemPropertyChanged += value;
             }
             remove
             {
+                CreateCollection();
                 _changeTracker.ItemPropertyChanged -= value;
             }
         }
@@ -187,23 +185,23 @@
                 });
         }
 
-        private ObservableCollection<CodeReferenceConfigurationItem> CreateCollection()
+        private void CreateCollection()
         {
             Contract.Ensures(_items != null);
             Contract.Ensures(_changeTracker != null);
 
+            if (_items != null)
+                return;
+
             _items = new ObservableCollection<CodeReferenceConfigurationItem>();
             _changeTracker = new ObservablePropertyChangeTracker<CodeReferenceConfigurationItem>(_items);
-
-            return _items;
         }
 
         [ContractInvariantMethod]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_items != null);
-            Contract.Invariant(_changeTracker != null);
+            Contract.Invariant((_items == null) || (_changeTracker != null));
         }
     }
 }

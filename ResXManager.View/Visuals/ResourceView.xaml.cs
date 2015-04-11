@@ -122,10 +122,16 @@
             inputBox.TextChanged += (_, args) =>
                 inputBox.IsInputValid = !cultureNames.Contains(args.Text, StringComparer.OrdinalIgnoreCase) && ResourceManager.IsValidLanguageName(args.Text);
 
-            if (inputBox.ShowDialog() == true)
-            {
-                DataGrid.Columns.AddLanguageColumn(viewModel, new CultureKey(new CultureInfo(inputBox.Text)));
-            }
+            if (!inputBox.ShowDialog().GetValueOrDefault())
+                return;
+
+            WaitCursor.Start(this);
+
+            var culture = new CultureInfo(inputBox.Text);
+
+            DataGrid.Columns.CreateNewLanguageColumn(viewModel, culture);
+
+            viewModel.LanguageAdded(culture);
         }
 
         [ContractInvariantMethod]

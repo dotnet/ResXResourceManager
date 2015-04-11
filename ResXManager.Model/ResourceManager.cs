@@ -385,6 +385,18 @@
             OnPropertyChanged(() => SelectedTableEntries);
         }
 
+        public void LanguageAdded(CultureInfo culture)
+        {
+            if (!_configuration.AutoCreateNewLanguageFiles)
+                return;
+
+            foreach (var resourceEntity in _resourceEntities)
+            {
+                if (!CanEdit(resourceEntity, culture))
+                    break;
+            }
+        }
+
         private bool CanEdit(ResourceEntity resourceEntity, CultureInfo culture)
         {
             Contract.Requires(resourceEntity != null);

@@ -184,9 +184,6 @@
   <data name="CopyKeys" xml:space="preserve">
     <value>Copy key(s)</value>
   </data>
-  <data name="FileExistsPrompt" xml:space="preserve">
-    <value>The file '{0}' already exists. Do you want to overwrite it?</value>
-  </data>
   <data name="ErrorAddingNewResourceFile" xml:space="preserve">
     <value>Error adding the new resource file '{0}'.</value>
   </data>
@@ -270,7 +267,7 @@
     <value>Sort all files now</value>
   </data>
   <data name="SortNodesByKey" xml:space="preserve">
-    <value>When saving a RESX file, sort the XML data nodes by the key.</value>
+    <value>When saving a RESX file, sort the XML data nodes by the key</value>
   </data>
   <data name="EditDefaultConfigurationNotification" xml:space="preserve">
     <value>Your are editing the default configuration. If you want to change settings that apply only to a specific solution, just open the solution.</value>
@@ -325,5 +322,14 @@
   </data>
   <data name="TranslatorConfiguration_SaveCredentials" xml:space="preserve">
     <value>Save credentials (Credentials will be stored as clear text in your local profile!)</value>
+  </data>
+  <data name="AutoCreateNewLanguageFiles" xml:space="preserve">
+    <value>Create all resource files when adding a new resource language</value>
+  </data>
+  <data name="ConfirmAddLanguage" xml:space="preserve">
+    <value>Confirm adding new resource files</value>
+  </data>
+  <data name="Configuration_FileCreationHeader" xml:space="preserve">
+    <value>File creation</value>
   </data>
 </root>

@@ -183,9 +183,6 @@
   <data name="ErrorAddingNewResourceFile" xml:space="preserve">
     <value>Fehler beim Hinzufügen der neuen Ressourcedatei '{0}'</value>
   </data>
-  <data name="FileExistsPrompt" xml:space="preserve">
-    <value>Die Datei '{0}' existiert bereits. Möchten sie die Datei überschreiben?</value>
-  </data>
   <data name="CutToolTip" xml:space="preserve">
     <value>Markierte Zeilen ausschneiden (Strg+X)</value>
   </data>
@@ -250,7 +247,7 @@
     <value>Ausgewählt/Gesamt</value>
   </data>
   <data name="SortNodesByKey" xml:space="preserve">
-    <value>Beim Speichern den Inhalt von RESX-Dateien nach Schlüssel sortieren.</value>
+    <value>Beim Speichern den Inhalt von RESX-Dateien nach Schlüssel sortieren</value>
   </data>
   <data name="SortAllFilesNow" xml:space="preserve">
     <value>Alle Dateien jetzt sortieren</value>

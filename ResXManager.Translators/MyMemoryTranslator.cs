@@ -107,7 +107,10 @@
 
             using (var webResponse = webRequest.GetResponse())
             {
-                using (var reader = new StreamReader(webResponse.GetResponseStream(), Encoding.UTF8))
+                var responseStream = webResponse.GetResponseStream();
+                Contract.Assume(responseStream != null);
+
+                using (var reader = new StreamReader(responseStream, Encoding.UTF8))
                 {
                     var json = reader.ReadToEnd();
                     return JsonConvert.DeserializeObject<Response>(json);

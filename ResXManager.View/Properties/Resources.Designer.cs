@@ -88,6 +88,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create all resource files when adding a new resource language.
+        /// </summary>
+        public static string AutoCreateNewLanguageFiles {
+            get {
+                return ResourceManager.GetString("AutoCreateNewLanguageFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Case Sens..
         /// </summary>
         public static string CaseSensitive {
@@ -142,6 +151,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File creation.
+        /// </summary>
+        public static string Configuration_FileCreationHeader {
+            get {
+                return ResourceManager.GetString("Configuration_FileCreationHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
         public static string Configuration_General {
@@ -165,6 +183,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string ConfigurationScopeHeader {
             get {
                 return ResourceManager.GetString("ConfigurationScopeHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm adding new resource files.
+        /// </summary>
+        public static string ConfirmAddLanguage {
+            get {
+                return ResourceManager.GetString("ConfirmAddLanguage", resourceCulture);
             }
         }
         
@@ -343,15 +370,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string ExportExcelSelection {
             get {
                 return ResourceManager.GetString("ExportExcelSelection", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The file &apos;{0}&apos; already exists. Do you want to overwrite it?.
-        /// </summary>
-        public static string FileExistsPrompt {
-            get {
-                return ResourceManager.GetString("FileExistsPrompt", resourceCulture);
             }
         }
         
@@ -599,7 +617,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Translations.
+        ///   Looks up a localized string similar to Translate.
         /// </summary>
         public static string ShellTabHeader_Translate {
             get {
@@ -626,7 +644,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When saving a RESX file, sort the XML data nodes by the key..
+        ///   Looks up a localized string similar to When saving a RESX file, sort the XML data nodes by the key.
         /// </summary>
         public static string SortNodesByKey {
             get {

@@ -67,6 +67,30 @@
             }
         }
 
+        public bool ConfirmAddLanguage
+        {
+            get
+            {
+                return GetValue(() => ConfirmAddLanguage, true);
+            }
+            set
+            {
+                SetValue(value, () => ConfirmAddLanguage);
+            }
+        }
+
+        public bool AutoCreateNewLanguageFiles
+        {
+            get
+            {
+                return GetValue(() => AutoCreateNewLanguageFiles, false);
+            }
+            set
+            {
+                SetValue(value, () => AutoCreateNewLanguageFiles);
+            }
+        }
+
         private void PersistCodeReferences()
         {
             SetValue(CodeReferences, () => CodeReferences);

@@ -70,7 +70,7 @@
         public string UniqueProjectName
         {
             get;
-            private set;
+            set;
         }
 
         public string RelativeFilePath

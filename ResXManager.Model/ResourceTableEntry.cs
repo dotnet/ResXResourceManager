@@ -206,6 +206,11 @@
             return _owner.CanEdit(culture);
         }
 
+        public void Refresh()
+        {
+            OnPropertyChanged(() => Values);
+        }
+
         private void Values_ValueChanged(object sender, EventArgs e)
         {
             OnPropertyChanged(() => Values);
