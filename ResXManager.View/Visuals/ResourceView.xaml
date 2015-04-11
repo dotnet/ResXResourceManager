@@ -12,6 +12,7 @@
              xmlns:behaviors="clr-namespace:tomenglertde.ResXManager.View.Behaviors"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:wpf="clr-namespace:TomsToolbox.Wpf;assembly=TomsToolbox.Wpf"
+             xmlns:tools="clr-namespace:tomenglertde.ResXManager.View.Tools"
              x:Name="LayoutRoot"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
              d:DataContext="{d:DesignInstance model:ResourceManager}">
@@ -56,7 +57,15 @@
       </CollectionViewSource.GroupDescriptions>
     </CollectionViewSource>
 
+    <LinearGradientBrush x:Key="HatchBrush"  StartPoint="0,0" EndPoint="4,4" SpreadMethod="Repeat" MappingMode="Absolute">
+      <GradientStop Offset="0" Color="LightCoral"/>
+      <GradientStop Offset="0.75" Color="LightCoral"/>
+      <GradientStop Offset="0.75" Color="Gray"/>
+      <GradientStop Offset="1" Color="Gray"/>
+    </LinearGradientBrush>
+
   </UserControl.Resources>
+
   <UserControl.InputBindings>
     <KeyBinding Key="N" Modifiers="Control" Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}" />
     <KeyBinding Key="Insert" Modifiers="Shift" Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}" />
@@ -431,7 +440,7 @@
               </VirtualizingStackPanel>
             </ItemsPanelTemplate>
           </DataGrid.ItemsPanel>
-          
+
           <DataGrid.RowStyle>
             <Style TargetType="DataGridRow">
               <Style.Triggers>
@@ -454,6 +463,10 @@
                     <Setter Property="Background" Value="LightCoral" />
                   </MultiDataTrigger.Setters>
                 </MultiDataTrigger>
+
+                <DataTrigger Binding="{Binding Path=(tools:ColumnManager.ResourceFileExists), RelativeSource={RelativeSource Mode=Self}}" Value="False">
+                  <Setter Property="Background" Value="{StaticResource HatchBrush}"/>
+                </DataTrigger>
 
                 <MultiDataTrigger>
                   <MultiDataTrigger.Conditions>

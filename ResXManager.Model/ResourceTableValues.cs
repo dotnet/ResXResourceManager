@@ -11,13 +11,13 @@
     /// An indexer that maps the language to the localized string for a resource table entry with the specified resource key; 
     /// the language name is the indexer key and the localized text is the indexer value.
     /// </summary>
-    public sealed class ResourceTableValues
+    public sealed class ResourceTableValues<T>
     {
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
-        private readonly Func<ResourceLanguage, string> _getter;
-        private readonly Func<ResourceLanguage, string, bool> _setter;
+        private readonly Func<ResourceLanguage, T> _getter;
+        private readonly Func<ResourceLanguage, T, bool> _setter;
 
-        public ResourceTableValues(IDictionary<CultureKey, ResourceLanguage> languages, Func<ResourceLanguage, string> getter, Func<ResourceLanguage, string, bool> setter)
+        public ResourceTableValues(IDictionary<CultureKey, ResourceLanguage> languages, Func<ResourceLanguage, T> getter, Func<ResourceLanguage, T, bool> setter)
         {
             Contract.Requires(languages != null);
             Contract.Requires(getter != null);
@@ -28,7 +28,7 @@
             _setter = setter;
         }
 
-        public string this[string cultureKey]
+        public T this[string cultureKey]
         {
             get
             {
@@ -40,31 +40,31 @@
             }
         }
 
-        public string GetValue(CultureInfo culture)
+        public T GetValue(CultureInfo culture)
         {
             return GetValue(new CultureKey(culture));
         }
 
-        public string GetValue(CultureKey cultureKey)
+        public T GetValue(CultureKey cultureKey)
         {
             Contract.Requires(cultureKey != null);
 
             ResourceLanguage language;
 
             if (!_languages.TryGetValue(cultureKey, out language))
-                return null;
+                return default(T);
 
             Contract.Assume(language != null);
 
             return _getter(language);
         }
 
-        public bool SetValue(CultureInfo culture, string value)
+        public bool SetValue(CultureInfo culture, T value)
         {
             return SetValue(new CultureKey(culture), value);
         }
 
-        public bool SetValue(CultureKey cultureKey, string value)
+        public bool SetValue(CultureKey cultureKey, T value)
         {
             Contract.Requires(cultureKey != null);
 

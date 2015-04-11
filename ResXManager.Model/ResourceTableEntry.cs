@@ -18,11 +18,12 @@
         private readonly ResourceEntity _owner;
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly ResourceLanguage _neutralLanguage;
-        private IList<CodeReference> _codeReferences;
-
+        private readonly ResourceTableValues<bool> _fileExists;
+        
         private string _key;
-        private ResourceTableValues _values;
-        private ResourceTableValues _comments;
+        private ResourceTableValues<string> _values;
+        private ResourceTableValues<string> _comments;
+        private IList<CodeReference> _codeReferences;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceTableEntry" /> class.
@@ -41,11 +42,13 @@
             _key = key;
             _languages = languages;
 
-            _values = new ResourceTableValues(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
+            _values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
             _values.ValueChanged += Values_ValueChanged;
 
-            _comments = new ResourceTableValues(_languages, lang => lang.GetComment(_key), (lang, value) => lang.SetComment(_key, value));
+            _comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(_key), (lang, value) => lang.SetComment(_key, value));
             _comments.ValueChanged += Comments_ValueChanged;
+
+            _fileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
 
             Contract.Assume(languages.Any());
             _neutralLanguage = languages.First().Value;
@@ -56,11 +59,11 @@
         private void ResetTableValues()
         {
             _values.ValueChanged -= Values_ValueChanged;
-            _values = new ResourceTableValues(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
+            _values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
             _values.ValueChanged += Values_ValueChanged;
 
             _comments.ValueChanged -= Comments_ValueChanged;
-            _comments = new ResourceTableValues(_languages, lang => lang.GetComment(_key), (lang, value) => lang.SetComment(_key, value));
+            _comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(_key), (lang, value) => lang.SetComment(_key, value));
             _comments.ValueChanged += Comments_ValueChanged;
         }
 
@@ -131,11 +134,11 @@
         /// <summary>
         /// Gets the localized values.
         /// </summary>
-        public ResourceTableValues Values
+        public ResourceTableValues<string> Values
         {
             get
             {
-                Contract.Ensures(Contract.Result<ResourceTableValues>() != null);
+                Contract.Ensures(Contract.Result<ResourceTableValues<string>>() != null);
                 return _values;
             }
         }
@@ -144,12 +147,21 @@
         /// Gets the localized comments.
         /// </summary>
         [PropertyDependency("Comment")]
-        public ResourceTableValues Comments
+        public ResourceTableValues<string> Comments
         {
             get
             {
-                Contract.Ensures(Contract.Result<ResourceTableValues>() != null);
+                Contract.Ensures(Contract.Result<ResourceTableValues<string>>() != null);
                 return _comments;
+            }
+        }
+
+        public ResourceTableValues<bool> FileExists
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ResourceTableValues<bool>>() != null);
+                return _fileExists;
             }
         }
 
@@ -209,6 +221,8 @@
         public void Refresh()
         {
             OnPropertyChanged(() => Values);
+            OnPropertyChanged(() => Comment);
+            OnPropertyChanged(() => FileExists);
         }
 
         private void Values_ValueChanged(object sender, EventArgs e)
@@ -263,6 +277,7 @@
             Contract.Invariant(!String.IsNullOrEmpty(_key));
             Contract.Invariant(_values != null);
             Contract.Invariant(_comments != null);
+            Contract.Invariant(_fileExists != null);
             Contract.Invariant(_neutralLanguage != null);
             Contract.Invariant(_owner != null);
             Contract.Invariant(_languages != null);

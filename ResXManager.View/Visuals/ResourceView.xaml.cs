@@ -129,7 +129,7 @@
 
             var culture = new CultureInfo(inputBox.Text);
 
-            DataGrid.Columns.CreateNewLanguageColumn(viewModel, culture);
+            DataGrid.CreateNewLanguageColumn(viewModel, culture);
 
             viewModel.LanguageAdded(culture);
         }
