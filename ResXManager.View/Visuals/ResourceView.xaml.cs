@@ -151,10 +151,12 @@
                 Multiselect = false
             };
 
-            if (dlg.ShowDialog() != true)
+            if (!dlg.ShowDialog().GetValueOrDefault())
                 e.Cancel = true;
             else
                 e.Parameter = dlg.FileName;
+
+            WaitCursor.Start(this);
         }
 
         private void CommandConverter_Error(object sender, ErrorEventArgs e)
