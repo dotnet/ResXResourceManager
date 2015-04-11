@@ -3,14 +3,18 @@
     using System;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Threading;
 
+    using Microsoft.Win32;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Controls;
+    using tomenglertde.ResXManager.View.Converters;
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
@@ -132,6 +136,37 @@
             DataGrid.CreateNewLanguageColumn(viewModel, culture);
 
             viewModel.LanguageAdded(culture);
+        }
+
+        private void ImportExcelCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        {
+            var dlg = new OpenFileDialog
+            {
+                AddExtension = true,
+                CheckPathExists = true,
+                CheckFileExists = true,
+                DefaultExt = ".xlsx",
+                Filter = "Excel Worksheets|*.xlsx|All Files|*.*",
+                FilterIndex = 0,
+                Multiselect = false
+            };
+
+            if (dlg.ShowDialog() != true)
+                e.Cancel = true;
+            else
+                e.Parameter = dlg.FileName;
+        }
+
+        private void CommandConverter_Error(object sender, ErrorEventArgs e)
+        {
+            var ex = e.GetException();
+
+            if (ex == null)
+                return;
+
+            var text = (ex is ImportException) ? ex.Message : ex.ToString();
+
+            MessageBox.Show(text, Properties.Resources.Title);
         }
 
         [ContractInvariantMethod]

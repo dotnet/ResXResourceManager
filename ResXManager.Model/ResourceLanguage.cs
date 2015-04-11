@@ -210,14 +210,7 @@ namespace tomenglertde.ResXManager.Model
 
         public void SortNodesByKey()
         {
-            try
-            {
-                Save(true);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, Resources.Title);
-            }
+            Save(true);
         }
 
         private void OnChanged()

@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.IO;
     using System.Windows;
     using System.Windows.Data;
     using System.Windows.Input;
@@ -22,6 +23,7 @@
         }
 
         public event EventHandler<ConfirmedCommandEventArgs> Executing;
+        public event EventHandler<ErrorEventArgs> Error;
 
         public string Query
         {
@@ -43,6 +45,13 @@
             }
 
             var handler = Executing;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        private void OnError(ErrorEventArgs e)
+        {
+            var handler = Error;
             if (handler != null)
                 handler(this, e);
         }
@@ -69,7 +78,14 @@
                 if (args.Cancel)
                     return;
 
-                _command.Execute(args.Parameter);
+                try
+                {
+                    _command.Execute(args.Parameter);
+                }
+                catch (Exception ex)
+                {
+                    _owner.OnError(new ErrorEventArgs(ex));
+                }
             }
 
             public bool CanExecute(object parameter)

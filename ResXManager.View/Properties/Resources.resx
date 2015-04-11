@@ -332,4 +332,7 @@
   <data name="Configuration_FileCreationHeader" xml:space="preserve">
     <value>File creation</value>
   </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort by: </value>
+  </data>
 </root>

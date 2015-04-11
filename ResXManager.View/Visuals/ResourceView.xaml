@@ -20,6 +20,8 @@
 
     <converters:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Query="{x:Static properties:Resources.ConfirmDeleteItems}" />
     <converters:ConfirmedCommandConverter x:Key="CutCommandConverter" Query="{x:Static properties:Resources.ConfirmCutItems}" />
+    <converters:ConfirmedCommandConverter x:Key="ImportExcelCommandConverter" Executing="ImportExcelCommandConverter_Executing" Error="CommandConverter_Error" />
+    <converters:ConfirmedCommandConverter x:Key="ErrorHandlerCommandConverter" Error="CommandConverter_Error" />
 
     <Style TargetType="{x:Type Control}" x:Key="SingleSelectElementStyle">
       <Setter Property="IsEnabled" Value="False" />
@@ -103,7 +105,7 @@
                wpf:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}">
         <ListBox.ContextMenu>
           <ContextMenu>
-            <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand}">
+            <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
               <MenuItem.Icon>
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
               </MenuItem.Icon>
@@ -253,7 +255,7 @@
               </Button>
               <Button ToolTip="{x:Static properties:Resources.PasteToolTip}"
                       Style="{StaticResource ToolbarCommandButtonStyle}"
-                      Command="{Binding Path=PasteCommand}">
+                      Command="{Binding Path=PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
               </Button>
               <Button ToolTip="{x:Static properties:Resources.AddKeyToolTip}"
@@ -273,7 +275,7 @@
                   </MenuItem.Header>
                   <MenuItem Header="{x:Static properties:Resources.ExportExcelAll}" Command="{Binding ExportExcelAllCommand}" />
                   <MenuItem Header="{x:Static properties:Resources.ExportExcelSelection}" Command="{Binding ExportExcelSelectedCommand}" CommandParameter="{Binding ElementName=DataGrid, Converter={x:Static converters:DataGridToSelectionScopeConverter.Default}}" />
-                  <MenuItem Header="{x:Static properties:Resources.ImportExcel}" Command="{Binding ImportExcelCommand}" />
+                  <MenuItem Header="{x:Static properties:Resources.ImportExcel}" Command="{Binding ImportExcelCommand, Converter={StaticResource ImportExcelCommandConverter}}" />
                 </MenuItem>
               </Menu>
               <Separator />
@@ -358,7 +360,7 @@
                   <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/copy.png" />
                 </MenuItem.Icon>
               </MenuItem>
-              <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand}">
+              <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
                 <MenuItem.Icon>
                   <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
                 </MenuItem.Icon>
@@ -425,7 +427,7 @@
             <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
             <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
             <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
-            <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand}" />
+            <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" />
           </DataGrid.InputBindings>
 
           <DataGrid.ItemsPanel>

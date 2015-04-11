@@ -321,4 +321,7 @@
   <data name="ConfirmAddLanguage" xml:space="preserve">
     <value>Erstellen neuer Ressourcendateien bestätigen</value>
   </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sortieren nach:</value>
+  </data>
 </root>

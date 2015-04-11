@@ -14,7 +14,7 @@
              Background="LightGray" Width="800">
   <UserControl.Resources>
 
-    <converters:ConfirmedCommandConverter x:Key="SortNodesByKeyCommandConverter" Query="{x:Static properties:Resources.SortNodesByKey_Confirmation}" />
+    <converters:ConfirmedCommandConverter x:Key="SortNodesByKeyCommandConverter" Query="{x:Static properties:Resources.SortNodesByKey_Confirmation}" Error="CommandConverter_Error"/>
 
     <Style x:Key="LabelStyle">
       <Setter Property="TextElement.Foreground" Value="DarkSlateGray" />
@@ -116,7 +116,7 @@
           <Decorator Height="5" />
           <StackPanel Orientation="Horizontal">
             <Decorator Width="22"/>
-            <TextBlock Text="Sort by: " Style="{StaticResource LabelStyle}"/>
+            <TextBlock Text="{x:Static properties:Resources.SortBy}" Style="{StaticResource LabelStyle}"/>
             <ComboBox ItemsSource="{Binding Source={x:Type system:StringComparison}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
                       SelectedItem="{Binding Configuration.ResXSortingComparison}" Width="175" />
           </StackPanel>

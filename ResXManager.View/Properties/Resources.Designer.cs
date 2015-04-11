@@ -644,6 +644,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sort by: .
+        /// </summary>
+        public static string SortBy {
+            get {
+                return ResourceManager.GetString("SortBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to When saving a RESX file, sort the XML data nodes by the key.
         /// </summary>
         public static string SortNodesByKey {

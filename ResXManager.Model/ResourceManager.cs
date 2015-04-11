@@ -279,7 +279,7 @@
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(ImportExcel);
+                return new DelegateCommand<string>(ImportExcel);
             }
         }
 
@@ -488,18 +488,7 @@
             if (!CanEdit(entity, null))
                 return;
 
-            try
-            {
-                entity.ImportTextTable(Clipboard.GetText());
-            }
-            catch (ImportException ex)
-            {
-                MessageBox.Show(ex.Message, Resources.Title);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), Resources.Title);
-            }
+            entity.ImportTextTable(Clipboard.GetText());
         }
 
         private void ToggleInvariant()
@@ -530,7 +519,7 @@
 
             try
             {
-                this.ExportExcel(dlg.FileName, scope);
+                this.ExportExcelFile(dlg.FileName, scope);
             }
             catch (Exception ex)
             {
@@ -538,34 +527,9 @@
             }
         }
 
-        private void ImportExcel()
+        private void ImportExcel(string fileName)
         {
-            var dlg = new OpenFileDialog
-            {
-                AddExtension = true,
-                CheckPathExists = true,
-                CheckFileExists = true,
-                DefaultExt = ".xlsx",
-                Filter = "Excel Worksheets|*.xlsx|All Files|*.*",
-                FilterIndex = 0,
-                Multiselect = false
-            };
-
-            if (dlg.ShowDialog() != true)
-                return;
-
-            try
-            {
-                this.ImportExcel(dlg.FileName);
-            }
-            catch (ImportException ex)
-            {
-                MessageBox.Show(ex.Message, Resources.Title);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), Resources.Title);
-            }
+            this.ImportExcelFile(fileName);
         }
 
         private void CopyKeys()

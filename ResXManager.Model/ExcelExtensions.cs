@@ -15,7 +15,7 @@
 
     public static partial class ResourceEntityExtensions
     {
-        public static void ExportExcel(this ResourceManager resourceManager, string filePath, IResourceScope scope)
+        public static void ExportExcelFile(this ResourceManager resourceManager, string filePath, IResourceScope scope)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(filePath != null);
@@ -50,7 +50,7 @@
             }
         }
 
-        public static void ImportExcel(this ResourceManager resourceManager, string filePath)
+        public static void ImportExcelFile(this ResourceManager resourceManager, string filePath)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(filePath != null);
