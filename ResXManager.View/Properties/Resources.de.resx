@@ -312,4 +312,13 @@
   <data name="TranslatorConfiguration_SaveCredentials" xml:space="preserve">
     <value>Anmeldeinformationen speichern (Anmeldeinformationen werden als Klartext in Ihrem lokalen Profil gespeichert!)</value>
   </data>
+  <data name="AutoCreateNewLanguageFiles" xml:space="preserve">
+    <value>Alle Ressourcendateien sofort erstellen, wenn eine neue Ressourcensprache hinzugefügt wird</value>
+  </data>
+  <data name="Configuration_FileCreationHeader" xml:space="preserve">
+    <value>Dateierstellung</value>
+  </data>
+  <data name="ConfirmAddLanguage" xml:space="preserve">
+    <value>Erstellen neuer Ressourcendateien bestätigen</value>
+  </data>
 </root>
