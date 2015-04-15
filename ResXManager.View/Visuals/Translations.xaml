@@ -21,7 +21,7 @@
       </DockPanel>
       <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding Culture}" Value="{x:Null}">
-          <Setter TargetName="image" Property="Source" Value="{Binding Path=NeutralResourceLanguage, Source={x:Static properties:Settings.Default}, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+          <Setter TargetName="image" Property="Source" Value="{Binding Path=DataContext.Configuration.NeutralResourcesLanguage, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
         </DataTrigger>
       </DataTemplate.Triggers>
     </DataTemplate>
