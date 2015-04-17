@@ -57,6 +57,9 @@
       <DockPanel>
         <visuals:TranslatorConfiguration DockPanel.Dock="Top" IsEnabled="{Binding Translations.Session.IsComplete}" />
         <Decorator Height="10" DockPanel.Dock="Top" />
+        <TextBlock Text="{x:Static properties:Resources.TranslatorsAnnotation}"
+                   DockPanel.Dock="Top" Background="Transparent" TextWrapping="Wrap" FontWeight="Bold" Foreground="#C02020" />
+        <Decorator Height="10" DockPanel.Dock="Top" />
         <DataGrid ItemsSource="{Binding Translations.Items}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
                   IsEnabled="{Binding Translations.Session.IsComplete}" wpf:MultiSelectorExtensions.SelectionBinding="{Binding Translations.SelectedItems}">
@@ -66,7 +69,7 @@
             </DataTemplate>
           </DataGrid.RowHeaderTemplate>
           <DataGrid.Columns>
-            <DataGridTextColumn Width="*" Binding="{Binding Source}" IsReadOnly="True">
+            <DataGridTextColumn Width="2*" Binding="{Binding Source}" IsReadOnly="True">
               <DataGridTextColumn.ElementStyle>
                 <Style TargetType="TextBlock">
                   <Setter Property="ToolTip" Value="{Binding Entry.Key}" />
@@ -82,13 +85,20 @@
                 </DataTemplate>
               </DataGridTextColumn.HeaderTemplate>
             </DataGridTextColumn>
-            <DataGridTemplateColumn Width="*" IsReadOnly="True">
+            <DataGridTemplateColumn Width="3*" IsReadOnly="True">
               <DataGridTemplateColumn.HeaderTemplate>
                 <DataTemplate>
                   <StackPanel Orientation="Horizontal" DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridCellsPanel}}" d:DataContext="{d:DesignInstance model:ResourceManager}">
                     <TextBlock Text="Target:" VerticalAlignment="Center" />
                     <Decorator Width="5" />
-                    <ComboBox Width="150" ItemsSource="{Binding CultureKeys}" SelectedItem="{Binding Translations.TargetCulture}" />
+                    <ComboBox Width="150" ItemsSource="{Binding CultureKeys}" SelectedItem="{Binding Translations.TargetCulture}" VerticalAlignment="Center" />
+                    <Decorator Width="20" />
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                      <CheckBox Content="{x:Static properties:Resources.TranslationsPrefixHeader}" IsChecked="{Binding Configuration.PrefixTranslations}"/>
+                      <TextBlock Text="&quot;" />
+                      <TextBox Text="{Binding Configuration.TranslationPrefix}" BorderThickness="0" Padding="-1" Background="Transparent" />
+                      <TextBlock Text="&quot;" />
+                    </StackPanel>
                   </StackPanel>
                 </DataTemplate>
               </DataGridTemplateColumn.HeaderTemplate>
@@ -96,7 +106,7 @@
                 <DataTemplate DataType="model:TranslationItem">
                   <ComboBox Margin="0" Padding="0" BorderThickness="0" DisplayMemberPath="TranslatedText"
                             ItemsSource="{Binding OrderedResults}" IsEditable="True"
-                            Text="{Binding Translation, UpdateSourceTrigger=PropertyChanged}" 
+                            Text="{Binding Translation, UpdateSourceTrigger=PropertyChanged}"
                             IsKeyboardFocusWithinChanged="ComboBox_IsKeyboardFocusWithinChanged">
                     <ComboBox.ItemTemplate>
                       <DataTemplate DataType="translators:ITranslationMatch">

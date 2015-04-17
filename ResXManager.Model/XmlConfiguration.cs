@@ -115,7 +115,7 @@
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>The value stored in the XML file, or null if the value does not exist.</returns>
-        public string GetValue(string key)
+        public string GetValue(string key, string defaultValue)
         {
             Contract.Requires(key != null);
 
@@ -125,7 +125,7 @@
                 .Select(item => item.Node.FirstNode as XText)
                 .Where(node => node != null)
                 .Select(node => node.Value)
-                .FirstOrDefault();
+                .FirstOrDefault() ?? defaultValue;
         }
 
         /// <summary>

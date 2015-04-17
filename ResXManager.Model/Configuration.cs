@@ -91,6 +91,30 @@
             }
         }
 
+        public bool PrefixTranslations
+        {
+            get
+            {
+                return GetValue(() => PrefixTranslations, false);
+            }
+            set
+            {
+                SetValue(value, () => PrefixTranslations);
+            }
+        }
+
+        public string TranslationPrefix
+        {
+            get
+            {
+                return GetValue(() => TranslationPrefix, "#TODO#_");
+            }
+            set
+            {
+                SetValue(value, () => TranslationPrefix);
+            }
+        }
+
         private void PersistCodeReferences()
         {
             SetValue(CodeReferences, () => CodeReferences);

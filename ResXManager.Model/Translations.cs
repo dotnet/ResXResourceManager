@@ -142,6 +142,8 @@
             Contract.Requires(items != null);
             Contract.Assume(_targetCulture != null);
 
+            var prefix = _owner.Configuration.PrefixTranslations ? _owner.Configuration.TranslationPrefix : string.Empty;
+
             foreach (var item in items.ToArray())
             {
                 Contract.Assume(item != null);
@@ -151,7 +153,7 @@
                 if (!entry.CanEdit(_targetCulture.Culture))
                     break;
 
-                entry.Values.SetValue(_targetCulture, item.Translation);
+                entry.Values.SetValue(_targetCulture, prefix + item.Translation);
                 Items.Remove(item);
             }
         }

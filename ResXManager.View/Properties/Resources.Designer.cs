@@ -716,11 +716,30 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prefix translations with .
+        /// </summary>
+        public static string TranslationsPrefixHeader {
+            get {
+                return ResourceManager.GetString("TranslationsPrefixHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save credentials (Credentials will be stored as clear text in your local profile!).
         /// </summary>
         public static string TranslatorConfiguration_SaveCredentials {
             get {
                 return ResourceManager.GetString("TranslatorConfiguration_SaveCredentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ResXResourceManager is not responsible for the results of the translations. 
+        ///For any questions about the quality of the translations or the capabilities of the individual services please refer to the translation service web sites..
+        /// </summary>
+        public static string TranslatorsAnnotation {
+            get {
+                return ResourceManager.GetString("TranslatorsAnnotation", resourceCulture);
             }
         }
     }

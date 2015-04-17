@@ -324,4 +324,11 @@
   <data name="SortBy" xml:space="preserve">
     <value>Sortieren nach:</value>
   </data>
+  <data name="TranslationsPrefixHeader" xml:space="preserve">
+    <value>Präfix vor übersetztem Text: </value>
+  </data>
+  <data name="TranslatorsAnnotation" xml:space="preserve">
+    <value>ResXResourceManager ist nicht verantwortlich für die Ergebnisse der Übersetzungen. 
+Bei Fragen zur Qualität der Übersetzungen oder zum Funktionsumfang der einzelnen Dienste besuchen sie bitte die Webseiten der Übersetzungsdienste.</value>
+  </data>
 </root>

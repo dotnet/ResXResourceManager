@@ -75,7 +75,7 @@
 
             try
             {
-                return ConvertFromString<T>(_configuration.GetValue(key));
+                return ConvertFromString<T>(_configuration.GetValue(key, defaultValue as string));
             }
             catch (InvalidCastException)
             {
