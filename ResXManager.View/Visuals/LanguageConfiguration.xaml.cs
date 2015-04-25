@@ -1,10 +1,11 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System.ComponentModel;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Windows;
     using System.Windows.Input;
-    using tomenglertde.ResXManager.Model;
+
     using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Core;
@@ -40,6 +41,25 @@
         {
             Contract.Invariant(ListBox != null);
         }
+    }
 
+    public class CultureInfoGroupDescription : GroupDescription
+    {
+        public override object GroupNameFromItem(object item, int level, CultureInfo culture)
+        {
+            var cultureItem = item as CultureInfo;
+            if (cultureItem == null)
+                return null;
+
+            var parent = cultureItem.Parent;
+
+            while (!string.IsNullOrEmpty(parent.Name))
+            {
+                cultureItem = parent;
+                parent = parent.Parent;
+            }
+
+            return cultureItem;
+        }
     }
 }

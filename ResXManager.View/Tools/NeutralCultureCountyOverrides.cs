@@ -67,12 +67,24 @@
                 handler(this, e);
         }
 
+        private static IEnumerable<CultureInfo> ParentChain(CultureInfo culture)
+        {
+            Contract.Requires(culture != null);
+            Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
+
+            while (!string.IsNullOrEmpty(culture.Name))
+            {
+                culture = culture.Parent;
+                yield return culture;
+            }
+        }
+
         private static CultureInfo GetDefaultSpecificCulture(CultureInfo neutralCulture)
         {
             Contract.Requires(neutralCulture != null);
 
             var cultureName = neutralCulture.Name;
-            var specificCultures = _allSpecificCultures.Where(c => (c != null) && ((c.Parent.Name == cultureName) || (c.Parent.IetfLanguageTag == cultureName))).ToArray();
+            var specificCultures = _allSpecificCultures.Where(c => (c != null) && ParentChain(c).Any(p => (p.Name == cultureName) || (p.IetfLanguageTag == cultureName))).ToArray();
 
             var preferredSpecificCultureName = cultureName + @"-" + cultureName.ToUpperInvariant();
 
