@@ -1,14 +1,15 @@
-﻿namespace tomenglertde.ResXManager.View.Controls
+﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Windows;
+
     using tomenglertde.ResXManager.View.Tools;
+
+    using TomsToolbox.Desktop;
 
     /// <summary>
     /// Input box shows a prompt to enter a string.
     /// </summary>
-    [ContractVerification(false)] // Too many dependencies on generated code.
     public partial class InputBox
     {
         /// <summary>
@@ -65,7 +66,7 @@
         /// </summary>
         public bool IsInputValid
         {
-            get { return (bool)GetValue(IsInputValidProperty); }
+            get { return this.GetValue<bool>(IsInputValidProperty); }
             set { SetValue(IsInputValidProperty, value); }
         }
         /// <summary>

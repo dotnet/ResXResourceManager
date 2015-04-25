@@ -106,32 +106,26 @@
 
         private void AddLanguage_Click(object sender, RoutedEventArgs e)
         {
-            var inputBox = new InputBox
-            {
-                Title = Properties.Resources.Title,
-                Prompt = Properties.Resources.NewLanguageIdPrompt,
-                Owner = Window.GetWindow(this),
-                WindowStartupLocation = WindowStartupLocation.CenterOwner
-            };
-
             var viewModel = ViewModel;
             if (viewModel == null)
                 return;
 
-            var cultureNames = viewModel.CultureKeys
+            var exisitingCultures = viewModel.CultureKeys
                 .Select(c => c.Culture)
-                .Where(c => c != null)
-                .Select(c => c.ToString()).ToArray();
+                .Where(c => c != null);
 
-            inputBox.TextChanged += (_, args) =>
-                inputBox.IsInputValid = !cultureNames.Contains(args.Text, StringComparer.OrdinalIgnoreCase) && ResourceManager.IsValidLanguageName(args.Text);
+            var inputBox = new LanguageSelectionBox(exisitingCultures)
+            {
+                Owner = Window.GetWindow(this),
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
 
             if (!inputBox.ShowDialog().GetValueOrDefault())
                 return;
 
             WaitCursor.Start(this);
 
-            var culture = new CultureInfo(inputBox.Text);
+            var culture = inputBox.SelectedLanguage;
 
             DataGrid.CreateNewLanguageColumn(viewModel, culture);
 

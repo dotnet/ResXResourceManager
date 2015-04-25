@@ -7,10 +7,15 @@
     using System.Linq;
     using tomenglertde.ResXManager.View.Properties;
 
+    using TomsToolbox.Core;
+
     public class NeutralCultureCountyOverrides
     {
+        private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,";
         private static readonly CultureInfo[] _allSpecificCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
-        private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().ToDictionary(item => item.Key, item => item.Value));
+        private static readonly IEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>> _comparer = new DelegateEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>>(item => item.Key);
+
+        private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly NeutralCultureCountyOverrides Default = new NeutralCultureCountyOverrides();
@@ -86,7 +91,7 @@
         {
             Contract.Ensures(Contract.Result<IEnumerable<KeyValuePair<CultureInfo, CultureInfo>>>() != null);
 
-            var neutralCultureCountryOverrides = (Settings.Default.NeutralCultureCountyOverrides ?? string.Empty).Split(',');
+            var neutralCultureCountryOverrides = (DefaultOverrides + Settings.Default.NeutralCultureCountyOverrides).Split(',');
 
             foreach (var item in neutralCultureCountryOverrides)
             {

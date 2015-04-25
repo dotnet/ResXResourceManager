@@ -93,11 +93,11 @@
           <ComboBox Width="175" ItemsSource="{Binding Source={x:Static Member=model:ResourceManager.SpecificCultures}}" SelectedItem="{Binding Configuration.NeutralResourcesLanguage}">
             <ComboBox.ItemTemplate>
               <DataTemplate DataType="globalization:CultureInfo">
-                <DockPanel>
-                  <Image DockPanel.Dock="Left" Stretch="None" Source="{Binding Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
-                  <Decorator DockPanel.Dock="Left" Width="5" />
+                <StackPanel Orientation="Horizontal">
+                  <Image Stretch="None" Source="{Binding Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+                  <Decorator Width="5" />
                   <TextBlock Text="{Binding Path=DisplayName}" />
-                </DockPanel>
+                </StackPanel>
               </DataTemplate>
             </ComboBox.ItemTemplate>
           </ComboBox>

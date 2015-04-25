@@ -731,7 +731,7 @@
 
             var missingNeutralCultures = allNeutralCultures.Except(referencedNeutralCultures);
 
-            return specificCultures.OrderBy(c => c.DisplayName).Concat(missingNeutralCultures.OrderBy(c => c.DisplayName)).ToArray();
+            return specificCultures.Concat(missingNeutralCultures).OrderBy(c => c.DisplayName).ToArray();
         }
 
         private static CultureInfo[] GetCultures(CultureTypes types)

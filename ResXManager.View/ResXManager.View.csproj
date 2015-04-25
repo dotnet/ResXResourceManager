@@ -240,6 +240,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="References.cs" />
+    <Compile Include="Visuals\LanguageSelectionBox.xaml.cs">
+      <DependentUpon>LanguageSelectionBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Visuals\ResourceView.xaml.cs">
       <DependentUpon>ResourceView.xaml</DependentUpon>
     </Compile>
@@ -273,6 +276,10 @@
     <Page Include="Visuals\InputBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Visuals\LanguageSelectionBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Visuals\ResourceView.xaml">
       <SubType>Designer</SubType>

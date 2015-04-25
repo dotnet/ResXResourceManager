@@ -509,7 +509,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the new language id:.
+        ///   Looks up a localized string similar to Select the new language:.
         /// </summary>
         public static string NewLanguageIdPrompt {
             get {

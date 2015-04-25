@@ -131,7 +131,7 @@
     <value>Neutral</value>
   </data>
   <data name="NewLanguageIdPrompt" xml:space="preserve">
-    <value>Enter the new language id:</value>
+    <value>Select the new language:</value>
   </data>
   <data name="Key" xml:space="preserve">
     <value>Key</value>

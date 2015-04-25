@@ -157,7 +157,7 @@
     <value>Rechts klicken, um das Symbol für die neutrale Sprache zu ändern</value>
   </data>
   <data name="NewLanguageIdPrompt" xml:space="preserve">
-    <value>Geben sie die neue Sprach-ID ein:</value>
+    <value>Wählen sie die neue Sprache aus:</value>
   </data>
   <data name="PasteToolTip" xml:space="preserve">
     <value>Zeilen einfügen (Strg+V)</value>
