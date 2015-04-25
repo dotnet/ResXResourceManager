@@ -96,8 +96,8 @@
             var url = string.Format(CultureInfo.InvariantCulture,
                 "http://api.mymemory.translated.net/get?q={0}!&langpair={1}|{2}",
                 HttpUtility.UrlEncode(input, Encoding.UTF8),
-                sourceLanguage.TwoLetterISOLanguageName,
-                targetLanguage.TwoLetterISOLanguageName);
+                sourceLanguage.IetfLanguageTag,
+                targetLanguage.IetfLanguageTag);
 
             if (!string.IsNullOrEmpty(key))
                 url += string.Format(CultureInfo.InvariantCulture, "&key={0}", HttpUtility.UrlEncode(key));
