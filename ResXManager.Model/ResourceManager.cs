@@ -392,6 +392,8 @@
 
             foreach (var resourceEntity in _resourceEntities)
             {
+                Contract.Assume(resourceEntity != null);
+
                 if (!CanEdit(resourceEntity, culture))
                     break;
             }
@@ -529,6 +531,8 @@
 
         private void ImportExcel(string fileName)
         {
+            Contract.Requires(fileName != null);
+
             this.ImportExcelFile(fileName);
         }
 
@@ -711,7 +715,7 @@
         private static string[] GetSortedCultureNames()
         {
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-            Contract.Assume(allCultures != null);
+
             var cultureNames = allCultures
                 .SelectMany(culture => new[] { culture.IetfLanguageTag, culture.Name })
                 .Distinct()
@@ -724,21 +728,12 @@
 
         private static CultureInfo[] GetSpecificCultures()
         {
-            var specificCultures = GetCultures(CultureTypes.AllCultures)
-                .Where(c => !string.IsNullOrEmpty(c.Parent.Name))
+            var specificCultures = CultureInfo.GetCultures(CultureTypes.AllCultures)
+                .Where(c => c.GetAncestors().Any())
                 .OrderBy(c => c.DisplayName)
                 .ToArray();
 
             return specificCultures;
-        }
-
-        private static CultureInfo[] GetCultures(CultureTypes types)
-        {
-            Contract.Ensures(Contract.Result<CultureInfo[]>() != null);
-
-            var cultures = CultureInfo.GetCultures(types);
-            Contract.Assume(cultures != null);
-            return cultures;
         }
 
         private void ApplyEntityFilter(string value)

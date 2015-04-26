@@ -3,9 +3,11 @@
     using System.ComponentModel;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Input;
 
+    using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Core;
@@ -31,7 +33,7 @@
 
             var neutralCulture = specificCulture.Parent;
 
-            NeutralCultureCountyOverrides.Default[neutralCulture] = specificCulture;
+            NeutralCultureCountryOverrides.Default[neutralCulture] = specificCulture;
             ListBox.Items.Refresh();
         }
 
@@ -51,15 +53,7 @@
             if (cultureItem == null)
                 return null;
 
-            var parent = cultureItem.Parent;
-
-            while (!string.IsNullOrEmpty(parent.Name))
-            {
-                cultureItem = parent;
-                parent = parent.Parent;
-            }
-
-            return cultureItem;
+            return cultureItem.GetAncestors().LastOrDefault();
         }
     }
 }

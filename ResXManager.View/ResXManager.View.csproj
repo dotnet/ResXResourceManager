@@ -203,7 +203,7 @@
     <Compile Include="Converters\CultureToXmlLanguageConverter.cs" />
     <Compile Include="Tools\ColumnManager.cs" />
     <Compile Include="Tools\CultureOverrideEventArgs.cs" />
-    <Compile Include="Tools\NeutralCultureCountyOverrides.cs" />
+    <Compile Include="Tools\NeutralCultureCountryOverrides.cs" />
     <Compile Include="Tools\PropertyBinding.cs" />
     <Compile Include="Tools\PropertyBindingValueChangedEventArgs.cs" />
     <Compile Include="Visuals\CodeReferencesToolTip.xaml.cs">

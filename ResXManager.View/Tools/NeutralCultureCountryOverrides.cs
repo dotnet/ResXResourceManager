@@ -5,11 +5,13 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
+
+    using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
     using TomsToolbox.Core;
 
-    public class NeutralCultureCountyOverrides
+    public class NeutralCultureCountryOverrides
     {
         private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,";
         private static readonly CultureInfo[] _allSpecificCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
@@ -18,9 +20,9 @@
         private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly NeutralCultureCountyOverrides Default = new NeutralCultureCountyOverrides();
+        public static readonly NeutralCultureCountryOverrides Default = new NeutralCultureCountryOverrides();
 
-        private NeutralCultureCountyOverrides()
+        private NeutralCultureCountryOverrides()
         {
         }
 
@@ -67,24 +69,12 @@
                 handler(this, e);
         }
 
-        private static IEnumerable<CultureInfo> ParentChain(CultureInfo culture)
-        {
-            Contract.Requires(culture != null);
-            Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
-
-            while (!string.IsNullOrEmpty(culture.Name))
-            {
-                culture = culture.Parent;
-                yield return culture;
-            }
-        }
-
         private static CultureInfo GetDefaultSpecificCulture(CultureInfo neutralCulture)
         {
             Contract.Requires(neutralCulture != null);
 
             var cultureName = neutralCulture.Name;
-            var specificCultures = _allSpecificCultures.Where(c => (c != null) && ParentChain(c).Any(p => (p.Name == cultureName) || (p.IetfLanguageTag == cultureName))).ToArray();
+            var specificCultures = neutralCulture.GetDescendents().ToArray();
 
             var preferredSpecificCultureName = cultureName + @"-" + cultureName.ToUpperInvariant();
 

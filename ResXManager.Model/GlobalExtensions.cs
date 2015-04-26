@@ -1,8 +1,10 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -71,7 +73,7 @@
         }
 
         public static T ForceBehavior<T>(this DependencyObject item)
-            where T: Behavior, new()
+            where T : Behavior, new()
         {
             Contract.Ensures(Contract.Result<T>() != null);
 
@@ -101,13 +103,75 @@
         }
 
         public static DependencyPropertyEventWrapper<T> Track<T>(this T dependencyObject, DependencyProperty property)
-            where T:DependencyObject
+            where T : DependencyObject
         {
             Contract.Requires(dependencyObject != null);
             Contract.Requires(property != null);
             Contract.Ensures(Contract.Result<DependencyPropertyEventWrapper<T>>() != null);
 
             return new DependencyPropertyEventWrapper<T>(dependencyObject, property);
+        }
+
+        public static IEnumerable<CultureInfo> GetAncestors(this CultureInfo cultureInfo)
+        {
+            Contract.Requires(cultureInfo != null);
+            Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
+
+            var item = cultureInfo.Parent;
+
+            while (!string.IsNullOrEmpty(item.Name))
+            {
+                yield return item;
+                item = item.Parent;
+            }
+        }
+        public static IEnumerable<CultureInfo> GetAncestorsOfSelf(this CultureInfo cultureInfo)
+        {
+            Contract.Requires(cultureInfo != null);
+            Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
+
+            var item = cultureInfo;
+
+            while (!string.IsNullOrEmpty(item.Name))
+            {
+                yield return item;
+                item = item.Parent;
+            }
+        }
+
+        private static readonly Dictionary<CultureInfo, CultureInfo[]> _childCache = new Dictionary<CultureInfo, CultureInfo[]>();
+
+        public static ICollection<CultureInfo> GetChildren(this CultureInfo cultureInfo)
+        {
+            Contract.Requires(cultureInfo != null);
+            Contract.Ensures(Contract.Result<ICollection<CultureInfo>>() != null);
+
+            var children = _childCache.ForceValue(cultureInfo, CreateChildList);
+            Contract.Assume(children != null); // because CreateChildList always returns != null
+            return children;
+        }
+
+        private static CultureInfo[] CreateChildList(CultureInfo parent)
+        {
+            Contract.Ensures(Contract.Result<CultureInfo[]>() != null);
+
+            return CultureInfo.GetCultures(CultureTypes.AllCultures).Where(child => child.Parent.Equals(parent)).ToArray();
+        }
+
+        public static IEnumerable<CultureInfo> GetDescendents(this CultureInfo cultureInfo)
+        {
+            Contract.Requires(cultureInfo != null);
+            Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
+
+            foreach (var child in cultureInfo.GetChildren())
+            {
+                yield return child;
+
+                foreach (var d in child.GetDescendents())
+                {
+                    yield return d;
+                }
+            }
         }
     }
 
