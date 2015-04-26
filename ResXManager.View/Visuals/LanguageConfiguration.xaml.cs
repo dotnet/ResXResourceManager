@@ -11,6 +11,7 @@
     using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Core;
+    using TomsToolbox.Desktop;
 
     /// <summary>
     /// Interaction logic for FlagConfiguration.xaml

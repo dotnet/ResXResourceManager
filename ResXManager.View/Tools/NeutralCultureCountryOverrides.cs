@@ -10,6 +10,7 @@
     using tomenglertde.ResXManager.View.Properties;
 
     using TomsToolbox.Core;
+    using TomsToolbox.Desktop;
 
     public class NeutralCultureCountryOverrides
     {
@@ -74,7 +75,7 @@
             Contract.Requires(neutralCulture != null);
 
             var cultureName = neutralCulture.Name;
-            var specificCultures = neutralCulture.GetDescendents().ToArray();
+            var specificCultures = neutralCulture.GetDescendants().ToArray();
 
             var preferredSpecificCultureName = cultureName + @"-" + cultureName.ToUpperInvariant();
 

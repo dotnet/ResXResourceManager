@@ -334,7 +334,7 @@
             if (!resourceLanguages.Any())
                 return false;
 
-            if (resourceManager.Configuration.ConfirmAddLanguage)
+            if (resourceManager.Configuration.ConfirmAddLanguageFile)
             {
                 var message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasNoResourceFile, culture.DisplayName);
 

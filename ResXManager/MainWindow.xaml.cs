@@ -184,7 +184,7 @@
                     // because entity.Languages.Any() => languages can only be empty if language != null!
                     Contract.Assume(culture != null);
 
-                    if (resourceManager.Configuration.ConfirmAddLanguage)
+                    if (resourceManager.Configuration.ConfirmAddLanguageFile)
                     {
                         message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.ProjectHasNoResourceFile, culture.DisplayName);
 

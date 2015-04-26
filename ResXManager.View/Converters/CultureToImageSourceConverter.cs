@@ -10,6 +10,8 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Tools;
 
+    using TomsToolbox.Desktop;
+
     public class CultureToImageSourceConverter : IValueConverter
     {
         public static readonly IValueConverter Default = new CultureToImageSourceConverter();
@@ -68,7 +70,7 @@
 
             if (Array.BinarySearch(_existingFlags, key, StringComparer.OrdinalIgnoreCase) < 0)
             {
-                return culture.GetDescendents().Select(Convert).FirstOrDefault(item => item != null);
+                return culture.GetDescendants().Select(Convert).FirstOrDefault(item => item != null);
             }
 
             var resourcePath = string.Format(CultureInfo.InvariantCulture, @"/ResXManager.View;component/Flags/{0}.gif", key);

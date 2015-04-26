@@ -117,6 +117,7 @@
           <StackPanel Orientation="Horizontal">
             <Decorator Width="22"/>
             <TextBlock Text="{x:Static properties:Resources.SortBy}" Style="{StaticResource LabelStyle}"/>
+            <Decorator Width="8"></Decorator>
             <ComboBox ItemsSource="{Binding Source={x:Type system:StringComparison}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
                       SelectedItem="{Binding Configuration.ResXSortingComparison}" Width="175" />
           </StackPanel>
@@ -133,7 +134,7 @@
       <StackPanel Margin="10" KeyboardNavigation.TabNavigation="Local">
         <CheckBox IsChecked="{Binding Configuration.AutoCreateNewLanguageFiles}" Content="{x:Static properties:Resources.AutoCreateNewLanguageFiles}" Style="{StaticResource LabelStyle}"/>
         <Decorator Height="5" />
-        <CheckBox IsChecked="{Binding Configuration.ConfirmAddLanguage}" Content="{x:Static properties:Resources.ConfirmAddLanguage}" Style="{StaticResource LabelStyle}"/>
+        <CheckBox IsChecked="{Binding Configuration.ConfirmAddLanguageFile}" Content="{x:Static properties:Resources.ConfirmAddLanguage}" Style="{StaticResource LabelStyle}"/>
       </StackPanel>
     </HeaderedContentControl>
 

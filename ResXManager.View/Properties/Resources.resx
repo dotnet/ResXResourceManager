@@ -333,7 +333,7 @@
     <value>File creation</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by: </value>
+    <value>Sort by:</value>
   </data>
   <data name="TranslatorsAnnotation" xml:space="preserve">
     <value>ResXResourceManager is not responsible for the results of the translations. 

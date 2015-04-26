@@ -67,15 +67,15 @@
             }
         }
 
-        public bool ConfirmAddLanguage
+        public bool ConfirmAddLanguageFile
         {
             get
             {
-                return GetValue(() => ConfirmAddLanguage, true);
+                return GetValue(() => ConfirmAddLanguageFile, true);
             }
             set
             {
-                SetValue(value, () => ConfirmAddLanguage);
+                SetValue(value, () => ConfirmAddLanguageFile);
             }
         }
 

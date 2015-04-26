@@ -644,7 +644,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sort by: .
+        ///   Looks up a localized string similar to Sort by:.
         /// </summary>
         public static string SortBy {
             get {

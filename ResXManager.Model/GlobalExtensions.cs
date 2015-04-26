@@ -111,71 +111,10 @@
 
             return new DependencyPropertyEventWrapper<T>(dependencyObject, property);
         }
-
-        public static IEnumerable<CultureInfo> GetAncestors(this CultureInfo cultureInfo)
-        {
-            Contract.Requires(cultureInfo != null);
-            Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
-
-            var item = cultureInfo.Parent;
-
-            while (!string.IsNullOrEmpty(item.Name))
-            {
-                yield return item;
-                item = item.Parent;
-            }
-        }
-        public static IEnumerable<CultureInfo> GetAncestorsOfSelf(this CultureInfo cultureInfo)
-        {
-            Contract.Requires(cultureInfo != null);
-            Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
-
-            var item = cultureInfo;
-
-            while (!string.IsNullOrEmpty(item.Name))
-            {
-                yield return item;
-                item = item.Parent;
-            }
-        }
-
-        private static readonly Dictionary<CultureInfo, CultureInfo[]> _childCache = new Dictionary<CultureInfo, CultureInfo[]>();
-
-        public static ICollection<CultureInfo> GetChildren(this CultureInfo cultureInfo)
-        {
-            Contract.Requires(cultureInfo != null);
-            Contract.Ensures(Contract.Result<ICollection<CultureInfo>>() != null);
-
-            var children = _childCache.ForceValue(cultureInfo, CreateChildList);
-            Contract.Assume(children != null); // because CreateChildList always returns != null
-            return children;
-        }
-
-        private static CultureInfo[] CreateChildList(CultureInfo parent)
-        {
-            Contract.Ensures(Contract.Result<CultureInfo[]>() != null);
-
-            return CultureInfo.GetCultures(CultureTypes.AllCultures).Where(child => child.Parent.Equals(parent)).ToArray();
-        }
-
-        public static IEnumerable<CultureInfo> GetDescendents(this CultureInfo cultureInfo)
-        {
-            Contract.Requires(cultureInfo != null);
-            Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
-
-            foreach (var child in cultureInfo.GetChildren())
-            {
-                yield return child;
-
-                foreach (var d in child.GetDescendents())
-                {
-                    yield return d;
-                }
-            }
-        }
     }
 
     public class DependencyPropertyEventWrapper<T>
+        where T : DependencyObject
     {
         private readonly T _dependencyObject;
         private readonly DependencyPropertyDescriptor _dependencyPropertyDescriptor;
