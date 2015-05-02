@@ -4,14 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="700"
              xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              xmlns:windows="clr-namespace:System.Windows;assembly=PresentationFramework"
+             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:model="urn:ResXManager.Model"
+             xmlns:toms="urn:TomsToolbox"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:columnHeaders="clr-namespace:tomenglertde.ResXManager.View.ColumnHeaders"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:tomenglertde.ResXManager.View.Behaviors"
-             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-             xmlns:wpf="clr-namespace:TomsToolbox.Wpf;assembly=TomsToolbox.Wpf"
              xmlns:tools="clr-namespace:tomenglertde.ResXManager.View.Tools"
              x:Name="LayoutRoot"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
@@ -102,7 +102,7 @@
       <ListBox x:Name="ListBox"
                ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
                Margin="5" BorderThickness="0" SelectionMode="Extended"
-               wpf:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}">
+               toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}">
         <ListBox.ContextMenu>
           <ContextMenu>
             <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
@@ -316,7 +316,7 @@
                 </ListBox.ItemTemplate>
                 <ListBox.ItemContainerStyle>
                   <Style TargetType="ListBoxItem">
-                    <Setter Property="IsSelected" Value="{Binding Path=Visibility, Converter={x:Static converters:VisibilityToBooleanConverter.Default}}" />
+                    <Setter Property="IsSelected" Value="{Binding Path=Visibility, Converter={x:Static toms:VisibilityToBooleanConverter.Default}}" />
                     <Setter Property="Template">
                       <Setter.Value>
                         <ControlTemplate TargetType="ListBoxItem">
@@ -341,7 +341,7 @@
                   dgx:DataGridFilter.IsAutoFilterEnabled="True" AutoGenerateColumns="False"
                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
                   SelectedItem="{Binding SelectedEntry, Mode=TwoWay}"
-                  wpf:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
+                  toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
           <DataGrid.Resources>
 
             <ContextMenu x:Key="RowContextMenu">
@@ -468,6 +468,7 @@
 
                 <DataTrigger Binding="{Binding Path=(tools:ColumnManager.ResourceFileExists), RelativeSource={RelativeSource Mode=Self}}" Value="False">
                   <Setter Property="Background" Value="{StaticResource HatchBrush}"/>
+                  <Setter Property="ToolTip" Value="{x:Static properties:Resources.NoResourceFileForResource}"/>
                 </DataTrigger>
 
                 <MultiDataTrigger>
@@ -493,7 +494,7 @@
               <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=IsChecked, ElementName=GroupedViewButton}" Value="True">
                   <Setter Property="ItemsSource" Value="{Binding Source={StaticResource GroupedResourceTableEntriesSource}}" />
-                  <Setter Property="dgx:GroupStyleBinding.GroupStyle" Value="{StaticResource GroupStyle}" />
+                  <Setter Property="toms:StyleBindings.GroupStyle" Value="{StaticResource GroupStyle}" />
                 </DataTrigger>
               </Style.Triggers>
             </Style>

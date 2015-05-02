@@ -132,7 +132,7 @@
             };
 
             column.SetIsFilterVisible(false);
-            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, new Binding(@"IsFindCodeReferencesEnabled") { Source = Settings.Default, Converter = Converters.BooleanToVisibilityConverter.Default });
+            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, new Binding(@"IsFindCodeReferencesEnabled") { Source = Settings.Default, Converter = TomsToolbox.Wpf.Converters.BooleanToVisibilityConverter.Default });
 
             return column;
         }

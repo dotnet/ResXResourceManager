@@ -1,3 +1,8 @@
+1.0.0.54:
+* Highlight entries where the RESX file is missing at all with a hatch brush.
+* WI1360: Add all missing RESX files. (Configurable)
+* WI4578: Mark auto-translated texts. Configurable prefix can be added.
+* WI4582: Translation not working from zh-CHT to zh-CHS.
 1.0.0.53:
 * WI1171: Automatic translations. (fix some minor issues)
 * WI1434: Sort order when sorting RESX files by key is configurable.

@@ -335,11 +335,10 @@
   <data name="SortBy" xml:space="preserve">
     <value>Sort by:</value>
   </data>
-  <data name="TranslatorsAnnotation" xml:space="preserve">
-    <value>ResXResourceManager is not responsible for the results of the translations. 
-For any questions about the quality of the translations or the capabilities of the individual services please refer to the translation service web sites.</value>
-  </data>
   <data name="TranslationsPrefixHeader" xml:space="preserve">
     <value>Prefix translations with </value>
+  </data>
+  <data name="NoResourceFileForResource" xml:space="preserve">
+    <value>There is no resource file for this resource.</value>
   </data>
 </root>

@@ -327,8 +327,7 @@
   <data name="TranslationsPrefixHeader" xml:space="preserve">
     <value>Präfix vor übersetztem Text: </value>
   </data>
-  <data name="TranslatorsAnnotation" xml:space="preserve">
-    <value>ResXResourceManager ist nicht verantwortlich für die Ergebnisse der Übersetzungen. 
-Bei Fragen zur Qualität der Übersetzungen oder zum Funktionsumfang der einzelnen Dienste besuchen sie bitte die Webseiten der Übersetzungsdienste.</value>
+  <data name="NoResourceFileForResource" xml:space="preserve">
+    <value>Es gibt keine Ressourcendatei für diese Ressource.</value>
   </data>
 </root>

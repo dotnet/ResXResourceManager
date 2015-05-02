@@ -7,7 +7,7 @@
     using System.Text;
 
     /// <summary>
-    /// Enumerator for strings, providing access to current and next char, and some usefull iterator extensions.
+    /// Enumerator for strings, providing access to current and next char, and some useful iterator extensions.
     /// </summary>
     public sealed class TextEnumerator : IDisposable
     {

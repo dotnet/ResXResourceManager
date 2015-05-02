@@ -6,6 +6,7 @@
     using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf;
 
     public abstract class LanguageColumnHeaderBase : ObservableObject, ILanguageColumnHeader
     {

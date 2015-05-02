@@ -3,8 +3,7 @@
     using System;
     using System.Windows;
 
-    using tomenglertde.ResXManager.View.Tools;
-
+    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
     /// <summary>

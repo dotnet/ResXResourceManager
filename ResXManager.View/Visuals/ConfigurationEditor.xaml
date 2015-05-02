@@ -67,7 +67,7 @@
 
   <StackPanel Margin="10" HorizontalAlignment="Left">
 
-    <HeaderedContentControl Header="{x:Static properties:Resources.ConfigurationScopeHeader}" Style="{StaticResource GroupStyle}" Visibility="{Binding Configuration.IsScopeSupported, Converter={x:Static converters:BooleanToVisibilityConverter.Default}}">
+    <HeaderedContentControl Header="{x:Static properties:Resources.ConfigurationScopeHeader}" Style="{StaticResource GroupStyle}" Visibility="{Binding Configuration.IsScopeSupported, Converter={x:Static toms:BooleanToVisibilityConverter.Default}}">
       <Control Focusable="False">
         <Control.Template>
           <ControlTemplate>

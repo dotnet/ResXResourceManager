@@ -57,9 +57,6 @@
       <DockPanel>
         <visuals:TranslatorConfiguration DockPanel.Dock="Top" IsEnabled="{Binding Translations.Session.IsComplete}" />
         <Decorator Height="10" DockPanel.Dock="Top" />
-        <TextBlock Text="{x:Static properties:Resources.TranslatorsAnnotation}"
-                   DockPanel.Dock="Top" Background="Transparent" TextWrapping="Wrap" FontWeight="Bold" Foreground="#C02020" />
-        <Decorator Height="10" DockPanel.Dock="Top" />
         <DataGrid ItemsSource="{Binding Translations.Items}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
                   IsEnabled="{Binding Translations.Session.IsComplete}" wpf:MultiSelectorExtensions.SelectionBinding="{Binding Translations.SelectedItems}">

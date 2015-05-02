@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="700"
         xmlns:model="clr-namespace:tomenglertde.ResXManager.Model;assembly=ResXManager.Model"
         xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals;assembly=ResXManager.View"
-        Title="ResX Resource Manager" Height="750" Width="1024" Icon="/ResXManager;component/ResourceManager.ico"
+        Title="ResX Resource Manager" Height="1024" Width="1200" Icon="/ResXManager;component/ResourceManager.ico"
         d:DataContext="{d:DesignInstance model:ResourceManager}">
   <DockPanel>
     <Menu  DockPanel.Dock="Top">

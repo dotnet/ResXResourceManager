@@ -527,6 +527,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is no resource file for this resource..
+        /// </summary>
+        public static string NoResourceFileForResource {
+            get {
+                return ResourceManager.GetString("NoResourceFileForResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No selection..
         /// </summary>
         public static string NoSelection {
@@ -730,16 +739,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string TranslatorConfiguration_SaveCredentials {
             get {
                 return ResourceManager.GetString("TranslatorConfiguration_SaveCredentials", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ResXResourceManager is not responsible for the results of the translations. 
-        ///For any questions about the quality of the translations or the capabilities of the individual services please refer to the translation service web sites..
-        /// </summary>
-        public static string TranslatorsAnnotation {
-            get {
-                return ResourceManager.GetString("TranslatorsAnnotation", resourceCulture);
             }
         }
     }

@@ -140,9 +140,9 @@
     <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DataGridExtensions, Version=1.0.22.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
+    <Reference Include="DataGridExtensions, Version=1.0.24.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DataGridExtensions.1.0.22.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
+      <HintPath>..\packages\DataGridExtensions.1.0.24.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -166,21 +166,21 @@
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
-    <Reference Include="TomsToolbox.Core, Version=1.0.6.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.Core, Version=1.0.7.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.Core.1.0.6.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Core.1.0.7.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.Desktop, Version=1.0.6.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.Desktop, Version=1.0.7.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.6.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.7.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.6.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.7.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.6.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.7.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.Wpf, Version=1.0.6.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+    <Reference Include="TomsToolbox.Wpf, Version=1.0.7.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TomsToolbox.Wpf.1.0.6.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Wpf.1.0.7.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -199,14 +199,11 @@
     <Compile Include="Behaviors\ZoomFontSizeOnMouseWheelBehavior.cs" />
     <Compile Include="ColumnHeaders\LanguageColumnHeaderBase.cs" />
     <Compile Include="Converters\AddNewKeyCommandConverter.cs" />
-    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\ConfirmedCommandEventArgs.cs" />
     <Compile Include="Converters\CultureToXmlLanguageConverter.cs" />
     <Compile Include="Tools\ColumnManager.cs" />
     <Compile Include="Tools\CultureOverrideEventArgs.cs" />
     <Compile Include="Tools\NeutralCultureCountryOverrides.cs" />
-    <Compile Include="Tools\PropertyBinding.cs" />
-    <Compile Include="Tools\PropertyBindingValueChangedEventArgs.cs" />
     <Compile Include="Visuals\CodeReferencesToolTip.xaml.cs">
       <DependentUpon>CodeReferencesToolTip.xaml</DependentUpon>
     </Compile>
@@ -248,9 +245,6 @@
       <DependentUpon>ResourceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.cs" />
-    <Compile Include="Tools\TextEventArgs.cs" />
-    <Compile Include="Converters\VisibilityToBooleanConverter.cs" />
-    <Compile Include="Tools\WaitCursor.cs" />
     <Compile Include="Visuals\Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
