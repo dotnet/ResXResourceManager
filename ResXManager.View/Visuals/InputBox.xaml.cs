@@ -50,13 +50,15 @@
         /// Identifies the Text dependency property
         /// </summary>
         public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(InputBox), new UIPropertyMetadata(null, (sender, e) => ((InputBox)sender).Text_Changed((string)e.NewValue)));
+            DependencyProperty.Register("Text", typeof(string), typeof(InputBox), new FrameworkPropertyMetadata(null, (sender, e) => ((InputBox)sender).Text_Changed((string)e.NewValue)));
 
         private void Text_Changed(string newValue)
         {
-            if (TextChanged != null)
+            var eventHandler = TextChanged;
+
+            if (eventHandler != null)
             {
-                TextChanged(this, new TextEventArgs(newValue));
+                eventHandler(this, new TextEventArgs(newValue ?? string.Empty));
             }
         }
 

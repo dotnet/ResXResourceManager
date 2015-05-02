@@ -199,7 +199,6 @@
     <Compile Include="Behaviors\ZoomFontSizeOnMouseWheelBehavior.cs" />
     <Compile Include="ColumnHeaders\LanguageColumnHeaderBase.cs" />
     <Compile Include="Converters\AddNewKeyCommandConverter.cs" />
-    <Compile Include="Converters\ConfirmedCommandEventArgs.cs" />
     <Compile Include="Converters\CultureToXmlLanguageConverter.cs" />
     <Compile Include="Tools\ColumnManager.cs" />
     <Compile Include="Tools\CultureOverrideEventArgs.cs" />
@@ -208,7 +207,6 @@
       <DependentUpon>CodeReferencesToolTip.xaml</DependentUpon>
     </Compile>
     <Compile Include="ColumnHeaders\CommentHeader.cs" />
-    <Compile Include="Converters\ConfirmedCommandConverter.cs" />
     <Compile Include="Converters\CultureToImageConverter.cs" />
     <Compile Include="Converters\CultureToImageSourceConverter.cs" />
     <Compile Include="Converters\DataGridToSelectionScopeConverter.cs" />

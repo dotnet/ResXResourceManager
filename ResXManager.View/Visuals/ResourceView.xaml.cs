@@ -20,6 +20,7 @@
 
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
+    using TomsToolbox.Wpf.Converters;
 
     /// <summary>
     /// Interaction logic for ResourceView.xaml
@@ -152,6 +153,22 @@
                 e.Parameter = dlg.FileName;
 
             WaitCursor.Start(this);
+        }
+
+        private void DeleteCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        {
+            if (MessageBox.Show(Properties.Resources.ConfirmDeleteItems, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void CutCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        {
+            if (MessageBox.Show(Properties.Resources.ConfirmCutItems, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                e.Cancel = true;
+            }
         }
 
         private void CommandConverter_Error(object sender, ErrorEventArgs e)

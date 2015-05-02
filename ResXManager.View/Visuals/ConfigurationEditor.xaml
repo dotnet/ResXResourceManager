@@ -14,7 +14,7 @@
              Background="LightGray" Width="800">
   <UserControl.Resources>
 
-    <converters:ConfirmedCommandConverter x:Key="SortNodesByKeyCommandConverter" Query="{x:Static properties:Resources.SortNodesByKey_Confirmation}" Error="CommandConverter_Error"/>
+    <toms:ConfirmedCommandConverter x:Key="SortNodesByKeyCommandConverter" Executing="SortNodesByKeyCommandConverter_Executing" Error="CommandConverter_Error"/>
 
     <Style x:Key="LabelStyle">
       <Setter Property="TextElement.Foreground" Value="DarkSlateGray" />

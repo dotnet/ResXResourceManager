@@ -18,10 +18,10 @@
              d:DataContext="{d:DesignInstance model:ResourceManager}">
   <UserControl.Resources>
 
-    <converters:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Query="{x:Static properties:Resources.ConfirmDeleteItems}" />
-    <converters:ConfirmedCommandConverter x:Key="CutCommandConverter" Query="{x:Static properties:Resources.ConfirmCutItems}" />
-    <converters:ConfirmedCommandConverter x:Key="ImportExcelCommandConverter" Executing="ImportExcelCommandConverter_Executing" Error="CommandConverter_Error" />
-    <converters:ConfirmedCommandConverter x:Key="ErrorHandlerCommandConverter" Error="CommandConverter_Error" />
+    <toms:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Executing="DeleteCommandConverter_Executing" />
+    <toms:ConfirmedCommandConverter x:Key="CutCommandConverter" Executing="CutCommandConverter_Executing" />
+    <toms:ConfirmedCommandConverter x:Key="ImportExcelCommandConverter" Executing="ImportExcelCommandConverter_Executing" Error="CommandConverter_Error" />
+    <toms:ConfirmedCommandConverter x:Key="ErrorHandlerCommandConverter" Error="CommandConverter_Error" />
 
     <Style TargetType="{x:Type Control}" x:Key="SingleSelectElementStyle">
       <Setter Property="IsEnabled" Value="False" />
@@ -44,9 +44,9 @@
 
     <CollectionViewSource x:Key="ResourceEntitiesSource" Source="{Binding FilteredResourceEntities}">
       <CollectionViewSource.SortDescriptions>
-        <componentModel:SortDescription PropertyName="ProjectName"/>
-        <componentModel:SortDescription PropertyName="RelativePath"/>
-        <componentModel:SortDescription PropertyName="BaseName"/>
+        <componentModel:SortDescription PropertyName="ProjectName" />
+        <componentModel:SortDescription PropertyName="RelativePath" />
+        <componentModel:SortDescription PropertyName="BaseName" />
       </CollectionViewSource.SortDescriptions>
       <CollectionViewSource.GroupDescriptions>
         <PropertyGroupDescription PropertyName="ProjectName" />
@@ -59,11 +59,11 @@
       </CollectionViewSource.GroupDescriptions>
     </CollectionViewSource>
 
-    <LinearGradientBrush x:Key="HatchBrush"  StartPoint="0,0" EndPoint="4,4" SpreadMethod="Repeat" MappingMode="Absolute">
-      <GradientStop Offset="0" Color="LightCoral"/>
-      <GradientStop Offset="0.75" Color="LightCoral"/>
-      <GradientStop Offset="0.75" Color="Gray"/>
-      <GradientStop Offset="1" Color="Gray"/>
+    <LinearGradientBrush x:Key="HatchBrush" StartPoint="0,0" EndPoint="4,4" SpreadMethod="Repeat" MappingMode="Absolute">
+      <GradientStop Offset="0" Color="LightCoral" />
+      <GradientStop Offset="0.75" Color="LightCoral" />
+      <GradientStop Offset="0.75" Color="Gray" />
+      <GradientStop Offset="1" Color="Gray" />
     </LinearGradientBrush>
 
   </UserControl.Resources>
@@ -115,7 +115,7 @@
         <ListBox.ItemTemplate>
           <DataTemplate DataType="model:ResourceEntity">
             <DockPanel ToolTip="{Binding Path=Directory, Mode=OneWay}" Margin="5,2" HorizontalAlignment="Stretch">
-              <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Focusable="False"/>
+              <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Focusable="False" />
               <Decorator DockPanel.Dock="Left" Width="5" />
               <TextBlock Background="Transparent" VerticalAlignment="Center">
                 <Run Text="{Binding Path=RelativePath, Mode=OneWay}" /><Run Text="{Binding Path=BaseName, Mode=OneWay}" />
@@ -154,7 +154,7 @@
       <Border DockPanel.Dock="Bottom" BorderThickness="0,0.7,0,0" BorderBrush="{x:Static SystemColors.ControlDarkBrush}">
         <DockPanel DockPanel.Dock="Bottom" Background="{Binding Background, ElementName=DataGrid}">
           <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" ToolTip="{x:Static properties:Resources.SelectedTotalToolTip}">
-            <Run Text="{Binding SelectedTableEntries.Count, Mode=OneWay}"/><Run Text="/"/><Run Text="{Binding ResourceTableEntries.Count, Mode=OneWay}"/><Run Text="  "/>
+            <Run Text="{Binding SelectedTableEntries.Count, Mode=OneWay}" /><Run Text="/" /><Run Text="{Binding ResourceTableEntries.Count, Mode=OneWay}" /><Run Text="  " />
           </TextBlock>
           <Control Focusable="False">
             <Control.Resources>
@@ -166,7 +166,7 @@
               </DataTemplate>
               <DataTemplate DataType="{x:Type model:ResourceTableEntry}">
                 <TextBlock>
-                  <Run Text="{Binding Path=Key, Mode=OneWay}" Foreground="Black"/>:
+                  <Run Text="{Binding Path=Key, Mode=OneWay}" Foreground="Black" />:
                   <Run Text="{Binding Path=Owner.BaseName, Mode=OneWay}" FontWeight="Bold" />
                   (<Run Text="{Binding Path=Owner.Directory, Mode=OneWay}" />)
                 </TextBlock>
@@ -175,26 +175,26 @@
             <Control.Template>
               <ControlTemplate>
                 <ContentControl x:Name="footerContent" Foreground="Gray" Margin="5" Focusable="False">
-                  <TextBlock Text="{x:Static properties:Resources.MultipleSelection}"/>
+                  <TextBlock Text="{x:Static properties:Resources.MultipleSelection}" />
                 </ContentControl>
                 <ControlTemplate.Triggers>
                   <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
-                      <Condition Binding="{Binding SelectedItems.Count, ElementName=DataGrid}" Value="0"/>
-                      <Condition Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="0"/>
+                      <Condition Binding="{Binding SelectedItems.Count, ElementName=DataGrid}" Value="0" />
+                      <Condition Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="0" />
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Content" TargetName="footerContent" Value="{x:Static properties:Resources.NoSelection}"/>
+                    <Setter Property="Content" TargetName="footerContent" Value="{x:Static properties:Resources.NoSelection}" />
                   </MultiDataTrigger>
                   <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="1">
-                    <Setter Property="Content" TargetName="footerContent" Value="{Binding SelectedItem, ElementName=ListBox}"/>
+                    <Setter Property="Content" TargetName="footerContent" Value="{Binding SelectedItem, ElementName=ListBox}" />
                   </DataTrigger>
                   <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=DataGrid}" Value="1">
-                    <Setter Property="Content" TargetName="footerContent" Value="{Binding SelectedItem, ElementName=DataGrid}"/>
+                    <Setter Property="Content" TargetName="footerContent" Value="{Binding SelectedItem, ElementName=DataGrid}" />
                   </DataTrigger>
                 </ControlTemplate.Triggers>
               </ControlTemplate>
             </Control.Template>
-          </Control >
+          </Control>
         </DockPanel>
       </Border>
       <Grid>
@@ -395,7 +395,7 @@
               <DockPanel>
                 <Grid DockPanel.Dock="Left" Background="Transparent"
                       Style="{StaticResource NeutralLanguageImageContainerStyle}">
-                  <Image x:Name="image" Stretch="None" 
+                  <Image x:Name="image" Stretch="None"
                          Source="{Binding Path=EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
                 </Grid>
                 <Decorator x:Name="padding" DockPanel.Dock="Left" Width="4" />
@@ -467,8 +467,8 @@
                 </MultiDataTrigger>
 
                 <DataTrigger Binding="{Binding Path=(tools:ColumnManager.ResourceFileExists), RelativeSource={RelativeSource Mode=Self}}" Value="False">
-                  <Setter Property="Background" Value="{StaticResource HatchBrush}"/>
-                  <Setter Property="ToolTip" Value="{x:Static properties:Resources.NoResourceFileForResource}"/>
+                  <Setter Property="Background" Value="{StaticResource HatchBrush}" />
+                  <Setter Property="ToolTip" Value="{x:Static properties:Resources.NoResourceFileForResource}" />
                 </DataTrigger>
 
                 <MultiDataTrigger>
@@ -503,7 +503,7 @@
           <i:Interaction.Behaviors>
             <dgx:BeginEditOnCtrlEnterBehavior />
             <dgx:DisableTargetWhileEditingBehavior Target="{Binding ElementName=ToolBar}" />
-            <dgx:ExtendedStarSizeBehavior/>
+            <dgx:ExtendedStarSizeBehavior />
             <behaviors:ShowErrorsOnlyBehavior ToggleButton="{Binding ElementName=ErrorsOnlyFilterButton}" />
             <behaviors:DataGridTryBeginEditBehavior />
           </i:Interaction.Behaviors>
