@@ -14,7 +14,6 @@
              xmlns:behaviors="clr-namespace:tomenglertde.ResXManager.View.Behaviors"
              xmlns:tools="clr-namespace:tomenglertde.ResXManager.View.Tools"
              x:Name="LayoutRoot"
-             UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
              d:DataContext="{d:DesignInstance model:ResourceManager}">
   <UserControl.Resources>
 

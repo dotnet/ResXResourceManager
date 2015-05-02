@@ -5,6 +5,7 @@
         xmlns:model="clr-namespace:tomenglertde.ResXManager.Model;assembly=ResXManager.Model"
         xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals;assembly=ResXManager.View"
         Title="ResX Resource Manager" Height="1024" Width="1200" Icon="/ResXManager;component/ResourceManager.ico"
+        UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
         d:DataContext="{d:DesignInstance model:ResourceManager}">
   <DockPanel>
     <Menu  DockPanel.Dock="Top">
