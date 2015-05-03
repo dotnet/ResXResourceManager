@@ -1,3 +1,5 @@
+1.0.0.55:
+* WI4584: V 1.0.0.54 does not start in VS, only an exception is shown
 1.0.0.54:
 * WI1360: Highlight entries where the RESX file is missing at all with a hatch brush.
 * WI1360: Add all missing RESX files. (Configurable)
