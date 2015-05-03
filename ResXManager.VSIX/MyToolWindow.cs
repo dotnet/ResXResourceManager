@@ -21,6 +21,7 @@
     using Microsoft.VisualStudio.Shell.Interop;
 
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.Translators;
     using tomenglertde.ResXManager.View.Visuals;
 
     using TomsToolbox.Core;
@@ -62,6 +63,10 @@
             // Each image in the strip being 16x16.
             BitmapResourceID = 301;
             BitmapIndex = 1;
+
+            var translators = TranslatorHost.Translators;
+            if (translators == null) // this never happens, just needed to reference some code to fix WI#4584
+                return;
 
             _trace = new OutputWindowTracer(this);
 
