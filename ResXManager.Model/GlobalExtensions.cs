@@ -1,10 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -28,7 +25,7 @@
         public static string GetGroupValue(this Match match, string groupName)
         {
             Contract.Requires(match != null);
-            Contract.Requires(!String.IsNullOrEmpty(groupName));
+            Contract.Requires(!string.IsNullOrEmpty(groupName));
             Contract.Ensures(Contract.Result<string>() != null);
 
             var group = match.Groups[groupName];
@@ -96,59 +93,10 @@
         public static string TryGetAttribute(this XElement element, string name)
         {
             Contract.Requires(element != null);
-            Contract.Requires(!String.IsNullOrEmpty(name));
+            Contract.Requires(!string.IsNullOrEmpty(name));
             Contract.Ensures(Contract.Result<string>() != null);
 
             return element.Attribute(name).Maybe().Return(x => x.Value, string.Empty);
-        }
-
-        public static DependencyPropertyEventWrapper<T> Track<T>(this T dependencyObject, DependencyProperty property)
-            where T : DependencyObject
-        {
-            Contract.Requires(dependencyObject != null);
-            Contract.Requires(property != null);
-            Contract.Ensures(Contract.Result<DependencyPropertyEventWrapper<T>>() != null);
-
-            return new DependencyPropertyEventWrapper<T>(dependencyObject, property);
-        }
-    }
-
-    public class DependencyPropertyEventWrapper<T>
-        where T : DependencyObject
-    {
-        private readonly T _dependencyObject;
-        private readonly DependencyPropertyDescriptor _dependencyPropertyDescriptor;
-
-        public DependencyPropertyEventWrapper(T dependencyObject, DependencyProperty property)
-        {
-            Contract.Requires(dependencyObject != null);
-            Contract.Requires(property != null);
-
-            _dependencyObject = dependencyObject;
-            _dependencyPropertyDescriptor = DependencyPropertyDescriptor.FromProperty(property, typeof(T));
-            Contract.Assume(_dependencyPropertyDescriptor != null);
-        }
-
-        public event EventHandler Changed
-        {
-            add
-            {
-                Contract.Requires(value != null);
-                _dependencyPropertyDescriptor.AddValueChanged(_dependencyObject, value);
-            }
-            remove
-            {
-                Contract.Requires(value != null);
-                _dependencyPropertyDescriptor.RemoveValueChanged(_dependencyObject, value);
-            }
-        }
-
-        [ContractInvariantMethod]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_dependencyObject != null);
-            Contract.Invariant(_dependencyPropertyDescriptor != null);
         }
     }
 }
