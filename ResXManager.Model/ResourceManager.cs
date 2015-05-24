@@ -744,7 +744,7 @@
             {
                 try
                 {
-                    var regex = new Regex(value, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    var regex = new Regex(value.Trim(), RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     _filteredResourceEntities.CollectionView.Filter = item => regex.Match(item.ToString()).Success;
                     return;
                 }
