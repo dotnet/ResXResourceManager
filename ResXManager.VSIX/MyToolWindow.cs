@@ -25,6 +25,7 @@
     using tomenglertde.ResXManager.View.Visuals;
 
     using TomsToolbox.Core;
+    using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
 
     using VSLangProj;

@@ -35,7 +35,7 @@
         public static string ToTextTable(this ICollection<ResourceTableEntry> entries)
         {
             Contract.Requires(entries != null);
-            Contract.Ensures(!String.IsNullOrEmpty(Contract.Result<string>()));
+            Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
 
             var languages = entries.SelectMany(e => e.Owner.Languages).Distinct().ToArray();
 

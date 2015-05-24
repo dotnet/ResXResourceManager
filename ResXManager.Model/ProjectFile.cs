@@ -141,7 +141,7 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(!String.IsNullOrEmpty(_filePath));
+            Contract.Invariant(!string.IsNullOrEmpty(_filePath));
             Contract.Invariant(_extension != null);
             Contract.Invariant(RelativeFilePath != null);
         }

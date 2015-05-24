@@ -34,7 +34,7 @@
         internal ResourceTableEntry(ResourceEntity owner, string key, IDictionary<CultureKey, ResourceLanguage> languages)
         {
             Contract.Requires(owner != null);
-            Contract.Requires(!String.IsNullOrEmpty(key));
+            Contract.Requires(!string.IsNullOrEmpty(key));
             Contract.Requires(languages != null);
             Contract.Requires(languages.Any());
 
@@ -88,7 +88,7 @@
             }
             set
             {
-                Contract.Requires(!String.IsNullOrEmpty(value));
+                Contract.Requires(!string.IsNullOrEmpty(value));
 
                 if (_key == value)
                     return;
@@ -274,7 +274,7 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(!String.IsNullOrEmpty(_key));
+            Contract.Invariant(!string.IsNullOrEmpty(_key));
             Contract.Invariant(_values != null);
             Contract.Invariant(_comments != null);
             Contract.Invariant(_fileExists != null);

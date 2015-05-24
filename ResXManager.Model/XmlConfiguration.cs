@@ -185,7 +185,7 @@
         /// <param name="fileName">Name of the file.</param>
         public void Save(string fileName)
         {
-            Contract.Requires(!String.IsNullOrEmpty(fileName));
+            Contract.Requires(!string.IsNullOrEmpty(fileName));
 
             using (var writer = new StreamWriter(fileName))
             {
