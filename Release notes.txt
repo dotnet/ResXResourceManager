@@ -1,3 +1,5 @@
+1.0.0.56:
+* WI4592: Word wrap for the top-right edit box.
 1.0.0.55:
 * WI4584: V 1.0.0.54 does not start in VS, only an exception is shown
 1.0.0.54:
