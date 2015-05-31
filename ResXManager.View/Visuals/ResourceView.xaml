@@ -71,6 +71,7 @@
     <KeyBinding Key="N" Modifiers="Control" Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}" />
     <KeyBinding Key="Insert" Modifiers="Shift" Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}" />
   </UserControl.InputBindings>
+
   <Grid FocusManager.FocusedElement="{Binding ElementName=DataGrid}">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto" MinWidth="120" />
@@ -328,11 +329,14 @@
               </ListBox>
             </Border>
           </Popup>
-          <TextBox x:Name="TextBox" AcceptsReturn="True" SpellCheck.IsEnabled="True">
-            <i:Interaction.Behaviors>
-              <behaviors:SynchronizeTextBoxWithDataGridCellBehavior DataGrid="{Binding ElementName=DataGrid}" />
-            </i:Interaction.Behaviors>
-          </TextBox>
+          <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=TextBox}" WhiteSpaceOpacity="0.4">
+            <TextBox x:Name="TextBox" AcceptsReturn="True" SpellCheck.IsEnabled="True" TextWrapping="Wrap">
+              <i:Interaction.Behaviors>
+                <toms:ZoomFontSizeOnMouseWheelBehavior />
+                <behaviors:SynchronizeTextBoxWithDataGridCellBehavior DataGrid="{Binding ElementName=DataGrid}" />
+              </i:Interaction.Behaviors>
+            </TextBox>
+          </toms:TextBoxVisibleWhiteSpaceDecorator>
         </DockPanel>
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
         <DataGrid Grid.Row="2" x:Name="DataGrid" FrozenColumnCount="1"
@@ -436,7 +440,7 @@
                 DataContext="{Binding Path=DataContext, ElementName=DataGrid}"
                 TextElement.FontSize="{Binding Path=TextFontSize, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}">
                 <i:Interaction.Behaviors>
-                  <behaviors:ZoomFontSizeOnMouseWheelBehavior />
+                  <toms:ZoomFontSizeOnMouseWheelBehavior />
                 </i:Interaction.Behaviors>
               </VirtualizingStackPanel>
             </ItemsPanelTemplate>
