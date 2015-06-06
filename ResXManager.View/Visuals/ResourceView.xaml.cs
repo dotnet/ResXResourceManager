@@ -13,8 +13,6 @@
     using Microsoft.Win32;
 
     using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Controls;
-    using tomenglertde.ResXManager.View.Converters;
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
