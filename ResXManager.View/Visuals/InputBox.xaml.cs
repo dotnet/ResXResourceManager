@@ -1,14 +1,14 @@
-﻿namespace tomenglertde.ResXManager.View.Controls
+﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Windows;
-    using tomenglertde.ResXManager.View.Tools;
+
+    using TomsToolbox.Core;
+    using TomsToolbox.Desktop;
 
     /// <summary>
     /// Input box shows a prompt to enter a string.
     /// </summary>
-    [ContractVerification(false)] // Too many dependencies on generated code.
     public partial class InputBox
     {
         /// <summary>
@@ -50,13 +50,15 @@
         /// Identifies the Text dependency property
         /// </summary>
         public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(InputBox), new UIPropertyMetadata(null, (sender, e) => ((InputBox)sender).Text_Changed((string)e.NewValue)));
+            DependencyProperty.Register("Text", typeof(string), typeof(InputBox), new FrameworkPropertyMetadata(null, (sender, e) => ((InputBox)sender).Text_Changed((string)e.NewValue)));
 
         private void Text_Changed(string newValue)
         {
-            if (TextChanged != null)
+            var eventHandler = TextChanged;
+
+            if (eventHandler != null)
             {
-                TextChanged(this, new TextEventArgs(newValue));
+                eventHandler(this, new TextEventArgs(newValue ?? string.Empty));
             }
         }
 
@@ -65,7 +67,7 @@
         /// </summary>
         public bool IsInputValid
         {
-            get { return (bool)GetValue(IsInputValidProperty); }
+            get { return this.GetValue<bool>(IsInputValidProperty); }
             set { SetValue(IsInputValidProperty, value); }
         }
         /// <summary>

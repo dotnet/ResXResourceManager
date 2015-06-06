@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -131,7 +131,7 @@
     <value>Neutral</value>
   </data>
   <data name="NewLanguageIdPrompt" xml:space="preserve">
-    <value>Enter the new language id:</value>
+    <value>Select the new language:</value>
   </data>
   <data name="Key" xml:space="preserve">
     <value>Key</value>
@@ -183,9 +183,6 @@
   </data>
   <data name="CopyKeys" xml:space="preserve">
     <value>Copy key(s)</value>
-  </data>
-  <data name="FileExistsPrompt" xml:space="preserve">
-    <value>The file '{0}' already exists. Do you want to overwrite it?</value>
   </data>
   <data name="ErrorAddingNewResourceFile" xml:space="preserve">
     <value>Error adding the new resource file '{0}'.</value>
@@ -270,7 +267,7 @@
     <value>Sort all files now</value>
   </data>
   <data name="SortNodesByKey" xml:space="preserve">
-    <value>When saving a RESX file, sort the XML data nodes by the key.</value>
+    <value>When saving a RESX file, sort the XML data nodes by the key</value>
   </data>
   <data name="EditDefaultConfigurationNotification" xml:space="preserve">
     <value>Your are editing the default configuration. If you want to change settings that apply only to a specific solution, just open the solution.</value>
@@ -298,5 +295,50 @@
   <comment>@Invariant</comment></data>
   <data name="CommentToken" xml:space="preserve">
     <value>Comment Token</value>
+  </data>
+  <data name="ShellTabHeader_Configuration" xml:space="preserve">
+    <value>Configuration</value>
+  </data>
+  <data name="ShellTabHeader_Translate" xml:space="preserve">
+    <value>Translate</value>
+  </data>
+  <data name="Translations_ApplyAll" xml:space="preserve">
+    <value>Apply All</value>
+  </data>
+  <data name="Translations_ApplySelected" xml:space="preserve">
+    <value>Apply Selected</value>
+  </data>
+  <data name="Translations_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Translations_Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="Authentication" xml:space="preserve">
+    <value>Authentication</value>
+  </data>
+  <data name="TranslatorConfiguration_SaveCredentials" xml:space="preserve">
+    <value>Save credentials (Credentials will be stored as clear text in your local profile!)</value>
+  </data>
+  <data name="AutoCreateNewLanguageFiles" xml:space="preserve">
+    <value>Create all resource files when adding a new resource language</value>
+  </data>
+  <data name="ConfirmAddLanguage" xml:space="preserve">
+    <value>Confirm adding new resource files</value>
+  </data>
+  <data name="Configuration_FileCreationHeader" xml:space="preserve">
+    <value>File creation</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort by:</value>
+  </data>
+  <data name="TranslationsPrefixHeader" xml:space="preserve">
+    <value>Prefix translations with </value>
+  </data>
+  <data name="NoResourceFileForResource" xml:space="preserve">
+    <value>There is no resource file for this resource.</value>
   </data>
 </root>

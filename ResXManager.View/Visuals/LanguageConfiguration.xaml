@@ -6,9 +6,10 @@
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
+             xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
              d:DataContext="{d:DesignInstance model:ResourceManager}">
   <UserControl.Resources>
-    
+
     <ControlTemplate x:Key="LanguageControlTemplate">
       <StackPanel Orientation="Horizontal" Margin="0,2" d:DataContext="{d:DesignInstance globalization:CultureInfo}">
         <Decorator Width="2" />
@@ -33,7 +34,7 @@
 
     <CollectionViewSource x:Key="CollectionViewSource" Source="{Binding SpecificCultures}">
       <CollectionViewSource.GroupDescriptions>
-        <PropertyGroupDescription PropertyName="Parent" />
+        <visuals:CultureInfoGroupDescription />
       </CollectionViewSource.GroupDescriptions>
     </CollectionViewSource>
 

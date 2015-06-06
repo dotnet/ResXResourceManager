@@ -133,7 +133,7 @@ namespace tomenglertde.ResXManager.Model
         {
             get
             {
-                Contract.Ensures(!String.IsNullOrEmpty(Contract.Result<string>()));
+                Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
                 return _file.FilePath;
             }
         }
@@ -181,6 +181,8 @@ namespace tomenglertde.ResXManager.Model
 
         internal string GetValue(string key)
         {
+            Contract.Requires(key != null);
+
             Node node;
 
             if (!_nodes.TryGetValue(key, out node) || (node == null))
@@ -249,7 +251,9 @@ namespace tomenglertde.ResXManager.Model
         /// <exception cref="UnauthorizedAccessException"></exception>
         public void Save(bool forceSortFileContent)
         {
-            if (forceSortFileContent || _resourceManager.Configuration.SortFileContentOnSave)
+            var configuration = _resourceManager.Configuration;
+
+            if (forceSortFileContent || configuration.SortFileContentOnSave)
             {
                 var nodes = _documentRoot.Elements(@"data").ToArray();
 
@@ -259,7 +263,10 @@ namespace tomenglertde.ResXManager.Model
                     item.Remove();
                 }
 
-                foreach (var item in nodes.OrderBy(node => node.TryGetAttribute("name").TrimStart('>'), StringComparer.OrdinalIgnoreCase))
+                var stringComparison = configuration.ResXSortingComparison;
+                var comparer = new DelegateComparer<string>((left, right) => string.Compare(left, right, stringComparison));
+
+                foreach (var item in nodes.OrderBy(node => node.TryGetAttribute("name").TrimStart('>'), comparer))
                 {
                     _documentRoot.Add(item);
                 }
@@ -274,6 +281,8 @@ namespace tomenglertde.ResXManager.Model
 
         internal string GetComment(string key)
         {
+            Contract.Requires(key != null);
+
             Node node;
 
             if (!_nodes.TryGetValue(key, out node) || (node == null))
@@ -335,6 +344,8 @@ namespace tomenglertde.ResXManager.Model
 
         private Node CreateNode(string key)
         {
+            Contract.Requires(key != null);
+
             Node node;
             var content = new XElement(@"value");
             content.Add(new XText(string.Empty));
@@ -349,6 +360,7 @@ namespace tomenglertde.ResXManager.Model
 
         internal bool RenameKey(string oldKey, string newKey)
         {
+            Contract.Requires(oldKey != null);
             Contract.Requires(!string.IsNullOrEmpty(newKey));
 
             Node node;
@@ -373,6 +385,8 @@ namespace tomenglertde.ResXManager.Model
 
         internal bool RemoveKey(string key)
         {
+            Contract.Requires(key != null);
+
             if (!OnChanging())
                 return false;
 
@@ -407,6 +421,8 @@ namespace tomenglertde.ResXManager.Model
 
         internal bool KeyExists(string key)
         {
+            Contract.Requires(key != null);
+
             return _nodes.ContainsKey(key);
         }
 

@@ -41,7 +41,7 @@ namespace tomenglertde.ResXManager.Translators
                     return;
                 }
 
-                var token = AdmAuthentication.GetAuthToken(clientId, clientSecret);
+                var token = AdmAuthentication.GetAuthToken(WebProxy, clientId, clientSecret);
 
                 var binding = new BasicHttpBinding();
                 var endpointAddress = new EndpointAddress("http://api.microsofttranslator.com/V2/soap.svc");
@@ -66,7 +66,7 @@ namespace tomenglertde.ResXManager.Translators
                                 if (!sourceStrings.Any())
                                     break;
 
-                                var response = client.GetTranslationsArray("", sourceStrings, session.SourceLanguage.TwoLetterISOLanguageName, session.TargetLanguage.TwoLetterISOLanguageName, 5,
+                                var response = client.GetTranslationsArray("", sourceStrings, session.SourceLanguage.IetfLanguageTag, session.TargetLanguage.IetfLanguageTag, 5,
                                     new TranslateOptions()
                                     {
                                         ContentType = "text/plain",

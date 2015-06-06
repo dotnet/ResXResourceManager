@@ -16,9 +16,28 @@
     using tomenglertde.ResXManager.View.Converters;
     using tomenglertde.ResXManager.View.Properties;
 
+    using TomsToolbox.Desktop;
+
     public static class ColumnManager
     {
+        private const string NeutralCultureKeyString = ".";
         private static readonly BitmapImage _codeReferencesImage = new BitmapImage(new Uri("/ResXManager.View;component/Assets/references.png", UriKind.RelativeOrAbsolute));
+
+        public static bool GetResourceFileExists(DependencyObject obj)
+        {
+            Contract.Requires(obj != null);
+            return obj.GetValue<bool>(ResourceFileExistsProperty);
+        }
+        public static void SetResourceFileExists(DependencyObject obj, bool value)
+        {
+            Contract.Requires(obj != null);
+            obj.SetValue(ResourceFileExistsProperty, value);
+        }
+        /// <summary>
+        /// Identifies the ResourceFileExists dependency property
+        /// </summary>
+        public static readonly DependencyProperty ResourceFileExistsProperty =
+            DependencyProperty.RegisterAttached("ResourceFileExists", typeof(bool), typeof(ColumnManager), new FrameworkPropertyMetadata(true));
 
         public static void SetupColumns(this DataGrid dataGrid, IEnumerable<CultureKey> cultureKeys)
         {
@@ -63,8 +82,22 @@
             foreach (var cultureKey in addedcultureKeys)
             {
                 Contract.Assume(cultureKey != null);
-                columns.AddLanguageColumn(resourceManager, cultureKey);
+                dataGrid.AddLanguageColumn(resourceManager, cultureKey);
             }
+        }
+
+        public static void CreateNewLanguageColumn(this DataGrid dataGrid, ResourceManager resourceManager, CultureInfo culture)
+        {
+            Contract.Requires(dataGrid != null);
+            Contract.Requires(resourceManager != null);
+
+            var cultureKey = new CultureKey(culture);
+
+            AddLanguageColumn(dataGrid, resourceManager, cultureKey);
+
+            var key = cultureKey.ToString(NeutralCultureKeyString);
+
+            HiddenLanguageColumns = HiddenLanguageColumns.Where(col => !string.Equals(col, key, StringComparison.OrdinalIgnoreCase));
         }
 
         private static Image CreateCodeReferencesImage()
@@ -99,18 +132,20 @@
             };
 
             column.SetIsFilterVisible(false);
-            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, new Binding(@"IsFindCodeReferencesEnabled") { Source = Settings.Default, Converter = Converters.BooleanToVisibilityConverter.Default });
+            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, new Binding(@"IsFindCodeReferencesEnabled") { Source = Settings.Default, Converter = TomsToolbox.Wpf.Converters.BooleanToVisibilityConverter.Default });
 
             return column;
         }
 
-        public static void AddLanguageColumn(this ICollection<DataGridColumn> columns, ResourceManager resourceManager, CultureKey cultureKey)
+        private static void AddLanguageColumn(this DataGrid dataGrid, ResourceManager resourceManager, CultureKey cultureKey)
         {
-            Contract.Requires(columns != null);
+            Contract.Requires(dataGrid != null);
             Contract.Requires(resourceManager != null);
             Contract.Requires(cultureKey != null);
 
-            var key = cultureKey.ToString(".");
+            var columns = dataGrid.Columns;
+
+            var key = cultureKey.ToString(NeutralCultureKeyString);
 
             var culture = cultureKey.Culture;
             var languageBinding = culture != null
@@ -127,11 +162,15 @@
 
             flowDirectionBinding.Converter = IsRightToLeftToFlowDirectionConverter.Default;
 
+            var cellStyle = new Style(typeof(DataGridCell), dataGrid.CellStyle);
+            cellStyle.Setters.Add(new Setter(ResourceFileExistsProperty, new Binding(@"FileExists[" + key + @"]")));
+
             var commentColumn = new DataGridTextColumn
             {
                 Header = new CommentHeader(resourceManager, cultureKey),
                 Binding = new Binding(@"Comments[" + key + @"]"),
                 MinWidth = 50,
+                CellStyle = cellStyle,
                 Width = new DataGridLength(1, DataGridLengthUnitType.Star),
                 Visibility = VisibleCommentColumns.Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Visible : Visibility.Hidden
             };
@@ -143,6 +182,7 @@
                 Header = new LanguageHeader(resourceManager, cultureKey),
                 Binding = new Binding(@"Values[" + key + @"]"),
                 MinWidth = 50,
+                CellStyle = cellStyle,
                 Width = new DataGridLength(2, DataGridLengthUnitType.Star),
                 Visibility = HiddenLanguageColumns.Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Hidden : Visibility.Visible
             };
@@ -196,7 +236,7 @@
                 .Where(predicate)
                 .Select(col => col.Header)
                 .OfType<T>()
-                .Select(hdr => hdr.CultureKey.ToString("."));
+                .Select(hdr => hdr.CultureKey.ToString(NeutralCultureKeyString));
         }
 
         private static IEnumerable<string> VisibleCommentColumns

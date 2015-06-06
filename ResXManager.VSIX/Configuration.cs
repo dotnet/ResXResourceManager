@@ -38,11 +38,11 @@
             }
         }
 
-        protected override T GetValue<T>(Expression<Func<T>> propertyExpression)
+        protected override T GetValue<T>(Expression<Func<T>> propertyExpression, T defaultValue)
         {
             T value;
 
-            return TryGetValue(GetKey(PropertySupport.ExtractPropertyName(propertyExpression)), out value) ? value : base.GetValue(propertyExpression);
+            return TryGetValue(GetKey(PropertySupport.ExtractPropertyName(propertyExpression)), out value) ? value : base.GetValue(propertyExpression, defaultValue);
         }
 
         private bool TryGetValue<T>(string key, out T value)

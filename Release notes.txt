@@ -1,3 +1,16 @@
+1.0.0.56:
+* WI4592: Word wrap for the top-right edit box.
+1.0.0.55:
+* WI4584: V 1.0.0.54 does not start in VS, only an exception is shown
+1.0.0.54:
+* WI1360: Highlight entries where the RESX file is missing at all with a hatch brush.
+* WI1360: Add all missing RESX files. (Configurable)
+* WI4578: Mark auto-translated texts. Configurable prefix can be added.
+* WI4582: Translation not working from zh-CHT to zh-CHS.
+1.0.0.53:
+* WI1171: Automatic translations. (fix some minor issues)
+* WI1434: Sort order when sorting RESX files by key is configurable.
+* WI1438: Link to translator homepage is broken in VS-Extension.
 1.0.0.52:
 * WI1171: Automatic translations.
 * WI1435: Reuse translations.

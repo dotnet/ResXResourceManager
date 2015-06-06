@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -157,7 +157,7 @@
     <value>Rechts klicken, um das Symbol für die neutrale Sprache zu ändern</value>
   </data>
   <data name="NewLanguageIdPrompt" xml:space="preserve">
-    <value>Geben sie die neue Sprach-ID ein:</value>
+    <value>Wählen sie die neue Sprache aus:</value>
   </data>
   <data name="PasteToolTip" xml:space="preserve">
     <value>Zeilen einfügen (Strg+V)</value>
@@ -182,9 +182,6 @@
   </data>
   <data name="ErrorAddingNewResourceFile" xml:space="preserve">
     <value>Fehler beim Hinzufügen der neuen Ressourcedatei '{0}'</value>
-  </data>
-  <data name="FileExistsPrompt" xml:space="preserve">
-    <value>Die Datei '{0}' existiert bereits. Möchten sie die Datei überschreiben?</value>
   </data>
   <data name="CutToolTip" xml:space="preserve">
     <value>Markierte Zeilen ausschneiden (Strg+X)</value>
@@ -250,7 +247,7 @@
     <value>Ausgewählt/Gesamt</value>
   </data>
   <data name="SortNodesByKey" xml:space="preserve">
-    <value>Beim Speichern den Inhalt von RESX-Dateien nach Schlüssel sortieren.</value>
+    <value>Beim Speichern den Inhalt von RESX-Dateien nach Schlüssel sortieren</value>
   </data>
   <data name="SortAllFilesNow" xml:space="preserve">
     <value>Alle Dateien jetzt sortieren</value>
@@ -287,5 +284,50 @@
   </data>
   <data name="EditDefaultConfigurationNotification" xml:space="preserve">
     <value>Sie bearbeiten die Standardeinstellungen. Wenn sie projektmappenspezifischen Einstellungen bearbeiten möchten öffnen sie eine Projektmappe.</value>
+  </data>
+  <data name="Authentication" xml:space="preserve">
+    <value>Authentifizierung</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="ShellTabHeader_Configuration" xml:space="preserve">
+    <value>Konfiguration</value>
+  </data>
+  <data name="ShellTabHeader_Translate" xml:space="preserve">
+    <value>Übersetzen</value>
+  </data>
+  <data name="Translations_ApplyAll" xml:space="preserve">
+    <value>Alle anwenden</value>
+  </data>
+  <data name="Translations_ApplySelected" xml:space="preserve">
+    <value>Ausgewählten anwenden</value>
+  </data>
+  <data name="Translations_Refresh" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+  <data name="Translations_Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="TranslatorConfiguration_SaveCredentials" xml:space="preserve">
+    <value>Anmeldeinformationen speichern (Anmeldeinformationen werden als Klartext in Ihrem lokalen Profil gespeichert!)</value>
+  </data>
+  <data name="AutoCreateNewLanguageFiles" xml:space="preserve">
+    <value>Alle Ressourcendateien sofort erstellen, wenn eine neue Ressourcensprache hinzugefügt wird</value>
+  </data>
+  <data name="Configuration_FileCreationHeader" xml:space="preserve">
+    <value>Dateierstellung</value>
+  </data>
+  <data name="ConfirmAddLanguage" xml:space="preserve">
+    <value>Erstellen neuer Ressourcendateien bestätigen</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sortieren nach:</value>
+  </data>
+  <data name="TranslationsPrefixHeader" xml:space="preserve">
+    <value>Präfix vor übersetztem Text: </value>
+  </data>
+  <data name="NoResourceFileForResource" xml:space="preserve">
+    <value>Es gibt keine Ressourcendatei für diese Ressource.</value>
   </data>
 </root>

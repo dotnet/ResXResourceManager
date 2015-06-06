@@ -13,18 +13,23 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
+
     using EnvDTE;
+
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
+
     using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Tools;
+    using tomenglertde.ResXManager.Translators;
     using tomenglertde.ResXManager.View.Visuals;
 
     using TomsToolbox.Core;
+    using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
 
     using VSLangProj;
+
     using Process = System.Diagnostics.Process;
 
     /// <summary>
@@ -59,6 +64,10 @@
             // Each image in the strip being 16x16.
             BitmapResourceID = 301;
             BitmapIndex = 1;
+
+            var translators = TranslatorHost.Translators;
+            if (translators == null) // this never happens, just needed to reference some code to fix WI#4584
+                return;
 
             _trace = new OutputWindowTracer(this);
 
@@ -98,7 +107,7 @@
 
                 AppDomain.CurrentDomain.AssemblyResolve += AppDomain_AssemblyResolve;
 
-                EventManager.RegisterClassHandler(typeof(ResourceView), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
+                EventManager.RegisterClassHandler(typeof(Shell), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
 
                 // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
                 // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
@@ -180,17 +189,31 @@
 
         private void Navigate_Click(object sender, RoutedEventArgs e)
         {
+            string url = null;
+
             var source = e.OriginalSource as FrameworkElement;
-            if (source == null)
-                return;
+            if (source != null)
+            {
+                var button = source.TryFindAncestorOrSelf<ButtonBase>();
+                if (button == null)
+                    return;
 
-            var button = source.TryFindAncestorOrSelf<ButtonBase>();
-            if (button == null)
-                return;
+                url = source.Tag as string;
+                if (string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                    return;
+            }
+            else
+            {
+                var link = e.OriginalSource as System.Windows.Documents.Hyperlink;
+                if (link == null)
+                    return;
 
-            var url = source.Tag as string;
-            if (string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-                return;
+                var navigateUri = link.NavigateUri;
+                if (navigateUri == null)
+                    return;
+
+                url = navigateUri.ToString();
+            }
 
             CreateWebBrowser(url);
         }
@@ -248,14 +271,19 @@
 
         private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
         {
-            if (!CanEdit(e.Entity, e.Culture))
+            Contract.Requires(sender != null);
+
+            var resourceManager = (ResourceManager)sender;
+
+            if (!CanEdit(resourceManager, e.Entity, e.Culture))
             {
                 e.Cancel = true;
             }
         }
 
-        private bool CanEdit(ResourceEntity entity, CultureInfo culture)
+        private bool CanEdit(ResourceManager resourceManager, ResourceEntity entity, CultureInfo culture)
         {
+            Contract.Requires(resourceManager != null);
             Contract.Requires(entity != null);
 
             var languages = entity.Languages.Where(lang => (culture == null) || culture.Equals(lang.Culture)).ToArray();
@@ -264,10 +292,10 @@
             {
                 try
                 {
-                    // because entity.Languages.Any() => languages can only be empty if language != null!
+                    // because entity.Languages.Any() => languages can only be empty if culture != null!
                     Contract.Assume(culture != null);
 
-                    return AddLanguage(entity, culture);
+                    return AddLanguage(resourceManager, entity, culture);
                 }
                 catch (Exception ex)
                 {
@@ -302,8 +330,9 @@
             return false;
         }
 
-        private bool AddLanguage(ResourceEntity entity, CultureInfo culture)
+        private bool AddLanguage(ResourceManager resourceManager, ResourceEntity entity, CultureInfo culture)
         {
+            Contract.Requires(resourceManager != null);
             Contract.Requires(entity != null);
             Contract.Requires(culture != null);
 
@@ -311,27 +340,27 @@
             if (!resourceLanguages.Any())
                 return false;
 
-            var message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasNoResourceFile, culture.DisplayName);
+            if (resourceManager.Configuration.ConfirmAddLanguageFile)
+            {
+                var message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasNoResourceFile, culture.DisplayName);
 
-            if (MessageBox.Show(message, Resources.ToolWindowTitle, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-                return false;
+                if (MessageBox.Show(message, Resources.ToolWindowTitle, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                    return false;
+            }
 
             var neutralLanguage = resourceLanguages.First();
             Contract.Assume(neutralLanguage != null);
 
             var languageFileName = neutralLanguage.ProjectFile.GetLanguageFileName(culture);
-            
-            if (File.Exists(languageFileName))
+
+            if (!File.Exists(languageFileName))
             {
-                if (MessageBox.Show(string.Format(CultureInfo.CurrentCulture, View.Properties.Resources.FileExistsPrompt, languageFileName), Resources.ToolWindowTitle, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-                    return false;
+                var directoryName = Path.GetDirectoryName(languageFileName);
+                if (!string.IsNullOrEmpty(directoryName))
+                    Directory.CreateDirectory(directoryName);
+
+                File.WriteAllText(languageFileName, View.Properties.Resources.EmptyResxTemplate);
             }
-
-            var directoryName = Path.GetDirectoryName(languageFileName);
-            if (!string.IsNullOrEmpty(directoryName))
-                Directory.CreateDirectory(directoryName);
-
-            File.WriteAllText(languageFileName, View.Properties.Resources.EmptyResxTemplate);
 
             AddProjectItems(entity, neutralLanguage, languageFileName);
 
@@ -440,15 +469,15 @@
 
             var solution = _dte.Solution;
             var sourceFileFilter = new SourceFileFilter(configuration);
-            
+
             var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || sourceFileFilter.IsSourceFile(p)).ToArray();
 
             // The solution events are not reliable, so we check the solution on every load/unload of our window.
             // To avoid loosing the scope every time this method is called we only call load if we detect changes.
             var fingerPrint = GetFingerprint(projectFiles);
 
-            if (!forceReload 
-                && !projectFiles.Where(p => p.IsResourceFile()).Any(p => p.HasChanges) 
+            if (!forceReload
+                && !projectFiles.Where(p => p.IsResourceFile()).Any(p => p.HasChanges)
                 && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
                 return;
 

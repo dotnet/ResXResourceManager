@@ -79,6 +79,24 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authentication.
+        /// </summary>
+        public static string Authentication {
+            get {
+                return ResourceManager.GetString("Authentication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create all resource files when adding a new resource language.
+        /// </summary>
+        public static string AutoCreateNewLanguageFiles {
+            get {
+                return ResourceManager.GetString("AutoCreateNewLanguageFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Case Sens..
         /// </summary>
         public static string CaseSensitive {
@@ -133,6 +151,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File creation.
+        /// </summary>
+        public static string Configuration_FileCreationHeader {
+            get {
+                return ResourceManager.GetString("Configuration_FileCreationHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
         public static string Configuration_General {
@@ -156,6 +183,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string ConfigurationScopeHeader {
             get {
                 return ResourceManager.GetString("ConfigurationScopeHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm adding new resource files.
+        /// </summary>
+        public static string ConfirmAddLanguage {
+            get {
+                return ResourceManager.GetString("ConfirmAddLanguage", resourceCulture);
             }
         }
         
@@ -302,6 +338,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        public static string Enabled {
+            get {
+                return ResourceManager.GetString("Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error adding the new resource file &apos;{0}&apos;..
         /// </summary>
         public static string ErrorAddingNewResourceFile {
@@ -325,15 +370,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string ExportExcelSelection {
             get {
                 return ResourceManager.GetString("ExportExcelSelection", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The file &apos;{0}&apos; already exists. Do you want to overwrite it?.
-        /// </summary>
-        public static string FileExistsPrompt {
-            get {
-                return ResourceManager.GetString("FileExistsPrompt", resourceCulture);
             }
         }
         
@@ -473,7 +509,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the new language id:.
+        ///   Looks up a localized string similar to Select the new language:.
         /// </summary>
         public static string NewLanguageIdPrompt {
             get {
@@ -487,6 +523,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string NoCodeReferencesToolTip {
             get {
                 return ResourceManager.GetString("NoCodeReferencesToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no resource file for this resource..
+        /// </summary>
+        public static string NoResourceFileForResource {
+            get {
+                return ResourceManager.GetString("NoResourceFileForResource", resourceCulture);
             }
         }
         
@@ -554,6 +599,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Configuration.
+        /// </summary>
+        public static string ShellTabHeader_Configuration {
+            get {
+                return ResourceManager.GetString("ShellTabHeader_Configuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Languages.
         /// </summary>
         public static string ShellTabHeader_Languages {
@@ -568,6 +622,15 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string ShellTabHeader_Main {
             get {
                 return ResourceManager.GetString("ShellTabHeader_Main", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Translate.
+        /// </summary>
+        public static string ShellTabHeader_Translate {
+            get {
+                return ResourceManager.GetString("ShellTabHeader_Translate", resourceCulture);
             }
         }
         
@@ -590,7 +653,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When saving a RESX file, sort the XML data nodes by the key..
+        ///   Looks up a localized string similar to Sort by:.
+        /// </summary>
+        public static string SortBy {
+            get {
+                return ResourceManager.GetString("SortBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When saving a RESX file, sort the XML data nodes by the key.
         /// </summary>
         public static string SortNodesByKey {
             get {
@@ -613,6 +685,60 @@ namespace tomenglertde.ResXManager.View.Properties {
         public static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply All.
+        /// </summary>
+        public static string Translations_ApplyAll {
+            get {
+                return ResourceManager.GetString("Translations_ApplyAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply Selected.
+        /// </summary>
+        public static string Translations_ApplySelected {
+            get {
+                return ResourceManager.GetString("Translations_ApplySelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        public static string Translations_Refresh {
+            get {
+                return ResourceManager.GetString("Translations_Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop.
+        /// </summary>
+        public static string Translations_Stop {
+            get {
+                return ResourceManager.GetString("Translations_Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prefix translations with .
+        /// </summary>
+        public static string TranslationsPrefixHeader {
+            get {
+                return ResourceManager.GetString("TranslationsPrefixHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save credentials (Credentials will be stored as clear text in your local profile!).
+        /// </summary>
+        public static string TranslatorConfiguration_SaveCredentials {
+            get {
+                return ResourceManager.GetString("TranslatorConfiguration_SaveCredentials", resourceCulture);
             }
         }
     }

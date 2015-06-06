@@ -20,7 +20,6 @@
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    [ContractVerification(false)] // Too many warnings from generated code.
     public partial class MainWindow : ITracer
     {
         private readonly Configuration _configuration = new Configuration();
@@ -37,7 +36,6 @@
             get { return (string)GetValue(FolderProperty); }
             set { SetValue(FolderProperty, value); }
         }
-
         /// <summary>
         /// Identifies the Folder dependency property
         /// </summary>
@@ -63,14 +61,16 @@
                 resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
                 DataContext = resourceManager;
 
-                if (!string.IsNullOrEmpty(Settings.StartupFolder))
-                {
-                    Folder = Settings.StartupFolder;
-                }
+                var folder = Settings.StartupFolder;
 
-                if ((Folder != null) && Directory.Exists(Folder))
+                if (!string.IsNullOrEmpty(folder))
                 {
-                    Load();
+                    Folder = folder;
+
+                    if (Directory.Exists(folder))
+                    {
+                        Load();
+                    }
                 }
             }
             catch (Exception ex)
@@ -96,13 +96,21 @@
 
         private void Load()
         {
-            var sourceFiles = new DirectoryInfo(Folder).GetAllSourceFiles(_configuration);
+            var folder = Folder;
+            if (string.IsNullOrEmpty(folder))
+                return;
 
-            ViewModel.Load(sourceFiles, _configuration);
+            var resourceManager = (ResourceManager)DataContext;
+            if (resourceManager == null)
+                return;
+
+            var sourceFiles = new DirectoryInfo(folder).GetAllSourceFiles(_configuration);
+
+            resourceManager.Load(sourceFiles, _configuration);
 
             if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
             {
-                CodeReference.BeginFind(ViewModel, sourceFiles, this);
+                CodeReference.BeginFind(resourceManager, sourceFiles, this);
             }
         }
 
@@ -147,18 +155,27 @@
 
         private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
         {
-            if (!CanEdit(e.Entity, e.Culture))
+            Contract.Requires(sender != null);
+
+            var resourceManager = (ResourceManager)sender;
+
+            if (!CanEdit(resourceManager, e.Entity, e.Culture))
             {
                 e.Cancel = true;
             }
         }
 
-        private bool CanEdit(ResourceEntity entity, CultureInfo culture)
+        private bool CanEdit(ResourceManager resourceManager, ResourceEntity entity, CultureInfo culture)
         {
+            Contract.Requires(resourceManager != null);
             Contract.Requires(entity != null);
 
             string message;
             var languages = entity.Languages.Where(lang => (culture == null) || culture.Equals(lang.Culture)).ToArray();
+
+            var rootFolder = Folder;
+            if (string.IsNullOrEmpty(rootFolder))
+                return false;
 
             if (!languages.Any())
             {
@@ -167,27 +184,30 @@
                     // because entity.Languages.Any() => languages can only be empty if language != null!
                     Contract.Assume(culture != null);
 
-                    message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.ProjectHasNoResourceFile, culture.DisplayName);
-
-                    if (MessageBox.Show(message, Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-                        return false;
-
-                    var neutralLanguage = entity.Languages.First();
-
-                    var languageFileName = neutralLanguage.ProjectFile.GetLanguageFileName(culture);
-
-                    if (File.Exists(languageFileName))
+                    if (resourceManager.Configuration.ConfirmAddLanguageFile)
                     {
-                        if (MessageBox.Show(string.Format(CultureInfo.CurrentCulture, View.Properties.Resources.FileExistsPrompt, languageFileName), Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                        message = string.Format(CultureInfo.CurrentCulture, Properties.Resources.ProjectHasNoResourceFile, culture.DisplayName);
+
+                        if (MessageBox.Show(message, Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                             return false;
                     }
 
-                    Directory.CreateDirectory(Path.GetDirectoryName(languageFileName));
+                    var neutralLanguage = entity.Languages.FirstOrDefault();
+                    if (neutralLanguage == null)
+                        return false;
 
-                    File.WriteAllText(languageFileName, View.Properties.Resources.EmptyResxTemplate);
+                    var languageFileName = neutralLanguage.ProjectFile.GetLanguageFileName(culture);
 
-                    entity.AddLanguage(new ProjectFile(languageFileName, Folder, entity.ProjectName, null));
+                    if (!File.Exists(languageFileName))
+                    {
+                        var directoryName = Path.GetDirectoryName(languageFileName);
+                        if (!string.IsNullOrEmpty(directoryName))
+                            Directory.CreateDirectory(directoryName);
 
+                        File.WriteAllText(languageFileName, View.Properties.Resources.EmptyResxTemplate);
+                    }
+
+                    entity.AddLanguage(new ProjectFile(languageFileName, rootFolder, entity.ProjectName, null));
                     return true;
                 }
                 catch (Exception ex)
@@ -212,6 +232,8 @@
         [Localizable(false)]
         private static string FormatFileNames(IEnumerable<string> lockedFiles)
         {
+            Contract.Requires(lockedFiles != null);
+
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
 
@@ -235,6 +257,13 @@
         public void WriteLine(string value)
         {
             Trace.TraceInformation(value);
+        }
+
+        [ContractInvariantMethod]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_configuration != null);
         }
     }
 }

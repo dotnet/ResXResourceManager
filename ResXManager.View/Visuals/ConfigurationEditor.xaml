@@ -8,11 +8,13 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
+             xmlns:toms="urn:TomsToolbox"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              d:DataContext="{d:DesignInstance model:ResourceManager}"
              Background="LightGray" Width="800">
   <UserControl.Resources>
 
-    <converters:ConfirmedCommandConverter x:Key="SortNodesByKeyCommandConverter" Query="{x:Static properties:Resources.SortNodesByKey_Confirmation}" />
+    <toms:ConfirmedCommandConverter x:Key="SortNodesByKeyCommandConverter" Executing="SortNodesByKeyCommandConverter_Executing" Error="CommandConverter_Error"/>
 
     <Style x:Key="LabelStyle">
       <Setter Property="TextElement.Foreground" Value="DarkSlateGray" />
@@ -39,7 +41,7 @@
         </Setter.Value>
       </Setter>
       <Setter Property="Grid.IsSharedSizeScope" Value="True" />
-      <Setter Property="Focusable" Value="False"/>
+      <Setter Property="Focusable" Value="False" />
     </Style>
 
     <Style TargetType="HeaderedContentControl" x:Key="PropertyStyle">
@@ -58,14 +60,14 @@
           </ControlTemplate>
         </Setter.Value>
       </Setter>
-      <Setter Property="Focusable" Value="False"/>
+      <Setter Property="Focusable" Value="False" />
     </Style>
 
   </UserControl.Resources>
 
   <StackPanel Margin="10" HorizontalAlignment="Left">
 
-    <HeaderedContentControl Header="{x:Static properties:Resources.ConfigurationScopeHeader}" Style="{StaticResource GroupStyle}" Visibility="{Binding Configuration.IsScopeSupported, Converter={x:Static converters:BooleanToVisibilityConverter.Default}}">
+    <HeaderedContentControl Header="{x:Static properties:Resources.ConfigurationScopeHeader}" Style="{StaticResource GroupStyle}" Visibility="{Binding Configuration.IsScopeSupported, Converter={x:Static toms:BooleanToVisibilityConverter.Default}}">
       <Control Focusable="False">
         <Control.Template>
           <ControlTemplate>
@@ -91,11 +93,11 @@
           <ComboBox Width="175" ItemsSource="{Binding Source={x:Static Member=model:ResourceManager.SpecificCultures}}" SelectedItem="{Binding Configuration.NeutralResourcesLanguage}">
             <ComboBox.ItemTemplate>
               <DataTemplate DataType="globalization:CultureInfo">
-                <DockPanel>
-                  <Image DockPanel.Dock="Left" Stretch="None" Source="{Binding Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
-                  <Decorator DockPanel.Dock="Left" Width="5" />
+                <StackPanel Orientation="Horizontal">
+                  <Image Stretch="None" Source="{Binding Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+                  <Decorator Width="5" />
                   <TextBlock Text="{Binding Path=DisplayName}" />
-                </DockPanel>
+                </StackPanel>
               </DataTemplate>
             </ComboBox.ItemTemplate>
           </ComboBox>
@@ -106,16 +108,33 @@
     <Decorator Height="5" />
 
     <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_LoadSaveHeader}" Style="{StaticResource GroupStyle}">
-      <StackPanel Margin="10">
-        <DockPanel KeyboardNavigation.TabNavigation="Local">
-          <Button DockPanel.Dock="Right" Padding="5,2" TabIndex="1"
-                  Content="{x:Static properties:Resources.SortAllFilesNow}"
-                  Command="{Binding SortNodesByKeyCommand, Converter={StaticResource SortNodesByKeyCommandConverter}}" />
-          <Decorator Width="50" DockPanel.Dock="Right" />
+      <Grid Margin="10" KeyboardNavigation.TabNavigation="Local">
+        <StackPanel>
           <CheckBox IsChecked="{Binding Configuration.SortFileContentOnSave}" TabIndex="0"
                     Style="{StaticResource LabelStyle}"
                     Content="{x:Static properties:Resources.SortNodesByKey}" />
-        </DockPanel>
+          <Decorator Height="5" />
+          <StackPanel Orientation="Horizontal">
+            <Decorator Width="22"/>
+            <TextBlock Text="{x:Static properties:Resources.SortBy}" Style="{StaticResource LabelStyle}"/>
+            <Decorator Width="8"></Decorator>
+            <ComboBox ItemsSource="{Binding Source={x:Type system:StringComparison}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
+                      SelectedItem="{Binding Configuration.ResXSortingComparison}" Width="175" />
+          </StackPanel>
+        </StackPanel>
+        <Button Padding="5,2" TabIndex="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Content="{x:Static properties:Resources.SortAllFilesNow}"
+                Command="{Binding SortNodesByKeyCommand, Converter={StaticResource SortNodesByKeyCommandConverter}}" />
+      </Grid>
+    </HeaderedContentControl>
+
+    <Decorator Height="5" />
+
+    <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_FileCreationHeader}" Style="{StaticResource GroupStyle}">
+      <StackPanel Margin="10" KeyboardNavigation.TabNavigation="Local">
+        <CheckBox IsChecked="{Binding Configuration.AutoCreateNewLanguageFiles}" Content="{x:Static properties:Resources.AutoCreateNewLanguageFiles}" Style="{StaticResource LabelStyle}"/>
+        <Decorator Height="5" />
+        <CheckBox IsChecked="{Binding Configuration.ConfirmAddLanguageFile}" Content="{x:Static properties:Resources.ConfirmAddLanguage}" Style="{StaticResource LabelStyle}"/>
       </StackPanel>
     </HeaderedContentControl>
 
@@ -123,8 +142,6 @@
 
     <HeaderedContentControl Header="{x:Static properties:Resources.DetectCodeReferences_Header}" Style="{StaticResource GroupStyle}">
       <DataGrid ItemsSource="{Binding Configuration.CodeReferences.Items}"
-                RowEditEnding="CodeReferencesConfiguration_RowEditEnding"
-                CellEditEnding="CodeReferencesConfiguration_CellEditEnding"
                 AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False"
                 HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
                 Margin="10" MinHeight="50" MaxHeight="250" MinWidth="700">
@@ -139,20 +156,6 @@
         </i:Interaction.Behaviors>
       </DataGrid>
     </HeaderedContentControl>
-
-    <Decorator Height="10" />
-
-    <!--
-    <HeaderedContentControl Header="File creation" Style="{StaticResource GroupStyle}">
-      <StackPanel>
-        <CheckBox Content ="Create all resource files when adding a new resource language" Margin="10,5" FontWeight="Bold"/>
-        <HeaderedContentControl Header="Fill :" Style="{StaticResource PropertyStyle}">
-          <TextBox Style="{StaticResource ControlWithErrorToolTipStyle}"
-                   Text="{Binding DetectCodeReferences_Exclude, Source={x:Static model:Settings.Default}, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"/>
-        </HeaderedContentControl>
-      </StackPanel>
-    </HeaderedContentControl>-->
-
 
   </StackPanel>
 </UserControl>

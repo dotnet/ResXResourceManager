@@ -3,18 +3,24 @@
     using System;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Threading;
 
+    using Microsoft.Win32;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Controls;
+    using tomenglertde.ResXManager.View.Converters;
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf;
+    using TomsToolbox.Wpf.Converters;
 
     /// <summary>
     /// Interaction logic for ResourceView.xaml
@@ -102,30 +108,79 @@
 
         private void AddLanguage_Click(object sender, RoutedEventArgs e)
         {
-            var inputBox = new InputBox
-            {
-                Title = Properties.Resources.Title,
-                Prompt = Properties.Resources.NewLanguageIdPrompt,
-                Owner = Window.GetWindow(this),
-                WindowStartupLocation = WindowStartupLocation.CenterOwner
-            };
-
             var viewModel = ViewModel;
             if (viewModel == null)
                 return;
 
-            var cultureNames = viewModel.CultureKeys
+            var exisitingCultures = viewModel.CultureKeys
                 .Select(c => c.Culture)
-                .Where(c => c != null)
-                .Select(c => c.ToString()).ToArray();
+                .Where(c => c != null);
 
-            inputBox.TextChanged += (_, args) =>
-                inputBox.IsInputValid = !cultureNames.Contains(args.Text, StringComparer.OrdinalIgnoreCase) && ResourceManager.IsValidLanguageName(args.Text);
-
-            if (inputBox.ShowDialog() == true)
+            var inputBox = new LanguageSelectionBox(exisitingCultures)
             {
-                DataGrid.Columns.AddLanguageColumn(viewModel, new CultureKey(new CultureInfo(inputBox.Text)));
+                Owner = Window.GetWindow(this),
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+
+            if (!inputBox.ShowDialog().GetValueOrDefault())
+                return;
+
+            WaitCursor.Start(this);
+
+            var culture = inputBox.SelectedLanguage;
+
+            DataGrid.CreateNewLanguageColumn(viewModel, culture);
+
+            viewModel.LanguageAdded(culture);
+        }
+
+        private void ImportExcelCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        {
+            var dlg = new OpenFileDialog
+            {
+                AddExtension = true,
+                CheckPathExists = true,
+                CheckFileExists = true,
+                DefaultExt = ".xlsx",
+                Filter = "Excel Worksheets|*.xlsx|All Files|*.*",
+                FilterIndex = 0,
+                Multiselect = false
+            };
+
+            if (!dlg.ShowDialog().GetValueOrDefault())
+                e.Cancel = true;
+            else
+                e.Parameter = dlg.FileName;
+
+            WaitCursor.Start(this);
+        }
+
+        private void DeleteCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        {
+            if (MessageBox.Show(Properties.Resources.ConfirmDeleteItems, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                e.Cancel = true;
             }
+        }
+
+        private void CutCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        {
+            if (MessageBox.Show(Properties.Resources.ConfirmCutItems, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void CommandConverter_Error(object sender, ErrorEventArgs e)
+        {
+            var ex = e.GetException();
+
+            if (ex == null)
+                return;
+
+            var text = (ex is ImportException) ? ex.Message : ex.ToString();
+
+            MessageBox.Show(text, Properties.Resources.Title);
         }
 
         [ContractInvariantMethod]

@@ -4,6 +4,7 @@ namespace tomenglertde.ResXManager.Translators
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.Net;
     using System.Runtime.Serialization;
 
     using TomsToolbox.Desktop;
@@ -12,6 +13,8 @@ namespace tomenglertde.ResXManager.Translators
     [DataContract]
     public abstract class TranslatorBase : ObservableObject, ITranslator
     {
+        protected static readonly IWebProxy WebProxy = WebRequest.DefaultWebProxy;
+
         private readonly string _id;
         private readonly string _displayName;
         private readonly IList<ICredentialItem> _credentials;
@@ -19,6 +22,11 @@ namespace tomenglertde.ResXManager.Translators
 
         private bool _isEnabled = true;
         private bool _saveCredentials;
+
+        static TranslatorBase()
+        {
+            WebProxy.Credentials = CredentialCache.DefaultNetworkCredentials;
+        }
 
         protected TranslatorBase(string id, string displayName, Uri uri, IList<ICredentialItem> credentials)
         {

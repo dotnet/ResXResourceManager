@@ -279,7 +279,7 @@
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(ImportExcel);
+                return new DelegateCommand<string>(ImportExcel);
             }
         }
 
@@ -385,6 +385,20 @@
             OnPropertyChanged(() => SelectedTableEntries);
         }
 
+        public void LanguageAdded(CultureInfo culture)
+        {
+            if (!_configuration.AutoCreateNewLanguageFiles)
+                return;
+
+            foreach (var resourceEntity in _resourceEntities)
+            {
+                Contract.Assume(resourceEntity != null);
+
+                if (!CanEdit(resourceEntity, culture))
+                    break;
+            }
+        }
+
         private bool CanEdit(ResourceEntity resourceEntity, CultureInfo culture)
         {
             Contract.Requires(resourceEntity != null);
@@ -476,18 +490,7 @@
             if (!CanEdit(entity, null))
                 return;
 
-            try
-            {
-                entity.ImportTextTable(Clipboard.GetText());
-            }
-            catch (ImportException ex)
-            {
-                MessageBox.Show(ex.Message, Resources.Title);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), Resources.Title);
-            }
+            entity.ImportTextTable(Clipboard.GetText());
         }
 
         private void ToggleInvariant()
@@ -518,7 +521,7 @@
 
             try
             {
-                this.ExportExcel(dlg.FileName, scope);
+                this.ExportExcelFile(dlg.FileName, scope);
             }
             catch (Exception ex)
             {
@@ -526,34 +529,11 @@
             }
         }
 
-        private void ImportExcel()
+        private void ImportExcel(string fileName)
         {
-            var dlg = new OpenFileDialog
-            {
-                AddExtension = true,
-                CheckPathExists = true,
-                CheckFileExists = true,
-                DefaultExt = ".xlsx",
-                Filter = "Excel Worksheets|*.xlsx|All Files|*.*",
-                FilterIndex = 0,
-                Multiselect = false
-            };
+            Contract.Requires(fileName != null);
 
-            if (dlg.ShowDialog() != true)
-                return;
-
-            try
-            {
-                this.ImportExcel(dlg.FileName);
-            }
-            catch (ImportException ex)
-            {
-                MessageBox.Show(ex.Message, Resources.Title);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), Resources.Title);
-            }
+            this.ImportExcelFile(fileName);
         }
 
         private void CopyKeys()
@@ -735,7 +715,7 @@
         private static string[] GetSortedCultureNames()
         {
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-            Contract.Assume(allCultures != null);
+
             var cultureNames = allCultures
                 .SelectMany(culture => new[] { culture.IetfLanguageTag, culture.Name })
                 .Distinct()
@@ -748,23 +728,12 @@
 
         private static CultureInfo[] GetSpecificCultures()
         {
-            var specificCultures = GetCultures(CultureTypes.SpecificCultures);
-            var allNeutralCultures = GetCultures(CultureTypes.NeutralCultures).Where(c => !Equals(c, CultureInfo.InvariantCulture));
+            var specificCultures = CultureInfo.GetCultures(CultureTypes.AllCultures)
+                .Where(c => c.GetAncestors().Any())
+                .OrderBy(c => c.DisplayName)
+                .ToArray();
 
-            var referencedNeutralCultures = specificCultures.Select(c => c.Parent);
-
-            var missingNeutralCultures = allNeutralCultures.Except(referencedNeutralCultures);
-
-            return specificCultures.OrderBy(c => c.DisplayName).Concat(missingNeutralCultures.OrderBy(c => c.DisplayName)).ToArray();
-        }
-
-        private static CultureInfo[] GetCultures(CultureTypes types)
-        {
-            Contract.Ensures(Contract.Result<CultureInfo[]>() != null);
-
-            var cultures = CultureInfo.GetCultures(types);
-            Contract.Assume(cultures != null);
-            return cultures;
+            return specificCultures;
         }
 
         private void ApplyEntityFilter(string value)
@@ -775,7 +744,7 @@
             {
                 try
                 {
-                    var regex = new Regex(value, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    var regex = new Regex(value.Trim(), RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     _filteredResourceEntities.CollectionView.Filter = item => regex.Match(item.ToString()).Success;
                     return;
                 }

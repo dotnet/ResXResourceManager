@@ -45,6 +45,8 @@
             Contract.Requires(configuration != null);
             Contract.Ensures(Contract.Result<IList<ProjectFile>>() != null);
 
+            var solutionFolderLength = solutionFolder.FullName.Length + 1;
+
             var fileInfos = solutionFolder.EnumerateFiles("*.*", SearchOption.AllDirectories);
             Contract.Assume(fileInfos != null);
 
@@ -63,19 +65,32 @@
                     continue;
 
                 var directory = new DirectoryInfo(directoryFiles.Key);
-                var projectName = FindProjectName(directory);
+                var project = FindProject(directory);
+
+                var projectName = "<no project>";
+                var uniqueProjectName = (string)null;
+
+                if (project != null)
+                {
+                    projectName = Path.ChangeExtension(project.Name, null);
+
+                    var fullProjectName = project.FullName;
+                    Contract.Assume(fullProjectName.Length >= solutionFolderLength); // all files are below solution folder.
+                    uniqueProjectName = fullProjectName.Substring(solutionFolderLength);
+                }
 
                 foreach (var file in directoryFiles)
                 {
                     Contract.Assume(file != null);
                     file.ProjectName = projectName;
+                    file.UniqueProjectName = uniqueProjectName;
                 }
             }
 
             return allProjectFiles;
         }
 
-        private static string FindProjectName(DirectoryInfo directory)
+        private static FileInfo FindProject(DirectoryInfo directory)
         {
             Contract.Requires(directory != null);
 
@@ -87,13 +102,13 @@
                 var project = projectFiles.FirstOrDefault();
                 if (project != null)
                 {
-                    return Path.ChangeExtension(project.Name, null);
+                    return project;
                 }
 
                 directory = directory.Parent;
             }
 
-            return @"<no project>";
+            return null;
         }
     }
 }

@@ -5,17 +5,25 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
+
+    using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
-    public class NeutralCultureCountyOverrides
+    using TomsToolbox.Core;
+    using TomsToolbox.Desktop;
+
+    public class NeutralCultureCountryOverrides
     {
+        private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,";
         private static readonly CultureInfo[] _allSpecificCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
-        private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().ToDictionary(item => item.Key, item => item.Value));
+        private static readonly IEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>> _comparer = new DelegateEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>>(item => item.Key);
+
+        private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly NeutralCultureCountyOverrides Default = new NeutralCultureCountyOverrides();
+        public static readonly NeutralCultureCountryOverrides Default = new NeutralCultureCountryOverrides();
 
-        private NeutralCultureCountyOverrides()
+        private NeutralCultureCountryOverrides()
         {
         }
 
@@ -67,7 +75,7 @@
             Contract.Requires(neutralCulture != null);
 
             var cultureName = neutralCulture.Name;
-            var specificCultures = _allSpecificCultures.Where(c => (c != null) && ((c.Parent.Name == cultureName) || (c.Parent.IetfLanguageTag == cultureName))).ToArray();
+            var specificCultures = neutralCulture.GetDescendants().ToArray();
 
             var preferredSpecificCultureName = cultureName + @"-" + cultureName.ToUpperInvariant();
 
@@ -86,7 +94,7 @@
         {
             Contract.Ensures(Contract.Result<IEnumerable<KeyValuePair<CultureInfo, CultureInfo>>>() != null);
 
-            var neutralCultureCountryOverrides = (Settings.Default.NeutralCultureCountyOverrides ?? string.Empty).Split(',');
+            var neutralCultureCountryOverrides = (DefaultOverrides + Settings.Default.NeutralCultureCountyOverrides).Split(',');
 
             foreach (var item in neutralCultureCountryOverrides)
             {

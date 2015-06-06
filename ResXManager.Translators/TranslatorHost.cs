@@ -1,5 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.Translators
 {
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Diagnostics.Contracts;
     using System.Threading;
@@ -27,14 +28,17 @@
 
             try
             {
-                var values = JsonConvert.DeserializeObject<StringDictionary>(configuration);
+                var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(configuration);
                 Contract.Assume(values != null);
 
                 foreach (var translator in Translators)
                 {
                     Contract.Assert(translator != null);
 
-                    var setting = values[translator.Id];
+                    string setting;
+
+                    if (!values.TryGetValue(translator.Id, out setting))
+                        continue;
                     if (string.IsNullOrEmpty(setting))
                         continue;
 
@@ -56,7 +60,7 @@
         {
             var settings = Settings.Default;
 
-            var values = new StringDictionary();
+            var values = new Dictionary<string, string>();
 
             foreach (var translator in Translators)
             {

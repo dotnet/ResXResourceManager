@@ -64,16 +64,23 @@
         {
             Contract.Requires(propertyExpression != null);
 
+            return GetValue(propertyExpression, default(T));
+        }
+
+        protected virtual T GetValue<T>(Expression<Func<T>> propertyExpression, T defaultValue)
+        {
+            Contract.Requires(propertyExpression != null);
+
             var key = PropertySupport.ExtractPropertyName(propertyExpression);
 
             try
             {
-                return ConvertFromString<T>(_configuration.GetValue(key));
+                return ConvertFromString<T>(_configuration.GetValue(key, defaultValue as string));
             }
             catch (InvalidCastException)
             {
             }
-            return default(T);
+            return defaultValue;
         }
 
         protected void SetValue<T>(T value, Expression<Func<T>> propertyExpression)
@@ -139,7 +146,7 @@
             Contract.Requires(type != null);
             Contract.Ensures(Contract.Result<TypeConverter>() != null);
 
-            return TypeDescriptor.GetConverter(type);
+            return type.GetCustomTypeConverter() ?? TypeDescriptor.GetConverter(type);
         }
 
         [ContractInvariantMethod]

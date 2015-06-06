@@ -1,13 +1,17 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System.ComponentModel;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Input;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Core;
+    using TomsToolbox.Desktop;
 
     /// <summary>
     /// Interaction logic for FlagConfiguration.xaml
@@ -30,7 +34,7 @@
 
             var neutralCulture = specificCulture.Parent;
 
-            NeutralCultureCountyOverrides.Default[neutralCulture] = specificCulture;
+            NeutralCultureCountryOverrides.Default[neutralCulture] = specificCulture;
             ListBox.Items.Refresh();
         }
 
@@ -40,6 +44,17 @@
         {
             Contract.Invariant(ListBox != null);
         }
+    }
 
+    public class CultureInfoGroupDescription : GroupDescription
+    {
+        public override object GroupNameFromItem(object item, int level, CultureInfo culture)
+        {
+            var cultureItem = item as CultureInfo;
+            if (cultureItem == null)
+                return null;
+
+            return cultureItem.GetAncestors().LastOrDefault();
+        }
     }
 }

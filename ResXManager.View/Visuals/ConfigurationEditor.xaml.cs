@@ -1,9 +1,9 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
-    using System;
-    using System.Windows.Controls;
-    using System.Windows.Threading;
-    using tomenglertde.ResXManager.Model;
+    using System.IO;
+    using System.Windows;
+
+    using TomsToolbox.Wpf.Converters;
 
     /// <summary>
     /// Interaction logic for Configuration.xaml
@@ -15,26 +15,21 @@
             InitializeComponent();
         }
 
-        private void CodeReferencesConfiguration_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        private void CommandConverter_Error(object sender, ErrorEventArgs e)
         {
-            CodeReferencesConfiguration_EndEditing(e.EditAction);
-        }
-
-        private void CodeReferencesConfiguration_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {
-            CodeReferencesConfiguration_EndEditing(e.EditAction);
-        }
-
-        private void CodeReferencesConfiguration_EndEditing(DataGridEditAction editAction)
-        {
-            if (editAction != DataGridEditAction.Commit)
+            var ex = e.GetException();
+            if (ex == null)
                 return;
 
-            var viewModel = (ResourceManager)DataContext;
-            if (viewModel == null)
-                return;
+            MessageBox.Show(ex.Message, Properties.Resources.Title);
+        }
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)viewModel.Configuration.PersistCodeReferences);
+        private void SortNodesByKeyCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        {
+            if (MessageBox.Show(Properties.Resources.SortNodesByKey_Confirmation, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                e.Cancel = true;
+            }
         }
     }
 }

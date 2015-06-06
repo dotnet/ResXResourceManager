@@ -1,48 +1,77 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics.Contracts;
-using System.Runtime.Serialization;
-using tomenglertde.ResXManager.Model;
-
-namespace tomenglertde.ResXManager.Model
+﻿namespace tomenglertde.ResXManager.Model
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Runtime.Serialization;
 
+    using JetBrains.Annotations;
+
+    using TomsToolbox.Core;
+    using TomsToolbox.ObservableCollections;
+
     [DataContract]
-    public class CodeReferenceConfigurationItem
+    public class CodeReferenceConfigurationItem : INotifyPropertyChanged
     {
+        private string _extensions;
+        private bool _isCaseSensitive;
+        private string _expression;
+        private string _singleLineComment;
+
         [DataMember]
         public string Extensions
         {
-            get;
-            set;
+            get
+            {
+                return _extensions;
+            }
+            set
+            {
+                SetProperty(ref _extensions, value, () => Extensions);
+            }
         }
 
         [DataMember]
         public bool IsCaseSensitive
         {
-            get;
-            set;
+            get
+            {
+                return _isCaseSensitive;
+            }
+            set
+            {
+                SetProperty(ref _isCaseSensitive, value, () => IsCaseSensitive);
+            }
         }
 
         [DataMember]
         public string Expression
         {
-            get;
-            set;
+            get
+            {
+                return _expression;
+            }
+            set
+            {
+                SetProperty(ref _expression, value, () => Expression);
+            }
         }
 
         [DataMember]
         public string SingleLineComment
         {
-            get;
-            set;
+            get
+            {
+                return _singleLineComment;
+            }
+            set
+            {
+                SetProperty(ref _singleLineComment, value, () => SingleLineComment);
+            }
         }
 
         public IEnumerable<string> ParseExtensions()
@@ -56,6 +85,40 @@ namespace tomenglertde.ResXManager.Model
                 .Select(ext => ext.Trim())
                 .Where(ext => !string.IsNullOrEmpty(ext));
         }
+
+        #region INotifyPropertyChanged implementation
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void SetProperty<T>(ref T backingField, T value, Expression<Func<T>> propertyExpression)
+        {
+            Contract.Requires(propertyExpression != null);
+
+            SetProperty(ref backingField, value, PropertySupport.ExtractPropertyName(propertyExpression));
+        }
+
+        [NotifyPropertyChangedInvocator]
+        private void SetProperty<T>(ref T backingField, T value, string propertyName)
+        {
+            Contract.Requires(propertyName != null);
+
+            if (Equals(backingField, value))
+                return;
+
+            backingField = value;
+
+            OnPropertyChanged(propertyName);
+        }
+
+        #endregion
     }
 
     [KnownType(typeof(CodeReferenceConfigurationItem))]
@@ -63,21 +126,31 @@ namespace tomenglertde.ResXManager.Model
     [TypeConverter(typeof(JsonSerializerTypeConverter<CodeReferenceConfiguration>))]
     public class CodeReferenceConfiguration
     {
-        private ObservableCollection<CodeReferenceConfigurationItem> _items = new ObservableCollection<CodeReferenceConfigurationItem>();
+        private ObservableCollection<CodeReferenceConfigurationItem> _items;
+        private ObservablePropertyChangeTracker<CodeReferenceConfigurationItem> _changeTracker;
 
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Must be serializable")]
         [DataMember(Name = "Items")]
         public ObservableCollection<CodeReferenceConfigurationItem> Items
         {
             get
             {
                 Contract.Ensures(Contract.Result<ObservableCollection<CodeReferenceConfigurationItem>>() != null);
+                CreateCollection();
                 return _items;
             }
-            set
+        }
+
+        public event EventHandler<PropertyChangedEventArgs> ItemPropertyChanged
+        {
+            add
             {
-                Contract.Requires(value != null);
-                _items = value;
+                CreateCollection();
+                _changeTracker.ItemPropertyChanged += value;
+            }
+            remove
+            {
+                CreateCollection();
+                _changeTracker.ItemPropertyChanged -= value;
             }
         }
 
@@ -112,11 +185,23 @@ namespace tomenglertde.ResXManager.Model
                 });
         }
 
+        private void CreateCollection()
+        {
+            Contract.Ensures(_items != null);
+            Contract.Ensures(_changeTracker != null);
+
+            if (_items != null)
+                return;
+
+            _items = new ObservableCollection<CodeReferenceConfigurationItem>();
+            _changeTracker = new ObservablePropertyChangeTracker<CodeReferenceConfigurationItem>(_items);
+        }
+
         [ContractInvariantMethod]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_items != null);
+            Contract.Invariant((_items == null) || (_changeTracker != null));
         }
     }
 }

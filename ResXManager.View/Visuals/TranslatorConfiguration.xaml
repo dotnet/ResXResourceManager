@@ -1,17 +1,17 @@
 ﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.TranslatorConfiguration"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignWidth="800"
-             xmlns:translators="clr-namespace:tomenglertde.ResXManager.Translators;assembly=ResXManager.Translators"
              xmlns:wpf="urn:TomsToolbox"
-             >
+             xmlns:translators="clr-namespace:tomenglertde.ResXManager.Translators;assembly=ResXManager.Translators"
+             xmlns:Properties="clr-namespace:tomenglertde.ResXManager.View.Properties">
   <TabControl TabStripPlacement="Left" ItemsSource="{Binding Source={x:Static translators:TranslatorHost.Translators}}" DisplayMemberPath="DisplayName">
     <TabControl.ContentTemplate>
       <DataTemplate DataType="translators:ITranslator">
         <StackPanel Margin="5">
           <DockPanel Margin="10,0">
-            <CheckBox DockPanel.Dock="Left" Content="Enabled" IsChecked="{Binding IsEnabled}" VerticalAlignment="Bottom" />
+            <CheckBox DockPanel.Dock="Left" Content="{x:Static Properties:Resources.Enabled}" IsChecked="{Binding IsEnabled}" VerticalAlignment="Bottom" />
             <Decorator DockPanel.Dock="Left" Width="20"/>
             <Button Tag="{Binding Uri, Mode=OneWay}" HorizontalAlignment="Right">
               <Button.Template>
@@ -22,7 +22,7 @@
             </Button>
           </DockPanel>
           <Decorator Height="5"/>
-          <GroupBox x:Name="AuthenticationGroup" Header="Authentication" Grid.IsSharedSizeScope="True">
+          <GroupBox x:Name="AuthenticationGroup" Header="{x:Static Properties:Resources.Authentication}" Grid.IsSharedSizeScope="True">
             <StackPanel>
               <ItemsControl ItemsSource="{Binding Credentials}" Margin="2" Focusable="False">
                 <ItemsControl.ItemTemplate>
@@ -37,7 +37,7 @@
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
               <wpf:SharedWidthHeaderedContentControl Margin="2,0">
-                <CheckBox Margin="1" Content="Save credentials (Credentials will be stored as clear text in your local profile!)" IsChecked="{Binding SaveCredentials}" />
+                <CheckBox Margin="1" Content="{x:Static Properties:Resources.TranslatorConfiguration_SaveCredentials}" IsChecked="{Binding SaveCredentials}" />
               </wpf:SharedWidthHeaderedContentControl>
             </StackPanel>
           </GroupBox>

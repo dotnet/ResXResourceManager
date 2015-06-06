@@ -6,6 +6,7 @@
     using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf;
 
     public abstract class LanguageColumnHeaderBase : ObservableObject, ILanguageColumnHeader
     {
@@ -21,7 +22,7 @@
             _neutralResourcesLanguageBinding = new PropertyBinding<CultureInfo>(resourceManager, "Configuration.NeutralResourcesLanguage");
             _neutralResourcesLanguageBinding.ValueChanged += NeutralResourcesLanguage_Changed;
 
-            NeutralCultureCountyOverrides.Default.OverrideChanged += NeutralCultureCountyOverrides_OverrideChanged;
+            NeutralCultureCountryOverrides.Default.OverrideChanged += NeutralCultureCountyOverrides_OverrideChanged;
         }
 
         private void NeutralResourcesLanguage_Changed(object sender, PropertyBindingValueChangedEventArgs<CultureInfo> e)

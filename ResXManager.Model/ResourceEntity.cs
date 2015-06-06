@@ -10,7 +10,7 @@
     using System.IO;
     using System.Linq;
 
-    using tomenglertde.ResXManager.Model.Properties;
+    using TomsToolbox.Core;
 
     /// <summary>
     /// Represents a logical resource file, e.g. "Resources".
@@ -32,9 +32,9 @@
         internal ResourceEntity(ResourceManager owner, string projectName, string baseName, string directory, ICollection<ProjectFile> files)
         {
             Contract.Requires(owner != null);
-            Contract.Requires(!String.IsNullOrEmpty(projectName));
-            Contract.Requires(!String.IsNullOrEmpty(baseName));
-            Contract.Requires(!String.IsNullOrEmpty(directory));
+            Contract.Requires(!string.IsNullOrEmpty(projectName));
+            Contract.Requires(!string.IsNullOrEmpty(baseName));
+            Contract.Requires(!string.IsNullOrEmpty(directory));
             Contract.Requires(files != null);
 
             _owner = owner;
@@ -73,7 +73,7 @@
 
         private static string GetRelativePath(string directory, IEnumerable<ProjectFile> files)
         {
-            Contract.Requires(!String.IsNullOrEmpty(directory));
+            Contract.Requires(!string.IsNullOrEmpty(directory));
             Contract.Requires(files != null);
             Contract.Ensures(Contract.Result<string>() != null);
 
@@ -242,6 +242,7 @@
             resourceLanguage.Changing += language_Changing;
 
             _languages.Add(cultureKey, resourceLanguage);
+            _resourceTableEntries.ForEach(entry => entry.Refresh());
 
             OnLanguageAdded(new LanguageChangedEventArgs(this, resourceLanguage));
         }
@@ -421,9 +422,9 @@
             Contract.Invariant(_owner != null);
             Contract.Invariant(_languages != null);
             Contract.Invariant(_resourceTableEntries != null);
-            Contract.Invariant(!String.IsNullOrEmpty(_projectName));
-            Contract.Invariant(!String.IsNullOrEmpty(_baseName));
-            Contract.Invariant(!String.IsNullOrEmpty(_directory));
+            Contract.Invariant(!string.IsNullOrEmpty(_projectName));
+            Contract.Invariant(!string.IsNullOrEmpty(_baseName));
+            Contract.Invariant(!string.IsNullOrEmpty(_directory));
             Contract.Invariant(_displayName != null);
             Contract.Invariant(_relativePath != null);
             Contract.Invariant(_sortKey != null);

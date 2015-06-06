@@ -4,21 +4,23 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="700"
              xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              xmlns:windows="clr-namespace:System.Windows;assembly=PresentationFramework"
+             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:model="urn:ResXManager.Model"
+             xmlns:toms="urn:TomsToolbox"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:columnHeaders="clr-namespace:tomenglertde.ResXManager.View.ColumnHeaders"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:tomenglertde.ResXManager.View.Behaviors"
-             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-             xmlns:wpf="clr-namespace:TomsToolbox.Wpf;assembly=TomsToolbox.Wpf"
+             xmlns:tools="clr-namespace:tomenglertde.ResXManager.View.Tools"
              x:Name="LayoutRoot"
-             UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
              d:DataContext="{d:DesignInstance model:ResourceManager}">
   <UserControl.Resources>
 
-    <converters:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Query="{x:Static properties:Resources.ConfirmDeleteItems}" />
-    <converters:ConfirmedCommandConverter x:Key="CutCommandConverter" Query="{x:Static properties:Resources.ConfirmCutItems}" />
+    <toms:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Executing="DeleteCommandConverter_Executing" />
+    <toms:ConfirmedCommandConverter x:Key="CutCommandConverter" Executing="CutCommandConverter_Executing" />
+    <toms:ConfirmedCommandConverter x:Key="ImportExcelCommandConverter" Executing="ImportExcelCommandConverter_Executing" Error="CommandConverter_Error" />
+    <toms:ConfirmedCommandConverter x:Key="ErrorHandlerCommandConverter" Error="CommandConverter_Error" />
 
     <Style TargetType="{x:Type Control}" x:Key="SingleSelectElementStyle">
       <Setter Property="IsEnabled" Value="False" />
@@ -41,9 +43,9 @@
 
     <CollectionViewSource x:Key="ResourceEntitiesSource" Source="{Binding FilteredResourceEntities}">
       <CollectionViewSource.SortDescriptions>
-        <componentModel:SortDescription PropertyName="ProjectName"/>
-        <componentModel:SortDescription PropertyName="RelativePath"/>
-        <componentModel:SortDescription PropertyName="BaseName"/>
+        <componentModel:SortDescription PropertyName="ProjectName" />
+        <componentModel:SortDescription PropertyName="RelativePath" />
+        <componentModel:SortDescription PropertyName="BaseName" />
       </CollectionViewSource.SortDescriptions>
       <CollectionViewSource.GroupDescriptions>
         <PropertyGroupDescription PropertyName="ProjectName" />
@@ -56,11 +58,20 @@
       </CollectionViewSource.GroupDescriptions>
     </CollectionViewSource>
 
+    <LinearGradientBrush x:Key="HatchBrush" StartPoint="0,0" EndPoint="4,4" SpreadMethod="Repeat" MappingMode="Absolute">
+      <GradientStop Offset="0" Color="LightCoral" />
+      <GradientStop Offset="0.75" Color="LightCoral" />
+      <GradientStop Offset="0.75" Color="Gray" />
+      <GradientStop Offset="1" Color="Gray" />
+    </LinearGradientBrush>
+
   </UserControl.Resources>
+
   <UserControl.InputBindings>
     <KeyBinding Key="N" Modifiers="Control" Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}" />
     <KeyBinding Key="Insert" Modifiers="Shift" Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}" />
   </UserControl.InputBindings>
+
   <Grid FocusManager.FocusedElement="{Binding ElementName=DataGrid}">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto" MinWidth="120" />
@@ -91,10 +102,10 @@
       <ListBox x:Name="ListBox"
                ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
                Margin="5" BorderThickness="0" SelectionMode="Extended"
-               wpf:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}">
+               toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}">
         <ListBox.ContextMenu>
           <ContextMenu>
-            <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand}">
+            <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
               <MenuItem.Icon>
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
               </MenuItem.Icon>
@@ -104,7 +115,7 @@
         <ListBox.ItemTemplate>
           <DataTemplate DataType="model:ResourceEntity">
             <DockPanel ToolTip="{Binding Path=Directory, Mode=OneWay}" Margin="5,2" HorizontalAlignment="Stretch">
-              <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Focusable="False"/>
+              <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Focusable="False" />
               <Decorator DockPanel.Dock="Left" Width="5" />
               <TextBlock Background="Transparent" VerticalAlignment="Center">
                 <Run Text="{Binding Path=RelativePath, Mode=OneWay}" /><Run Text="{Binding Path=BaseName, Mode=OneWay}" />
@@ -143,7 +154,7 @@
       <Border DockPanel.Dock="Bottom" BorderThickness="0,0.7,0,0" BorderBrush="{x:Static SystemColors.ControlDarkBrush}">
         <DockPanel DockPanel.Dock="Bottom" Background="{Binding Background, ElementName=DataGrid}">
           <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" ToolTip="{x:Static properties:Resources.SelectedTotalToolTip}">
-            <Run Text="{Binding SelectedTableEntries.Count, Mode=OneWay}"/><Run Text="/"/><Run Text="{Binding ResourceTableEntries.Count, Mode=OneWay}"/><Run Text="  "/>
+            <Run Text="{Binding SelectedTableEntries.Count, Mode=OneWay}" /><Run Text="/" /><Run Text="{Binding ResourceTableEntries.Count, Mode=OneWay}" /><Run Text="  " />
           </TextBlock>
           <Control Focusable="False">
             <Control.Resources>
@@ -155,7 +166,7 @@
               </DataTemplate>
               <DataTemplate DataType="{x:Type model:ResourceTableEntry}">
                 <TextBlock>
-                  <Run Text="{Binding Path=Key, Mode=OneWay}" Foreground="Black"/>:
+                  <Run Text="{Binding Path=Key, Mode=OneWay}" Foreground="Black" />:
                   <Run Text="{Binding Path=Owner.BaseName, Mode=OneWay}" FontWeight="Bold" />
                   (<Run Text="{Binding Path=Owner.Directory, Mode=OneWay}" />)
                 </TextBlock>
@@ -164,26 +175,26 @@
             <Control.Template>
               <ControlTemplate>
                 <ContentControl x:Name="footerContent" Foreground="Gray" Margin="5" Focusable="False">
-                  <TextBlock Text="{x:Static properties:Resources.MultipleSelection}"/>
+                  <TextBlock Text="{x:Static properties:Resources.MultipleSelection}" />
                 </ContentControl>
                 <ControlTemplate.Triggers>
                   <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
-                      <Condition Binding="{Binding SelectedItems.Count, ElementName=DataGrid}" Value="0"/>
-                      <Condition Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="0"/>
+                      <Condition Binding="{Binding SelectedItems.Count, ElementName=DataGrid}" Value="0" />
+                      <Condition Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="0" />
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Content" TargetName="footerContent" Value="{x:Static properties:Resources.NoSelection}"/>
+                    <Setter Property="Content" TargetName="footerContent" Value="{x:Static properties:Resources.NoSelection}" />
                   </MultiDataTrigger>
                   <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=ListBox}" Value="1">
-                    <Setter Property="Content" TargetName="footerContent" Value="{Binding SelectedItem, ElementName=ListBox}"/>
+                    <Setter Property="Content" TargetName="footerContent" Value="{Binding SelectedItem, ElementName=ListBox}" />
                   </DataTrigger>
                   <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=DataGrid}" Value="1">
-                    <Setter Property="Content" TargetName="footerContent" Value="{Binding SelectedItem, ElementName=DataGrid}"/>
+                    <Setter Property="Content" TargetName="footerContent" Value="{Binding SelectedItem, ElementName=DataGrid}" />
                   </DataTrigger>
                 </ControlTemplate.Triggers>
               </ControlTemplate>
             </Control.Template>
-          </Control >
+          </Control>
         </DockPanel>
       </Border>
       <Grid>
@@ -244,7 +255,7 @@
               </Button>
               <Button ToolTip="{x:Static properties:Resources.PasteToolTip}"
                       Style="{StaticResource ToolbarCommandButtonStyle}"
-                      Command="{Binding Path=PasteCommand}">
+                      Command="{Binding Path=PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
               </Button>
               <Button ToolTip="{x:Static properties:Resources.AddKeyToolTip}"
@@ -264,7 +275,7 @@
                   </MenuItem.Header>
                   <MenuItem Header="{x:Static properties:Resources.ExportExcelAll}" Command="{Binding ExportExcelAllCommand}" />
                   <MenuItem Header="{x:Static properties:Resources.ExportExcelSelection}" Command="{Binding ExportExcelSelectedCommand}" CommandParameter="{Binding ElementName=DataGrid, Converter={x:Static converters:DataGridToSelectionScopeConverter.Default}}" />
-                  <MenuItem Header="{x:Static properties:Resources.ImportExcel}" Command="{Binding ImportExcelCommand}" />
+                  <MenuItem Header="{x:Static properties:Resources.ImportExcel}" Command="{Binding ImportExcelCommand, Converter={StaticResource ImportExcelCommandConverter}}" />
                 </MenuItem>
               </Menu>
               <Separator />
@@ -305,7 +316,7 @@
                 </ListBox.ItemTemplate>
                 <ListBox.ItemContainerStyle>
                   <Style TargetType="ListBoxItem">
-                    <Setter Property="IsSelected" Value="{Binding Path=Visibility, Converter={x:Static converters:VisibilityToBooleanConverter.Default}}" />
+                    <Setter Property="IsSelected" Value="{Binding Path=Visibility, Converter={x:Static toms:VisibilityToBooleanConverter.Default}}" />
                     <Setter Property="Template">
                       <Setter.Value>
                         <ControlTemplate TargetType="ListBoxItem">
@@ -318,11 +329,14 @@
               </ListBox>
             </Border>
           </Popup>
-          <TextBox x:Name="TextBox" AcceptsReturn="True" SpellCheck.IsEnabled="True">
-            <i:Interaction.Behaviors>
-              <behaviors:SynchronizeTextBoxWithDataGridCellBehavior DataGrid="{Binding ElementName=DataGrid}" />
-            </i:Interaction.Behaviors>
-          </TextBox>
+          <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=TextBox}" WhiteSpaceOpacity="0.4">
+            <TextBox x:Name="TextBox" AcceptsReturn="True" SpellCheck.IsEnabled="True" TextWrapping="Wrap">
+              <i:Interaction.Behaviors>
+                <toms:ZoomFontSizeOnMouseWheelBehavior />
+                <behaviors:SynchronizeTextBoxWithDataGridCellBehavior DataGrid="{Binding ElementName=DataGrid}" />
+              </i:Interaction.Behaviors>
+            </TextBox>
+          </toms:TextBoxVisibleWhiteSpaceDecorator>
         </DockPanel>
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
         <DataGrid Grid.Row="2" x:Name="DataGrid" FrozenColumnCount="1"
@@ -330,7 +344,7 @@
                   dgx:DataGridFilter.IsAutoFilterEnabled="True" AutoGenerateColumns="False"
                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
                   SelectedItem="{Binding SelectedEntry, Mode=TwoWay}"
-                  wpf:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
+                  toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
           <DataGrid.Resources>
 
             <ContextMenu x:Key="RowContextMenu">
@@ -349,7 +363,7 @@
                   <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/copy.png" />
                 </MenuItem.Icon>
               </MenuItem>
-              <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand}">
+              <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
                 <MenuItem.Icon>
                   <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
                 </MenuItem.Icon>
@@ -384,7 +398,7 @@
               <DockPanel>
                 <Grid DockPanel.Dock="Left" Background="Transparent"
                       Style="{StaticResource NeutralLanguageImageContainerStyle}">
-                  <Image x:Name="image" Stretch="None" 
+                  <Image x:Name="image" Stretch="None"
                          Source="{Binding Path=EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
                 </Grid>
                 <Decorator x:Name="padding" DockPanel.Dock="Left" Width="4" />
@@ -416,7 +430,7 @@
             <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
             <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
             <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
-            <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand}" />
+            <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" />
           </DataGrid.InputBindings>
 
           <DataGrid.ItemsPanel>
@@ -426,12 +440,12 @@
                 DataContext="{Binding Path=DataContext, ElementName=DataGrid}"
                 TextElement.FontSize="{Binding Path=TextFontSize, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}">
                 <i:Interaction.Behaviors>
-                  <behaviors:ZoomFontSizeOnMouseWheelBehavior />
+                  <toms:ZoomFontSizeOnMouseWheelBehavior />
                 </i:Interaction.Behaviors>
               </VirtualizingStackPanel>
             </ItemsPanelTemplate>
           </DataGrid.ItemsPanel>
-          
+
           <DataGrid.RowStyle>
             <Style TargetType="DataGridRow">
               <Style.Triggers>
@@ -454,6 +468,11 @@
                     <Setter Property="Background" Value="LightCoral" />
                   </MultiDataTrigger.Setters>
                 </MultiDataTrigger>
+
+                <DataTrigger Binding="{Binding Path=(tools:ColumnManager.ResourceFileExists), RelativeSource={RelativeSource Mode=Self}}" Value="False">
+                  <Setter Property="Background" Value="{StaticResource HatchBrush}" />
+                  <Setter Property="ToolTip" Value="{x:Static properties:Resources.NoResourceFileForResource}" />
+                </DataTrigger>
 
                 <MultiDataTrigger>
                   <MultiDataTrigger.Conditions>
@@ -478,7 +497,7 @@
               <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=IsChecked, ElementName=GroupedViewButton}" Value="True">
                   <Setter Property="ItemsSource" Value="{Binding Source={StaticResource GroupedResourceTableEntriesSource}}" />
-                  <Setter Property="dgx:GroupStyleBinding.GroupStyle" Value="{StaticResource GroupStyle}" />
+                  <Setter Property="toms:StyleBindings.GroupStyle" Value="{StaticResource GroupStyle}" />
                 </DataTrigger>
               </Style.Triggers>
             </Style>
@@ -487,7 +506,7 @@
           <i:Interaction.Behaviors>
             <dgx:BeginEditOnCtrlEnterBehavior />
             <dgx:DisableTargetWhileEditingBehavior Target="{Binding ElementName=ToolBar}" />
-            <dgx:ExtendedStarSizeBehavior/>
+            <dgx:ExtendedStarSizeBehavior />
             <behaviors:ShowErrorsOnlyBehavior ToggleButton="{Binding ElementName=ErrorsOnlyFilterButton}" />
             <behaviors:DataGridTryBeginEditBehavior />
           </i:Interaction.Behaviors>

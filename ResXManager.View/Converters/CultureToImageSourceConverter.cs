@@ -1,15 +1,16 @@
 ﻿namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Windows.Data;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
+
     using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
+
+    using TomsToolbox.Desktop;
 
     public class CultureToImageSourceConverter : IValueConverter
     {
@@ -40,12 +41,11 @@
         /// <param name="value">The value produced by the binding source.</param><param name="targetType">The type of the binding target property.</param><param name="parameter">The converter parameter to use.</param><param name="culture">The culture to use in the converter.</param>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return Convert(value);
+            return Convert(value as CultureInfo);
         }
 
-        internal static ImageSource Convert(object value)
+        internal static ImageSource Convert(CultureInfo culture)
         {
-            var culture = value as CultureInfo;
             if (culture == null)
                 return null;
 
@@ -53,10 +53,13 @@
 
             if (culture.IsNeutralCulture)
             {
-                culture = NeutralCultureCountyOverrides.Default[culture];
+                var countryOverride = NeutralCultureCountryOverrides.Default[culture];
 
-                if (culture != null)
+                if (countryOverride != null)
+                {
+                    culture = countryOverride;
                     cultureName = culture.Name;
+                }
             }
 
             var cultureParts = cultureName.Split('-');
@@ -66,7 +69,9 @@
             var key = cultureParts.Last();
 
             if (Array.BinarySearch(_existingFlags, key, StringComparer.OrdinalIgnoreCase) < 0)
-                return null;
+            {
+                return culture.GetDescendants().Select(Convert).FirstOrDefault(item => item != null);
+            }
 
             var resourcePath = string.Format(CultureInfo.InvariantCulture, @"/ResXManager.View;component/Flags/{0}.gif", key);
             var imageSource = new BitmapImage(new Uri(resourcePath, UriKind.RelativeOrAbsolute));
