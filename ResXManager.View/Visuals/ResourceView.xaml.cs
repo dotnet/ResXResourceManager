@@ -55,7 +55,7 @@
         {
             base.OnInitialized(e);
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Background, () => ListBox.SelectAll());
+            this.BeginInvoke(DispatcherPriority.Background, () => ListBox.SelectAll());
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)

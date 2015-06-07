@@ -84,7 +84,7 @@
             var focusable = child.VisualDescendantsAndSelf().OfType<UIElement>().FirstOrDefault(item => item.Focusable);
             if (focusable != null)
             {
-                Dispatcher.BeginInvoke(new Action(() => focusable.Focus()));
+                focusable.BeginInvoke(() => focusable.Focus());
             }
         }
 
