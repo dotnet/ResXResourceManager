@@ -447,7 +447,7 @@
           </DataGrid.ItemsPanel>
 
           <DataGrid.RowStyle>
-            <Style TargetType="DataGridRow">
+            <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
               <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
                   <Setter Property="Background" Value="{x:Static SystemColors.HighlightBrush}" />
@@ -457,7 +457,7 @@
           </DataGrid.RowStyle>
 
           <DataGrid.CellStyle>
-            <Style TargetType="DataGridCell">
+            <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
               <Style.Triggers>
                 <MultiDataTrigger>
                   <MultiDataTrigger.Conditions>
@@ -492,7 +492,7 @@
           </DataGrid.CellStyle>
 
           <DataGrid.Style>
-            <Style TargetType="DataGrid">
+            <Style TargetType="DataGrid" BasedOn="{StaticResource {x:Type DataGrid}}">
               <Setter Property="ItemsSource" Value="{Binding ResourceTableEntries}" />
               <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=IsChecked, ElementName=GroupedViewButton}" Value="True">

@@ -14,6 +14,7 @@
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
     using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf;
 
     public class ShowErrorsOnlyBehavior : Behavior<DataGrid>
     {
@@ -96,7 +97,7 @@
 
             if (toggleButton.IsChecked.GetValueOrDefault())
             {
-                Dispatcher.BeginInvoke(UpdateErrorsOnlyFilter);
+                toggleButton.BeginInvoke(UpdateErrorsOnlyFilter);
             }
         }
 

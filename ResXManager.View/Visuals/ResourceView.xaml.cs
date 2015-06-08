@@ -13,8 +13,6 @@
     using Microsoft.Win32;
 
     using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Controls;
-    using tomenglertde.ResXManager.View.Converters;
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
@@ -57,7 +55,7 @@
         {
             base.OnInitialized(e);
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Background, () => ListBox.SelectAll());
+            this.BeginInvoke(DispatcherPriority.Background, () => ListBox.SelectAll());
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
