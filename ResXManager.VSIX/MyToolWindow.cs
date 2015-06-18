@@ -435,7 +435,7 @@
             var projectItems = ((DteProjectFile)e.Language.ProjectFile).ProjectItems
                 .Where(projectItem => projectItem != null);
 
-            foreach (var projectItem in projectItems)
+            foreach (var projectItem in projectItems.SelectMany(item => item.DescendantsAndSelf()))
             {
                 Contract.Assume(projectItem != null);
 

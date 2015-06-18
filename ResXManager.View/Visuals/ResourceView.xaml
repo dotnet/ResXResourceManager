@@ -20,6 +20,7 @@
     <toms:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Executing="DeleteCommandConverter_Executing" />
     <toms:ConfirmedCommandConverter x:Key="CutCommandConverter" Executing="CutCommandConverter_Executing" />
     <toms:ConfirmedCommandConverter x:Key="ImportExcelCommandConverter" Executing="ImportExcelCommandConverter_Executing" Error="CommandConverter_Error" />
+    <toms:ConfirmedCommandConverter x:Key="ExportExcelCommandConverter" Executing="ExportExcelCommandConverter_Executing" Error="CommandConverter_Error" />
     <toms:ConfirmedCommandConverter x:Key="ErrorHandlerCommandConverter" Error="CommandConverter_Error" />
 
     <Style TargetType="{x:Type Control}" x:Key="SingleSelectElementStyle">
@@ -273,9 +274,13 @@
                       <Path Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="Black" VerticalAlignment="Center" />
                     </StackPanel>
                   </MenuItem.Header>
-                  <MenuItem Header="{x:Static properties:Resources.ExportExcelAll}" Command="{Binding ExportExcelAllCommand}" />
-                  <MenuItem Header="{x:Static properties:Resources.ExportExcelSelection}" Command="{Binding ExportExcelSelectedCommand}" CommandParameter="{Binding ElementName=DataGrid, Converter={x:Static converters:DataGridToSelectionScopeConverter.Default}}" />
-                  <MenuItem Header="{x:Static properties:Resources.ImportExcel}" Command="{Binding ImportExcelCommand, Converter={StaticResource ImportExcelCommandConverter}}" />
+                  <MenuItem Header="{x:Static properties:Resources.ExportExcelAll}"
+                            Command="{Binding ExportExcelCommand, Converter={StaticResource ExportExcelCommandConverter}}" />
+                  <MenuItem Header="{x:Static properties:Resources.ExportExcelSelection}"
+                            Command="{Binding ExportExcelCommand, Converter={StaticResource ExportExcelCommandConverter}}"
+                            CommandParameter="{Binding ElementName=DataGrid, Converter={x:Static converters:DataGridToSelectionScopeConverter.Default}}" />
+                  <MenuItem Header="{x:Static properties:Resources.ImportExcel}"
+                            Command="{Binding ImportExcelCommand, Converter={StaticResource ImportExcelCommandConverter}}" />
                 </MenuItem>
               </Menu>
               <Separator />

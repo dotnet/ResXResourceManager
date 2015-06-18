@@ -93,6 +93,8 @@
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged(string propertyName)
         {
+            Contract.Requires(!string.IsNullOrEmpty(propertyName));
+
             var handler = PropertyChanged;
             if (handler != null)
                 handler(this, new PropertyChangedEventArgs(propertyName));
@@ -108,7 +110,7 @@
         [NotifyPropertyChangedInvocator]
         private void SetProperty<T>(ref T backingField, T value, string propertyName)
         {
-            Contract.Requires(propertyName != null);
+            Contract.Requires(!string.IsNullOrEmpty(propertyName));
 
             if (Equals(backingField, value))
                 return;

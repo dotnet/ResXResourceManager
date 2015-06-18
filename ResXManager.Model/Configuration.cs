@@ -115,6 +115,18 @@
             }
         }
 
+        public ExcelExportMode ExcelExportMode
+        {
+            get
+            {
+                return GetValue(() => ExcelExportMode);
+            }
+            set
+            {
+                SetValue(value, () => ExcelExportMode);
+            }
+        }
+
         private void PersistCodeReferences()
         {
             SetValue(CodeReferences, () => CodeReferences);

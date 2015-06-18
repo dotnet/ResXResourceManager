@@ -1,5 +1,4 @@
-﻿<#@ template debug="false" hostspecific="true" language="C#" #>
-<#@ assembly name="System.Core" #>
+﻿<#@ assembly name="System.Core" #>
 <#@ assembly name="System.Windows.Forms" #>
 <#@ assembly name="EnvDTE" #>
 <#@ import namespace="EnvDTE" #>
@@ -10,10 +9,6 @@
 <#@ import namespace="System.Collections" #>
 <#@ import namespace="System.ComponentModel.Design" #>
 <#@ output extension=".cs" #><#
-
-    const bool generateDataAnnotationAttributes = true;
-    const bool generateTextAttribute = false;
-    const bool insertRemarks = true;
 
     var resxItem = GetResxProjectItem();
     var resxPath = resxItem.FileNames[0];
@@ -34,7 +29,6 @@
 
 namespace <#= localNamespace #> {
     using System;
-    using System.ComponentModel;
     
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -150,7 +144,7 @@ namespace <#= localNamespace #> {
     [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [AttributeUsage(AttributeTargets.All, AllowMultiple=false)]
-    public sealed class LocalizedDescriptionAttribute : DescriptionAttribute
+    public sealed class LocalizedDescriptionAttribute : System.ComponentModel.DescriptionAttribute
     {
         private readonly StringResourceKey _resourceKey;
 
@@ -181,7 +175,7 @@ namespace <#= localNamespace #> {
     [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [AttributeUsage(AttributeTargets.All, AllowMultiple=false)]
-    public sealed class LocalizedDisplayNameAttribute : DisplayNameAttribute
+    public sealed class LocalizedDisplayNameAttribute : System.ComponentModel.DisplayNameAttribute
     {
         private readonly StringResourceKey _resourceKey;
 
@@ -217,7 +211,7 @@ namespace <#= localNamespace #> {
     [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
-    public sealed class LocalizedTextAttribute : TextAttribute
+    public sealed class LocalizedTextAttribute : global::TomsToolbox.Core.TextAttribute
     {
         private readonly StringResourceKey _resourceKey;
 
@@ -390,7 +384,8 @@ namespace <#= localNamespace #> {
                 Comment = node.Comment,
                 Value = node.GetValue((ITypeResolutionService)null) as string,
                 Type = Type.GetType(node.GetValueTypeName((ITypeResolutionService)null))
-            });
+            })
+            .OrderBy(node => node.Key);
     }
 
     public string XmlEscape(string value)

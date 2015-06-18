@@ -99,7 +99,7 @@
             }
         }
 
-        public IEnumerable<ResourceEntity> ResourceEntities
+        public ICollection<ResourceEntity> ResourceEntities
         {
             get
             {
@@ -251,25 +251,13 @@
             }
         }
 
-        public ICommand ExportExcelSelectedCommand
+        public ICommand ExportExcelCommand
         {
             get
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand<IResourceScope>(
-                    scope => scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()),
-                    ExportExcel);
-            }
-        }
-
-        public ICommand ExportExcelAllCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => ExportExcel(null));
+                return new DelegateCommand<IExportParameters>(CanExportExcel, ExportExcel);
             }
         }
 
@@ -505,28 +493,19 @@
             items.ForEach(item => item.IsInvariant = newValue);
         }
 
-        private void ExportExcel(IResourceScope scope)
+        private static bool CanExportExcel(IExportParameters param)
         {
-            var dlg = new SaveFileDialog
-            {
-                AddExtension = true,
-                CheckPathExists = true,
-                DefaultExt = ".xlsx",
-                Filter = "Excel Worksheets|*.xlsx|All Files|*.*",
-                FilterIndex = 0
-            };
+            if (param == null)
+                return true;
 
-            if (dlg.ShowDialog() != true)
-                return;
+            var scope = param.Scope;
 
-            try
-            {
-                this.ExportExcelFile(dlg.FileName, scope);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            return (scope == null) || (scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()));
+        }
+
+        private void ExportExcel(IExportParameters param)
+        {
+            this.ExportExcelFile(param.FileName, param.Scope);
         }
 
         private void ImportExcel(string fileName)

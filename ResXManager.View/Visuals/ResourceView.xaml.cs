@@ -132,6 +132,25 @@
             viewModel.LanguageAdded(culture);
         }
 
+        private void ExportExcelCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        {
+            var dlg = new SaveFileDialog
+            {
+                AddExtension = true,
+                CheckPathExists = true,
+                DefaultExt = ".xlsx",
+                Filter = "Excel Worksheets|*.xlsx|All Files|*.*",
+                FilterIndex = 0
+            };
+
+            if (!dlg.ShowDialog().GetValueOrDefault())
+                e.Cancel = true;
+            else
+                e.Parameter = new ExportParameters(dlg.FileName, e.Parameter as IResourceScope);
+
+            WaitCursor.Start(this);
+        }
+
         private void ImportExcelCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
         {
             var dlg = new OpenFileDialog
@@ -179,6 +198,27 @@
             var text = (ex is ImportException) ? ex.Message : ex.ToString();
 
             MessageBox.Show(text, Properties.Resources.Title);
+        }
+
+        private class ExportParameters : IExportParameters
+        {
+            public ExportParameters(string fileName, IResourceScope scope)
+            {
+                FileName = fileName;
+                Scope = scope;
+            }
+
+            public IResourceScope Scope
+            {
+                get;
+                private set;
+            }
+
+            public string FileName
+            {
+                get;
+                private set;
+            }
         }
 
         [ContractInvariantMethod]
