@@ -120,10 +120,10 @@
   <data name="CanNotCreateWindow" xml:space="preserve">
     <value>Can not create tool window.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="ToolWindowTitle" xml:space="preserve">
     <value>ResX Resource Manager</value>
-  <comment>@Invariant</comment></data>
+    <comment>@Invariant</comment>
+  </data>
   <data name="IntroMessage" xml:space="preserve">
     <value>ResX Resource Manager loaded.
 Home: http://resxresourcemanager.codeplex.com/
@@ -141,7 +141,7 @@ Do you want to add the resource file to the project?</value>
 {0}</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>Error: </value>
+    <value>Error:</value>
   </data>
   <data name="ExtensionLoadingError" xml:space="preserve">
     <value>Error loading the ResX Manager extension: {0}.
@@ -156,5 +156,8 @@ See output window for details.</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version: {0}</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warning:</value>
   </data>
 </root>

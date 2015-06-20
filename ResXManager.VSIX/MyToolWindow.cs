@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -21,14 +22,15 @@
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.Translators;
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Visuals;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
+    using TomsToolbox.Wpf.Composition;
 
     using VSLangProj;
 
@@ -38,9 +40,11 @@
     /// This class implements the tool window exposed by this package and hosts a user control.
     /// </summary>
     [Guid("79664857-03bf-4bca-aa54-ec998b3328f8")]
-    public sealed class MyToolWindow : ToolWindowPane
+    public sealed class MyToolWindow : ToolWindowPane, IVsServiceProvider
     {
-        private readonly OutputWindowTracer _trace;
+        private readonly ICompositionHost _compositionHost = new CompositionHost();
+
+        private readonly ITracer _trace;
         private readonly ResourceManager _resourceManager;
         private readonly Control _view;
 
@@ -63,19 +67,20 @@
             BitmapResourceID = 301;
             BitmapIndex = 1;
 
-            var translators = TranslatorHost.Translators;
-            if (translators == null) // this never happens, just needed to reference some code to fix WI#4584
-                return;
+            _compositionHost.AddCatalog(new DirectoryCatalog(Path.GetDirectoryName(GetType().Assembly.Location), "ResXManager.*.dll"));
+            _compositionHost.ComposeExportedValue((IVsServiceProvider)this);
 
-            _trace = new OutputWindowTracer(this);
+            ExportProviderLocator.Register(_compositionHost.Container);
 
-            _resourceManager = new ResourceManager();
+            _trace = _compositionHost.GetExportedValue<ITracer>();
 
+            _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
             _resourceManager.BeginEditing += ResourceManager_BeginEditing;
             _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
             _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
 
             _view = new Shell { DataContext = _resourceManager };
+            _view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
             _view.Loaded += view_Loaded;
             _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
             _view.Track(UIElement.IsMouseOverProperty).Changed += view_IsMouseOverChanged;
@@ -91,19 +96,13 @@
                 _trace.WriteLine(Resources.IntroMessage);
 
                 _dte = (DTE)GetService(typeof(DTE));
-                if (_dte == null)
-                {
-                    _trace.TraceError("Error getting DTE service.");
-                    return;
-                }
+                Contract.Assume(_dte != null);
 
                 var executingAssembly = Assembly.GetExecutingAssembly();
-
                 var folder = Path.GetDirectoryName(executingAssembly.Location);
+
                 _trace.WriteLine(Resources.AssemblyLocation, folder);
                 _trace.WriteLine(Resources.Version, new AssemblyName(executingAssembly.FullName).Version);
-
-                AppDomain.CurrentDomain.AssemblyResolve += AppDomain_AssemblyResolve;
 
                 EventManager.RegisterClassHandler(typeof(Shell), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
 
@@ -115,14 +114,19 @@
                 _dte.SetFontSize(_view);
 
                 ReloadSolution();
-
-                AppDomain.CurrentDomain.AssemblyResolve -= AppDomain_AssemblyResolve;
             }
             catch (Exception ex)
             {
                 _trace.TraceError(ex.ToString());
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
             }
+        }
+
+        protected override void OnClose()
+        {
+            base.OnClose();
+
+            _compositionHost.Dispose();
         }
 
         /* Maybe use that later...
@@ -355,8 +359,10 @@
             if (solution == null)
                 return;
 
-            foreach (var neutralLanguageProjectItem in ((DteProjectFile)neutralLanguage.ProjectFile).ProjectItems.OfType<ProjectItem>())
+            foreach (var neutralLanguageProjectItem in ((DteProjectFile)neutralLanguage.ProjectFile).ProjectItems)
             {
+                Contract.Assume(neutralLanguageProjectItem != null);
+
                 var collection = neutralLanguageProjectItem.Collection;
                 Contract.Assume(collection != null);
 
@@ -440,10 +446,8 @@
         {
             Contract.Assume(_dte != null);
 
-            var configuration = new Configuration(_dte);
-
             var solution = _dte.Solution;
-            var sourceFileFilter = new SourceFileFilter(configuration);
+            var sourceFileFilter = new SourceFileFilter(_compositionHost.GetExportedValue<Model.Configuration>());
 
             var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || sourceFileFilter.IsSourceFile(p)).ToArray();
 
@@ -460,7 +464,7 @@
 
             _solutionFingerPrint = fingerPrint;
 
-            _resourceManager.Load(projectFiles, configuration);
+            _resourceManager.Load(projectFiles);
 
             if (!string.Equals(solutionFullName, _currentSolutionFullName, StringComparison.OrdinalIgnoreCase))
             {
@@ -499,44 +503,11 @@
             return string.Join(@"|", fileKeys);
         }
 
-        private Assembly AppDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            if (args.Name == null)
-                return null;
-
-            var assemblySimpleName = new AssemblyName(args.Name).Name;
-            Contract.Assume(assemblySimpleName != null);
-
-            if (assemblySimpleName.EndsWith(@".resources", StringComparison.OrdinalIgnoreCase))
-                return null;
-
-            var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var filePath = Path.Combine(folder, assemblySimpleName + ".dll");
-
-            _trace.WriteLine(string.Format(CultureInfo.CurrentCulture, @"Resolve assembly {0} => {1}", args.Name, filePath));
-
-            if (!File.Exists(filePath))
-            {
-                _trace.TraceError(@"File not found: {0}", filePath);
-                return null;
-            }
-
-            try
-            {
-                var assembly = Assembly.Load(AssemblyName.GetAssemblyName(filePath));
-                return assembly;
-            }
-            catch (Exception ex)
-            {
-                _trace.TraceError(ex.ToString());
-                throw;
-            }
-        }
-
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
+            Contract.Invariant(_compositionHost != null);
             Contract.Invariant(_trace != null);
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_view != null);

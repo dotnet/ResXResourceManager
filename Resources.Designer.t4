@@ -29,6 +29,7 @@
 
 namespace <#= localNamespace #> {
     using System;
+    using System.Diagnostics.Contracts;
     
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -38,6 +39,7 @@ namespace <#= localNamespace #> {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("ResXResourceManager", "1.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    // [ContractVerification(false)]
     public class <#= className #> {
         
         private static global::System.Resources.ResourceManager resourceMan;
@@ -89,7 +91,8 @@ namespace <#= localNamespace #> {
 <# InsertRemarks(insertRemarks, node.Comment); #>
         public static string <#= node.Key #> {
             get {
-                return ResourceManager.GetString("<#= node.Key #>", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("<#= node.Key #>", resourceCulture) ?? "?";
             }
         }
 <#

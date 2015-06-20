@@ -22,7 +22,7 @@
         /// <param name="solution">The solution.</param>
         /// <param name="trace">The tracer.</param>
         /// <returns>The file names of all files.</returns>
-        public static IEnumerable<DteProjectFile> GetProjectFiles(this EnvDTE.Solution solution, OutputWindowTracer trace)
+        public static IEnumerable<DteProjectFile> GetProjectFiles(this EnvDTE.Solution solution, ITracer trace)
         {
             Contract.Requires(solution != null);
             Contract.Requires(solution.Projects != null);
@@ -99,7 +99,7 @@
             }
         }
 
-        private static void GetProjectFiles(this EnvDTE.ProjectItems projectItems, string solutionFolder, IDictionary<string, DteProjectFile> items, OutputWindowTracer trace)
+        private static void GetProjectFiles(this EnvDTE.ProjectItems projectItems, string solutionFolder, IDictionary<string, DteProjectFile> items, ITracer trace)
         {
             Contract.Requires(solutionFolder != null);
             Contract.Requires(items != null);
@@ -132,7 +132,7 @@
             }
         }
 
-        private static void GetProjectFiles(this EnvDTE.ProjectItem projectItem, string solutionFolder, IDictionary<string, DteProjectFile> items, OutputWindowTracer trace)
+        private static void GetProjectFiles(this EnvDTE.ProjectItem projectItem, string solutionFolder, IDictionary<string, DteProjectFile> items, ITracer trace)
         {
             Contract.Requires(projectItem != null);
             Contract.Requires(solutionFolder != null);

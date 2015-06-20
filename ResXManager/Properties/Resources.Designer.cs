@@ -9,6 +9,7 @@
 
 namespace tomenglertde.ResXManager.Properties {
     using System;
+    using System.Diagnostics.Contracts;
     
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -18,6 +19,7 @@ namespace tomenglertde.ResXManager.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("ResXResourceManager", "1.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    // [ContractVerification(false)]
     public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
@@ -62,7 +64,8 @@ namespace tomenglertde.ResXManager.Properties {
         /// </summary>
         public static string ProjectHasNoResourceFile {
             get {
-                return ResourceManager.GetString("ProjectHasNoResourceFile", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ProjectHasNoResourceFile", resourceCulture) ?? "?";
             }
         }
 
@@ -71,7 +74,8 @@ namespace tomenglertde.ResXManager.Properties {
         /// </summary>
         public static string ProjectHasReadOnlyFiles {
             get {
-                return ResourceManager.GetString("ProjectHasReadOnlyFiles", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ProjectHasReadOnlyFiles", resourceCulture) ?? "?";
             }
         }
     }

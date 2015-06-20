@@ -10,6 +10,8 @@
     using System.Text.RegularExpressions;
     using System.Threading;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     public class CodeReference
     {
         private static Thread _backgroundThread;

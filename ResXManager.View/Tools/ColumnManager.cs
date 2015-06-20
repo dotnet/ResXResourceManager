@@ -43,14 +43,13 @@
         public static readonly DependencyProperty ResourceFileExistsProperty =
             DependencyProperty.RegisterAttached("ResourceFileExists", typeof(bool), typeof(ColumnManager), new FrameworkPropertyMetadata(true));
 
-        public static void SetupColumns(this DataGrid dataGrid, IEnumerable<CultureKey> cultureKeys)
+        public static void SetupColumns(this DataGrid dataGrid, ResourceManager resourceManager)
         {
             Contract.Requires(dataGrid != null);
-            Contract.Requires(cultureKeys != null);
+            Contract.Requires(resourceManager != null);
 
+            IEnumerable<CultureKey> cultureKeys = resourceManager.CultureKeys;
             var dataGridEvents = dataGrid.GetAdditionalEvents();
-            var resourceManager = (ResourceManager)dataGrid.DataContext;
-            Contract.Assume(resourceManager != null);
 
             dataGridEvents.ColumnVisibilityChanged -= DataGrid_ColumnVisibilityChanged;
             dataGridEvents.ColumnVisibilityChanged += DataGrid_ColumnVisibilityChanged;

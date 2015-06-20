@@ -5,11 +5,11 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
+    using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
-    using System.CodeDom;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Windows;
@@ -25,6 +25,7 @@
     /// <summary>
     /// Represents all resources found in a folder and its's sub folders.
     /// </summary>
+    [Export]
     public class ResourceManager : ObservableObject
     {
         private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
@@ -33,7 +34,7 @@
         private readonly DispatcherThrottle _selectedEntitiesChangeThrottle;
         private readonly Translations _translations;
 
-        private Configuration _configuration = new Configuration();
+        private readonly Configuration _configuration;
 
         private ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
         private ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
@@ -51,8 +52,12 @@
         public event EventHandler<EventArgs> Loaded;
         public event EventHandler<EventArgs> ReloadRequested;
 
-        public ResourceManager()
+        [ImportingConstructor]
+        private ResourceManager(Configuration configuration)
         {
+            Contract.Requires(configuration != null);
+
+            _configuration = configuration;
             _selectedEntitiesChangeThrottle = new DispatcherThrottle(OnSelectedEntitiesChanged);
             _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
             _translations = new Translations(this);
@@ -62,16 +67,12 @@
         /// Loads all resources from the specified project files.
         /// </summary>
         /// <param name="allSourceFiles">All resource x files.</param>
-        /// <param name="configuration"></param>
-        public void Load<T>(IList<T> allSourceFiles, Configuration configuration)
+        public void Load<T>(IList<T> allSourceFiles)
             where T : ProjectFile
         {
             Contract.Requires(allSourceFiles != null);
-            Contract.Requires(configuration != null);
 
             CodeReference.StopFind();
-
-            Configuration = configuration;
 
             var resourceFilesByDirectory = allSourceFiles
                 .Where(file => file.IsResourceFile())
@@ -346,13 +347,6 @@
                 Contract.Ensures(Contract.Result<Configuration>() != null);
 
                 return _configuration;
-            }
-            set
-            {
-                if (Equals(value, _configuration))
-                    return;
-                _configuration = value;
-                OnPropertyChanged(() => Configuration);
             }
         }
 

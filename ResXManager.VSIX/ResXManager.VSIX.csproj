@@ -164,6 +164,7 @@
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -201,9 +202,10 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
-    <Compile Include="Configuration.cs" />
+    <Compile Include="DteConfiguration.cs" />
     <Compile Include="DteExtensions.cs" />
     <Compile Include="DteProjectFile.cs" />
+    <Compile Include="IVsServiceProvider.cs" />
     <Compile Include="MyToolWindow.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="OutputWindowTracer.cs" />

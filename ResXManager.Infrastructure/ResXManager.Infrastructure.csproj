@@ -185,6 +185,7 @@
       <Link>Version.cs</Link>
     </Compile>
     <Compile Include="Global.cs" />
+    <Compile Include="ITracer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

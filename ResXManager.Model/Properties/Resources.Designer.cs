@@ -9,6 +9,7 @@
 
 namespace tomenglertde.ResXManager.Model.Properties {
     using System;
+    using System.Diagnostics.Contracts;
     
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -18,6 +19,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("ResXResourceManager", "1.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    // [ContractVerification(false)]
     public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
@@ -62,7 +64,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string ClipboardIsEmpty {
             get {
-                return ResourceManager.GetString("ClipboardIsEmpty", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ClipboardIsEmpty", resourceCulture) ?? "?";
             }
         }
 
@@ -71,7 +74,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string DuplicateKeyError {
             get {
-                return ResourceManager.GetString("DuplicateKeyError", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("DuplicateKeyError", resourceCulture) ?? "?";
             }
         }
 
@@ -80,7 +84,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string ExcelExport_MultipleSheets {
             get {
-                return ResourceManager.GetString("ExcelExport_MultipleSheets", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ExcelExport_MultipleSheets", resourceCulture) ?? "?";
             }
         }
 
@@ -89,7 +94,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string ExcelExport_SingleSheet {
             get {
-                return ResourceManager.GetString("ExcelExport_SingleSheet", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ExcelExport_SingleSheet", resourceCulture) ?? "?";
             }
         }
 
@@ -98,7 +104,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string FileSaveError {
             get {
-                return ResourceManager.GetString("FileSaveError", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("FileSaveError", resourceCulture) ?? "?";
             }
         }
 
@@ -107,7 +114,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string ImportColumnMismatchError {
             get {
-                return ResourceManager.GetString("ImportColumnMismatchError", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportColumnMismatchError", resourceCulture) ?? "?";
             }
         }
 
@@ -116,7 +124,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string ImportDuplicateLanguageError {
             get {
-                return ResourceManager.GetString("ImportDuplicateLanguageError", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportDuplicateLanguageError", resourceCulture) ?? "?";
             }
         }
 
@@ -125,7 +134,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string ImportFailedError {
             get {
-                return ResourceManager.GetString("ImportFailedError", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportFailedError", resourceCulture) ?? "?";
             }
         }
 
@@ -134,7 +144,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string ImportFailedPartiallyError {
             get {
-                return ResourceManager.GetString("ImportFailedPartiallyError", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportFailedPartiallyError", resourceCulture) ?? "?";
             }
         }
 
@@ -143,7 +154,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string ImportHeaderMismatchError {
             get {
-                return ResourceManager.GetString("ImportHeaderMismatchError", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportHeaderMismatchError", resourceCulture) ?? "?";
             }
         }
 
@@ -152,7 +164,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string ImportInconsistentDoubleQuoteError {
             get {
-                return ResourceManager.GetString("ImportInconsistentDoubleQuoteError", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportInconsistentDoubleQuoteError", resourceCulture) ?? "?";
             }
         }
 
@@ -161,7 +174,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string ImportLanguageNotEditable {
             get {
-                return ResourceManager.GetString("ImportLanguageNotEditable", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportLanguageNotEditable", resourceCulture) ?? "?";
             }
         }
 
@@ -170,7 +184,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string ImportMapSheetError {
             get {
-                return ResourceManager.GetString("ImportMapSheetError", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportMapSheetError", resourceCulture) ?? "?";
             }
         }
 
@@ -179,7 +194,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string ImportNormalizedTableExpected {
             get {
-                return ResourceManager.GetString("ImportNormalizedTableExpected", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportNormalizedTableExpected", resourceCulture) ?? "?";
             }
         }
 
@@ -188,7 +204,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string ImportParseEmptyTextError {
             get {
-                return ResourceManager.GetString("ImportParseEmptyTextError", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportParseEmptyTextError", resourceCulture) ?? "?";
             }
         }
 
@@ -197,7 +214,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string InvalidResourceFileError {
             get {
-                return ResourceManager.GetString("InvalidResourceFileError", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("InvalidResourceFileError", resourceCulture) ?? "?";
             }
         }
 
@@ -206,7 +224,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string InvalidResourceFileNameAttributeMissingError {
             get {
-                return ResourceManager.GetString("InvalidResourceFileNameAttributeMissingError", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("InvalidResourceFileNameAttributeMissingError", resourceCulture) ?? "?";
             }
         }
 
@@ -215,7 +234,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string InvalidResourceFileValueAttributeMissingError {
             get {
-                return ResourceManager.GetString("InvalidResourceFileValueAttributeMissingError", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("InvalidResourceFileValueAttributeMissingError", resourceCulture) ?? "?";
             }
         }
 
@@ -224,7 +244,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string LanguageNotDefinedError {
             get {
-                return ResourceManager.GetString("LanguageNotDefinedError", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("LanguageNotDefinedError", resourceCulture) ?? "?";
             }
         }
 
@@ -233,7 +254,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         public static string Neutral {
             get {
-                return ResourceManager.GetString("Neutral", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("Neutral", resourceCulture) ?? "?";
             }
         }
 
@@ -245,7 +267,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </remarks>
         public static string Title {
             get {
-                return ResourceManager.GetString("Title", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("Title", resourceCulture) ?? "?";
             }
         }
     }

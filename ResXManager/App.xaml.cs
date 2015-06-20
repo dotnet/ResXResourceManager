@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager
 {
     using System.ComponentModel.Composition.Hosting;
+    using System.Diagnostics.Contracts;
     using System.IO;
 
     using TomsToolbox.Wpf.Composition;
@@ -23,8 +24,13 @@
         {
             base.OnStartup(e);
 
-            _compositionHost.AddCatalog(new DirectoryCatalog(Path.GetDirectoryName(GetType().Assembly.Location), "ResXManager.*.dll"));
-            
+            var path = Path.GetDirectoryName(GetType().Assembly.Location);
+            Contract.Assume(!string.IsNullOrEmpty(path));
+
+            _compositionHost.AddCatalog(GetType().Assembly);
+            _compositionHost.AddCatalog(new DirectoryCatalog(path, "ResXManager.*.dll"));
+
+            Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
             ExportProviderLocator.Register(_compositionHost.Container);
         }
 

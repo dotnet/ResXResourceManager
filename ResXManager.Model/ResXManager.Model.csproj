@@ -154,6 +154,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -198,7 +199,6 @@
     <Compile Include="ConfigurationBase.cs" />
     <Compile Include="IExportParameters.cs" />
     <Compile Include="ImportException.cs" />
-    <Compile Include="ITracer.cs" />
     <Compile Include="JsonSerializerTypeConverter.cs" />
     <Compile Include="LanguageEventArgs.cs" />
     <Compile Include="CultureKey.cs" />
@@ -253,6 +253,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ResXManager.Infrastructure\ResXManager.Infrastructure.csproj">
+      <Project>{A20586DF-CBE9-4A6F-807C-10960D13E848}</Project>
+      <Name>ResXManager.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ResXManager.Translators\ResXManager.Translators.csproj">
       <Project>{D8B0B04F-4273-45DB-AE2D-5A91C89E1225}</Project>
       <Name>ResXManager.Translators</Name>
