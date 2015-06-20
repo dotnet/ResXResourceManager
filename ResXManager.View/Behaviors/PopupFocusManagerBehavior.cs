@@ -7,7 +7,6 @@
     using System.Windows.Controls.Primitives;
     using System.Windows.Input;
     using System.Windows.Interactivity;
-    using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Wpf;
 

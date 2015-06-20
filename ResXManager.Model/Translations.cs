@@ -1,7 +1,9 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows.Input;
@@ -29,7 +31,7 @@
             _owner.Loaded += Owner_Loaded;
         }
 
-        void Owner_Loaded(object sender, System.EventArgs e)
+        void Owner_Loaded(object sender, EventArgs e)
         {
             if (SourceCulture == null)
                 SourceCulture = _owner.CultureKeys.FirstOrDefault();
@@ -239,7 +241,7 @@
         }
 
         [ContractInvariantMethod]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_owner != null);

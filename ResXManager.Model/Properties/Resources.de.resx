@@ -176,4 +176,10 @@
   <data name="ImportMapSheetError" xml:space="preserve">
     <value>Das Arbeitsblatt "{0}" kann nicht importiert werden; es gibt keine passende Ressource in der Umgebung.</value>
   </data>
+  <data name="ExcelExport_MultipleSheets" xml:space="preserve">
+    <value>In mehrere Arbeitsblätter</value>
+  </data>
+  <data name="ExcelExport_SingleSheet" xml:space="preserve">
+    <value>In ein einziges Arbeitsblatt</value>
+  </data>
 </root>

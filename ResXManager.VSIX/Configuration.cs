@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.VSIX
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
     using tomenglertde.ResXManager.Model;
@@ -31,8 +32,8 @@
             get
             {
                 var solution = _dte.Solution;
-                
-                return (solution != null) && !string.IsNullOrEmpty(solution.FullName) && (solution.Globals != null) 
+
+                return (solution != null) && !string.IsNullOrEmpty(solution.FullName) && (solution.Globals != null)
                     ? ConfigurationScope.Solution
                     : ConfigurationScope.Global;
             }
@@ -97,7 +98,7 @@
         }
 
         [ContractInvariantMethod]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_dte != null);

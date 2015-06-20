@@ -13,7 +13,6 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
-    using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
 
     public class ShowErrorsOnlyBehavior : Behavior<DataGrid>

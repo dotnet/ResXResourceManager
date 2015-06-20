@@ -13,6 +13,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
+    using System.Windows.Documents;
 
     using EnvDTE;
 
@@ -22,6 +23,7 @@
 
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Translators;
+    using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Visuals;
 
     using TomsToolbox.Core;
@@ -204,7 +206,7 @@
             }
             else
             {
-                var link = e.OriginalSource as System.Windows.Documents.Hyperlink;
+                var link = e.OriginalSource as Hyperlink;
                 if (link == null)
                     return;
 
@@ -435,7 +437,7 @@
             var projectItems = ((DteProjectFile)e.Language.ProjectFile).ProjectItems
                 .Where(projectItem => projectItem != null);
 
-            foreach (var projectItem in projectItems)
+            foreach (var projectItem in projectItems.SelectMany(item => item.DescendantsAndSelf()))
             {
                 Contract.Assume(projectItem != null);
 
@@ -493,7 +495,7 @@
                 _resourceManager.AreAllFilesSelected = true;
             }
 
-            if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
+            if (Settings.Default.IsFindCodeReferencesEnabled)
             {
                 CodeReference.BeginFind(_resourceManager, projectFiles, _trace);
             }

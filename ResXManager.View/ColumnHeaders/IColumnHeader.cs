@@ -1,7 +1,9 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
+    using System;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+
     using tomenglertde.ResXManager.Model;
 
     public enum ColumnType
@@ -41,7 +43,7 @@
         {
             get
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
 
@@ -51,7 +53,7 @@
             {
                 Contract.Ensures(Contract.Result<CultureKey>() != null);
 
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
 
@@ -61,7 +63,7 @@
             {
                 Contract.Ensures(Contract.Result<CultureInfo>() != null);
 
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
     }

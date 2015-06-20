@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Windows.Controls;
     using System.Windows.Interactivity;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
 

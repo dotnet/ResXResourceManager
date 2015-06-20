@@ -1,7 +1,9 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Tools;
 
@@ -64,7 +66,7 @@
         }
 
         [ContractInvariantMethod]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_cultureKey != null);

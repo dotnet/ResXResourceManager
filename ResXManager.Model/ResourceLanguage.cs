@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace tomenglertde.ResXManager.Model
+﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
     using System.Collections.Generic;
@@ -13,6 +11,7 @@ namespace tomenglertde.ResXManager.Model
     using System.Windows;
     using System.Xml;
     using System.Xml.Linq;
+
     using tomenglertde.ResXManager.Model.Properties;
 
     using TomsToolbox.Core;

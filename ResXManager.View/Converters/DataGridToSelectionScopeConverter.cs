@@ -7,6 +7,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
@@ -24,7 +25,7 @@
             throw new NotImplementedException();
         }
 
-        class DataGridSelectionScope : IResourceScope
+        class DataGridSelectionScope : IResourceScope, IExportParameters
         {
             private readonly DataGrid _dataGrid;
 
@@ -71,6 +72,22 @@
                         .Select(col => col.Header)
                         .OfType<CommentHeader>()
                         .Select(hdr => hdr.CultureKey);
+                }
+            }
+
+            public IResourceScope Scope
+            {
+                get
+                {
+                    return this;
+                }
+            }
+
+            public string FileName
+            {
+                get
+                {
+                    return null;
                 }
             }
         }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -178,5 +178,11 @@
   </data>
   <data name="ImportMapSheetError" xml:space="preserve">
     <value>The sheet "{0}" can't be imported; there is no matching resource file in the solution.</value>
+  </data>
+  <data name="ExcelExport_SingleSheet" xml:space="preserve">
+    <value>Single sheet</value>
+  </data>
+  <data name="ExcelExport_MultipleSheets" xml:space="preserve">
+    <value>Multiple sheets</value>
   </data>
 </root>

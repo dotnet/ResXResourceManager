@@ -140,6 +140,29 @@
 
     <Decorator Height="5" />
 
+    <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_ExcelExportModeHeader}" Style="{StaticResource GroupStyle}">
+      <ListBox Margin="10"  BorderThickness="0" Background="Transparent" 
+               ItemsSource="{Binding Source={x:Type model:ExcelExportMode}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
+               SelectedItem="{Binding Configuration.ExcelExportMode}">
+        <ListBox.ItemContainerStyle>
+          <Style TargetType="ListBoxItem">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+              <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                  <RadioButton Margin="0,2" IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                               Content="{TemplateBinding Content, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}" 
+                               Style="{StaticResource LabelStyle}" Focusable="True"/>
+                </ControlTemplate>
+              </Setter.Value>
+            </Setter>
+          </Style>
+        </ListBox.ItemContainerStyle>
+      </ListBox>
+    </HeaderedContentControl>
+
+    <Decorator Height="5" />
+
     <HeaderedContentControl Header="{x:Static properties:Resources.DetectCodeReferences_Header}" Style="{StaticResource GroupStyle}">
       <DataGrid ItemsSource="{Binding Configuration.CodeReferences.Items}"
                 AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False"

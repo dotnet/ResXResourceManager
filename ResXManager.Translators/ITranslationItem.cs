@@ -1,5 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.Translators
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
@@ -25,7 +26,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<string>() != null);
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
 
@@ -34,7 +35,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<IList<ITranslationMatch>>() != null);
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
     }

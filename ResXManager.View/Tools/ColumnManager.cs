@@ -9,7 +9,9 @@
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Media.Imaging;
+
     using DataGridExtensions;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
     using tomenglertde.ResXManager.View.Controls;
@@ -17,6 +19,8 @@
     using tomenglertde.ResXManager.View.Properties;
 
     using TomsToolbox.Desktop;
+
+    using BooleanToVisibilityConverter = TomsToolbox.Wpf.Converters.BooleanToVisibilityConverter;
 
     public static class ColumnManager
     {
@@ -132,7 +136,7 @@
             };
 
             column.SetIsFilterVisible(false);
-            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, new Binding(@"IsFindCodeReferencesEnabled") { Source = Settings.Default, Converter = TomsToolbox.Wpf.Converters.BooleanToVisibilityConverter.Default });
+            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, new Binding(@"IsFindCodeReferencesEnabled") { Source = Settings.Default, Converter = BooleanToVisibilityConverter.Default });
 
             return column;
         }

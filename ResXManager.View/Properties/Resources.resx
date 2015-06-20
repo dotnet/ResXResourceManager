@@ -341,4 +341,7 @@
   <data name="NoResourceFileForResource" xml:space="preserve">
     <value>There is no resource file for this resource.</value>
   </data>
+  <data name="Configuration_ExcelExportModeHeader" xml:space="preserve">
+    <value>Excel export mode</value>
+  </data>
 </root>

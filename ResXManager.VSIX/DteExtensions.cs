@@ -240,5 +240,20 @@
 
             return false;
         }
+
+        public static IEnumerable<EnvDTE.ProjectItem> DescendantsAndSelf(this EnvDTE.ProjectItem projectItem)
+        {
+            Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.ProjectItem>>() != null);
+
+            if (projectItem == null)
+                yield break;
+
+            yield return projectItem;
+
+            foreach (var item in projectItem.ProjectItems.Cast<EnvDTE.ProjectItem>().SelectMany(p => p.DescendantsAndSelf()))
+            {
+                yield return item;
+            }
+        }
     }
 }

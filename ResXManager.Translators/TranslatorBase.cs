@@ -2,6 +2,7 @@ namespace tomenglertde.ResXManager.Translators
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Net;
@@ -103,7 +104,7 @@ namespace tomenglertde.ResXManager.Translators
         public abstract void Translate(Session session);
 
         [ContractInvariantMethod]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_id != null);
@@ -123,7 +124,7 @@ namespace tomenglertde.ResXManager.Translators
         public override void Translate(Session session)
         {
             Contract.Requires(session != null);
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

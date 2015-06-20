@@ -5,7 +5,9 @@
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
+
     using EnvDTE;
+
     using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Core;
