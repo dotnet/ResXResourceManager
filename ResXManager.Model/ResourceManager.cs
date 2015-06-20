@@ -9,13 +9,12 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
+    using System.CodeDom;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Windows;
     using System.Windows.Data;
     using System.Windows.Input;
-
-    using Microsoft.Win32;
 
     using tomenglertde.ResXManager.Model.Properties;
 
@@ -505,6 +504,9 @@
 
         private void ExportExcel(IExportParameters param)
         {
+            Contract.Requires(param != null);
+            Contract.Requires(param.FileName != null);
+
             this.ExportExcelFile(param.FileName, param.Scope);
         }
 

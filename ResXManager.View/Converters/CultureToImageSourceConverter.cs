@@ -7,7 +7,6 @@
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
-    using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Desktop;

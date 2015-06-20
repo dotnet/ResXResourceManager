@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
@@ -8,6 +9,7 @@
     using System.Windows.Data;
 
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Visuals;
 
     using TomsToolbox.Wpf;
@@ -62,8 +64,8 @@
 
                 var inputBox = new InputBox
                 {
-                    Title = Properties.Resources.Title,
-                    Prompt = Properties.Resources.NewKeyPrompt,
+                    Title = Resources.Title,
+                    Prompt = Resources.NewKeyPrompt,
                     Owner = application.MainWindow,
                     WindowStartupLocation = WindowStartupLocation.CenterOwner
                 };
@@ -85,12 +87,12 @@
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString(), Properties.Resources.Title);
+                    MessageBox.Show(ex.ToString(), Resources.Title);
                 }
             }
 
             [ContractInvariantMethod]
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+            [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
             private void ObjectInvariant()
             {
                 Contract.Invariant(_resourceManager != null);

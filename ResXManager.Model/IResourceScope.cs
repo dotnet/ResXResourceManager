@@ -1,8 +1,8 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
 
     [ContractClass(typeof (ResourceScopeContract))]
     public interface IResourceScope
@@ -31,7 +31,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<IEnumerable<ResourceTableEntry>>() != null);
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
 
@@ -40,7 +40,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<IEnumerable<CultureKey>>() != null);
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
 
@@ -49,7 +49,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<IEnumerable<CultureKey>>() != null);
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
     }

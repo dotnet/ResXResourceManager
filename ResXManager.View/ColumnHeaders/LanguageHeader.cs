@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
     using System.Diagnostics.Contracts;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 

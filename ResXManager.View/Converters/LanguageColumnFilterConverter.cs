@@ -4,6 +4,7 @@
     using System.Globalization;
     using System.Windows.Controls;
     using System.Windows.Data;
+
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
     public class LanguageColumnFilterConverter : IValueConverter

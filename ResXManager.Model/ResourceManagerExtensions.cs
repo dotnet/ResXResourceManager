@@ -7,8 +7,6 @@
     using System.IO;
     using System.Linq;
 
-    using tomenglertde.ResXManager.Model.Properties;
-
     using TomsToolbox.Core;
 
     /// <summary>

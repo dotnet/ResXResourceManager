@@ -7,6 +7,7 @@
     using System.Windows.Data;
     using System.Windows.Interactivity;
     using System.Windows.Markup;
+
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
     public class SynchronizeTextBoxWithDataGridCellBehavior : Behavior<TextBox>

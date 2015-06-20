@@ -2,14 +2,17 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
+
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Spreadsheet;
+
     using tomenglertde.ResXManager.Model.Properties;
+
     using TomsToolbox.Core;
 
     public enum ExcelExportMode
@@ -574,7 +577,7 @@
             }
 
             [ContractInvariantMethod]
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+            [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
             private void ObjectInvariant()
             {
                 Contract.Invariant(_resourceEntity != null);
