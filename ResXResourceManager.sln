@@ -27,9 +27,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DB4FD4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResXManager.Translators", "ResXManager.Translators\ResXManager.Translators.csproj", "{D8B0B04F-4273-45DB-AE2D-5A91C89E1225}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResXManager.Infrastructure", "ResXManager.Infrastructure\ResXManager.Infrastructure.csproj", "{A20586DF-CBE9-4A6F-807C-10960D13E848}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 6
+		SccNumberOfProjects = 7
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs36
 		SccLocalPath0 = .
@@ -48,6 +50,9 @@ Global
 		SccProjectUniqueName5 = ResXManager.Translators\\ResXManager.Translators.csproj
 		SccProjectName5 = ResXManager.Translators
 		SccLocalPath5 = ResXManager.Translators
+		SccProjectUniqueName6 = ResXManager.Infrastructure\\ResXManager.Infrastructure.csproj
+		SccProjectName6 = ResXManager.Infrastructure
+		SccLocalPath6 = ResXManager.Infrastructure
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +79,10 @@ Global
 		{D8B0B04F-4273-45DB-AE2D-5A91C89E1225}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8B0B04F-4273-45DB-AE2D-5A91C89E1225}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8B0B04F-4273-45DB-AE2D-5A91C89E1225}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A20586DF-CBE9-4A6F-807C-10960D13E848}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A20586DF-CBE9-4A6F-807C-10960D13E848}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A20586DF-CBE9-4A6F-807C-10960D13E848}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A20586DF-CBE9-4A6F-807C-10960D13E848}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

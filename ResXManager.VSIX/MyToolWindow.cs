@@ -40,10 +40,6 @@
     [Guid("79664857-03bf-4bca-aa54-ec998b3328f8")]
     public sealed class MyToolWindow : ToolWindowPane
     {
-        private const string CATEGORY_FONTS_AND_COLORS = "FontsAndColors";
-        private const string PAGE_TEXT_EDITOR = "TextEditor";
-        private const string PROPERTY_FONT_SIZE = "FontSize";
-
         private readonly OutputWindowTracer _trace;
         private readonly ResourceManager _resourceManager;
         private readonly Control _view;
@@ -116,7 +112,7 @@
                 // the object returned by the Content property.
                 Content = _view;
 
-                SetFontSize(_dte, _view);
+                _dte.SetFontSize(_view);
 
                 ReloadSolution();
 
@@ -126,29 +122,6 @@
             {
                 _trace.TraceError(ex.ToString());
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
-            }
-        }
-
-        private static void SetFontSize(DTE dte, Control view)
-        {
-            Contract.Requires(dte != null);
-            Contract.Requires(view != null);
-            try
-            {
-                var fontSize = dte.Maybe()
-                    .Select(x => x.Properties[CATEGORY_FONTS_AND_COLORS, PAGE_TEXT_EDITOR])
-                    .Select(x => x.Item(PROPERTY_FONT_SIZE))
-                    .Select(x => x.Value)
-                    .Return(x => Convert.ToDouble(x, CultureInfo.InvariantCulture));
-
-                if (fontSize > 1)
-                {
-                    // Default in VS is 10, but looks like 12 in WPF
-                    view.SetValue(ResourceView.TextFontSizeProperty, fontSize * 1.2);
-                }
-            }
-            catch
-            {
             }
         }
 

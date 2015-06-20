@@ -1,9 +1,12 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using TomsToolbox.Wpf.Composition;
+
     /// <summary>
     /// Interaction logic for Shell.xaml
     /// </summary>
-    public partial class Shell
+    [VisualCompositionExport("Shell")]
+    public partial class Shell : IComposablePart
     {
         public Shell()
         {

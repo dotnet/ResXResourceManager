@@ -13,6 +13,7 @@
              xmlns:columnHeaders="clr-namespace:tomenglertde.ResXManager.View.ColumnHeaders"
              xmlns:behaviors="clr-namespace:tomenglertde.ResXManager.View.Behaviors"
              xmlns:tools="clr-namespace:tomenglertde.ResXManager.View.Tools"
+             xmlns:infrastructure="urn:ResXManager.Infrastructure"
              x:Name="LayoutRoot"
              d:DataContext="{d:DesignInstance model:ResourceManager}">
   <UserControl.Resources>
@@ -443,7 +444,7 @@
               <VirtualizingStackPanel
                 ContextMenu="{StaticResource RowContextMenu}"
                 DataContext="{Binding Path=DataContext, ElementName=DataGrid}"
-                TextElement.FontSize="{Binding Path=TextFontSize, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}">
+                TextElement.FontSize="{Binding Path=(infrastructure:Global.TextFontSize), RelativeSource={RelativeSource Self}}">
                 <i:Interaction.Behaviors>
                   <toms:ZoomFontSizeOnMouseWheelBehavior />
                 </i:Interaction.Behaviors>
