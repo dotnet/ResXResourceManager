@@ -34,6 +34,7 @@
 
     using VSLangProj;
 
+    using Configuration = tomenglertde.ResXManager.Model.Configuration;
     using Process = System.Diagnostics.Process;
 
     /// <summary>
@@ -46,6 +47,7 @@
 
         private readonly ITracer _trace;
         private readonly ResourceManager _resourceManager;
+        private readonly Configuration _configuration;
         private readonly Control _view;
 
         private DTE _dte;
@@ -67,19 +69,23 @@
             BitmapResourceID = 301;
             BitmapIndex = 1;
 
-            _compositionHost.AddCatalog(new DirectoryCatalog(Path.GetDirectoryName(GetType().Assembly.Location), "ResXManager.*.dll"));
+            var path = Path.GetDirectoryName(GetType().Assembly.Location);
+            Contract.Assume(path != null);
+
+            _compositionHost.AddCatalog(new DirectoryCatalog(path, "ResXManager.*.dll"));
             _compositionHost.ComposeExportedValue((IVsServiceProvider)this);
 
             ExportProviderLocator.Register(_compositionHost.Container);
 
             _trace = _compositionHost.GetExportedValue<ITracer>();
+            _configuration = _compositionHost.GetExportedValue<Configuration>();
 
             _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
             _resourceManager.BeginEditing += ResourceManager_BeginEditing;
             _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
             _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
 
-            _view = new Shell { DataContext = _resourceManager };
+            _view = new ShellView();
             _view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
             _view.Loaded += view_Loaded;
             _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
@@ -104,7 +110,7 @@
                 _trace.WriteLine(Resources.AssemblyLocation, folder);
                 _trace.WriteLine(Resources.Version, new AssemblyName(executingAssembly.FullName).Version);
 
-                EventManager.RegisterClassHandler(typeof(Shell), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
+                EventManager.RegisterClassHandler(typeof(ShellView), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
 
                 // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
                 // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
@@ -319,7 +325,7 @@
             if (!resourceLanguages.Any())
                 return false;
 
-            if (resourceManager.Configuration.ConfirmAddLanguageFile)
+            if (_configuration.ConfirmAddLanguageFile)
             {
                 var message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasNoResourceFile, culture.DisplayName);
 
@@ -447,7 +453,7 @@
             Contract.Assume(_dte != null);
 
             var solution = _dte.Solution;
-            var sourceFileFilter = new SourceFileFilter(_compositionHost.GetExportedValue<Model.Configuration>());
+            var sourceFileFilter = new SourceFileFilter(_configuration);
 
             var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || sourceFileFilter.IsSourceFile(p)).ToArray();
 
@@ -474,7 +480,7 @@
 
             if (Settings.Default.IsFindCodeReferencesEnabled)
             {
-                CodeReference.BeginFind(_resourceManager, projectFiles, _trace);
+                CodeReference.BeginFind(_resourceManager, _configuration.CodeReferences, projectFiles, _trace);
             }
         }
 

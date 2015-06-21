@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System;
+    using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -24,6 +25,8 @@
     /// <summary>
     /// Interaction logic for ResourceView.xaml
     /// </summary>
+    [DataTemplate(typeof(ResourceViewModel))]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class ResourceView
     {
         private readonly ResourceManager _resourceManager;
@@ -36,10 +39,9 @@
             _resourceManager.Loaded += ResourceManager_Loaded;
             _resourceManager.EntityFilter = Settings.Default.ResourceFilter;
 
-            BindingOperations.SetBinding(this, EntityFilterProperty, new Binding("DataContext.EntityFilter") { Source = this });
+            BindingOperations.SetBinding(this, EntityFilterProperty, new Binding("EntityFilter") { Source = _resourceManager });
 
             DataGrid.SetupColumns(_resourceManager);
-            this.BeginInvoke(DispatcherPriority.Background, () => ListBox.SelectAll());
         }
 
         private static readonly DependencyProperty EntityFilterProperty =

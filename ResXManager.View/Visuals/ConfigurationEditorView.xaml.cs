@@ -1,16 +1,20 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System.ComponentModel.Composition;
     using System.IO;
     using System.Windows;
 
+    using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Converters;
 
     /// <summary>
-    /// Interaction logic for Configuration.xaml
+    /// Interaction logic for ConfigurationEditorView.xaml
     /// </summary>
-    public partial class ConfigurationEditor
+    [DataTemplate(typeof(ConfigurationEditorViewModel))]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
+    public partial class ConfigurationEditorView
     {
-        public ConfigurationEditor()
+        public ConfigurationEditorView()
         {
             InitializeComponent();
         }

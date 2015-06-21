@@ -322,7 +322,7 @@
     <value>Erstellen neuer Ressourcendateien bestätigen</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sortieren nach:</value>
+    <value>Sortieren mit:</value>
   </data>
   <data name="TranslationsPrefixHeader" xml:space="preserve">
     <value>Präfix vor übersetztem Text: </value>

@@ -41,7 +41,7 @@
             _backgroundThread = null;
         }
 
-        public static void BeginFind(ResourceManager resourceManager, IEnumerable<ProjectFile> allSourceFiles, ITracer tracer)
+        public static void BeginFind(ResourceManager resourceManager, CodeReferenceConfiguration configuration, IEnumerable<ProjectFile> allSourceFiles, ITracer tracer)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(allSourceFiles != null);
@@ -50,7 +50,6 @@
 
             var sourceFiles = allSourceFiles.Where(item => !item.IsResourceFile() && !item.IsDesignerFile()).ToArray();
             var resourceTableEntries = resourceManager.ResourceEntities.SelectMany(entity => entity.Entries).ToArray();
-            var configuration = resourceManager.Configuration.CodeReferences;
 
             _backgroundThread = new Thread(() => FindCodeReferences(configuration, sourceFiles, resourceTableEntries, tracer))
             {

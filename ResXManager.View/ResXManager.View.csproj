@@ -167,20 +167,20 @@
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
-    <Reference Include="TomsToolbox.Core, Version=1.0.12.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Core.1.0.12.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
+    <Reference Include="TomsToolbox.Core, Version=1.0.13.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Core.1.0.13.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TomsToolbox.Desktop, Version=1.0.12.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.12.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
+    <Reference Include="TomsToolbox.Desktop, Version=1.0.13.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.13.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.12.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.12.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
+    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.13.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.13.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TomsToolbox.Wpf, Version=1.0.12.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Wpf.1.0.12.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
+    <Reference Include="TomsToolbox.Wpf, Version=1.0.13.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Wpf.1.0.13.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
@@ -216,11 +216,12 @@
     <Compile Include="Converters\CultureToImageSourceConverter.cs" />
     <Compile Include="Converters\DataGridToSelectionScopeConverter.cs" />
     <Compile Include="ColumnHeaders\IColumnHeader.cs" />
-    <Compile Include="Visuals\ConfigurationEditor.xaml.cs">
-      <DependentUpon>ConfigurationEditor.xaml</DependentUpon>
+    <Compile Include="Visuals\ConfigurationEditorView.xaml.cs">
+      <DependentUpon>ConfigurationEditorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Visuals\LanguageConfiguration.xaml.cs">
-      <DependentUpon>LanguageConfiguration.xaml</DependentUpon>
+    <Compile Include="Visuals\ConfigurationEditorViewModel.cs" />
+    <Compile Include="Visuals\LanguageConfigurationView.xaml.cs">
+      <DependentUpon>LanguageConfigurationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Visuals\InputBox.xaml.cs">
       <DependentUpon>InputBox.xaml</DependentUpon>
@@ -236,6 +237,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="References.cs" />
+    <Compile Include="Visuals\LanguageConfigurationViewModel.cs" />
     <Compile Include="Visuals\LanguageSelectionBox.xaml.cs">
       <DependentUpon>LanguageSelectionBox.xaml</DependentUpon>
     </Compile>
@@ -243,12 +245,15 @@
       <DependentUpon>ResourceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.cs" />
-    <Compile Include="Visuals\Shell.xaml.cs">
-      <DependentUpon>Shell.xaml</DependentUpon>
+    <Compile Include="Visuals\ResourceViewModel.cs" />
+    <Compile Include="Visuals\ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Visuals\Translations.xaml.cs">
-      <DependentUpon>Translations.xaml</DependentUpon>
+    <Compile Include="Visuals\ShellViewModel.cs" />
+    <Compile Include="Visuals\TranslationsView.xaml.cs">
+      <DependentUpon>TranslationsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Visuals\TranslationsViewModel.cs" />
     <Compile Include="Visuals\TranslatorConfiguration.xaml.cs">
       <DependentUpon>TranslatorConfiguration.xaml</DependentUpon>
     </Compile>
@@ -258,11 +263,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Visuals\ConfigurationEditor.xaml">
+    <Page Include="Visuals\ConfigurationEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Visuals\LanguageConfiguration.xaml">
+    <Page Include="Visuals\LanguageConfigurationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -278,11 +283,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Visuals\Shell.xaml">
+    <Page Include="Visuals\ShellView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Visuals\Translations.xaml">
+    <Page Include="Visuals\TranslationsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

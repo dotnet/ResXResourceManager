@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -15,6 +16,7 @@
 
     using TomsToolbox.Desktop;
 
+    [Export(typeof(ITranslator))]
     public class MyMemoryTranslator : TranslatorBase
     {
         private static readonly Uri _uri = new Uri("http://mymemory.translated.net/doc");

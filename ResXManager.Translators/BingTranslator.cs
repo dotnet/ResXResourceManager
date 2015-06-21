@@ -2,6 +2,7 @@ namespace tomenglertde.ResXManager.Translators
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -15,6 +16,7 @@ namespace tomenglertde.ResXManager.Translators
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
+    [Export(typeof(ITranslator))]
     public class BingTranslator : TranslatorBase
     {
         private static readonly Uri _uri = new Uri("https://datamarket.azure.com/dataset/bing/microsofttranslator");

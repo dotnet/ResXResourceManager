@@ -32,8 +32,6 @@
         private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
 
         private readonly DispatcherThrottle _selectedEntitiesChangeThrottle;
-        private readonly Translations _translations;
-
         private readonly Configuration _configuration;
 
         private ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
@@ -60,7 +58,6 @@
             _configuration = configuration;
             _selectedEntitiesChangeThrottle = new DispatcherThrottle(OnSelectedEntitiesChanged);
             _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
-            _translations = new Translations(this);
         }
 
         /// <summary>
@@ -200,14 +197,6 @@
 
                 OnPropertyChanged(() => EntityFilter);
                 OnPropertyChanged(() => AreAllFilesSelected);
-            }
-        }
-
-        public Translations Translations
-        {
-            get
-            {
-                return _translations;
             }
         }
 
@@ -556,13 +545,15 @@
                 .OrderBy(e => e.ProjectName)
                 .ThenBy(e => e.BaseName);
 
+            var reload = _resourceEntities.Any();
+
             _resourceEntities = new ObservableCollection<ResourceEntity>(entities);
             _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
             if (!string.IsNullOrEmpty(_entityFilter))
                 ApplyEntityFilter(_entityFilter);
 
             _selectedEntities.CollectionChanged -= SelectedEntities_CollectionChanged;
-            _selectedEntities = new ObservableCollection<ResourceEntity>(_resourceEntities.Where(_selectedEntities.Contains));
+            _selectedEntities = new ObservableCollection<ResourceEntity>(reload ? _resourceEntities.Where(_selectedEntities.Contains) : _resourceEntities);
             _selectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
 
             var cultureKeys = _resourceEntities.SelectMany(entity => entity.Languages).Distinct().Select(lang => lang.CultureKey);

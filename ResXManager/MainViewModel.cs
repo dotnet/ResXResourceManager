@@ -114,21 +114,20 @@
 
             if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
             {
-                CodeReference.BeginFind(_resourceManager, sourceFiles, _tracer);
+                CodeReference.BeginFind(_resourceManager, _configuration.CodeReferences, sourceFiles, _tracer);
             }
         }
 
         private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
         {
-            if (!CanEdit(_resourceManager, e.Entity, e.Culture))
+            if (!CanEdit(e.Entity, e.Culture))
             {
                 e.Cancel = true;
             }
         }
 
-        private bool CanEdit(ResourceManager resourceManager, ResourceEntity entity, CultureInfo culture)
+        private bool CanEdit(ResourceEntity entity, CultureInfo culture)
         {
-            Contract.Requires(resourceManager != null);
             Contract.Requires(entity != null);
 
             string message;
@@ -145,7 +144,7 @@
                     // because entity.Languages.Any() => languages can only be empty if language != null!
                     Contract.Assume(culture != null);
 
-                    if (resourceManager.Configuration.ConfirmAddLanguageFile)
+                    if (_configuration.ConfirmAddLanguageFile)
                     {
                         message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasNoResourceFile, culture.DisplayName);
 

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.LanguageConfiguration"
+﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.LanguageConfigurationView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
@@ -7,7 +7,7 @@
              xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
-             d:DataContext="{d:DesignInstance model:ResourceManager}">
+             d:DataContext="{d:DesignInstance visuals:LanguageConfigurationViewModel}">
   <UserControl.Resources>
 
     <ControlTemplate x:Key="LanguageControlTemplate">
@@ -32,7 +32,7 @@
       </Border>
     </DataTemplate>
 
-    <CollectionViewSource x:Key="CollectionViewSource" Source="{Binding SpecificCultures}">
+    <CollectionViewSource x:Key="CollectionViewSource" Source="{x:Static model:ResourceManager.SpecificCultures}">
       <CollectionViewSource.GroupDescriptions>
         <visuals:CultureInfoGroupDescription />
       </CollectionViewSource.GroupDescriptions>

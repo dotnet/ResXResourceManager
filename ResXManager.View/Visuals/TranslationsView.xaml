@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.Translations"
+﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.TranslationsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,7 +11,7 @@
              xmlns:wpf="urn:TomsToolbox"
              xmlns:controls="clr-namespace:TomsToolbox.Wpf.Controls;assembly=TomsToolbox.Wpf"
              x:Name="UserControl"
-             d:DataContext="{d:DesignInstance model:ResourceManager}" Background="LightGray">
+             d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}" Background="LightGray">
   <UserControl.Resources>
     <DataTemplate DataType="{x:Type model:CultureKey}">
       <DockPanel>
@@ -55,7 +55,7 @@
     <Decorator Height="10" DockPanel.Dock="Bottom" />
     <Grid>
       <DockPanel>
-        <visuals:TranslatorConfiguration DockPanel.Dock="Top" IsEnabled="{Binding Translations.Session.IsComplete}" />
+        <visuals:TranslatorConfiguration DockPanel.Dock="Top" IsEnabled="{Binding Translations.Session.IsComplete}" Translators="{Binding Translators}" />
         <Decorator Height="10" DockPanel.Dock="Top" />
         <DataGrid ItemsSource="{Binding Translations.Items}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
@@ -74,10 +74,10 @@
               </DataGridTextColumn.ElementStyle>
               <DataGridTextColumn.HeaderTemplate>
                 <DataTemplate>
-                  <StackPanel Orientation="Horizontal" DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridCellsPanel}}" d:DataContext="{d:DesignInstance model:ResourceManager}">
+                  <StackPanel Orientation="Horizontal" DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridCellsPanel}}" d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}">
                     <TextBlock Text="Source:" VerticalAlignment="Center" />
                     <Decorator Width="5" />
-                    <ComboBox Width="150" ItemsSource="{Binding CultureKeys}" SelectedItem="{Binding Translations.SourceCulture}" />
+                    <ComboBox Width="150" ItemsSource="{Binding ResourceManager.CultureKeys}" SelectedItem="{Binding Translations.SourceCulture}" />
                   </StackPanel>
                 </DataTemplate>
               </DataGridTextColumn.HeaderTemplate>
@@ -85,10 +85,10 @@
             <DataGridTemplateColumn Width="3*" IsReadOnly="True">
               <DataGridTemplateColumn.HeaderTemplate>
                 <DataTemplate>
-                  <StackPanel Orientation="Horizontal" DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridCellsPanel}}" d:DataContext="{d:DesignInstance model:ResourceManager}">
+                  <StackPanel Orientation="Horizontal" DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridCellsPanel}}" d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}">
                     <TextBlock Text="Target:" VerticalAlignment="Center" />
                     <Decorator Width="5" />
-                    <ComboBox Width="150" ItemsSource="{Binding CultureKeys}" SelectedItem="{Binding Translations.TargetCulture}" VerticalAlignment="Center" />
+                    <ComboBox Width="150" ItemsSource="{Binding ResourceManager.CultureKeys}" SelectedItem="{Binding Translations.TargetCulture}" VerticalAlignment="Center" />
                     <Decorator Width="20" />
                     <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                       <CheckBox Content="{x:Static properties:Resources.TranslationsPrefixHeader}" IsChecked="{Binding Configuration.PrefixTranslations}"/>

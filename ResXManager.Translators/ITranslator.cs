@@ -2,11 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
     [ContractClass(typeof (ITranslatorContract))]
-    public interface ITranslator
+    public interface ITranslator : INotifyPropertyChanged
     {
         string Id
         {
@@ -116,5 +117,7 @@
                 throw new NotImplementedException();
             }
         }
+
+        public abstract event PropertyChangedEventHandler PropertyChanged;
     }
 }
