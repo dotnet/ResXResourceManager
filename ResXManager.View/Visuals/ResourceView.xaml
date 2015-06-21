@@ -107,7 +107,7 @@
                toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedEntities}">
         <ListBox.ContextMenu>
           <ContextMenu>
-            <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding ResourceManager.PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
+            <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
               <MenuItem.Icon>
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
               </MenuItem.Icon>
@@ -208,7 +208,7 @@
         <DockPanel Grid.Row="0">
           <ToolBarTray DockPanel.Dock="Left" Background="{x:Static SystemColors.MenuBarBrush}">
             <ToolBar x:Name="ToolBar" IsOverflowOpen="False" Background="{x:Static SystemColors.MenuBarBrush}" KeyboardNavigation.TabNavigation="Continue">
-              <Button ToolTip="{x:Static properties:Resources.RefreshViewToolTip}" Command="{Binding ResourceManager.ReloadCommand}">
+              <Button ToolTip="{x:Static properties:Resources.RefreshViewToolTip}" Command="{Binding ReloadCommand}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/refresh.png" />
               </Button>
               <Separator />
@@ -236,28 +236,28 @@
               </Button>
               <ToggleButton ToolTip="{x:Static properties:Resources.FindCodeReferencesButtonToolTip}"
                             IsChecked="{Binding IsFindCodeReferencesEnabled, Source={x:Static properties:Settings.Default}, Mode=TwoWay}"
-                            Command="{Binding ResourceManager.ReloadCommand}">
+                            Command="{Binding ReloadCommand}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/references.png" />
               </ToggleButton>
               <Separator />
               <Button ToolTip="{x:Static properties:Resources.DeleteToolTip}"
                       Style="{StaticResource ToolbarCommandButtonStyle}"
-                      Command="{Binding Path=ResourceManager.DeleteCommand, Converter={StaticResource DeleteCommandConverter}}">
+                      Command="{Binding Path=DeleteCommand, Converter={StaticResource DeleteCommandConverter}}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/delete.png" />
               </Button>
               <Button ToolTip="{x:Static properties:Resources.CutToolTip}"
                       Style="{StaticResource ToolbarCommandButtonStyle}"
-                      Command="{Binding Path=ResourceManager.CutCommand, Converter={StaticResource CutCommandConverter}}">
+                      Command="{Binding Path=CutCommand, Converter={StaticResource CutCommandConverter}}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/cut.png" />
               </Button>
               <Button ToolTip="{x:Static properties:Resources.CopyToolTip}"
                       Style="{StaticResource ToolbarCommandButtonStyle}"
-                      Command="{Binding Path=ResourceManager.CopyCommand}">
+                      Command="{Binding Path=CopyCommand}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/copy.png" />
               </Button>
               <Button ToolTip="{x:Static properties:Resources.PasteToolTip}"
                       Style="{StaticResource ToolbarCommandButtonStyle}"
-                      Command="{Binding Path=ResourceManager.PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
+                      Command="{Binding Path=PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
               </Button>
               <Button ToolTip="{x:Static properties:Resources.AddKeyToolTip}"
@@ -276,12 +276,12 @@
                     </StackPanel>
                   </MenuItem.Header>
                   <MenuItem Header="{x:Static properties:Resources.ExportExcelAll}"
-                            Command="{Binding ResourceManager.ExportExcelCommand, Converter={StaticResource ExportExcelCommandConverter}}" />
+                            Command="{Binding ExportExcelCommand, Converter={StaticResource ExportExcelCommandConverter}}" />
                   <MenuItem Header="{x:Static properties:Resources.ExportExcelSelection}"
-                            Command="{Binding ResourceManager.ExportExcelCommand, Converter={StaticResource ExportExcelCommandConverter}}"
+                            Command="{Binding ExportExcelCommand, Converter={StaticResource ExportExcelCommandConverter}}"
                             CommandParameter="{Binding ElementName=DataGrid, Converter={x:Static converters:DataGridToSelectionScopeConverter.Default}}" />
                   <MenuItem Header="{x:Static properties:Resources.ImportExcel}"
-                            Command="{Binding ResourceManager.ImportExcelCommand, Converter={StaticResource ImportExcelCommandConverter}}" />
+                            Command="{Binding ImportExcelCommand, Converter={StaticResource ImportExcelCommandConverter}}" />
                 </MenuItem>
               </Menu>
               <Separator />
@@ -354,30 +354,30 @@
           <DataGrid.Resources>
 
             <ContextMenu x:Key="RowContextMenu">
-              <MenuItem Header="{x:Static properties:Resources.Delete}" Command="{Binding ResourceManager.DeleteCommand, Converter={StaticResource DeleteCommandConverter}}">
+              <MenuItem Header="{x:Static properties:Resources.Delete}" Command="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}">
                 <MenuItem.Icon>
                   <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/delete.png" />
                 </MenuItem.Icon>
               </MenuItem>
-              <MenuItem Header="{x:Static properties:Resources.Cut}" Command="{Binding ResourceManager.CutCommand, Converter={StaticResource CutCommandConverter}}">
+              <MenuItem Header="{x:Static properties:Resources.Cut}" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}">
                 <MenuItem.Icon>
                   <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/cut.png" />
                 </MenuItem.Icon>
               </MenuItem>
-              <MenuItem Header="{x:Static properties:Resources.Copy}" Command="{Binding ResourceManager.CopyCommand}">
+              <MenuItem Header="{x:Static properties:Resources.Copy}" Command="{Binding CopyCommand}">
                 <MenuItem.Icon>
                   <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/copy.png" />
                 </MenuItem.Icon>
               </MenuItem>
-              <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding ResourceManager.PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
+              <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
                 <MenuItem.Icon>
                   <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
                 </MenuItem.Icon>
               </MenuItem>
               <MenuItem Header="{x:Static properties:Resources.Invariant}" IsCheckable="True"
-                        IsChecked="{Binding Mode=OneWay, Path=SelectedEntry.IsInvariant }"
-                        Command="{Binding ResourceManager.ToggleInvariantCommand}" />
-              <MenuItem Header="{x:Static properties:Resources.CopyKeys}" Command="{Binding ResourceManager.CopyKeysCommand}" />
+                        IsChecked="{Binding Mode=OneWay, Path=ResourceManager.SelectedEntry.IsInvariant }"
+                        Command="{Binding ToggleInvariantCommand}" />
+              <MenuItem Header="{x:Static properties:Resources.CopyKeys}" Command="{Binding CopyKeysCommand}" />
             </ContextMenu>
 
             <ContextMenu x:Key="NeutralLanguageContextMenu"
@@ -432,11 +432,11 @@
           </DataGrid.Resources>
 
           <DataGrid.InputBindings>
-            <KeyBinding Key="Delete" Command="{Binding ResourceManager.DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" />
-            <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding ResourceManager.CutCommand, Converter={StaticResource CutCommandConverter}}" />
-            <KeyBinding Key="X" Modifiers="Control" Command="{Binding ResourceManager.CutCommand, Converter={StaticResource CutCommandConverter}}" />
-            <KeyBinding Key="C" Modifiers="Control" Command="{Binding ResourceManager.CopyCommand}" />
-            <KeyBinding Key="V" Modifiers="Control" Command="{Binding ResourceManager.PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" />
+            <KeyBinding Key="Delete" Command="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" />
+            <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
+            <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
+            <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
+            <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" />
           </DataGrid.InputBindings>
 
           <DataGrid.ItemsPanel>

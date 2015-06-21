@@ -200,107 +200,6 @@
             }
         }
 
-        public ICommand CopyCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(CanCutOrCopy, CopySelected);
-            }
-        }
-
-        public ICommand CutCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(CanCutOrCopy, CutSelected);
-            }
-        }
-
-        public ICommand DeleteCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(CanDelete, DeleteSelected);
-            }
-        }
-
-        public ICommand PasteCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(CanPaste, Paste);
-            }
-        }
-
-        public ICommand ExportExcelCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand<IExportParameters>(CanExportExcel, ExportExcel);
-            }
-        }
-
-        public ICommand ImportExcelCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand<string>(ImportExcel);
-            }
-        }
-
-        public ICommand CopyKeysCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => _selectedTableEntries.Any(), CopyKeys);
-            }
-        }
-
-        public ICommand ToggleInvariantCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => _selectedTableEntries.Any(), ToggleInvariant);
-            }
-        }
-
-        public ICommand ReloadCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(OnReloadRequested);
-            }
-        }
-
-        public ICommand SortNodesByKeyCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(SortNodesByKey);
-            }
-
-        }
-
         public bool? AreAllFilesSelected
         {
             get
@@ -369,7 +268,12 @@
             }
         }
 
-        private bool CanEdit(ResourceEntity resourceEntity, CultureInfo culture)
+        public void Reload()
+        {
+            OnReloadRequested();
+        }
+
+        public bool CanEdit(ResourceEntity resourceEntity, CultureInfo culture)
         {
             Contract.Requires(resourceEntity != null);
 
@@ -383,137 +287,6 @@
             eventHandler(this, args);
 
             return !args.Cancel;
-        }
-
-        private bool CanDelete()
-        {
-            return SelectedTableEntries.Any();
-        }
-
-        private bool CanCutOrCopy()
-        {
-            var entries = SelectedTableEntries;
-
-            var totalNumberOfEntries = entries.Count;
-            if (totalNumberOfEntries == 0)
-                return false;
-
-            // Only allow is all keys are different.
-            var numberOfDistinctEntries = entries.Select(e => e.Key).Distinct().Count();
-
-            return numberOfDistinctEntries == totalNumberOfEntries;
-        }
-
-        private bool CanPaste()
-        {
-            return _selectedEntities.Count == 1;
-        }
-
-        private void CutSelected()
-        {
-            var selectedItems = _selectedTableEntries.ToList();
-
-            var resourceFiles = selectedItems.Select(item => item.Owner).Distinct();
-
-            if (resourceFiles.Any(resourceFile => !CanEdit(resourceFile, null)))
-                return;
-
-            Clipboard.SetText(selectedItems.ToTextTable());
-
-            selectedItems.ForEach(item => item.Owner.Remove(item));
-        }
-
-        private void CopySelected()
-        {
-            var selectedItems = _selectedTableEntries.ToList();
-
-            var entries = selectedItems.Cast<ResourceTableEntry>().ToArray();
-            Clipboard.SetText(entries.ToTextTable());
-        }
-
-        public void DeleteSelected()
-        {
-            var selectedItems = _selectedTableEntries.ToList();
-
-            if (selectedItems.Count == 0)
-                return;
-
-            var resourceFiles = selectedItems.Select(item => item.Owner).Distinct();
-
-            if (resourceFiles.Any(resourceFile => !CanEdit(resourceFile, null)))
-                return;
-
-            selectedItems.ForEach(item => item.Owner.Remove(item));
-        }
-
-        private void Paste()
-        {
-            var selectedItems = _selectedEntities.ToList();
-
-            if (selectedItems.Count != 1)
-                return;
-
-            var entity = selectedItems[0];
-
-            Contract.Assume(entity != null);
-
-            if (!CanEdit(entity, null))
-                return;
-
-            entity.ImportTextTable(Clipboard.GetText());
-        }
-
-        private void ToggleInvariant()
-        {
-            var items = _selectedTableEntries.ToList();
-
-            if (!items.Any())
-                return;
-
-            var newValue = !items.First().IsInvariant;
-
-            items.ForEach(item => item.IsInvariant = newValue);
-        }
-
-        private static bool CanExportExcel(IExportParameters param)
-        {
-            if (param == null)
-                return true;
-
-            var scope = param.Scope;
-
-            return (scope == null) || (scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()));
-        }
-
-        private void ExportExcel(IExportParameters param)
-        {
-            Contract.Requires(param != null);
-            Contract.Requires(param.FileName != null);
-
-            this.ExportExcelFile(param.FileName, param.Scope);
-        }
-
-        private void ImportExcel(string fileName)
-        {
-            Contract.Requires(fileName != null);
-
-            this.ImportExcelFile(fileName);
-        }
-
-        private void CopyKeys()
-        {
-            var selectedKeys = _selectedTableEntries.Select(item => item.Key);
-
-            Clipboard.SetText(string.Join(Environment.NewLine, selectedKeys));
-        }
-
-        private void SortNodesByKey()
-        {
-            foreach (var language in _resourceEntities.SelectMany(entity => entity.Languages))
-            {
-                Contract.Assume(language != null);
-                language.SortNodesByKey();
-            }
         }
 
         private void OnLoaded()

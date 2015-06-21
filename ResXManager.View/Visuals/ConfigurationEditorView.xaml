@@ -125,7 +125,7 @@
           </StackPanel>
           <Button Padding="5,2" TabIndex="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                   Content="{x:Static properties:Resources.SortAllFilesNow}"
-                  Command="{Binding ResourceManager.SortNodesByKeyCommand, Converter={StaticResource SortNodesByKeyCommandConverter}}" />
+                  Command="{Binding SortNodesByKeyCommand, Converter={StaticResource SortNodesByKeyCommandConverter}}" />
         </Grid>
       </HeaderedContentControl>
 
