@@ -1,3 +1,5 @@
+1.0.0.57:
+* WI4595: Excel sheet name too long: Export can now be configured to create one single sheet.
 1.0.0.56:
 * WI4592: Word wrap for the top-right edit box.
 1.0.0.55:
