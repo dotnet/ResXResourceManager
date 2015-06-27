@@ -12,9 +12,6 @@
     using System.Windows;
     using System.Windows.Controls.Primitives;
 
-    using Microsoft.WindowsAPICodePack.Dialogs;
-    using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
-
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Properties;
 
@@ -85,12 +82,12 @@
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "CA is wrong about this!")]
         private void Browse_Click(object sender, RoutedEventArgs e)
         {
-            using (var dlg = new CommonOpenFileDialog { IsFolderPicker = true, InitialDirectory = Settings.StartupFolder, EnsurePathExists = true })
+            using (var dlg = new System.Windows.Forms.FolderBrowserDialog { SelectedPath = Settings.StartupFolder })
             {
-                if (dlg.ShowDialog() !=CommonFileDialogResult.Ok)
+                if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                     return;
 
-                Folder = Settings.StartupFolder = dlg.FileName;
+                Folder = Settings.StartupFolder = dlg.SelectedPath;
                 Settings.Save();
 
                 Load();
