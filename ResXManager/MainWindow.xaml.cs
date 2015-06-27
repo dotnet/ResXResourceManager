@@ -10,16 +10,12 @@
     using System.IO;
     using System.Linq;
     using System.Windows;
-    using System.Windows.Documents;
-    using System.Windows.Forms;
+    using System.Windows.Controls.Primitives;
 
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Properties;
 
     using TomsToolbox.Wpf;
-
-    using ButtonBase = System.Windows.Controls.Primitives.ButtonBase;
-    using MessageBox = System.Windows.MessageBox;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -86,7 +82,7 @@
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "CA is wrong about this!")]
         private void Browse_Click(object sender, RoutedEventArgs e)
         {
-            using (var dlg = new FolderBrowserDialog { SelectedPath = Settings.StartupFolder })
+            using (var dlg = new System.Windows.Forms.FolderBrowserDialog { SelectedPath = Settings.StartupFolder })
             {
                 if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                     return;
@@ -143,7 +139,7 @@
             }
             else
             {
-                var link = e.OriginalSource as Hyperlink;
+                var link = e.OriginalSource as System.Windows.Documents.Hyperlink;
                 if (link == null)
                     return;
 

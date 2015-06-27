@@ -570,7 +570,9 @@
             {
                 Contract.Ensures(Contract.Result<IEnumerable<IEnumerable<string>>>() != null);
 
-                var languages = _resourceEntity.Languages.Select(l => l.CultureKey).ToArray();
+                var languages = _resourceEntity.Languages
+                    .Select(l => l.CultureKey)
+                    .ToArray();
 
                 return languages.GetHeaderRows(scope)
                     .Concat(_resourceEntity.GetDataRows(languages, scope));
