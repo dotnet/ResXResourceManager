@@ -52,7 +52,7 @@
 
             _backgroundThread = new Thread(() => FindCodeReferences(configuration, sourceFiles, resourceTableEntries, tracer))
             {
-                IsBackground = true, 
+                IsBackground = true,
                 Priority = ThreadPriority.Lowest
             };
 
@@ -93,7 +93,7 @@
 
                         if (!configs.Any())
                             continue;
-                        
+
                         FindCodeReferences(configs, sourceFile, baseName, tableEntries, tracer);
                     }
                 }
