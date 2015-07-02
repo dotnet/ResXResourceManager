@@ -219,7 +219,7 @@
 
             var firstLanguage = _languages.Values.First();
             Contract.Assume(firstLanguage != null);
-            
+
             firstLanguage.ForceValue(key, string.Empty); // force an entry in the neutral language resource file.
             var resourceTableEntry = new ResourceTableEntry(this, key, _languages);
             _resourceTableEntries.Add(resourceTableEntry);

@@ -155,6 +155,7 @@
     <CodeContractsSuggestReadonly>True</CodeContractsSuggestReadonly>
     <CodeContractsSkipAnalysisIfCannotConnectToCache>False</CodeContractsSkipAnalysisIfCannotConnectToCache>
     <CodeContractsBeingOptimisticOnExternal>True</CodeContractsBeingOptimisticOnExternal>
+    <CodeContractsInferEnsuresAutoProperties>True</CodeContractsInferEnsuresAutoProperties>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -349,7 +350,7 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
     <Exec ContinueOnError="false"
-          Command="&quot;$(SolutionDir)\packages\Brutal.Dev.StrongNameSigner.1.4.8\tools\StrongNameSigner.Console.exe&quot; -in &quot;$(SolutionDir)\packages&quot;" />
+          Command="&quot;$(SolutionDir)packages\Brutal.Dev.StrongNameSigner.1.4.8\tools\StrongNameSigner.Console.exe&quot; -in &quot;$(SolutionDir)packages\WindowsAPICodePack-Core.1.1.1|$(SolutionDir)packages\WindowsAPICodePack-Shell.1.1.1&quot; -k &quot;$(SolutionDir)key.snk&quot;" />
   </Target>
   <Target Name="AfterBuild">
   </Target>

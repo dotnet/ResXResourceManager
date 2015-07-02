@@ -41,7 +41,7 @@
             catch
             {
             }
-            
+
             _configuration = new XmlConfiguration();
         }
 
