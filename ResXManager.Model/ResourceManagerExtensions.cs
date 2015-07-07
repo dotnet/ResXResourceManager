@@ -63,7 +63,7 @@
                     continue;
 
                 var directory = new DirectoryInfo(directoryFiles.Key);
-                var project = FindProject(directory);
+                var project = FindProject(directory, solutionFolder.FullName);
 
                 var projectName = "<no project>";
                 var uniqueProjectName = (string)null;
@@ -88,11 +88,11 @@
             return allProjectFiles;
         }
 
-        private static FileInfo FindProject(DirectoryInfo directory)
+        private static FileInfo FindProject(DirectoryInfo directory, string solutionFolder)
         {
             Contract.Requires(directory != null);
 
-            while (directory != null)
+            while ((directory != null) && (directory.FullName.Length >= solutionFolder.Length))
             {
                 var projectFiles = directory.EnumerateFiles(@"*.*proj", SearchOption.TopDirectoryOnly);
                 Contract.Assume(projectFiles != null);
