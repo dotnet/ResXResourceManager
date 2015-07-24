@@ -200,7 +200,7 @@
 
                 var rows = sheet.GetRows(workbookPart);
 
-                var data = (IList<IList<string>>)rows.Select(row => row.GetCellValues(sharedStrings)).ToArray();
+                var data = (IList<IList<string>>)rows.Select(row => (IList<string>)row.GetCellValues(sharedStrings).ToArray()).ToArray();
                 if (data.Count == 0)
                     continue;
 
