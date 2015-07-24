@@ -73,8 +73,10 @@
                     projectName = Path.ChangeExtension(project.Name, null);
 
                     var fullProjectName = project.FullName;
-                    Contract.Assume(fullProjectName.Length >= solutionFolderLength); // all files are below solution folder.
-                    uniqueProjectName = fullProjectName.Substring(solutionFolderLength);
+                    if (fullProjectName.Length >= solutionFolderLength) // project found is in solution tree
+                    {
+                        uniqueProjectName = fullProjectName.Substring(solutionFolderLength);
+                    }
                 }
 
                 foreach (var file in directoryFiles)
@@ -91,6 +93,7 @@
         private static FileInfo FindProject(DirectoryInfo directory, string solutionFolder)
         {
             Contract.Requires(directory != null);
+            Contract.Requires(solutionFolder != null);
 
             while ((directory != null) && (directory.FullName.Length >= solutionFolder.Length))
             {

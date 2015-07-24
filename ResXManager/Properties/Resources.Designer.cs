@@ -9,7 +9,8 @@
 
 namespace tomenglertde.ResXManager.Properties {
     using System;
-    
+    using System.Diagnostics.Contracts;
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -62,7 +63,8 @@ namespace tomenglertde.ResXManager.Properties {
         /// </summary>
         public static string ProjectHasNoResourceFile {
             get {
-                return ResourceManager.GetString("ProjectHasNoResourceFile", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ProjectHasNoResourceFile", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -71,7 +73,8 @@ namespace tomenglertde.ResXManager.Properties {
         /// </summary>
         public static string ProjectHasReadOnlyFiles {
             get {
-                return ResourceManager.GetString("ProjectHasReadOnlyFiles", resourceCulture);
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ProjectHasReadOnlyFiles", resourceCulture) ?? string.Empty;
             }
         }
     }

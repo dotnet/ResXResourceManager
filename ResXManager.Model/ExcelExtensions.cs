@@ -200,8 +200,8 @@
 
                 var rows = sheet.GetRows(workbookPart);
 
-                var data = (IList<IList<string>>)rows.Select(row => (IList<string>)row.GetCellValues(sharedStrings).ToArray()).ToArray();
-                if (data.Count == 0)
+                var data = rows.Select(row => row.GetCellValues(sharedStrings)).ToArray();
+                if (data.Length == 0)
                     continue;
 
                 resourceEntity.ImportTable(FixedColumnHeaders, data);
@@ -215,11 +215,11 @@
                 .SequenceEqual(_singleSheetFixedColumnHeaders);
         }
 
-        private static IEnumerable<string> GetCellValues(this Row row, IList<SharedStringItem> sharedStrings)
+        private static IList<string> GetCellValues(this Row row, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(row != null);
 
-            return row.OfType<Cell>().GetCellValues(sharedStrings);
+            return row.OfType<Cell>().GetCellValues(sharedStrings).ToArray();
         }
 
         private static IEnumerable<Row> GetRows(this Sheet sheet, WorkbookPart workbookPart)
