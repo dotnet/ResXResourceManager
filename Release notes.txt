@@ -1,3 +1,8 @@
+1.0.0.58:
+* WI4614: Regression in spreadsheet import
+* WI4621: excel import/export broken in 1.0.0.57
+* WI4615: App crashing when trying to load resx folder
+* WI4609: Issue with path length
 1.0.0.57:
 * WI4595: Excel sheet name too long: Export can now be configured to create one single sheet.
 1.0.0.56:

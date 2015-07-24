@@ -38,8 +38,8 @@
     <SupportUrl>https://resxresourcemanager.codeplex.com</SupportUrl>
     <ProductName>ResX Resource Manager</ProductName>
     <PublisherName>tom-englert.de</PublisherName>
-    <ApplicationRevision>57</ApplicationRevision>
-    <ApplicationVersion>1.0.0.57</ApplicationVersion>
+    <ApplicationRevision>58</ApplicationRevision>
+    <ApplicationVersion>1.0.0.58</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -355,8 +355,7 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <Target Name="BeforeBuild">
-    <Exec ContinueOnError="false"
-          Command="&quot;$(SolutionDir)packages\Brutal.Dev.StrongNameSigner.1.5.0\tools\StrongNameSigner.Console.exe&quot; -in &quot;$(SolutionDir)packages\WindowsAPICodePack-Core.1.1.1|$(SolutionDir)packages\WindowsAPICodePack-Shell.1.1.1&quot; -k &quot;$(SolutionDir)key.snk&quot;" />
+    <Exec ContinueOnError="false" Command="&quot;$(SolutionDir)packages\Brutal.Dev.StrongNameSigner.1.5.0\tools\StrongNameSigner.Console.exe&quot; -in &quot;$(SolutionDir)packages\WindowsAPICodePack-Core.1.1.1|$(SolutionDir)packages\WindowsAPICodePack-Shell.1.1.1&quot; -k &quot;$(SolutionDir)key.snk&quot;" />
   </Target>
   <Target Name="AfterBuild">
   </Target>
