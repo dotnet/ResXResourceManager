@@ -116,7 +116,7 @@ namespace tomenglertde.ResXManager.Translators
     [ContractClassFor(typeof (TranslatorBase))]
     abstract class TranslatorBaseContract : TranslatorBase
     {
-        protected TranslatorBaseContract(string id, string displayName, Uri uri, IList<ICredentialItem> credentials) 
+        protected TranslatorBaseContract(string id, string displayName, Uri uri, IList<ICredentialItem> credentials)
             : base(id, displayName, uri, credentials)
         {
         }

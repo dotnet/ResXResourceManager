@@ -11,6 +11,8 @@
     using System.Windows;
     using System.Windows.Input;
 
+    using Microsoft.WindowsAPICodePack.Dialogs;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Properties;
@@ -91,12 +93,14 @@
 
         private void Browse()
         {
-            using (var dlg = new System.Windows.Forms.FolderBrowserDialog { SelectedPath = Settings.Default.StartupFolder })
+            var settings = Settings.Default;
+
+            using (var dlg = new CommonOpenFileDialog { IsFolderPicker = true, InitialDirectory = settings.StartupFolder, EnsurePathExists = true })
             {
-                if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                if (dlg.ShowDialog() != CommonFileDialogResult.Ok)
                     return;
 
-                Folder = Settings.Default.StartupFolder = dlg.SelectedPath;
+                Folder = settings.StartupFolder = dlg.FileName;
 
                 Load();
             }
