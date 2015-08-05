@@ -349,35 +349,34 @@
                   HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" Padding="2" BorderThickness="0"
                   dgx:DataGridFilter.IsAutoFilterEnabled="True" AutoGenerateColumns="False"
                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
-                  SelectedItem="{Binding ResourceManager.SelectedEntry, Mode=TwoWay}"
                   toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedTableEntries}">
           <DataGrid.Resources>
 
             <ContextMenu x:Key="RowContextMenu">
-              <MenuItem Header="{x:Static properties:Resources.Delete}" Command="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}">
+              <MenuItem Header="{x:Static properties:Resources.Delete}" Command="{Binding DataContext.DeleteCommand, Converter={StaticResource DeleteCommandConverter}}">
                 <MenuItem.Icon>
                   <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/delete.png" />
                 </MenuItem.Icon>
               </MenuItem>
-              <MenuItem Header="{x:Static properties:Resources.Cut}" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}">
+              <MenuItem Header="{x:Static properties:Resources.Cut}" Command="{Binding DataContext.CutCommand, Converter={StaticResource CutCommandConverter}}">
                 <MenuItem.Icon>
                   <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/cut.png" />
                 </MenuItem.Icon>
               </MenuItem>
-              <MenuItem Header="{x:Static properties:Resources.Copy}" Command="{Binding CopyCommand}">
+              <MenuItem Header="{x:Static properties:Resources.Copy}" Command="{Binding DataContext.CopyCommand}">
                 <MenuItem.Icon>
                   <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/copy.png" />
                 </MenuItem.Icon>
               </MenuItem>
-              <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
+              <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding DataContext.PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
                 <MenuItem.Icon>
                   <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
                 </MenuItem.Icon>
               </MenuItem>
               <MenuItem Header="{x:Static properties:Resources.Invariant}" IsCheckable="True"
-                        IsChecked="{Binding Mode=OneWay, Path=ResourceManager.SelectedEntry.IsInvariant }"
-                        Command="{Binding ToggleInvariantCommand}" />
-              <MenuItem Header="{x:Static properties:Resources.CopyKeys}" Command="{Binding CopyKeysCommand}" />
+                        IsChecked="{Binding Mode=OneWay, Path=SelectedItem.IsInvariant }"
+                        Command="{Binding DataContext.ToggleInvariantCommand}" />
+              <MenuItem Header="{x:Static properties:Resources.CopyKeys}" Command="{Binding DataContext.CopyKeysCommand}" />
             </ContextMenu>
 
             <ContextMenu x:Key="NeutralLanguageContextMenu"
@@ -443,7 +442,7 @@
             <ItemsPanelTemplate>
               <VirtualizingStackPanel
                 ContextMenu="{StaticResource RowContextMenu}"
-                DataContext="{Binding Path=DataContext, ElementName=DataGrid}"
+                DataContext="{Binding ElementName=DataGrid}"
                 TextElement.FontSize="{Binding Path=(infrastructure:Global.TextFontSize), RelativeSource={RelativeSource Self}}">
                 <i:Interaction.Behaviors>
                   <toms:ZoomFontSizeOnMouseWheelBehavior />

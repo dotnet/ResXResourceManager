@@ -42,7 +42,6 @@
         private ObservableCompositeCollection<ResourceTableEntry> _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>();
         private IList<ResourceTableEntry> _selectedTableEntries = new List<ResourceTableEntry>();
 
-        private ResourceTableEntry _selectedEntry;
         private string _entityFilter;
 
         public event EventHandler<LanguageEventArgs> LanguageSaved;
@@ -153,22 +152,6 @@
                 Contract.Ensures(Contract.Result<IList<ResourceTableEntry>>() != null);
 
                 return _selectedTableEntries;
-            }
-        }
-
-        public ResourceTableEntry SelectedEntry
-        {
-            get
-            {
-                return _selectedEntry;
-            }
-            set
-            {
-                if (_selectedEntry == value)
-                    return;
-
-                _selectedEntry = value;
-                OnPropertyChanged(() => SelectedEntry);
             }
         }
 
