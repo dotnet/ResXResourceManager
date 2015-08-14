@@ -283,7 +283,7 @@
                 if (fontSize > 1)
                 {
                     // Default in VS is 10, but looks like 12 in WPF
-                    view.SetValue(Global.TextFontSizeProperty, fontSize * 1.2);
+                    view.SetValue(Appearance.TextFontSizeProperty, fontSize * 1.2);
                 }
             }
             catch

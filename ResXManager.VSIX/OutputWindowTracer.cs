@@ -11,7 +11,7 @@
     using tomenglertde.ResXManager.Infrastructure;
 
     [Export(typeof(ITracer))]
-    internal class OutputWindowTracer : ITracer
+    public class OutputWindowTracer : ITracer
     {
         private readonly IServiceProvider _serviceProvider;
 

@@ -443,7 +443,7 @@
               <VirtualizingStackPanel
                 ContextMenu="{StaticResource RowContextMenu}"
                 DataContext="{Binding ElementName=DataGrid}"
-                TextElement.FontSize="{Binding Path=(infrastructure:Global.TextFontSize), RelativeSource={RelativeSource Self}}">
+                TextElement.FontSize="{Binding Path=(infrastructure:Appearance.TextFontSize), RelativeSource={RelativeSource Self}}">
                 <i:Interaction.Behaviors>
                   <toms:ZoomFontSizeOnMouseWheelBehavior />
                 </i:Interaction.Behaviors>

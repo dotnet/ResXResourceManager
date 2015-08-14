@@ -10,12 +10,12 @@
     using TomsToolbox.Core;
 
     [Export(typeof(Configuration))]
-    class DteConfiguration : Configuration
+    public class DteConfiguration : Configuration
     {
         private readonly IVsServiceProvider _vsServiceProvider;
 
         [ImportingConstructor]
-        private DteConfiguration(IVsServiceProvider vsServiceProvider)
+        public DteConfiguration(IVsServiceProvider vsServiceProvider)
         {
             Contract.Requires(vsServiceProvider != null);
 

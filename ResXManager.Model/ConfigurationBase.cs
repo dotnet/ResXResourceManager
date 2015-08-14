@@ -22,7 +22,7 @@
         private readonly string _filePath;
         private readonly XmlConfiguration _configuration;
 
-        public ConfigurationBase()
+        protected ConfigurationBase()
         {
             Contract.Assume(!string.IsNullOrEmpty(_directory));
 

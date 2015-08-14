@@ -19,7 +19,7 @@
         private readonly ITranslator[] _translators;
 
         [ImportingConstructor]
-        TranslatorHost([ImportMany] ITranslator[] translators)
+        public TranslatorHost([ImportMany] ITranslator[] translators)
         {
             Contract.Requires(translators != null);
 

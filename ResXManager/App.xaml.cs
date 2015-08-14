@@ -1,5 +1,6 @@
 ﻿namespace tomenglertde.ResXManager
 {
+    using System;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.Contracts;
     using System.IO;
@@ -9,7 +10,7 @@
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App
+    public sealed partial class App : IDisposable
     {
         private readonly ICompositionHost _compositionHost = new CompositionHost();
 
@@ -36,9 +37,14 @@
 
         protected override void OnExit(System.Windows.ExitEventArgs e)
         {
-            _compositionHost.Dispose();
+            Dispose();
 
             base.OnExit(e);
+        }
+
+        public void Dispose()
+        {
+            _compositionHost.Dispose();
         }
     }
 }
