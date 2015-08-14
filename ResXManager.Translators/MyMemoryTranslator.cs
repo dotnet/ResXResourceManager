@@ -47,11 +47,6 @@
             }
         }
 
-        public override bool IsLanguageSupported(CultureInfo culture)
-        {
-            return false;
-        }
-
         public override void Translate(Session session)
         {
             foreach (var item in session.Items)

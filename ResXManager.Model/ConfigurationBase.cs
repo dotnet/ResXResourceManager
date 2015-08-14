@@ -14,7 +14,7 @@
     /// <summary>
     /// Handle global persistence.
     /// </summary>
-    public class ConfigurationBase : ObservableObject
+    public abstract class ConfigurationBase : ObservableObject
     {
         private const string FileName = "Configuration.xml";
         private static readonly string _directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "tom-englert.de", "ResXManager");
@@ -45,20 +45,14 @@
             _configuration = new XmlConfiguration();
         }
 
-        public virtual bool IsScopeSupported
+        public abstract bool IsScopeSupported
         {
-            get
-            {
-                return false;
-            }
+            get;
         }
 
-        public virtual ConfigurationScope Scope
+        public abstract ConfigurationScope Scope
         {
-            get
-            {
-                return ConfigurationScope.Global;
-            }
+            get;
         }
 
         protected virtual T GetValue<T>(Expression<Func<T>> propertyExpression)

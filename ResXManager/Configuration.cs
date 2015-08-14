@@ -10,5 +10,21 @@
         private StandaloneConfiguration()
         {
         }
+
+        public override bool IsScopeSupported
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public override ConfigurationScope Scope
+        {
+            get
+            {
+                return ConfigurationScope.Global;
+            }
+        }
     }
 }

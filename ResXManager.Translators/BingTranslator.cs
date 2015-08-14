@@ -26,11 +26,6 @@ namespace tomenglertde.ResXManager.Translators
         {
         }
 
-        public override bool IsLanguageSupported(CultureInfo culture)
-        {
-            return false;
-        }
-
         public override void Translate(Session session)
         {
             try

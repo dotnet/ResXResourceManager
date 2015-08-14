@@ -36,8 +36,6 @@
             set;
         }
 
-        bool IsLanguageSupported(CultureInfo culture);
-
         void Translate(Session session);
 
         IList<ICredentialItem> Credentials
@@ -97,11 +95,6 @@
             {
                 throw new NotImplementedException();
             }
-        }
-
-        bool ITranslator.IsLanguageSupported(CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
 
         void ITranslator.Translate(Session session)
