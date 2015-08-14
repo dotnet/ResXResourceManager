@@ -201,7 +201,7 @@
                 var rows = sheet.GetRows(workbookPart);
 
                 var data = rows.Select(row => row.GetCellValues(sharedStrings)).ToArray();
-                if (data.Length == 0)
+                if (!data.Any())
                     continue;
 
                 resourceEntity.ImportTable(FixedColumnHeaders, data);

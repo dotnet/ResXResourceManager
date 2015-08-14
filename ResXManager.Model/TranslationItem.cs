@@ -59,6 +59,8 @@ namespace tomenglertde.ResXManager.Model
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICollectionView>() != null);
+
                 return _orderedResults;
             }
         }

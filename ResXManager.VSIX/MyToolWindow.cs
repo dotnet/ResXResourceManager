@@ -514,8 +514,9 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_compositionHost != null);
-            Contract.Invariant(_trace != null);
             Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(_configuration != null);
+            Contract.Invariant(_trace != null);
             Contract.Invariant(_view != null);
         }
     }

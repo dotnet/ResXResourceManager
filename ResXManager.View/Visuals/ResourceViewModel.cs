@@ -250,5 +250,12 @@
         {
             return Resources.ShellTabHeader_Main;
         }
+
+        [ContractInvariantMethod]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_resourceManager != null);
+        }
     }
 }

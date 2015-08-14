@@ -96,6 +96,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICollection<TranslationItem>>() != null);
+
                 return _selectedItems;
             }
         }
@@ -116,6 +118,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(() => (SourceCulture != null) && (TargetCulture != null), UpdateTargetList);
             }
         }
@@ -124,6 +128,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(() => IsSessionComplete && Items.Any(), () => Apply(Items));
             }
         }
@@ -132,6 +138,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(() => IsSessionComplete && SelectedItems.Any(), () => Apply(SelectedItems));
             }
         }
@@ -140,6 +148,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(() => IsSessionRunning, Stop);
             }
         }
@@ -200,9 +210,9 @@
                 return;
             }
 
-            GetItemsToTranslate();
+            Items = _resourceManager.GetItemsToTranslate(_sourceCulture, _targetCulture);
 
-            ApplyExistingTranslations();
+            _resourceManager.ApplyExistingTranslations(Items, _sourceCulture, _targetCulture);
 
             var sourceCulture = _sourceCulture.Culture ?? _configuration.NeutralResourcesLanguage;
             var targetCulture = _targetCulture.Culture ?? _configuration.NeutralResourcesLanguage;
@@ -210,45 +220,6 @@
             Session = new Session(sourceCulture, targetCulture, Items.Cast<ITranslationItem>().ToArray());
 
             _translatorHost.Translate(Session);
-        }
-
-        private void GetItemsToTranslate()
-        {
-            Contract.Requires(_sourceCulture != null);
-            Contract.Requires(_targetCulture != null);
-
-            Items = new ObservableCollection<TranslationItem>(_resourceManager.ResourceTableEntries
-                .Where(entry => !entry.IsInvariant)
-                .Where(entry => string.IsNullOrWhiteSpace(entry.Values.GetValue(_targetCulture)))
-                .Select(entry => new {Entry = entry, Source = entry.Values.GetValue(_sourceCulture)})
-                .Where(item => !string.IsNullOrWhiteSpace(item.Source))
-                .Select(item => new TranslationItem(item.Entry, item.Source)));
-        }
-
-        private void ApplyExistingTranslations()
-        {
-            Contract.Requires(_sourceCulture != null);
-            Contract.Requires(_targetCulture != null);
-
-            foreach (var item in Items)
-            {
-                var targetItem = item;
-                Contract.Assume(targetItem != null);
-
-                var existingTranslations = _resourceManager.ResourceTableEntries
-                    .Where(entry => entry != targetItem.Entry)
-                    .Where(entry => !entry.IsInvariant)
-                    .Where(entry => entry.Values.GetValue(_sourceCulture) == targetItem.Source)
-                    .Select(entry => entry.Values.GetValue(_targetCulture))
-                    .Where(translation => !string.IsNullOrWhiteSpace(translation))
-                    .GroupBy(translation => translation);
-
-                foreach (var translation in existingTranslations)
-                {
-                    Contract.Assume(translation != null);
-                    item.Results.Add(new TranslationMatch(null, translation.Key, translation.Count()));
-                }
-            }
         }
 
         [ContractInvariantMethod]

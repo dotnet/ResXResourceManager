@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -29,7 +30,9 @@
 
         private void TabControl_Loaded(object sender, RoutedEventArgs e)
         {
-            var tabControl = (TabControl) sender;
+            Contract.Requires(sender != null);
+
+            var tabControl = (TabControl)sender;
             tabControl.SelectedIndex = 0;
         }
     }

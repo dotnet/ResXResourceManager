@@ -84,6 +84,7 @@
             get
             {
                 Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
+
                 return _key;
             }
             set
