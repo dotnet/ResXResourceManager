@@ -13,7 +13,6 @@
     using System.Windows.Controls.Primitives;
 
     using Microsoft.WindowsAPICodePack.Dialogs;
-    using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Properties;
