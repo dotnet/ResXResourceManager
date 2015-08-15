@@ -14,12 +14,12 @@
     {
         private readonly ICompositionHost _compositionHost = new CompositionHost();
 
+#if DEBUG
         public App()
         {
-#if DEBUG
             System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("de-DE");
-#endif
         }
+#endif
 
         protected override void OnStartup(System.Windows.StartupEventArgs e)
         {
