@@ -10,7 +10,7 @@
     {
         private const string Resx = ".resx";
         private const string Resw = ".resw";
-        private static readonly string[] SupportedFileExtensions = { Resx, Resw };
+        public static readonly string[] SupportedFileExtensions = { Resx, Resw };
 
         public static string GetBaseDirectory(this ProjectFile projectFile)
         {

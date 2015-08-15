@@ -47,8 +47,6 @@
       <Group guid="guidResXManager_VSIXCmdSet" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
       </Group>
-      
-
 
     </Groups>
     
@@ -76,13 +74,23 @@
 
       <Button guid="guidResXManager_VSIXCmdSet" id="cmdidMyTool" priority="0x0100" type="Button">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
-        <Icon guid="guidImages" id="bmpPic2" />
+        <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
           <CommandName>cmdidMyTool</CommandName>
           <ButtonText>ResX Manager</ButtonText>
         </Strings>
       </Button>
 
+      <Button guid="guidResXManager_VSIXCmdSet" id="cmdidMyContextMenu" priority="0x0200" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_ITEM_OPEN" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <CommandName>cmdidMyContextMenu</CommandName>
+          <ButtonText>Open in ResX Manager</ButtonText>
+        </Strings>
+      </Button>
 
     </Buttons>
    
@@ -99,23 +107,17 @@
  
   </Commands>
 
-
-
-
-
   <Symbols>
     <!-- This is the package guid. -->
     <GuidSymbol name="guidResXManager_VSIXPkg" value="{43b35fe0-1f30-48de-887a-68256474202a}" />
     
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidResXManager_VSIXCmdSet" value="{4beab5e4-da91-4600-bd36-53a67b206b19}">
-
       <IDSymbol name="MyMenuGroup" value="0x1020" />
       <IDSymbol name="cmdidMyCommand" value="0x0100" />
       <IDSymbol name="cmdidMyTool" value="0x0101" />
+      <IDSymbol name="cmdidMyContextMenu" value="0x0102" />
     </GuidSymbol>
-    
-    
     
     <GuidSymbol name="guidImages" value="{9dcbd54f-41cb-419d-b46f-0070904553b6}">
       <IDSymbol name="bmpPic1" value="1" />

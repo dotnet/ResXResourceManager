@@ -7,7 +7,11 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Windows;
+
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell.Interop;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
@@ -198,6 +202,71 @@
                 return null;
 
             return TryGetContent(document);
+        }
+
+        public static IEnumerable<VSITEMSELECTION> GetSelectedProjectItems(this IVsMonitorSelection monitorSelection)
+        {
+            Contract.Requires(monitorSelection != null);
+            Contract.Ensures(Contract.Result<IEnumerable<VSITEMSELECTION>>() != null);
+
+            var hierarchyPtr = IntPtr.Zero;
+            var selectionContainerPtr = IntPtr.Zero;
+
+            try
+            {
+                IVsMultiItemSelect multiItemSelect;
+                uint itemId;
+
+                var hr = monitorSelection.GetCurrentSelection(out hierarchyPtr, out itemId, out multiItemSelect, out selectionContainerPtr);
+
+                if (ErrorHandler.Failed(hr))
+                    return Enumerable.Empty<VSITEMSELECTION>();
+
+                if ((itemId == VSConstants.VSITEMID_SELECTION) && (multiItemSelect != null))
+                {
+                    uint cItems;
+                    int info;
+
+                    multiItemSelect.GetSelectionInfo(out cItems, out info);
+                    var items = new VSITEMSELECTION[cItems];
+                    multiItemSelect.GetSelectedItems(0, cItems, items);
+                    return items;
+                }
+
+                if ((hierarchyPtr == IntPtr.Zero) || (itemId == VSConstants.VSITEMID_ROOT))
+                    return Enumerable.Empty<VSITEMSELECTION>();
+
+                return new[]
+                {
+                    new VSITEMSELECTION
+                    {
+                        pHier = Marshal.GetObjectForIUnknown(hierarchyPtr) as IVsHierarchy, 
+                        itemid = itemId
+                    }
+                };
+            }
+            finally
+            {
+                if (selectionContainerPtr != IntPtr.Zero)
+                    Marshal.Release(selectionContainerPtr);
+
+                if (hierarchyPtr != IntPtr.Zero)
+                    Marshal.Release(hierarchyPtr);
+            }
+        }
+
+        public static string GetMkDocument(this VSITEMSELECTION selection)
+        {
+            string itemFullPath;
+
+            var vsProject = selection.pHier as IVsProject;
+
+            if (vsProject == null)
+                return null;
+
+            vsProject.GetMkDocument(selection.itemid, out itemFullPath);
+
+            return itemFullPath;
         }
 
         [ContractVerification(false)]
