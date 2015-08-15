@@ -4,6 +4,7 @@
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.Contracts;
     using System.IO;
+    using System.Windows;
 
     using TomsToolbox.Wpf.Composition;
 
@@ -21,7 +22,7 @@
         }
 #endif
 
-        protected override void OnStartup(System.Windows.StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
@@ -35,7 +36,7 @@
             ExportProviderLocator.Register(_compositionHost.Container);
         }
 
-        protected override void OnExit(System.Windows.ExitEventArgs e)
+        protected override void OnExit(ExitEventArgs e)
         {
             Dispose();
 
