@@ -1,16 +1,20 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System.ComponentModel.Composition;
     using System.Windows;
     using System.Windows.Controls;
 
     using TomsToolbox.Wpf;
+    using TomsToolbox.Wpf.Composition;
 
     /// <summary>
     /// Interaction logic for Translations.xaml
     /// </summary>
-    public partial class Translations
+    [DataTemplate(typeof(TranslationsViewModel))]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
+    public partial class TranslationsView
     {
-        public Translations()
+        public TranslationsView()
         {
             InitializeComponent();
         }

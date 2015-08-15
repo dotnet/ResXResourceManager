@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.VSIX
 {
     using System;
+    using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
@@ -8,15 +9,17 @@
 
     using TomsToolbox.Core;
 
-    internal class Configuration : Model.Configuration
+    [Export(typeof(Configuration))]
+    public class DteConfiguration : Configuration
     {
-        private readonly EnvDTE.DTE _dte;
+        private readonly IVsServiceProvider _vsServiceProvider;
 
-        public Configuration(EnvDTE.DTE dte)
+        [ImportingConstructor]
+        public DteConfiguration(IVsServiceProvider vsServiceProvider)
         {
-            Contract.Requires(dte != null);
+            Contract.Requires(vsServiceProvider != null);
 
-            _dte = dte;
+            _vsServiceProvider = vsServiceProvider;
         }
 
         public override bool IsScopeSupported
@@ -31,7 +34,7 @@
         {
             get
             {
-                var solution = _dte.Solution;
+                var solution = Solution;
 
                 return (solution != null) && !string.IsNullOrEmpty(solution.FullName) && (solution.Globals != null)
                     ? ConfigurationScope.Solution
@@ -49,7 +52,7 @@
         private bool TryGetValue<T>(string key, out T value)
         {
             value = default(T);
-            var solution = _dte.Solution;
+            var solution = Solution;
 
             return (solution != null) && !string.IsNullOrEmpty(solution.FullName) && TryGetValue(solution.Globals, key, ref value);
         }
@@ -73,7 +76,7 @@
 
         protected override void InternalSetValue<T>(T value, Expression<Func<T>> propertyExpression)
         {
-            var solution = _dte.Solution;
+            var solution = Solution;
 
             if ((solution != null) && !string.IsNullOrEmpty(solution.FullName) && (solution.Globals != null))
             {
@@ -97,12 +100,20 @@
             return "RESX_" + propertyName;
         }
 
+        private EnvDTE.Solution Solution
+        {
+            get
+            {
+                var dte = (EnvDTE.DTE)_vsServiceProvider.GetService(typeof(EnvDTE.DTE));
+                return dte == null ? null : dte.Solution;
+            }
+        }
+
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_dte != null);
+            Contract.Invariant(_vsServiceProvider != null);
         }
-
     }
 }

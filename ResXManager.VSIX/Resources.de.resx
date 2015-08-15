@@ -133,4 +133,7 @@ Mehr Details finden sich im Ausgabefenster.</value>
   <data name="Version" xml:space="preserve">
     <value>Version: {0}</value>
   </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warnung:</value>
+  </data>
 </root>

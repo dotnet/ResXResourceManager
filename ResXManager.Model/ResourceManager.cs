@@ -5,11 +5,11 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
+    using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
-    using System.CodeDom;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Windows;
@@ -25,15 +25,14 @@
     /// <summary>
     /// Represents all resources found in a folder and its's sub folders.
     /// </summary>
+    [Export]
     public class ResourceManager : ObservableObject
     {
         private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
         private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
 
         private readonly DispatcherThrottle _selectedEntitiesChangeThrottle;
-        private readonly Translations _translations;
-
-        private Configuration _configuration = new Configuration();
+        private readonly Configuration _configuration;
 
         private ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
         private ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
@@ -43,7 +42,6 @@
         private ObservableCompositeCollection<ResourceTableEntry> _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>();
         private IList<ResourceTableEntry> _selectedTableEntries = new List<ResourceTableEntry>();
 
-        private ResourceTableEntry _selectedEntry;
         private string _entityFilter;
 
         public event EventHandler<LanguageEventArgs> LanguageSaved;
@@ -51,27 +49,26 @@
         public event EventHandler<EventArgs> Loaded;
         public event EventHandler<EventArgs> ReloadRequested;
 
-        public ResourceManager()
+        [ImportingConstructor]
+        private ResourceManager(Configuration configuration)
         {
+            Contract.Requires(configuration != null);
+
+            _configuration = configuration;
             _selectedEntitiesChangeThrottle = new DispatcherThrottle(OnSelectedEntitiesChanged);
             _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
-            _translations = new Translations(this);
         }
 
         /// <summary>
         /// Loads all resources from the specified project files.
         /// </summary>
         /// <param name="allSourceFiles">All resource x files.</param>
-        /// <param name="configuration"></param>
-        public void Load<T>(IList<T> allSourceFiles, Configuration configuration)
+        public void Load<T>(IList<T> allSourceFiles)
             where T : ProjectFile
         {
             Contract.Requires(allSourceFiles != null);
-            Contract.Requires(configuration != null);
 
             CodeReference.StopFind();
-
-            Configuration = configuration;
 
             var resourceFilesByDirectory = allSourceFiles
                 .Where(file => file.IsResourceFile())
@@ -158,22 +155,6 @@
             }
         }
 
-        public ResourceTableEntry SelectedEntry
-        {
-            get
-            {
-                return _selectedEntry;
-            }
-            set
-            {
-                if (_selectedEntry == value)
-                    return;
-
-                _selectedEntry = value;
-                OnPropertyChanged(() => SelectedEntry);
-            }
-        }
-
         public static IEnumerable<CultureInfo> SpecificCultures
         {
             get
@@ -200,115 +181,6 @@
                 OnPropertyChanged(() => EntityFilter);
                 OnPropertyChanged(() => AreAllFilesSelected);
             }
-        }
-
-        public Translations Translations
-        {
-            get
-            {
-                return _translations;
-            }
-        }
-
-        public ICommand CopyCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(CanCutOrCopy, CopySelected);
-            }
-        }
-
-        public ICommand CutCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(CanCutOrCopy, CutSelected);
-            }
-        }
-
-        public ICommand DeleteCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(CanDelete, DeleteSelected);
-            }
-        }
-
-        public ICommand PasteCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(CanPaste, Paste);
-            }
-        }
-
-        public ICommand ExportExcelCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand<IExportParameters>(CanExportExcel, ExportExcel);
-            }
-        }
-
-        public ICommand ImportExcelCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand<string>(ImportExcel);
-            }
-        }
-
-        public ICommand CopyKeysCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => _selectedTableEntries.Any(), CopyKeys);
-            }
-        }
-
-        public ICommand ToggleInvariantCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => _selectedTableEntries.Any(), ToggleInvariant);
-            }
-        }
-
-        public ICommand ReloadCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(OnReloadRequested);
-            }
-        }
-
-        public ICommand SortNodesByKeyCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(SortNodesByKey);
-            }
-
         }
 
         public bool? AreAllFilesSelected
@@ -347,13 +219,6 @@
 
                 return _configuration;
             }
-            set
-            {
-                if (Equals(value, _configuration))
-                    return;
-                _configuration = value;
-                OnPropertyChanged(() => Configuration);
-            }
         }
 
         public void AddNewKey(ResourceEntity entity, string key)
@@ -386,7 +251,12 @@
             }
         }
 
-        private bool CanEdit(ResourceEntity resourceEntity, CultureInfo culture)
+        public void Reload()
+        {
+            OnReloadRequested();
+        }
+
+        public bool CanEdit(ResourceEntity resourceEntity, CultureInfo culture)
         {
             Contract.Requires(resourceEntity != null);
 
@@ -400,137 +270,6 @@
             eventHandler(this, args);
 
             return !args.Cancel;
-        }
-
-        private bool CanDelete()
-        {
-            return SelectedTableEntries.Any();
-        }
-
-        private bool CanCutOrCopy()
-        {
-            var entries = SelectedTableEntries;
-
-            var totalNumberOfEntries = entries.Count;
-            if (totalNumberOfEntries == 0)
-                return false;
-
-            // Only allow is all keys are different.
-            var numberOfDistinctEntries = entries.Select(e => e.Key).Distinct().Count();
-
-            return numberOfDistinctEntries == totalNumberOfEntries;
-        }
-
-        private bool CanPaste()
-        {
-            return _selectedEntities.Count == 1;
-        }
-
-        private void CutSelected()
-        {
-            var selectedItems = _selectedTableEntries.ToList();
-
-            var resourceFiles = selectedItems.Select(item => item.Owner).Distinct();
-
-            if (resourceFiles.Any(resourceFile => !CanEdit(resourceFile, null)))
-                return;
-
-            Clipboard.SetText(selectedItems.ToTextTable());
-
-            selectedItems.ForEach(item => item.Owner.Remove(item));
-        }
-
-        private void CopySelected()
-        {
-            var selectedItems = _selectedTableEntries.ToList();
-
-            var entries = selectedItems.Cast<ResourceTableEntry>().ToArray();
-            Clipboard.SetText(entries.ToTextTable());
-        }
-
-        public void DeleteSelected()
-        {
-            var selectedItems = _selectedTableEntries.ToList();
-
-            if (selectedItems.Count == 0)
-                return;
-
-            var resourceFiles = selectedItems.Select(item => item.Owner).Distinct();
-
-            if (resourceFiles.Any(resourceFile => !CanEdit(resourceFile, null)))
-                return;
-
-            selectedItems.ForEach(item => item.Owner.Remove(item));
-        }
-
-        private void Paste()
-        {
-            var selectedItems = _selectedEntities.ToList();
-
-            if (selectedItems.Count != 1)
-                return;
-
-            var entity = selectedItems[0];
-
-            Contract.Assume(entity != null);
-
-            if (!CanEdit(entity, null))
-                return;
-
-            entity.ImportTextTable(Clipboard.GetText());
-        }
-
-        private void ToggleInvariant()
-        {
-            var items = _selectedTableEntries.ToList();
-
-            if (!items.Any())
-                return;
-
-            var newValue = !items.First().IsInvariant;
-
-            items.ForEach(item => item.IsInvariant = newValue);
-        }
-
-        private static bool CanExportExcel(IExportParameters param)
-        {
-            if (param == null)
-                return true;
-
-            var scope = param.Scope;
-
-            return (scope == null) || (scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()));
-        }
-
-        private void ExportExcel(IExportParameters param)
-        {
-            Contract.Requires(param != null);
-            Contract.Requires(param.FileName != null);
-
-            this.ExportExcelFile(param.FileName, param.Scope);
-        }
-
-        private void ImportExcel(string fileName)
-        {
-            Contract.Requires(fileName != null);
-
-            this.ImportExcelFile(fileName);
-        }
-
-        private void CopyKeys()
-        {
-            var selectedKeys = _selectedTableEntries.Select(item => item.Key);
-
-            Clipboard.SetText(string.Join(Environment.NewLine, selectedKeys));
-        }
-
-        private void SortNodesByKey()
-        {
-            foreach (var language in _resourceEntities.SelectMany(entity => entity.Languages))
-            {
-                Contract.Assume(language != null);
-                language.SortNodesByKey();
-            }
         }
 
         private void OnLoaded()
@@ -562,13 +301,15 @@
                 .OrderBy(e => e.ProjectName)
                 .ThenBy(e => e.BaseName);
 
+            var reload = _resourceEntities.Any();
+
             _resourceEntities = new ObservableCollection<ResourceEntity>(entities);
             _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
             if (!string.IsNullOrEmpty(_entityFilter))
                 ApplyEntityFilter(_entityFilter);
 
             _selectedEntities.CollectionChanged -= SelectedEntities_CollectionChanged;
-            _selectedEntities = new ObservableCollection<ResourceEntity>(_resourceEntities.Where(_selectedEntities.Contains));
+            _selectedEntities = new ObservableCollection<ResourceEntity>(reload ? _resourceEntities.Where(_selectedEntities.Contains) : _resourceEntities);
             _selectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
 
             var cultureKeys = _resourceEntities.SelectMany(entity => entity.Languages).Distinct().Select(lang => lang.CultureKey);

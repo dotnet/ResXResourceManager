@@ -99,8 +99,6 @@ namespace tomenglertde.ResXManager.Translators
             }
         }
 
-        public abstract bool IsLanguageSupported(CultureInfo culture);
-
         public abstract void Translate(Session session);
 
         [ContractInvariantMethod]

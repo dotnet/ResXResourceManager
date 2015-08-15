@@ -11,6 +11,8 @@
       <Word>resxresourcemanager</Word>
       <Word>visualstudiogallery</Word>
       <Word>workitem</Word>
+      <Word>dte</Word>
+      <Word>ResX</Word>
     </Recognized>
     <Deprecated>
       <Term PreferredAlternate=""></Term>

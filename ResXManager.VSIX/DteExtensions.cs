@@ -2,11 +2,17 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Windows;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
+
+    using TomsToolbox.Core;
 
     internal static class DteExtensions
     {
@@ -16,7 +22,7 @@
         /// <param name="solution">The solution.</param>
         /// <param name="trace">The tracer.</param>
         /// <returns>The file names of all files.</returns>
-        public static IEnumerable<DteProjectFile> GetProjectFiles(this EnvDTE.Solution solution, OutputWindowTracer trace)
+        public static IEnumerable<DteProjectFile> GetProjectFiles(this EnvDTE.Solution solution, ITracer trace)
         {
             Contract.Requires(solution != null);
             Contract.Requires(solution.Projects != null);
@@ -93,7 +99,7 @@
             }
         }
 
-        private static void GetProjectFiles(this EnvDTE.ProjectItems projectItems, string solutionFolder, IDictionary<string, DteProjectFile> items, OutputWindowTracer trace)
+        private static void GetProjectFiles(this EnvDTE.ProjectItems projectItems, string solutionFolder, IDictionary<string, DteProjectFile> items, ITracer trace)
         {
             Contract.Requires(solutionFolder != null);
             Contract.Requires(items != null);
@@ -126,7 +132,7 @@
             }
         }
 
-        private static void GetProjectFiles(this EnvDTE.ProjectItem projectItem, string solutionFolder, IDictionary<string, DteProjectFile> items, OutputWindowTracer trace)
+        private static void GetProjectFiles(this EnvDTE.ProjectItem projectItem, string solutionFolder, IDictionary<string, DteProjectFile> items, ITracer trace)
         {
             Contract.Requires(projectItem != null);
             Contract.Requires(solutionFolder != null);
@@ -255,5 +261,36 @@
                 yield return item;
             }
         }
+
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public static void SetFontSize(this EnvDTE.DTE dte, DependencyObject view)
+        {
+            Contract.Requires(dte != null);
+            Contract.Requires(view != null);
+
+            const string CATEGORY_FONTS_AND_COLORS = "FontsAndColors";
+            const string PAGE_TEXT_EDITOR = "TextEditor";
+            const string PROPERTY_FONT_SIZE = "FontSize";
+
+            try
+            {
+                var fontSize = dte.Maybe()
+                    .Select(x => x.Properties[CATEGORY_FONTS_AND_COLORS, PAGE_TEXT_EDITOR])
+                    .Select(x => x.Item(PROPERTY_FONT_SIZE))
+                    .Select(x => x.Value)
+                    .Return(x => Convert.ToDouble(x, CultureInfo.InvariantCulture));
+
+                if (fontSize > 1)
+                {
+                    // Default in VS is 10, but looks like 12 in WPF
+                    view.SetValue(Appearance.TextFontSizeProperty, fontSize * 1.2);
+                }
+            }
+            catch
+            {
+            }
+        }
+
+
     }
 }

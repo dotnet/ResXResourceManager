@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System.ComponentModel;
+    using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -12,13 +13,16 @@
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf.Composition;
 
     /// <summary>
-    /// Interaction logic for FlagConfiguration.xaml
+    /// Interaction logic for LanguageConfigurationView.xaml
     /// </summary>
-    public partial class LanguageConfiguration
+    [DataTemplate(typeof(LanguageConfigurationViewModel))]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
+    public partial class LanguageConfigurationView
     {
-        public LanguageConfiguration()
+        public LanguageConfigurationView()
         {
             InitializeComponent();
         }

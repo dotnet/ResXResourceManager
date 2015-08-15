@@ -333,7 +333,7 @@
     <value>File creation</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by:</value>
+    <value>Sort using:</value>
   </data>
   <data name="TranslationsPrefixHeader" xml:space="preserve">
     <value>Prefix translations with </value>

@@ -712,7 +712,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Sort by:.
+        ///   Looks up a localized string similar to Sort using:.
         /// </summary>
         public static string SortBy {
             get {
@@ -1086,7 +1086,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         SortAllFilesNow,
         /// <summary>
-        ///   Looks up a localized string similar to Sort by:.
+        ///   Looks up a localized string similar to Sort using:.
         /// </summary>
         SortBy,
         /// <summary>

@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="tomenglertde.ResXManager.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:composition="urn:TomsToolbox"
+             xmlns:resXManager="clr-namespace:tomenglertde.ResXManager"
+             d:DataContext="{d:DesignInstance resXManager:MainViewModel}">
+  <DockPanel>
+    <Menu  DockPanel.Dock="Top">
+      <MenuItem>
+        <MenuItem.Header>
+          <TextBlock Margin="3">
+              <Run Text="Directory:" TextBlock.FontWeight="Bold" />
+              <Run Text="{Binding Folder, Mode=OneWay}" />
+          </TextBlock>
+        </MenuItem.Header>
+        <MenuItem Header="Browse" Command="{Binding BrowseCommand}" />
+      </MenuItem>
+    </Menu>
+
+    <ContentControl DataContext="{Binding ResourceManager}">
+      <i:Interaction.Behaviors>
+        <composition:ContentControlCompositionBehavior RegionId="Shell" />
+      </i:Interaction.Behaviors>
+    </ContentControl>
+  </DockPanel>
+</UserControl>

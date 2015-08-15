@@ -1,31 +1,39 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
-    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Windows;
-    using System.Windows.Controls.Primitives;
+    using System.Windows.Controls;
 
     using tomenglertde.ResXManager.Translators;
 
-    using TomsToolbox.Desktop;
-
     /// <summary>
-    /// Interaction logic for TranslatorConfiguration.xaml
+    ///     Interaction logic for TranslatorConfiguration.xaml
     /// </summary>
     public partial class TranslatorConfiguration
     {
-        private readonly Throttle _changeThrottle = new Throttle(TimeSpan.FromSeconds(1), TranslatorHost.SaveConfiguration);
-
         public TranslatorConfiguration()
         {
             InitializeComponent();
-
-            EventManager.RegisterClassHandler(typeof(TranslatorConfiguration), ButtonBase.ClickEvent, new RoutedEventHandler(Element_Changed));
-            EventManager.RegisterClassHandler(typeof(TranslatorConfiguration), TextBoxBase.TextChangedEvent, new RoutedEventHandler(Element_Changed));
         }
 
-        private void Element_Changed(object sender, RoutedEventArgs e)
+        public IEnumerable<ITranslator> Translators
         {
-            _changeThrottle.Tick();
+            get { return (IEnumerable<ITranslator>)GetValue(TranslatorsProperty); }
+            set { SetValue(TranslatorsProperty, value); }
+        }
+        /// <summary>
+        /// Identifies the <see cref="Translators"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty TranslatorsProperty =
+            DependencyProperty.Register("Translators", typeof (IEnumerable<ITranslator>), typeof (TranslatorConfiguration));
+
+        private void TabControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            Contract.Requires(sender != null);
+
+            var tabControl = (TabControl)sender;
+            tabControl.SelectedIndex = 0;
         }
     }
 }

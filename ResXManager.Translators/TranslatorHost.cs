@@ -1,6 +1,8 @@
 ﻿namespace tomenglertde.ResXManager.Translators
 {
+    using System;
     using System.Collections.Generic;
+    using System.ComponentModel.Composition;
     using System.Diagnostics.Contracts;
     using System.Threading;
 
@@ -8,17 +10,22 @@
 
     using tomenglertde.ResXManager.Translators.Properties;
 
-    public static class TranslatorHost
-    {
-        public static readonly ITranslator[] Translators = 
-        {
-            new BingTranslator(),
-            // new GoogleTranslator(), 
-            new MyMemoryTranslator(),
-        };
+    using TomsToolbox.Desktop;
 
-        static TranslatorHost()
+    [Export]
+    public class TranslatorHost
+    {
+        private readonly Throttle _changeThrottle;
+        private readonly ITranslator[] _translators;
+
+        [ImportingConstructor]
+        public TranslatorHost([ImportMany] ITranslator[] translators)
         {
+            Contract.Requires(translators != null);
+
+            _changeThrottle = new Throttle(TimeSpan.FromSeconds(1), SaveConfiguration);
+            _translators = translators;
+
             var settings = Settings.Default;
             var configuration = settings.Configuration;
 
@@ -30,9 +37,9 @@
                 var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(configuration);
                 Contract.Assume(values != null);
 
-                foreach (var translator in Translators)
+                foreach (var translator in _translators)
                 {
-                    Contract.Assert(translator != null);
+                    Contract.Assume(translator != null);
 
                     string setting;
 
@@ -48,6 +55,8 @@
                     catch // Newtonsoft.Jason has not documented any exceptions...
                     {
                     }
+
+                    translator.PropertyChanged += (_, __) => _changeThrottle.Tick();
                 }
             }
             catch // Newtonsoft.Jason has not documented any exceptions...
@@ -55,7 +64,17 @@
             }
         }
 
-        public static void SaveConfiguration()
+        public IEnumerable<ITranslator> Translators
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<IEnumerable<ITranslator>>() != null);
+
+                return _translators;
+            }
+        }
+
+        public void SaveConfiguration()
         {
             var settings = Settings.Default;
 
@@ -72,7 +91,7 @@
             settings.Configuration = JsonConvert.SerializeObject(values);
         }
 
-        public static void Translate(Session session)
+        public void Translate(Session session)
         {
             Contract.Requires(session != null);
 
@@ -108,6 +127,14 @@
             {
                 session.IsComplete = true;
             }
+        }
+
+        [ContractInvariantMethod]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_changeThrottle != null);
+            Contract.Invariant(_translators != null);
         }
     }
 }

@@ -1,20 +1,22 @@
 ﻿namespace tomenglertde.ResXManager.VSIX
 {
     using System;
+    using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
 
-    using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.Infrastructure;
 
-    internal class OutputWindowTracer : ITracer
+    [Export(typeof(ITracer))]
+    public class OutputWindowTracer : ITracer
     {
-        private const string NewLine = "\r\n";
         private readonly IServiceProvider _serviceProvider;
 
-        public OutputWindowTracer(IServiceProvider serviceProvider)
+        [ImportingConstructor]
+        public OutputWindowTracer(IVsServiceProvider serviceProvider)
         {
             Contract.Requires(serviceProvider != null);
             _serviceProvider = serviceProvider;
@@ -45,12 +47,17 @@
 
         public void TraceError(string value)
         {
-            WriteLine(Resources.Error + value);
+            WriteLine(string.Concat(Resources.Error, " ", value));
+        }
+
+        public void TraceWarning(string value)
+        {
+            WriteLine(string.Concat(Resources.Warning, " ", value));
         }
 
         public void WriteLine(string value)
         {
-            LogMessageToOutputWindow(value + NewLine);
+            LogMessageToOutputWindow(value + Environment.NewLine);
         }
 
         [ContractInvariantMethod]

@@ -2,11 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
     [ContractClass(typeof (ITranslatorContract))]
-    public interface ITranslator
+    public interface ITranslator : INotifyPropertyChanged
     {
         string Id
         {
@@ -34,8 +35,6 @@
             get;
             set;
         }
-
-        bool IsLanguageSupported(CultureInfo culture);
 
         void Translate(Session session);
 
@@ -98,11 +97,6 @@
             }
         }
 
-        bool ITranslator.IsLanguageSupported(CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-
         void ITranslator.Translate(Session session)
         {
             throw new NotImplementedException();
@@ -116,5 +110,7 @@
                 throw new NotImplementedException();
             }
         }
+
+        public abstract event PropertyChangedEventHandler PropertyChanged;
     }
 }

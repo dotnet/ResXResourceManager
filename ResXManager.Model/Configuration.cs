@@ -9,12 +9,12 @@
     using TomsToolbox.Desktop;
 
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces", Justification = "Works fine with this")]
-    public class Configuration : ConfigurationBase
+    public abstract class Configuration : ConfigurationBase
     {
         private readonly DispatcherThrottle _codeReferencesChangeThrottle;
         private CodeReferenceConfiguration _codeReferences;
 
-        public Configuration()
+        protected Configuration()
         {
             _codeReferencesChangeThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, PersistCodeReferences);
         }

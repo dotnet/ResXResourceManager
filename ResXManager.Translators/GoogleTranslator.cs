@@ -22,11 +22,6 @@
             yield return new CredentialItem("APIKey", "API Key");
         }
 
-        public override bool IsLanguageSupported(CultureInfo culture)
-        {
-            return false;
-        }
-
         public override void Translate(Session session)
         {
         }
