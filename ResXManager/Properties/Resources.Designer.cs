@@ -19,7 +19,6 @@ namespace tomenglertde.ResXManager.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("ResXResourceManager", "1.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    // [ContractVerification(false)]
     public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
@@ -75,7 +74,7 @@ namespace tomenglertde.ResXManager.Properties {
         public static string ProjectHasReadOnlyFiles {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("ProjectHasReadOnlyFiles", resourceCulture);
+                return ResourceManager.GetString("ProjectHasReadOnlyFiles", resourceCulture) ?? string.Empty;
             }
         }
     }
