@@ -166,9 +166,6 @@
   <data name="DonateButtonToolTip" xml:space="preserve">
     <value>Support the Open Source Community.</value>
   </data>
-  <data name="NeutralLanguageToolTip" xml:space="preserve">
-    <value>Right click to change the neutral language icon.</value>
-  </data>
   <data name="ResourceFilterToolTip" xml:space="preserve">
     <value>A regular expression to filter resource files</value>
   </data>

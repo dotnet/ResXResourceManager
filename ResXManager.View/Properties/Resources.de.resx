@@ -153,9 +153,6 @@
   <data name="Neutral" xml:space="preserve">
     <value>Neutral</value>
   </data>
-  <data name="NeutralLanguageToolTip" xml:space="preserve">
-    <value>Rechts klicken, um das Symbol für die neutrale Sprache zu ändern</value>
-  </data>
   <data name="NewLanguageIdPrompt" xml:space="preserve">
     <value>Wählen sie die neue Sprache aus:</value>
   </data>

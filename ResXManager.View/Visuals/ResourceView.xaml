@@ -379,30 +379,9 @@
               <MenuItem Header="{x:Static properties:Resources.CopyKeys}" Command="{Binding DataContext.CopyKeysCommand}" />
             </ContextMenu>
 
-            <ContextMenu x:Key="NeutralLanguageContextMenu"
-                         ItemsSource="{Binding Source={x:Static Member=model:ResourceManager.SpecificCultures}}">
-              <ContextMenu.ItemContainerStyle>
-                <Style TargetType="MenuItem">
-                  <Setter Property="Header" Value="{Binding Path=DisplayName}" />
-                  <Setter Property="Icon" Value="{Binding Converter={x:Static converters:CultureToImageConverter.Default}}" />
-                  <EventSetter Event="Click" Handler="NeutralLanguage_Click" />
-                </Style>
-              </ContextMenu.ItemContainerStyle>
-            </ContextMenu>
-
-            <Style TargetType="Grid" x:Key="NeutralLanguageImageContainerStyle">
-              <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=CultureKey.Culture}" Value="{x:Null}">
-                  <Setter Property="ContextMenu" Value="{StaticResource NeutralLanguageContextMenu}" />
-                  <Setter Property="ToolTip" Value="{x:Static properties:Resources.NeutralLanguageToolTip}" />
-                </DataTrigger>
-              </Style.Triggers>
-            </Style>
-
             <DataTemplate DataType="{x:Type columnHeaders:LanguageHeader}">
               <DockPanel>
-                <Grid DockPanel.Dock="Left" Background="Transparent"
-                      Style="{StaticResource NeutralLanguageImageContainerStyle}">
+                <Grid DockPanel.Dock="Left" Background="Transparent">
                   <Image x:Name="image" Stretch="None"
                          Source="{Binding Path=EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
                 </Grid>
@@ -412,10 +391,9 @@
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type columnHeaders:CommentHeader}">
-              <TextBlock><Run Text="{x:Static properties:Resources.CommentColumnHeader}"/><Run Text=" ("/><InlineUIContainer>
-                  <Grid>
-                  <Image x:Name="image" Stretch="None" Margin="1,2,1,-2"
-                         Source="{Binding Path=EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+              <TextBlock><Run Text="{x:Static properties:Resources.CommentColumnHeader}"/><Run Text=" ("/><InlineUIContainer><Grid>
+                <Image x:Name="image" Stretch="None" Margin="1,2,1,-2"
+                        Source="{Binding Path=EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
                 </Grid></InlineUIContainer><Run Text=")"/>
               </TextBlock>
             </DataTemplate>

@@ -522,16 +522,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Right click to change the neutral language icon..
-        /// </summary>
-        public static string NeutralLanguageToolTip {
-            get {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("NeutralLanguageToolTip", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Neutral Resources Language:.
         /// </summary>
         public static string NeutralResourceLanguageHeader {
@@ -775,7 +765,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Refresh.
+        ///   Looks up a localized string similar to Restart.
         /// </summary>
         public static string Translations_Restart {
             get {
@@ -1010,10 +1000,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         Neutral,
         /// <summary>
-        ///   Looks up a localized string similar to Right click to change the neutral language icon..
-        /// </summary>
-        NeutralLanguageToolTip,
-        /// <summary>
         ///   Looks up a localized string similar to Neutral Resources Language:.
         /// </summary>
         NeutralResourceLanguageHeader,
@@ -1113,7 +1099,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         Translations_ApplySelected,
         /// <summary>
-        ///   Looks up a localized string similar to Refresh.
+        ///   Looks up a localized string similar to Restart.
         /// </summary>
         Translations_Restart,
         /// <summary>

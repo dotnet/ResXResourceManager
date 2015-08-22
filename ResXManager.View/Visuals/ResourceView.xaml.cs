@@ -46,13 +46,6 @@
         private static readonly DependencyProperty EntityFilterProperty =
             DependencyProperty.Register("EntityFilter", typeof(string), typeof(ResourceView), new FrameworkPropertyMetadata(null, (sender, e) => Settings.Default.ResourceFilter = (string)e.NewValue));
 
-        private void NeutralLanguage_Click(object sender, RoutedEventArgs e)
-        {
-            Contract.Requires(sender != null);
-
-            _resourceManager.Configuration.NeutralResourcesLanguage = (CultureInfo)(((MenuItem)sender).DataContext);
-        }
-
         private void ResourceManager_Loaded(object sender, EventArgs e)
         {
             DataGrid.SetupColumns(_resourceManager);
