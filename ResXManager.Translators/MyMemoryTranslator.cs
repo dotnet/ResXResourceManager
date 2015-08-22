@@ -14,6 +14,8 @@
 
     using Newtonsoft.Json;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     using TomsToolbox.Desktop;
 
     [Export(typeof(ITranslator))]
@@ -59,7 +61,8 @@
 
                 try
                 {
-                    var result = TranslateText(translationItem.Source, Key, session.SourceLanguage, session.TargetLanguage);
+                    var targetCulture = translationItem.TargetCulture.Culture ?? session.NeutralResourcesLanguage;
+                    var result = TranslateText(translationItem.Source, Key, session.SourceLanguage, targetCulture);
 
                     session.Dispatcher.BeginInvoke(() =>
                     {

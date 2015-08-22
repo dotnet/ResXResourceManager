@@ -54,27 +54,32 @@ namespace tomenglertde.ResXManager.Translators
                         Contract.Assume(operationContext != null); // because we are inside OperationContextScope
                         operationContext.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
 
-                        using (var itemsEnumerator = session.Items.GetEnumerator())
+                        foreach (var languageGroup in session.Items.GroupBy(item => item.TargetCulture))
                         {
-                            while (true)
+                            var targetLanguage = languageGroup.Key.Culture ?? session.NeutralResourcesLanguage;
+
+                            using (var itemsEnumerator = languageGroup.GetEnumerator())
                             {
-                                var sourceItems = itemsEnumerator.Take(10);
-                                var sourceStrings = sourceItems.Select(item => item.Source).ToArray();
+                                while (true)
+                                {
+                                    var sourceItems = itemsEnumerator.Take(10);
+                                    var sourceStrings = sourceItems.Select(item => item.Source).ToArray();
 
-                                if (!sourceStrings.Any())
-                                    break;
+                                    if (!sourceStrings.Any())
+                                        break;
 
-                                var response = client.GetTranslationsArray("", sourceStrings, session.SourceLanguage.IetfLanguageTag, session.TargetLanguage.IetfLanguageTag, 5,
-                                    new TranslateOptions()
-                                    {
-                                        ContentType = "text/plain",
-                                        IncludeMultipleMTAlternatives = true
-                                    });
+                                    var response = client.GetTranslationsArray("", sourceStrings, session.SourceLanguage.IetfLanguageTag, targetLanguage.IetfLanguageTag, 5,
+                                        new TranslateOptions()
+                                        {
+                                            ContentType = "text/plain",
+                                            IncludeMultipleMTAlternatives = true
+                                        });
 
-                                session.Dispatcher.BeginInvoke(() => ReturnResults(sourceItems, response));
+                                    session.Dispatcher.BeginInvoke(() => ReturnResults(sourceItems, response));
 
-                                if (session.IsCanceled)
-                                    break;
+                                    if (session.IsCanceled)
+                                        break;
+                                }
                             }
                         }
                     }

@@ -777,10 +777,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Refresh.
         /// </summary>
-        public static string Translations_Refresh {
+        public static string Translations_Restart {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("Translations_Refresh", resourceCulture) ?? string.Empty;
+                return ResourceManager.GetString("Translations_Restart", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -1115,7 +1115,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Refresh.
         /// </summary>
-        Translations_Refresh,
+        Translations_Restart,
         /// <summary>
         ///   Looks up a localized string similar to Stop.
         /// </summary>

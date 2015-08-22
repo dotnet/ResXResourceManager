@@ -301,10 +301,10 @@
     <value>Alle anwenden</value>
   </data>
   <data name="Translations_ApplySelected" xml:space="preserve">
-    <value>Ausgewählten anwenden</value>
+    <value>Ausgewählte anwenden</value>
   </data>
-  <data name="Translations_Refresh" xml:space="preserve">
-    <value>Aktualisieren</value>
+  <data name="Translations_Restart" xml:space="preserve">
+    <value>Neu starten</value>
   </data>
   <data name="Translations_Stop" xml:space="preserve">
     <value>Stop</value>

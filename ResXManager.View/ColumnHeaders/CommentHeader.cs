@@ -2,6 +2,7 @@
 {
     using System.Diagnostics.Contracts;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 

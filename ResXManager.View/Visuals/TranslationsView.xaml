@@ -3,17 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="1000"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
              xmlns:model="urn:ResXManager.Model"
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
              xmlns:translators="clr-namespace:tomenglertde.ResXManager.Translators;assembly=ResXManager.Translators"
-             xmlns:wpf="urn:TomsToolbox"
-             xmlns:controls="clr-namespace:TomsToolbox.Wpf.Controls;assembly=TomsToolbox.Wpf"
+             xmlns:toms="urn:TomsToolbox"
+             xmlns:infrastructure="urn:ResXManager.Infrastructure"
+             xmlns:behaviors="clr-namespace:tomenglertde.ResXManager.View.Behaviors"
+             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              x:Name="UserControl"
              d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}" Background="LightGray">
   <UserControl.Resources>
-    <DataTemplate DataType="{x:Type model:CultureKey}">
+    <DataTemplate DataType="{x:Type infrastructure:CultureKey}">
       <DockPanel>
         <Image DockPanel.Dock="Left" x:Name="image" Stretch="None" Source="{Binding Path=Culture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
         <Decorator x:Name="padding" DockPanel.Dock="Left" Width="4" />
@@ -26,26 +30,29 @@
       </DataTemplate.Triggers>
     </DataTemplate>
   </UserControl.Resources>
-  <DockPanel Margin="10">
-    <DockPanel DockPanel.Dock="Bottom" Grid.IsSharedSizeScope="True">
+  <DockPanel Margin="10" Grid.IsSharedSizeScope="True">
+    <DockPanel.Resources>
+      <Style TargetType="Button" x:Key="PushButtonStyle">
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="Padding" Value="15,3" />
+      </Style>
+    </DockPanel.Resources>
+    <DockPanel DockPanel.Dock="Bottom">
       <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Bottom">
         <StackPanel.Resources>
-          <Style TargetType="Button">
-            <Setter Property="Margin" Value="5" />
-            <Setter Property="Padding" Value="15,2" />
-          </Style>
+          <Style TargetType="Button" BasedOn="{StaticResource PushButtonStyle}" />
         </StackPanel.Resources>
         <Button Command="{Binding Translations.ApplyAllCommand}">
-          <ContentControl Content="{x:Static properties:Resources.Translations_ApplyAll}" Style="{StaticResource {x:Static wpf:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_ApplyAll}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
         <Button Command="{Binding Translations.ApplySelectedCommand}">
-          <ContentControl Content="{x:Static properties:Resources.Translations_ApplySelected}" Style="{StaticResource {x:Static wpf:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_ApplySelected}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
-        <Button Command="{Binding Translations.RefreshCommand}">
-          <ContentControl Content="{x:Static properties:Resources.Translations_Refresh}" Style="{StaticResource {x:Static wpf:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+        <Button Command="{Binding Translations.RestartCommand}">
+          <ContentControl Content="{x:Static properties:Resources.Translations_Restart}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
         <Button Command="{Binding Translations.StopCommand}">
-          <ContentControl Content="{x:Static properties:Resources.Translations_Stop}" Style="{StaticResource {x:Static wpf:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_Stop}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
       </StackPanel>
       <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="100" HorizontalScrollBarVisibility="Auto">
@@ -59,10 +66,10 @@
         <Decorator Height="10" DockPanel.Dock="Top" />
         <DataGrid ItemsSource="{Binding Translations.Items}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
-                  IsEnabled="{Binding Translations.Session.IsComplete}" wpf:MultiSelectorExtensions.SelectionBinding="{Binding Translations.SelectedItems}">
+                  IsEnabled="{Binding Translations.Session.IsComplete}" toms:MultiSelectorExtensions.SelectionBinding="{Binding Translations.SelectedItems}">
           <DataGrid.RowHeaderTemplate>
             <DataTemplate DataType="DataGridRowHeader">
-              <CheckBox Style="{StaticResource {x:Static wpf:ResourceKeys.DataGridRowCheckBoxStyle}}" />
+              <CheckBox Style="{StaticResource {x:Static toms:ResourceKeys.DataGridRowCheckBoxStyle}}" />
             </DataTemplate>
           </DataGrid.RowHeaderTemplate>
           <DataGrid.Columns>
@@ -82,21 +89,112 @@
                 </DataTemplate>
               </DataGridTextColumn.HeaderTemplate>
             </DataGridTextColumn>
+            <DataGridTemplateColumn Width="24" SortMemberPath="TargetCulture" IsReadOnly="True" CanUserResize="False">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate DataType="{x:Type model:TranslationItem}">
+                  <Grid>
+                    <Image Stretch="None" Source="{Binding Path=TargetCulture.Culture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" HorizontalAlignment="Center">
+                      <Image.ToolTip>
+                        <TextBlock Text="{Binding Path=TargetCulture.Culture.DisplayName, FallbackValue=Neutral}" />
+                      </Image.ToolTip>
+                    </Image>
+                  </Grid>
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
             <DataGridTemplateColumn Width="3*" IsReadOnly="True">
+              <DataGridTemplateColumn.HeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                  <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+              </DataGridTemplateColumn.HeaderStyle>
               <DataGridTemplateColumn.HeaderTemplate>
                 <DataTemplate>
-                  <StackPanel Orientation="Horizontal" DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridCellsPanel}}" d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}">
-                    <TextBlock Text="Target:" VerticalAlignment="Center" />
-                    <Decorator Width="5" />
-                    <ComboBox Width="150" ItemsSource="{Binding ResourceManager.CultureKeys}" SelectedItem="{Binding Translations.TargetCulture}" VerticalAlignment="Center" />
-                    <Decorator Width="20" />
-                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                      <CheckBox Content="{x:Static properties:Resources.TranslationsPrefixHeader}" IsChecked="{Binding Configuration.PrefixTranslations}"/>
-                      <TextBlock Text="&quot;" />
-                      <TextBox Text="{Binding Configuration.TranslationPrefix}" BorderThickness="0" Padding="-1" Background="Transparent" />
-                      <TextBlock Text="&quot;" />
+                  <DockPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridCellsPanel}}" d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}">
+                    <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" Orientation="Horizontal">
+                      <Decorator Width="20" />
+                      <CheckBox Content="{x:Static properties:Resources.TranslationsPrefixHeader}" IsChecked="{Binding Configuration.PrefixTranslations}" />
+                      <StackPanel Orientation="Horizontal" MinWidth="40">
+                        <TextBlock Text="&quot;" />
+                        <TextBox Text="{Binding Configuration.TranslationPrefix}" BorderThickness="0" Padding="-1" Background="Transparent" />
+                        <TextBlock Text="&quot;" />
+                      </StackPanel>
                     </StackPanel>
-                  </StackPanel>
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                      <TextBlock Text="Target:" VerticalAlignment="Center" />
+                      <Decorator Width="5" />
+                      <ToggleButton x:Name="TargetCulturesButton">
+                        <ToggleButton.Resources>
+                          <CollectionViewSource x:Key="SelectedTargetCulturesSource" Source="{Binding  Translations.SelectedTargetCultures}" >
+                            <CollectionViewSource.SortDescriptions>
+                              <componentModel:SortDescription PropertyName="."/>
+                            </CollectionViewSource.SortDescriptions>
+                          </CollectionViewSource>
+                        </ToggleButton.Resources>
+                        <ItemsControl ItemsSource="{Binding Source={StaticResource SelectedTargetCulturesSource}}" VerticalAlignment="Center">
+                          <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                              <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                          </ItemsControl.ItemsPanel>
+                          <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="infrastructure:CultureKey">
+                              <Image x:Name="image"  Source="{Binding Culture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" Stretch="None" Margin="2,4" />
+                              <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Culture}" Value="{x:Null}">
+                                  <Setter TargetName="image" Property="Source" Value="{Binding Path=DataContext.Configuration.NeutralResourcesLanguage, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+                                </DataTrigger>
+                              </DataTemplate.Triggers>
+                            </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                      </ToggleButton>
+                      <Popup IsOpen="{Binding Path=IsChecked, ElementName=TargetCulturesButton, Mode=OneWay}"
+                             StaysOpen="False"
+                             Placement="Bottom" PlacementTarget="{Binding ElementName=TargetCulturesButton}">
+                        <i:Interaction.Behaviors>
+                          <behaviors:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=TargetCulturesButton}" />
+                        </i:Interaction.Behaviors>
+                        <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                          <ListBox ItemsSource="{Binding Translations.AllTargetCultures}"
+                                   toms:MultiSelectorExtensions.SelectionBinding="{Binding Translations.SelectedTargetCultures}"
+                                   SelectionMode="Multiple" KeyboardNavigation.TabNavigation="Once">
+                            <ListBox.ItemTemplate>
+                              <DataTemplate DataType="infrastructure:CultureKey">
+                                <DockPanel Margin="2">
+                                  <CheckBox DockPanel.Dock="Left"
+                                            IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" />
+                                  <Decorator DockPanel.Dock="Left" Width="3" />
+                                  <Image x:Name="image"  DockPanel.Dock="Left"
+                                         Source="{Binding Culture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+                                  <Decorator DockPanel.Dock="Left" Width="3" />
+                                  <Decorator DockPanel.Dock="Right" Width="3" />
+                                  <ContentPresenter x:Name="content" Content="{Binding Culture.DisplayName}" VerticalAlignment="Center" />
+                                </DockPanel>
+                                <DataTemplate.Triggers>
+                                  <DataTrigger Binding="{Binding Culture}" Value="{x:Null}">
+                                    <Setter TargetName="image" Property="Source" Value="{Binding Path=DataContext.Configuration.NeutralResourcesLanguage, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+                                    <Setter TargetName="content" Property="Content" Value="{Binding Path=DataContext.Configuration.NeutralResourcesLanguage.DisplayName, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" />
+                                  </DataTrigger>
+                                </DataTemplate.Triggers>
+                              </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ItemContainerStyle>
+                              <Style TargetType="ListBoxItem">
+                                <Setter Property="Template">
+                                  <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                      <ContentPresenter />
+                                    </ControlTemplate>
+                                  </Setter.Value>
+                                </Setter>
+                              </Style>
+                            </ListBox.ItemContainerStyle>
+                          </ListBox>
+                        </Border>
+                      </Popup>
+                    </StackPanel>
+                  </DockPanel>
                 </DataTemplate>
               </DataGridTemplateColumn.HeaderTemplate>
               <DataGridTemplateColumn.CellTemplate>
@@ -123,7 +221,12 @@
           </DataGrid.Columns>
         </DataGrid>
       </DockPanel>
-      <controls:LoadingIndicator IsActive="{Binding Translations.Session.IsActive}" />
+      <toms:LoadingIndicator IsActive="{Binding Translations.Session.IsActive}" Header="Translating..." />
     </Grid>
   </DockPanel>
+  <i:Interaction.Triggers>
+    <i:EventTrigger EventName="Loaded">
+      <i:InvokeCommandAction Command="{Binding Translations.StartCommand}"/>
+    </i:EventTrigger>
+  </i:Interaction.Triggers>
 </UserControl>

@@ -6,6 +6,7 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
 
     /// <summary>

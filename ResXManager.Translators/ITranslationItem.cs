@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     [ContractClass(typeof (TranslationItemContract))]
     public interface ITranslationItem
     {
@@ -13,6 +15,11 @@
         }
 
         IList<ITranslationMatch> Results
+        {
+            get;
+        }
+
+        CultureKey TargetCulture
         {
             get;
         }
@@ -35,6 +42,15 @@
             get
             {
                 Contract.Ensures(Contract.Result<IList<ITranslationMatch>>() != null);
+                throw new NotImplementedException();
+            }
+        }
+
+        public CultureKey TargetCulture
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<CultureKey>() != null);
                 throw new NotImplementedException();
             }
         }

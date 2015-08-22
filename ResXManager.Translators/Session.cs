@@ -17,14 +17,13 @@
         private int _progress;
         private bool _isComplete;
 
-        public Session(CultureInfo sourceLanguage, CultureInfo targetLanguage, IList<ITranslationItem> items)
+        public Session(CultureInfo sourceLanguage, CultureInfo neutralResourcesLanguage, IList<ITranslationItem> items)
         {
-            Contract.Requires(sourceLanguage != null);
-            Contract.Requires(targetLanguage != null);
+            Contract.Requires(neutralResourcesLanguage != null);
             Contract.Requires(items != null);
 
-            SourceLanguage = sourceLanguage;
-            TargetLanguage = targetLanguage;
+            SourceLanguage = sourceLanguage ?? neutralResourcesLanguage;
+            NeutralResourcesLanguage = neutralResourcesLanguage;
             Items = items;
 
             _messages = new ReadOnlyObservableCollection<string>(_internalMessage);
@@ -36,7 +35,7 @@
             private set;
         }
 
-        public CultureInfo TargetLanguage
+        public CultureInfo NeutralResourcesLanguage
         {
             get;
             private set;
@@ -119,7 +118,7 @@
             Contract.Invariant(_internalMessage != null);
             Contract.Invariant(_messages != null);
             Contract.Invariant(SourceLanguage != null);
-            Contract.Invariant(TargetLanguage != null);
+            Contract.Invariant(NeutralResourcesLanguage != null);
             Contract.Invariant(Items != null);
         }
     }

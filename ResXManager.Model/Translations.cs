@@ -6,11 +6,14 @@
     using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.Linq;
     using System.Windows.Input;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Translators;
 
+    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
 
@@ -21,11 +24,13 @@
         private readonly Configuration _configuration;
         private readonly TranslatorHost _translatorHost;
         private readonly ObservableCollection<TranslationItem> _selectedItems = new ObservableCollection<TranslationItem>();
+        private readonly ObservableCollection<CultureKey> _selectedTargetCultures = new ObservableCollection<CultureKey>();
 
         private CultureKey _sourceCulture;
-        private CultureKey _targetCulture;
         private ICollection<TranslationItem> _items = new TranslationItem[0];
         private Session _session;
+        private ICollection<CultureKey> _allTargetCultures = new CultureKey[0];
+
 
         [ImportingConstructor]
         private Translations(ResourceManager resourceManager, Configuration configuration, TranslatorHost translatorHost)
@@ -42,12 +47,6 @@
             SourceCulture = _resourceManager.CultureKeys.FirstOrDefault();
         }
 
-        void ResourceManager_Loaded(object sender, EventArgs e)
-        {
-            if ((SourceCulture == null) || !_resourceManager.CultureKeys.Contains(SourceCulture))
-                SourceCulture = _resourceManager.CultureKeys.FirstOrDefault();
-        }
-
         public CultureKey SourceCulture
         {
             get
@@ -58,23 +57,37 @@
             {
                 if (SetProperty(ref _sourceCulture, value, () => SourceCulture))
                 {
-                    UpdateTargetList();
+                    AllTargetCultures = _resourceManager.CultureKeys.Where(key => key != _sourceCulture).ToArray();
                 }
             }
         }
 
-        public CultureKey TargetCulture
+        public ICollection<CultureKey> AllTargetCultures
         {
             get
             {
-                return _targetCulture;
+                Contract.Ensures(Contract.Result<ICollection<CultureKey>>() != null);
+
+                return _allTargetCultures;
             }
             set
             {
-                if (SetProperty(ref _targetCulture, value, () => TargetCulture))
+                Contract.Requires(value != null);
+
+                if (SetProperty(ref _allTargetCultures, value, () => AllTargetCultures))
                 {
-                    UpdateTargetList();
+                    _selectedTargetCultures.SynchronizeWith(value);
                 }
+            }
+        }
+
+        public ICollection<CultureKey> SelectedTargetCultures
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICollection<CultureKey>>() != null);
+
+                return _selectedTargetCultures;
             }
         }
 
@@ -83,6 +96,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<ICollection<TranslationItem>>() != null);
+
                 return _items;
             }
             private set
@@ -114,13 +128,23 @@
             }
         }
 
-        public ICommand RefreshCommand
+        public ICommand StartCommand
         {
             get
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(() => (SourceCulture != null) && (TargetCulture != null), UpdateTargetList);
+                return new DelegateCommand(() => (_session == null), UpdateTargetList);
+            }
+        }
+
+        public ICommand RestartCommand
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
+                return new DelegateCommand(() => (SourceCulture != null), UpdateTargetList);
             }
         }
 
@@ -154,6 +178,14 @@
             }
         }
 
+        private void ResourceManager_Loaded(object sender, EventArgs e)
+        {
+            if ((SourceCulture == null) || !_resourceManager.CultureKeys.Contains(SourceCulture))
+                SourceCulture = _resourceManager.CultureKeys.FirstOrDefault();
+
+            Items = new TranslationItem[0];
+        }
+
         private void Stop()
         {
             if (_session != null)
@@ -163,7 +195,6 @@
         private void Apply(IEnumerable<TranslationItem> items)
         {
             Contract.Requires(items != null);
-            Contract.Assume(_targetCulture != null);
 
             var prefix = _configuration.PrefixTranslations ? _configuration.TranslationPrefix : string.Empty;
 
@@ -173,10 +204,10 @@
 
                 var entry = item.Entry;
 
-                if (!entry.CanEdit(_targetCulture.Culture))
+                if (!entry.CanEdit(item.TargetCulture.Culture))
                     break;
 
-                entry.Values.SetValue(_targetCulture, prefix + item.Translation);
+                entry.Values.SetValue(item.TargetCulture, prefix + item.Translation);
                 Items.Remove(item);
             }
         }
@@ -204,20 +235,17 @@
 
             SelectedItems.Clear();
 
-            if ((_sourceCulture == null) || (_targetCulture == null))
+            if (_sourceCulture == null)
             {
                 Items = new TranslationItem[0];
                 return;
             }
 
-            Items = _resourceManager.GetItemsToTranslate(_sourceCulture, _targetCulture);
+            Items = _resourceManager.GetItemsToTranslate(_sourceCulture, _selectedTargetCultures);
 
-            _resourceManager.ApplyExistingTranslations(Items, _sourceCulture, _targetCulture);
+            _resourceManager.ApplyExistingTranslations(Items, _sourceCulture);
 
-            var sourceCulture = _sourceCulture.Culture ?? _configuration.NeutralResourcesLanguage;
-            var targetCulture = _targetCulture.Culture ?? _configuration.NeutralResourcesLanguage;
-
-            Session = new Session(sourceCulture, targetCulture, Items.Cast<ITranslationItem>().ToArray());
+            Session = new Session(_sourceCulture.Culture, _configuration.NeutralResourcesLanguage, Items.Cast<ITranslationItem>().ToArray());
 
             _translatorHost.Translate(Session);
         }
@@ -228,7 +256,9 @@
         {
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_selectedItems != null);
+            Contract.Invariant(_selectedTargetCultures != null);
             Contract.Invariant(_items != null);
+            Contract.Invariant(_allTargetCultures != null);
         }
     }
 }

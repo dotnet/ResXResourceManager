@@ -10,6 +10,8 @@
     using System.IO;
     using System.Linq;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     using TomsToolbox.Core;
 
     /// <summary>

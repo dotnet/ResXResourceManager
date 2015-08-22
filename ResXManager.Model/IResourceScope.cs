@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     [ContractClass(typeof (ResourceScopeContract))]
     public interface IResourceScope
     {

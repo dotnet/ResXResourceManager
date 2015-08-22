@@ -12,6 +12,7 @@
     using System.Xml;
     using System.Xml.Linq;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
 
     using TomsToolbox.Core;

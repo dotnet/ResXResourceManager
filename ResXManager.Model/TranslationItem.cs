@@ -5,28 +5,33 @@ namespace tomenglertde.ResXManager.Model
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.Linq;
     using System.Windows.Data;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Translators;
 
     using TomsToolbox.Desktop;
 
     public class TranslationItem : ObservableObject, ITranslationItem
     {
+        private readonly CultureKey _targetCulture;
         private readonly ListCollectionView _orderedResults;
         private readonly ObservableCollection<ITranslationMatch> _results = new ObservableCollection<ITranslationMatch>();
 
         private string _translation;
 
-        public TranslationItem(ResourceTableEntry entry, string source)
+        public TranslationItem(ResourceTableEntry entry, string source, CultureKey targetCulture)
         {
             Contract.Requires(entry != null);
             Contract.Requires(source != null);
+            Contract.Requires(targetCulture != null);
 
             Entry = entry;
             Source = source;
 
+            _targetCulture = targetCulture;
             _results.CollectionChanged += (_, __) => OnPropertyChanged(() => Translation);
             _orderedResults = new ListCollectionView(_results);
             _orderedResults.SortDescriptions.Add(new SortDescription("Rating", ListSortDirection.Descending));
@@ -43,6 +48,14 @@ namespace tomenglertde.ResXManager.Model
         {
             get;
             private set;
+        }
+
+        public CultureKey TargetCulture
+        {
+            get
+            {
+                return _targetCulture;
+            }
         }
 
         public IList<ITranslationMatch> Results

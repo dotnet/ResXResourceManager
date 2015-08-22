@@ -7,6 +7,8 @@
     using System.Globalization;
     using System.Linq;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     using TomsToolbox.Desktop;
 
     /// <summary>

@@ -15,6 +15,7 @@
     using System.Windows;
     using System.Windows.Data;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
 
     using TomsToolbox.Desktop;

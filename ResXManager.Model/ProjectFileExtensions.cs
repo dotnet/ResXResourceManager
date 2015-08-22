@@ -6,6 +6,8 @@
     using System.IO;
     using System.Linq;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     public static class ProjectFileExtensions
     {
         private const string Resx = ".resx";

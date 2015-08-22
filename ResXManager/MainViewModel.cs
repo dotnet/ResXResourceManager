@@ -4,12 +4,14 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.Composition;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Windows;
     using System.Windows.Input;
+    using System.Windows.Threading;
 
     using Microsoft.WindowsAPICodePack.Dialogs;
 
@@ -108,17 +110,24 @@
 
         private void Load()
         {
-            var folder = Folder;
-            if (string.IsNullOrEmpty(folder))
-                return;
-
-            var sourceFiles = new DirectoryInfo(folder).GetAllSourceFiles(_configuration);
-
-            _resourceManager.Load(sourceFiles);
-
-            if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
+            try
             {
-                CodeReference.BeginFind(_resourceManager, _configuration.CodeReferences, sourceFiles, _tracer);
+                var folder = Folder;
+                if (string.IsNullOrEmpty(folder))
+                    return;
+
+                var sourceFiles = new DirectoryInfo(folder).GetAllSourceFiles(_configuration);
+
+                _resourceManager.Load(sourceFiles);
+
+                if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
+                {
+                    CodeReference.BeginFind(_resourceManager, _configuration.CodeReferences, sourceFiles, _tracer);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -203,18 +212,11 @@
 
         private void ResourceManager_ReloadRequested(object sender, EventArgs e)
         {
-            try
-            {
-                Load();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+            Load();
         }
 
         [ContractInvariantMethod]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_resourceManager != null);

@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.Linq;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
 
     public enum ColumnKind
