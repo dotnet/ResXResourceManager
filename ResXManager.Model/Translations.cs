@@ -18,7 +18,7 @@
     using TomsToolbox.Wpf;
 
     [Export]
-    public class Translations : ObservableObject
+    public sealed class Translations : ObservableObject
     {
         private readonly ResourceManager _resourceManager;
         private readonly Configuration _configuration;
