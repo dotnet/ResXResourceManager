@@ -61,7 +61,8 @@
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                _tracer.TraceError(ex.ToString());
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -127,7 +128,8 @@
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                _tracer.TraceError(ex.ToString());
+                MessageBox.Show(ex.Message);
             }
         }
 

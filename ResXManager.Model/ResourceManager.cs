@@ -33,6 +33,7 @@
 
         private readonly DispatcherThrottle _selectedEntitiesChangeThrottle;
         private readonly Configuration _configuration;
+        private readonly ITracer _tracer;
 
         private ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
         private ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
@@ -50,11 +51,13 @@
         public event EventHandler<EventArgs> ReloadRequested;
 
         [ImportingConstructor]
-        private ResourceManager(Configuration configuration)
+        private ResourceManager(Configuration configuration, ITracer tracer)
         {
             Contract.Requires(configuration != null);
+            Contract.Requires(tracer != null);
 
             _configuration = configuration;
+            _tracer = tracer;
             _selectedEntitiesChangeThrottle = new DispatcherThrottle(OnSelectedEntitiesChanged);
             _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
         }
@@ -404,6 +407,7 @@
                     }
                     catch (Exception ex)
                     {
+                        _tracer.TraceError(ex.ToString());
                         MessageBox.Show(ex.Message, Resources.Title);
                     }
                 }));

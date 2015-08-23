@@ -1,8 +1,11 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System.ComponentModel.Composition;
+    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Windows;
+
+    using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Converters;
@@ -14,8 +17,14 @@
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class ConfigurationEditorView
     {
-        public ConfigurationEditorView()
+        private readonly ITracer _tracer;
+
+        [ImportingConstructor]
+        public ConfigurationEditorView(ITracer tracer)
         {
+            Contract.Requires(tracer != null);
+            _tracer = tracer;
+
             InitializeComponent();
         }
 
@@ -24,6 +33,8 @@
             var ex = e.GetException();
             if (ex == null)
                 return;
+
+            _tracer.TraceError(ex.ToString());
 
             MessageBox.Show(ex.Message, Properties.Resources.Title);
         }
