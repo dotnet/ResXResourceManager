@@ -2,10 +2,11 @@
 {
     using System;
     using System.ComponentModel.Composition.Hosting;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Windows;
+
+    using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf.Composition;
 
@@ -36,7 +37,8 @@
             Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
             ExportProviderLocator.Register(_compositionHost.Container);
 
-            Trace.TraceInformation("Started");
+            var tracer = _compositionHost.GetExportedValue<ITracer>();
+            tracer.WriteLine("Started");
         }
 
         protected override void OnExit(ExitEventArgs e)

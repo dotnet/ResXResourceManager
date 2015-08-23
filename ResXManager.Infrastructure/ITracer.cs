@@ -3,11 +3,34 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    [ContractClass(typeof (TracerContract))]
     public interface ITracer
     {
         void TraceError(string value);
         void TraceWarning(string value);
         void WriteLine(string value);
+    }
+
+    [ContractClassFor(typeof (ITracer))]
+    abstract class TracerContract : ITracer
+    {
+        void ITracer.TraceError(string value)
+        {
+            Contract.Requires(value != null);
+            throw new System.NotImplementedException();
+        }
+
+        void ITracer.TraceWarning(string value)
+        {
+            Contract.Requires(value != null);
+            throw new System.NotImplementedException();
+        }
+
+        void ITracer.WriteLine(string value)
+        {
+            Contract.Requires(value != null);
+            throw new System.NotImplementedException();
+        }
     }
 
     public static class TracerExtensions

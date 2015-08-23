@@ -11,6 +11,7 @@ namespace tomenglertde.ResXManager.Translators
     using System.ServiceModel;
     using System.ServiceModel.Channels;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Translators.BingServiceReference;
 
     using TomsToolbox.Core;
@@ -56,7 +57,12 @@ namespace tomenglertde.ResXManager.Translators
 
                         foreach (var languageGroup in session.Items.GroupBy(item => item.TargetCulture))
                         {
-                            var targetLanguage = languageGroup.Key.Culture ?? session.NeutralResourcesLanguage;
+                            Contract.Assume(languageGroup != null);
+
+                            var cultureKey = languageGroup.Key;
+                            Contract.Assume(cultureKey != null);
+
+                            var targetLanguage = cultureKey.Culture ?? session.NeutralResourcesLanguage;
 
                             using (var itemsEnumerator = languageGroup.GetEnumerator())
                             {
