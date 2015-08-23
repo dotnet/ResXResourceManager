@@ -35,7 +35,7 @@
         {
             get
             {
-                return _cultureKey.Culture ?? _resourceManager.Configuration.NeutralResourcesLanguage ?? CultureInfo.InvariantCulture;
+                return _cultureKey.Culture ?? _resourceManager.Configuration.NeutralResourcesLanguage;
             }
         }
 

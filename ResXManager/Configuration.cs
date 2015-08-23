@@ -1,14 +1,19 @@
 ﻿namespace tomenglertde.ResXManager
 {
     using System.ComponentModel.Composition;
+    using System.Diagnostics.Contracts;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
     [Export(typeof(Configuration))]
     class StandaloneConfiguration : Configuration
     {
-        private StandaloneConfiguration()
+        [ImportingConstructor]
+        private StandaloneConfiguration(ITracer tracer)
+            : base(tracer)
         {
+            Contract.Requires(tracer != null);
         }
 
         public override bool IsScopeSupported

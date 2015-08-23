@@ -5,6 +5,8 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
+
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Core;
@@ -15,9 +17,11 @@
         private readonly IVsServiceProvider _vsServiceProvider;
 
         [ImportingConstructor]
-        public DteConfiguration(IVsServiceProvider vsServiceProvider)
+        public DteConfiguration(IVsServiceProvider vsServiceProvider, ITracer tracer)
+            : base(tracer)
         {
             Contract.Requires(vsServiceProvider != null);
+            Contract.Requires(tracer != null);
 
             _vsServiceProvider = vsServiceProvider;
         }

@@ -8,6 +8,8 @@
     using System.Linq.Expressions;
     using System.Windows;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
@@ -22,8 +24,10 @@
         private readonly string _filePath;
         private readonly XmlConfiguration _configuration;
 
-        protected ConfigurationBase()
+        protected ConfigurationBase(ITracer tracer)
         {
+            Contract.Requires(tracer != null);
+
             Contract.Assume(!string.IsNullOrEmpty(_directory));
 
             _filePath = Path.Combine(_directory, FileName);
@@ -34,7 +38,7 @@
 
                 using (var reader = new StreamReader(File.OpenRead(_filePath)))
                 {
-                    _configuration = new XmlConfiguration(reader);
+                    _configuration = new XmlConfiguration(tracer, reader);
                     return;
                 }
             }
@@ -42,7 +46,7 @@
             {
             }
 
-            _configuration = new XmlConfiguration();
+            _configuration = new XmlConfiguration(tracer);
         }
 
         public abstract bool IsScopeSupported

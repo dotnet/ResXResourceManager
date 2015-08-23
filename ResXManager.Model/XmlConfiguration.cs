@@ -8,6 +8,8 @@
     using System.Linq;
     using System.Xml.Linq;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     /// <summary>
     /// Store key/value pairs in an XML stream.
     /// </summary>
@@ -32,6 +34,7 @@
         /// </summary>
         public const string KeyAttributeName = "Key";
 
+        private readonly ITracer _tracer;
         private readonly XDocument _document;
         private readonly XElement _root;
         private readonly XNamespace _namespace;
@@ -42,17 +45,22 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlConfiguration"/> class.
         /// </summary>
-        public XmlConfiguration()
-            : this(null)
+        public XmlConfiguration(ITracer tracer)
+            : this(tracer, null)
         {
+            Contract.Requires(tracer != null);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlConfiguration" /> class.
         /// </summary>
         /// <param name="reader">The reader providing the XML stream.</param>
-        public XmlConfiguration(TextReader reader)
+        public XmlConfiguration(ITracer tracer, TextReader reader)
         {
+            Contract.Requires(tracer != null);
+
+            _tracer = tracer;
+
             if ((reader != null) && (reader.Peek() != -1))
             {
                 try
@@ -67,7 +75,7 @@
                 }
                 catch (Exception ex)
                 {
-                    Trace.TraceError(ex.ToString());
+                    _tracer.TraceError(ex.ToString());
                 }
             }
 
@@ -82,33 +90,33 @@
             _valueName = XName.Get("Value", _namespace.NamespaceName);
         }
 
-        /// <summary>
-        /// Loads the configuration from the specified file name.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns>The configuration loaded from the file; an empty configuration if the file does not exist or is not accessible.</returns>
-        public static XmlConfiguration Load(string fileName)
-        {
-            Contract.Requires(fileName != null);
-            Contract.Ensures(Contract.Result<XmlConfiguration>() != null);
+        ///// <summary>
+        ///// Loads the configuration from the specified file name.
+        ///// </summary>
+        ///// <param name="fileName">Name of the file.</param>
+        ///// <returns>The configuration loaded from the file; an empty configuration if the file does not exist or is not accessible.</returns>
+        //public static XmlConfiguration Load(string fileName)
+        //{
+        //    Contract.Requires(fileName != null);
+        //    Contract.Ensures(Contract.Result<XmlConfiguration>() != null);
 
-            if (File.Exists(fileName))
-            {
-                try
-                {
-                    using (var reader = new StreamReader(fileName))
-                    {
-                        return new XmlConfiguration(reader);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Trace.TraceError(ex.ToString());
-                }
-            }
+        //    if (File.Exists(fileName))
+        //    {
+        //        try
+        //        {
+        //            using (var reader = new StreamReader(fileName))
+        //            {
+        //                return new XmlConfiguration(reader);
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            _tracer.TraceError(ex.ToString());
+        //        }
+        //    }
 
-            return new XmlConfiguration(null);
-        }
+        //    return new XmlConfiguration(null);
+        //}
 
         /// <summary>
         /// Gets the value with the specified key from the XML stream.

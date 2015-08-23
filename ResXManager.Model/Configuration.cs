@@ -6,6 +6,8 @@
     using System.Globalization;
     using System.Windows.Threading;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     using TomsToolbox.Desktop;
 
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces", Justification = "Works fine with this")]
@@ -14,8 +16,11 @@
         private readonly DispatcherThrottle _codeReferencesChangeThrottle;
         private CodeReferenceConfiguration _codeReferences;
 
-        protected Configuration()
+        protected Configuration(ITracer tracer)
+            : base(tracer)
         {
+            Contract.Requires(tracer != null);
+
             _codeReferencesChangeThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, PersistCodeReferences);
         }
 
