@@ -1,3 +1,7 @@
+1.0.0.59:
+* WI4610: Open ResxManager to an specific file
+* WI4625: One Button Click For All Locales
+* WI4623: Improve error logging
 1.0.0.58:
 * WI4614: Regression in spreadsheet import
 * WI4621: excel import/export broken in 1.0.0.57
