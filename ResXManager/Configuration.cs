@@ -7,10 +7,10 @@
     using tomenglertde.ResXManager.Model;
 
     [Export(typeof(Configuration))]
-    class StandaloneConfiguration : Configuration
+    public class StandaloneConfiguration : Configuration
     {
         [ImportingConstructor]
-        private StandaloneConfiguration(ITracer tracer)
+        public StandaloneConfiguration(ITracer tracer)
             : base(tracer)
         {
             Contract.Requires(tracer != null);

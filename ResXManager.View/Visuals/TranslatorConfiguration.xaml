@@ -7,8 +7,13 @@
              xmlns:translators="clr-namespace:tomenglertde.ResXManager.Translators;assembly=ResXManager.Translators"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              >
-  <TabControl TabStripPlacement="Left" DisplayMemberPath="DisplayName" Loaded="TabControl_Loaded"
+  <TabControl TabStripPlacement="Left" Loaded="TabControl_Loaded"
               ItemsSource="{Binding Translators, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" >
+    <TabControl.ItemTemplate>
+      <DataTemplate>
+        <TextBlock Text="{Binding DisplayName}" Margin="4"/>
+      </DataTemplate>
+    </TabControl.ItemTemplate>
     <TabControl.ContentTemplate>
       <DataTemplate DataType="translators:ITranslator">
         <StackPanel Margin="5">

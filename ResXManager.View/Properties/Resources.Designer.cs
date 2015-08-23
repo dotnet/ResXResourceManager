@@ -775,12 +775,32 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Source:.
+        /// </summary>
+        public static string Translations_Source {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("Translations_Source", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Stop.
         /// </summary>
         public static string Translations_Stop {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Translations_Stop", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Targets:.
+        /// </summary>
+        public static string Translations_Targets {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("Translations_Targets", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -1103,9 +1123,17 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         Translations_Restart,
         /// <summary>
+        ///   Looks up a localized string similar to Source:.
+        /// </summary>
+        Translations_Source,
+        /// <summary>
         ///   Looks up a localized string similar to Stop.
         /// </summary>
         Translations_Stop,
+        /// <summary>
+        ///   Looks up a localized string similar to Targets:.
+        /// </summary>
+        Translations_Targets,
         /// <summary>
         ///   Looks up a localized string similar to Prefix translations with .
         /// </summary>

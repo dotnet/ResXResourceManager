@@ -82,7 +82,7 @@
               <DataGridTextColumn.HeaderTemplate>
                 <DataTemplate>
                   <StackPanel Orientation="Horizontal" DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridCellsPanel}}" d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}">
-                    <TextBlock Text="Source:" VerticalAlignment="Center" />
+                    <TextBlock Text="{x:Static properties:Resources.Translations_Source}" VerticalAlignment="Center" />
                     <Decorator Width="5" />
                     <ComboBox Width="150" ItemsSource="{Binding ResourceManager.CultureKeys}" SelectedItem="{Binding Translations.SourceCulture}" />
                   </StackPanel>
@@ -121,7 +121,7 @@
                       </StackPanel>
                     </StackPanel>
                     <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                      <TextBlock Text="Target:" VerticalAlignment="Center" />
+                      <TextBlock Text="{x:Static properties:Resources.Translations_Targets}" VerticalAlignment="Center" />
                       <Decorator Width="5" />
                       <ToggleButton x:Name="TargetCulturesButton">
                         <ToggleButton.Resources>

@@ -19,7 +19,7 @@
 
     [VisualCompositionExport("Content", Sequence = 99)]
     [Export(typeof(ITracer))]
-    public class OutputViewModel : ObservableObject, IComposablePart, ITracer
+    public sealed class OutputViewModel : ObservableObject, IComposablePart, ITracer
     {
         private readonly ObservableCollection<string> _lines = new ObservableCollection<string>();
 

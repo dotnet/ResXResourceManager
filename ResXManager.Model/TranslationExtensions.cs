@@ -10,7 +10,7 @@ namespace tomenglertde.ResXManager.Model
 
     static class TranslationExtensions
     {
-        public static ICollection<TranslationItem> GetItemsToTranslate(this ResourceManager resourceManager, CultureKey sourceCulture, IEnumerable<CultureKey> targetCultures)
+        public static ICollection<TranslationItem> GetItemsToTranslate(this ResourceManager resourceManager, CultureKey sourceCulture, string translationPrefix, IEnumerable<CultureKey> targetCultures)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(sourceCulture != null);
@@ -21,8 +21,8 @@ namespace tomenglertde.ResXManager.Model
                 targetCultures.SelectMany(targetCulture =>
                     resourceManager.ResourceTableEntries
                         .Where(entry => !entry.IsInvariant)
-                        .Where(entry => string.IsNullOrWhiteSpace(entry.Values.GetValue(targetCulture)))
-                        .Select(entry => new { Entry = entry, Source = entry.Values.GetValue(sourceCulture) })
+                        .Select(entry => new { Entry = entry, Source = entry.Values.GetValue(sourceCulture), Target = entry.Values.GetValue(targetCulture) })
+                        .Where(item => string.IsNullOrWhiteSpace(item.Target) || string.Equals(item.Target, translationPrefix, System.StringComparison.Ordinal))
                         .Where(item => !string.IsNullOrWhiteSpace(item.Source))
                         .Select(item => new TranslationItem(item.Entry, item.Source, targetCulture))));
         }

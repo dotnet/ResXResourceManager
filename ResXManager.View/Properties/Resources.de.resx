@@ -330,4 +330,10 @@
   <data name="Configuration_ExcelExportModeHeader" xml:space="preserve">
     <value>Excel Export</value>
   </data>
+  <data name="Translations_Source" xml:space="preserve">
+    <value>Quelle:</value>
+  </data>
+  <data name="Translations_Targets" xml:space="preserve">
+    <value>Ziele:</value>
+  </data>
 </root>

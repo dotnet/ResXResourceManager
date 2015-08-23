@@ -120,6 +120,14 @@
             }
         }
 
+        public string EffectiveTranslationPrefix
+        {
+            get
+            {
+                return PrefixTranslations ? TranslationPrefix : string.Empty;
+            }
+        }
+
         public ExcelExportMode ExcelExportMode
         {
             get

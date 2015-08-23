@@ -70,7 +70,7 @@
 
                 return _allTargetCultures;
             }
-            set
+            private set
             {
                 Contract.Requires(value != null);
 
@@ -196,9 +196,9 @@
         {
             Contract.Requires(items != null);
 
-            var prefix = _configuration.PrefixTranslations ? _configuration.TranslationPrefix : string.Empty;
+            var prefix = _configuration.EffectiveTranslationPrefix;
 
-            foreach (var item in items.ToArray())
+            foreach (var item in items.Where(item => !string.IsNullOrEmpty(item.Translation)).ToArray())
             {
                 Contract.Assume(item != null);
 
@@ -241,7 +241,7 @@
                 return;
             }
 
-            Items = _resourceManager.GetItemsToTranslate(_sourceCulture, _selectedTargetCultures);
+            Items = _resourceManager.GetItemsToTranslate(_sourceCulture, _configuration.EffectiveTranslationPrefix, _selectedTargetCultures);
 
             _resourceManager.ApplyExistingTranslations(Items, _sourceCulture);
 
