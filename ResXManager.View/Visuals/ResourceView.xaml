@@ -262,7 +262,7 @@
               </Button>
               <Button ToolTip="{x:Static properties:Resources.AddKeyToolTip}"
                       Style="{StaticResource SingleSelectElementStyle}"
-                      Command="{Binding Converter={x:Static converters:AddNewKeyCommandConverter.Default}}">
+                      Command="{Binding Path=ResourceManager, Converter={x:Static converters:AddNewKeyCommandConverter.Default}}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/add.png" />
               </Button>
               <Separator />
