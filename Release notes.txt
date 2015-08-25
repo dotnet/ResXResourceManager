@@ -1,3 +1,5 @@
+1.0.0.60:
+* WI4630: Add New Key not working
 1.0.0.59:
 * WI4610: Open ResxManager to an specific file
 * WI4625: One Button Click For All Locales
