@@ -20,6 +20,7 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<bool>() == false);
                 return false;
             }
         }
@@ -28,6 +29,7 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<tomenglertde.ResXManager.Model.ConfigurationScope>() == tomenglertde.ResXManager.Model.ConfigurationScope.Global);
                 return ConfigurationScope.Global;
             }
         }

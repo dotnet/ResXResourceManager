@@ -131,9 +131,10 @@
 
             var selectedFiles = selection
                 .Select(item => item.GetMkDocument())
-                .Where(file => !string.IsNullOrEmpty(file));
+                .Where(file => !string.IsNullOrEmpty(file))
+                .ToArray();
 
-            menuCommand.Visible = selectedFiles.All(file => ProjectFileExtensions.SupportedFileExtensions.Any(ext => Path.GetExtension(file).Equals(ext, StringComparison.OrdinalIgnoreCase)));
+            menuCommand.Visible = selectedFiles.Any() && selectedFiles.All(file => ProjectFileExtensions.SupportedFileExtensions.Any(ext => Path.GetExtension(file).Equals(ext, StringComparison.OrdinalIgnoreCase)));
         }
 
         protected override void Dispose(bool disposing)
