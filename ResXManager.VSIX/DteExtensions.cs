@@ -325,7 +325,12 @@
 
             yield return projectItem;
 
-            foreach (var item in projectItem.ProjectItems.Cast<EnvDTE.ProjectItem>().SelectMany(p => p.DescendantsAndSelf()))
+            var projectItems = projectItem.ProjectItems;
+
+            if (projectItems == null)
+                yield break;
+
+            foreach (var item in projectItems.OfType<EnvDTE.ProjectItem>().SelectMany(p => p.DescendantsAndSelf()))
             {
                 yield return item;
             }
