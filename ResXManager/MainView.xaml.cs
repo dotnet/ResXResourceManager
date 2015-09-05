@@ -1,7 +1,9 @@
 ﻿namespace tomenglertde.ResXManager
 {
     using System.ComponentModel.Composition;
+    using System.Diagnostics.Contracts;
 
+    using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf.Composition;
 
     /// <summary>
@@ -9,11 +11,15 @@
     /// </summary>
     [DataTemplate(typeof(MainViewModel))] 
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    
     public partial class MainView
     {
-        public MainView()
+        [ImportingConstructor]
+        public MainView(ICompositionHost compositionHost)
         {
+            Contract.Requires(compositionHost != null);
+
+            this.SetExportProvider(compositionHost.Container);
+
             InitializeComponent();
         }
     }

@@ -23,6 +23,7 @@
         public ConfigurationEditorView(ITracer tracer)
         {
             Contract.Requires(tracer != null);
+
             _tracer = tracer;
 
             InitializeComponent();

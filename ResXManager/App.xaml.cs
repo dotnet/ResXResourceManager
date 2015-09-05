@@ -6,8 +6,9 @@
     using System.IO;
     using System.Windows;
 
-    using tomenglertde.ResXManager.Infrastructure;
+ using tomenglertde.ResXManager.Infrastructure;
 
+    using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf.Composition;
 
     /// <summary>
@@ -35,10 +36,12 @@
             _compositionHost.AddCatalog(new DirectoryCatalog(path, "ResXManager.*.dll"));
 
             Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
-            ExportProviderLocator.Register(_compositionHost.Container);
 
             var tracer = _compositionHost.GetExportedValue<ITracer>();
             tracer.WriteLine("Started");
+
+            MainWindow = _compositionHost.GetExportedValue<MainWindow>();
+            MainWindow.Show();
         }
 
         protected override void OnExit(ExitEventArgs e)

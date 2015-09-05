@@ -17,6 +17,7 @@
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
+    using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Converters;
@@ -30,11 +31,16 @@
     {
         private readonly ResourceManager _resourceManager;
 
-        public ResourceView()
+        [ImportingConstructor]
+        public ResourceView(ICompositionHost compositionHost, ResourceManager resourceManager)
         {
+            Contract.Requires(compositionHost != null);
+
+            this.SetExportProvider(compositionHost.Container);
+
             InitializeComponent();
 
-            _resourceManager = ExportProviderLocator.GetExportProvider(this).GetExportedValue<ResourceManager>();
+            _resourceManager = resourceManager;
             _resourceManager.Loaded += ResourceManager_Loaded;
             _resourceManager.EntityFilter = Settings.Default.ResourceFilter;
 

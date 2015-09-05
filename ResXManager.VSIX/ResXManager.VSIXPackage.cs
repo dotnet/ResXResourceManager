@@ -15,7 +15,7 @@
     using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Core;
-    using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Desktop.Composition;
 
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -41,8 +41,6 @@
 
             _compositionHost.AddCatalog(new DirectoryCatalog(path, "ResXManager.*.dll"));
             _compositionHost.ComposeExportedValue((IVsServiceProvider)this);
-
-            ExportProviderLocator.Register(_compositionHost.Container);
         }
 
         internal static ExportProvider ExportProvider

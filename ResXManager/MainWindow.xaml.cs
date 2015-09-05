@@ -1,20 +1,28 @@
 ﻿namespace tomenglertde.ResXManager
 {
     using System;
+    using System.ComponentModel.Composition;
     using System.Diagnostics;
     using System.Windows;
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
 
+    using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
+    using TomsToolbox.Wpf.Composition;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    [Export]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class MainWindow
     {
-        public MainWindow()
+        [ImportingConstructor]
+        public MainWindow(ICompositionHost compositionHost)
         {
+            this.SetExportProvider(compositionHost.Container);
+
             InitializeComponent();
 
             EventManager.RegisterClassHandler(typeof(MainWindow), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));

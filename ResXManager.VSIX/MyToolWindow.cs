@@ -76,7 +76,7 @@
             _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
             _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
 
-            _view = new ShellView();
+            _view = exportProvider.GetExportedValue<ShellView>();
             _view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(exportProvider));
             _view.Loaded += view_Loaded;
             _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
