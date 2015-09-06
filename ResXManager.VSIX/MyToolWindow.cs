@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -28,6 +29,7 @@
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
+    using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
@@ -40,8 +42,10 @@
     /// This class implements the tool window exposed by this package and hosts a user control.
     /// </summary>
     [Guid("79664857-03bf-4bca-aa54-ec998b3328f8")]
-    public sealed class MyToolWindow : ToolWindowPane
+    public sealed class MyToolWindow : ToolWindowPane, IVsServiceProvider
     {
+        private readonly ICompositionHost _compositionHost = new CompositionHost();
+
         private readonly ITracer _trace;
         private readonly ResourceManager _resourceManager;
         private readonly Configuration _configuration;
@@ -66,21 +70,35 @@
             BitmapResourceID = 301;
             BitmapIndex = 1;
 
-            var exportProvider = ResXManagerVsixPackage.ExportProvider;
+            var path = Path.GetDirectoryName(GetType().Assembly.Location);
+            Contract.Assume(path != null);
 
-            _trace = exportProvider.GetExportedValue<ITracer>();
-            _configuration = exportProvider.GetExportedValue<Configuration>();
+            _compositionHost.AddCatalog(new DirectoryCatalog(path, "ResXManager.*.dll"));
+            _compositionHost.ComposeExportedValue((IVsServiceProvider)this);
 
-            _resourceManager = exportProvider.GetExportedValue<ResourceManager>();
+            _trace = _compositionHost.GetExportedValue<ITracer>();
+            _configuration = _compositionHost.GetExportedValue<Configuration>();
+
+            _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
             _resourceManager.BeginEditing += ResourceManager_BeginEditing;
             _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
             _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
 
-            _view = exportProvider.GetExportedValue<ShellView>();
-            _view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(exportProvider));
+            _view = _compositionHost.GetExportedValue<ShellView>();
+            _view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
             _view.Loaded += view_Loaded;
             _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
             _view.Track(UIElement.IsMouseOverProperty).Changed += view_IsMouseOverChanged;
+        }
+
+        public ResourceManager ResourceManager
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ResourceManager>() != null);
+
+                return _resourceManager;
+            }
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -117,6 +135,13 @@
                 _trace.TraceError(ex.ToString());
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
             }
+        }
+
+        protected override void OnClose()
+        {
+            base.OnClose();
+
+            _compositionHost.Dispose();
         }
 
         /* Maybe use that later...
@@ -489,6 +514,7 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
+            Contract.Invariant(_compositionHost != null);
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_configuration != null);
             Contract.Invariant(_trace != null);

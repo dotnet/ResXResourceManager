@@ -1,12 +1,12 @@
 ﻿namespace tomenglertde.ResXManager.VSIX
 {
     using System;
-    using System.ComponentModel.Composition.Hosting;
     using System.ComponentModel.Design;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using System.Windows.Threading;
 
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
@@ -15,7 +15,7 @@
     using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Core;
-    using TomsToolbox.Desktop.Composition;
+    using TomsToolbox.Desktop;
 
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -30,43 +30,36 @@
     [ProvideToolWindow(typeof(MyToolWindow))]
     [Guid(GuidList.guidResXManager_VSIXPkgString)]
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
-    public sealed class ResXManagerVsixPackage : Package, IVsServiceProvider
+    public sealed class ResXManagerVsixPackage : Package
     {
-        private static readonly ICompositionHost _compositionHost = new CompositionHost();
-
-        public ResXManagerVsixPackage()
-        {
-            var path = Path.GetDirectoryName(typeof(ResXManagerVsixPackage).Assembly.Location);
-            Contract.Assume(!string.IsNullOrEmpty(path));
-
-            _compositionHost.AddCatalog(new DirectoryCatalog(path, "ResXManager.*.dll"));
-            _compositionHost.ComposeExportedValue((IVsServiceProvider)this);
-        }
-
-        internal static ExportProvider ExportProvider
-        {
-            get
-            {
-                return _compositionHost.Container;
-            }
-        }
-
         private void ShowToolWindow(object sender, EventArgs e)
         {
+            ShowToolWindow();
+        }
+
+        private MyToolWindow ShowToolWindow()
+        {
+            Contract.Ensures(Contract.Result<MyToolWindow>() != null);
+
             // Get the instance number 0 of this tool window. This window is single instance so this instance is actually the only one.
             // The last flag is set to true so that if the tool window does not exists it will be created.
-            var window = FindToolWindow(typeof(MyToolWindow), 0, true);
+            var window = FindToolWindow(typeof (MyToolWindow), 0, true);
+
             if ((null == window) || (null == window.Frame))
             {
                 throw new NotSupportedException(Resources.CanNotCreateWindow);
             }
+
             var windowFrame = (IVsWindowFrame)window.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
+
+            return (MyToolWindow)window;
         }
 
         private void ShowSelectedResourceFiles(object sender, EventArgs e)
         {
-            ShowToolWindow(sender, e);
+            var toolWindow = ShowToolWindow();
+            var resourceManager = toolWindow.ResourceManager;
 
             var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
             Contract.Assume(monitorSelection != null);
@@ -77,13 +70,14 @@
                 .Select(item => item.GetMkDocument())
                 .Where(file => !string.IsNullOrEmpty(file));
 
-            var resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
+            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Input, () =>
+            {
+                var selectedResourceEntites = resourceManager.ResourceEntities
+                    .Where(entity => entity.Languages.Any(lang => selectedFiles.Any(file => lang.FileName.Equals(file, StringComparison.OrdinalIgnoreCase))));
 
-            var selectedResourceEntites = resourceManager.ResourceEntities
-                .Where(entity => entity.Languages.Any(lang => selectedFiles.Any(file => lang.FileName.Equals(file, StringComparison.OrdinalIgnoreCase))));
-
-            resourceManager.SelectedEntities.Clear();
-            resourceManager.SelectedEntities.AddRange(selectedResourceEntites);
+                resourceManager.SelectedEntities.Clear();
+                resourceManager.SelectedEntities.AddRange(selectedResourceEntites);
+            });
         }
 
         /// <summary>
@@ -133,13 +127,6 @@
                 .ToArray();
 
             menuCommand.Visible = selectedFiles.Any() && selectedFiles.All(file => ProjectFileExtensions.SupportedFileExtensions.Any(ext => Path.GetExtension(file).Equals(ext, StringComparison.OrdinalIgnoreCase)));
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            _compositionHost.Dispose();
         }
     }
 }
