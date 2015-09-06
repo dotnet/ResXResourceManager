@@ -91,7 +91,16 @@
             {
                 Contract.Requires(value != null);
 
-                File.WriteAllText(FilePath, value, Encoding.UTF8);
+                try
+                {
+                    IsSaving = true;
+
+                    File.WriteAllText(FilePath, value, Encoding.UTF8);
+                }
+                finally
+                {
+                    IsSaving = false;
+                }
             }
         }
 
@@ -117,6 +126,12 @@
 
                 return false;
             }
+        }
+
+        public bool IsSaving
+        {
+            get;
+            protected set;
         }
 
         private static string GetRelativePath(string solutionFolder, string filePath)

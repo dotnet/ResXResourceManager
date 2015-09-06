@@ -76,21 +76,30 @@
             }
             set
             {
-                var projectItem = ProjectItem;
-
                 try
                 {
-                    if (!projectItem.TrySetContent(value))
-                    {
-                        base.Content = value;
-                    }
-                }
-                catch (IOException)
-                {
-                }
+                    IsSaving = true;
 
-                projectItem.Open();
-                projectItem.TrySetContent(value);
+                    var projectItem = ProjectItem;
+
+                    try
+                    {
+                        if (!projectItem.TrySetContent(value))
+                        {
+                            base.Content = value;
+                        }
+                    }
+                    catch (IOException)
+                    {
+                    }
+
+                    projectItem.Open();
+                    projectItem.TrySetContent(value);
+                }
+                finally
+                {
+                    IsSaving = false;
+                }
             }
         }
 
