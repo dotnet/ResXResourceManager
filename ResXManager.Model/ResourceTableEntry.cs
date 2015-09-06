@@ -312,7 +312,7 @@
             return _stringFormatParameterPattern
                 .Matches(value)
                 .Cast<Match>()
-                .Aggregate(0L, (a, match) => a | (1L << int.Parse(match.Groups[1].Value)));
+                .Aggregate(0L, (a, match) => a | (1L << int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture)));
         }
 
         class Comparer : IEqualityComparer<ResourceTableEntry>

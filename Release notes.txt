@@ -1,3 +1,6 @@
+1.0.0.61:
+* WI4623: Fix: Value cannot be null
+* WI4622: Detect inconsistent string format parameters
 1.0.0.60:
 * WI4630: Add New Key not working
 1.0.0.59:
