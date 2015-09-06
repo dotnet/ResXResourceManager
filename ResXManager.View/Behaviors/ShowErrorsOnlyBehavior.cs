@@ -117,7 +117,8 @@
             {
                 var entry = (ResourceTableEntry)row;
                 var values = visibleLanguages.Select(lang => entry.Values.GetValue(lang));
-                return !entry.IsInvariant && values.Any(string.IsNullOrEmpty);
+
+                return !entry.IsInvariant && (values.Any(string.IsNullOrEmpty) || entry.HasStringFormatParameterMismatches(visibleLanguages));
             };
         }
     }

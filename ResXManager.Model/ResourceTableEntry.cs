@@ -6,8 +6,10 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
+    using System.Text.RegularExpressions;
 
     using tomenglertde.ResXManager.Infrastructure;
+    using tomenglertde.ResXManager.Model.Properties;
 
     using TomsToolbox.Desktop;
 
@@ -21,7 +23,8 @@
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly ResourceLanguage _neutralLanguage;
         private readonly ResourceTableValues<bool> _fileExists;
-        
+        private readonly ResourceTableValues<string> _errors;
+
         private string _key;
         private ResourceTableValues<string> _values;
         private ResourceTableValues<string> _comments;
@@ -51,6 +54,7 @@
             _comments.ValueChanged += Comments_ValueChanged;
 
             _fileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
+            _errors = new ResourceTableValues<string>(_languages, GetErrors, (lang, value) => false);
 
             Contract.Assume(languages.Any());
             _neutralLanguage = languages.First().Value;
@@ -159,12 +163,23 @@
             }
         }
 
+        [PropertyDependency("Values")]
         public ResourceTableValues<bool> FileExists
         {
             get
             {
                 Contract.Ensures(Contract.Result<ResourceTableValues<bool>>() != null);
                 return _fileExists;
+            }
+        }
+
+        [PropertyDependency("Values")]
+        public ResourceTableValues<string> Errors
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ResourceTableValues<string>>() != null);
+                return _errors;
             }
         }
 
@@ -200,6 +215,15 @@
             }
         }
 
+        [PropertyDependency("Values", "IsInvariant")]
+        public bool HasAnyStringFormatParameterMismatches
+        {
+            get
+            {
+                return !IsInvariant && HasStringFormatParameterMismatches(_values.Select(lang => lang.GetValue(_key)));
+            }
+        }
+
         public IList<CodeReference> CodeReferences
         {
             get
@@ -208,11 +232,7 @@
             }
             internal set
             {
-                if (_codeReferences == value)
-                    return;
-
-                _codeReferences = value;
-                OnPropertyChanged(() => CodeReferences);
+                SetProperty(ref _codeReferences, value, () => CodeReferences);
             }
         }
 
@@ -225,7 +245,13 @@
         {
             OnPropertyChanged(() => Values);
             OnPropertyChanged(() => Comment);
-            OnPropertyChanged(() => FileExists);
+        }
+
+        public bool HasStringFormatParameterMismatches(IEnumerable<CultureKey> cultures)
+        {
+            Contract.Requires(cultures != null);
+
+            return HasStringFormatParameterMismatches(cultures.Select(lang => _values.GetValue(lang)));
         }
 
         private void Values_ValueChanged(object sender, EventArgs e)
@@ -236,6 +262,57 @@
         private void Comments_ValueChanged(object sender, EventArgs e)
         {
             OnPropertyChanged(() => Comment);
+        }
+
+        private string GetErrors(ResourceLanguage arg)
+        {
+            if (arg.IsNeutralLanguage)
+                return null;
+
+            var value = arg.GetValue(_key);
+            if (string.IsNullOrEmpty(value))
+                return null;
+
+            var neutralValue = _neutralLanguage.GetValue(_key);
+            if (string.IsNullOrEmpty(neutralValue))
+                return null;
+
+            if (HasStringFormatParameterMismatches(neutralValue, value))
+                return Resources.StringFormatParameterMismatchError;
+
+            return null;
+        }
+
+        private static bool HasStringFormatParameterMismatches(params string[] values)
+        {
+            return HasStringFormatParameterMismatches((IEnumerable<string>)values);
+        }
+
+        private static bool HasStringFormatParameterMismatches(IEnumerable<string> values)
+        {
+            Contract.Requires(values != null);
+
+            values = values.Where(value => !string.IsNullOrEmpty(value)).ToArray();
+
+            if (!values.Any())
+                return false;
+            
+            return values.Select(GetStringFormatFlags)
+                .Distinct()
+                .Count() > 1;
+        }
+
+        private static readonly Regex _stringFormatParameterPattern = new Regex(@"\{(\d+)(,\d+)?(:\S+)?\}");
+
+        private static long GetStringFormatFlags(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return 0;
+
+            return _stringFormatParameterPattern
+                .Matches(value)
+                .Cast<Match>()
+                .Aggregate(0L, (a, match) => a | (1L << int.Parse(match.Groups[1].Value)));
         }
 
         class Comparer : IEqualityComparer<ResourceTableEntry>

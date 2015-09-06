@@ -182,4 +182,7 @@
   <data name="ExcelExport_SingleSheet" xml:space="preserve">
     <value>In ein einziges Arbeitsblatt</value>
   </data>
+  <data name="StringFormatParameterMismatchError" xml:space="preserve">
+    <value>Dieser Text enthält String-Format Parameterinkonsistenzen!</value>
+  </data>
 </root>

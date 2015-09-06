@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -13,7 +14,7 @@
     /// An indexer that maps the language to the localized string for a resource table entry with the specified resource key; 
     /// the language name is the indexer key and the localized text is the indexer value.
     /// </summary>
-    public sealed class ResourceTableValues<T>
+    public sealed class ResourceTableValues<T> : IEnumerable<ResourceLanguage>
     {
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly Func<ResourceLanguage, T> _getter;
@@ -83,6 +84,16 @@
         }
 
         public event EventHandler ValueChanged;
+
+        public IEnumerator<ResourceLanguage> GetEnumerator()
+        {
+            return _languages.Values.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
         private void OnValueChanged()
         {

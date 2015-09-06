@@ -185,4 +185,7 @@
   <data name="ExcelExport_MultipleSheets" xml:space="preserve">
     <value>Multiple sheets</value>
   </data>
+  <data name="StringFormatParameterMismatchError" xml:space="preserve">
+    <value>This item contains string format parameter mismatches!</value>
+  </data>
 </root>

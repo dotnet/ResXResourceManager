@@ -259,6 +259,16 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to This item contains string format parameter mismatc....
+        /// </summary>
+        public static string StringFormatParameterMismatchError {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("StringFormatParameterMismatchError", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to ResX Resource Manager.
         /// </summary>
         /// <remarks>
@@ -359,6 +369,10 @@ namespace tomenglertde.ResXManager.Model.Properties {
         ///   Looks up a localized string similar to Neutral.
         /// </summary>
         Neutral,
+        /// <summary>
+        ///   Looks up a localized string similar to This item contains string format parameter mismatc....
+        /// </summary>
+        StringFormatParameterMismatchError,
         /// <summary>
         ///   Looks up a localized string similar to ResX Resource Manager.
         /// </summary>

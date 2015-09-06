@@ -441,7 +441,17 @@
 
           <DataGrid.CellStyle>
             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+
+              <Setter Property="Background" Value="Orange"/>
+              <Setter Property="ToolTip" Value="{Binding Path=(tools:ColumnManager.CellErrors), RelativeSource={RelativeSource Mode=Self}}"/>
+
               <Style.Triggers>
+
+                <DataTrigger Binding="{Binding Path=(tools:ColumnManager.CellErrors), RelativeSource={RelativeSource Mode=Self}}" Value="{x:Null}">
+                  <Setter Property="Background" Value="{x:Null}"/>
+                  <Setter Property="ToolTip" Value="{x:Null}"/>
+                </DataTrigger>
+
                 <MultiDataTrigger>
                   <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding Path=Column.Header.ColumnType, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static columnHeaders:ColumnType.Language}" />

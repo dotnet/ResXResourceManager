@@ -28,21 +28,17 @@
         private const string NeutralCultureKeyString = ".";
         private static readonly BitmapImage _codeReferencesImage = new BitmapImage(new Uri("/ResXManager.View;component/Assets/references.png", UriKind.RelativeOrAbsolute));
 
-        public static bool GetResourceFileExists(DependencyObject obj)
-        {
-            Contract.Requires(obj != null);
-            return obj.GetValue<bool>(ResourceFileExistsProperty);
-        }
-        public static void SetResourceFileExists(DependencyObject obj, bool value)
-        {
-            Contract.Requires(obj != null);
-            obj.SetValue(ResourceFileExistsProperty, value);
-        }
         /// <summary>
-        /// Identifies the ResourceFileExists dependency property
+        /// Identifies the ResourceFileExists attached property
         /// </summary>
         public static readonly DependencyProperty ResourceFileExistsProperty =
             DependencyProperty.RegisterAttached("ResourceFileExists", typeof(bool), typeof(ColumnManager), new FrameworkPropertyMetadata(true));
+
+        /// <summary>
+        /// Identifies the CellErrors attached property
+        /// </summary>
+        public static readonly DependencyProperty CellErrorsProperty =
+            DependencyProperty.RegisterAttached("CellErrors", typeof(string), typeof(ColumnManager), new FrameworkPropertyMetadata(null));
 
         public static void SetupColumns(this DataGrid dataGrid, ResourceManager resourceManager)
         {
@@ -181,12 +177,15 @@
 
             columns.AddLanguageColumn(commentColumn, languageBinding, flowDirectionBinding);
 
+            var textCellStyle = new Style(typeof (DataGridCell), cellStyle);
+            cellStyle.Setters.Add(new Setter(CellErrorsProperty, new Binding(@"Errors[" + key + @"]")));
+
             var column = new DataGridTextColumn
             {
                 Header = new LanguageHeader(resourceManager, cultureKey),
                 Binding = new Binding(@"Values[" + key + @"]"),
                 MinWidth = 50,
-                CellStyle = cellStyle,
+                CellStyle = textCellStyle,
                 Width = new DataGridLength(2, DataGridLengthUnitType.Star),
                 Visibility = HiddenLanguageColumns.Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Hidden : Visibility.Visible
             };
