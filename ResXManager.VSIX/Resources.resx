@@ -160,4 +160,7 @@ See output window for details.</value>
   <data name="Warning" xml:space="preserve">
     <value>Warning:</value>
   </data>
+  <data name="OpenInResXManager" xml:space="preserve">
+    <value>Open in ResX Manager</value>
+  </data>
 </root>

@@ -39,6 +39,47 @@
         private DTE _dte;
         private DocumentEvents _documentEvents;
 
+        /// <summary>
+        /// Initialization of the package; this method is called right after the package is sited, so this is the place
+        /// where you can put all the initialization code that rely on services provided by VisualStudio.
+        /// </summary>
+        protected override void Initialize()
+        {
+            base.Initialize();
+
+            ConnectEvents();
+
+            // Add our command handlers for menu (commands must exist in the .vsct file)
+            var mcs = GetService(typeof(IMenuCommandService)) as IMenuCommandService;
+            if (null == mcs)
+                return;
+
+            // Create the command for the menu item.
+            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyCommand, ShowToolWindow);
+            // Create the command for the tool window
+            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTool, ShowToolWindow);
+            // Create the command for the solution explorer context menu
+            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMySolutionExplorerContextMenu, ShowSelectedResourceFiles).BeforeQueryStatus += SolutionExplorerContextMenuCommand_BeforeQueryStatus;
+            // Create the command for the text editor context menu
+            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTextEditorContextMenu, MoveToResource).BeforeQueryStatus += TextEditorContextMenuCommand_BeforeQueryStatus;
+        }
+
+        [ContractVerification(false)]
+        private void ConnectEvents()
+        {
+            _dte = (DTE)GetService(typeof(SDTE));
+            _documentEvents = _dte.Events.DocumentEvents;
+            _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
+        }
+
+        private static OleMenuCommand CreateMenuCommand(IMenuCommandService mcs, int cmdId, EventHandler invokeHandler)
+        {
+            var menuCommandId = new CommandID(GuidList.guidResXManager_VSIXCmdSet, cmdId);
+            var menuCommand = new OleMenuCommand(invokeHandler, menuCommandId);
+            mcs.AddCommand(menuCommand);
+            return menuCommand;
+        }
+
         private void ShowToolWindow(object sender, EventArgs e)
         {
             ShowToolWindow();
@@ -97,46 +138,40 @@
             });
         }
 
-        /// <summary>
-        /// Initialization of the package; this method is called right after the package is sited, so this is the place
-        /// where you can put all the initialization code that rely on services provided by VisualStudio.
-        /// </summary>
-        protected override void Initialize()
+        private static void SolutionExplorerContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
         {
-            base.Initialize();
-
-            ConnectEvents();
-
-            // Add our command handlers for menu (commands must exist in the .vsct file)
-            var mcs = GetService(typeof(IMenuCommandService)) as IMenuCommandService;
-            if (null == mcs)
+            var menuCommand = sender as OleMenuCommand;
+            if (menuCommand == null)
                 return;
 
-            // Create the command for the menu item.
-            var menuCommandId = new CommandID(GuidList.guidResXManager_VSIXCmdSet, PkgCmdIdList.cmdidMyCommand);
-            var menuCommand = new MenuCommand(ShowToolWindow, menuCommandId);
-            mcs.AddCommand(menuCommand);
+            menuCommand.Text = Resources.OpenInResXManager;
 
-            // Create the command for the tool window
-            var toolWindowCommandId = new CommandID(GuidList.guidResXManager_VSIXCmdSet, PkgCmdIdList.cmdidMyTool);
-            var toolWindowCommand = new MenuCommand(ShowToolWindow, toolWindowCommandId);
-            mcs.AddCommand(toolWindowCommand);
+            var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
+            Contract.Assume(monitorSelection != null);
 
-            // Create the command for the solution explorer context menu
-            var contextMenuCommandId = new CommandID(GuidList.guidResXManager_VSIXCmdSet, PkgCmdIdList.cmdidMyContextMenu);
-            var contextMenuCommand = new OleMenuCommand(ShowSelectedResourceFiles, contextMenuCommandId);
-            contextMenuCommand.BeforeQueryStatus += ContextMenuCommand_BeforeQueryStatus;
-            mcs.AddCommand(contextMenuCommand);
+            var selection = monitorSelection.GetSelectedProjectItems();
+
+            var selectedFiles = selection
+                .Select(item => item.GetMkDocument())
+                .Where(file => !string.IsNullOrEmpty(file))
+                .ToArray();
+
+            menuCommand.Visible = selectedFiles.Any() && selectedFiles.All(file => ProjectFileExtensions.SupportedFileExtensions.Any(ext => Path.GetExtension(file).Equals(ext, StringComparison.OrdinalIgnoreCase)));
         }
 
-        [ContractVerification(false)]
-        private void ConnectEvents()
+        private void MoveToResource(object sender, EventArgs e)
         {
-            _dte = (DTE) GetService(typeof (SDTE));
-            _documentEvents = _dte.Events.DocumentEvents;
-            _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
         }
 
+        private static void TextEditorContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
+        {
+            var menuCommand = sender as OleMenuCommand;
+            if (menuCommand == null)
+                return;
+
+            menuCommand.Text = "Move to Resource";
+        }
+        
         private void DocumentEvents_DocumentSaved(Document document)
         {
             if (document == null)
@@ -158,25 +193,6 @@
                 .Select(projectItem => projectItem.Object)
                 .OfType<VSProjectItem>()
                 .ForEach(vsProjectItem => vsProjectItem.RunCustomTool());
-        }
-
-        private static void ContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
-        {
-            var menuCommand = sender as OleMenuCommand;
-            if (menuCommand == null)
-                return;
-
-            var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
-            Contract.Assume(monitorSelection != null);
-
-            var selection = monitorSelection.GetSelectedProjectItems();
-
-            var selectedFiles = selection
-                .Select(item => item.GetMkDocument())
-                .Where(file => !string.IsNullOrEmpty(file))
-                .ToArray();
-
-            menuCommand.Visible = selectedFiles.Any() && selectedFiles.All(file => ProjectFileExtensions.SupportedFileExtensions.Any(ext => Path.GetExtension(file).Equals(ext, StringComparison.OrdinalIgnoreCase)));
         }
     }
 }

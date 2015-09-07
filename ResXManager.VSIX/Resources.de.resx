@@ -136,4 +136,7 @@ Mehr Details finden sich im Ausgabefenster.</value>
   <data name="Warning" xml:space="preserve">
     <value>Warnung:</value>
   </data>
+  <data name="OpenInResXManager" xml:space="preserve">
+    <value>Im ResX Manager öffnen</value>
+  </data>
 </root>

@@ -7,6 +7,7 @@ namespace tomenglertde.ResXManager.VSIX
     {
         public const int cmdidMyCommand = 0x100;
         public const int cmdidMyTool = 0x101;
-        public const int cmdidMyContextMenu = 0x102;
+        public const int cmdidMySolutionExplorerContextMenu = 0x102;
+        public const int cmdidMyTextEditorContextMenu = 0x103;
     };
 }

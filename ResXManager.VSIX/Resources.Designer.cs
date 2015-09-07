@@ -110,6 +110,15 @@ namespace tomenglertde.ResXManager.VSIX {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open in ResX Manager.
+        /// </summary>
+        internal static string OpenInResXManager {
+            get {
+                return ResourceManager.GetString("OpenInResXManager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The project has no resource file for the language {0}.
         ///
         ///Do you want to add the resource file to the project?.
