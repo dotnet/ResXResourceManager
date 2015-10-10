@@ -97,7 +97,7 @@
             worksheetPart.Worksheet = worksheet;
 
             var headerRow = _singleSheetFixedColumnHeaders.Concat(languages.GetLanguageColumnHeaders(scope));
-            var dataRows = entries.Select(e => new[] { e.Owner.ProjectName, e.Owner.BaseName }.Concat(e.GetDataRow(languages, scope)));
+            var dataRows = entries.Select(e => new[] { e.Owner.ProjectName, e.Owner.UniqueName }.Concat(e.GetDataRow(languages, scope)));
 
             var rows = new[] { headerRow }.Concat(dataRows);
 
@@ -171,11 +171,17 @@
                 {
                     Contract.Assume(fileRows != null);
 
-                    var baseName = fileRows.Key;
-                    if (string.IsNullOrEmpty(baseName))
+                    var uniqueName = fileRows.Key;
+                    if (string.IsNullOrEmpty(uniqueName))
                         continue;
 
-                    var entity = resourceManager.ResourceEntities.FirstOrDefault(item => (item.ProjectName == projectName) && (item.BaseName == baseName));
+                    var projectEntities = resourceManager.ResourceEntities
+                        .Where(item => projectName.Equals(item.ProjectName, StringComparison.OrdinalIgnoreCase))
+                        .ToArray();
+
+                    var entity = projectEntities.FirstOrDefault(item => uniqueName.Equals(item.UniqueName, StringComparison.OrdinalIgnoreCase))
+                        // fallback for backward compatibility:
+                        ?? projectEntities.FirstOrDefault(item => uniqueName.Equals(item.BaseName, StringComparison.OrdinalIgnoreCase));
 
                     if (entity == null)
                         continue;

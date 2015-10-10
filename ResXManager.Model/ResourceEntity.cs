@@ -145,6 +145,15 @@
             }
         }
 
+        public string UniqueName
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return _relativePath + _baseName;
+            }
+        }
+
         public string DisplayName
         {
             get
