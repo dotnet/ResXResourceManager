@@ -37,8 +37,8 @@
     <SupportUrl>https://resxresourcemanager.codeplex.com</SupportUrl>
     <ProductName>ResX Resource Manager</ProductName>
     <PublisherName>tom-englert.de</PublisherName>
-    <ApplicationRevision>61</ApplicationRevision>
-    <ApplicationVersion>1.0.0.61</ApplicationVersion>
+    <ApplicationRevision>62</ApplicationRevision>
+    <ApplicationVersion>1.0.0.62</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -170,7 +170,7 @@
     <ApplicationIcon>ResourceManager.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>9C26F94AB34E6BDCC4CA231A83DD0200EAB8627E</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>30B066A127A046DC56D01AFD38C932F11D29AC18</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>ResXManager_Key.pfx</ManifestKeyFile>

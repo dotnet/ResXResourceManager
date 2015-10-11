@@ -1,3 +1,6 @@
+1.0.0.62:
+* WI1244: Transform text templates.
+* WI4636: File name collision in Excel export.
 1.0.0.61:
 * WI4623: Fix: Value cannot be null
 * WI4622: Detect inconsistent string format parameters
