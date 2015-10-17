@@ -60,16 +60,8 @@
         </Grid>
         <i:Interaction.Triggers>
           <ei:TimerTrigger MillisecondsPerTick="1000">
-            <toms:UpdatePropertiesAction TargetName="Text">
-              <toms:UpdatePropertiesAction.Properties>
-                <x:StaticExtension Member="TextBlock.TextProperty"/>
-              </toms:UpdatePropertiesAction.Properties>
-            </toms:UpdatePropertiesAction>
-            <toms:UpdatePropertiesAction TargetName="Progress">
-              <toms:UpdatePropertiesAction.Properties>
-                <x:StaticExtension Member="ProgressBar.ValueProperty"/>
-              </toms:UpdatePropertiesAction.Properties>
-            </toms:UpdatePropertiesAction>
+            <toms:UpdatePropertyAction TargetName="Text" Property="{x:Static TextBlock.TextProperty}" />
+            <toms:UpdatePropertyAction TargetName="Progress" Property="{x:Static ProgressBar.ValueProperty}" />
           </ei:TimerTrigger>
         </i:Interaction.Triggers>
       </Border>
