@@ -11,7 +11,6 @@
     using System.Linq;
     using System.Windows;
     using System.Windows.Input;
-    using System.Windows.Threading;
 
     using Microsoft.WindowsAPICodePack.Dialogs;
 
@@ -100,12 +99,30 @@
         {
             var settings = Settings.Default;
 
-            using (var dlg = new CommonOpenFileDialog { IsFolderPicker = true, InitialDirectory = settings.StartupFolder, EnsurePathExists = true })
+            try
             {
-                if (dlg.ShowDialog() != CommonFileDialogResult.Ok)
+                using (var dlg = new CommonOpenFileDialog { IsFolderPicker = true, InitialDirectory = settings.StartupFolder, EnsurePathExists = true })
+                {
+                    if (dlg.ShowDialog() != CommonFileDialogResult.Ok)
+                        return;
+
+                    Folder = settings.StartupFolder = dlg.FileName;
+
+                    Load();
+                    return;
+                }
+            }
+            catch (NotSupportedException)
+            {
+                // CommonOpenFileDialog not supported on current platform.
+            }
+
+            using (var dlg = new System.Windows.Forms.FolderBrowserDialog { SelectedPath = Settings.Default.StartupFolder })
+            {
+                if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                     return;
 
-                Folder = settings.StartupFolder = dlg.FileName;
+                Folder = Settings.Default.StartupFolder = dlg.SelectedPath;
 
                 Load();
             }
