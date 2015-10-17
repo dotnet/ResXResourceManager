@@ -72,6 +72,11 @@
                 .Where(item => !item.Key.StartsWith(@">>", StringComparison.OrdinalIgnoreCase))
                 .ToArray();
 
+            if (_resourceManager.Configuration.DuplicateKeyHandling == DuplicateKeyHandling.Rename)
+            {
+                MakeKeysUnique(elements);
+            }
+
             try
             {
                 _nodes = elements.ToDictionary(item => item.Key);
@@ -427,6 +432,40 @@
             return _nodes.ContainsKey(key);
         }
 
+        private static void MakeKeysUnique(ICollection<Node> elements)
+        {
+            Contract.Requires(elements != null);
+
+            var itemsWithDuplicateKeys = elements.GroupBy(item => item.Key)
+                .Where(group => group.Count() > 1);
+
+            foreach (var duplicates in itemsWithDuplicateKeys)
+            {
+                Contract.Assume(duplicates != null);
+                var index = 1;
+
+                duplicates.Skip(1).ForEach(item => item.Key = GenerateUniqueKey(elements, item, ref index));
+            }
+        }
+
+        private static string GenerateUniqueKey(ICollection<Node> elements, Node item, ref int index)
+        {
+            Contract.Requires(elements != null);
+            Contract.Requires(item != null);
+
+            var key = item.Key;
+            string newKey;
+
+            do
+            {
+                newKey = string.Format(CultureInfo.InvariantCulture, "{0}_Duplicate[{1}]", key, index);
+                index += 1;
+            }
+            while (elements.Any(element => element.Key.Equals(newKey, StringComparison.OrdinalIgnoreCase)));
+
+            return newKey;
+        }
+
         public override string ToString()
         {
             return DisplayName;
@@ -585,6 +624,8 @@
 
                 return nameAttribute;
             }
+
+
 
             [ContractInvariantMethod]
             [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]

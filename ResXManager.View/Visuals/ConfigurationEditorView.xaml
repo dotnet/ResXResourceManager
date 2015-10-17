@@ -63,6 +63,20 @@
       <Setter Property="Focusable" Value="False" />
     </Style>
 
+    <Style x:Key="EmumSelectorItemContainerStyle" TargetType="ListBoxItem">
+      <Setter Property="Focusable" Value="False" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ListBoxItem">
+            <RadioButton Margin="0,2" IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                         Content="{TemplateBinding Content, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
+                         ToolTip="{TemplateBinding Content, Converter={x:Static toms:ObjectToDescriptionConverter.Default}}"
+                         Style="{StaticResource LabelStyle}" Focusable="True" />
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
   </UserControl.Resources>
 
   <Grid Background="LightGray" Width="800" HorizontalAlignment="Left">
@@ -144,22 +158,17 @@
       <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_ExcelExportModeHeader}" Style="{StaticResource GroupStyle}">
         <ListBox Margin="10" BorderThickness="0" Background="Transparent"
                  ItemsSource="{Binding Source={x:Type model:ExcelExportMode}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
-                 SelectedItem="{Binding Configuration.ExcelExportMode}">
-          <ListBox.ItemContainerStyle>
-            <Style TargetType="ListBoxItem">
-              <Setter Property="Focusable" Value="False" />
-              <Setter Property="Template">
-                <Setter.Value>
-                  <ControlTemplate TargetType="ListBoxItem">
-                    <RadioButton Margin="0,2" IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                 Content="{TemplateBinding Content, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
-                                 Style="{StaticResource LabelStyle}" Focusable="True" />
-                  </ControlTemplate>
-                </Setter.Value>
-              </Setter>
-            </Style>
-          </ListBox.ItemContainerStyle>
-        </ListBox>
+                 SelectedItem="{Binding Configuration.ExcelExportMode}"
+                 ItemContainerStyle="{StaticResource EmumSelectorItemContainerStyle}" />
+      </HeaderedContentControl>
+
+      <Decorator Height="5" />
+
+      <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_DuplicateKeyHandling}" Style="{StaticResource GroupStyle}">
+        <ListBox Margin="10" BorderThickness="0" Background="Transparent"
+                 ItemsSource="{Binding Source={x:Type model:DuplicateKeyHandling}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
+                 SelectedItem="{Binding Configuration.DuplicateKeyHandling}"
+                 ItemContainerStyle="{StaticResource EmumSelectorItemContainerStyle}" />
       </HeaderedContentControl>
 
       <Decorator Height="5" />

@@ -432,6 +432,9 @@
           <DataGrid.RowStyle>
             <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
               <Style.Triggers>
+                <DataTrigger Binding="{Binding IsDuplicateKey}" Value="True">
+                  <Setter Property="Background" Value="LightCoral" />
+                </DataTrigger>
                 <Trigger Property="IsSelected" Value="True">
                   <Setter Property="Background" Value="{x:Static SystemColors.HighlightBrush}" />
                 </Trigger>

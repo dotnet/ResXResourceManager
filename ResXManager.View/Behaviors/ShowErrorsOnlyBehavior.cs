@@ -85,6 +85,10 @@
                 DataGrid.Items.Filter = null;
                 DataGrid.SetIsAutoFilterEnabled(true);
             }
+
+            var selectedItem = DataGrid.SelectedItem;
+            if (selectedItem != null)
+                DataGrid.ScrollIntoView(selectedItem);
         }
 
         private void DataGrid_ColumnVisibilityChanged(object source, EventArgs e)
@@ -118,7 +122,7 @@
                 var entry = (ResourceTableEntry)row;
                 var values = visibleLanguages.Select(lang => entry.Values.GetValue(lang));
 
-                return !entry.IsInvariant && (values.Any(string.IsNullOrEmpty) || entry.HasStringFormatParameterMismatches(visibleLanguages));
+                return entry.IsDuplicateKey || (!entry.IsInvariant && (values.Any(string.IsNullOrEmpty) || entry.HasStringFormatParameterMismatches(visibleLanguages)));
             };
         }
     }

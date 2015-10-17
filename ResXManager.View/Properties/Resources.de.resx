@@ -339,4 +339,7 @@
   <data name="CodeReferenceTrackingInProgress" xml:space="preserve">
     <value>Code-Referenzen werden ermittelt ({0} %)</value>
   </data>
+  <data name="Configuration_DuplicateKeyHandling" xml:space="preserve">
+    <value>Behandlung doppelter Ressourcenschlüssel</value>
+  </data>
 </root>

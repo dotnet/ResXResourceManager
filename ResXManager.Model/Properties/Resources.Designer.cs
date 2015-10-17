@@ -79,6 +79,26 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Show an error message and don't load the resource.
+        /// </summary>
+        public static string DuplicateKeyHandling_Fail {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("DuplicateKeyHandling_Fail", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Postfix duplicate keys with "_Duplicate[#]".
+        /// </summary>
+        public static string DuplicateKeyHandling_Rename {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("DuplicateKeyHandling_Rename", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Multiple sheets.
         /// </summary>
         public static string ExcelExport_MultipleSheets {
@@ -297,6 +317,14 @@ namespace tomenglertde.ResXManager.Model.Properties {
         ///   Looks up a localized string similar to Duplicate keys in '{0}':&amp;#13;&amp;#10;{1}&amp;....
         /// </summary>
         DuplicateKeyError,
+        /// <summary>
+        ///   Looks up a localized string similar to Show an error message and don't load the resource.
+        /// </summary>
+        DuplicateKeyHandling_Fail,
+        /// <summary>
+        ///   Looks up a localized string similar to Postfix duplicate keys with "_Duplicate[#]".
+        /// </summary>
+        DuplicateKeyHandling_Rename,
         /// <summary>
         ///   Looks up a localized string similar to Multiple sheets.
         /// </summary>

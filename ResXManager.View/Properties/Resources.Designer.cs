@@ -172,6 +172,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Duplicate resource key handling.
+        /// </summary>
+        public static string Configuration_DuplicateKeyHandling {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("Configuration_DuplicateKeyHandling", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Excel export mode.
         /// </summary>
         public static string Configuration_ExcelExportModeHeader {
@@ -889,6 +899,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Comment Token.
         /// </summary>
         CommentToken,
+        /// <summary>
+        ///   Looks up a localized string similar to Duplicate resource key handling.
+        /// </summary>
+        Configuration_DuplicateKeyHandling,
         /// <summary>
         ///   Looks up a localized string similar to Excel export mode.
         /// </summary>

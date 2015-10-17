@@ -19,6 +19,7 @@
     public class ResourceTableEntry : ObservableObject
     {
         private const string InvariantKey = "@Invariant";
+        private readonly Regex _duplicateKeyExpression = new Regex(@"_Duplicate\[\d+\]$");
         private readonly ResourceEntity _owner;
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly ResourceLanguage _neutralLanguage;
@@ -212,6 +213,15 @@
 
                     Comment = comment;
                 }
+            }
+        }
+
+        [PropertyDependency("Key")]
+        public bool IsDuplicateKey
+        {
+            get
+            {
+                return _duplicateKeyExpression.Match(Key).Success;
             }
         }
 

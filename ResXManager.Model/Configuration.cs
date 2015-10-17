@@ -7,8 +7,17 @@
     using System.Windows.Threading;
 
     using tomenglertde.ResXManager.Infrastructure;
+    using tomenglertde.ResXManager.Model.Properties;
 
     using TomsToolbox.Desktop;
+
+    public enum DuplicateKeyHandling
+    {
+        [LocalizedDisplayName(StringResourceKey.DuplicateKeyHandling_Rename)]
+        Rename,
+        [LocalizedDisplayName(StringResourceKey.DuplicateKeyHandling_Fail)]
+        Fail
+    }
 
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces", Justification = "Works fine with this")]
     public abstract class Configuration : ConfigurationBase
@@ -137,6 +146,18 @@
             set
             {
                 SetValue(value, () => ExcelExportMode);
+            }
+        }
+
+        public DuplicateKeyHandling DuplicateKeyHandling
+        {
+            get
+            {
+                return GetValue(() => DuplicateKeyHandling);
+            }
+            set
+            {
+                SetValue(value, () => DuplicateKeyHandling);
             }
         }
 

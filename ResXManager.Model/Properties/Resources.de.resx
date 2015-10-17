@@ -185,4 +185,10 @@
   <data name="StringFormatParameterMismatchError" xml:space="preserve">
     <value>Dieser Text enthält String-Format Parameterinkonsistenzen!</value>
   </data>
+  <data name="DuplicateKeyHandling_Fail" xml:space="preserve">
+    <value>Eine Fehlermeldung anzeigen und die Datei nicht laden.</value>
+  </data>
+  <data name="DuplicateKeyHandling_Rename" xml:space="preserve">
+    <value>Doppelte Schlüssel umbenennen ("_Duplicate[#]" anhängen)</value>
+  </data>
 </root>
