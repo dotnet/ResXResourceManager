@@ -132,6 +132,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Code reference detection is still in progress ({0}....
+        /// </summary>
+        public static string CodeReferenceTrackingInProgress {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("CodeReferenceTrackingInProgress", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Comment.
         /// </summary>
         public static string Comment {
@@ -863,6 +873,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to The number of references found in code files. This....
         /// </summary>
         CodeReferencesToolTip,
+        /// <summary>
+        ///   Looks up a localized string similar to Code reference detection is still in progress ({0}....
+        /// </summary>
+        CodeReferenceTrackingInProgress,
         /// <summary>
         ///   Looks up a localized string similar to Comment.
         /// </summary>

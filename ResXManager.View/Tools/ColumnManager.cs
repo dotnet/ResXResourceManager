@@ -15,11 +15,12 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
-    using tomenglertde.ResXManager.View.Controls;
     using tomenglertde.ResXManager.View.Converters;
     using tomenglertde.ResXManager.View.Properties;
+    using tomenglertde.ResXManager.View.Visuals;
 
     using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf.Composition;
 
     using BooleanToVisibilityConverter = TomsToolbox.Wpf.Converters.BooleanToVisibilityConverter;
 
@@ -110,7 +111,6 @@
             Contract.Requires(dataGrid != null);
 
             var elementStyle = new Style();
-            elementStyle.Setters.Add(new Setter(FrameworkElement.ToolTipProperty, new CodeReferencesToolTip()));
             elementStyle.Setters.Add(new Setter(ToolTipService.ShowDurationProperty, Int32.MaxValue));
             elementStyle.Setters.Add(new Setter(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Center));
 
@@ -120,9 +120,13 @@
                 HorizontalContentAlignment = HorizontalAlignment.Center
             };
 
+            var cellStyle = new Style(typeof (DataGridCell));
+            cellStyle.Setters.Add(new Setter(FrameworkElement.ToolTipProperty, new CodeReferencesToolTip(dataGrid.GetExportProvider())));
+
             var column = new DataGridTextColumn
             {
                 Header = columnHeader,
+                CellStyle = cellStyle,
                 ElementStyle = elementStyle,
                 Binding = new Binding(@"CodeReferences.Count"),
                 Width = DataGridLength.SizeToHeader,

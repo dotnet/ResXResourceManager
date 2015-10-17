@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
@@ -12,27 +13,26 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    public class CodeReference
+    [Export]
+    public class CodeReferenceTracker
     {
-        private static Thread _backgroundThread;
+        private Thread _backgroundThread;
+        private long _total;
+        private long _visited;
 
-        private CodeReference(ProjectFile projectFile, int lineNumber, IList<string> lineSegemnts)
+        private CodeReferenceTracker()
         {
-            Contract.Requires(projectFile != null);
-            Contract.Requires(lineSegemnts != null);
-
-            ProjectFile = projectFile;
-            LineNumber = lineNumber;
-            LineSegments = lineSegemnts;
         }
 
-        public int LineNumber { get; private set; }
+        public int Progress
+        {
+            get
+            {
+                return (int)(_total > 0 ? Math.Max(1, (100 * _visited) / _total) : 0);
+            }
+        }
 
-        public ProjectFile ProjectFile { get; private set; }
-
-        public IList<string> LineSegments { get; private set; }
-
-        public static void StopFind()
+        public void StopFind()
         {
             if ((_backgroundThread == null) || (_backgroundThread.ThreadState != ThreadState.Background))
                 return;
@@ -41,7 +41,7 @@
             _backgroundThread = null;
         }
 
-        public static void BeginFind(ResourceManager resourceManager, CodeReferenceConfiguration configuration, IEnumerable<ProjectFile> allSourceFiles, ITracer tracer)
+        public void BeginFind(ResourceManager resourceManager, CodeReferenceConfiguration configuration, IEnumerable<ProjectFile> allSourceFiles, ITracer tracer)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(allSourceFiles != null);
@@ -60,7 +60,7 @@
             _backgroundThread.Start();
         }
 
-        public static void FindCodeReferences(CodeReferenceConfiguration configuration, IEnumerable<ProjectFile> projectFiles, IList<ResourceTableEntry> resourceTableEntries, ITracer tracer)
+        private void FindCodeReferences(CodeReferenceConfiguration configuration, IEnumerable<ProjectFile> projectFiles, IList<ResourceTableEntry> resourceTableEntries, ITracer tracer)
         {
             Contract.Requires(configuration != null);
             Contract.Requires(projectFiles != null);
@@ -74,7 +74,13 @@
                     entry.CodeReferences = null;
                 }
 
-                var sourceFiles = projectFiles.Select(file => new FileInfo(file)).ToArray();
+                var sourceFiles = projectFiles.Select(file => new FileInfo(file, configuration.Items))
+                    .Where(file => file.Configurations.Any())
+                    .ToArray();
+
+                _total = sourceFiles.Select(sf => sf.Lines.Length).Sum() * resourceTableEntries.Count;
+                _visited = 0;
+
                 var entriesByBaseName = resourceTableEntries.GroupBy(entry => entry.Owner.BaseName);
 
                 foreach (var entriesGroup in entriesByBaseName.AsParallel())
@@ -88,14 +94,7 @@
                     {
                         Contract.Assume(sourceFile != null);
 
-                        var configs = configuration.Items
-                            .Where(item => item.ParseExtensions().Contains(sourceFile.ProjectFile.Extension, StringComparer.OrdinalIgnoreCase))
-                            .ToArray();
-
-                        if (!configs.Any())
-                            continue;
-
-                        FindCodeReferences(configs, sourceFile, baseName, tableEntries, tracer);
+                        FindCodeReferences(sourceFile, baseName, tableEntries, tracer);
                     }
                 }
 
@@ -111,9 +110,8 @@
             }
         }
 
-        private static void FindCodeReferences(IList<CodeReferenceConfigurationItem> configurations, FileInfo source, string baseName, IList<ResourceTableEntry> entries, ITracer tracer)
+        private void FindCodeReferences(FileInfo source, string baseName, IList<ResourceTableEntry> entries, ITracer tracer)
         {
-            Contract.Requires(configurations != null);
             Contract.Requires(source != null);
             Contract.Requires(baseName != null);
             Contract.Requires(entries != null);
@@ -121,6 +119,7 @@
             try
             {
                 var projectFile = source.ProjectFile;
+                var configurations = source.Configurations;
 
                 foreach (var entry in entries)
                 {
@@ -140,6 +139,11 @@
                     {
                         Contract.Assume(line != null);
                         lineNumber += 1;
+
+                        Interlocked.Increment(ref _visited);
+
+                        if (line.IndexOf(key, StringComparison.OrdinalIgnoreCase) == -1)
+                            continue;
 
                         foreach (var parameter in parameters)
                         {
@@ -170,7 +174,7 @@
             }
         }
 
-        class CodeMatch
+        private class CodeMatch
         {
             [ContractVerification(false)] // too many assumptions would be needed...
             public CodeMatch(string line, string key, Regex regex, StringComparison stringComparison, string singleLineComment)
@@ -178,18 +182,19 @@
                 Contract.Requires(line != null);
                 Contract.Requires(key != null);
 
-                var indexOfKey = line.IndexOf(key, stringComparison);
-                if (indexOfKey < 0)
-                    return;
-
-                var lastIndex = 0;
+                var keyIndexes = new List<int>();
 
                 if (regex == null)
                 {
-                    lastIndex = indexOfKey;
+                    var keyIndex = line.IndexOf(key, stringComparison);
+                    if (keyIndex < 0)
+                        return;
+
+                    keyIndexes.Add(keyIndex);
+
                     var length = key.Length;
 
-                    Segments = new[] { line.Substring(0, lastIndex), line.Substring(lastIndex, length), line.Substring(lastIndex + length) };
+                    Segments = new[] { line.Substring(0, keyIndex), line.Substring(keyIndex, length), line.Substring(keyIndex + length) };
                 }
                 else
                 {
@@ -201,32 +206,34 @@
 
                     if (match.Groups.Count < 2)
                     {
-                        lastIndex = match.Index;
+                        var keyIndex = match.Index;
                         var length = match.Length;
 
-                        Segments = new[] { line.Substring(0, lastIndex), line.Substring(lastIndex, length), line.Substring(lastIndex + length) };
+                        keyIndexes.Add(keyIndex);
+
+                        Segments = new[] { line.Substring(0, keyIndex), line.Substring(keyIndex, length), line.Substring(keyIndex + length) };
                     }
                     else
                     {
                         Segments = new List<string>();
-                        var index = 0;
+                        var keyIndex = 0;
                         foreach (var group in match.Groups.Cast<Group>().Skip(1).Where(group => group.Success))
                         {
-                            Segments.Add(line.Substring(index, group.Index - index));
-                            index = group.Index;
-                            lastIndex = index;
-                            Segments.Add(line.Substring(index, group.Length));
-                            index += group.Length;
+                            Segments.Add(line.Substring(keyIndex, group.Index - keyIndex));
+                            keyIndex = group.Index;
+                            keyIndexes.Add(keyIndex);
+                            Segments.Add(line.Substring(keyIndex, group.Length));
+                            keyIndex += group.Length;
                         }
 
-                        Segments.Add(line.Substring(index));
+                        Segments.Add(line.Substring(keyIndex));
                     }
                 }
 
                 if (!string.IsNullOrEmpty(singleLineComment))
                 {
                     var indexOfComment = line.IndexOf(singleLineComment, stringComparison);
-                    if ((indexOfComment >= 0) && (indexOfComment <= lastIndex))
+                    if ((indexOfComment >= 0) && (indexOfComment <= keyIndexes.FirstOrDefault()))
                         return;
                 }
 
@@ -253,14 +260,18 @@
             }
         }
 
-        class FileInfo
+        private class FileInfo
         {
-            public FileInfo(ProjectFile projectFile)
+            private string[] _lines;
+
+            public FileInfo(ProjectFile projectFile, IEnumerable<CodeReferenceConfigurationItem> configurations)
             {
                 Contract.Requires(projectFile != null);
 
                 ProjectFile = projectFile;
-                Lines = projectFile.ReadAllLines();
+                Configurations = configurations
+                    .Where(item => item.ParseExtensions().Contains(projectFile.Extension, StringComparer.OrdinalIgnoreCase))
+                    .ToArray();
             }
 
             public ProjectFile ProjectFile
@@ -270,6 +281,14 @@
             }
 
             public string[] Lines
+            {
+                get
+                {
+                    return _lines ?? (_lines = ProjectFile.ReadAllLines());
+                }
+            }
+
+            public CodeReferenceConfigurationItem[] Configurations
             {
                 get;
                 private set;
@@ -281,8 +300,28 @@
             {
                 Contract.Invariant(ProjectFile != null);
                 Contract.Invariant(Lines != null);
+                Contract.Invariant(Configurations != null);
             }
         }
+    }
+
+    public class CodeReference
+    {
+        internal CodeReference(ProjectFile projectFile, int lineNumber, IList<string> lineSegemnts)
+        {
+            Contract.Requires(projectFile != null);
+            Contract.Requires(lineSegemnts != null);
+
+            ProjectFile = projectFile;
+            LineNumber = lineNumber;
+            LineSegments = lineSegemnts;
+        }
+
+        public int LineNumber { get; private set; }
+
+        public ProjectFile ProjectFile { get; private set; }
+
+        public IList<string> LineSegments { get; private set; }
     }
 
     static class CodeReferenceExtensionMethods

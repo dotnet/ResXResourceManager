@@ -1,16 +1,21 @@
-﻿<ToolTip x:Class="tomenglertde.ResXManager.View.Controls.CodeReferencesToolTip"
+﻿<ToolTip x:Class="tomenglertde.ResXManager.View.Visuals.CodeReferencesToolTip"
          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
          xmlns:model="urn:ResXManager.Model"
-         xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
          xmlns:system="clr-namespace:System;assembly=mscorlib"
+         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+         xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+         xmlns:toms="urn:TomsToolbox"
+         xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
          d:DataContext="{d:DesignInstance model:ResourceTableEntry}">
   <ToolTip.Template>
     <ControlTemplate TargetType="Control">
       <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
         <Grid Margin="{TemplateBinding Padding}">
-          <TextBlock x:Name="EmptyText" Text="{x:Static properties:Resources.NoCodeReferencesToolTip}" Visibility="Collapsed" MaxHeight="200" TextWrapping="Wrap"/>
+          <ProgressBar x:Name="Progress" Maximum="100" BorderThickness="0" Background="Transparent" Visibility="Collapsed"
+                       Value="{Binding Path=Progress, Mode=OneWay, Source={toms:Import model:CodeReferenceTracker}}" />
+          <TextBlock x:Name="Text" MaxWidth="300" TextWrapping="Wrap"/>
           <ItemsControl x:Name="ItemsControl" ItemsSource="{Binding CodeReferences}" Grid.IsSharedSizeScope="True">
             <ItemsControl.ItemTemplate>
               <DataTemplate DataType="{x:Type model:CodeReference}">
@@ -53,10 +58,28 @@
             </ItemsControl.ItemTemplate>
           </ItemsControl>
         </Grid>
+        <i:Interaction.Triggers>
+          <ei:TimerTrigger MillisecondsPerTick="1000">
+            <toms:UpdatePropertiesAction TargetName="EmptyText">
+              <toms:UpdatePropertiesAction.Properties>
+                <x:StaticExtension Member="TextBlock.TextProperty"/>
+              </toms:UpdatePropertiesAction.Properties>
+            </toms:UpdatePropertiesAction>
+            <toms:UpdatePropertiesAction TargetName="ProgressBar">
+              <toms:UpdatePropertiesAction.Properties>
+                <x:StaticExtension Member="ProgressBar.ValueProperty"/>
+              </toms:UpdatePropertiesAction.Properties>
+            </toms:UpdatePropertiesAction>
+          </ei:TimerTrigger>
+        </i:Interaction.Triggers>
       </Border>
       <ControlTemplate.Triggers>
         <DataTrigger Binding="{Binding ElementName=ItemsControl, Path=Items.Count}" Value="0">
-          <Setter TargetName="EmptyText" Property="Visibility" Value="Visible"/>
+          <Setter TargetName="Text" Property="Text" Value="{x:Static properties:Resources.NoCodeReferencesToolTip}"/>
+        </DataTrigger>
+        <DataTrigger Binding="{Binding CodeReferences}" Value="{x:Null}">
+          <Setter TargetName="Text" Property="Text" Value="{Binding Path=Progress, Source={toms:Import model:CodeReferenceTracker}, StringFormat={x:Static properties:Resources.CodeReferenceTrackingInProgress}}"/>
+          <Setter TargetName="Progress" Property="Visibility" Value="Visible"/>
         </DataTrigger>
       </ControlTemplate.Triggers>
     </ControlTemplate>

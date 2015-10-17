@@ -336,4 +336,7 @@
   <data name="Translations_Targets" xml:space="preserve">
     <value>Ziele:</value>
   </data>
+  <data name="CodeReferenceTrackingInProgress" xml:space="preserve">
+    <value>Code-Referenzen werden ermittelt ({0} %)</value>
+  </data>
 </root>

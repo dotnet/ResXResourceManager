@@ -54,6 +54,7 @@
         private DTE _dte;
         private string _solutionFingerPrint;
         private string _currentSolutionFullName;
+        private readonly CodeReferenceTracker _codeReferenceTracker;
 
         /// <summary>
         /// Standard constructor for the tool window.
@@ -83,6 +84,8 @@
             _resourceManager.BeginEditing += ResourceManager_BeginEditing;
             _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
             _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
+
+            _codeReferenceTracker = _compositionHost.GetExportedValue<CodeReferenceTracker>();
 
             _view = _compositionHost.GetExportedValue<ShellView>();
             _view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
@@ -481,7 +484,7 @@
 
             if (Settings.Default.IsFindCodeReferencesEnabled)
             {
-                CodeReference.BeginFind(_resourceManager, _configuration.CodeReferences, projectFiles, _trace);
+                _codeReferenceTracker.BeginFind(_resourceManager, _configuration.CodeReferences, projectFiles, _trace);
             }
         }
 
@@ -519,6 +522,7 @@
             Contract.Invariant(_configuration != null);
             Contract.Invariant(_trace != null);
             Contract.Invariant(_view != null);
+            Contract.Invariant(_codeReferenceTracker != null);
         }
     }
 }

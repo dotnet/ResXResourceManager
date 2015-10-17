@@ -27,18 +27,20 @@
     class MainViewModel : ObservableObject, IComposablePart
     {
         private readonly ResourceManager _resourceManager;
+        private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly ITracer _tracer;
         private readonly Configuration _configuration;
         private string _folder;
 
         [ImportingConstructor]
-        public MainViewModel(ResourceManager resourceManager, Configuration configuration, ITracer tracer)
+        public MainViewModel(ResourceManager resourceManager, CodeReferenceTracker codeReferenceTracker, Configuration configuration, ITracer tracer)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(configuration != null);
             Contract.Requires(tracer != null);
 
             _resourceManager = resourceManager;
+            _codeReferenceTracker = codeReferenceTracker;
             _configuration = configuration;
             _tracer = tracer;
 
@@ -123,7 +125,7 @@
 
                 if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
                 {
-                    CodeReference.BeginFind(_resourceManager, _configuration.CodeReferences, sourceFiles, _tracer);
+                    _codeReferenceTracker.BeginFind(_resourceManager, _configuration.CodeReferences, sourceFiles, _tracer);
                 }
             }
             catch (Exception ex)
@@ -223,6 +225,7 @@
         {
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_tracer != null);
+            Contract.Invariant(_codeReferenceTracker != null);
         }
     }
 }

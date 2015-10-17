@@ -195,7 +195,7 @@
     <Compile Include="ConfigurationScope.cs" />
     <Compile Include="ExcelExtensions.cs" />
     <Compile Include="ExcelRange.cs" />
-    <Compile Include="CodeReference.cs" />
+    <Compile Include="CodeReferenceTracker.cs" />
     <Compile Include="GlobalExtensions.cs" />
     <Compile Include="ConfigurationBase.cs" />
     <Compile Include="IExportParameters.cs" />

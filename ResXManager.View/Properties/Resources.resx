@@ -347,4 +347,7 @@
   <data name="Translations_Targets" xml:space="preserve">
     <value>Targets:</value>
   </data>
+  <data name="CodeReferenceTrackingInProgress" xml:space="preserve">
+    <value>Code reference detection is still in progress ({0} %).</value>
+  </data>
 </root>

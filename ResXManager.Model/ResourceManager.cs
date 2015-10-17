@@ -33,6 +33,7 @@
 
         private readonly DispatcherThrottle _selectedEntitiesChangeThrottle;
         private readonly Configuration _configuration;
+        private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly ITracer _tracer;
 
         private ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
@@ -51,12 +52,14 @@
         public event EventHandler<EventArgs> ReloadRequested;
 
         [ImportingConstructor]
-        private ResourceManager(Configuration configuration, ITracer tracer)
+        private ResourceManager(Configuration configuration, CodeReferenceTracker codeReferenceTracker, ITracer tracer)
         {
             Contract.Requires(configuration != null);
+            Contract.Requires(codeReferenceTracker != null);
             Contract.Requires(tracer != null);
 
             _configuration = configuration;
+            _codeReferenceTracker = codeReferenceTracker;
             _tracer = tracer;
             _selectedEntitiesChangeThrottle = new DispatcherThrottle(OnSelectedEntitiesChanged);
             _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
@@ -71,7 +74,7 @@
         {
             Contract.Requires(allSourceFiles != null);
 
-            CodeReference.StopFind();
+            _codeReferenceTracker.StopFind();
 
             var resourceFilesByDirectory = allSourceFiles
                 .Where(file => file.IsResourceFile())
