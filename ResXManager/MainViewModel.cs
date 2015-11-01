@@ -35,6 +35,7 @@
         public MainViewModel(ResourceManager resourceManager, CodeReferenceTracker codeReferenceTracker, Configuration configuration, ITracer tracer)
         {
             Contract.Requires(resourceManager != null);
+            Contract.Requires(codeReferenceTracker != null);
             Contract.Requires(configuration != null);
             Contract.Requires(tracer != null);
 

@@ -482,6 +482,36 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Index of the entry in the resource file..
+        /// </summary>
+        public static string IndexColumnHeaderToolTip {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("IndexColumnHeaderToolTip", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Show the index column.
+        /// </summary>
+        public static string IndexColumnToggleButtonToolTip {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("IndexColumnToggleButtonToolTip", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Index of the entry in the resource file. Use fract....
+        /// </summary>
+        public static string IndexColumnToolTip {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("IndexColumnToolTip", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Invariant.
         /// </summary>
         public static string Invariant {
@@ -1023,6 +1053,18 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Import.
         /// </summary>
         ImportExcel,
+        /// <summary>
+        ///   Looks up a localized string similar to Index of the entry in the resource file..
+        /// </summary>
+        IndexColumnHeaderToolTip,
+        /// <summary>
+        ///   Looks up a localized string similar to Show the index column.
+        /// </summary>
+        IndexColumnToggleButtonToolTip,
+        /// <summary>
+        ///   Looks up a localized string similar to Index of the entry in the resource file. Use fract....
+        /// </summary>
+        IndexColumnToolTip,
         /// <summary>
         ///   Looks up a localized string similar to Invariant.
         /// </summary>

@@ -19,8 +19,8 @@
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Visuals;
 
-    using TomsToolbox.Desktop;
     using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.Converters;
 
     using BooleanToVisibilityConverter = TomsToolbox.Wpf.Converters.BooleanToVisibilityConverter;
 
@@ -56,20 +56,12 @@
 
             if (columns.Count == 0)
             {
-                var keyColumn = new DataGridTextColumn
-                {
-                    Header = new ColumnHeader(Resources.Key, ColumnType.Key),
-                    Binding = new Binding(@"Key") { ValidatesOnExceptions = true },
-                    Width = 200,
-                    CanUserReorder = false,
-                };
-
-                columns.Add(keyColumn);
-
+                columns.Add(CreateKeyColumn());
+                columns.Add(CreateIndexColumn(resourceManager));
                 columns.Add(CreateCodeReferencesColumn(dataGrid));
             }
 
-            var languageColumns = columns.Skip(2).ToArray();
+            var languageColumns = columns.Skip(3).ToArray();
 
             var disconnectedColumns = languageColumns.Where(col => cultureKeys.All(cultureKey => !Equals(col.GetCultureKey(), cultureKey)));
 
@@ -101,18 +93,101 @@
             HiddenLanguageColumns = HiddenLanguageColumns.Where(col => !string.Equals(col, key, StringComparison.OrdinalIgnoreCase));
         }
 
+        private static DataGridTextColumn CreateKeyColumn()
+        {
+            return new DataGridTextColumn
+            {
+                Header = new ColumnHeader(Resources.Key, ColumnType.Key),
+                Binding = new Binding(@"Key") { ValidatesOnExceptions = true },
+                Width = 200,
+                CanUserReorder = false,
+            };
+        }
+
+        private static DataGridTextColumn CreateIndexColumn(ResourceManager resourceManager)
+        {
+            var elementStyle = new Style(typeof(TextBlock))
+            {
+                Setters =
+                {
+                    new Setter(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Right),
+                    new Setter(TextBlock.PaddingProperty, new Thickness(2, 0, 2, 0)),
+                    new Setter(FrameworkElement.ToolTipProperty, Resources.IndexColumnToolTip)
+                }
+            };
+
+            var columnHeader = new ColumnHeader("#", ColumnType.Other)
+            {
+                ToolTip = Resources.IndexColumnHeaderToolTip,
+                HorizontalAlignment = HorizontalAlignment.Center,
+            };
+
+            var column = new DataGridTextColumn
+            {
+                Header = columnHeader,
+                ElementStyle = elementStyle,
+                Width = 26,
+                Binding = new Binding(@"Index"),
+                CanUserReorder = false,
+            };
+
+            var andValuesToVisibilityConverter = new CompositeMultiValueConverter()
+            {
+                MultiValueConverter = LogicalMultiValueConverter.And,
+                Converters =
+                {
+                    BooleanToVisibilityConverter.Default
+                }
+            };
+
+            var visibilityBinding = new MultiBinding
+            {
+                Bindings =
+                {
+                    new Binding("SelectedEntities.Count") { Source = resourceManager, Converter = BinaryOperationConverter.Equality, ConverterParameter = 1 },
+                    new Binding("IsIndexColumnVisible") { Source = Settings.Default }
+                },
+                Converter = andValuesToVisibilityConverter
+            };
+
+            column.SetIsFilterVisible(false);
+            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, visibilityBinding);
+
+            return column;
+        }
+
         private static Image CreateCodeReferencesImage()
         {
-            return new Image { Source = _codeReferencesImage, SnapsToDevicePixels = true };
+            return new Image
+            {
+                Source = _codeReferencesImage, 
+                SnapsToDevicePixels = true
+            };
         }
 
         private static DataGridColumn CreateCodeReferencesColumn(FrameworkElement dataGrid)
         {
             Contract.Requires(dataGrid != null);
 
-            var elementStyle = new Style();
-            elementStyle.Setters.Add(new Setter(ToolTipService.ShowDurationProperty, Int32.MaxValue));
-            elementStyle.Setters.Add(new Setter(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Center));
+            var elementStyle = new Style(typeof(TextBlock))
+            {
+                Setters =
+                {
+                    new Setter(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Center)
+                },
+                Triggers =
+                {
+                    new DataTrigger
+                    {
+                        Binding = new Binding(@"CodeReferences.Count"),
+                        Value = null,
+                        Setters =
+                        {
+                            new Setter(UIElement.OpacityProperty, 0.3)
+                        }
+                    }
+                }
+            };
 
             var columnHeader = new ColumnHeader(CreateCodeReferencesImage(), ColumnType.Other)
             {
@@ -120,15 +195,21 @@
                 HorizontalContentAlignment = HorizontalAlignment.Center
             };
 
-            var cellStyle = new Style(typeof (DataGridCell));
-            cellStyle.Setters.Add(new Setter(FrameworkElement.ToolTipProperty, new CodeReferencesToolTip(dataGrid.GetExportProvider())));
+            var cellStyle = new Style(typeof(DataGridCell))
+            {
+                Setters =
+                {
+                    new Setter(ToolTipService.ShowDurationProperty, int.MaxValue),
+                    new Setter(FrameworkElement.ToolTipProperty, new CodeReferencesToolTip(dataGrid.GetExportProvider()))
+                }
+            };
 
             var column = new DataGridTextColumn
             {
                 Header = columnHeader,
                 CellStyle = cellStyle,
                 ElementStyle = elementStyle,
-                Binding = new Binding(@"CodeReferences.Count"),
+                Binding = new Binding(@"CodeReferences.Count") { FallbackValue = "?" },
                 Width = DataGridLength.SizeToHeader,
                 CanUserReorder = false,
                 CanUserResize = false,
@@ -181,7 +262,7 @@
 
             columns.AddLanguageColumn(commentColumn, languageBinding, flowDirectionBinding);
 
-            var textCellStyle = new Style(typeof (DataGridCell), cellStyle);
+            var textCellStyle = new Style(typeof(DataGridCell), cellStyle);
             cellStyle.Setters.Add(new Setter(CellErrorsProperty, new Binding(@"Errors[" + key + @"]")));
 
             var column = new DataGridTextColumn
@@ -278,7 +359,7 @@
             }
         }
 
-        class IsRightToLeftToFlowDirectionConverter : IValueConverter
+        private class IsRightToLeftToFlowDirectionConverter : IValueConverter
         {
             public static readonly IValueConverter Default = new IsRightToLeftToFlowDirectionConverter();
 

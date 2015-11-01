@@ -353,4 +353,13 @@
   <data name="Configuration_DuplicateKeyHandling" xml:space="preserve">
     <value>Duplicate resource key handling</value>
   </data>
+  <data name="IndexColumnToggleButtonToolTip" xml:space="preserve">
+    <value>Show the index column</value>
+  </data>
+  <data name="IndexColumnToolTip" xml:space="preserve">
+    <value>Index of the entry in the resource file. Use fractional values to reorder the entries.</value>
+  </data>
+  <data name="IndexColumnHeaderToolTip" xml:space="preserve">
+    <value>Index of the entry in the resource file.</value>
+  </data>
 </root>

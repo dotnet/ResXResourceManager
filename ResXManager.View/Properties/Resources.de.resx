@@ -342,4 +342,13 @@
   <data name="Configuration_DuplicateKeyHandling" xml:space="preserve">
     <value>Behandlung doppelter Ressourcenschlüssel</value>
   </data>
+  <data name="IndexColumnToggleButtonToolTip" xml:space="preserve">
+    <value>Die Indexspalte anzeigen</value>
+  </data>
+  <data name="IndexColumnToolTip" xml:space="preserve">
+    <value>Index des Eintrags in der Ressourcendatei. Zum umsortieren können auch Dezimalzahlen eingegeben werden.</value>
+  </data>
+  <data name="IndexColumnHeaderToolTip" xml:space="preserve">
+    <value>Index des Eintrags in der Ressourcendatei.</value>
+  </data>
 </root>

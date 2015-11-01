@@ -261,21 +261,7 @@
 
             if (forceSortFileContent || configuration.SortFileContentOnSave)
             {
-                var nodes = _documentRoot.Elements(@"data").ToArray();
-
-                foreach (var item in nodes)
-                {
-                    Contract.Assume(item != null);
-                    item.Remove();
-                }
-
-                var stringComparison = configuration.ResXSortingComparison;
-                var comparer = new DelegateComparer<string>((left, right) => string.Compare(left, right, stringComparison));
-
-                foreach (var item in nodes.OrderBy(node => node.TryGetAttribute("name").TrimStart('>'), comparer))
-                {
-                    _documentRoot.Add(item);
-                }
+                SortNodesByKey(configuration.ResXSortingComparison);
             }
 
             const string declaration = @"<?xml version=""1.0"" encoding=""utf-8""?>";
@@ -283,6 +269,24 @@
             _file.Content = declaration + Environment.NewLine + _document;
 
             HasChanges = false;
+        }
+
+        private void SortNodesByKey(StringComparison stringComparison)
+        {
+            var nodes = _documentRoot.Elements(@"data").ToArray();
+
+            foreach (var item in nodes)
+            {
+                Contract.Assume(item != null);
+                item.Remove();
+            }
+
+            var comparer = new DelegateComparer<string>((left, right) => string.Compare(left, right, stringComparison));
+
+            foreach (var item in nodes.OrderBy(node => node.TryGetAttribute("name").TrimStart('>'), comparer))
+            {
+                _documentRoot.Add(item);
+            }
         }
 
         internal string GetComment(string key)
@@ -430,6 +434,34 @@
             Contract.Requires(key != null);
 
             return _nodes.ContainsKey(key);
+        }
+
+        internal void MoveNode(ResourceTableEntry resourceTableEntry, IEnumerable<ResourceTableEntry> previousEntries)
+        {
+            Contract.Requires(resourceTableEntry != null);
+            Contract.Requires(previousEntries != null);
+
+            if (!OnChanging())
+                return;
+
+            var node = _nodes.GetValueOrDefault(resourceTableEntry.Key);
+
+            if (node == null)
+                return;
+
+            var prevousNode = previousEntries
+                .Select(entry => _nodes.GetValueOrDefault(entry.Key))
+                .FirstOrDefault(item => item != null);
+
+            if (prevousNode == null)
+                return;
+
+            var element = node.Element;
+            element.Remove();
+            prevousNode.Element.AddAfterSelf(element);
+
+            HasChanges = true;
+            OnChanged();
         }
 
         private static void MakeKeysUnique(ICollection<Node> elements)

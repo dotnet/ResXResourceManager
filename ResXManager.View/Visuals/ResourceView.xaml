@@ -239,6 +239,11 @@
                             Command="{Binding ReloadCommand}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/references.png" />
               </ToggleButton>
+              <ToggleButton ToolTip="{x:Static properties:Resources.IndexColumnToggleButtonToolTip}"
+                            IsChecked="{Binding IsIndexColumnVisible, Source={x:Static properties:Settings.Default}, Mode=TwoWay}"
+                            IsEnabled="{Binding SelectedItems.Count, ElementName=ListBox, Converter={x:Static toms:BinaryOperationConverter.Equality}, ConverterParameter=1}">
+                <TextBlock Width="16" Height="16" Text="#" TextAlignment="Center"/>
+              </ToggleButton>
               <Separator />
               <Button ToolTip="{x:Static properties:Resources.DeleteToolTip}"
                       Style="{StaticResource ToolbarCommandButtonStyle}"

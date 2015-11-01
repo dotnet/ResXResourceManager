@@ -71,7 +71,9 @@
 
         private void ToggleButton_StateChanged(object sender, EventArgs e)
         {
-            if ((sender == null) || (DataGrid == null))
+            var dataGrid = DataGrid;
+
+            if ((sender == null) || (dataGrid == null))
                 return;
 
             var button = (ToggleButton)sender;
@@ -82,13 +84,13 @@
             }
             else
             {
-                DataGrid.Items.Filter = null;
-                DataGrid.SetIsAutoFilterEnabled(true);
+                dataGrid.Items.Filter = null;
+                dataGrid.SetIsAutoFilterEnabled(true);
             }
 
-            var selectedItem = DataGrid.SelectedItem;
+            var selectedItem = dataGrid.SelectedItem;
             if (selectedItem != null)
-                DataGrid.ScrollIntoView(selectedItem);
+                dataGrid.ScrollIntoView(selectedItem);
         }
 
         private void DataGrid_ColumnVisibilityChanged(object source, EventArgs e)

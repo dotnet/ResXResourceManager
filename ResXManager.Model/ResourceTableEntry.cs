@@ -27,17 +27,20 @@
         private readonly ResourceTableValues<string> _errors;
 
         private string _key;
+
         private ResourceTableValues<string> _values;
         private ResourceTableValues<string> _comments;
         private IList<CodeReference> _codeReferences;
+        private double _index;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceTableEntry" /> class.
         /// </summary>
         /// <param name="owner">The owner.</param>
         /// <param name="key">The resource key.</param>
+        /// <param name="index">The original index of the resource in the file.</param>
         /// <param name="languages">The localized values.</param>
-        internal ResourceTableEntry(ResourceEntity owner, string key, IDictionary<CultureKey, ResourceLanguage> languages)
+        internal ResourceTableEntry(ResourceEntity owner, string key, double index, IDictionary<CultureKey, ResourceLanguage> languages)
         {
             Contract.Requires(owner != null);
             Contract.Requires(!string.IsNullOrEmpty(key));
@@ -46,6 +49,7 @@
 
             _owner = owner;
             _key = key;
+            _index = index;
             _languages = languages;
 
             _values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
@@ -246,6 +250,21 @@
             }
         }
 
+        public double Index
+        {
+            get
+            {
+                return _index;
+            }
+            set
+            {
+                if (SetProperty(ref _index, value, () => Index))
+                {
+                    _owner.OnIndexChanged(this);
+                }
+            }
+        }
+
         public bool CanEdit(CultureInfo culture)
         {
             return _owner.CanEdit(culture);
@@ -276,6 +295,8 @@
 
         private string GetErrors(ResourceLanguage arg)
         {
+            Contract.Requires(arg != null);
+
             if (arg.IsNeutralLanguage)
                 return null;
 
@@ -295,6 +316,8 @@
 
         private static bool HasStringFormatParameterMismatches(params string[] values)
         {
+            Contract.Requires(values != null);
+
             return HasStringFormatParameterMismatches((IEnumerable<string>)values);
         }
 
@@ -306,7 +329,7 @@
 
             if (!values.Any())
                 return false;
-            
+
             return values.Select(GetStringFormatFlags)
                 .Distinct()
                 .Count() > 1;

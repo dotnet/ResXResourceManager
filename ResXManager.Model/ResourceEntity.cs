@@ -65,8 +65,7 @@
 
             var entriesQuery = _languages.Values.SelectMany(language => language.ResourceKeys)
                 .Distinct()
-                .OrderBy(key => key.ToUpper(CultureInfo.CurrentCulture))
-                .Select(key => new ResourceTableEntry(this, key, _languages));
+                .Select((key, index) => new ResourceTableEntry(this, key, index, _languages));
 
             _resourceTableEntries = new ObservableCollection<ResourceTableEntry>(entriesQuery);
 
@@ -232,7 +231,8 @@
             Contract.Assume(firstLanguage != null);
 
             firstLanguage.ForceValue(key, string.Empty); // force an entry in the neutral language resource file.
-            var resourceTableEntry = new ResourceTableEntry(this, key, _languages);
+            var index = Math.Floor(_resourceTableEntries.Select(entry => entry.Index).DefaultIfEmpty().Max()) + 1;
+            var resourceTableEntry = new ResourceTableEntry(this, key, index, _languages);
             _resourceTableEntries.Add(resourceTableEntry);
 
             return resourceTableEntry;
@@ -300,6 +300,29 @@
             var handler = LanguageAdded;
             if (handler != null)
                 handler(this, e);
+        }
+
+        internal void OnIndexChanged(ResourceTableEntry resourceTableEntry)
+        {
+            Contract.Requires(resourceTableEntry != null);
+
+            var previousEntries = _resourceTableEntries
+                .Where(entry => entry.Index < resourceTableEntry.Index)
+                .Reverse()
+                .ToArray();
+
+            if (!previousEntries.Any())
+                return;
+
+            if (!_languages.Values.All(l => l.CanChange()))
+                return;
+
+            foreach (var language in _languages.Values)
+            {
+                Contract.Assume(language != null);
+
+                language.MoveNode(resourceTableEntry, previousEntries);
+            }
         }
 
         #region IComparable/IEquatable implementation

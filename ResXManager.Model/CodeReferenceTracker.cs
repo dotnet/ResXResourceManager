@@ -267,6 +267,7 @@
             public FileInfo(ProjectFile projectFile, IEnumerable<CodeReferenceConfigurationItem> configurations)
             {
                 Contract.Requires(projectFile != null);
+                Contract.Requires(configurations != null);
 
                 ProjectFile = projectFile;
                 Configurations = configurations
@@ -284,6 +285,7 @@
             {
                 get
                 {
+                    Contract.Ensures(Contract.Result<string[]>() != null);
                     return _lines ?? (_lines = ProjectFile.ReadAllLines());
                 }
             }
@@ -299,7 +301,6 @@
             private void ObjectInvariant()
             {
                 Contract.Invariant(ProjectFile != null);
-                Contract.Invariant(Lines != null);
                 Contract.Invariant(Configurations != null);
             }
         }

@@ -36,58 +36,6 @@
             return value;
         }
 
-        /// <summary>
-        /// Replaces the invalid file name chars in the string with the replacement.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="replacement">The replacement of invalid file name chars. Can be null or empty to remove all invalid file name chars.</param>
-        /// <returns>The value with all invalid file name chars replaced.</returns>
-        public static string ReplaceInvalidFileNameChars(this string value, string replacement)
-        {
-            Contract.Requires(value != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
-            if (value.Length <= 0)
-                return value;
-
-            var invalidFileNameChars = Path.GetInvalidFileNameChars();
-            var index = 0;
-
-            while ((index = value.IndexOfAny(invalidFileNameChars, index)) >= 0)
-            {
-                Contract.Assume(index + 1 < value.Length);
-                value = value.Remove(index, 1);
-
-                if (string.IsNullOrEmpty(replacement))
-                    continue;
-
-                value = value.Insert(index, replacement);
-                index += replacement.Length;
-            }
-
-            return value;
-        }
-
-        public static T ForceBehavior<T>(this DependencyObject item)
-            where T : Behavior, new()
-        {
-            Contract.Ensures(Contract.Result<T>() != null);
-
-            var behaviors = Interaction.GetBehaviors(item);
-            Contract.Assume(behaviors != null);
-
-            var behavior = behaviors.OfType<T>().FirstOrDefault();
-            if (behavior != null)
-                return behavior;
-
-            behavior = new T();
-
-
-            behaviors.Add(behavior);
-
-            return behavior;
-        }
-
         [ContractVerification(false)]
         public static string TryGetAttribute(this XElement element, string name)
         {
