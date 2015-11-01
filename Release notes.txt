@@ -1,3 +1,7 @@
+1.0.0.63:
+* WI4634: Fix: Duplicate keys prevent application to open.
+* WI4637: Entries can be ordered by specifying an index.
+* WI4641: Fix: ClickOnce Version crashes while browse for new directory (pre Vista systems only)
 1.0.0.62:
 * WI1244: Transform text templates.
 * WI4636: File name collision in Excel export.
