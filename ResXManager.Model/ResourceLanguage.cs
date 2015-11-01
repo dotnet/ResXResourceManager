@@ -261,7 +261,7 @@
 
             if (forceSortFileContent || configuration.SortFileContentOnSave)
             {
-                SortNodesByKey(configuration.ResXSortingComparison);
+                SortNodes(configuration.ResXSortingComparison);
             }
 
             const string declaration = @"<?xml version=""1.0"" encoding=""utf-8""?>";
@@ -271,7 +271,7 @@
             HasChanges = false;
         }
 
-        private void SortNodesByKey(StringComparison stringComparison)
+        private void SortNodes(StringComparison stringComparison)
         {
             var nodes = _documentRoot.Elements(@"data").ToArray();
 
