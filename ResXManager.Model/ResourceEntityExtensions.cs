@@ -9,21 +9,14 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
 
-    public enum ColumnKind
-    {
-        Data,
-        Comment
-    }
-
     public static partial class ResourceEntityExtensions
     {
         private const string Quote = "\"";
         private const string ColumnSeparator = "\t";
         private const string TerminatingColumnHeaderText = "!";
 
-        // Add one empty terminating colum to workaround the ambiguity problem with Excels algorithm to quote multi-line columns.
+        // Add one empty terminating column to workaround the ambiguity problem with Excels algorithm to quote multi-line columns.
         private static readonly string[] TerminatorColumnHeaders = { TerminatingColumnHeaderText };
-
         private static readonly string[] FixedColumnHeaders = { @"Key" };
         private const string CommentHeaderPrefix = "Comment";
 
@@ -193,15 +186,39 @@
             if (!lines.Any())
                 return;
 
-            entity.ImportTable(FixedColumnHeaders, lines);
+            entity.ImportTable(FixedColumnHeaders, lines).Apply();
         }
 
-        public static void ImportTable(this ResourceEntity entity, ICollection<string> fixedColumnHeaders, IList<IList<string>> lines)
+        public static bool Apply(this EntryChange change)
+        {
+            Contract.Requires(change != null);
+
+            return change.Entry.SetEntryData(change.Culture, change.ColumnKind, change.Text);
+        }
+
+        public static void Apply(this ICollection<EntryChange> changes)
+        {
+            Contract.Requires(changes != null);
+
+            var acceptedChanges = changes
+                .TakeWhile(change => change.Apply())
+                .ToArray();
+
+            if (acceptedChanges.Length == changes.Count)
+                return;
+
+            throw new ImportException(acceptedChanges.Length > 0 ? Resources.ImportFailedPartiallyError : Resources.ImportFailedError);
+        }
+
+        public static ICollection<EntryChange> ImportTable(this ResourceEntity entity, ICollection<string> fixedColumnHeaders, IList<IList<string>> lines)
         {
             Contract.Requires(entity != null);
             Contract.Requires(fixedColumnHeaders != null);
             Contract.Requires(lines != null);
-            Contract.Requires(lines.Any());
+            Contract.Ensures(Contract.Result<ICollection<EntryChange>>() != null);
+
+            if (!lines.Any())
+                return new EntryChange[0];
 
             var headerColumns = GetHeaderColumns(lines, fixedColumnHeaders);
 
@@ -232,21 +249,14 @@
                         ColumnKind = dataColumnHeaders[index].GetColumnKind()
                     }))
                 .Where(mapping => mapping.Entry != null)
-                .Select(mapping => new { mapping.Entry, mapping.Text, mapping.Culture, mapping.ColumnKind, OriginalText = mapping.Entry.GetEntryData(mapping.Culture, mapping.ColumnKind) })
+                .Select(mapping => new EntryChange(mapping.Entry, mapping.Text, mapping.Culture, mapping.ColumnKind, mapping.Entry.GetEntryData(mapping.Culture, mapping.ColumnKind)))
                 .ToArray();
 
             var changes = mappings
                 .Where(mapping => (mapping.OriginalText != mapping.Text) && !string.IsNullOrEmpty(mapping.Text))
                 .ToArray();
 
-            var acceptedChanges = changes
-                .TakeWhile(change => change.Entry.SetEntryData(change.Culture, change.ColumnKind, change.Text))
-                .ToArray();
-
-            if (acceptedChanges.Length == changes.Length)
-                return;
-
-            throw new ImportException(acceptedChanges.Length > 0 ? Resources.ImportFailedPartiallyError : Resources.ImportFailedError);
+            return changes;
         }
 
         [ContractVerification(false)]

@@ -236,7 +236,9 @@
         {
             Contract.Requires(fileName != null);
 
-            _resourceManager.ImportExcelFile(fileName);
+            var changes = _resourceManager.ImportExcelFile(fileName).ToArray();
+
+            changes.Apply();
         }
 
         private void CopyKeys()

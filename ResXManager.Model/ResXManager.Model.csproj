@@ -190,8 +190,10 @@
       <Link>Version.cs</Link>
     </Compile>
     <Compile Include="CodeReferenceConfiguration.cs" />
+    <Compile Include="ColumnKind.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ConfigurationScope.cs" />
+    <Compile Include="EntryChange.cs" />
     <Compile Include="ExcelExtensions.cs" />
     <Compile Include="ExcelRange.cs" />
     <Compile Include="CodeReferenceTracker.cs" />

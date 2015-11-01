@@ -74,6 +74,8 @@
 
         private static OleMenuCommand CreateMenuCommand(IMenuCommandService mcs, int cmdId, EventHandler invokeHandler)
         {
+            Contract.Requires(mcs != null);
+
             var menuCommandId = new CommandID(GuidList.guidResXManager_VSIXCmdSet, cmdId);
             var menuCommand = new OleMenuCommand(invokeHandler, menuCommandId);
             mcs.AddCommand(menuCommand);

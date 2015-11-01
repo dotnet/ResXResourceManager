@@ -104,10 +104,11 @@
             worksheet.AppendItem(rows.Aggregate(new SheetData(), AppendRow));
         }
 
-        public static void ImportExcelFile(this ResourceManager resourceManager, string filePath)
+        public static IEnumerable<EntryChange> ImportExcelFile(this ResourceManager resourceManager, string filePath)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(filePath != null);
+            Contract.Ensures(Contract.Result<IEnumerable<EntryChange>>() != null);
 
             using (var package = SpreadsheetDocument.Open(filePath, false))
             {
@@ -125,22 +126,19 @@
 
                 var firstSheet = sheets.OfType<Sheet>().FirstOrDefault();
                 if (firstSheet == null)
-                    return;
+                    return Enumerable.Empty<EntryChange>();
 
                 var firstRow = firstSheet.GetRows(workbookPart).FirstOrDefault();
 
-                if (IsSingleSheetHeader(firstRow, sharedStrings))
-                {
-                    ImportSingleSheet(resourceManager, firstSheet, workbookPart, sharedStrings);
-                }
-                else
-                {
-                    ImportMultipleSheets(resourceManager, sheets, workbookPart, sharedStrings);
-                }
+                var changes = IsSingleSheetHeader(firstRow, sharedStrings) 
+                    ? ImportSingleSheet(resourceManager, firstSheet, workbookPart, sharedStrings) 
+                    : ImportMultipleSheets(resourceManager, sheets, workbookPart, sharedStrings);
+
+                return changes;
             }
         }
 
-        private static void ImportSingleSheet(ResourceManager resourceManager, Sheet firstSheet, WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
+        private static IEnumerable<EntryChange> ImportSingleSheet(ResourceManager resourceManager, Sheet firstSheet, WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(firstSheet != null);
@@ -187,32 +185,28 @@
                         continue;
 
                     var tableData = new[] { headerRow }.Concat(fileRows).ToArray();
-                    Contract.Assume(tableData.Any());
-                    entity.ImportTable(FixedColumnHeaders, tableData);
+
+                    foreach (var change in entity.ImportTable(FixedColumnHeaders, tableData))
+                    {
+                        yield return change;
+                    }
                 }
             }
         }
 
-        private static void ImportMultipleSheets(ResourceManager resourceManager, Sheets sheets, WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
+        private static IEnumerable<EntryChange> ImportMultipleSheets(ResourceManager resourceManager, Sheets sheets, WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(sheets != null);
             Contract.Requires(workbookPart != null);
+            Contract.Ensures(Contract.Result<IEnumerable<EntryChange>>() != null);
 
             var entities = GetMultipleSheetEntities(resourceManager).ToArray();
 
-            foreach (var sheet in sheets.OfType<Sheet>())
-            {
-                var resourceEntity = FindResourceEntity(entities, sheet);
+            var changes = sheets.OfType<Sheet>()
+                .SelectMany(sheet => FindResourceEntity(entities, sheet).ImportTable(FixedColumnHeaders, sheet.GetRows(workbookPart).Select(row => row.GetCellValues(sharedStrings)).ToArray()));
 
-                var rows = sheet.GetRows(workbookPart);
-
-                var data = rows.Select(row => row.GetCellValues(sharedStrings)).ToArray();
-                if (!data.Any())
-                    continue;
-
-                resourceEntity.ImportTable(FixedColumnHeaders, data);
-            }
+            return changes;
         }
 
         private static bool IsSingleSheetHeader(Row firstRow, IList<SharedStringItem> sharedStrings)
