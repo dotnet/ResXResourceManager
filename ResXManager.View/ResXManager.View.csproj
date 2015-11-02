@@ -241,7 +241,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="References.cs" />
     <Compile Include="Visuals\LanguageConfigurationViewModel.cs" />
     <Compile Include="Visuals\LanguageSelectionBox.xaml.cs">
       <DependentUpon>LanguageSelectionBox.xaml</DependentUpon>

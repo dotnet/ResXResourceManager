@@ -21,8 +21,6 @@
 
             this.SetExportProvider(compositionHost.Container);
 
-            References.Resolve(this);
-
             InitializeComponent();
         }
     }
