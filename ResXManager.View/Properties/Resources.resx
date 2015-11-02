@@ -1,0 +1,365 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ConfirmDeleteItems" xml:space="preserve">
+    <value>Delete the selected rows?</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>ResX Resource Manager</value>
+    <comment>@Invariant</comment>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="Neutral" xml:space="preserve">
+    <value>Neutral</value>
+  </data>
+  <data name="NewLanguageIdPrompt" xml:space="preserve">
+    <value>Select the new language:</value>
+  </data>
+  <data name="Key" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="FlatViewToolTip" xml:space="preserve">
+    <value>Flat view</value>
+  </data>
+  <data name="GroupedViewToolTip" xml:space="preserve">
+    <value>Grouped view</value>
+  </data>
+  <data name="ShowOnlyMissingToolTip" xml:space="preserve">
+    <value>Show only lines with missing strings</value>
+  </data>
+  <data name="ChooseColumnsToolTip" xml:space="preserve">
+    <value>Choose columns</value>
+  </data>
+  <data name="AddLanguageToolTip" xml:space="preserve">
+    <value>Add new language</value>
+  </data>
+  <data name="CopyToolTip" xml:space="preserve">
+    <value>Copy selected rows (Ctrl+C)</value>
+  </data>
+  <data name="PasteToolTip" xml:space="preserve">
+    <value>Paste rows (Ctrl+V)</value>
+  </data>
+  <data name="AddKeyToolTip" xml:space="preserve">
+    <value>Add new key (Shift+Insert)</value>
+  </data>
+  <data name="LikeButtonToolTip" xml:space="preserve">
+    <value>Like it? Support the project by writing a short review!</value>
+  </data>
+  <data name="DonateButtonToolTip" xml:space="preserve">
+    <value>Support the Open Source Community.</value>
+  </data>
+  <data name="ResourceFilterToolTip" xml:space="preserve">
+    <value>A regular expression to filter resource files</value>
+  </data>
+  <data name="RefreshViewToolTip" xml:space="preserve">
+    <value>Refresh view</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete (Del)</value>
+  </data>
+  <data name="Invariant" xml:space="preserve">
+    <value>Invariant</value>
+  </data>
+  <data name="CopyKeys" xml:space="preserve">
+    <value>Copy key(s)</value>
+  </data>
+  <data name="ErrorAddingNewResourceFile" xml:space="preserve">
+    <value>Error adding the new resource file '{0}'.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="EmptyResxTemplate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>EmptyResxTemplate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="CutToolTip" xml:space="preserve">
+    <value>Cut selected rows (Ctrl+X)</value>
+  </data>
+  <data name="DeleteToolTip" xml:space="preserve">
+    <value>Delete selected rows (Del)</value>
+  </data>
+  <data name="Cut" xml:space="preserve">
+    <value>Cut (Ctrl+X)</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copy (Ctrl+C)</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>Paste (Ctrl+V)</value>
+  </data>
+  <data name="CodeReferencesToolTip" xml:space="preserve">
+    <value>The number of references found in code files. This is only a hint for possible usages, see documentation for more details!</value>
+  </data>
+  <data name="FindCodeReferencesButtonToolTip" xml:space="preserve">
+    <value>Detect code references.</value>
+  </data>
+  <data name="ConfirmCutItems" xml:space="preserve">
+    <value>Cut the selected rows?</value>
+  </data>
+  <data name="NewKeyPrompt" xml:space="preserve">
+    <value>Enter new resource key:</value>
+  </data>
+  <data name="NoCodeReferencesToolTip" xml:space="preserve">
+    <value>No code references have been found by this algorithm. Nevertheless there might exist indirect references to this string.</value>
+  </data>
+  <data name="HelpButtonToolTip" xml:space="preserve">
+    <value>Documentation</value>
+  </data>
+  <data name="ExportExcelAll" xml:space="preserve">
+    <value>Export all</value>
+  </data>
+  <data name="ExportExcelSelection" xml:space="preserve">
+    <value>Export selection</value>
+  </data>
+  <data name="ImportExcel" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="CommentColumnHeader" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="LanguageConfiguration_Description" xml:space="preserve">
+    <value>This is an overview of the languages supported by the system. It shows the specific languages (e.g. 'en-US') grouped by their neutral language (e.g. 'en'). To change the flag displayed for a neutral language, double click the specific language with the desired flag.</value>
+  </data>
+  <data name="ShellTabHeader_Main" xml:space="preserve">
+    <value>Main</value>
+  </data>
+  <data name="ShellTabHeader_Languages" xml:space="preserve">
+    <value>Languages</value>
+  </data>
+  <data name="NoSelection" xml:space="preserve">
+    <value>No selection.</value>
+  </data>
+  <data name="MultipleSelection" xml:space="preserve">
+    <value>Multiple selection.</value>
+  </data>
+  <data name="SelectedTotalToolTip" xml:space="preserve">
+    <value>Selected/Total</value>
+  </data>
+  <data name="SortNodesByKey_Confirmation" xml:space="preserve">
+    <value>Do you want to sort all nodes of all resource files by the key now?</value>
+  </data>
+  <data name="DetectCodeReferences_Header" xml:space="preserve">
+    <value>Detect Code References</value>
+  </data>
+  <data name="Configuration_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="SortAllFilesNow" xml:space="preserve">
+    <value>Sort all files now</value>
+  </data>
+  <data name="SortNodesByKey" xml:space="preserve">
+    <value>When saving a RESX file, sort the XML data nodes by the key</value>
+  </data>
+  <data name="EditDefaultConfigurationNotification" xml:space="preserve">
+    <value>Your are editing the default configuration. If you want to change settings that apply only to a specific solution, just open the solution.</value>
+  </data>
+  <data name="EditSolutionConfigurationNotification" xml:space="preserve">
+    <value>You are editing the configuration specific for the active solution. If you want to edit the default configuration, just close the solution.</value>
+  </data>
+  <data name="NeutralResourceLanguageHeader" xml:space="preserve">
+    <value>Neutral Resources Language:</value>
+  </data>
+  <data name="ConfigurationScopeHeader" xml:space="preserve">
+    <value>Scope</value>
+  </data>
+  <data name="Configuration_LoadSaveHeader" xml:space="preserve">
+    <value>Load &amp; Save</value>
+  </data>
+  <data name="FileExtensions" xml:space="preserve">
+    <value>File Extensions</value>
+  </data>
+  <data name="RegularExpression" xml:space="preserve">
+    <value>Regular Expression</value>
+  </data>
+  <data name="CaseSensitive" xml:space="preserve">
+    <value>Case Sens.</value>
+  <comment>@Invariant</comment></data>
+  <data name="CommentToken" xml:space="preserve">
+    <value>Comment Token</value>
+  </data>
+  <data name="ShellTabHeader_Configuration" xml:space="preserve">
+    <value>Configuration</value>
+  </data>
+  <data name="ShellTabHeader_Translate" xml:space="preserve">
+    <value>Translate</value>
+  </data>
+  <data name="Translations_ApplyAll" xml:space="preserve">
+    <value>Apply All</value>
+  </data>
+  <data name="Translations_ApplySelected" xml:space="preserve">
+    <value>Apply Selected</value>
+  </data>
+  <data name="Translations_Restart" xml:space="preserve">
+    <value>Restart</value>
+  </data>
+  <data name="Translations_Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="Authentication" xml:space="preserve">
+    <value>Authentication</value>
+  </data>
+  <data name="TranslatorConfiguration_SaveCredentials" xml:space="preserve">
+    <value>Save credentials (Credentials will be stored as clear text in your local profile!)</value>
+  </data>
+  <data name="AutoCreateNewLanguageFiles" xml:space="preserve">
+    <value>Create all resource files when adding a new resource language</value>
+  </data>
+  <data name="ConfirmAddLanguage" xml:space="preserve">
+    <value>Confirm adding new resource files</value>
+  </data>
+  <data name="Configuration_FileCreationHeader" xml:space="preserve">
+    <value>File creation</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort using:</value>
+  </data>
+  <data name="TranslationsPrefixHeader" xml:space="preserve">
+    <value>Prefix translations with </value>
+  </data>
+  <data name="NoResourceFileForResource" xml:space="preserve">
+    <value>There is no resource file for this resource.</value>
+  </data>
+  <data name="Configuration_ExcelExportModeHeader" xml:space="preserve">
+    <value>Excel export mode</value>
+  </data>
+  <data name="Translations_Source" xml:space="preserve">
+    <value>Source:</value>
+  </data>
+  <data name="Translations_Targets" xml:space="preserve">
+    <value>Targets:</value>
+  </data>
+  <data name="CodeReferenceTrackingInProgress" xml:space="preserve">
+    <value>Code reference detection is still in progress ({0} %).</value>
+  </data>
+  <data name="Configuration_DuplicateKeyHandling" xml:space="preserve">
+    <value>Duplicate resource key handling</value>
+  </data>
+  <data name="IndexColumnToggleButtonToolTip" xml:space="preserve">
+    <value>Show the index column</value>
+  </data>
+  <data name="IndexColumnToolTip" xml:space="preserve">
+    <value>Index of the entry in the resource file. Use fractional values to reorder the entries.</value>
+  </data>
+  <data name="IndexColumnHeaderToolTip" xml:space="preserve">
+    <value>Index of the entry in the resource file.</value>
+  </data>
+</root>

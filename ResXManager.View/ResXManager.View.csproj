@@ -1,0 +1,655 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{32935FC5-1F28-419C-B67F-12D2014F8A8B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>tomenglertde.ResXManager.View</RootNamespace>
+    <AssemblyName>ResXManager.View</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>..\CodeContracts.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>True</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>True</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>True</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>True</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>True</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>True</CodeContractsRedundantAssumptions>
+    <CodeContractsInferRequires>True</CodeContractsInferRequires>
+    <CodeContractsInferEnsures>True</CodeContractsInferEnsures>
+    <CodeContractsInferObjectInvariants>True</CodeContractsInferObjectInvariants>
+    <CodeContractsSuggestAssumptions>True</CodeContractsSuggestAssumptions>
+    <CodeContractsSuggestRequires>True</CodeContractsSuggestRequires>
+    <CodeContractsSuggestEnsures>False</CodeContractsSuggestEnsures>
+    <CodeContractsSuggestObjectInvariants>True</CodeContractsSuggestObjectInvariants>
+    <CodeContractsDisjunctiveRequires>True</CodeContractsDisjunctiveRequires>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>True</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>True</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>3</CodeContractsAnalysisWarningLevel>
+    <CodeContractsMissingPublicRequiresAsWarnings>True</CodeContractsMissingPublicRequiresAsWarnings>
+    <CodeContractsSQLServerOption />
+    <CodeContractsFailBuildOnWarnings>False</CodeContractsFailBuildOnWarnings>
+    <CodeContractsAssertsToContractsCheckBox>True</CodeContractsAssertsToContractsCheckBox>
+    <CodeContractsRedundantTests>True</CodeContractsRedundantTests>
+    <CodeContractsMissingPublicEnsuresAsWarnings>True</CodeContractsMissingPublicEnsuresAsWarnings>
+    <CodeContractsSuggestAssumptionsForCallees>True</CodeContractsSuggestAssumptionsForCallees>
+    <CodeContractsNecessaryEnsures>True</CodeContractsNecessaryEnsures>
+    <CodeContractsSuggestReadonly>True</CodeContractsSuggestReadonly>
+    <CodeContractsSkipAnalysisIfCannotConnectToCache>False</CodeContractsSkipAnalysisIfCannotConnectToCache>
+    <CodeContractsBeingOptimisticOnExternal>True</CodeContractsBeingOptimisticOnExternal>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>..\CodeContracts.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>True</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>True</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>True</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>True</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>True</CodeContractsRedundantAssumptions>
+    <CodeContractsInferRequires>True</CodeContractsInferRequires>
+    <CodeContractsInferEnsures>True</CodeContractsInferEnsures>
+    <CodeContractsInferObjectInvariants>True</CodeContractsInferObjectInvariants>
+    <CodeContractsSuggestAssumptions>True</CodeContractsSuggestAssumptions>
+    <CodeContractsSuggestRequires>True</CodeContractsSuggestRequires>
+    <CodeContractsSuggestEnsures>False</CodeContractsSuggestEnsures>
+    <CodeContractsSuggestObjectInvariants>True</CodeContractsSuggestObjectInvariants>
+    <CodeContractsDisjunctiveRequires>True</CodeContractsDisjunctiveRequires>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>True</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>True</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>3</CodeContractsAnalysisWarningLevel>
+    <CodeContractsMissingPublicRequiresAsWarnings>True</CodeContractsMissingPublicRequiresAsWarnings>
+    <CodeContractsSQLServerOption />
+    <CodeContractsFailBuildOnWarnings>False</CodeContractsFailBuildOnWarnings>
+    <CodeContractsAssertsToContractsCheckBox>True</CodeContractsAssertsToContractsCheckBox>
+    <CodeContractsRedundantTests>True</CodeContractsRedundantTests>
+    <CodeContractsMissingPublicEnsuresAsWarnings>False</CodeContractsMissingPublicEnsuresAsWarnings>
+    <CodeContractsSuggestAssumptionsForCallees>False</CodeContractsSuggestAssumptionsForCallees>
+    <CodeContractsNecessaryEnsures>True</CodeContractsNecessaryEnsures>
+    <CodeContractsSuggestReadonly>True</CodeContractsSuggestReadonly>
+    <CodeContractsSkipAnalysisIfCannotConnectToCache>False</CodeContractsSkipAnalysisIfCannotConnectToCache>
+    <CodeContractsBeingOptimisticOnExternal>True</CodeContractsBeingOptimisticOnExternal>
+    <CodeContractsInferEnsuresAutoProperties>True</CodeContractsInferEnsuresAutoProperties>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DataGridExtensions, Version=1.0.25.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
+      <HintPath>..\packages\DataGridExtensions.1.0.25.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TomsToolbox.Core, Version=1.0.24.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Core.1.0.24.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="TomsToolbox.Desktop, Version=1.0.24.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.24.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.24.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.24.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="TomsToolbox.Wpf, Version=1.0.24.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Wpf.1.0.24.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Trademark.cs">
+      <Link>Trademark.cs</Link>
+    </Compile>
+    <Compile Include="..\Version.cs">
+      <Link>Version.cs</Link>
+    </Compile>
+    <Compile Include="Behaviors\DataGridTryBeginEditBehavior.cs" />
+    <Compile Include="Behaviors\PopupFocusManagerBehavior.cs" />
+    <Compile Include="Behaviors\SelectGroupOnGroupHeaderClickBehavior.cs" />
+    <Compile Include="Behaviors\ShowErrorsOnlyBehavior.cs" />
+    <Compile Include="Behaviors\SynchronizeTextBoxWithDataGridCellBehavior.cs" />
+    <Compile Include="ColumnHeaders\LanguageColumnHeaderBase.cs" />
+    <Compile Include="Tools\AddNewKeyCommand.cs" />
+    <Compile Include="Converters\CultureToXmlLanguageConverter.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.Designer.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\ColumnManager.cs" />
+    <Compile Include="Tools\CultureOverrideEventArgs.cs" />
+    <Compile Include="Tools\NeutralCultureCountryOverrides.cs" />
+    <Compile Include="Visuals\CodeReferencesToolTip.xaml.cs">
+      <DependentUpon>CodeReferencesToolTip.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColumnHeaders\CommentHeader.cs" />
+    <Compile Include="Converters\CultureToImageConverter.cs" />
+    <Compile Include="Converters\CultureToImageSourceConverter.cs" />
+    <Compile Include="Converters\DataGridToSelectionScopeConverter.cs" />
+    <Compile Include="ColumnHeaders\IColumnHeader.cs" />
+    <Compile Include="Visuals\ConfigurationEditorView.xaml.cs">
+      <DependentUpon>ConfigurationEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Visuals\ConfigurationEditorViewModel.cs" />
+    <Compile Include="Visuals\LanguageConfigurationView.xaml.cs">
+      <DependentUpon>LanguageConfigurationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Visuals\InputBox.xaml.cs">
+      <DependentUpon>InputBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColumnHeaders\ColumnHeader.cs" />
+    <Compile Include="Converters\LanguageColumnFilterConverter.cs" />
+    <Compile Include="ColumnHeaders\LanguageHeader.cs" />
+    <Compile Include="Tools\ExtensionMethods.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="References.cs" />
+    <Compile Include="Visuals\LanguageConfigurationViewModel.cs" />
+    <Compile Include="Visuals\LanguageSelectionBox.xaml.cs">
+      <DependentUpon>LanguageSelectionBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Visuals\ResourceView.xaml.cs">
+      <DependentUpon>ResourceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.cs" />
+    <Compile Include="Visuals\ResourceViewModel.cs" />
+    <Compile Include="Visuals\ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Visuals\ShellViewModel.cs" />
+    <Compile Include="Visuals\TranslationsView.xaml.cs">
+      <DependentUpon>TranslationsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Visuals\TranslationsViewModel.cs" />
+    <Compile Include="Visuals\TranslatorConfiguration.xaml.cs">
+      <DependentUpon>TranslatorConfiguration.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Visuals\CodeReferencesToolTip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\ConfigurationEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\LanguageConfigurationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\InputBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Visuals\LanguageSelectionBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\ResourceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\ShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\TranslationsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\TranslatorConfiguration.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ResXManager.Infrastructure\ResXManager.Infrastructure.csproj">
+      <Project>{a20586df-cbe9-4a6f-807c-10960d13e848}</Project>
+      <Name>ResXManager.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj">
+      <Project>{6AF977DB-2C9F-4D9C-8C2D-CFDDF7E022FC}</Project>
+      <Name>ResXManager.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ResXManager.Translators\ResXManager.Translators.csproj">
+      <Project>{d8b0b04f-4273-45db-ae2d-5a91c89e1225}</Project>
+      <Name>ResXManager.Translators</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\CodeContracts.ruleset">
+      <Link>CodeContracts.ruleset</Link>
+    </None>
+    <None Include="..\Key.snk">
+      <Link>Key.snk</Link>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="..\ResourceManager.ico">
+      <Link>ResourceManager.ico</Link>
+    </SplashScreen>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Flags\ad.gif" />
+    <Resource Include="Flags\ae.gif" />
+    <Resource Include="Flags\af.gif" />
+    <Resource Include="Flags\ag.gif" />
+    <Resource Include="Flags\ai.gif" />
+    <Resource Include="Flags\al.gif" />
+    <Resource Include="Flags\am.gif" />
+    <Resource Include="Flags\an.gif" />
+    <Resource Include="Flags\ao.gif" />
+    <Resource Include="Flags\ar.gif" />
+    <Resource Include="Flags\as.gif" />
+    <Resource Include="Flags\at.gif" />
+    <Resource Include="Flags\au.gif" />
+    <Resource Include="Flags\aw.gif" />
+    <Resource Include="Flags\ax.gif" />
+    <Resource Include="Flags\az.gif" />
+    <Resource Include="Flags\ba.gif" />
+    <Resource Include="Flags\bb.gif" />
+    <Resource Include="Flags\bd.gif" />
+    <Resource Include="Flags\be.gif" />
+    <Resource Include="Flags\bf.gif" />
+    <Resource Include="Flags\bg.gif" />
+    <Resource Include="Flags\bh.gif" />
+    <Resource Include="Flags\bi.gif" />
+    <Resource Include="Flags\bj.gif" />
+    <Resource Include="Flags\bm.gif" />
+    <Resource Include="Flags\bn.gif" />
+    <Resource Include="Flags\bo.gif" />
+    <Resource Include="Flags\br.gif" />
+    <Resource Include="Flags\bs.gif" />
+    <Resource Include="Flags\bt.gif" />
+    <Resource Include="Flags\bv.gif" />
+    <Resource Include="Flags\bw.gif" />
+    <Resource Include="Flags\by.gif" />
+    <Resource Include="Flags\bz.gif" />
+    <Resource Include="Flags\ca.gif" />
+    <Resource Include="Flags\cc.gif" />
+    <Resource Include="Flags\cd.gif" />
+    <Resource Include="Flags\cf.gif" />
+    <Resource Include="Flags\cg.gif" />
+    <Resource Include="Flags\ch.gif" />
+    <Resource Include="Flags\ci.gif" />
+    <Resource Include="Flags\ck.gif" />
+    <Resource Include="Flags\cl.gif" />
+    <Resource Include="Flags\cm.gif" />
+    <Resource Include="Flags\cn.gif" />
+    <Resource Include="Flags\co.gif" />
+    <Resource Include="Flags\cr.gif" />
+    <Resource Include="Flags\cs.gif" />
+    <Resource Include="Flags\cu.gif" />
+    <Resource Include="Flags\cv.gif" />
+    <Resource Include="Flags\cx.gif" />
+    <Resource Include="Flags\cy.gif" />
+    <Resource Include="Flags\cz.gif" />
+    <Resource Include="Flags\de.gif" />
+    <Resource Include="Flags\dj.gif" />
+    <Resource Include="Flags\dk.gif" />
+    <Resource Include="Flags\dm.gif" />
+    <Resource Include="Flags\do.gif" />
+    <Resource Include="Flags\dz.gif" />
+    <Resource Include="Flags\ec.gif" />
+    <Resource Include="Flags\ee.gif" />
+    <Resource Include="Flags\eg.gif" />
+    <Resource Include="Flags\eh.gif" />
+    <Resource Include="Flags\er.gif" />
+    <Resource Include="Flags\es.gif" />
+    <Resource Include="Flags\et.gif" />
+    <Resource Include="Flags\fi.gif" />
+    <Resource Include="Flags\fj.gif" />
+    <Resource Include="Flags\fk.gif" />
+    <Resource Include="Flags\fm.gif" />
+    <Resource Include="Flags\fo.gif" />
+    <Resource Include="Flags\fr.gif" />
+    <Resource Include="Flags\ga.gif" />
+    <Resource Include="Flags\gb.gif" />
+    <Resource Include="Flags\gd.gif" />
+    <Resource Include="Flags\ge.gif" />
+    <Resource Include="Flags\gf.gif" />
+    <Resource Include="Flags\gh.gif" />
+    <Resource Include="Flags\gi.gif" />
+    <Resource Include="Flags\gl.gif" />
+    <Resource Include="Flags\gm.gif" />
+    <Resource Include="Flags\gn.gif" />
+    <Resource Include="Flags\gp.gif" />
+    <Resource Include="Flags\gq.gif" />
+    <Resource Include="Flags\gr.gif" />
+    <Resource Include="Flags\gs.gif" />
+    <Resource Include="Flags\gt.gif" />
+    <Resource Include="Flags\gu.gif" />
+    <Resource Include="Flags\gw.gif" />
+    <Resource Include="Flags\gy.gif" />
+    <Resource Include="Flags\hk.gif" />
+    <Resource Include="Flags\hm.gif" />
+    <Resource Include="Flags\hn.gif" />
+    <Resource Include="Flags\hr.gif" />
+    <Resource Include="Flags\ht.gif" />
+    <Resource Include="Flags\hu.gif" />
+    <Resource Include="Flags\id.gif" />
+    <Resource Include="Flags\ie.gif" />
+    <Resource Include="Flags\il.gif" />
+    <Resource Include="Flags\in.gif" />
+    <Resource Include="Flags\io.gif" />
+    <Resource Include="Flags\iq.gif" />
+    <Resource Include="Flags\ir.gif" />
+    <Resource Include="Flags\is.gif" />
+    <Resource Include="Flags\it.gif" />
+    <Resource Include="Flags\jm.gif" />
+    <Resource Include="Flags\jo.gif" />
+    <Resource Include="Flags\jp.gif" />
+    <Resource Include="Flags\ke.gif" />
+    <Resource Include="Flags\kg.gif" />
+    <Resource Include="Flags\kh.gif" />
+    <Resource Include="Flags\ki.gif" />
+    <Resource Include="Flags\km.gif" />
+    <Resource Include="Flags\kn.gif" />
+    <Resource Include="Flags\kp.gif" />
+    <Resource Include="Flags\kr.gif" />
+    <Resource Include="Flags\kw.gif" />
+    <Resource Include="Flags\ky.gif" />
+    <Resource Include="Flags\kz.gif" />
+    <Resource Include="Flags\la.gif" />
+    <Resource Include="Flags\lb.gif" />
+    <Resource Include="Flags\lc.gif" />
+    <Resource Include="Flags\li.gif" />
+    <Resource Include="Flags\lk.gif" />
+    <Resource Include="Flags\lr.gif" />
+    <Resource Include="Flags\ls.gif" />
+    <Resource Include="Flags\lt.gif" />
+    <Resource Include="Flags\lu.gif" />
+    <Resource Include="Flags\lv.gif" />
+    <Resource Include="Flags\ly.gif" />
+    <Resource Include="Flags\ma.gif" />
+    <Resource Include="Flags\mc.gif" />
+    <Resource Include="Flags\md.gif" />
+    <Resource Include="Flags\me.gif" />
+    <Resource Include="Flags\mg.gif" />
+    <Resource Include="Flags\mh.gif" />
+    <Resource Include="Flags\mk.gif" />
+    <Resource Include="Flags\ml.gif" />
+    <Resource Include="Flags\mm.gif" />
+    <Resource Include="Flags\mn.gif" />
+    <Resource Include="Flags\mo.gif" />
+    <Resource Include="Flags\mp.gif" />
+    <Resource Include="Flags\mq.gif" />
+    <Resource Include="Flags\mr.gif" />
+    <Resource Include="Flags\ms.gif" />
+    <Resource Include="Flags\mt.gif" />
+    <Resource Include="Flags\mu.gif" />
+    <Resource Include="Flags\mv.gif" />
+    <Resource Include="Flags\mw.gif" />
+    <Resource Include="Flags\mx.gif" />
+    <Resource Include="Flags\my.gif" />
+    <Resource Include="Flags\mz.gif" />
+    <Resource Include="Flags\na.gif" />
+    <Resource Include="Flags\nc.gif" />
+    <Resource Include="Flags\ne.gif" />
+    <Resource Include="Flags\nf.gif" />
+    <Resource Include="Flags\ng.gif" />
+    <Resource Include="Flags\ni.gif" />
+    <Resource Include="Flags\nl.gif" />
+    <Resource Include="Flags\no.gif" />
+    <Resource Include="Flags\np.gif" />
+    <Resource Include="Flags\nr.gif" />
+    <Resource Include="Flags\nu.gif" />
+    <Resource Include="Flags\nz.gif" />
+    <Resource Include="Flags\om.gif" />
+    <Resource Include="Flags\pa.gif" />
+    <Resource Include="Flags\pe.gif" />
+    <Resource Include="Flags\pf.gif" />
+    <Resource Include="Flags\pg.gif" />
+    <Resource Include="Flags\ph.gif" />
+    <Resource Include="Flags\pk.gif" />
+    <Resource Include="Flags\pl.gif" />
+    <Resource Include="Flags\pm.gif" />
+    <Resource Include="Flags\pn.gif" />
+    <Resource Include="Flags\pr.gif" />
+    <Resource Include="Flags\ps.gif" />
+    <Resource Include="Flags\pt.gif" />
+    <Resource Include="Flags\pw.gif" />
+    <Resource Include="Flags\py.gif" />
+    <Resource Include="Flags\qa.gif" />
+    <Resource Include="Flags\re.gif" />
+    <Resource Include="Flags\ro.gif" />
+    <Resource Include="Flags\rs.gif" />
+    <Resource Include="Flags\ru.gif" />
+    <Resource Include="Flags\rw.gif" />
+    <Resource Include="Flags\sa.gif" />
+    <Resource Include="Flags\sb.gif" />
+    <Resource Include="Flags\sc.gif" />
+    <Resource Include="Flags\sd.gif" />
+    <Resource Include="Flags\se.gif" />
+    <Resource Include="Flags\sg.gif" />
+    <Resource Include="Flags\sh.gif" />
+    <Resource Include="Flags\si.gif" />
+    <Resource Include="Flags\sj.gif" />
+    <Resource Include="Flags\sk.gif" />
+    <Resource Include="Flags\sl.gif" />
+    <Resource Include="Flags\sm.gif" />
+    <Resource Include="Flags\sn.gif" />
+    <Resource Include="Flags\so.gif" />
+    <Resource Include="Flags\sr.gif" />
+    <Resource Include="Flags\st.gif" />
+    <Resource Include="Flags\sv.gif" />
+    <Resource Include="Flags\sy.gif" />
+    <Resource Include="Flags\sz.gif" />
+    <Resource Include="Flags\tc.gif" />
+    <Resource Include="Flags\td.gif" />
+    <Resource Include="Flags\tf.gif" />
+    <Resource Include="Flags\tg.gif" />
+    <Resource Include="Flags\th.gif" />
+    <Resource Include="Flags\tj.gif" />
+    <Resource Include="Flags\tk.gif" />
+    <Resource Include="Flags\tl.gif" />
+    <Resource Include="Flags\tm.gif" />
+    <Resource Include="Flags\tn.gif" />
+    <Resource Include="Flags\to.gif" />
+    <Resource Include="Flags\tr.gif" />
+    <Resource Include="Flags\tt.gif" />
+    <Resource Include="Flags\tv.gif" />
+    <Resource Include="Flags\tw.gif" />
+    <Resource Include="Flags\tz.gif" />
+    <Resource Include="Flags\ua.gif" />
+    <Resource Include="Flags\ug.gif" />
+    <Resource Include="Flags\um.gif" />
+    <Resource Include="Flags\us.gif" />
+    <Resource Include="Flags\uy.gif" />
+    <Resource Include="Flags\uz.gif" />
+    <Resource Include="Flags\va.gif" />
+    <Resource Include="Flags\vc.gif" />
+    <Resource Include="Flags\ve.gif" />
+    <Resource Include="Flags\vg.gif" />
+    <Resource Include="Flags\vi.gif" />
+    <Resource Include="Flags\vn.gif" />
+    <Resource Include="Flags\vu.gif" />
+    <Resource Include="Flags\wf.gif" />
+    <Resource Include="Flags\ws.gif" />
+    <Resource Include="Flags\ye.gif" />
+    <Resource Include="Flags\yt.gif" />
+    <Resource Include="Flags\za.gif" />
+    <Resource Include="Flags\zm.gif" />
+    <Resource Include="Flags\zw.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.de.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\refresh.png" />
+    <Resource Include="Assets\copy.png" />
+    <Resource Include="Assets\paste.png" />
+    <Resource Include="Assets\add.png" />
+    <Resource Include="Assets\flat.png" />
+    <Resource Include="Assets\grouped.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\columns.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\addColumns.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\errorFilter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\like.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\btn_donate_SM.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\EmptyResxTemplate.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\excel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\cut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\references.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Properties\Resources.Designer.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
