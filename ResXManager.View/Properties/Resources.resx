@@ -362,4 +362,7 @@
   <data name="IndexColumnHeaderToolTip" xml:space="preserve">
     <value>Index of the entry in the resource file.</value>
   </data>
+  <data name="PasteFailed" xml:space="preserve">
+    <value>Error parsing the data from clipboard:</value>
+  </data>
 </root>

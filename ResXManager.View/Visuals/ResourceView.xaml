@@ -15,6 +15,7 @@
              xmlns:tools="clr-namespace:tomenglertde.ResXManager.View.Tools"
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
+             xmlns:view="clr-namespace:tomenglertde.ResXManager.View"
              x:Name="LayoutRoot"
              d:DataContext="{d:DesignInstance visuals:ResourceViewModel}">
   <UserControl.Resources>
@@ -104,16 +105,8 @@
       </Grid>
       <ListBox x:Name="ListBox" ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
                Margin="5" BorderThickness="0" SelectionMode="Extended"
-               toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedEntities}">
-        <ListBox.ContextMenu>
-          <ContextMenu>
-            <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
-              <MenuItem.Icon>
-                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
-              </MenuItem.Icon>
-            </MenuItem>
-          </ContextMenu>
-        </ListBox.ContextMenu>
+               toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedEntities}"
+               ContextMenu="{toms:Import visuals:ProjectListContextMenu }">
         <ListBox.ItemTemplate>
           <DataTemplate DataType="model:ResourceEntity">
             <DockPanel ToolTip="{Binding Path=Directory, Mode=OneWay}" Margin="5,2" HorizontalAlignment="Stretch">
@@ -242,7 +235,7 @@
               <ToggleButton ToolTip="{x:Static properties:Resources.IndexColumnToggleButtonToolTip}"
                             IsChecked="{Binding IsIndexColumnVisible, Source={x:Static properties:Settings.Default}, Mode=TwoWay}"
                             IsEnabled="{Binding SelectedItems.Count, ElementName=ListBox, Converter={x:Static toms:BinaryOperationConverter.Equality}, ConverterParameter=1}">
-                <TextBlock Width="16" Height="16" Text="#" TextAlignment="Center"/>
+                <TextBlock Width="16" Height="16" Text="#" TextAlignment="Center" />
               </ToggleButton>
               <Separator />
               <Button ToolTip="{x:Static properties:Resources.DeleteToolTip}"
@@ -357,33 +350,6 @@
                   toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedTableEntries}">
           <DataGrid.Resources>
 
-            <ContextMenu x:Key="RowContextMenu">
-              <MenuItem Header="{x:Static properties:Resources.Delete}" Command="{Binding DataContext.DeleteCommand, Converter={StaticResource DeleteCommandConverter}}">
-                <MenuItem.Icon>
-                  <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/delete.png" />
-                </MenuItem.Icon>
-              </MenuItem>
-              <MenuItem Header="{x:Static properties:Resources.Cut}" Command="{Binding DataContext.CutCommand, Converter={StaticResource CutCommandConverter}}">
-                <MenuItem.Icon>
-                  <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/cut.png" />
-                </MenuItem.Icon>
-              </MenuItem>
-              <MenuItem Header="{x:Static properties:Resources.Copy}" Command="{Binding DataContext.CopyCommand}">
-                <MenuItem.Icon>
-                  <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/copy.png" />
-                </MenuItem.Icon>
-              </MenuItem>
-              <MenuItem Header="{x:Static properties:Resources.Paste}" Command="{Binding DataContext.PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
-                <MenuItem.Icon>
-                  <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
-                </MenuItem.Icon>
-              </MenuItem>
-              <MenuItem Header="{x:Static properties:Resources.Invariant}" IsCheckable="True"
-                        IsChecked="{Binding Mode=OneWay, Path=SelectedItem.IsInvariant }"
-                        Command="{Binding DataContext.ToggleInvariantCommand}" />
-              <MenuItem Header="{x:Static properties:Resources.CopyKeys}" Command="{Binding DataContext.CopyKeysCommand}" />
-            </ContextMenu>
-
             <DataTemplate DataType="{x:Type columnHeaders:LanguageHeader}">
               <DockPanel>
                 <Grid DockPanel.Dock="Left" Background="Transparent">
@@ -424,7 +390,7 @@
           <DataGrid.ItemsPanel>
             <ItemsPanelTemplate>
               <VirtualizingStackPanel
-                ContextMenu="{StaticResource RowContextMenu}"
+                ContextMenu="{toms:Import visuals:ResourceTableContextMenu}">
                 DataContext="{Binding ElementName=DataGrid}"
                 TextElement.FontSize="{Binding Path=(infrastructure:Appearance.TextFontSize), RelativeSource={RelativeSource Self}}">
                 <i:Interaction.Behaviors>
@@ -450,14 +416,14 @@
           <DataGrid.CellStyle>
             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
 
-              <Setter Property="Background" Value="Orange"/>
-              <Setter Property="ToolTip" Value="{Binding Path=(tools:ColumnManager.CellErrors), RelativeSource={RelativeSource Mode=Self}}"/>
+              <Setter Property="Background" Value="Orange" />
+              <Setter Property="ToolTip" Value="{Binding Path=(tools:ColumnManager.CellErrors), RelativeSource={RelativeSource Mode=Self}}" />
 
               <Style.Triggers>
 
                 <DataTrigger Binding="{Binding Path=(tools:ColumnManager.CellErrors), RelativeSource={RelativeSource Mode=Self}}" Value="{x:Null}">
-                  <Setter Property="Background" Value="{x:Null}"/>
-                  <Setter Property="ToolTip" Value="{x:Null}"/>
+                  <Setter Property="Background" Value="{x:Null}" />
+                  <Setter Property="ToolTip" Value="{x:Null}" />
                 </DataTrigger>
 
                 <MultiDataTrigger>
@@ -515,4 +481,13 @@
       </Grid>
     </DockPanel>
   </Grid>
+
+  <i:Interaction.Behaviors>
+    <toms:CommandRoutingBehavior CommandSource="view:DeleteCommand" CommandTarget="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" />
+    <toms:CommandRoutingBehavior CommandSource="view:CutCommand" CommandTarget="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
+    <toms:CommandRoutingBehavior CommandSource="view:CopyCommand" CommandTarget="{Binding CopyCommand}" />
+    <toms:CommandRoutingBehavior CommandSource="view:PasteCommand" CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" />
+    <toms:CommandRoutingBehavior CommandSource="view:IsInvariantCommand" CommandTarget="{Binding ToggleInvariantCommand}" IsChecked="{Binding Path=SelectedItem.IsInvariant, Mode=OneWay, ElementName=DataGrid}" />
+    <toms:CommandRoutingBehavior CommandSource="view:CopyKeysCommand" CommandTarget="{Binding CopyKeysCommand}" />
+  </i:Interaction.Behaviors>
 </UserControl>

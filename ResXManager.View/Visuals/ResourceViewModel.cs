@@ -14,6 +14,7 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
+    [Export]
     [VisualCompositionExport("Content", Sequence = 1)]
     class ResourceViewModel : ObservableObject, IComposablePart
     {
@@ -199,7 +200,14 @@
             if (!_resourceManager.CanEdit(entity, null))
                 return;
 
-            entity.ImportTextTable(Clipboard.GetText());
+            try
+            {
+                entity.ImportTextTable(Clipboard.GetText());
+            }
+            catch (ImportException ex)
+            {
+                throw new ImportException(Resources.PasteFailed + " " + ex.Message);
+            }
         }
 
         private void ToggleInvariant()

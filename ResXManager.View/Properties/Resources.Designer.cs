@@ -642,6 +642,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Error parsing the data from clipboard:.
+        /// </summary>
+        public static string PasteFailed {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("PasteFailed", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Paste rows (Ctrl+V).
         /// </summary>
         public static string PasteToolTip {
@@ -1117,6 +1127,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Paste (Ctrl+V).
         /// </summary>
         Paste,
+        /// <summary>
+        ///   Looks up a localized string similar to Error parsing the data from clipboard:.
+        /// </summary>
+        PasteFailed,
         /// <summary>
         ///   Looks up a localized string similar to Paste rows (Ctrl+V).
         /// </summary>

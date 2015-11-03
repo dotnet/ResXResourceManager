@@ -1,0 +1,12 @@
+﻿<ContextMenu x:Class="tomenglertde.ResXManager.View.Visuals.ResourceTableContextMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:toms="urn:TomsToolbox"
+             xmlns:infrastructure="urn:ResXManager.Infrastructure"
+             ItemContainerStyle="{DynamicResource {x:Type toms:CommandSource}}"
+             >
+  <i:Interaction.Behaviors>
+    <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ResourceTableContextMenu}"/>
+  </i:Interaction.Behaviors>
+</ContextMenu>
