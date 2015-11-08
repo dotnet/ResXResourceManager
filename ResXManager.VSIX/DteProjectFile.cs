@@ -107,7 +107,7 @@
         {
             get
             {
-                return ProjectItem.Document.Maybe().Return(d => !d.ReadOnly, base.IsWritable);
+                return ProjectItem.TryGetDocument().Maybe().Return(d => !d.ReadOnly, base.IsWritable);
             }
         }
 
@@ -115,7 +115,7 @@
         {
             get
             {
-                return ProjectItem.Document.Maybe().Return(d => !d.Saved);
+                return ProjectItem.TryGetDocument().Maybe().Return(d => !d.Saved);
             }
         }
 

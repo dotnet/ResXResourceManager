@@ -190,6 +190,22 @@
             return null;
         }
 
+        public static EnvDTE.Document TryGetDocument(this EnvDTE.ProjectItem projectItem)
+        {
+            if (projectItem == null)
+                return null;
+
+            try
+            {
+                return projectItem.Document;
+            }
+            catch (ExternalException)
+            {
+            }
+
+            return null;
+        }
+
         public static string TryGetContent(this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
@@ -197,7 +213,7 @@
             if (!projectItem.IsOpen)
                 return null;
 
-            var document = projectItem.Document;
+            var document = projectItem.TryGetDocument();
             if (document == null)
                 return null;
 
@@ -257,16 +273,23 @@
 
         public static string GetMkDocument(this VSITEMSELECTION selection)
         {
-            string itemFullPath;
+            try
+            {
+                string itemFullPath;
 
-            var vsProject = selection.pHier as IVsProject;
+                var vsProject = selection.pHier as IVsProject;
 
-            if (vsProject == null)
+                if (vsProject == null)
+                    return null;
+
+                vsProject.GetMkDocument(selection.itemid, out itemFullPath);
+
+                return itemFullPath;
+            }
+            catch (ExternalException)
+            {
                 return null;
-
-            vsProject.GetMkDocument(selection.itemid, out itemFullPath);
-
-            return itemFullPath;
+            }
         }
 
         [ContractVerification(false)]
@@ -277,7 +300,7 @@
                 var textDocument = (EnvDTE.TextDocument)document.Object("TextDocument");
                 return textDocument.CreateEditPoint().GetText(textDocument.EndPoint);
             }
-            catch
+            catch (ExternalException)
             {
             }
 
@@ -292,7 +315,7 @@
             if (!projectItem.IsOpen)
                 return false;
 
-            var document = projectItem.Document;
+            var document = projectItem.TryGetDocument();
             if (document == null)
                 return false;
 
@@ -309,7 +332,7 @@
                 document.Save();
                 return true;
             }
-            catch
+            catch (ExternalException)
             {
             }
 
