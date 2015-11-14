@@ -25,7 +25,7 @@
     }
 
     [Export]
-    [VisualCompositionExport(RegionId.ProjectListContextMenu, RegionId.ResourceTableContextMenu)]
+    [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Copy)]
     [Text(IconUriKey, "pack://application:,,,/ResXManager.View;component/Assets/copy.png")]
     public class CopyCommand : CommandSourceFactory
@@ -33,7 +33,7 @@
     }
 
     [Export]
-    [VisualCompositionExport(RegionId.ProjectListContextMenu, RegionId.ResourceTableContextMenu)]
+    [VisualCompositionExport(RegionId.ResourceTableContextMenu, RegionId.ProjectListContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Paste)]
     [Text(IconUriKey, "pack://application:,,,/ResXManager.View;component/Assets/paste.png")]
     public class PasteCommand : CommandSourceFactory

@@ -390,7 +390,7 @@
           <DataGrid.ItemsPanel>
             <ItemsPanelTemplate>
               <VirtualizingStackPanel
-                ContextMenu="{toms:Import visuals:ResourceTableContextMenu}">
+                ContextMenu="{toms:CompositeContextMenu {x:Static infrastructure:RegionId.ResourceTableContextMenu}}"
                 DataContext="{Binding ElementName=DataGrid}"
                 TextElement.FontSize="{Binding Path=(infrastructure:Appearance.TextFontSize), RelativeSource={RelativeSource Self}}">
                 <i:Interaction.Behaviors>

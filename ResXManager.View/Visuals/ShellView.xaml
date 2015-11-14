@@ -70,4 +70,5 @@
       <Image SnapsToDevicePixels="True" Stretch="None" Source="/ResXManager.View;component/Assets/btn_donate_SM.gif" />
     </Button>
   </Grid>
+  
 </UserControl>
