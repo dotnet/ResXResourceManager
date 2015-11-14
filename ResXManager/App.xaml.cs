@@ -33,7 +33,7 @@
             Contract.Assume(!string.IsNullOrEmpty(path));
 
             _compositionHost.AddCatalog(GetType().Assembly);
-            _compositionHost.AddCatalog(new DirectoryCatalog(path, "ResXManager.*.dll"));
+            _compositionHost.AddCatalog(new DirectoryCatalog(path, "*.dll"));
 
             Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
 
