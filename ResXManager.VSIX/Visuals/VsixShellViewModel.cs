@@ -1,7 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.VSIX.Visuals
 {
     using System;
-    using System.Collections.Specialized;
+    using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -32,13 +32,13 @@
             OnPropertyChanged(() => SelectedCodeGenerators);
         }
 
-        public ICommand CodeProviderCommand
+        public ICommand SetCodeProviderCommand
         {
             get
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand<CodeGenerator>(CodeProviderClicked);
+                return new DelegateCommand<CodeGenerator>(CanSetCodeProvider, SetCodeProvider);
             }
         }
 
@@ -46,18 +46,27 @@
         {
             get
             {
-                var items = _resourceManager.SelectedEntities
-                    .Select(x => x.NeutralProjectFile)
-                    .OfType<DteProjectFile>()
-                    .Select(pf => pf.CodeGenerator)
-                    .Distinct()
-                    .ToArray();
+                var items = SelectedItemsCodeGenerators().ToArray();
 
                 return items.Length == 1 ? items[0] : CodeGenerator.None;
             }
         }
 
-        private void CodeProviderClicked(CodeGenerator codeGenerator)
+        private IEnumerable<CodeGenerator> SelectedItemsCodeGenerators()
+        {
+            return _resourceManager.SelectedEntities
+                .Select(x => x.NeutralProjectFile)
+                .OfType<DteProjectFile>()
+                .Select(pf => pf.CodeGenerator)
+                .Distinct();
+        }
+
+        private bool CanSetCodeProvider(CodeGenerator obj)
+        {
+            return SelectedItemsCodeGenerators().All(g => g != CodeGenerator.None);
+        }
+
+        private void SetCodeProvider(CodeGenerator codeGenerator)
         {
             _resourceManager.SelectedEntities
                 .Select(x => x.NeutralProjectFile)

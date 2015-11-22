@@ -12,7 +12,7 @@
     [VisualCompositionExport(RegionId.ProjectListContextMenu)]
     [DisplayName("Code generator")]
     [Text(SubRegionIdKey, "CodeGen")]
-    public class CodeGeneratorCommand : CommandSourceFactory
+    public class CodeGeneratorGroupCommand : CommandSourceFactory
     {
     }
 

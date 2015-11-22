@@ -12,17 +12,17 @@
              toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Shell}">
   <i:Interaction.Behaviors>
     <toms:CommandRoutingBehavior CommandSource="{x:Type vsix:ResXFileCodeGeneratorCommand}" 
-                                 CommandTarget="{Binding CodeProviderCommand}" 
+                                 CommandTarget="{Binding SetCodeProviderCommand}" 
                                  CommandParameter="{x:Static vsix:CodeGenerator.ResXFileCodeGenerator}"
                                  IsChecked="{Binding SelectedCodeGenerators, Converter={x:Static toms:BinaryOperationConverter.Equality}, ConverterParameter={x:Static vsix:CodeGenerator.ResXFileCodeGenerator}}"
                                  />
     <toms:CommandRoutingBehavior CommandSource="{x:Type vsix:PublicResXFileCodeGeneratorCommand}" 
-                                 CommandTarget="{Binding CodeProviderCommand}" 
+                                 CommandTarget="{Binding SetCodeProviderCommand}" 
                                  CommandParameter="{x:Static vsix:CodeGenerator.PublicResXFileCodeGenerator}"
                                  IsChecked="{Binding SelectedCodeGenerators, Converter={x:Static toms:BinaryOperationConverter.Equality}, ConverterParameter={x:Static vsix:CodeGenerator.PublicResXFileCodeGenerator}}"
                                  />
     <toms:CommandRoutingBehavior CommandSource="{x:Type vsix:TextTemplateCodeGeneratorCommand}" 
-                                 CommandTarget="{Binding CodeProviderCommand}" 
+                                 CommandTarget="{Binding SetCodeProviderCommand}" 
                                  CommandParameter="{x:Static vsix:CodeGenerator.TextTemplate}"
                                  IsChecked="{Binding SelectedCodeGenerators, Converter={x:Static toms:BinaryOperationConverter.Equality}, ConverterParameter={x:Static vsix:CodeGenerator.TextTemplate}}"
                                  />
