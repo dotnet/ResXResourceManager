@@ -9,19 +9,19 @@ namespace tomenglertde.ResXManager.VSIX
         [Text("Icon", "")]
         None,
 
-        [Description("Unknown code generator.")]
+        [LocalizedDescription(StringResourceKey.CodeGenerator_Unkown)]
         [Text("Icon", @"pack://application:,,,/ResXManager.VSIX;component/Assets/Unknown.png")]
         Unknown,
 
-        [Description("Custom tool code generator, internal access.")]
+        [LocalizedDescription(StringResourceKey.CodeGenerator_Internal)]
         [Text("Icon", @"pack://application:,,,/ResXManager.VSIX;component/Assets/PrivateTool.png")]
         ResXFileCodeGenerator,
 
-        [Description("Custom tool code generator, public access.")]
+        [LocalizedDescription(StringResourceKey.CodeGenerator_Public)]
         [Text("Icon", @"pack://application:,,,/ResXManager.VSIX;component/Assets/PublicTool.png")]
         PublicResXFileCodeGenerator,
 
-        [Description("TextTemplate code generator.")]
+        [LocalizedDescription(StringResourceKey.CodeGenerator_TextTemplate)]
         [Text("Icon", @"pack://application:,,,/ResXManager.VSIX;component/Assets/TextTemplate.png")]
         TextTemplate
     }

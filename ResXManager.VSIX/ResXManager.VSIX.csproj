@@ -221,7 +221,7 @@
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
+      <DependentUpon>Resources.Designer.tt</DependentUpon>
     </Compile>
     <Compile Include="ResXManager.VSIXPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -237,9 +237,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources.de.resx" />
     <EmbeddedResource Include="Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
@@ -288,6 +286,11 @@
     </Content>
     <Content Include="64x64.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources.Designer.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Content>
     <None Include="Resources\Resources.Designer.tt">
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

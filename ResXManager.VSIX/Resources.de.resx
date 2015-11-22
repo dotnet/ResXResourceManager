@@ -139,4 +139,28 @@ Mehr Details finden sich im Ausgabefenster.</value>
   <data name="OpenInResXManager" xml:space="preserve">
     <value>Im ResX Manager öffnen</value>
   </data>
+  <data name="CodeGenerator_Unkown" xml:space="preserve">
+    <value>Unbekannter Code-Generator</value>
+  </data>
+  <data name="CodeGenerator_Internal" xml:space="preserve">
+    <value>Custom-Tool Codegenerator (interner Zugriff)</value>
+  </data>
+  <data name="CodeGenerator_Public" xml:space="preserve">
+    <value>Custom-Tool Codegenerator (öffentlicher Zugriff)</value>
+  </data>
+  <data name="CodeGenerator_TextTemplate" xml:space="preserve">
+    <value>Text-Template Codegenerator</value>
+  </data>
+  <data name="CodeGenerator_CommandGroup" xml:space="preserve">
+    <value>Codegenerator</value>
+  </data>
+  <data name="CodeGenerator_CommandInternal" xml:space="preserve">
+    <value>Custom-Tool (interner Zugriff)</value>
+  </data>
+  <data name="CodeGenerator_CommandPublic" xml:space="preserve">
+    <value>Custom-Tool (öffentlicher Zugriff)</value>
+  </data>
+  <data name="CodeGenerator_CommandTextTemplate" xml:space="preserve">
+    <value>Text-Template</value>
+  </data>
 </root>
