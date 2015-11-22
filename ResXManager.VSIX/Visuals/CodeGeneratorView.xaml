@@ -3,14 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
-             xmlns:visuals="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
              xmlns:toms="urn:TomsToolbox"
              xmlns:model="urn:ResXManager.Model"
              d:DataContext="{d:DesignInstance model:ResourceEntity}">
   <UserControl.Resources>
     <toms:CompositeConverter x:Key="ObjectToIconConverter">
-      <visuals:ObjectToTextConverter Key="Icon" />
-      <visuals:StringToObjectConverter />
+      <toms:ObjectToTextConverter Key="Icon" />
+      <toms:StringToObjectConverter />
     </toms:CompositeConverter>
   </UserControl.Resources>
   <Grid>

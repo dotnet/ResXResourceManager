@@ -9,7 +9,8 @@ namespace tomenglertde.ResXManager.VSIX
         [Text("Icon", "")]
         None,
 
-        [Text("Icon", "")]
+        [Description("Unknown code generator.")]
+        [Text("Icon", @"pack://application:,,,/ResXManager.VSIX;component/Assets/Unknown.png")]
         Unknown,
 
         [Description("Custom tool code generator, internal access.")]
