@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -32,11 +33,11 @@
         private readonly ResourceManager _resourceManager;
 
         [ImportingConstructor]
-        public ResourceView(ICompositionHost compositionHost, ResourceManager resourceManager)
+        public ResourceView(ExportProvider exportProvider, ResourceManager resourceManager)
         {
-            Contract.Requires(compositionHost != null);
+            Contract.Requires(exportProvider != null);
 
-            this.SetExportProvider(compositionHost.Container);
+            this.SetExportProvider(exportProvider);
 
             InitializeComponent();
 

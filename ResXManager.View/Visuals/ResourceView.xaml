@@ -106,16 +106,22 @@
       <ListBox x:Name="ListBox" ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
                Margin="5" BorderThickness="0" SelectionMode="Extended"
                toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedEntities}"
-               ContextMenu="{toms:Import visuals:ProjectListContextMenu }">
+               ContextMenu="{toms:CompositeContextMenu RegionId={x:Static infrastructure:RegionId.ProjectListContextMenu} }">
         <ListBox.ItemTemplate>
           <DataTemplate DataType="model:ResourceEntity">
-            <DockPanel ToolTip="{Binding Path=Directory, Mode=OneWay}" Margin="5,2" HorizontalAlignment="Stretch">
-              <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Focusable="False" />
-              <Decorator DockPanel.Dock="Left" Width="5" />
+            <StackPanel ToolTip="{Binding Path=Directory, Mode=OneWay}" Margin="5,2" HorizontalAlignment="Left" Orientation="Horizontal">
+              <CheckBox IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Focusable="False" />
+              <Decorator Width="5" />
               <TextBlock Background="Transparent" VerticalAlignment="Center">
                 <Run Text="{Binding Path=RelativePath, Mode=OneWay}" /><Run Text="{Binding Path=BaseName, Mode=OneWay}" />
               </TextBlock>
-            </DockPanel>
+              <Decorator Width="5" />
+              <ContentControl>
+                <i:Interaction.Behaviors>
+                  <toms:ContentControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListItemDecorator}" CompositionContext="{Binding}"/>
+                </i:Interaction.Behaviors>
+              </ContentControl>
+            </StackPanel>
           </DataTemplate>
         </ListBox.ItemTemplate>
         <ListBox.GroupStyle>

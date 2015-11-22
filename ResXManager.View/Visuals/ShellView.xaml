@@ -10,27 +10,6 @@
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
              d:DataContext="{d:DesignInstance visuals:ShellViewModel}">
 
-  <UserControl.Resources>
-    <Style TargetType="MenuItem" x:Key="{x:Type toms:CommandSource}" BasedOn="{StaticResource {x:Type MenuItem}}">
-      <Setter Property="Header" Value="{Binding Header}"/>
-      <Setter Property="Icon" Value="{Binding Icon, Converter={x:Static toms:ImageSourceToImageConverter.Default}}"/>
-      <Setter Property="Command" Value="{Binding Command}"/>
-      <Setter Property="IsCheckable" Value="{Binding IsCheckable}"/>
-      <Setter Property="toms:StyleBindings.Behaviors">
-        <Setter.Value>
-          <toms:BehaviorCollection>
-            <toms:ItemsControlCompositionBehavior RegionId="{Binding SubRegionId}"/>
-          </toms:BehaviorCollection>
-        </Setter.Value>
-      </Setter>
-      <Style.Triggers>
-        <DataTrigger Binding="{Binding IsCheckable}" Value="True">
-          <Setter Property="IsChecked" Value="{Binding IsChecked}"/>
-        </DataTrigger>
-      </Style.Triggers>
-    </Style>
-  </UserControl.Resources>
-
   <Grid Background="{x:Static SystemColors.WindowBrush}">
     <TabControl x:Name="TabControl"  TabStripPlacement="Bottom" Margin="-1" Padding="0" BorderThickness="1">
       <TabControl.ItemTemplate>

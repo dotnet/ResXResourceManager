@@ -42,7 +42,7 @@
         private ListCollectionViewListAdapter<ResourceEntity> _filteredResourceEntities;
 
         private ObservableCompositeCollection<ResourceTableEntry> _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>();
-        private IList<ResourceTableEntry> _selectedTableEntries = new List<ResourceTableEntry>();
+        private ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
 
         private string _entityFilter;
 
@@ -50,6 +50,7 @@
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
         public event EventHandler<EventArgs> Loaded;
         public event EventHandler<EventArgs> ReloadRequested;
+        public event EventHandler<EventArgs> SelectedEntitiesChanged;
 
         [ImportingConstructor]
         private ResourceManager(Configuration configuration, CodeReferenceTracker codeReferenceTracker, ITracer tracer)
@@ -239,7 +240,7 @@
             if (entry == null)
                 return;
 
-            _selectedTableEntries = new List<ResourceTableEntry> { entry };
+            _selectedTableEntries = new ObservableCollection<ResourceTableEntry> { entry };
             OnPropertyChanged(() => SelectedTableEntries);
         }
 
@@ -434,6 +435,10 @@
             OnPropertyChanged(() => ResourceTableEntries);
             OnPropertyChanged(() => SelectedTableEntries);
             OnPropertyChanged(() => AreAllFilesSelected);
+
+            var eventHandler = SelectedEntitiesChanged;
+            if (eventHandler != null)
+                eventHandler(this, EventArgs.Empty);
         }
 
         public static bool IsValidLanguageName(string languageName)

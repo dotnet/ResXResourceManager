@@ -246,12 +246,6 @@
     <Compile Include="Visuals\LanguageSelectionBox.xaml.cs">
       <DependentUpon>LanguageSelectionBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Visuals\ProjectListContextMenu.xaml.cs">
-      <DependentUpon>ProjectListContextMenu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Visuals\ResourceTableContextMenu.xaml.cs">
-      <DependentUpon>ResourceTableContextMenu.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Visuals\ResourceView.xaml.cs">
       <DependentUpon>ResourceView.xaml</DependentUpon>
     </Compile>
@@ -287,14 +281,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Visuals\LanguageSelectionBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Visuals\ProjectListContextMenu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Visuals\ResourceTableContextMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
