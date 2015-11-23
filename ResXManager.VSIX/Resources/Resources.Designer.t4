@@ -25,6 +25,18 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
+// 
+// This template generates PublicResXFileCodeGenerator compatible code plus some
+// useful extensions. 
+// 
+// The original version provided by ResXResourceManager is restricted to resource key names
+// that are valid c# identifiers to keep this template simple (KISS!).
+// 
+// Us it as it is or as a scaffold to generate the code you need.
+//
+// As long as you have ResXResourceManager running in the background, the generated code 
+// will be kept up to date.
+//  
 //------------------------------------------------------------------------------
 
 namespace <#= localNamespace #> {
