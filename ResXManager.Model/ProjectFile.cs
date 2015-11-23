@@ -7,10 +7,12 @@
     using System.Linq;
     using System.Text;
 
+    using TomsToolbox.Desktop;
+
     /// <summary>
     /// Represents a file associated with a project.
     /// </summary>
-    public class ProjectFile
+    public class ProjectFile : ObservableObject
     {
         private readonly string _filePath;
         private readonly string _extension;

@@ -8,8 +8,6 @@
     using System.Runtime.InteropServices;
     using System.Windows.Threading;
 
-    using EnvDTE;
-
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -18,8 +16,6 @@
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
-
-    using VSLangProj;
 
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -36,8 +32,8 @@
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     public sealed class ResXManagerVsixPackage : Package
     {
-        private DTE _dte;
-        private DocumentEvents _documentEvents;
+        private EnvDTE.DTE _dte;
+        private EnvDTE.DocumentEvents _documentEvents;
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -67,7 +63,7 @@
         [ContractVerification(false)]
         private void ConnectEvents()
         {
-            _dte = (DTE)GetService(typeof(SDTE));
+            _dte = (EnvDTE.DTE)GetService(typeof(SDTE));
             _documentEvents = _dte.Events.DocumentEvents;
             _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
         }
@@ -172,9 +168,10 @@
                 return;
 
             menuCommand.Text = "Move to Resource";
+            menuCommand.Visible = false;
         }
-        
-        private void DocumentEvents_DocumentSaved(Document document)
+
+        private void DocumentEvents_DocumentSaved(EnvDTE.Document document)
         {
             if (document == null)
                 return;
@@ -191,10 +188,7 @@
             if ((toolWindow != null) && toolWindow.ResourceManager.ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.ProjectFile.IsSaving))
                 return;
 
-            document.ProjectItem.Descendants()
-                .Select(projectItem => projectItem.Object)
-                .OfType<VSProjectItem>()
-                .ForEach(vsProjectItem => vsProjectItem.RunCustomTool());
+            document.ProjectItem.Descendants().ForEach(projectItem => projectItem.RunCustomTool());
         }
     }
 }

@@ -22,7 +22,7 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
-    [VisualCompositionExport("Main")]
+    [VisualCompositionExport(RegionId.Main)]
     class MainViewModel : ObservableObject, IComposablePart
     {
         private readonly ResourceManager _resourceManager;

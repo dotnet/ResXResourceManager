@@ -5,7 +5,6 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
-    using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows;
@@ -14,182 +13,11 @@
     using Microsoft.VisualStudio.Shell.Interop;
 
     using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Core;
 
     internal static class DteExtensions
     {
-        /// <summary>
-        /// Gets all files of all project in the solution.
-        /// </summary>
-        /// <param name="solution">The solution.</param>
-        /// <param name="trace">The tracer.</param>
-        /// <returns>The file names of all files.</returns>
-        public static IEnumerable<DteProjectFile> GetProjectFiles(this EnvDTE.Solution solution, ITracer trace)
-        {
-            Contract.Requires(solution != null);
-            Contract.Requires(solution.Projects != null);
-            Contract.Requires(trace != null);
-            Contract.Ensures(Contract.Result<IEnumerable<ProjectFile>>() != null);
-
-            var items = new Dictionary<string, DteProjectFile>();
-
-            var solutionFolder = solution.GetSolutionFolder();
-
-            foreach (var project in solution.GetProjects(trace))
-            {
-                Contract.Assume(project != null);
-
-                trace.WriteLine("Loading project " + project.Name);
-
-                project.ProjectItems.GetProjectFiles(solutionFolder, items, trace);
-            }
-
-            return items.Values;
-        }
-
-        private static string GetSolutionFolder(this EnvDTE._Solution solution)
-        {
-            Contract.Requires(solution != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-            Contract.Ensures(solution.Projects == Contract.OldValue(solution.Projects));
-
-            try
-            {
-                var fullName = solution.FullName;
-
-                if (!string.IsNullOrEmpty(fullName))
-                {
-                    return Path.GetDirectoryName(fullName);
-                }
-            }
-            catch
-            {
-            }
-
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// Gets the projects of the solution, ignoring the ones that fail to load.
-        /// </summary>
-        /// <param name="solution">The solution.</param>
-        /// <param name="trace">The tracer.</param>
-        /// <returns>The projects.</returns>
-        private static IEnumerable<EnvDTE.Project> GetProjects(this EnvDTE._Solution solution, ITracer trace)
-        {
-            Contract.Requires(solution != null);
-            Contract.Requires(solution.Projects != null);
-            Contract.Requires(trace != null);
-            Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.Project>>() != null);
-
-            var projects = solution.Projects;
-
-            for (var i = 1; i <= projects.Count; i++)
-            {
-                EnvDTE.Project project;
-                try
-                {
-                    project = projects.Item(i);
-                }
-                catch
-                {
-                    trace.TraceError("Error loading project #" + i);
-                    continue;
-                }
-
-                yield return project;
-            }
-        }
-
-        private static void GetProjectFiles(this EnvDTE.ProjectItems projectItems, string solutionFolder, IDictionary<string, DteProjectFile> items, ITracer trace)
-        {
-            Contract.Requires(solutionFolder != null);
-            Contract.Requires(items != null);
-
-            if (projectItems == null)
-                return;
-
-            try
-            {
-                var index = 1;
-
-                // Must use forach here! See https://connect.microsoft.com/VisualStudio/feedback/details/1093318/resource-files-falsely-enumerated-as-part-of-project
-                foreach (var projectItem in projectItems.OfType<EnvDTE.ProjectItem>())
-                {
-                    try
-                    {
-                        projectItem.GetProjectFiles(solutionFolder, items, trace);
-                    }
-                    catch
-                    {
-                        trace.TraceError("Error loading project item #{0}.", index);
-                    }
-
-                    index += 1;
-                }
-            }
-            catch
-            {
-                trace.TraceError("Error loading a project item.");
-            }
-        }
-
-        private static void GetProjectFiles(this EnvDTE.ProjectItem projectItem, string solutionFolder, IDictionary<string, DteProjectFile> items, ITracer trace)
-        {
-            Contract.Requires(projectItem != null);
-            Contract.Requires(solutionFolder != null);
-            Contract.Requires(items != null);
-
-            if (projectItem.FileCount > 0)
-            {
-                var fileName = TryGetFileName(projectItem);
-
-                if (!string.IsNullOrEmpty(fileName))
-                {
-                    var project = projectItem.ContainingProject;
-                    Contract.Assume(project != null);
-
-                    DteProjectFile projectFile;
-                    if (items.TryGetValue(fileName, out projectFile))
-                    {
-                        Contract.Assume(projectFile != null);
-                        Contract.Assume(project.Name != null);
-
-                        projectFile.AddProject(project.Name, projectItem);
-                    }
-                    else
-                    {
-                        items.Add(fileName, new DteProjectFile(fileName, solutionFolder, project.Name, project.UniqueName, projectItem));
-                    }
-                }
-            }
-
-            projectItem.ProjectItems.GetProjectFiles(solutionFolder, items, trace);
-
-            if (projectItem.SubProject != null)
-            {
-                projectItem.SubProject.ProjectItems.GetProjectFiles(solutionFolder, items, trace);
-            }
-        }
-
-        private static string TryGetFileName(this EnvDTE.ProjectItem projectItem)
-        {
-            Contract.Requires(projectItem != null);
-
-            try
-            {
-                // some items report a file count > 0 but don't return a file name!
-                return projectItem.FileNames[0];
-            }
-            catch (ArgumentException)
-            {
-            }
-
-            return null;
-        }
-
         public static EnvDTE.Document TryGetDocument(this EnvDTE.ProjectItem projectItem)
         {
             if (projectItem == null)
@@ -210,14 +38,7 @@
         {
             Contract.Requires(projectItem != null);
 
-            if (!projectItem.IsOpen)
-                return null;
-
-            var document = projectItem.TryGetDocument();
-            if (document == null)
-                return null;
-
-            return TryGetContent(document);
+            return !projectItem.IsOpen ? null : TryGetContent(projectItem.TryGetDocument());
         }
 
         public static IEnumerable<VSITEMSELECTION> GetSelectedProjectItems(this IVsMonitorSelection monitorSelection)
@@ -277,6 +98,7 @@
             {
                 string itemFullPath;
 
+                // ReSharper disable once SuspiciousTypeConversion.Global
                 var vsProject = selection.pHier as IVsProject;
 
                 if (vsProject == null)
@@ -297,7 +119,13 @@
         {
             try
             {
+                if (document == null)
+                    return null;
+
                 var textDocument = (EnvDTE.TextDocument)document.Object("TextDocument");
+                if (textDocument == null)
+                    return null;
+
                 return textDocument.CreateEditPoint().GetText(textDocument.EndPoint);
             }
             catch (ExternalException)
@@ -312,14 +140,7 @@
             Contract.Requires(projectItem != null);
             Contract.Requires(text != null);
 
-            if (!projectItem.IsOpen)
-                return false;
-
-            var document = projectItem.TryGetDocument();
-            if (document == null)
-                return false;
-
-            return TrySetContent(text, document);
+            return projectItem.IsOpen && TrySetContent(text, projectItem.TryGetDocument());
         }
 
         [ContractVerification(false)]
@@ -327,9 +148,16 @@
         {
             try
             {
+                if (document == null)
+                    return false;
+
                 var textDocument = (EnvDTE.TextDocument)document.Object("TextDocument");
+                if (textDocument == null)
+                    return false;
+
                 textDocument.CreateEditPoint().ReplaceText(textDocument.EndPoint, text, 0);
                 document.Save();
+
                 return true;
             }
             catch (ExternalException)
@@ -339,24 +167,33 @@
             return false;
         }
 
+        public static IEnumerable<EnvDTE.ProjectItem> Children(this EnvDTE.ProjectItem projectItem)
+        {
+            Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.ProjectItem>>() != null);
+
+            if (projectItem == null)
+                return Enumerable.Empty<EnvDTE.ProjectItem>();
+
+            var projectItems = projectItem.ProjectItems;
+            if (projectItems == null)
+                return Enumerable.Empty<EnvDTE.ProjectItem>();
+
+            return projectItems.OfType<EnvDTE.ProjectItem>();
+        }
+
         public static IEnumerable<EnvDTE.ProjectItem> Descendants(this EnvDTE.ProjectItem projectItem)
         {
             Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.ProjectItem>>() != null);
 
             if (projectItem == null)
-                yield break;
+                return Enumerable.Empty<EnvDTE.ProjectItem>();
 
             var projectItems = projectItem.ProjectItems;
-
             if (projectItems == null)
-                yield break;
+                return Enumerable.Empty<EnvDTE.ProjectItem>();
 
-            foreach (var item in projectItems.OfType<EnvDTE.ProjectItem>().SelectMany(p => p.DescendantsAndSelf()))
-            {
-                yield return item;
-            }
+            return projectItem.ProjectItems.OfType<EnvDTE.ProjectItem>().SelectMany(p => p.DescendantsAndSelf());
         }
-
 
         public static IEnumerable<EnvDTE.ProjectItem> DescendantsAndSelf(this EnvDTE.ProjectItem projectItem)
         {
@@ -371,6 +208,68 @@
             {
                 yield return item;
             }
+        }
+
+        public static void RunCustomTool(this EnvDTE.ProjectItem projectItem)
+        {
+            Contract.Requires(projectItem != null);
+
+            var vsProjectItem = (projectItem.Object as VSLangProj.VSProjectItem);
+            
+            if (vsProjectItem != null)
+                vsProjectItem.RunCustomTool();
+        }
+
+        public static void SetCustomTool(this EnvDTE.ProjectItem projectItem, string value)
+        {
+            Contract.Requires(projectItem != null);
+
+            var properties = projectItem.Properties;
+            if (properties == null)
+                return;
+
+            var item = properties.Item("CustomTool");
+
+            if (item != null)
+                item.Value = value;
+        }
+
+        public static string GetCustomTool(this EnvDTE.ProjectItem projectItem)
+        {
+            Contract.Requires(projectItem != null);
+
+            var properties = projectItem.Properties;
+            if (properties == null)
+                return null;
+
+            var item = properties.Item("CustomTool");
+
+            if (item != null)
+                return item.Value as string;
+
+            return null;
+        }
+
+        public static EnvDTE.ProjectItem AddFromFile(this EnvDTE.ProjectItem projectItem, string fileName)
+        {
+            Contract.Requires(projectItem != null);
+
+            var projectItems = projectItem.ProjectItems;
+            if (projectItems == null)
+                return null;
+            
+            return projectItems.AddFromFile(fileName);
+        }
+
+        public static EnvDTE.ProjectItem AddFromFile(this EnvDTE.Project project, string fileName)
+        {
+            Contract.Requires(project != null);
+
+            var projectItems = project.ProjectItems;
+            if (projectItems == null)
+                return null;
+
+            return projectItems.AddFromFile(fileName);
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -401,7 +300,5 @@
             {
             }
         }
-
-
     }
 }

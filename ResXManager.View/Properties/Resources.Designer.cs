@@ -642,6 +642,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Error parsing the data from clipboard:.
+        /// </summary>
+        public static string PasteFailed {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("PasteFailed", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Paste rows (Ctrl+V).
         /// </summary>
         public static string PasteToolTip {
@@ -1118,6 +1128,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         Paste,
         /// <summary>
+        ///   Looks up a localized string similar to Error parsing the data from clipboard:.
+        /// </summary>
+        PasteFailed,
+        /// <summary>
         ///   Looks up a localized string similar to Paste rows (Ctrl+V).
         /// </summary>
         PasteToolTip,
@@ -1275,6 +1289,33 @@ namespace tomenglertde.ResXManager.View.Properties {
             }
         }
     }
+
+    /// <summary>
+    /// Specifies a localized display name for an object.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [AttributeUsage(AttributeTargets.All, AllowMultiple=false)]
+    public sealed class LocalizedCategoryAttribute : System.ComponentModel.CategoryAttribute
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocalizedCategoryAttribute"/> class.
+        /// </summary>
+        /// <param name="resourceKey">The resource key of the associated resource.</param>
+        public LocalizedCategoryAttribute(StringResourceKey resourceKey)
+            : base(resourceKey.ToString())
+        {
+        }
+
+        /// <summary>
+        /// Gets the localized category name from the resource id stored in this attribute.
+        /// </summary>
+        protected override string GetLocalizedString(string value)
+        {
+            return Resources.ResourceManager.GetString(value);
+        }
+    }
+
 
 
     /// <summary>

@@ -351,4 +351,7 @@
   <data name="IndexColumnHeaderToolTip" xml:space="preserve">
     <value>Index des Eintrags in der Ressourcendatei.</value>
   </data>
+  <data name="PasteFailed" xml:space="preserve">
+    <value>Fehler beim interpretieren der Daten aus der Zwischenablage:</value>
+  </data>
 </root>

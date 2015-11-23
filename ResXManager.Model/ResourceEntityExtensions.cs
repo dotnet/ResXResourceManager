@@ -183,9 +183,6 @@
 
             var lines = ReadLines(text).ToArray();
 
-            if (!lines.Any())
-                return;
-
             entity.ImportTable(FixedColumnHeaders, lines).Apply();
         }
 

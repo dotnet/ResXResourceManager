@@ -13,13 +13,14 @@
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Core;
+    using TomsToolbox.Desktop;
 
     /// <summary>
     /// Represents a logical resource file, e.g. "Resources".
-    /// A logical resource entity is linked to multiple physical resource files, one per langueage, e.g. "Resources.resx", "Resources.de.resx", "Resources.fr.resx".
-    /// For windows store apps "de\Resources.resm", "en-us\Resources.resm" are also supported.
+    /// A logical resource entity is linked to multiple physical resource files, one per language, e.g. "Resources.resx", "Resources.de.resx", "Resources.fr.resx".
+    /// For windows store apps "de\Resources.resw", "en-us\Resources.resw" are also supported.
     /// </summary>
-    public class ResourceEntity : IComparable<ResourceEntity>, IComparable, IEquatable<ResourceEntity>
+    public class ResourceEntity : ObservableObject, IComparable<ResourceEntity>, IComparable, IEquatable<ResourceEntity>
     {
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly ResourceManager _owner;
@@ -30,6 +31,7 @@
         private readonly string _displayName;
         private readonly string _relativePath;
         private readonly string _sortKey;
+        private readonly ProjectFile _neutralProjectFile;
 
         internal ResourceEntity(ResourceManager owner, string projectName, string baseName, string directory, ICollection<ProjectFile> files)
         {
@@ -46,6 +48,7 @@
             _relativePath = GetRelativePath(directory, files);
             _displayName = projectName + @" - " + _relativePath + baseName;
             _sortKey = string.Concat(@" - ", _displayName, _directory);
+            _neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
 
             var languageQuery =
                 from file in files
@@ -171,6 +174,14 @@
             {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return _directory;
+            }
+        }
+
+        public ProjectFile NeutralProjectFile
+        {
+            get
+            {
+                return _neutralProjectFile;
             }
         }
 

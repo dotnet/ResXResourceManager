@@ -26,6 +26,7 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Visuals;
+    using tomenglertde.ResXManager.VSIX.Visuals;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
@@ -87,7 +88,8 @@
 
             _codeReferenceTracker = _compositionHost.GetExportedValue<CodeReferenceTracker>();
 
-            _view = _compositionHost.GetExportedValue<ShellView>();
+            _view = _compositionHost.GetExportedValue<VsixShellView>();
+            _view.DataContext = _compositionHost.GetExportedValue<VsixShellViewModel>();
             _view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
             _view.Loaded += view_Loaded;
             _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
@@ -122,7 +124,7 @@
                 _trace.WriteLine(Resources.AssemblyLocation, folder);
                 _trace.WriteLine(Resources.Version, new AssemblyName(executingAssembly.FullName).Version);
 
-                EventManager.RegisterClassHandler(typeof(ShellView), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
+                EventManager.RegisterClassHandler(typeof(VsixShellView), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
 
                 // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
                 // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
@@ -371,11 +373,6 @@
             Contract.Requires(!string.IsNullOrEmpty(languageFileName));
 
             DteProjectFile projectFile = null;
-            if (_dte == null)
-                return;
-            var solution = _dte.Solution;
-            if (solution == null)
-                return;
 
             foreach (var neutralLanguageProjectItem in ((DteProjectFile)neutralLanguage.ProjectFile).ProjectItems)
             {
@@ -395,9 +392,7 @@
 
                 if (projectFile == null)
                 {
-                    var solutionFolder = Path.GetDirectoryName(solution.FullName);
-                    Contract.Assume(solutionFolder != null);
-                    projectFile = new DteProjectFile(languageFileName, solutionFolder, projectName, containingProject.UniqueName, projectItem);
+                    projectFile = new DteProjectFile(_compositionHost.GetExportedValue<DteSolution>(), languageFileName, projectName, containingProject.UniqueName, projectItem);
                 }
                 else
                 {
@@ -434,9 +429,7 @@
             ((DteProjectFile)e.Language.ProjectFile).ProjectItems
                 .Where(projectItem => projectItem != null)
                 .SelectMany(item => item.DescendantsAndSelf())
-                .Select(projectItem => projectItem.Object)
-                .OfType<VSProjectItem>()
-                .ForEach(vsProjectItem => vsProjectItem.RunCustomTool());
+                .ForEach(projectItem => projectItem.RunCustomTool());
         }
 
         private void Solution_Changed(bool forceReload = false)
@@ -454,9 +447,6 @@
 
         private void ReloadSolution(bool forceReload = false)
         {
-            Contract.Assume(_dte != null);
-
-            var solution = _dte.Solution;
             var sourceFileFilter = new SourceFileFilter(_configuration);
 
             var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || sourceFileFilter.IsSourceFile(p)).ToArray();
@@ -470,7 +460,7 @@
                 && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
                 return;
 
-            var solutionFullName = solution.Maybe().Return(s => s.FullName);
+            var solutionFullName = _compositionHost.GetExportedValue<DteSolution>().FullName;
 
             _solutionFingerPrint = fingerPrint;
 
@@ -490,14 +480,7 @@
 
         private IEnumerable<DteProjectFile> GetProjectFiles()
         {
-            if (_dte == null)
-                return Enumerable.Empty<DteProjectFile>();
-
-            var solution = _dte.Solution;
-            if ((solution == null) || (solution.Projects == null))
-                return Enumerable.Empty<DteProjectFile>();
-
-            return solution.GetProjectFiles(_trace);
+            return _compositionHost.GetExportedValue<DteSolution>().GetProjectFiles();
         }
 
         private static string GetFingerprint(IEnumerable<DteProjectFile> allFiles)

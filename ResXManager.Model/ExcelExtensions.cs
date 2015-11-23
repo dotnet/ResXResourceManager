@@ -460,7 +460,9 @@
             where TContainer : OpenXmlElement
             where TItem : OpenXmlElement
         {
-            container.Append(item);
+            if ((container != null) && (item != null))
+                container.Append(item);
+
             return container;
         }
 

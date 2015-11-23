@@ -1,13 +1,9 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
-
-    using TomsToolbox.Core;
 
     /// <summary>
     /// Resource manager specific extension methods.

@@ -163,4 +163,35 @@ See output window for details.</value>
   <data name="OpenInResXManager" xml:space="preserve">
     <value>Open in ResX Manager</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Resources_Designer_t4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Resources.Designer.t4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Resources_Designer_tt" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Resources.Designer.tt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="CodeGenerator_Unkown" xml:space="preserve">
+    <value>Unknown code generator.</value>
+  </data>
+  <data name="CodeGenerator_Internal" xml:space="preserve">
+    <value>Custom tool code generator, internal access.</value>
+  </data>
+  <data name="CodeGenerator_Public" xml:space="preserve">
+    <value>Custom tool code generator, public access.</value>
+  </data>
+  <data name="CodeGenerator_TextTemplate" xml:space="preserve">
+    <value>TextTemplate code generator.</value>
+  </data>
+  <data name="CodeGenerator_CommandGroup" xml:space="preserve">
+    <value>Code generator</value>
+  </data>
+  <data name="CodeGenerator_CommandInternal" xml:space="preserve">
+    <value>Custom tool (internal access)</value>
+  </data>
+  <data name="CodeGenerator_CommandPublic" xml:space="preserve">
+    <value>Custom tool (public access)</value>
+  </data>
+  <data name="CodeGenerator_CommandTextTemplate" xml:space="preserve">
+    <value>Text template</value>
+  </data>
 </root>
