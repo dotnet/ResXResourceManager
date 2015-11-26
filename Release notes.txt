@@ -1,3 +1,7 @@
+1.0.0.65:
+* WI4646: Cannot add new key time to time - exception triggered.
+* WI4652: Code generator can be selected in the project list (VS Extension only).
+* WI4654: Properly handle xml files with encodings other than UTF8
 1.0.0.64:
 * WI4645: VS extension fails to load: "The composition produced a single composition error. ..." 
 1.0.0.63:
