@@ -163,7 +163,7 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' != 'Debug'">
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
@@ -172,7 +172,7 @@
   <PropertyGroup>
     <ManifestCertificateThumbprint>30B066A127A046DC56D01AFD38C932F11D29AC18</ManifestCertificateThumbprint>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' != 'Debug'">
     <ManifestKeyFile>ResXManager_Key.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>

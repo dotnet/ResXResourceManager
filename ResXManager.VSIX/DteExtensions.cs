@@ -8,6 +8,7 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows;
+    using System.Xml.Linq;
 
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -34,7 +35,7 @@
             return null;
         }
 
-        public static string TryGetContent(this EnvDTE.ProjectItem projectItem)
+        public static XDocument TryGetContent(this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
 
@@ -115,7 +116,7 @@
         }
 
         [ContractVerification(false)]
-        private static string TryGetContent(EnvDTE.Document document)
+        private static XDocument TryGetContent(EnvDTE.Document document)
         {
             try
             {
@@ -126,7 +127,7 @@
                 if (textDocument == null)
                     return null;
 
-                return textDocument.CreateEditPoint().GetText(textDocument.EndPoint);
+                return XDocument.Parse(textDocument.CreateEditPoint().GetText(textDocument.EndPoint));
             }
             catch (ExternalException)
             {
@@ -135,16 +136,16 @@
             return null;
         }
 
-        public static bool TrySetContent(this EnvDTE.ProjectItem projectItem, string text)
+        public static bool TrySetContent(this EnvDTE.ProjectItem projectItem, XDocument value)
         {
             Contract.Requires(projectItem != null);
-            Contract.Requires(text != null);
+            Contract.Requires(value != null);
 
-            return projectItem.IsOpen && TrySetContent(text, projectItem.TryGetDocument());
+            return projectItem.IsOpen && TrySetContent(projectItem.TryGetDocument(), value);
         }
 
         [ContractVerification(false)]
-        private static bool TrySetContent(string text, EnvDTE.Document document)
+        private static bool TrySetContent(EnvDTE.Document document, XDocument value)
         {
             try
             {
@@ -154,6 +155,8 @@
                 var textDocument = (EnvDTE.TextDocument)document.Object("TextDocument");
                 if (textDocument == null)
                     return false;
+
+                var text = value.Declaration + Environment.NewLine + value;
 
                 textDocument.CreateEditPoint().ReplaceText(textDocument.EndPoint, text, 0);
                 document.Save();

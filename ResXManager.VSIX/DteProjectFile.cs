@@ -6,6 +6,7 @@
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
+    using System.Xml.Linq;
 
     using tomenglertde.ResXManager.Model;
 
@@ -59,50 +60,41 @@
             ProjectName += @", " + projectName;
         }
 
-        public override string Content
+        public override XDocument Load()
         {
-            get
+            var projectItem = DefaultProjectItem;
+
+            try
             {
-                var projectItem = DefaultProjectItem;
-
-                try
-                {
-                    return projectItem.TryGetContent() ?? base.Content;
-                }
-                catch (IOException)
-                {
-                }
-
-                projectItem.Open();
-                return projectItem.TryGetContent() ?? string.Empty;
+                return projectItem.TryGetContent() ?? base.Load();
             }
-            set
+            catch (IOException)
             {
-                try
+                // The file does not exist locally, but VS may download it when we call projectItem.Open()
+            }
+
+            projectItem.Open();
+            return projectItem.TryGetContent() ?? new XDocument();
+        }
+
+        protected override void InternalSave(XDocument document)
+        {
+            var projectItem = DefaultProjectItem;
+
+            try
+            {
+                if (!projectItem.TrySetContent(document))
                 {
-                    IsSaving = true;
-
-                    var projectItem = DefaultProjectItem;
-
-                    try
-                    {
-                        if (!projectItem.TrySetContent(value))
-                        {
-                            base.Content = value;
-                        }
-                    }
-                    catch (IOException)
-                    {
-                    }
-
-                    projectItem.Open();
-                    projectItem.TrySetContent(value);
-                }
-                finally
-                {
-                    IsSaving = false;
+                    base.InternalSave(document);
                 }
             }
+            catch (IOException)
+            {
+                // The file does not exist locally, but VS may download it when we call projectItem.Open()
+            }
+
+            projectItem.Open();
+            projectItem.TrySetContent(document);
         }
 
         public override bool IsWritable
@@ -211,7 +203,7 @@
             }
 
             var fileName = Path.ChangeExtension(FilePath, "Designer.tt");
-            
+
             File.WriteAllBytes(fileName, Resources.Resources_Designer_tt);
 
             var item = projectItem.AddFromFile(fileName);

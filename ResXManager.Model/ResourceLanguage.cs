@@ -53,7 +53,7 @@
 
             try
             {
-                _document = XDocument.Parse(file.Content);
+                _document = file.Load();
                 _documentRoot = _document.Root;
             }
             catch (XmlException ex)
@@ -264,9 +264,7 @@
                 SortNodes(configuration.ResXSortingComparison);
             }
 
-            const string declaration = @"<?xml version=""1.0"" encoding=""utf-8""?>";
-
-            _file.Content = declaration + Environment.NewLine + _document;
+            _file.Save(_document);
 
             HasChanges = false;
         }
