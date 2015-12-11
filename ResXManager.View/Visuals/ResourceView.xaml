@@ -339,8 +339,8 @@
               </ListBox>
             </Border>
           </Popup>
-          <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=TextBox}" WhiteSpaceOpacity="0.4">
-            <TextBox x:Name="TextBox" AcceptsReturn="True" SpellCheck.IsEnabled="True" TextWrapping="Wrap">
+          <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=TextBox}" WhiteSpaceOpacity="0.4" WhiteSpaces="All">
+            <TextBox x:Name="TextBox" AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="True" TextWrapping="Wrap" IsTabStop="False">
               <i:Interaction.Behaviors>
                 <toms:ZoomFontSizeOnMouseWheelBehavior />
                 <behaviors:SynchronizeTextBoxWithDataGridCellBehavior DataGrid="{Binding ElementName=DataGrid}" />
