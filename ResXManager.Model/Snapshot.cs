@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -16,6 +14,8 @@
 
     public static class Snapshot
     {
+        private static readonly IDictionary<CultureKey, ResourceData> _emptyDictionary = new Dictionary<CultureKey, ResourceData>();
+
         public static string CreateSnapshot(this ICollection<ResourceEntity> resourceEntities)
         {
             Contract.Requires(resourceEntities != null);
@@ -38,7 +38,7 @@
                     }).ToArray()
                 }).ToArray();
 
-            entitySnapshots.ForEach(entity => Load(resourceEntities, entity));
+            resourceEntities.Load(entitySnapshots);
 
             return JsonConvert.SerializeObject(entitySnapshots) ?? string.Empty; 
         }
@@ -47,120 +47,115 @@
         {
             Contract.Requires(resourceEntities != null);
 
-            resourceEntities.SelectMany(entitiy => entitiy.Entries).ForEach(entry => entry.Snapshot = null);
+            var clearSnapshot = string.IsNullOrEmpty(snapshot);
 
-            if (string.IsNullOrEmpty(snapshot))
+            var initialValue = clearSnapshot ? null : _emptyDictionary;
+
+            resourceEntities.SelectMany(entitiy => entitiy.Entries)
+                .ForEach(entry => entry.Snapshot = initialValue);
+
+            if (clearSnapshot)
                 return;
 
-            var entitySnapshots = JsonConvert.DeserializeObject<Collection<EntitySnapshot>>(snapshot);
-            if (entitySnapshots == null)
-                return;
-
-            entitySnapshots.ForEach(entity => Load(resourceEntities, entity));
+            var entitySnapshots = JsonConvert.DeserializeObject<ICollection<EntitySnapshot>>(snapshot) ?? new EntitySnapshot[0];
+            
+            resourceEntities.Load(entitySnapshots);
         }
 
-        private static void Load(IEnumerable<ResourceEntity> resourceEntities, EntitySnapshot entitySnapshot)
+        private static void Load(this IEnumerable<ResourceEntity> resourceEntities, IEnumerable<EntitySnapshot> entitySnapshots)
         {
             Contract.Requires(resourceEntities != null);
-            Contract.Requires(entitySnapshot != null);
+            Contract.Requires(entitySnapshots != null);
 
-            var entrySnapshots = entitySnapshot.Entries;
-            if (entrySnapshots == null)
-                return;
+            resourceEntities.ForEach(entity =>
+            {
+                var entrySnapshots = entitySnapshots.Where(snapshot => Equals(entity, snapshot)).Select(s => s.Entries).FirstOrDefault() ?? new EntrySnapshot[0];
 
-            var entity = resourceEntities.FirstOrDefault(e => string.Equals(e.ProjectName, entitySnapshot.ProjectName, StringComparison.OrdinalIgnoreCase) && string.Equals(e.UniqueName, entitySnapshot.UniqueName, StringComparison.OrdinalIgnoreCase));
-            if (entity == null)
-                return;
+                entity.Entries.ForEach(entry =>
+                {
+                    var data = entrySnapshots.Where(s => string.Equals(entry.Key, s.Key)).Select(s => s.Data).FirstOrDefault() ?? new DataSnapshot[0];
 
-            entrySnapshots.ForEach(entry => Load(entity.Entries, entry));
+                    entry.Snapshot = data.ToDictionary(item => new CultureKey(item.Language), item => new ResourceData { Text = item.Text, Comment = item.Comment }); ;
+                });
+            });
         }
 
-        private static void Load(IEnumerable<ResourceTableEntry> entries, EntrySnapshot entrySnapshot)
+        private static bool Equals(ResourceEntity entity, EntitySnapshot snapshot)
         {
-            Contract.Requires(entries != null);
-            Contract.Requires(entrySnapshot != null);
-
-            var data = entrySnapshot.Data;
-            if (data == null)
-                return;
-
-            var entry = entries.FirstOrDefault(e => string.Equals(e.Key, entrySnapshot.Key));
-            if (entry == null)
-                return;
-
-            entry.Snapshot = data.ToDictionary(item => new CultureKey(item.Language), item => new ResourceData {Text = item.Text, Comment = item.Comment});
+            return string.Equals(entity.ProjectName, snapshot.ProjectName, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(entity.UniqueName, snapshot.UniqueName, StringComparison.OrdinalIgnoreCase);
         }
 
         private static string NullIfEmpty(string value)
         {
             return string.IsNullOrEmpty(value) ? null : value;
         }
-    }
 
-    [DataContract]
-    public class EntitySnapshot
-    {
-        [DataMember]
-        public string ProjectName
+        [DataContract]
+        class EntitySnapshot
         {
-            get;
-            set;
-        }
-        [DataMember]
-        public string UniqueName
-        {
-            get;
-            set;
-        }
+            [DataMember]
+            public string ProjectName
+            {
+                get;
+                set;
+            }
+            [DataMember]
+            public string UniqueName
+            {
+                get;
+                set;
+            }
 
-        [DataMember]
-        public ICollection<EntrySnapshot> Entries
-        {
-            get;
-            set;
-        }
-    }
-
-    [DataContract]
-    public class EntrySnapshot
-    {
-        [DataMember]
-        public string Key
-        {
-            get;
-            set;
+            [DataMember]
+            public ICollection<EntrySnapshot> Entries
+            {
+                get;
+                set;
+            }
         }
 
-        [DataMember]
-        public ICollection<DataSnapshot> Data
+        [DataContract]
+        class EntrySnapshot
         {
-            get;
-            set;
-        }
-    }
+            [DataMember]
+            public string Key
+            {
+                get;
+                set;
+            }
 
-    [DataContract]
-    public class DataSnapshot
-    {
-        [DataMember(Name = "L", EmitDefaultValue = false)]
-        public string Language
-        {
-            get;
-            set;
-        }
-
-        [DataMember(Name = "C", EmitDefaultValue = false)]
-        public string Comment
-        {
-            get;
-            set;
+            [DataMember]
+            public ICollection<DataSnapshot> Data
+            {
+                get;
+                set;
+            }
         }
 
-        [DataMember(Name = "T", EmitDefaultValue = false)]
-        public string Text
+        [DataContract]
+        class DataSnapshot
         {
-            get;
-            set;
+            [DataMember(Name = "L", EmitDefaultValue = false)]
+            public string Language
+            {
+                get;
+                set;
+            }
+
+            [DataMember(Name = "C", EmitDefaultValue = false)]
+            public string Comment
+            {
+                get;
+                set;
+            }
+
+            [DataMember(Name = "T", EmitDefaultValue = false)]
+            public string Text
+            {
+                get;
+                set;
+            }
         }
     }
 }

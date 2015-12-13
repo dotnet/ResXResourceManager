@@ -276,12 +276,12 @@
               </Button>
               <Separator />
               <Menu VerticalAlignment="Center">
-                <MenuItem  Padding="0">
+                <MenuItem Padding="2">
                   <MenuItem.Header>
                     <StackPanel Orientation="Horizontal">
                       <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/excel.png" />
                       <Decorator Width="2" />
-                      <Path Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="Black" VerticalAlignment="Center" Margin="2"/>
+                      <Path Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="Black" VerticalAlignment="Center"/>
                     </StackPanel>
                   </MenuItem.Header>
                   <MenuItem Header="{x:Static properties:Resources.ExportExcelAll}"
@@ -292,21 +292,22 @@
                   <MenuItem Header="{x:Static properties:Resources.ImportExcel}"
                             Command="{Binding ImportExcelCommand, Converter={StaticResource ImportExcelCommandConverter}}" />
                 </MenuItem>
-                <MenuItem Padding="0">
+                <MenuItem Padding="2">
                   <MenuItem.Header>
                     <StackPanel Orientation="Horizontal" ToolTip="{Binding LoadedSnapshot}" Background="Transparent">
-                      <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/snapshot.png" />
+                      <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/snapshot.png" >
+                        <Image.Style>
+                          <Style TargetType="Image">
+                            <Style.Triggers>
+                              <DataTrigger Binding="{Binding LoadedSnapshot}" Value="{x:Null}">
+                                <Setter Property="Opacity" Value=".5"/>
+                              </DataTrigger>
+                            </Style.Triggers>
+                          </Style>
+                        </Image.Style>
+                      </Image>
                       <Decorator Width="2" />
-                      <Path Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="Black" VerticalAlignment="Center" Margin="2"/>
-                      <StackPanel.Style>
-                        <Style TargetType="StackPanel">
-                          <Style.Triggers>
-                            <DataTrigger Binding="{Binding LoadedSnapshot}" Value="{x:Null}">
-                              <Setter Property="Opacity" Value=".4"/>
-                            </DataTrigger>
-                          </Style.Triggers>
-                        </Style>
-                      </StackPanel.Style>
+                      <Path Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="Black" VerticalAlignment="Center" />
                     </StackPanel>
                   </MenuItem.Header>
                   <MenuItem Header="{x:Static properties:Resources.CreateSnapshot}" Command="{Binding CreateSnapshotCommand, Converter={StaticResource CreateSnapshotCommandConverter}}"/>

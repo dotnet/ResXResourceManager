@@ -232,7 +232,7 @@
         public void AddNewKey(ResourceEntity entity, string key)
         {
             Contract.Requires(entity != null);
-            Contract.Requires(!String.IsNullOrEmpty(key));
+            Contract.Requires(!string.IsNullOrEmpty(key));
 
             if (!entity.CanEdit(null))
                 return;
@@ -240,6 +240,9 @@
             var entry = entity.Add(key);
             if (entry == null)
                 return;
+
+            if (_snapshot != null)
+                ResourceEntities.LoadSnapshot(_snapshot);
 
             _selectedTableEntries = new ObservableCollection<ResourceTableEntry> { entry };
             OnPropertyChanged(() => SelectedTableEntries);
