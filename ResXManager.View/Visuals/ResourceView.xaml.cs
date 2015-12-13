@@ -91,7 +91,7 @@
                 DefaultExt = ".snapshot",
                 Filter = "Snapshots|*.snapshot|All Files|*.*",
                 FilterIndex = 0,
-                FileName = DateTime.Today.ToShortDateString()
+                FileName = DateTime.Today.ToShortDateString().ReplaceInvalidFileNameChars('_')
             };
 
             if (!dlg.ShowDialog().GetValueOrDefault())

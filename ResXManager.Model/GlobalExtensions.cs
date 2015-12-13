@@ -2,10 +2,7 @@
 {
     using System.Diagnostics.Contracts;
     using System.IO;
-    using System.Linq;
     using System.Text.RegularExpressions;
-    using System.Windows;
-    using System.Windows.Interactivity;
     using System.Xml.Linq;
 
     using TomsToolbox.Core;
@@ -44,6 +41,15 @@
             Contract.Ensures(Contract.Result<string>() != null);
 
             return element.Attribute(name).Maybe().Return(x => x.Value, string.Empty);
+        }
+
+        public static string ReplaceInvalidFileNameChars(this string value, char replacement)
+        {
+            Contract.Requires(value != null);
+
+            Path.GetInvalidFileNameChars().ForEach(c => value = value.Replace(c, replacement));
+
+            return value;
         }
     }
 }
