@@ -183,12 +183,15 @@
     <value>In ein einziges Arbeitsblatt</value>
   </data>
   <data name="StringFormatParameterMismatchError" xml:space="preserve">
-    <value>Dieser Text enthält String-Format Parameterinkonsistenzen!</value>
+    <value>Warnung: Dieser Text enthält String-Format Parameterinkonsistenzen!</value>
   </data>
   <data name="DuplicateKeyHandling_Fail" xml:space="preserve">
     <value>Eine Fehlermeldung anzeigen und die Datei nicht laden.</value>
   </data>
   <data name="DuplicateKeyHandling_Rename" xml:space="preserve">
     <value>Doppelte Schlüssel umbenennen ("_Duplicate[#]" anhängen)</value>
+  </data>
+  <data name="SnapshotAnnotation" xml:space="preserve">
+    <value>Snapshot: "{0}"</value>
   </data>
 </root>

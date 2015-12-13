@@ -6,6 +6,7 @@
              xmlns:windows="clr-namespace:System.Windows;assembly=PresentationFramework"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ix="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:model="urn:ResXManager.Model"
              xmlns:toms="urn:TomsToolbox"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
@@ -20,10 +21,21 @@
              d:DataContext="{d:DesignInstance visuals:ResourceViewModel}">
   <UserControl.Resources>
 
+    <Color x:Key="HighlightColor">#FFE3E3</Color>
+    <SolidColorBrush x:Key="HighlightBrush" Color="{StaticResource HighlightColor}"/>
+    <LinearGradientBrush x:Key="HatchBrush" StartPoint="0,0" EndPoint="4,4" SpreadMethod="Repeat" MappingMode="Absolute">
+      <GradientStop Offset="0" Color="{StaticResource HighlightColor}" />
+      <GradientStop Offset="0.75" Color="{StaticResource HighlightColor}" />
+      <GradientStop Offset="0.75" Color="DarkGray" />
+      <GradientStop Offset="1" Color="DarkGray" />
+    </LinearGradientBrush>
+
     <toms:ConfirmedCommandConverter x:Key="DeleteCommandConverter" Executing="DeleteCommandConverter_Executing" />
     <toms:ConfirmedCommandConverter x:Key="CutCommandConverter" Executing="CutCommandConverter_Executing" />
     <toms:ConfirmedCommandConverter x:Key="ImportExcelCommandConverter" Executing="ImportExcelCommandConverter_Executing" Error="CommandConverter_Error" />
     <toms:ConfirmedCommandConverter x:Key="ExportExcelCommandConverter" Executing="ExportExcelCommandConverter_Executing" Error="CommandConverter_Error" />
+    <toms:ConfirmedCommandConverter x:Key="CreateSnapshotCommandConverter" Executing="CreateSnapshotCommandConverter_Executing" Error="CommandConverter_Error" />
+    <toms:ConfirmedCommandConverter x:Key="LoadSnapshotCommandConverter" Executing="LoadSnapshotCommandConverter_Executing" Error="CommandConverter_Error" />
     <toms:ConfirmedCommandConverter x:Key="ErrorHandlerCommandConverter" Error="CommandConverter_Error" />
 
     <Style TargetType="{x:Type Control}" x:Key="SingleSelectElementStyle">
@@ -61,13 +73,6 @@
         <PropertyGroupDescription PropertyName="Owner" />
       </CollectionViewSource.GroupDescriptions>
     </CollectionViewSource>
-
-    <LinearGradientBrush x:Key="HatchBrush" StartPoint="0,0" EndPoint="4,4" SpreadMethod="Repeat" MappingMode="Absolute">
-      <GradientStop Offset="0" Color="LightCoral" />
-      <GradientStop Offset="0.75" Color="LightCoral" />
-      <GradientStop Offset="0.75" Color="Gray" />
-      <GradientStop Offset="1" Color="Gray" />
-    </LinearGradientBrush>
 
   </UserControl.Resources>
 
@@ -270,13 +275,13 @@
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/add.png" />
               </Button>
               <Separator />
-              <Menu>
-                <MenuItem>
+              <Menu VerticalAlignment="Center">
+                <MenuItem  Padding="0">
                   <MenuItem.Header>
                     <StackPanel Orientation="Horizontal">
                       <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/excel.png" />
-                      <Decorator Width="4" />
-                      <Path Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="Black" VerticalAlignment="Center" />
+                      <Decorator Width="2" />
+                      <Path Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="Black" VerticalAlignment="Center" Margin="2"/>
                     </StackPanel>
                   </MenuItem.Header>
                   <MenuItem Header="{x:Static properties:Resources.ExportExcelAll}"
@@ -286,6 +291,27 @@
                             CommandParameter="{Binding ElementName=DataGrid, Converter={x:Static converters:DataGridToSelectionScopeConverter.Default}}" />
                   <MenuItem Header="{x:Static properties:Resources.ImportExcel}"
                             Command="{Binding ImportExcelCommand, Converter={StaticResource ImportExcelCommandConverter}}" />
+                </MenuItem>
+                <MenuItem Padding="0">
+                  <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal" ToolTip="{Binding LoadedSnapshot}" Background="Transparent">
+                      <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/snapshot.png" />
+                      <Decorator Width="2" />
+                      <Path Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="Black" VerticalAlignment="Center" Margin="2"/>
+                      <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                          <Style.Triggers>
+                            <DataTrigger Binding="{Binding LoadedSnapshot}" Value="{x:Null}">
+                              <Setter Property="Opacity" Value=".4"/>
+                            </DataTrigger>
+                          </Style.Triggers>
+                        </Style>
+                      </StackPanel.Style>
+                    </StackPanel>
+                  </MenuItem.Header>
+                  <MenuItem Header="{x:Static properties:Resources.CreateSnapshot}" Command="{Binding CreateSnapshotCommand, Converter={StaticResource CreateSnapshotCommandConverter}}"/>
+                  <MenuItem Header="{x:Static properties:Resources.LoadSnapshot}" Command="{Binding LoadSnapshotCommand, Converter={StaticResource LoadSnapshotCommandConverter}}"/>
+                  <MenuItem Header="{x:Static properties:Resources.ClearSnapshot}" Command="{Binding ClearSnapshotCommand}"/>
                 </MenuItem>
               </Menu>
               <Separator />
@@ -410,7 +436,7 @@
             <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
               <Style.Triggers>
                 <DataTrigger Binding="{Binding IsDuplicateKey}" Value="True">
-                  <Setter Property="Background" Value="LightCoral" />
+                  <Setter Property="Background" Value="{StaticResource HighlightBrush}" />
                 </DataTrigger>
                 <Trigger Property="IsSelected" Value="True">
                   <Setter Property="Background" Value="{x:Static SystemColors.HighlightBrush}" />
@@ -422,12 +448,19 @@
           <DataGrid.CellStyle>
             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
 
-              <Setter Property="Background" Value="Orange" />
-              <Setter Property="ToolTip" Value="{Binding Path=(tools:ColumnManager.CellErrors), RelativeSource={RelativeSource Mode=Self}}" />
+              <Setter Property="BorderThickness" Value="0"/>
+              <Setter Property="Background" Value="{StaticResource HighlightBrush}" />
+              <Setter Property="ToolTip">
+                <Setter.Value>
+                  <ToolTip>
+                    <ItemsControl ItemsSource="{Binding Path=(tools:ColumnManager.CellAnnotations), RelativeSource={RelativeSource Mode=Self}}" />
+                  </ToolTip>
+                </Setter.Value>
+              </Setter>
 
               <Style.Triggers>
 
-                <DataTrigger Binding="{Binding Path=(tools:ColumnManager.CellErrors), RelativeSource={RelativeSource Mode=Self}}" Value="{x:Null}">
+                <DataTrigger Binding="{Binding Path=(tools:ColumnManager.CellAnnotations).Count, RelativeSource={RelativeSource Mode=Self}, FallbackValue=0}" Value="0">
                   <Setter Property="Background" Value="{x:Null}" />
                   <Setter Property="ToolTip" Value="{x:Null}" />
                 </DataTrigger>
@@ -438,7 +471,7 @@
                     <Condition Binding="{Binding Path=Content.Text, RelativeSource={RelativeSource Mode=Self}, UpdateSourceTrigger=PropertyChanged}" Value="" />
                   </MultiDataTrigger.Conditions>
                   <MultiDataTrigger.Setters>
-                    <Setter Property="Background" Value="LightCoral" />
+                    <Setter Property="Background" Value="{StaticResource HighlightBrush}" />
                   </MultiDataTrigger.Setters>
                 </MultiDataTrigger>
 
@@ -480,9 +513,17 @@
             <dgx:BeginEditOnCtrlEnterBehavior />
             <dgx:DisableTargetWhileEditingBehavior Target="{Binding ElementName=ToolBar}" />
             <dgx:ExtendedStarSizeBehavior />
-            <behaviors:ShowErrorsOnlyBehavior ToggleButton="{Binding ElementName=ErrorsOnlyFilterButton}" />
+            <behaviors:ShowErrorsOnlyBehavior x:Name="ShowErrorsOnlyBehavior" ToggleButton="{Binding ElementName=ErrorsOnlyFilterButton}" />
             <behaviors:DataGridTryBeginEditBehavior />
           </i:Interaction.Behaviors>
+
+          <i:Interaction.Triggers>
+            <ix:PropertyChangedTrigger Binding="{Binding LoadedSnapshot}">
+              <ix:PropertyChangedTrigger.Actions>
+                <ix:CallMethodAction TargetObject="{Binding ElementName=ShowErrorsOnlyBehavior}" MethodName="Refresh"/>
+              </ix:PropertyChangedTrigger.Actions>
+            </ix:PropertyChangedTrigger>
+          </i:Interaction.Triggers>
         </DataGrid>
       </Grid>
     </DockPanel>

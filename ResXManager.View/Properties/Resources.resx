@@ -143,7 +143,7 @@
     <value>Grouped view</value>
   </data>
   <data name="ShowOnlyMissingToolTip" xml:space="preserve">
-    <value>Show only lines with missing strings</value>
+    <value>Show only lines with warnings or changes</value>
   </data>
   <data name="ChooseColumnsToolTip" xml:space="preserve">
     <value>Choose columns</value>
@@ -364,5 +364,14 @@
   </data>
   <data name="PasteFailed" xml:space="preserve">
     <value>Error parsing the data from clipboard:</value>
+  </data>
+  <data name="CreateSnapshot" xml:space="preserve">
+    <value>Create Snapshot</value>
+  </data>
+  <data name="LoadSnapshot" xml:space="preserve">
+    <value>Load Snapshot</value>
+  </data>
+  <data name="ClearSnapshot" xml:space="preserve">
+    <value>Clear Snapshot</value>
   </data>
 </root>

@@ -36,10 +36,10 @@
             DependencyProperty.RegisterAttached("ResourceFileExists", typeof(bool), typeof(ColumnManager), new FrameworkPropertyMetadata(true));
 
         /// <summary>
-        /// Identifies the CellErrors attached property
+        /// Identifies the CellAnnotations attached property
         /// </summary>
-        public static readonly DependencyProperty CellErrorsProperty =
-            DependencyProperty.RegisterAttached("CellErrors", typeof(string), typeof(ColumnManager), new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty CellAnnotationsProperty =
+            DependencyProperty.RegisterAttached("CellAnnotations", typeof(ICollection<string>), typeof(ColumnManager), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
         public static void SetupColumns(this DataGrid dataGrid, ResourceManager resourceManager)
         {
@@ -250,12 +250,15 @@
             var cellStyle = new Style(typeof(DataGridCell), dataGrid.CellStyle);
             cellStyle.Setters.Add(new Setter(ResourceFileExistsProperty, new Binding(@"FileExists[" + key + @"]")));
 
+            var commentCellStyle = new Style(typeof(DataGridCell), cellStyle);
+            commentCellStyle.Setters.Add(new Setter(CellAnnotationsProperty, new Binding(@"CommentAnnotations[" + key + @"]")));
+
             var commentColumn = new DataGridTextColumn
             {
                 Header = new CommentHeader(resourceManager, cultureKey),
                 Binding = new Binding(@"Comments[" + key + @"]"),
                 MinWidth = 50,
-                CellStyle = cellStyle,
+                CellStyle = commentCellStyle,
                 Width = new DataGridLength(1, DataGridLengthUnitType.Star),
                 Visibility = VisibleCommentColumns.Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Visible : Visibility.Hidden
             };
@@ -263,7 +266,7 @@
             columns.AddLanguageColumn(commentColumn, languageBinding, flowDirectionBinding);
 
             var textCellStyle = new Style(typeof(DataGridCell), cellStyle);
-            cellStyle.Setters.Add(new Setter(CellErrorsProperty, new Binding(@"Errors[" + key + @"]")));
+            textCellStyle.Setters.Add(new Setter(CellAnnotationsProperty, new Binding(@"ValueAnnotations[" + key + @"]")));
 
             var column = new DataGridTextColumn
             {

@@ -122,6 +122,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Clear Snapshot.
+        /// </summary>
+        public static string ClearSnapshot {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ClearSnapshot", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to The number of references found in code files. This....
         /// </summary>
         public static string CodeReferencesToolTip {
@@ -288,6 +298,16 @@ namespace tomenglertde.ResXManager.View.Properties {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CopyToolTip", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Create Snapshot.
+        /// </summary>
+        public static string CreateSnapshot {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("CreateSnapshot", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -552,6 +572,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Load Snapshot.
+        /// </summary>
+        public static string LoadSnapshot {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("LoadSnapshot", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Multiple selection..
         /// </summary>
         public static string MultipleSelection {
@@ -742,7 +772,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Show only lines with missing strings.
+        ///   Looks up a localized string similar to Show only lines with warnings or changes.
         /// </summary>
         public static string ShowOnlyMissingToolTip {
             get {
@@ -920,6 +950,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         ChooseColumnsToolTip,
         /// <summary>
+        ///   Looks up a localized string similar to Clear Snapshot.
+        /// </summary>
+        ClearSnapshot,
+        /// <summary>
         ///   Looks up a localized string similar to The number of references found in code files. This....
         /// </summary>
         CodeReferencesToolTip,
@@ -987,6 +1021,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Copy selected rows (Ctrl+C).
         /// </summary>
         CopyToolTip,
+        /// <summary>
+        ///   Looks up a localized string similar to Create Snapshot.
+        /// </summary>
+        CreateSnapshot,
         /// <summary>
         ///   Looks up a localized string similar to Cut (Ctrl+X).
         /// </summary>
@@ -1092,6 +1130,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         LikeButtonToolTip,
         /// <summary>
+        ///   Looks up a localized string similar to Load Snapshot.
+        /// </summary>
+        LoadSnapshot,
+        /// <summary>
         ///   Looks up a localized string similar to Multiple selection..
         /// </summary>
         MultipleSelection,
@@ -1168,7 +1210,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         ShellTabHeader_Translate,
         /// <summary>
-        ///   Looks up a localized string similar to Show only lines with missing strings.
+        ///   Looks up a localized string similar to Show only lines with warnings or changes.
         /// </summary>
         ShowOnlyMissingToolTip,
         /// <summary>
@@ -1315,8 +1357,6 @@ namespace tomenglertde.ResXManager.View.Properties {
             return Resources.ResourceManager.GetString(value);
         }
     }
-
-
 
     /// <summary>
     /// Specifies a localized display name for an object.

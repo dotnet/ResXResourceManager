@@ -279,7 +279,17 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to This item contains string format parameter mismatc....
+        ///   Looks up a localized string similar to Snapshot: "{0}".
+        /// </summary>
+        public static string SnapshotAnnotation {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("SnapshotAnnotation", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Warning: This item contains string format paramete....
         /// </summary>
         public static string StringFormatParameterMismatchError {
             get {
@@ -398,7 +408,11 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         Neutral,
         /// <summary>
-        ///   Looks up a localized string similar to This item contains string format parameter mismatc....
+        ///   Looks up a localized string similar to Snapshot: "{0}".
+        /// </summary>
+        SnapshotAnnotation,
+        /// <summary>
+        ///   Looks up a localized string similar to Warning: This item contains string format paramete....
         /// </summary>
         StringFormatParameterMismatchError,
         /// <summary>
@@ -497,8 +511,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
             return Resources.ResourceManager.GetString(value);
         }
     }
-
-
 
     /// <summary>
     /// Specifies a localized display name for an object.

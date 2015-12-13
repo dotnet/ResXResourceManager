@@ -166,7 +166,7 @@
     <value>Ein regulärer Ausdruck zum Filtern der Dateien</value>
   </data>
   <data name="ShowOnlyMissingToolTip" xml:space="preserve">
-    <value>Nur Zeilen mit fehlenden Einträgen anzeigen</value>
+    <value>Nur Zeilen anzeigen, die Warnungen oder Änderungen enthalten</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Löschen (Entf)</value>
@@ -353,5 +353,14 @@
   </data>
   <data name="PasteFailed" xml:space="preserve">
     <value>Fehler beim interpretieren der Daten aus der Zwischenablage:</value>
+  </data>
+  <data name="CreateSnapshot" xml:space="preserve">
+    <value>Snapshot erzeugen</value>
+  </data>
+  <data name="LoadSnapshot" xml:space="preserve">
+    <value>Snapshot laden</value>
+  </data>
+  <data name="ClearSnapshot" xml:space="preserve">
+    <value>Snapshot entladen</value>
   </data>
 </root>

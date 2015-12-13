@@ -1,11 +1,16 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel.Composition;
     using System.Diagnostics.Contracts;
+    using System.IO;
     using System.Linq;
     using System.Windows;
     using System.Windows.Input;
+
+    using Newtonsoft.Json;
 
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
@@ -19,6 +24,7 @@
     class ResourceViewModel : ObservableObject, IComposablePart
     {
         private readonly ResourceManager _resourceManager;
+        private string _loadedSnapshot;
 
         [ImportingConstructor]
         public ResourceViewModel(ResourceManager resourceManager)
@@ -32,6 +38,18 @@
             get
             {
                 return _resourceManager;
+            }
+        }
+
+        public string LoadedSnapshot
+        {
+            get
+            {
+                return _loadedSnapshot;
+            }
+            set
+            {
+                SetProperty(ref _loadedSnapshot, value, () => LoadedSnapshot);
             }
         }
 
@@ -123,6 +141,46 @@
 
                 return new DelegateCommand(_resourceManager.Reload);
             }
+        }
+
+        public ICommand CreateSnapshotCommand
+        {
+            get
+            {
+                return new DelegateCommand<string>(CreateSnapshot);
+            }
+        }
+
+        public ICommand LoadSnapshotCommand
+        {
+            get
+            {
+                return new DelegateCommand<string>(LoadSnapshot);
+            }
+        }
+
+        public ICommand ClearSnapshotCommand
+        {
+            get
+            {
+                return new DelegateCommand(() => LoadSnapshot(null));
+            }
+        }
+
+        private void LoadSnapshot(string fileName)
+        {
+            _resourceManager.LoadSnapshot(string.IsNullOrEmpty(fileName) ? null : File.ReadAllText(fileName));
+
+            LoadedSnapshot = fileName;
+        }
+
+        private void CreateSnapshot(string fileName)
+        {
+            var snapshot = _resourceManager.CreateSnapshot();
+
+            File.WriteAllText(fileName, snapshot);
+
+            LoadedSnapshot = fileName;
         }
 
         private bool CanDelete()

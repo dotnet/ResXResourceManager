@@ -82,6 +82,47 @@
             _resourceManager.LanguageAdded(culture);
         }
 
+        private void CreateSnapshotCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        {
+            var dlg = new SaveFileDialog
+            {
+                AddExtension = true,
+                CheckPathExists = true,
+                DefaultExt = ".snapshot",
+                Filter = "Snapshots|*.snapshot|All Files|*.*",
+                FilterIndex = 0,
+                FileName = DateTime.Today.ToShortDateString()
+            };
+
+            if (!dlg.ShowDialog().GetValueOrDefault())
+                e.Cancel = true;
+            else
+                e.Parameter = dlg.FileName;
+
+            WaitCursor.Start(this);
+        }
+
+        private void LoadSnapshotCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        {
+            var dlg = new OpenFileDialog
+            {
+                AddExtension = true,
+                CheckPathExists = true,
+                CheckFileExists = true,
+                DefaultExt = ".snapshot",
+                Filter = "Snapshots|*.snapshot|All Files|*.*",
+                FilterIndex = 0,
+                Multiselect = false
+            };
+
+            if (!dlg.ShowDialog().GetValueOrDefault())
+                e.Cancel = true;
+            else
+                e.Parameter = dlg.FileName;
+
+            WaitCursor.Start(this);
+        }
+
         private void ExportExcelCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
         {
             var dlg = new SaveFileDialog

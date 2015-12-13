@@ -45,6 +45,7 @@
         private ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
 
         private string _entityFilter;
+        private string _snapshot;
 
         public event EventHandler<LanguageEventArgs> LanguageSaved;
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
@@ -311,6 +312,8 @@
             var reload = _resourceEntities.Any();
 
             _resourceEntities = new ObservableCollection<ResourceEntity>(entities);
+            _resourceEntities.LoadSnapshot(_snapshot);
+
             _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
             if (!string.IsNullOrEmpty(_entityFilter))
                 ApplyEntityFilter(_entityFilter);
@@ -376,7 +379,7 @@
             }
         }
 
-        void ResourceEntity_LanguageAdded(object sender, LanguageChangedEventArgs e)
+        private void ResourceEntity_LanguageAdded(object sender, LanguageChangedEventArgs e)
         {
             var cultureKey = e.Language.CultureKey;
 
@@ -488,6 +491,20 @@
             }
 
             _filteredResourceEntities.CollectionView.Filter = null;
+        }
+
+        public void LoadSnapshot(string value)
+        {
+            _snapshot = value;
+
+            ResourceEntities.LoadSnapshot(value);
+        }
+
+        public string CreateSnapshot()
+        {
+            Contract.Ensures(Contract.Result<string>() != null);
+
+            return _snapshot = ResourceEntities.CreateSnapshot();
         }
 
         [ContractInvariantMethod]

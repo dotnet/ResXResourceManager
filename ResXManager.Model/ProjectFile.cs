@@ -91,6 +91,7 @@
 
         public void Save(XDocument document)
         {
+            Contract.Requires(document != null);
             try
             {
                 IsSaving = true;

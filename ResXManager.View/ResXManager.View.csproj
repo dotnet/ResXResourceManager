@@ -628,6 +628,9 @@
     <Resource Include="Assets\references.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\snapshot.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Properties\Resources.Designer.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
