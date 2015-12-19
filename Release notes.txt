@@ -1,3 +1,6 @@
+1.0.0.66:
+* WI4604, WI4638, WI4642: New snapshot feature allows to filter for changes (https://resxresourcemanager.codeplex.com/wikipage?title=Snapshots)
+* WI4657: Allow to add tab characters in the top-right edit field.
 1.0.0.65:
 * WI4646: Cannot add new key time to time - exception triggered.
 * WI4652: Code generator can be selected in the project list (VS Extension only).
