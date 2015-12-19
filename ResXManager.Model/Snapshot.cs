@@ -47,19 +47,31 @@
         {
             Contract.Requires(resourceEntities != null);
 
-            var clearSnapshot = string.IsNullOrEmpty(snapshot);
+            try
+            {
+                if (string.IsNullOrEmpty(snapshot))
+                {
+                    ClearSnapshot(resourceEntities);
+                }
+                else
+                {
+                    var entitySnapshots = JsonConvert.DeserializeObject<ICollection<EntitySnapshot>>(snapshot) ?? new EntitySnapshot[0];
+                    resourceEntities.Load(entitySnapshots);
+                }
+            }
+            catch
+            {
+                // ClearSnapshot(resourceEntities);
+                throw;
+            }
+        }
 
-            var initialValue = clearSnapshot ? null : _emptyDictionary;
+        private static void ClearSnapshot(IEnumerable<ResourceEntity> resourceEntities)
+        {
+            Contract.Requires(resourceEntities != null);
 
             resourceEntities.SelectMany(entitiy => entitiy.Entries)
-                .ForEach(entry => entry.Snapshot = initialValue);
-
-            if (clearSnapshot)
-                return;
-
-            var entitySnapshots = JsonConvert.DeserializeObject<ICollection<EntitySnapshot>>(snapshot) ?? new EntitySnapshot[0];
-            
-            resourceEntities.Load(entitySnapshots);
+                .ForEach(entry => entry.Snapshot = null);
         }
 
         private static void Load(this IEnumerable<ResourceEntity> resourceEntities, IEnumerable<EntitySnapshot> entitySnapshots)
@@ -100,6 +112,7 @@
                 get;
                 set;
             }
+
             [DataMember]
             public string UniqueName
             {

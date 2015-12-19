@@ -241,8 +241,8 @@
             if (entry == null)
                 return;
 
-            if (_snapshot != null)
-                ResourceEntities.LoadSnapshot(_snapshot);
+            if (!string.IsNullOrEmpty(_snapshot))
+                _resourceEntities.LoadSnapshot(_snapshot);
 
             _selectedTableEntries = new ObservableCollection<ResourceTableEntry> { entry };
             OnPropertyChanged(() => SelectedTableEntries);
@@ -315,7 +315,9 @@
             var reload = _resourceEntities.Any();
 
             _resourceEntities = new ObservableCollection<ResourceEntity>(entities);
-            _resourceEntities.LoadSnapshot(_snapshot);
+
+            if (!string.IsNullOrEmpty(_snapshot))
+                _resourceEntities.LoadSnapshot(_snapshot);
 
             _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
             if (!string.IsNullOrEmpty(_entityFilter))
@@ -498,9 +500,9 @@
 
         public void LoadSnapshot(string value)
         {
-            _snapshot = value;
-
             ResourceEntities.LoadSnapshot(value);
+
+            _snapshot = value;
         }
 
         public string CreateSnapshot()
