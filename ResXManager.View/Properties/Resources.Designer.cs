@@ -122,16 +122,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Clear Snapshot.
-        /// </summary>
-        public static string ClearSnapshot {
-            get {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("ClearSnapshot", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to The number of references found in code files. This....
         /// </summary>
         public static string CodeReferencesToolTip {
@@ -913,6 +903,16 @@ namespace tomenglertde.ResXManager.View.Properties {
                 return ResourceManager.GetString("TranslatorConfiguration_SaveCredentials", resourceCulture) ?? string.Empty;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unload Snapshot.
+        /// </summary>
+        public static string UnloadSnapshot {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("UnloadSnapshot", resourceCulture) ?? string.Empty;
+            }
+        }
     }
 
     /// <summary>
@@ -949,10 +949,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Choose columns.
         /// </summary>
         ChooseColumnsToolTip,
-        /// <summary>
-        ///   Looks up a localized string similar to Clear Snapshot.
-        /// </summary>
-        ClearSnapshot,
         /// <summary>
         ///   Looks up a localized string similar to The number of references found in code files. This....
         /// </summary>
@@ -1268,6 +1264,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Save credentials (Credentials will be stored as cl....
         /// </summary>
         TranslatorConfiguration_SaveCredentials,
+        /// <summary>
+        ///   Looks up a localized string similar to Unload Snapshot.
+        /// </summary>
+        UnloadSnapshot,
     }
 
     /// <summary>

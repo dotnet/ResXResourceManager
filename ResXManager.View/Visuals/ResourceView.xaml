@@ -312,7 +312,7 @@
                   </MenuItem.Header>
                   <MenuItem Header="{x:Static properties:Resources.CreateSnapshot}" Command="{Binding CreateSnapshotCommand, Converter={StaticResource CreateSnapshotCommandConverter}}"/>
                   <MenuItem Header="{x:Static properties:Resources.LoadSnapshot}" Command="{Binding LoadSnapshotCommand, Converter={StaticResource LoadSnapshotCommandConverter}}"/>
-                  <MenuItem Header="{x:Static properties:Resources.ClearSnapshot}" Command="{Binding ClearSnapshotCommand}"/>
+                  <MenuItem Header="{x:Static properties:Resources.UnloadSnapshot}" Command="{Binding UnloadSnapshotCommand}"/>
                 </MenuItem>
               </Menu>
               <Separator />

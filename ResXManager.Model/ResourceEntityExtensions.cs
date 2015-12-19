@@ -132,16 +132,37 @@
         {
             Contract.Requires(dataColumnHeader != null);
 
-            return dataColumnHeader.StartsWith(CommentHeaderPrefix, StringComparison.OrdinalIgnoreCase) ? ColumnKind.Comment : ColumnKind.Data;
+            return dataColumnHeader.StartsWith(CommentHeaderPrefix, StringComparison.OrdinalIgnoreCase) ? ColumnKind.Comment : ColumnKind.Text;
         }
 
-        private static string GetEntryData(this ResourceTableEntry entry, CultureInfo culture, ColumnKind columnKind)
+        private static string GetEntryData(this ResourceTableEntry entry, CultureKey culture, ColumnKind columnKind)
         {
             Contract.Requires(entry != null);
 
+            var snapshot = entry.Snapshot;
+
+            if (snapshot != null)
+            {
+                ResourceData data;
+                if (!snapshot.TryGetValue(culture, out data) || (data == null))
+                    return null;
+
+                switch (columnKind)
+                {
+                    case ColumnKind.Text:
+                        return data.Text;
+
+                    case ColumnKind.Comment:
+                        return data.Comment;
+
+                    default:
+                        throw new InvalidOperationException("Invalid Column Kind");
+                }
+            }
+
             switch (columnKind)
             {
-                case ColumnKind.Data:
+                case ColumnKind.Text:
                     return entry.Values.GetValue(culture);
 
                 case ColumnKind.Comment:
@@ -158,7 +179,7 @@
 
             switch (columnKind)
             {
-                case ColumnKind.Data:
+                case ColumnKind.Text:
                     return entry.Values.SetValue(culture, text);
 
                 case ColumnKind.Comment:

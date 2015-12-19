@@ -14,8 +14,6 @@
 
     public static class Snapshot
     {
-        private static readonly IDictionary<CultureKey, ResourceData> _emptyDictionary = new Dictionary<CultureKey, ResourceData>();
-
         public static string CreateSnapshot(this ICollection<ResourceEntity> resourceEntities)
         {
             Contract.Requires(resourceEntities != null);
@@ -40,33 +38,25 @@
 
             resourceEntities.Load(entitySnapshots);
 
-            return JsonConvert.SerializeObject(entitySnapshots) ?? string.Empty; 
+            return JsonConvert.SerializeObject(entitySnapshots) ?? string.Empty;
         }
 
         public static void LoadSnapshot(this ICollection<ResourceEntity> resourceEntities, string snapshot)
         {
             Contract.Requires(resourceEntities != null);
 
-            try
+            if (string.IsNullOrEmpty(snapshot))
             {
-                if (string.IsNullOrEmpty(snapshot))
-                {
-                    ClearSnapshot(resourceEntities);
-                }
-                else
-                {
-                    var entitySnapshots = JsonConvert.DeserializeObject<ICollection<EntitySnapshot>>(snapshot) ?? new EntitySnapshot[0];
-                    resourceEntities.Load(entitySnapshots);
-                }
+                UnloadSnapshot(resourceEntities);
             }
-            catch
+            else
             {
-                // ClearSnapshot(resourceEntities);
-                throw;
+                var entitySnapshots = JsonConvert.DeserializeObject<ICollection<EntitySnapshot>>(snapshot) ?? new EntitySnapshot[0];
+                resourceEntities.Load(entitySnapshots);
             }
         }
 
-        private static void ClearSnapshot(IEnumerable<ResourceEntity> resourceEntities)
+        private static void UnloadSnapshot(IEnumerable<ResourceEntity> resourceEntities)
         {
             Contract.Requires(resourceEntities != null);
 

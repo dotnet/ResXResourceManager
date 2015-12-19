@@ -159,7 +159,7 @@
             }
         }
 
-        public ICommand ClearSnapshotCommand
+        public ICommand UnloadSnapshotCommand
         {
             get
             {

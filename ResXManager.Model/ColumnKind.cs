@@ -2,7 +2,7 @@ namespace tomenglertde.ResXManager.Model
 {
     public enum ColumnKind
     {
-        Data,
+        Text,
         Comment
     }
 }

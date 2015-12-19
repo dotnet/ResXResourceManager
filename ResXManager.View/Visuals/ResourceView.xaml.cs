@@ -131,7 +131,8 @@
                 CheckPathExists = true,
                 DefaultExt = ".xlsx",
                 Filter = "Excel Worksheets|*.xlsx|All Files|*.*",
-                FilterIndex = 0
+                FilterIndex = 0,
+                FileName = DateTime.Today.ToShortDateString().ReplaceInvalidFileNameChars('_')
             };
 
             if (!dlg.ShowDialog().GetValueOrDefault())

@@ -360,7 +360,7 @@
   <data name="LoadSnapshot" xml:space="preserve">
     <value>Snapshot laden</value>
   </data>
-  <data name="ClearSnapshot" xml:space="preserve">
+  <data name="UnloadSnapshot" xml:space="preserve">
     <value>Snapshot entladen</value>
   </data>
 </root>
