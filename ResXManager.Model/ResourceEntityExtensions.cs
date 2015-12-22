@@ -138,6 +138,7 @@
         private static string GetEntryData(this ResourceTableEntry entry, CultureKey culture, ColumnKind columnKind)
         {
             Contract.Requires(entry != null);
+            Contract.Requires(culture != null);
 
             var snapshot = entry.Snapshot;
 

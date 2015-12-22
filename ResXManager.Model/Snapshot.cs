@@ -84,6 +84,9 @@
 
         private static bool Equals(ResourceEntity entity, EntitySnapshot snapshot)
         {
+            Contract.Requires(entity != null);
+            Contract.Requires(snapshot != null);
+
             return string.Equals(entity.ProjectName, snapshot.ProjectName, StringComparison.OrdinalIgnoreCase)
                    && string.Equals(entity.UniqueName, snapshot.UniqueName, StringComparison.OrdinalIgnoreCase);
         }

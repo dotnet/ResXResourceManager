@@ -45,7 +45,7 @@
             _projectName = projectName;
             _baseName = baseName;
             _directory = directory;
-            _relativePath = GetRelativePath(directory, files);
+            _relativePath = GetRelativePath(files);
             _displayName = projectName + @" - " + _relativePath + baseName;
             _sortKey = string.Concat(@" - ", _displayName, _directory);
             _neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
@@ -75,30 +75,35 @@
             Contract.Assume(_languages.Any());
         }
 
-        private static string GetRelativePath(string directory, IEnumerable<ProjectFile> files)
+        private static string GetRelativePath(ICollection<ProjectFile> files)
         {
-            Contract.Requires(!string.IsNullOrEmpty(directory));
             Contract.Requires(files != null);
             Contract.Ensures(Contract.Result<string>() != null);
 
             var uniqueProjectName = files.Select(file => file.UniqueProjectName).FirstOrDefault();
-
             if (uniqueProjectName == null)
                 return string.Empty;
 
-            directory += Path.DirectorySeparatorChar;
-
-            var subFolder = Path.DirectorySeparatorChar + Path.GetDirectoryName(uniqueProjectName) + Path.DirectorySeparatorChar;
-            var pos = directory.LastIndexOf(subFolder, StringComparison.OrdinalIgnoreCase);
-            if (pos < 0)
+            var relativeFilePath = files.Select(file => file.RelativeFilePath).FirstOrDefault();
+            if (string.IsNullOrEmpty(relativeFilePath))
                 return string.Empty;
 
-            pos += subFolder.Length;
+            var relativeFileDirectory = Path.GetDirectoryName(relativeFilePath) + Path.DirectorySeparatorChar;
 
-            Contract.Assume(pos <= directory.Length);
-            var relativePath = directory.Substring(pos);
+            var relativeProjectPath = Path.GetDirectoryName(uniqueProjectName);
+            if (string.IsNullOrEmpty(relativeProjectPath))
+            {
+                return relativeFileDirectory;
+            }
 
-            return relativePath;
+            var relativeProjectDirectory = Path.GetDirectoryName(uniqueProjectName) + Path.DirectorySeparatorChar;
+            if ((relativeFileDirectory.Length > relativeProjectDirectory.Length)
+                && (relativeFileDirectory.StartsWith(relativeProjectDirectory)))
+            {
+                return relativeFileDirectory.Substring(relativeProjectDirectory.Length);
+            }
+
+            return string.Empty;
         }
 
         public event EventHandler<LanguageChangingEventArgs> LanguageChanging;
