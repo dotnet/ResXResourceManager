@@ -6,6 +6,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Xml.Linq;
 
     using TomsToolbox.Desktop;
 
@@ -81,29 +82,33 @@
             private set;
         }
 
-        public virtual string Content
+        public virtual XDocument Load()
         {
-            get
+            Contract.Ensures(Contract.Result<XDocument>() != null);
+
+            return XDocument.Load(FilePath);
+        }
+
+        public void Save(XDocument document)
+        {
+            Contract.Requires(document != null);
+            try
             {
-                Contract.Ensures(Contract.Result<string>() != null);
+                IsSaving = true;
 
-                return File.ReadAllText(FilePath);
+                InternalSave(document);
             }
-            set
+            finally
             {
-                Contract.Requires(value != null);
-
-                try
-                {
-                    IsSaving = true;
-
-                    File.WriteAllText(FilePath, value, Encoding.UTF8);
-                }
-                finally
-                {
-                    IsSaving = false;
-                }
+                IsSaving = false;
             }
+        }
+
+        protected virtual void InternalSave(XDocument document)
+        {
+            Contract.Requires(document != null);
+
+            document.Save(FilePath);
         }
 
         /// <summary>

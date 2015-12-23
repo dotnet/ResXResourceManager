@@ -47,8 +47,12 @@
             get
             {
                 var items = SelectedItemsCodeGenerators().ToArray();
+                var generator = items.FirstOrDefault();
 
-                return items.Length == 1 ? items[0] : CodeGenerator.None;
+                if ((items.Length == 1) && Enum.IsDefined(typeof(CodeGenerator), generator))
+                    return generator;
+
+                return CodeGenerator.None;
             }
         }
 

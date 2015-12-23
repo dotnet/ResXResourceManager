@@ -37,8 +37,8 @@
     <SupportUrl>https://resxresourcemanager.codeplex.com</SupportUrl>
     <ProductName>ResX Resource Manager</ProductName>
     <PublisherName>tom-englert.de</PublisherName>
-    <ApplicationRevision>64</ApplicationRevision>
-    <ApplicationVersion>1.0.0.64</ApplicationVersion>
+    <ApplicationRevision>66</ApplicationRevision>
+    <ApplicationVersion>1.0.0.66</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -163,7 +163,7 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' != 'Debug'">
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
@@ -172,7 +172,7 @@
   <PropertyGroup>
     <ManifestCertificateThumbprint>30B066A127A046DC56D01AFD38C932F11D29AC18</ManifestCertificateThumbprint>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' != 'Debug'">
     <ManifestKeyFile>ResXManager_Key.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>

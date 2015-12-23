@@ -8,8 +8,7 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows;
-
-    using EnvDTE;
+    using System.Xml.Linq;
 
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -20,11 +19,27 @@
 
     internal static class DteExtensions
     {
-        public static string TryGetContent(this EnvDTE.ProjectItem projectItem)
+        public static EnvDTE.Document TryGetDocument(this EnvDTE.ProjectItem projectItem)
+        {
+            if (projectItem == null)
+                return null;
+
+            try
+            {
+                return projectItem.Document;
+            }
+            catch (ExternalException)
+            {
+            }
+
+            return null;
+        }
+
+        public static XDocument TryGetContent(this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
 
-            return !projectItem.IsOpen ? null : TryGetContent(projectItem.Document);
+            return !projectItem.IsOpen ? null : TryGetContent(projectItem.TryGetDocument());
         }
 
         public static IEnumerable<VSITEMSELECTION> GetSelectedProjectItems(this IVsMonitorSelection monitorSelection)
@@ -80,21 +95,28 @@
 
         public static string GetMkDocument(this VSITEMSELECTION selection)
         {
-            string itemFullPath;
+            try
+            {
+                string itemFullPath;
 
-            // ReSharper disable once SuspiciousTypeConversion.Global
-            var vsProject = selection.pHier as IVsProject;
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                var vsProject = selection.pHier as IVsProject;
 
-            if (vsProject == null)
+                if (vsProject == null)
+                    return null;
+
+                vsProject.GetMkDocument(selection.itemid, out itemFullPath);
+
+                return itemFullPath;
+            }
+            catch (ExternalException)
+            {
                 return null;
-
-            vsProject.GetMkDocument(selection.itemid, out itemFullPath);
-
-            return itemFullPath;
+            }
         }
 
         [ContractVerification(false)]
-        private static string TryGetContent(EnvDTE.Document document)
+        private static XDocument TryGetContent(EnvDTE.Document document)
         {
             try
             {
@@ -105,25 +127,25 @@
                 if (textDocument == null)
                     return null;
 
-                return textDocument.CreateEditPoint().GetText(textDocument.EndPoint);
+                return XDocument.Parse(textDocument.CreateEditPoint().GetText(textDocument.EndPoint));
             }
-            catch
+            catch (ExternalException)
             {
             }
 
             return null;
         }
 
-        public static bool TrySetContent(this EnvDTE.ProjectItem projectItem, string text)
+        public static bool TrySetContent(this EnvDTE.ProjectItem projectItem, XDocument value)
         {
             Contract.Requires(projectItem != null);
-            Contract.Requires(text != null);
+            Contract.Requires(value != null);
 
-            return projectItem.IsOpen && TrySetContent(text, projectItem.Document);
+            return projectItem.IsOpen && TrySetContent(projectItem.TryGetDocument(), value);
         }
 
         [ContractVerification(false)]
-        private static bool TrySetContent(string text, EnvDTE.Document document)
+        private static bool TrySetContent(EnvDTE.Document document, XDocument value)
         {
             try
             {
@@ -134,12 +156,14 @@
                 if (textDocument == null)
                     return false;
 
+                var text = value.Declaration + Environment.NewLine + value;
+
                 textDocument.CreateEditPoint().ReplaceText(textDocument.EndPoint, text, 0);
                 document.Save();
 
                 return true;
             }
-            catch
+            catch (ExternalException)
             {
             }
 

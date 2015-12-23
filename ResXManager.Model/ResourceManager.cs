@@ -45,6 +45,7 @@
         private ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
 
         private string _entityFilter;
+        private string _snapshot;
 
         public event EventHandler<LanguageEventArgs> LanguageSaved;
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
@@ -231,7 +232,7 @@
         public void AddNewKey(ResourceEntity entity, string key)
         {
             Contract.Requires(entity != null);
-            Contract.Requires(!String.IsNullOrEmpty(key));
+            Contract.Requires(!string.IsNullOrEmpty(key));
 
             if (!entity.CanEdit(null))
                 return;
@@ -239,6 +240,9 @@
             var entry = entity.Add(key);
             if (entry == null)
                 return;
+
+            if (!string.IsNullOrEmpty(_snapshot))
+                _resourceEntities.LoadSnapshot(_snapshot);
 
             _selectedTableEntries = new ObservableCollection<ResourceTableEntry> { entry };
             OnPropertyChanged(() => SelectedTableEntries);
@@ -311,6 +315,10 @@
             var reload = _resourceEntities.Any();
 
             _resourceEntities = new ObservableCollection<ResourceEntity>(entities);
+
+            if (!string.IsNullOrEmpty(_snapshot))
+                _resourceEntities.LoadSnapshot(_snapshot);
+
             _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
             if (!string.IsNullOrEmpty(_entityFilter))
                 ApplyEntityFilter(_entityFilter);
@@ -376,7 +384,7 @@
             }
         }
 
-        void ResourceEntity_LanguageAdded(object sender, LanguageChangedEventArgs e)
+        private void ResourceEntity_LanguageAdded(object sender, LanguageChangedEventArgs e)
         {
             var cultureKey = e.Language.CultureKey;
 
@@ -488,6 +496,20 @@
             }
 
             _filteredResourceEntities.CollectionView.Filter = null;
+        }
+
+        public void LoadSnapshot(string value)
+        {
+            ResourceEntities.LoadSnapshot(value);
+
+            _snapshot = value;
+        }
+
+        public string CreateSnapshot()
+        {
+            Contract.Ensures(Contract.Result<string>() != null);
+
+            return _snapshot = ResourceEntities.CreateSnapshot();
         }
 
         [ContractInvariantMethod]

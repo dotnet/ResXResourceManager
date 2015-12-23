@@ -11,6 +11,7 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
 
+    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
     /// <summary>
@@ -24,7 +25,8 @@
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly ResourceLanguage _neutralLanguage;
         private readonly ResourceTableValues<bool> _fileExists;
-        private readonly ResourceTableValues<string> _errors;
+        private readonly ResourceTableValues<ICollection<string>> _valueAnnotations;
+        private readonly ResourceTableValues<ICollection<string>> _commentAnnotations;
 
         private string _key;
 
@@ -32,6 +34,7 @@
         private ResourceTableValues<string> _comments;
         private IList<CodeReference> _codeReferences;
         private double _index;
+        private IDictionary<CultureKey, ResourceData> _snapshot;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceTableEntry" /> class.
@@ -59,7 +62,9 @@
             _comments.ValueChanged += Comments_ValueChanged;
 
             _fileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
-            _errors = new ResourceTableValues<string>(_languages, GetErrors, (lang, value) => false);
+
+            _valueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
+            _commentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
 
             Contract.Assume(languages.Any());
             _neutralLanguage = languages.First().Value;
@@ -109,7 +114,7 @@
 
                 if (resourceLanguages.Any(language => language.KeyExists(value)) || !resourceLanguages.All(language => language.CanChange()))
                 {
-                    Dispatcher.BeginInvoke((Action)(() => OnPropertyChanged("Key")));
+                    Dispatcher.BeginInvoke(() => OnPropertyChanged(() => Key));
                     throw new InvalidOperationException("Key already exists: " + value);
                 }
 
@@ -178,13 +183,35 @@
             }
         }
 
-        [PropertyDependency("Values")]
-        public ResourceTableValues<string> Errors
+        [PropertyDependency("Values", "Snapshot")]
+        public ResourceTableValues<ICollection<string>> ValueAnnotations
         {
             get
             {
-                Contract.Ensures(Contract.Result<ResourceTableValues<string>>() != null);
-                return _errors;
+                Contract.Ensures(Contract.Result<ResourceTableValues<ICollection<string>>>() != null);
+
+                return _valueAnnotations;
+            }
+        }
+
+        [PropertyDependency("Comments", "Snapshot")]
+        public ResourceTableValues<ICollection<string>> CommentAnnotations
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ResourceTableValues<ICollection<string>>>() != null);
+
+                return _commentAnnotations;
+            }
+        }
+
+        public ICollection<CultureKey> Languages
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICollection<CultureKey>>() != null);
+
+                return _languages.Keys;
             }
         }
 
@@ -229,15 +256,6 @@
             }
         }
 
-        [PropertyDependency("Values", "IsInvariant")]
-        public bool HasAnyStringFormatParameterMismatches
-        {
-            get
-            {
-                return !IsInvariant && HasStringFormatParameterMismatches(_values.Select(lang => lang.GetValue(_key)));
-            }
-        }
-
         public IList<CodeReference> CodeReferences
         {
             get
@@ -265,6 +283,29 @@
             }
         }
 
+        public static IEqualityComparer<ResourceTableEntry> EqualityComparer
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<IEqualityComparer<ResourceTableEntry>>() != null);
+
+                return Comparer.Default;
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public IDictionary<CultureKey, ResourceData> Snapshot
+        {
+            get
+            {
+                return _snapshot;
+            }
+            set
+            {
+                SetProperty(ref _snapshot, value, () => Snapshot);
+            }
+        }
+
         public bool CanEdit(CultureInfo culture)
         {
             return _owner.CanEdit(culture);
@@ -283,6 +324,27 @@
             return HasStringFormatParameterMismatches(cultures.Select(lang => _values.GetValue(lang)));
         }
 
+        public bool HasSnapshotDifferences(IEnumerable<CultureKey> cultures)
+        {
+            Contract.Requires(cultures != null);
+
+            return _snapshot != null && cultures.Any(IsSnapshotDifferent);
+        }
+
+        private bool IsSnapshotDifferent(CultureKey culture)
+        {
+            Contract.Requires(culture != null);
+            Contract.Requires(_snapshot != null);
+
+            var snapshotValue = _snapshot.GetValueOrDefault(culture).Maybe().Return(x => x.Text) ?? string.Empty;
+            var currentValue = _values.GetValue(culture) ?? string.Empty;
+
+            var snapshotComment = _snapshot.GetValueOrDefault(culture).Maybe().Return(x => x.Comment) ?? string.Empty;
+            var currentComment = _comments.GetValue(culture) ?? string.Empty;
+
+            return !string.Equals(snapshotValue, currentValue) || !string.Equals(snapshotComment, currentComment);
+        }
+
         private void Values_ValueChanged(object sender, EventArgs e)
         {
             OnPropertyChanged(() => Values);
@@ -293,25 +355,51 @@
             OnPropertyChanged(() => Comment);
         }
 
-        private string GetErrors(ResourceLanguage arg)
+        private ICollection<string> GetValueAnnotations(ResourceLanguage language)
         {
-            Contract.Requires(arg != null);
+            Contract.Requires(language != null);
 
-            if (arg.IsNeutralLanguage)
-                return null;
+            return GetStringFormatParameterMismatchAnnotations(language)
+                .Concat(GetSnapshotDifferences(language, Values.GetValue(language.CultureKey), d => d.Text))
+                .ToArray();
+        }
 
-            var value = arg.GetValue(_key);
+        private ICollection<string> GetCommentAnnotations(ResourceLanguage language)
+        {
+            Contract.Requires(language != null);
+
+            return GetSnapshotDifferences(language, Comments.GetValue(language.CultureKey), d => d.Comment)
+                .ToArray();
+        }
+
+        private IEnumerable<string> GetSnapshotDifferences(ResourceLanguage language, string current, Func<ResourceData, string> selector)
+        {
+            var snapshot = _snapshot;
+            if (snapshot == null)
+                yield break;
+
+            var snapshotValue = snapshot.GetValueOrDefault(language.CultureKey).Maybe().Return(selector) ?? string.Empty;
+            if (snapshotValue.Equals(current ?? string.Empty))
+                yield break;
+
+            yield return string.Format(CultureInfo.CurrentCulture, Resources.SnapshotAnnotation, snapshotValue);
+        }
+
+        private IEnumerable<string> GetStringFormatParameterMismatchAnnotations(ResourceLanguage language)
+        {
+            if (language.IsNeutralLanguage)
+                yield break;
+
+            var value = language.GetValue(_key);
             if (string.IsNullOrEmpty(value))
-                return null;
+                yield break;
 
             var neutralValue = _neutralLanguage.GetValue(_key);
             if (string.IsNullOrEmpty(neutralValue))
-                return null;
+                yield break;
 
             if (HasStringFormatParameterMismatches(neutralValue, value))
-                return Resources.StringFormatParameterMismatchError;
-
-            return null;
+                yield return Resources.StringFormatParameterMismatchError;
         }
 
         private static bool HasStringFormatParameterMismatches(params string[] values)
@@ -370,16 +458,6 @@
                     throw new ArgumentNullException("obj");
 
                 return obj.Owner.GetHashCode() + obj.Key.GetHashCode();
-            }
-        }
-
-        public static IEqualityComparer<ResourceTableEntry> EqualityComparer
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IEqualityComparer<ResourceTableEntry>>() != null);
-
-                return Comparer.Default;
             }
         }
 

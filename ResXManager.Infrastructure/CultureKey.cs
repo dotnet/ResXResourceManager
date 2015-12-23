@@ -169,5 +169,12 @@
         }
 
         #endregion
- }
+
+        public static implicit operator CultureKey(CultureInfo culture)
+        {
+            Contract.Ensures(Contract.Result<CultureKey>() != null);
+            
+            return new CultureKey(culture);
+        }
+    }
 }

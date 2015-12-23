@@ -30,6 +30,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResXManager.Translators", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResXManager.Infrastructure", "ResXManager.Infrastructure\ResXManager.Infrastructure.csproj", "{A20586DF-CBE9-4A6F-807C-10960D13E848}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{632FD104-D77C-4342-A4C1-2EEFFB8011E5}"
+	ProjectSection(SolutionItems) = preProject
+		Assets\ChooseColumns.png = Assets\ChooseColumns.png
+		Assets\CopyPasteExport.png = Assets\CopyPasteExport.png
+		Assets\DetectCodeReferences.png = Assets\DetectCodeReferences.png
+		Assets\DetectCodeReferencesConfig.png = Assets\DetectCodeReferencesConfig.png
+		Assets\Invariant.png = Assets\Invariant.png
+		Assets\ShowOnlyErrors.png = Assets\ShowOnlyErrors.png
+		Assets\Snapshots.png = Assets\Snapshots.png
+		Assets\Translations.png = Assets\Translations.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 7

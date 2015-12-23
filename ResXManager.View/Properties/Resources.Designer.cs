@@ -292,6 +292,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Create Snapshot.
+        /// </summary>
+        public static string CreateSnapshot {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("CreateSnapshot", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Cut (Ctrl+X).
         /// </summary>
         public static string Cut {
@@ -552,6 +562,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Load Snapshot.
+        /// </summary>
+        public static string LoadSnapshot {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("LoadSnapshot", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Multiple selection..
         /// </summary>
         public static string MultipleSelection {
@@ -742,7 +762,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Show only lines with missing strings.
+        ///   Looks up a localized string similar to Show only lines with warnings or changes.
         /// </summary>
         public static string ShowOnlyMissingToolTip {
             get {
@@ -883,6 +903,16 @@ namespace tomenglertde.ResXManager.View.Properties {
                 return ResourceManager.GetString("TranslatorConfiguration_SaveCredentials", resourceCulture) ?? string.Empty;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unload Snapshot.
+        /// </summary>
+        public static string UnloadSnapshot {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("UnloadSnapshot", resourceCulture) ?? string.Empty;
+            }
+        }
     }
 
     /// <summary>
@@ -988,6 +1018,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         CopyToolTip,
         /// <summary>
+        ///   Looks up a localized string similar to Create Snapshot.
+        /// </summary>
+        CreateSnapshot,
+        /// <summary>
         ///   Looks up a localized string similar to Cut (Ctrl+X).
         /// </summary>
         Cut,
@@ -1092,6 +1126,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         LikeButtonToolTip,
         /// <summary>
+        ///   Looks up a localized string similar to Load Snapshot.
+        /// </summary>
+        LoadSnapshot,
+        /// <summary>
         ///   Looks up a localized string similar to Multiple selection..
         /// </summary>
         MultipleSelection,
@@ -1168,7 +1206,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         ShellTabHeader_Translate,
         /// <summary>
-        ///   Looks up a localized string similar to Show only lines with missing strings.
+        ///   Looks up a localized string similar to Show only lines with warnings or changes.
         /// </summary>
         ShowOnlyMissingToolTip,
         /// <summary>
@@ -1226,6 +1264,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Save credentials (Credentials will be stored as cl....
         /// </summary>
         TranslatorConfiguration_SaveCredentials,
+        /// <summary>
+        ///   Looks up a localized string similar to Unload Snapshot.
+        /// </summary>
+        UnloadSnapshot,
     }
 
     /// <summary>
@@ -1315,8 +1357,6 @@ namespace tomenglertde.ResXManager.View.Properties {
             return Resources.ResourceManager.GetString(value);
         }
     }
-
-
 
     /// <summary>
     /// Specifies a localized display name for an object.

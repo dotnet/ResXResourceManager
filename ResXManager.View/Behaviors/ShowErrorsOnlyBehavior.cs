@@ -28,6 +28,11 @@
         public static readonly DependencyProperty ToggleButtonProperty =
             DependencyProperty.Register("ToggleButton", typeof(ToggleButton), typeof(ShowErrorsOnlyBehavior), new FrameworkPropertyMetadata(null, (sender, e) => ((ShowErrorsOnlyBehavior)sender).ToggleButton_Changed((ToggleButton)e.OldValue, (ToggleButton)e.NewValue)));
 
+        public void Refresh()
+        {
+            Refresh(ToggleButton);
+        }
+
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -71,12 +76,15 @@
 
         private void ToggleButton_StateChanged(object sender, EventArgs e)
         {
+            Refresh((ToggleButton)sender);
+        }
+
+        private void Refresh(ToggleButton button)
+        {
             var dataGrid = DataGrid;
 
-            if ((sender == null) || (dataGrid == null))
+            if ((button == null) || (dataGrid == null))
                 return;
-
-            var button = (ToggleButton)sender;
 
             if (button.IsChecked.GetValueOrDefault())
             {
@@ -124,7 +132,9 @@
                 var entry = (ResourceTableEntry)row;
                 var values = visibleLanguages.Select(lang => entry.Values.GetValue(lang));
 
-                return entry.IsDuplicateKey || (!entry.IsInvariant && (values.Any(string.IsNullOrEmpty) || entry.HasStringFormatParameterMismatches(visibleLanguages)));
+                return entry.IsDuplicateKey
+                    || (!entry.IsInvariant && (values.Any(string.IsNullOrEmpty) || entry.HasStringFormatParameterMismatches(visibleLanguages)))
+                    || entry.HasSnapshotDifferences(visibleLanguages);
             };
         }
     }

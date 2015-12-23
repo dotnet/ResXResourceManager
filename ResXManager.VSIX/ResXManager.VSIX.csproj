@@ -176,6 +176,8 @@
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="TomsToolbox.Core, Version=1.0.27.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
       <HintPath>..\packages\TomsToolbox.Core.1.0.27.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
       <Private>True</Private>
@@ -260,6 +262,7 @@
   <ItemGroup>
     <VSCTCompile Include="ResXManager.VSIX.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
+      <SubType>Designer</SubType>
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
