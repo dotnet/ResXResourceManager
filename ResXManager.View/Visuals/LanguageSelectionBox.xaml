@@ -1,0 +1,46 @@
+﻿<Window x:Class="tomenglertde.ResXManager.View.Visuals.LanguageSelectionBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
+        xmlns:model="urn:ResXManager.Model"
+        xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
+        ShowInTaskbar="False" Width="300" SizeToContent="Height" WindowStyle="ToolWindow" ResizeMode="NoResize"
+        Title="{x:Static properties:Resources.Title}"
+        FocusManager.FocusedElement="{Binding ElementName=ComboBox}"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+  <StackPanel Margin="10">
+    <TextBlock Text="{x:Static properties:Resources.NewLanguageIdPrompt}" TextWrapping="Wrap" />
+    <Decorator Height="10" />
+    <ComboBox x:Name="ComboBox" IsEditable="True"
+              ItemsSource="{Binding Languages}" 
+              HorizontalAlignment="Stretch" 
+              SelectedItem="{Binding SelectedLanguage}" >
+      <ComboBox.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Orientation="Horizontal">
+            <Image Source="{Binding Converter={x:Static converters:CultureToImageSourceConverter.Default}}"/>
+            <Decorator Width="10"/>
+            <TextBlock Text="{Binding}" FontWeight="Bold" />
+            <Decorator Width="10"/>
+            <TextBlock Text="{Binding DisplayName}"/>
+          </StackPanel>
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
+    <Decorator Height="20" />
+    <Grid HorizontalAlignment="Right" Grid.IsSharedSizeScope="True">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition SharedSizeGroup="A" />
+        <ColumnDefinition Width="20" />
+        <ColumnDefinition SharedSizeGroup="A" />
+      </Grid.ColumnDefinitions>
+      <Grid.Resources>
+        <Style TargetType="{x:Type Button}">
+          <Setter Property="Padding" Value="10,2" />
+        </Style>
+      </Grid.Resources>
+      <Button Grid.Column="0" Content="OK" IsDefault="True" Command="{Binding CommitCommand}"/>
+      <Button Grid.Column="2" Content="Cancel" IsCancel="True" />
+    </Grid>
+  </StackPanel>
+</Window>

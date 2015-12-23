@@ -1,0 +1,14 @@
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#
+
+// If true, comments in RESX files are added as XMLDOC remarks to the code.
+const bool insertRemarks = true;
+
+// If true, a localizable text attribute derived from TomsToolbox.Core.TextAttribute will be created.
+const bool generateTextAttribute = true;
+
+// If true, localizable versions of the System.ComponentModel.DataAnnotations attributes will be created.
+const bool generateDataAnnotationAttributes = false;
+
+#>
+<#@ include file="$(SolutionDir)Resources.Designer.t4" #>

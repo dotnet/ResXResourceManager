@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="tomenglertde.ResXManager.View.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ResourceFilter" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="IsFindCodeReferencesEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="NeutralCultureCountyOverrides" Type="System.String" Scope="User">
+      <Value Profile="(Default)">en=en-US</Value>
+    </Setting>
+    <Setting Name="VisibleCommentColumns" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.</Value>
+    </Setting>
+    <Setting Name="HiddenLanguageColumns" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="IsIndexColumnVisible" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

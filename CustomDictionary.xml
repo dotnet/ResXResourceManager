@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Dictionary>
+  <Words>
+    <Unrecognized>
+      <Word></Word>
+    </Unrecognized>
+    <Recognized>
+      <Word>tomenglertde</Word>
+      <Word>VSIX</Word>
+      <Word>codeplex</Word>
+      <Word>resxresourcemanager</Word>
+      <Word>visualstudiogallery</Word>
+      <Word>workitem</Word>
+      <Word>dte</Word>
+      <Word>ResX</Word>
+    </Recognized>
+    <Deprecated>
+      <Term PreferredAlternate=""></Term>
+    </Deprecated>
+    <Compound>
+      <Term CompoundAlternate=""></Term>
+    </Compound>
+    <DiscreteExceptions>
+      <Term></Term>
+    </DiscreteExceptions>
+  </Words>
+  <Acronyms>
+    <CasingExceptions>
+      <Acronym>tomenglertde</Acronym>
+      <Acronym>vsix</Acronym>
+    </CasingExceptions>
+  </Acronyms>
+</Dictionary>
