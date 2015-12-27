@@ -204,15 +204,17 @@
     <Compile Include="Behaviors\SynchronizeTextBoxWithDataGridCellBehavior.cs" />
     <Compile Include="ColumnHeaders\LanguageColumnHeaderBase.cs" />
     <Compile Include="Commands.cs" />
-    <Compile Include="Tools\AddNewKeyCommand.cs" />
-    <Compile Include="Converters\CultureToXmlLanguageConverter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.Designer.tt</DependentUpon>
     </Compile>
+    <Compile Include="Tools\AddNewKeyCommand.cs" />
+    <Compile Include="Converters\CultureToXmlLanguageConverter.cs" />
+    <Compile Include="Tools\ClipboardHelper.cs" />
     <Compile Include="Tools\ColumnManager.cs" />
     <Compile Include="Tools\CultureOverrideEventArgs.cs" />
+    <Compile Include="Tools\DataGridHelper.cs" />
     <Compile Include="Tools\NeutralCultureCountryOverrides.cs" />
     <Compile Include="Visuals\CodeReferencesToolTip.xaml.cs">
       <DependentUpon>CodeReferencesToolTip.xaml</DependentUpon>
@@ -631,14 +633,14 @@
     <Resource Include="Assets\snapshot.png" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Properties\Resources.Designer.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <DependentUpon>Resources.resx</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

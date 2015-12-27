@@ -123,10 +123,6 @@
   <data name="ImportFailedPartiallyError">
     <value>Import teilweise fehlgeschlagen. Einige Spalten wurden überschrieben, aber nicht alle.</value>
   </data>
-  <data name="ClipboardIsEmpty">
-    <value>Die Zwischenablage ist leer.</value>
-    <comment>Deutscher kommentar</comment>
-  </data>
   <data name="DuplicateKeyError">
     <value>Doppelte Schlüssel in '{0}':
 {1}
@@ -145,15 +141,6 @@
   </data>
   <data name="ImportHeaderMismatchError">
     <value>Kopfzeile entspricht nicht dem Standard.</value>
-  </data>
-  <data name="ImportInconsistentDoubleQuoteError">
-    <value>Inkonsistente Benutzung von doppelten Anführungszeichen.</value>
-  </data>
-  <data name="ImportNormalizedTableExpected">
-    <value>Die Tabelle muß normalisiert sein.</value>
-  </data>
-  <data name="ImportParseEmptyTextError">
-    <value>Leerer Text kann nicht gelesen werden.</value>
   </data>
   <data name="InvalidResourceFileError">
     <value>{0} ist keine gültige Ressourcedatei: Kein xml root.</value>

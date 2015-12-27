@@ -261,12 +261,12 @@
               </Button>
               <Button ToolTip="{x:Static properties:Resources.CopyToolTip}"
                       Style="{StaticResource ToolbarCommandButtonStyle}"
-                      Command="{Binding Path=CopyCommand}">
+                      Command="{Binding Path=CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/copy.png" />
               </Button>
               <Button ToolTip="{x:Static properties:Resources.PasteToolTip}"
                       Style="{StaticResource ToolbarCommandButtonStyle}"
-                      Command="{Binding Path=PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
+                      Command="{Binding Path=PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
               </Button>
               <Button ToolTip="{x:Static properties:Resources.AddKeyToolTip}"
@@ -380,6 +380,7 @@
                   HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" Padding="2" BorderThickness="0"
                   dgx:DataGridFilter.IsAutoFilterEnabled="True" AutoGenerateColumns="False"
                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
+                  SelectionUnit="CellOrRowHeader"
                   toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedTableEntries}">
           <DataGrid.Resources>
 
@@ -416,8 +417,8 @@
             <KeyBinding Key="Delete" Command="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" />
             <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
             <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
-            <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
-            <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" />
+            <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}"/>
+            <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
           </DataGrid.InputBindings>
 
           <DataGrid.ItemsPanel>
@@ -533,8 +534,8 @@
   <i:Interaction.Behaviors>
     <toms:CommandRoutingBehavior CommandSource="view:DeleteCommand" CommandTarget="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" />
     <toms:CommandRoutingBehavior CommandSource="view:CutCommand" CommandTarget="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
-    <toms:CommandRoutingBehavior CommandSource="view:CopyCommand" CommandTarget="{Binding CopyCommand}" />
-    <toms:CommandRoutingBehavior CommandSource="view:PasteCommand" CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" />
+    <toms:CommandRoutingBehavior CommandSource="view:CopyCommand" CommandTarget="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}"/>
+    <toms:CommandRoutingBehavior CommandSource="view:PasteCommand" CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}"/>
     <toms:CommandRoutingBehavior CommandSource="view:IsInvariantCommand" CommandTarget="{Binding ToggleInvariantCommand}" IsChecked="{Binding Path=SelectedItem.IsInvariant, Mode=OneWay, ElementName=DataGrid}" />
     <toms:CommandRoutingBehavior CommandSource="view:CopyKeysCommand" CommandTarget="{Binding CopyKeysCommand}" />
   </i:Interaction.Behaviors>

@@ -2,15 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.ComponentModel.Composition;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Input;
 
-    using Newtonsoft.Json;
+    using DocumentFormat.OpenXml.Vml.Spreadsheet;
 
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
@@ -18,6 +19,10 @@
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
+
+    using ResXManager.View.Tools;
+
+    using TomsToolbox.Core;
 
     [Export]
     [VisualCompositionExport("Content", Sequence = 1)]
@@ -59,7 +64,7 @@
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(CanCutOrCopy, CopySelected);
+                return new DelegateCommand<DataGrid>(CanCopy, CopySelected);
             }
         }
 
@@ -69,7 +74,7 @@
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(CanCutOrCopy, CutSelected);
+                return new DelegateCommand(CanCut, CutSelected);
             }
         }
 
@@ -89,7 +94,7 @@
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(CanPaste, Paste);
+                return new DelegateCommand<DataGrid>(CanPaste, Paste);
             }
         }
 
@@ -188,7 +193,7 @@
             return _resourceManager.SelectedTableEntries.Any();
         }
 
-        private bool CanCutOrCopy()
+        private bool CanCut()
         {
             var entries = _resourceManager.SelectedTableEntries;
 
@@ -202,9 +207,30 @@
             return numberOfDistinctEntries == totalNumberOfEntries;
         }
 
-        private bool CanPaste()
+        private bool CanCopy(DataGrid dataGrid)
         {
-            return _resourceManager.SelectedEntities.Count == 1;
+            if (!dataGrid.HasRectangularCellSelection())
+                return false;
+
+            var entries = _resourceManager.SelectedTableEntries;
+
+            var totalNumberOfEntries = entries.Count;
+            if (totalNumberOfEntries == 0)
+                return true; // cell selection
+
+            // Only allow if all keys are different.
+            var numberOfDistinctEntries = entries.Select(e => e.Key).Distinct().Count();
+
+            return numberOfDistinctEntries == totalNumberOfEntries;
+        }
+
+        private bool CanPaste(DataGrid dataGrid)
+        {
+            if (dataGrid == null)
+                return false;
+
+            return Clipboard.ContainsText() && (_resourceManager.SelectedEntities.Count == 1)
+                && ((dataGrid.SelectedCells == null || !dataGrid.SelectedCells.Any()) || dataGrid.HasRectangularCellSelection());
         }
 
         private void CutSelected()
@@ -216,17 +242,25 @@
             if (resourceFiles.Any(resourceFile => !_resourceManager.CanEdit(resourceFile, null)))
                 return;
 
-            Clipboard.SetText(selectedItems.ToTextTable());
+            selectedItems.ToTable().SetClipboardData();
 
             selectedItems.ForEach(item => item.Owner.Remove(item));
         }
 
-        private void CopySelected()
+        private void CopySelected(DataGrid dataGrid)
         {
-            var selectedItems = _resourceManager.SelectedTableEntries.ToList();
+            Contract.Requires(dataGrid != null);
 
-            var entries = selectedItems.Cast<ResourceTableEntry>().ToArray();
-            Clipboard.SetText(entries.ToTextTable());
+            var selectedItems = _resourceManager.SelectedTableEntries.ToArray();
+
+            if (selectedItems.Length == 0)
+            {
+                dataGrid.GetCellSelection().SetClipboardData();
+            }
+            else
+            {
+                selectedItems.ToTable().SetClipboardData();
+            }
         }
 
         public void DeleteSelected()
@@ -244,8 +278,10 @@
             selectedItems.ForEach(item => item.Owner.Remove(item));
         }
 
-        private void Paste()
+        private void Paste(DataGrid dataGrid)
         {
+            Contract.Requires(dataGrid != null);
+
             var selectedItems = _resourceManager.SelectedEntities.ToList();
 
             if (selectedItems.Count != 1)
@@ -258,9 +294,19 @@
             if (!_resourceManager.CanEdit(entity, null))
                 return;
 
+            var table = ClipboardHelper.GetClipboardData();
+
             try
             {
-                entity.ImportTextTable(Clipboard.GetText());
+                if (table.HasValidTableHeaderRow())
+                {
+                    entity.ImportTable(table);
+                }
+                else
+                {
+                    if (!dataGrid.PasteCells(table))
+                        throw new ImportException(Resources.PasteSelectionSizeMismatch);
+                }
             }
             catch (ImportException ex)
             {

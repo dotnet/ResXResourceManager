@@ -374,4 +374,19 @@
   <data name="UnloadSnapshot" xml:space="preserve">
     <value>Unload Snapshot</value>
   </data>
+  <data name="ImportParseEmptyTextError" xml:space="preserve">
+    <value>Can't parse empty text.</value>
+  </data>
+  <data name="ImportNormalizedTableExpected" xml:space="preserve">
+    <value>A normalized table is expected.</value>
+  </data>
+  <data name="ImportInconsistentDoubleQuoteError" xml:space="preserve">
+    <value>Inconsistent usage of double quote.</value>
+  </data>
+  <data name="ClipboardIsEmpty" xml:space="preserve">
+    <value>Clipboard is empty.</value>
+  </data>
+  <data name="PasteSelectionSizeMismatch" xml:space="preserve">
+    <value>The data you're pasting isn't the same size as your selection.</value>
+  </data>
 </root>

@@ -59,16 +59,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Clipboard is empty..
-        /// </summary>
-        public static string ClipboardIsEmpty {
-            get {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("ClipboardIsEmpty", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Duplicate keys in '{0}':&amp;#13;&amp;#10;{1}&amp;....
         /// </summary>
         public static string DuplicateKeyError {
@@ -179,16 +169,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Inconsistent usage of double quote..
-        /// </summary>
-        public static string ImportInconsistentDoubleQuoteError {
-            get {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("ImportInconsistentDoubleQuoteError", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to The language "{0}" can't be edited. The operation ....
         /// </summary>
         public static string ImportLanguageNotEditable {
@@ -205,26 +185,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ImportMapSheetError", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to A normalized table is expected..
-        /// </summary>
-        public static string ImportNormalizedTableExpected {
-            get {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("ImportNormalizedTableExpected", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Can't parse empty text..
-        /// </summary>
-        public static string ImportParseEmptyTextError {
-            get {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("ImportParseEmptyTextError", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -320,10 +280,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
     public enum StringResourceKey
     {
         /// <summary>
-        ///   Looks up a localized string similar to Clipboard is empty..
-        /// </summary>
-        ClipboardIsEmpty,
-        /// <summary>
         ///   Looks up a localized string similar to Duplicate keys in '{0}':&amp;#13;&amp;#10;{1}&amp;....
         /// </summary>
         DuplicateKeyError,
@@ -368,10 +324,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         ImportHeaderMismatchError,
         /// <summary>
-        ///   Looks up a localized string similar to Inconsistent usage of double quote..
-        /// </summary>
-        ImportInconsistentDoubleQuoteError,
-        /// <summary>
         ///   Looks up a localized string similar to The language "{0}" can't be edited. The operation ....
         /// </summary>
         ImportLanguageNotEditable,
@@ -379,14 +331,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
         ///   Looks up a localized string similar to The sheet "{0}" can't be imported; there is no mat....
         /// </summary>
         ImportMapSheetError,
-        /// <summary>
-        ///   Looks up a localized string similar to A normalized table is expected..
-        /// </summary>
-        ImportNormalizedTableExpected,
-        /// <summary>
-        ///   Looks up a localized string similar to Can't parse empty text..
-        /// </summary>
-        ImportParseEmptyTextError,
         /// <summary>
         ///   Looks up a localized string similar to {0} is not a valid RESX resource file: No xml root....
         /// </summary>

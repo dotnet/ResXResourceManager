@@ -122,6 +122,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Clipboard is empty..
+        /// </summary>
+        public static string ClipboardIsEmpty {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ClipboardIsEmpty", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to The number of references found in code files. This....
         /// </summary>
         public static string CodeReferencesToolTip {
@@ -492,6 +502,36 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Inconsistent usage of double quote..
+        /// </summary>
+        public static string ImportInconsistentDoubleQuoteError {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportInconsistentDoubleQuoteError", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to A normalized table is expected..
+        /// </summary>
+        public static string ImportNormalizedTableExpected {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportNormalizedTableExpected", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Can't parse empty text..
+        /// </summary>
+        public static string ImportParseEmptyTextError {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportParseEmptyTextError", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Index of the entry in the resource file..
         /// </summary>
         public static string IndexColumnHeaderToolTip {
@@ -668,6 +708,16 @@ namespace tomenglertde.ResXManager.View.Properties {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("PasteFailed", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The data you're pasting isn't the same size as you....
+        /// </summary>
+        public static string PasteSelectionSizeMismatch {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("PasteSelectionSizeMismatch", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -950,6 +1000,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         ChooseColumnsToolTip,
         /// <summary>
+        ///   Looks up a localized string similar to Clipboard is empty..
+        /// </summary>
+        ClipboardIsEmpty,
+        /// <summary>
         ///   Looks up a localized string similar to The number of references found in code files. This....
         /// </summary>
         CodeReferencesToolTip,
@@ -1098,6 +1152,18 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         ImportExcel,
         /// <summary>
+        ///   Looks up a localized string similar to Inconsistent usage of double quote..
+        /// </summary>
+        ImportInconsistentDoubleQuoteError,
+        /// <summary>
+        ///   Looks up a localized string similar to A normalized table is expected..
+        /// </summary>
+        ImportNormalizedTableExpected,
+        /// <summary>
+        ///   Looks up a localized string similar to Can't parse empty text..
+        /// </summary>
+        ImportParseEmptyTextError,
+        /// <summary>
         ///   Looks up a localized string similar to Index of the entry in the resource file..
         /// </summary>
         IndexColumnHeaderToolTip,
@@ -1169,6 +1235,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Error parsing the data from clipboard:.
         /// </summary>
         PasteFailed,
+        /// <summary>
+        ///   Looks up a localized string similar to The data you're pasting isn't the same size as you....
+        /// </summary>
+        PasteSelectionSizeMismatch,
         /// <summary>
         ///   Looks up a localized string similar to Paste rows (Ctrl+V).
         /// </summary>

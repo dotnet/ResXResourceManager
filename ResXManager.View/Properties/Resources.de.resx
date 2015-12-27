@@ -363,4 +363,20 @@
   <data name="UnloadSnapshot" xml:space="preserve">
     <value>Snapshot entladen</value>
   </data>
+  <data name="ImportParseEmptyTextError" xml:space="preserve">
+    <value>Leerer Text kann nicht gelesen werden.</value>
+  </data>
+  <data name="ImportNormalizedTableExpected" xml:space="preserve">
+    <value>Die Tabelle muß normalisiert sein.</value>
+  </data>
+  <data name="ImportInconsistentDoubleQuoteError" xml:space="preserve">
+    <value>Inkonsistente Benutzung von doppelten Anführungszeichen.</value>
+  </data>
+  <data name="ClipboardIsEmpty" xml:space="preserve">
+    <value>Die Zwischenablage ist leer.</value>
+    <comment>Deutscher kommentar</comment>
+  </data>
+  <data name="PasteSelectionSizeMismatch" xml:space="preserve">
+    <value>Die Daten in der Zwischenablage haben nicht die gleiche Größe wie die Auswahl.</value>
+  </data>
 </root>

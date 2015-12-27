@@ -186,7 +186,7 @@
 
                     var tableData = new[] { headerRow }.Concat(fileRows).ToArray();
 
-                    foreach (var change in entity.ImportTable(FixedColumnHeaders, tableData))
+                    foreach (var change in entity.ImportTable(_fixedColumnHeaders, tableData))
                     {
                         yield return change;
                     }
@@ -204,7 +204,7 @@
             var entities = GetMultipleSheetEntities(resourceManager).ToArray();
 
             var changes = sheets.OfType<Sheet>()
-                .SelectMany(sheet => FindResourceEntity(entities, sheet).ImportTable(FixedColumnHeaders, sheet.GetRows(workbookPart).Select(row => row.GetCellValues(sharedStrings)).ToArray()));
+                .SelectMany(sheet => FindResourceEntity(entities, sheet).ImportTable(_fixedColumnHeaders, sheet.GetRows(workbookPart).Select(row => row.GetCellValues(sharedStrings)).ToArray()));
 
             return changes;
         }
@@ -400,7 +400,7 @@
 
             var languageColumnHeaders = languages.GetLanguageColumnHeaders(scope);
 
-            yield return FixedColumnHeaders.Concat(languageColumnHeaders);
+            yield return _fixedColumnHeaders.Concat(languageColumnHeaders);
         }
 
         private static IEnumerable<string> GetLanguageColumnHeaders(this IEnumerable<CultureKey> languages, IResourceScope scope)
