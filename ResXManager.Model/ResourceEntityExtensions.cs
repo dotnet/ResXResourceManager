@@ -90,7 +90,7 @@
             Contract.Requires(entry != null);
             Contract.Requires(languages != null);
 
-            return (new[] { entry.Key }).Concat(languages.SelectMany(l => entry.GetTableDataColumns(l.CultureKey))).Concat(new[] { string.Empty });
+            return (new[] { entry.Key }).Concat(languages.SelectMany(l => entry.GetTableDataColumns(l.CultureKey)));
         }
 
         private static string GetLanguageName(string dataColumnHeader)
@@ -293,9 +293,12 @@
             if (headerColumns[0] != KeyColumnHeader)
                 return false;
 
-            var headerCultures = headerColumns.Skip(1).Select(ExtractCultureKey).ToArray();
+            var headerCultures = headerColumns
+                .Skip(1)
+                .Select(ExtractCultureKey)
+                .ToArray();
 
-            return headerCultures.All(c => c != null) && (headerCultures.Distinct().Count() == headerCultures.Count());
+            return headerCultures.All(c => c != null);
         }
 
         private static void VerifyCultures(ResourceEntity entity, ICollection<string> dataColumns)

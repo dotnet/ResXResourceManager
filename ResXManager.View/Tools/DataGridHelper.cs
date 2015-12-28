@@ -78,7 +78,8 @@
 
             return row
                 .OrderBy(i => i.Column.DisplayIndex)
-                .Select(i => i.Column.OnCopyingCellClipboardContent(i.Item) as string)
+                .Select(i => i.Column.OnCopyingCellClipboardContent(i.Item))
+                .Select(i => i == null ? string.Empty : i.ToString())
                 .ToArray();
         }
 
@@ -94,6 +95,8 @@
 
             var firstRow = data[0];
             Contract.Assume(firstRow != null);
+            Contract.Assume(Contract.ForAll(firstRow, item => item != null));
+
             var numberOfColumns = firstRow.Count;
 
             var selectedCells = dataGrid.SelectedCells;
@@ -135,28 +138,24 @@
                     .ToArray();
             }
 
-            if ((selectedItems.Length != numberOfRows) || (selectedColumns.Length != numberOfColumns))
+            if ((selectedItems.Length == numberOfRows) && (selectedColumns.Length == numberOfColumns))
             {
-                return false;
+                Enumerate.AsTuples(selectedItems, data)
+                    .ForEach(row => Enumerate.AsTuples(selectedColumns, row.Item2)
+                        .ForEach(column => column.Item1.OnPastingCellClipboardContent(row.Item1, column.Item2)));
+
+                return true;
             }
 
-            foreach (var row in Enumerate.AsTuples(selectedItems, data))
+            if ((data.Count == 1) && (firstRow.Count == 1))
             {
-                Contract.Assume(row != null);
-                Contract.Assume(row.Item1 != null);
-                Contract.Assume(row.Item2 != null);
+                selectedItems.ForEach(row => selectedColumns
+                    .ForEach(column => column.OnPastingCellClipboardContent(row, firstRow[0])));
 
-                foreach (var column in Enumerate.AsTuples(selectedColumns, row.Item2))
-                {
-                    Contract.Assume(column != null);
-                    Contract.Assume(column.Item1 != null);
-                    Contract.Assume(column.Item2 != null);
-
-                    column.Item1.OnPastingCellClipboardContent(row.Item1, column.Item2);
-                }
+                return true;
             }
 
-            return true;
+            return false;
         }
     }
 }

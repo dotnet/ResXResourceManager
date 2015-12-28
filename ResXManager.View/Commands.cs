@@ -47,11 +47,4 @@
     public class IsInvariantCommand : CommandSourceFactory
     {
     }
-
-    [Export]
-    [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
-    [LocalizedDisplayName(StringResourceKey.CopyKeys)]
-    public class CopyKeysCommand : CommandSourceFactory
-    {
-    }
 }

@@ -8,12 +8,9 @@
     using System.Linq;
     using System.Text;
     using System.Windows;
-    using System.Windows.Controls;
 
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
-
-    using TomsToolbox.Core;
 
     public static class ClipboardHelper
     {

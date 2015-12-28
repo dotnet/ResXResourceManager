@@ -5,11 +5,9 @@
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Data;
 
     using Microsoft.Win32;
@@ -18,7 +16,6 @@
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
-    using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Converters;

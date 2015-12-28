@@ -119,23 +119,32 @@
             if (DataGrid == null)
                 return;
 
-            var visibleLanguages = DataGrid.Columns
-                .Where(column => column.Visibility == Visibility.Visible)
-                .Select(column => column.Header)
-                .OfType<LanguageHeader>()
-                .Select(header => header.CultureKey)
-                .ToArray();
-
-            DataGrid.SetIsAutoFilterEnabled(false);
-            DataGrid.Items.Filter = row =>
+            try
             {
-                var entry = (ResourceTableEntry)row;
-                var values = visibleLanguages.Select(lang => entry.Values.GetValue(lang));
+                DataGrid.CommitEdit();
 
-                return entry.IsDuplicateKey
-                    || (!entry.IsInvariant && (values.Any(string.IsNullOrEmpty) || entry.HasStringFormatParameterMismatches(visibleLanguages)))
-                    || entry.HasSnapshotDifferences(visibleLanguages);
-            };
+                var visibleLanguages = DataGrid.Columns
+                    .Where(column => column.Visibility == Visibility.Visible)
+                    .Select(column => column.Header)
+                    .OfType<LanguageHeader>()
+                    .Select(header => header.CultureKey)
+                    .ToArray();
+
+                DataGrid.SetIsAutoFilterEnabled(false);
+
+                DataGrid.Items.Filter = row =>
+                {
+                    var entry = (ResourceTableEntry)row;
+                    var values = visibleLanguages.Select(lang => entry.Values.GetValue(lang));
+
+                    return entry.IsDuplicateKey
+                        || (!entry.IsInvariant && (values.Any(string.IsNullOrEmpty) || entry.HasStringFormatParameterMismatches(visibleLanguages)))
+                        || entry.HasSnapshotDifferences(visibleLanguages);
+                };
+            }
+            catch (InvalidOperationException)
+            {
+            }
         }
     }
 }

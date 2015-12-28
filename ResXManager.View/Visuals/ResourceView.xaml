@@ -537,6 +537,5 @@
     <toms:CommandRoutingBehavior CommandSource="view:CopyCommand" CommandTarget="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}"/>
     <toms:CommandRoutingBehavior CommandSource="view:PasteCommand" CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}"/>
     <toms:CommandRoutingBehavior CommandSource="view:IsInvariantCommand" CommandTarget="{Binding ToggleInvariantCommand}" IsChecked="{Binding Path=SelectedItem.IsInvariant, Mode=OneWay, ElementName=DataGrid}" />
-    <toms:CommandRoutingBehavior CommandSource="view:CopyKeysCommand" CommandTarget="{Binding CopyKeysCommand}" />
   </i:Interaction.Behaviors>
 </UserControl>

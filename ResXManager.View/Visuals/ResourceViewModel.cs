@@ -1,28 +1,21 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
 
-    using DocumentFormat.OpenXml.Vml.Spreadsheet;
-
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
+    using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
-
-    using ResXManager.View.Tools;
-
-    using TomsToolbox.Core;
 
     [Export]
     [VisualCompositionExport("Content", Sequence = 1)]
@@ -115,16 +108,6 @@
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
                 return new DelegateCommand<string>(ImportExcel);
-            }
-        }
-
-        public ICommand CopyKeysCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => _resourceManager.SelectedTableEntries.Any(), CopyKeys);
             }
         }
 
@@ -351,13 +334,6 @@
             var changes = _resourceManager.ImportExcelFile(fileName).ToArray();
 
             changes.Apply();
-        }
-
-        private void CopyKeys()
-        {
-            var selectedKeys = _resourceManager.SelectedTableEntries.Select(item => item.Key);
-
-            Clipboard.SetText(string.Join(Environment.NewLine, selectedKeys));
         }
 
         public override string ToString()
