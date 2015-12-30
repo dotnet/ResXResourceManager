@@ -33,14 +33,15 @@
             return value;
         }
 
-        [ContractVerification(false)]
-        public static string TryGetAttribute(this XElement element, string name)
+        public static string TryGetAttribute(this XElement element, XName name)
         {
             Contract.Requires(element != null);
-            Contract.Requires(!string.IsNullOrEmpty(name));
+            Contract.Requires(name != null);
             Contract.Ensures(Contract.Result<string>() != null);
 
-            return element.Attribute(name).Maybe().Return(x => x.Value, string.Empty);
+            var attribute = element.Attribute(name);
+
+            return attribute != null ? attribute.Value : string.Empty;
         }
 
         public static string ReplaceInvalidFileNameChars(this string value, char replacement)
