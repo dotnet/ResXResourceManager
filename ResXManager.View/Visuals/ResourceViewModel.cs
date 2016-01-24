@@ -9,6 +9,8 @@
     using System.Windows.Controls;
     using System.Windows.Input;
 
+    using DataGridExtensions;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
@@ -207,15 +209,6 @@
             return numberOfDistinctEntries == totalNumberOfEntries;
         }
 
-        private bool CanPaste(DataGrid dataGrid)
-        {
-            if (dataGrid == null)
-                return false;
-
-            return Clipboard.ContainsText() && (_resourceManager.SelectedEntities.Count == 1)
-                && ((dataGrid.SelectedCells == null || !dataGrid.SelectedCells.Any()) || dataGrid.HasRectangularCellSelection());
-        }
-
         private void CutSelected()
         {
             var selectedItems = _resourceManager.SelectedTableEntries.ToList();
@@ -261,6 +254,21 @@
             selectedItems.ForEach(item => item.Owner.Remove(item));
         }
 
+        private bool CanPaste(DataGrid dataGrid)
+        {
+            if (dataGrid == null)
+                return false;
+
+            if (!Clipboard.ContainsText())
+                return false;
+
+            if (_resourceManager.SelectedEntities.Count != 1)
+                return false;
+
+            return (((dataGrid.SelectedCells == null) || !dataGrid.SelectedCells.Any()) 
+                || dataGrid.HasRectangularCellSelection());
+        }
+
         private void Paste(DataGrid dataGrid)
         {
             Contract.Requires(dataGrid != null);
@@ -277,7 +285,9 @@
             if (!_resourceManager.CanEdit(entity, null))
                 return;
 
-            var table = ClipboardHelper.GetClipboardData();
+            var table = ClipboardHelper.GetClipboardDataAsTable();
+            if (table == null)
+                throw new ImportException(Resources.ImportNormalizedTableExpected);
 
             try
             {

@@ -154,7 +154,7 @@
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -169,20 +169,20 @@
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="TomsToolbox.Core, Version=1.0.27.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Core.1.0.27.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
+    <Reference Include="TomsToolbox.Core, Version=1.0.31.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Core.1.0.31.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TomsToolbox.Desktop, Version=1.0.27.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.27.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
+    <Reference Include="TomsToolbox.Desktop, Version=1.0.31.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.31.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.27.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.27.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
+    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.31.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.31.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TomsToolbox.Wpf, Version=1.0.27.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Wpf.1.0.27.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
+    <Reference Include="TomsToolbox.Wpf, Version=1.0.31.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Wpf.1.0.31.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
