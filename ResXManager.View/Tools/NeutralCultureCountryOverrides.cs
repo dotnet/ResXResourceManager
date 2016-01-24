@@ -18,14 +18,13 @@
         private static readonly CultureInfo[] _allSpecificCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
         private static readonly IEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>> _comparer = new DelegateEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>>(item => item.Key);
 
-        private readonly Dictionary<CultureInfo, CultureInfo> _overrides;
+        private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly NeutralCultureCountryOverrides Default = new NeutralCultureCountryOverrides();
 
         private NeutralCultureCountryOverrides()
         {
-            _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
         }
 
         public event EventHandler<CultureOverrideEventArgs> OverrideChanged;
@@ -93,8 +92,7 @@
 
         private static IEnumerable<KeyValuePair<CultureInfo, CultureInfo>> ReadSettings()
         {
-            // TODO: enabling this line will cause a crash! Did not happen ever before!!!
-            // Contract.Ensures(Contract.Result<IEnumerable<KeyValuePair<CultureInfo, CultureInfo>>>() != null);
+            Contract.Ensures(Contract.Result<IEnumerable<KeyValuePair<CultureInfo, CultureInfo>>>() != null);
 
             var neutralCultureCountryOverrides = (DefaultOverrides + Settings.Default.NeutralCultureCountyOverrides).Split(',');
 
