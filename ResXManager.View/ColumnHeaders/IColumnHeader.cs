@@ -5,7 +5,6 @@
     using System.Globalization;
 
     using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
 
     public enum ColumnType
     {

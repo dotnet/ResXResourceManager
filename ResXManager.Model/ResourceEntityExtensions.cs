@@ -11,36 +11,29 @@
 
     public static partial class ResourceEntityExtensions
     {
-        private const string Quote = "\"";
-        private const string ColumnSeparator = "\t";
-        private const string TerminatingColumnHeaderText = "!";
-
-        // Add one empty terminating column to workaround the ambiguity problem with Excels algorithm to quote multi-line columns.
-        private static readonly string[] TerminatorColumnHeaders = { TerminatingColumnHeaderText };
-        private static readonly string[] FixedColumnHeaders = { @"Key" };
+        private const string KeyColumnHeader = @"Key";
         private const string CommentHeaderPrefix = "Comment";
 
+        private static readonly string[] _fixedColumnHeaders = { KeyColumnHeader };
+
         /// <summary>
-        /// Converts the entries into a tab-delimited text table.
+        /// Converts the entries into table with header line.
         /// </summary>
         /// <param name="entries">The entries.</param>
-        /// <returns></returns>
-        public static string ToTextTable(this ICollection<ResourceTableEntry> entries)
+        /// <returns>The table.</returns>
+        public static IList<IList<string>> ToTable(this ICollection<ResourceTableEntry> entries)
         {
             Contract.Requires(entries != null);
-            Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
+            Contract.Ensures(Contract.Result<IList<IList<string>>>() != null);
 
             var languages = entries.SelectMany(e => e.Owner.Languages).Distinct().ToArray();
 
-            var lines = languages.GetTextTableHeaderLines().Concat(entries.GetTextTableDataLines(languages));
-            var result = string.Join(Environment.NewLine, lines) + Environment.NewLine;
+            var table = languages.GetTableHeaderLines().Concat(entries.GetTableDataLines(languages)).ToArray();
 
-            Contract.Assert(!string.IsNullOrEmpty(result));
-
-            return result;
+            return table;
         }
 
-        private static IEnumerable<string> GetTextTableLanguageColumnHeaders(this ResourceLanguage language)
+        private static IEnumerable<string> GetTableLanguageColumnHeaders(this ResourceLanguage language)
         {
             Contract.Requires(language != null);
 
@@ -50,10 +43,10 @@
             yield return cultureName;
         }
 
-        private static IEnumerable<string> GetTextTableDataColumns(this ResourceTableEntry entry, CultureKey cultureKey)
+        private static IEnumerable<string> GetTableDataColumns(this ResourceTableEntry entry, CultureKey cultureKey)
         {
-            yield return Quoted(entry.Comments.GetValue(cultureKey));
-            yield return Quoted(entry.Values.GetValue(cultureKey));
+            yield return entry.Comments.GetValue(cultureKey);
+            yield return entry.Values.GetValue(cultureKey);
         }
 
         /// <summary>
@@ -61,27 +54,27 @@
         /// </summary>
         /// <param name="languages"></param>
         /// <returns>The header line.</returns>
-        private static IEnumerable<string> GetTextTableHeaderLines(this IEnumerable<ResourceLanguage> languages)
+        private static IEnumerable<IList<string>> GetTableHeaderLines(this IEnumerable<ResourceLanguage> languages)
         {
             Contract.Requires(languages != null);
 
-            var languageColumns = languages.SelectMany(l => l.GetTextTableLanguageColumnHeaders());
+            var languageColumns = languages.SelectMany(l => l.GetTableLanguageColumnHeaders());
 
-            yield return string.Join(ColumnSeparator, FixedColumnHeaders.Concat(languageColumns).Concat(TerminatorColumnHeaders));
+            yield return _fixedColumnHeaders.Concat(languageColumns).ToArray();
         }
 
         /// <summary>
-        /// Gets the text tables data lines.
+        /// Gets the text tables data table.
         /// </summary>
         /// <param name="entries"></param>
         /// <param name="languages"></param>
-        /// <returns>The data lines.</returns>
-        private static IEnumerable<string> GetTextTableDataLines(this IEnumerable<ResourceTableEntry> entries, IEnumerable<ResourceLanguage> languages)
+        /// <returns>The data table.</returns>
+        private static IEnumerable<IList<string>> GetTableDataLines(this IEnumerable<ResourceTableEntry> entries, IEnumerable<ResourceLanguage> languages)
         {
             Contract.Requires(entries != null);
             Contract.Requires(languages != null);
 
-            return entries.Select(entry => string.Join(ColumnSeparator, entry.GetTextTableLine(languages)) + ColumnSeparator);
+            return entries.Select(entry => entry.GetTableLine(languages).ToArray());
         }
 
         /// <summary>
@@ -92,40 +85,33 @@
         /// <returns>
         /// The columns of this line.
         /// </returns>
-        private static IEnumerable<string> GetTextTableLine(this ResourceTableEntry entry, IEnumerable<ResourceLanguage> languages)
+        private static IEnumerable<string> GetTableLine(this ResourceTableEntry entry, IEnumerable<ResourceLanguage> languages)
         {
             Contract.Requires(entry != null);
             Contract.Requires(languages != null);
 
-            return (new[] { entry.Key }).Concat(languages.SelectMany(l => entry.GetTextTableDataColumns(l.CultureKey)));
+            return (new[] { entry.Key }).Concat(languages.SelectMany(l => entry.GetTableDataColumns(l.CultureKey)));
         }
 
-        /// <summary>
-        /// Quotes the string if necessary.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The properly quoted string.</returns>
-        private static string Quoted(string value)
+        private static string GetLanguageName(string dataColumnHeader)
         {
-            if (value == null)
-                return string.Empty;
-
-            if (value.Any(IsLineFeed))
-            {
-                return Quote + value.Replace(Quote, Quote + Quote) + Quote;
-            }
-
-            return value;
+            var languageName = (dataColumnHeader.StartsWith(CommentHeaderPrefix, StringComparison.OrdinalIgnoreCase)
+                ? dataColumnHeader.Substring(CommentHeaderPrefix.Length) : dataColumnHeader);
+            return languageName;
         }
 
         private static CultureInfo ExtractCulture(this string dataColumnHeader)
         {
             Contract.Requires(dataColumnHeader != null);
 
-            var languageName = (dataColumnHeader.StartsWith(CommentHeaderPrefix, StringComparison.OrdinalIgnoreCase)
-                ? dataColumnHeader.Substring(CommentHeaderPrefix.Length) : dataColumnHeader);
+            return GetLanguageName(dataColumnHeader).ToCulture();
+        }
 
-            return languageName.ToCulture();
+        private static CultureKey ExtractCultureKey(this string dataColumnHeader)
+        {
+            Contract.Requires(dataColumnHeader != null);
+
+            return GetLanguageName(dataColumnHeader).ToCultureKey();
         }
 
         private static ColumnKind GetColumnKind(this string dataColumnHeader)
@@ -192,20 +178,16 @@
         }
 
         /// <summary>
-        /// Imports a text table into the entity.
+        /// Imports a table with header line into the entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        /// <param name="text">The text.</param>
-        public static void ImportTextTable(this ResourceEntity entity, string text)
+        /// <param name="table">The text.</param>
+        public static void ImportTable(this ResourceEntity entity, IList<IList<string>> table)
         {
             Contract.Requires(entity != null);
+            Contract.Requires(table != null);
 
-            if (string.IsNullOrEmpty(text))
-                throw new ImportException(Resources.ClipboardIsEmpty);
-
-            var lines = ReadLines(text).ToArray();
-
-            entity.ImportTable(FixedColumnHeaders, lines).Apply();
+            entity.ImportTable(_fixedColumnHeaders, table).Apply();
         }
 
         public static bool Apply(this EntryChange change)
@@ -229,33 +211,31 @@
             throw new ImportException(acceptedChanges.Length > 0 ? Resources.ImportFailedPartiallyError : Resources.ImportFailedError);
         }
 
-        public static ICollection<EntryChange> ImportTable(this ResourceEntity entity, ICollection<string> fixedColumnHeaders, IList<IList<string>> lines)
+        public static ICollection<EntryChange> ImportTable(this ResourceEntity entity, ICollection<string> fixedColumnHeaders, IList<IList<string>> table)
         {
             Contract.Requires(entity != null);
             Contract.Requires(fixedColumnHeaders != null);
-            Contract.Requires(lines != null);
+            Contract.Requires(table != null);
             Contract.Ensures(Contract.Result<ICollection<EntryChange>>() != null);
 
-            if (!lines.Any())
+            if (!table.Any())
                 return new EntryChange[0];
 
-            var headerColumns = GetHeaderColumns(lines, fixedColumnHeaders);
+            var headerColumns = GetHeaderColumns(table, fixedColumnHeaders);
 
             var fixedColumnHeadersCount = fixedColumnHeaders.Count;
-            var emptyColumnCount = GetEmptyColumnCount(lines);
-            var dataColumnCount = headerColumns.Count() - fixedColumnHeadersCount - emptyColumnCount;
+            var dataColumnCount = headerColumns.Count - fixedColumnHeadersCount;
 
             var dataColumnHeaders = headerColumns
                 .Skip(fixedColumnHeadersCount)
                 .Take(dataColumnCount)
-                .TakeWhile(header => header != TerminatingColumnHeaderText)
                 .ToArray();
 
             dataColumnCount = dataColumnHeaders.Length;
 
             VerifyCultures(entity, dataColumnHeaders);
 
-            var mappings = lines.Skip(1)
+            var mappings = table.Skip(1)
                 .Select(columns => new { Key = columns[0], TextColumns = columns.Skip(fixedColumnHeadersCount).Take(dataColumnCount).ToArray() })
                 .Where(mapping => !string.IsNullOrEmpty(mapping.Key))
                 .SelectMany(mapping => mapping.TextColumns.Select((column, index) =>
@@ -278,17 +258,19 @@
             return changes;
         }
 
-        [ContractVerification(false)]
-        private static IList<string> GetHeaderColumns(IEnumerable<IList<string>> lines, ICollection<string> fixedColumnHeaders)
+        private static IList<string> GetHeaderColumns(IList<IList<string>> table, ICollection<string> fixedColumnHeaders)
         {
+            Contract.Requires(table != null);
+            Contract.Requires(table.Count > 0);
+            Contract.Requires(fixedColumnHeaders != null);
             Contract.Ensures(Contract.Result<IList<string>>() != null);
-            Contract.Ensures(lines.Count() == Contract.OldValue(lines.Count()));
+            Contract.Ensures(table.Count() == Contract.OldValue(table.Count()));
 
-            var headerColumns = lines.First();
+            var headerColumns = table.First();
 
             var fixedColumnHeadersCount = fixedColumnHeaders.Count;
 
-            if (headerColumns.Count() <= fixedColumnHeadersCount)
+            if (headerColumns.Count <= fixedColumnHeadersCount)
                 throw new ImportException(Resources.ImportColumnMismatchError);
 
             if (!headerColumns.Take(fixedColumnHeadersCount).SequenceEqual(fixedColumnHeaders))
@@ -297,12 +279,34 @@
             return headerColumns;
         }
 
-        private static void VerifyCultures(ResourceEntity entity, IList<string> dataColumns)
+        [Pure]
+        public static bool HasValidTableHeaderRow(this IList<IList<string>> table)
+        {
+            Contract.Requires(table != null);
+            Contract.Requires(table.Count > 0);
+
+            var headerColumns = table.First();
+
+            if (headerColumns.Count < 2)
+                return false;
+
+            if (headerColumns[0] != KeyColumnHeader)
+                return false;
+
+            var headerCultures = headerColumns
+                .Skip(1)
+                .Select(ExtractCultureKey)
+                .ToArray();
+
+            return headerCultures.All(c => c != null);
+        }
+
+        private static void VerifyCultures(ResourceEntity entity, ICollection<string> dataColumns)
         {
             Contract.Requires(entity != null);
             Contract.Requires(dataColumns != null);
 
-            if (dataColumns.Distinct().Count() != dataColumns.Count())
+            if (dataColumns.Distinct().Count() != dataColumns.Count)
                 throw new ImportException(Resources.ImportDuplicateLanguageError);
 
             var languages = dataColumns.Select(data => data.ExtractCulture()).Distinct().ToArray();
@@ -315,143 +319,6 @@
                 return;
 
             throw new ImportException(string.Format(CultureInfo.CurrentCulture, Resources.ImportLanguageNotEditable, lockedLanguage));
-        }
-
-        private static IEnumerable<IList<string>> ReadLines(string text)
-        {
-            Contract.Requires(text != null);
-            Contract.Ensures(Contract.Result<IEnumerable<IList<string>>>() != null);
-            Contract.Ensures(Contract.Result<IEnumerable<IList<string>>>().Any());
-
-            var lines = new List<IList<string>>();
-
-            using (var textEnumerator = new TextEnumerator(text.GetEnumerator()))
-            {
-                while (textEnumerator.HasData)
-                {
-                    var columns = ReadLine(textEnumerator);
-                    if (!columns.All(string.IsNullOrWhiteSpace))
-                    {
-                        lines.Add(columns);
-                    }
-                }
-            }
-
-            if (!lines.Any())
-                throw new ImportException(Resources.ImportParseEmptyTextError);
-
-            var headerColumns = lines.First();
-
-            if (lines.Any(columns => columns.Count() != headerColumns.Count()))
-                throw new ImportException(Resources.ImportNormalizedTableExpected);
-
-            return lines;
-        }
-
-        private static IList<string> ReadLine(TextEnumerator textEnumerator)
-        {
-            Contract.Requires(textEnumerator != null);
-
-            var columns = new List<string>();
-
-            while (textEnumerator.HasData)
-            {
-                columns.Add(ReadColumn(textEnumerator));
-
-                if (IsTab(textEnumerator.Current))
-                {
-                    textEnumerator.Skip(1);
-                    continue;
-                }
-
-                if (!IsLineFeed(textEnumerator.Current))
-                {
-                    throw new ImportException(Resources.ImportInconsistentDoubleQuoteError);
-                }
-
-                textEnumerator.SkipWhile(IsLineFeed);
-
-                break;
-            }
-
-            return columns.ToArray();
-        }
-
-        private static string ReadColumn(TextEnumerator textEnumerator)
-        {
-            Contract.Requires(textEnumerator != null);
-            // Excels quoting is sometimes ambigous - try to do our best.
-            // Should be OK if we have an empty column at the end.
-
-            if (IsDoubleQuote(textEnumerator.Current))
-            {
-                textEnumerator.Skip(1);
-
-                var text = textEnumerator.Take((current, next) =>
-                    IsTab(current) ? 0 : // Whenever we reach a tab the column is finshed.
-                    ((IsDoubleQuote(current) && IsDoubleQuote(next)) ? 2 : // Read both of doubled double quotes.
-                    ((IsDoubleQuote(current) && IsTabOrLineFeed(next)) ? 0 : // Stop at a single double quote followed by new line or tab.
-                    1))); // Else read the char.
-
-                if (IsDoubleQuote(textEnumerator.Current))
-                {
-                    textEnumerator.Skip(1);
-                    if (text.Any(IsLineFeed))
-                    {
-                        // Only if text contains a line break the surrounding quotes are the result of automatic quoting and containing quotes are doubled...
-                        text = text.Replace(Quote + Quote, Quote);
-                    }
-                    else
-                    {
-                        // ... else restore the surrounding quotes, they have been part of the original text.
-                        text = Quote + text + Quote;
-                    }
-                }
-                else
-                {
-                    text = text.Insert(0, Quote);
-                }
-
-                return text;
-            }
-
-            return textEnumerator.TakeUntil(IsTabOrLineFeed);
-        }
-
-        private static bool IsDoubleQuote(char c)
-        {
-            return (c == '"');
-        }
-
-        private static bool IsTabOrLineFeed(char c)
-        {
-            return IsTab(c) || IsLineFeed(c);
-        }
-
-        private static bool IsLineFeed(char c)
-        {
-            return (c == '\r') || (c == '\n');
-        }
-
-        private static bool IsTab(char c)
-        {
-            return (c == '\t');
-        }
-
-        private static int GetEmptyColumnCount(IList<IList<string>> lines)
-        {
-            Contract.Requires(lines != null);
-            Contract.Requires(lines.Any());
-
-            var emptyColumnCount = Enumerable.Range(0, lines.First().Count())
-                .Skip(2)
-                .Reverse()
-                .TakeWhile(columnIndex => lines.All(columns => string.IsNullOrWhiteSpace(columns[columnIndex])))
-                .Count();
-
-            var terminatorColumnCount = lines.First().Skip(2).Reverse().SkipWhile(string.IsNullOrWhiteSpace).TakeWhile(c => TerminatorColumnHeaders.Any(h => (c == h))).Count();
-
-            return emptyColumnCount + terminatorColumnCount;
         }
     }
 }

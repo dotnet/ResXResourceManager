@@ -127,9 +127,6 @@
     <value>ResX Resource Manager</value>
     <comment>@Invariant</comment>
   </data>
-  <data name="ClipboardIsEmpty" xml:space="preserve">
-    <value>Clipboard is empty.</value>
-  </data>
   <data name="ImportColumnMismatchError" xml:space="preserve">
     <value>At least three columns expected.</value>
   </data>
@@ -138,15 +135,6 @@
   </data>
   <data name="ImportDuplicateLanguageError" xml:space="preserve">
     <value>Duplicate language in header.</value>
-  </data>
-  <data name="ImportParseEmptyTextError" xml:space="preserve">
-    <value>Can't parse empty text.</value>
-  </data>
-  <data name="ImportNormalizedTableExpected" xml:space="preserve">
-    <value>A normalized table is expected.</value>
-  </data>
-  <data name="ImportInconsistentDoubleQuoteError" xml:space="preserve">
-    <value>Inconsistent usage of double quote.</value>
   </data>
   <data name="InvalidResourceFileError" xml:space="preserve">
     <value>{0} is not a valid RESX resource file: No xml root.</value>

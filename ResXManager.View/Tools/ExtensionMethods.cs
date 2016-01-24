@@ -10,7 +10,6 @@ namespace tomenglertde.ResXManager.View.Tools
     using System.Windows.Input;
 
     using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
     using TomsToolbox.Core;

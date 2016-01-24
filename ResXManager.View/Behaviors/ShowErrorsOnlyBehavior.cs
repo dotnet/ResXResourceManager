@@ -131,19 +131,19 @@
                     .ToArray();
 
                 DataGrid.SetIsAutoFilterEnabled(false);
+
                 DataGrid.Items.Filter = row =>
                 {
-                    var entry = (ResourceTableEntry) row;
+                    var entry = (ResourceTableEntry)row;
                     var values = visibleLanguages.Select(lang => entry.Values.GetValue(lang));
 
                     return entry.IsDuplicateKey
-                           || (!entry.IsInvariant && (values.Any(string.IsNullOrEmpty) || entry.HasStringFormatParameterMismatches(visibleLanguages)))
-                           || entry.HasSnapshotDifferences(visibleLanguages);
+                        || (!entry.IsInvariant && (values.Any(string.IsNullOrEmpty) || entry.HasStringFormatParameterMismatches(visibleLanguages)))
+                        || entry.HasSnapshotDifferences(visibleLanguages);
                 };
             }
             catch (InvalidOperationException)
             {
-                // data grid is still in editing mode.
             }
         }
     }

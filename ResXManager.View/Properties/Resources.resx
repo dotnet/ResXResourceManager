@@ -152,10 +152,10 @@
     <value>Add new language</value>
   </data>
   <data name="CopyToolTip" xml:space="preserve">
-    <value>Copy selected rows (Ctrl+C)</value>
+    <value>Copy the selected rows or cells (Ctrl+C)</value>
   </data>
   <data name="PasteToolTip" xml:space="preserve">
-    <value>Paste rows (Ctrl+V)</value>
+    <value>Paste the clipboard content (Ctrl+V)</value>
   </data>
   <data name="AddKeyToolTip" xml:space="preserve">
     <value>Add new key (Shift+Insert)</value>
@@ -177,9 +177,6 @@
   </data>
   <data name="Invariant" xml:space="preserve">
     <value>Invariant</value>
-  </data>
-  <data name="CopyKeys" xml:space="preserve">
-    <value>Copy key(s)</value>
   </data>
   <data name="ErrorAddingNewResourceFile" xml:space="preserve">
     <value>Error adding the new resource file '{0}'.</value>
@@ -373,5 +370,11 @@
   </data>
   <data name="UnloadSnapshot" xml:space="preserve">
     <value>Unload Snapshot</value>
+  </data>
+  <data name="ImportNormalizedTableExpected" xml:space="preserve">
+    <value>A normalized table is expected.</value>
+  </data>
+  <data name="PasteSelectionSizeMismatch" xml:space="preserve">
+    <value>The data you're pasting isn't the same size as your selection.</value>
   </data>
 </root>

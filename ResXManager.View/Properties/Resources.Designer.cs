@@ -272,17 +272,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Copy key(s).
-        /// </summary>
-        public static string CopyKeys {
-            get {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("CopyKeys", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Copy selected rows (Ctrl+C).
+        ///   Looks up a localized string similar to Copy the selected rows or cells (Ctrl+C).
         /// </summary>
         public static string CopyToolTip {
             get {
@@ -492,6 +482,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to A normalized table is expected..
+        /// </summary>
+        public static string ImportNormalizedTableExpected {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportNormalizedTableExpected", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Index of the entry in the resource file..
         /// </summary>
         public static string IndexColumnHeaderToolTip {
@@ -672,7 +672,17 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Paste rows (Ctrl+V).
+        ///   Looks up a localized string similar to The data you're pasting isn't the same size as you....
+        /// </summary>
+        public static string PasteSelectionSizeMismatch {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("PasteSelectionSizeMismatch", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Paste the clipboard content (Ctrl+V).
         /// </summary>
         public static string PasteToolTip {
             get {
@@ -1010,11 +1020,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         Copy,
         /// <summary>
-        ///   Looks up a localized string similar to Copy key(s).
-        /// </summary>
-        CopyKeys,
-        /// <summary>
-        ///   Looks up a localized string similar to Copy selected rows (Ctrl+C).
+        ///   Looks up a localized string similar to Copy the selected rows or cells (Ctrl+C).
         /// </summary>
         CopyToolTip,
         /// <summary>
@@ -1098,6 +1104,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         ImportExcel,
         /// <summary>
+        ///   Looks up a localized string similar to A normalized table is expected..
+        /// </summary>
+        ImportNormalizedTableExpected,
+        /// <summary>
         ///   Looks up a localized string similar to Index of the entry in the resource file..
         /// </summary>
         IndexColumnHeaderToolTip,
@@ -1170,7 +1180,11 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         PasteFailed,
         /// <summary>
-        ///   Looks up a localized string similar to Paste rows (Ctrl+V).
+        ///   Looks up a localized string similar to The data you're pasting isn't the same size as you....
+        /// </summary>
+        PasteSelectionSizeMismatch,
+        /// <summary>
+        ///   Looks up a localized string similar to Paste the clipboard content (Ctrl+V).
         /// </summary>
         PasteToolTip,
         /// <summary>
