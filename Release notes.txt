@@ -1,3 +1,5 @@
+1.0.0.68:
+* Fix broken copy/paste for complex content.
 1.0.0.67:
 * WI6450: Show namespace in the resource list (for project residing in the solution folder)
 * WI6451: Resources are not found if the resx file has a default namespace
