@@ -3,7 +3,7 @@ using System.Reflection;
 [assembly: AssemblyVersion(Product.Version)]
 [assembly: AssemblyFileVersion(Product.Version)]
 
-static class Product
+internal static class Product
 {
-    public const string Version = "1.0.0.68";
+    public const string Version = "1.0.0.69";
 }
