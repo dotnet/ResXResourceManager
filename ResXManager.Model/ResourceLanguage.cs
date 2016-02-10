@@ -527,6 +527,7 @@
             {
                 Contract.Requires(owner != null);
                 Contract.Requires(element != null);
+                Contract.Requires(owner._commentNodeName != null);
 
                 _element = element;
                 _owner = owner;

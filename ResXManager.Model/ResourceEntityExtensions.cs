@@ -95,6 +95,8 @@
 
         private static string GetLanguageName(string dataColumnHeader)
         {
+            Contract.Requires(dataColumnHeader != null);
+
             var languageName = (dataColumnHeader.StartsWith(CommentHeaderPrefix, StringComparison.OrdinalIgnoreCase)
                 ? dataColumnHeader.Substring(CommentHeaderPrefix.Length) : dataColumnHeader);
             return languageName;
