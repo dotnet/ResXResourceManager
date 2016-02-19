@@ -171,6 +171,7 @@
                 value.Add(".vb", false, @"\W($Key)\W", @"'");
                 value.Add(".cpp,.c,.hxx,.h", true, @"\W($File::$Key)\W", @"//");
                 value.Add(".aspx,.ascx", true, @"<%\$\s+Resources:\s*($File)\s*,\s*($Key)\s*%>", null);
+                value.Add("*cs", true, @"StringResourceKey\.($Key)", @"//");
 
                 return value;
             }
