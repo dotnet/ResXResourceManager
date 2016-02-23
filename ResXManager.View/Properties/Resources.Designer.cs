@@ -5,6 +5,18 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
+// 
+// This template generates PublicResXFileCodeGenerator compatible code plus some
+// useful extensions. 
+// 
+// The original version provided by ResXResourceManager is restricted to resource key names
+// that are valid c# identifiers to keep this template simple (KISS!).
+// 
+// Us it as it is or as a scaffold to generate the code you need.
+//
+// As long as you have ResXResourceManager running in the background, the generated code 
+// will be kept up to date.
+//  
 //------------------------------------------------------------------------------
 
 namespace tomenglertde.ResXManager.View.Properties {
@@ -108,6 +120,26 @@ namespace tomenglertde.ResXManager.View.Properties {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CaseSensitive", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cell selection.
+        /// </summary>
+        public static string CellSelection {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("CellSelection", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Allow selection of individual cells to copy/paste ....
+        /// </summary>
+        public static string CellSelectionToolTip {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("CellSelectionToolTip", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -955,6 +987,14 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// @Invariant
         /// </remarks>
         CaseSensitive,
+        /// <summary>
+        ///   Looks up a localized string similar to Cell selection.
+        /// </summary>
+        CellSelection,
+        /// <summary>
+        ///   Looks up a localized string similar to Allow selection of individual cells to copy/paste ....
+        /// </summary>
+        CellSelectionToolTip,
         /// <summary>
         ///   Looks up a localized string similar to Choose columns.
         /// </summary>

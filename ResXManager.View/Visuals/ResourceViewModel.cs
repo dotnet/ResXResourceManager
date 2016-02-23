@@ -25,6 +25,7 @@
     {
         private readonly ResourceManager _resourceManager;
         private string _loadedSnapshot;
+        private bool _isCellSelectionEnabled;
 
         [ImportingConstructor]
         public ResourceViewModel(ResourceManager resourceManager)
@@ -50,6 +51,26 @@
             set
             {
                 SetProperty(ref _loadedSnapshot, value, () => LoadedSnapshot);
+            }
+        }
+
+        public bool IsCellSelectionEnabled
+        {
+            get
+            {
+                return _isCellSelectionEnabled;
+            }
+            set
+            {
+                SetProperty(ref _isCellSelectionEnabled, value, () => IsCellSelectionEnabled);
+            }
+        }
+
+        public ICommand ToggleCellSelectionCommand
+        {
+            get
+            {
+                return new DelegateCommand(() => IsCellSelectionEnabled = !IsCellSelectionEnabled);
             }
         }
 
@@ -213,14 +234,14 @@
         {
             var selectedItems = _resourceManager.SelectedTableEntries.ToList();
 
-            var resourceFiles = selectedItems.Select(item => item.Owner).Distinct();
+            var resourceFiles = selectedItems.Select(item => item.Container).Distinct();
 
             if (resourceFiles.Any(resourceFile => !_resourceManager.CanEdit(resourceFile, null)))
                 return;
 
             selectedItems.ToTable().SetClipboardData();
 
-            selectedItems.ForEach(item => item.Owner.Remove(item));
+            selectedItems.ForEach(item => item.Container.Remove(item));
         }
 
         private void CopySelected(DataGrid dataGrid)
@@ -246,12 +267,12 @@
             if (selectedItems.Count == 0)
                 return;
 
-            var resourceFiles = selectedItems.Select(item => item.Owner).Distinct();
+            var resourceFiles = selectedItems.Select(item => item.Container).Distinct();
 
             if (resourceFiles.Any(resourceFile => !_resourceManager.CanEdit(resourceFile, null)))
                 return;
 
-            selectedItems.ForEach(item => item.Owner.Remove(item));
+            selectedItems.ForEach(item => item.Container.Remove(item));
         }
 
         private bool CanPaste(DataGrid dataGrid)
@@ -265,7 +286,7 @@
             if (_resourceManager.SelectedEntities.Count != 1)
                 return false;
 
-            return (((dataGrid.SelectedCells == null) || !dataGrid.SelectedCells.Any()) 
+            return (((dataGrid.SelectedCells == null) || !dataGrid.SelectedCells.Any())
                 || dataGrid.HasRectangularCellSelection());
         }
 

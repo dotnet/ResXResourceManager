@@ -377,4 +377,10 @@
   <data name="PasteSelectionSizeMismatch" xml:space="preserve">
     <value>The data you're pasting isn't the same size as your selection.</value>
   </data>
+  <data name="CellSelection" xml:space="preserve">
+    <value>Cell selection</value>
+  </data>
+  <data name="CellSelectionToolTip" xml:space="preserve">
+    <value>Allow selection of individual cells to copy/paste the content.</value>
+  </data>
 </root>

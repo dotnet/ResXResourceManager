@@ -426,7 +426,15 @@
             // WE have saved the files - update the finger print so we don't reload unnecessarily
             _solutionFingerPrint = GetFingerprint(GetProjectFiles());
 
-            ((DteProjectFile)e.Language.ProjectFile).ProjectItems
+            var language = e.Language;
+            var entity = language.Container;
+
+            // Run custom tool (usually attached to neutral language) even if a localized language changes,
+            // e.g. if custom tool is a text template, we might want not only to generate the designer file but also 
+            // extract some localization information.
+            entity.Languages.Select(lang => lang.ProjectFile)
+                .OfType<DteProjectFile>()
+                .SelectMany(projectFile => projectFile.ProjectItems)
                 .Where(projectItem => projectItem != null)
                 .SelectMany(item => item.DescendantsAndSelf())
                 .ForEach(projectItem => projectItem.RunCustomTool());

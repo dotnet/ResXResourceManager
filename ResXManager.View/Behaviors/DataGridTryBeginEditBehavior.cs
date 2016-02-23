@@ -35,7 +35,7 @@
 
             var dataGridRow = e.Row;
             var entry = (ResourceTableEntry)dataGridRow.Item;
-            var resourceEntity = entry.Owner;
+            var resourceEntity = entry.Container;
 
             var resourceLanguages = resourceEntity.Languages;
             if (!resourceLanguages.Any())

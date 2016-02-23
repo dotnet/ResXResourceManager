@@ -12,6 +12,7 @@
     [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Delete)]
     [Text(IconUriKey, "pack://application:,,,/ResXManager.View;component/Assets/delete.png")]
+    [Text(GroupNameKey, "Edit")]
     public class DeleteCommand : CommandSourceFactory
     {
     }
@@ -20,6 +21,7 @@
     [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Cut)]
     [Text(IconUriKey, "pack://application:,,,/ResXManager.View;component/Assets/cut.png")]
+    [Text(GroupNameKey, "Edit")]
     public class CutCommand : CommandSourceFactory
     {
     }
@@ -28,6 +30,7 @@
     [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Copy)]
     [Text(IconUriKey, "pack://application:,,,/ResXManager.View;component/Assets/copy.png")]
+    [Text(GroupNameKey, "Edit")]
     public class CopyCommand : CommandSourceFactory
     {
     }
@@ -36,6 +39,7 @@
     [VisualCompositionExport(RegionId.ResourceTableContextMenu, RegionId.ProjectListContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Paste)]
     [Text(IconUriKey, "pack://application:,,,/ResXManager.View;component/Assets/paste.png")]
+    [Text(GroupNameKey, "Edit")]
     public class PasteCommand : CommandSourceFactory
     {
     }
@@ -44,7 +48,17 @@
     [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Invariant)]
     [Text(IsCheckableKey, "True")]
+    [Text(GroupNameKey, "Edit")]
     public class IsInvariantCommand : CommandSourceFactory
+    {
+    }
+
+    [Export]
+    [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
+    [LocalizedDisplayName(StringResourceKey.CellSelection)]
+    [Text(IsCheckableKey, "True")]
+    [Text(GroupNameKey, "Options")]
+    public class ToggleCellSelectionCommand : CommandSourceFactory
     {
     }
 }

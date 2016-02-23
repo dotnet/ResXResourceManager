@@ -173,8 +173,8 @@
               <DataTemplate DataType="{x:Type model:ResourceTableEntry}">
                 <TextBlock>
                   <Run Text="{Binding Path=Key, Mode=OneWay}" Foreground="Black" />:
-                  <Run Text="{Binding Path=Owner.BaseName, Mode=OneWay}" FontWeight="Bold" />
-                  (<Run Text="{Binding Path=Owner.Directory, Mode=OneWay}" />)
+                  <Run Text="{Binding Path=Container.BaseName, Mode=OneWay}" FontWeight="Bold" />
+                  (<Run Text="{Binding Path=Container.Directory, Mode=OneWay}" />)
                 </TextBlock>
               </DataTemplate>
             </Control.Resources>
@@ -247,6 +247,10 @@
                             IsChecked="{Binding IsIndexColumnVisible, Source={x:Static properties:Settings.Default}, Mode=TwoWay}"
                             IsEnabled="{Binding SelectedItems.Count, ElementName=ListBox, Converter={x:Static toms:BinaryOperationConverter.Equality}, ConverterParameter=1}">
                 <TextBlock Width="16" Height="16" Text="#" TextAlignment="Center" />
+              </ToggleButton>
+              <ToggleButton ToolTip="{x:Static properties:Resources.CellSelectionToolTip}"
+                            IsChecked="{Binding IsCellSelectionEnabled, Mode=TwoWay}">
+                <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/cellSelection.png" />
               </ToggleButton>
               <Separator />
               <Button ToolTip="{x:Static properties:Resources.DeleteToolTip}"
@@ -380,7 +384,6 @@
                   HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" Padding="2" BorderThickness="0"
                   dgx:DataGridFilter.IsAutoFilterEnabled="True" AutoGenerateColumns="False"
                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
-                  SelectionUnit="CellOrRowHeader"
                   toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedTableEntries}">
           <DataGrid.Resources>
 
@@ -507,6 +510,9 @@
                   <Setter Property="ItemsSource" Value="{Binding Source={StaticResource GroupedResourceTableEntriesSource}}" />
                   <Setter Property="toms:StyleBindings.GroupStyle" Value="{StaticResource GroupStyle}" />
                 </DataTrigger>
+                <DataTrigger Binding="{Binding IsCellSelectionEnabled}" Value="True">
+                  <Setter Property="SelectionUnit" Value="CellOrRowHeader"/>
+                </DataTrigger>
               </Style.Triggers>
             </Style>
           </DataGrid.Style>
@@ -537,5 +543,6 @@
     <toms:CommandRoutingBehavior CommandSource="view:CopyCommand" CommandTarget="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}"/>
     <toms:CommandRoutingBehavior CommandSource="view:PasteCommand" CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}"/>
     <toms:CommandRoutingBehavior CommandSource="view:IsInvariantCommand" CommandTarget="{Binding ToggleInvariantCommand}" IsChecked="{Binding Path=SelectedItem.IsInvariant, Mode=OneWay, ElementName=DataGrid}" />
+    <toms:CommandRoutingBehavior CommandSource="view:ToggleCellSelectionCommand" CommandTarget="{Binding ToggleCellSelectionCommand}" IsChecked="{Binding IsCellSelectionEnabled, Mode=OneWay}" />
   </i:Interaction.Behaviors>
 </UserControl>

@@ -41,22 +41,24 @@
         private readonly XName _dataNodeName;
         private readonly XName _valueNodeName;
         private readonly XName _commentNodeName;
+        private readonly ResourceEntity _container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceLanguage" /> class.
         /// </summary>
-        /// <param name="resourceManager">The resource manager.</param>
+        /// <param name="container">The containing resource entity.</param>
         /// <param name="cultureKey">The culture key.</param>
         /// <param name="file">The .resx file having all the localization.</param>
         /// <exception cref="System.InvalidOperationException">
         /// </exception>
-        internal ResourceLanguage(ResourceManager resourceManager, CultureKey cultureKey, ProjectFile file)
+        internal ResourceLanguage(ResourceEntity container, CultureKey cultureKey, ProjectFile file)
         {
-            Contract.Requires(resourceManager != null);
+            _container = container;
+            Contract.Requires(container != null);
             Contract.Requires(cultureKey != null);
             Contract.Requires(file != null);
 
-            _resourceManager = resourceManager;
+            _resourceManager = container.Container;
             _cultureKey = cultureKey;
             _file = file;
 
@@ -181,6 +183,16 @@
                 Contract.Ensures(Contract.Result<CultureKey>() != null);
 
                 return _cultureKey;
+            }
+        }
+
+        public ResourceEntity Container
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ResourceEntity>() != null);
+
+                return _container;
             }
         }
 
@@ -760,6 +772,7 @@
             Contract.Invariant(_dataNodeName != null);
             Contract.Invariant(_valueNodeName != null);
             Contract.Invariant(_commentNodeName != null);
+            Contract.Invariant(_container != null);
         }
     }
 }

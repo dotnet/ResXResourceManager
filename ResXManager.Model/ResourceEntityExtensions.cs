@@ -26,7 +26,7 @@
             Contract.Requires(entries != null);
             Contract.Ensures(Contract.Result<IList<IList<string>>>() != null);
 
-            var languages = entries.SelectMany(e => e.Owner.Languages).Distinct().ToArray();
+            var languages = entries.SelectMany(e => e.Container.Languages).Distinct().ToArray();
 
             var table = languages.GetTableHeaderLines().Concat(entries.GetTableDataLines(languages)).ToArray();
 

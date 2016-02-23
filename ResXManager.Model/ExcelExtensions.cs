@@ -62,7 +62,7 @@
 
             if (scope != null)
             {
-                var entitiesInScope = scope.Entries.Select(entry => entry.Owner).Distinct().ToArray();
+                var entitiesInScope = scope.Entries.Select(entry => entry.Container).Distinct().ToArray();
                 entitiesQuery = entitiesQuery.Where(entity => entitiesInScope.Contains(entity.ResourceEntity));
             }
 
@@ -97,7 +97,7 @@
             worksheetPart.Worksheet = worksheet;
 
             var headerRow = _singleSheetFixedColumnHeaders.Concat(languages.GetLanguageColumnHeaders(scope));
-            var dataRows = entries.Select(e => new[] { e.Owner.ProjectName, e.Owner.UniqueName }.Concat(e.GetDataRow(languages, scope)));
+            var dataRows = entries.Select(e => new[] { e.Container.ProjectName, e.Container.UniqueName }.Concat(e.GetDataRow(languages, scope)));
 
             var rows = new[] { headerRow }.Concat(dataRows);
 
@@ -425,7 +425,7 @@
             Contract.Ensures(Contract.Result<IEnumerable<IEnumerable<string>>>() != null);
 
             var entries = (scope != null)
-                ? scope.Entries.Where(entry => entry.Owner == entity)
+                ? scope.Entries.Where(entry => entry.Container == entity)
                 : entity.Entries;
 
             return entries.Select(entry => entry.GetDataRow(languages, scope));

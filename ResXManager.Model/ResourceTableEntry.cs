@@ -21,7 +21,7 @@
     {
         private const string InvariantKey = "@Invariant";
         private readonly Regex _duplicateKeyExpression = new Regex(@"_Duplicate\[\d+\]$");
-        private readonly ResourceEntity _owner;
+        private readonly ResourceEntity _container;
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly ResourceLanguage _neutralLanguage;
         private readonly ResourceTableValues<bool> _fileExists;
@@ -39,18 +39,18 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceTableEntry" /> class.
         /// </summary>
-        /// <param name="owner">The owner.</param>
+        /// <param name="container">The owner.</param>
         /// <param name="key">The resource key.</param>
         /// <param name="index">The original index of the resource in the file.</param>
         /// <param name="languages">The localized values.</param>
-        internal ResourceTableEntry(ResourceEntity owner, string key, double index, IDictionary<CultureKey, ResourceLanguage> languages)
+        internal ResourceTableEntry(ResourceEntity container, string key, double index, IDictionary<CultureKey, ResourceLanguage> languages)
         {
-            Contract.Requires(owner != null);
+            Contract.Requires(container != null);
             Contract.Requires(!string.IsNullOrEmpty(key));
             Contract.Requires(languages != null);
             Contract.Requires(languages.Any());
 
-            _owner = owner;
+            _container = container;
             _key = key;
             _index = index;
             _languages = languages;
@@ -83,12 +83,12 @@
             _comments.ValueChanged += Comments_ValueChanged;
         }
 
-        public ResourceEntity Owner
+        public ResourceEntity Container
         {
             get
             {
                 Contract.Ensures(Contract.Result<ResourceEntity>() != null);
-                return _owner;
+                return _container;
             }
         }
 
@@ -278,7 +278,7 @@
             {
                 if (SetProperty(ref _index, value, () => Index))
                 {
-                    _owner.OnIndexChanged(this);
+                    _container.OnIndexChanged(this);
                 }
             }
         }
@@ -308,7 +308,7 @@
 
         public bool CanEdit(CultureInfo culture)
         {
-            return _owner.CanEdit(culture);
+            return _container.CanEdit(culture);
         }
 
         public void Refresh()
@@ -449,7 +449,7 @@
                 if (ReferenceEquals(y, null))
                     return false;
 
-                return x.Owner.Equals(y.Owner) && x.Key.Equals(y.Key);
+                return x.Container.Equals(y.Container) && x.Key.Equals(y.Key);
             }
 
             public int GetHashCode(ResourceTableEntry obj)
@@ -457,7 +457,7 @@
                 if (obj == null)
                     throw new ArgumentNullException("obj");
 
-                return obj.Owner.GetHashCode() + obj.Key.GetHashCode();
+                return obj.Container.GetHashCode() + obj.Key.GetHashCode();
             }
         }
 
@@ -470,7 +470,7 @@
             Contract.Invariant(_comments != null);
             Contract.Invariant(_fileExists != null);
             Contract.Invariant(_neutralLanguage != null);
-            Contract.Invariant(_owner != null);
+            Contract.Invariant(_container != null);
             Contract.Invariant(_languages != null);
         }
     }

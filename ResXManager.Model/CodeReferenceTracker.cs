@@ -81,7 +81,7 @@
                 _total = sourceFiles.Select(sf => sf.Lines.Length).Sum() * resourceTableEntries.Count;
                 _visited = 0;
 
-                var entriesByBaseName = resourceTableEntries.GroupBy(entry => entry.Owner.BaseName);
+                var entriesByBaseName = resourceTableEntries.GroupBy(entry => entry.Container.BaseName);
 
                 foreach (var entriesGroup in entriesByBaseName.AsParallel())
                 {

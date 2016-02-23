@@ -23,7 +23,7 @@
     public class ResourceEntity : ObservableObject, IComparable<ResourceEntity>, IComparable, IEquatable<ResourceEntity>
     {
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
-        private readonly ResourceManager _owner;
+        private readonly ResourceManager _container;
         private readonly string _projectName;
         private readonly string _baseName;
         private readonly string _directory;
@@ -33,15 +33,15 @@
         private readonly string _sortKey;
         private readonly ProjectFile _neutralProjectFile;
 
-        internal ResourceEntity(ResourceManager owner, string projectName, string baseName, string directory, ICollection<ProjectFile> files)
+        internal ResourceEntity(ResourceManager container, string projectName, string baseName, string directory, ICollection<ProjectFile> files)
         {
-            Contract.Requires(owner != null);
+            Contract.Requires(container != null);
             Contract.Requires(!string.IsNullOrEmpty(projectName));
             Contract.Requires(!string.IsNullOrEmpty(baseName));
             Contract.Requires(!string.IsNullOrEmpty(directory));
             Contract.Requires(files != null);
 
-            _owner = owner;
+            _container = container;
             _projectName = projectName;
             _baseName = baseName;
             _directory = directory;
@@ -54,7 +54,7 @@
                 from file in files
                 let cultureKey = file.GetCultureKey()
                 orderby cultureKey
-                select new ResourceLanguage(owner, cultureKey, file);
+                select new ResourceLanguage(this, cultureKey, file);
 
             _languages = languageQuery.ToDictionary(language => language.CultureKey);
 
@@ -110,12 +110,12 @@
         public event EventHandler<LanguageChangedEventArgs> LanguageChanged;
         public event EventHandler<LanguageChangedEventArgs> LanguageAdded;
 
-        public ResourceManager Owner
+        public ResourceManager Container
         {
             get
             {
                 Contract.Ensures(Contract.Result<ResourceManager>() != null);
-                return _owner;
+                return _container;
             }
         }
 
@@ -263,7 +263,7 @@
             Contract.Requires(file != null);
 
             var cultureKey = file.GetCultureKey();
-            var resourceLanguage = new ResourceLanguage(_owner, cultureKey, file);
+            var resourceLanguage = new ResourceLanguage(this, cultureKey, file);
 
             resourceLanguage.Changed += language_Changed;
             resourceLanguage.Changing += language_Changing;
@@ -469,7 +469,7 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_owner != null);
+            Contract.Invariant(_container != null);
             Contract.Invariant(_languages != null);
             Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(!string.IsNullOrEmpty(_projectName));

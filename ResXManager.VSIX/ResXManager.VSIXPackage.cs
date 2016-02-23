@@ -185,8 +185,11 @@
 
             var toolWindow = FindToolWindow(false);
 
-            if ((toolWindow != null) && toolWindow.ResourceManager.ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.ProjectFile.IsSaving))
-                return;
+            if (toolWindow != null)
+            {
+                if (toolWindow.ResourceManager.ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.ProjectFile.IsSaving))
+                    return;
+            }
 
             document.ProjectItem.Descendants().ForEach(projectItem => projectItem.RunCustomTool());
         }
