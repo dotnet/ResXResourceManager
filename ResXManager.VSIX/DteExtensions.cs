@@ -213,6 +213,35 @@
             }
         }
 
+        public static void SetProperty(this EnvDTE.ProjectItem projectItem, string propertyName, object value)
+        {
+            Contract.Requires(projectItem != null);
+            Contract.Requires(propertyName != null);
+
+            var properties = projectItem.Properties;
+            if (properties == null)
+                return;
+
+            var item = properties.Item(propertyName);
+            if (item != null)
+                item.Value = value;
+        }
+
+        public static object GetProperty(this EnvDTE.ProjectItem projectItem, string propertyName)
+        {
+            Contract.Requires(projectItem != null);
+            Contract.Requires(propertyName != null);
+
+            var properties = projectItem.Properties;
+            if (properties == null)
+                return null;
+
+            var item = properties.Item(propertyName);
+
+            return item != null ? item.Value : null;
+        }
+
+
         public static void RunCustomTool(this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
@@ -227,30 +256,14 @@
         {
             Contract.Requires(projectItem != null);
 
-            var properties = projectItem.Properties;
-            if (properties == null)
-                return;
-
-            var item = properties.Item("CustomTool");
-
-            if (item != null)
-                item.Value = value;
+            SetProperty(projectItem, "CustomTool", value);
         }
 
         public static string GetCustomTool(this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
 
-            var properties = projectItem.Properties;
-            if (properties == null)
-                return null;
-
-            var item = properties.Item("CustomTool");
-
-            if (item != null)
-                return item.Value as string;
-
-            return null;
+            return GetProperty(projectItem, "CustomTool") as string;
         }
 
         public static EnvDTE.ProjectItem AddFromFile(this EnvDTE.ProjectItem projectItem, string fileName)

@@ -207,10 +207,12 @@
             File.WriteAllBytes(fileName, Resources.Resources_Designer_tt);
 
             var item = projectItem.AddFromFile(fileName);
-            if (item != null)
-            {
-                Dispatcher.BeginInvoke(() => item.RunCustomTool());
-            }
+            if (item == null) 
+                return;
+
+            item.SetProperty("BuildAction", 0);
+
+            Dispatcher.BeginInvoke(() => item.RunCustomTool());
         }
 
         private static void SetCustomToolCodeGenerator(EnvDTE.ProjectItem projectItem, CodeGenerator value)
