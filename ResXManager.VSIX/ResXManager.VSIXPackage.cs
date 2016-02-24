@@ -8,6 +8,8 @@
     using System.Runtime.InteropServices;
     using System.Windows.Threading;
 
+    using EnvDTE;
+
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -66,6 +68,7 @@
             _dte = (EnvDTE.DTE)GetService(typeof(SDTE));
             _documentEvents = _dte.Events.DocumentEvents;
             _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
+            _documentEvents.DocumentOpened += DocumentEvents_DocumentOpened;
         }
 
         private static OleMenuCommand CreateMenuCommand(IMenuCommandService mcs, int cmdId, EventHandler invokeHandler)
@@ -171,16 +174,17 @@
             menuCommand.Visible = false;
         }
 
+        private void DocumentEvents_DocumentOpened(EnvDTE.Document document)
+        {
+            if (!AffectsResourceFile(document))
+                return;
+
+            FindToolWindow(true);
+        }
+
         private void DocumentEvents_DocumentSaved(EnvDTE.Document document)
         {
-            if (document == null)
-                return;
-
-            var extension = Path.GetExtension(document.Name);
-            if (extension == null)
-                return;
-
-            if (!ProjectFileExtensions.SupportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
+            if (!AffectsResourceFile(document))
                 return;
 
             var toolWindow = FindToolWindow(false);
@@ -192,6 +196,48 @@
             }
 
             document.ProjectItem.Descendants().ForEach(projectItem => projectItem.RunCustomTool());
+
+            if (toolWindow != null)
+            {
+                toolWindow.ReloadSolution();
+            }
+        }
+
+        private static bool AffectsResourceFile(Document document)
+        {
+            Contract.Ensures((Contract.Result<bool>() == false) || (document != null));
+
+            if (document == null)
+                return false;
+
+            return document.ProjectItem
+                .DescendantsAndSelf()
+                .Select(TryGetFileName)
+                .Where(fileName => fileName != null)
+                .Select(Path.GetExtension)
+                .Any(extension => ProjectFileExtensions.SupportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase));
+        }
+
+        private static string TryGetFileName(EnvDTE.ProjectItem projectItem)
+        {
+            Contract.Requires(projectItem != null);
+
+            var name = projectItem.Name;
+            Contract.Assume(name != null);
+
+            try
+            {
+                if (string.Equals(projectItem.Kind, ItemKind.PhysicalFile, StringComparison.OrdinalIgnoreCase))
+                {
+                    // some items report a file count > 0 but don't return a file name!
+                    return projectItem.FileNames[0];
+                }
+            }
+            catch (ArgumentException)
+            {
+            }
+
+            return null;
         }
     }
 }

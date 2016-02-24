@@ -16,8 +16,6 @@
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
 
-    using EnvDTE;
-
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -25,7 +23,6 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
-    using tomenglertde.ResXManager.View.Visuals;
     using tomenglertde.ResXManager.VSIX.Visuals;
 
     using TomsToolbox.Core;
@@ -33,8 +30,6 @@
     using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
-
-    using VSLangProj;
 
     using Configuration = tomenglertde.ResXManager.Model.Configuration;
     using Process = System.Diagnostics.Process;
@@ -52,7 +47,7 @@
         private readonly Configuration _configuration;
         private readonly Control _view;
 
-        private DTE _dte;
+        private EnvDTE.DTE _dte;
         private string _solutionFingerPrint;
         private string _currentSolutionFullName;
         private readonly CodeReferenceTracker _codeReferenceTracker;
@@ -115,7 +110,7 @@
             {
                 _trace.WriteLine(Resources.IntroMessage);
 
-                _dte = (DTE)GetService(typeof(DTE));
+                _dte = (EnvDTE.DTE)GetService(typeof(EnvDTE.DTE));
                 Contract.Assume(_dte != null);
 
                 var executingAssembly = Assembly.GetExecutingAssembly();
@@ -453,7 +448,7 @@
             }
         }
 
-        private void ReloadSolution(bool forceReload = false)
+        internal void ReloadSolution(bool forceReload = false)
         {
             var sourceFileFilter = new SourceFileFilter(_configuration);
 
@@ -472,7 +467,11 @@
 
             _solutionFingerPrint = fingerPrint;
 
+            var oldItems = _resourceManager.ResourceEntities.ToArray();
+
             _resourceManager.Load(projectFiles);
+
+            PreserveCommentsInWinFormsDesignerResources(oldItems);
 
             if (!string.Equals(solutionFullName, _currentSolutionFullName, StringComparison.OrdinalIgnoreCase))
             {
@@ -483,6 +482,43 @@
             if (Settings.Default.IsFindCodeReferencesEnabled)
             {
                 _codeReferenceTracker.BeginFind(_resourceManager, _configuration.CodeReferences, projectFiles, _trace);
+            }
+        }
+
+        private void PreserveCommentsInWinFormsDesignerResources(ICollection<ResourceEntity> oldValues)
+        {
+            Contract.Requires(oldValues != null);
+
+            foreach (var newEntity in _resourceManager.ResourceEntities)
+            {
+                Contract.Assume(newEntity != null);
+
+                var oldEntity = oldValues.FirstOrDefault(entity => entity.Equals(newEntity));
+                if (oldEntity == null)
+                    continue;
+
+                var projectFile = (DteProjectFile)newEntity.NeutralProjectFile;
+                if (projectFile == null)
+                    continue;
+
+                if (!projectFile.IsWinFormsDesignerResource)
+                    continue;
+
+                foreach (var newEntry in newEntity.Entries)
+                {
+                    Contract.Assume(newEntry != null);
+
+                    var oldEntry = oldEntity.Entries.FirstOrDefault(entry => ResourceTableEntry.EqualityComparer.Equals(entry, newEntry));
+                    if (oldEntry == null)
+                        continue;
+
+                    var oldComment = oldEntry.Comment;
+                    if (!string.IsNullOrEmpty(oldComment))
+                    {
+                        if (string.IsNullOrEmpty(newEntry.Comment))
+                        newEntry.Comment = oldComment;
+                    }
+                }
             }
         }
 

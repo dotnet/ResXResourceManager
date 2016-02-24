@@ -135,6 +135,25 @@
             }
         }
 
+        public bool IsWinFormsDesignerResource
+        {
+            get
+            {
+                var projectItem = DefaultProjectItem;
+
+                var projectItems = projectItem.Collection;
+                if (projectItems == null)
+                    return false;
+
+                var parent = projectItems.Parent as EnvDTE.ProjectItem;
+                if (parent == null)
+                    return false;
+
+                var subType = parent.GetProperty("SubType") as string;
+                return (subType == "Form") || (subType == "UserControl");
+            }
+        }
+
         public CodeGenerator GetCodeGenerator()
         {
             var projectItem = DefaultProjectItem;
@@ -207,7 +226,7 @@
             File.WriteAllBytes(fileName, Resources.Resources_Designer_tt);
 
             var item = projectItem.AddFromFile(fileName);
-            if (item == null) 
+            if (item == null)
                 return;
 
             item.SetProperty("BuildAction", 0);

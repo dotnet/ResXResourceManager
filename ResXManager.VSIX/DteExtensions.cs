@@ -236,9 +236,16 @@
             if (properties == null)
                 return null;
 
-            var item = properties.Item(propertyName);
+            try
+            {
+                var item = properties.Item(propertyName);
 
-            return item != null ? item.Value : null;
+                return item != null ? item.Value : null;
+            }
+            catch (ArgumentException)
+            {
+                return null;
+            }
         }
 
 
