@@ -453,8 +453,9 @@
           <DataGrid.CellStyle>
             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
 
-              <Setter Property="BorderThickness" Value="0"/>
+              <Setter Property="BorderThickness" Value="1"/>
               <Setter Property="Background" Value="{StaticResource HighlightBrush}" />
+              <Setter Property="BorderBrush" Value="{Binding Background, RelativeSource={RelativeSource Self}}"/>
               <Setter Property="ToolTip">
                 <Setter.Value>
                   <ToolTip>
