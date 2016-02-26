@@ -1,5 +1,11 @@
+1.0.0.70:
+* WI4683: T4 Templates are added as build action "Content", should be "None".
+* WI4685: Cell selection should not be active by default.
+* WI4686: Trigger custom tool when any language changes.
+* WI4687: WinForms designer drops comments in resx, removing @Invariant.
+* WI4653: Keep sorting after file change.
 1.0.0.69:
-* WI4680: Problem when copying/cutting unicode resource strings
+* WI4680: Problem when copying/cutting unicode resource strings.
 1.0.0.68:
 * Fix broken copy/paste for complex content.
 1.0.0.67:
