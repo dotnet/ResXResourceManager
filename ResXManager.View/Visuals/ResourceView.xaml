@@ -70,7 +70,7 @@
 
     <CollectionViewSource x:Key="GroupedResourceTableEntriesSource" Source="{Binding ResourceManager.ResourceTableEntries}">
       <CollectionViewSource.GroupDescriptions>
-        <PropertyGroupDescription PropertyName="Owner" />
+        <PropertyGroupDescription PropertyName="Container" />
       </CollectionViewSource.GroupDescriptions>
     </CollectionViewSource>
 
