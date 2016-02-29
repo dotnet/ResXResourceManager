@@ -1,3 +1,5 @@
+1.0.0.71:
+* Fix broken grouping view.
 1.0.0.70:
 * WI4683: T4 Templates are added as build action "Content", should be "None".
 * WI4685: Cell selection should not be active by default.
