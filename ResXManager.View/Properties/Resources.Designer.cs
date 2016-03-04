@@ -344,6 +344,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string dddd {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("dddd", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Delete (Del).
         /// </summary>
         public static string Delete {
@@ -684,6 +694,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string ölkölk {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ölkölk", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Paste (Ctrl+V).
         /// </summary>
         public static string Paste {
@@ -850,6 +870,16 @@ namespace tomenglertde.ResXManager.View.Properties {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("SortNodesByKey_Confirmation", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string Test {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("Test", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -1076,6 +1106,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         CutToolTip,
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        dddd,
+        /// <summary>
         ///   Looks up a localized string similar to Delete (Del).
         /// </summary>
         Delete,
@@ -1212,6 +1246,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         NoSelection,
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        ölkölk,
+        /// <summary>
         ///   Looks up a localized string similar to Paste (Ctrl+V).
         /// </summary>
         Paste,
@@ -1279,6 +1317,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Do you want to sort all nodes of all resource file....
         /// </summary>
         SortNodesByKey_Confirmation,
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        Test,
         /// <summary>
         ///   Looks up a localized string similar to ResX Resource Manager.
         /// </summary>

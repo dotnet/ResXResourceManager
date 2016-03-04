@@ -383,4 +383,13 @@
   <data name="CellSelectionToolTip" xml:space="preserve">
     <value>Allow selection of individual cells to copy/paste the content.</value>
   </data>
+  <data name="Test" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="dddd" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ölkölk" xml:space="preserve">
+    <value></value>
+  </data>
 </root>
