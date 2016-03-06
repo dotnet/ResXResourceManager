@@ -57,7 +57,7 @@
       </Style.Triggers>
     </Style>
 
-    <CollectionViewSource x:Key="ResourceEntitiesSource" Source="{Binding ResourceManager.FilteredResourceEntities}">
+    <CollectionViewSource x:Key="ResourceEntitiesSource" Source="{Binding ResourceManager.ResourceEntities}" >
       <CollectionViewSource.SortDescriptions>
         <componentModel:SortDescription PropertyName="ProjectName" />
         <componentModel:SortDescription PropertyName="RelativePath" />
@@ -92,7 +92,7 @@
         <DockPanel Margin="0,5">
           <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
             <Decorator Width="16" />
-            <CheckBox VerticalAlignment="Center" IsChecked="{Binding ResourceManager.AreAllFilesSelected}" IsThreeState="True" />
+            <CheckBox x:Name="SelectAll" VerticalAlignment="Center" IsThreeState="True" IsChecked="True"/>
             <Decorator Width="7" />
           </StackPanel>
           <Border Background="{x:Static SystemColors.WindowBrush}">
@@ -102,8 +102,8 @@
                 <Path Data="M0,0 L10,0 6,4 6,9 4,9 4,4 Z" Fill="Gray"
                       VerticalAlignment="Center" HorizontalAlignment="Right" Margin="2,0" />
               </StackPanel>
-              <TextBox ToolTip="{x:Static properties:Resources.ResourceFilterToolTip}" BorderThickness="0"
-                       Text="{Binding ResourceManager.EntityFilter, UpdateSourceTrigger=PropertyChanged}" />
+              <TextBox x:Name="EntityFilter" Text="{Binding Path=ResourceFilter, Source={x:Static properties:Settings.Default}, Mode=TwoWay}"
+                       ToolTip="{x:Static properties:Resources.ResourceFilterToolTip}" BorderThickness="0" />
             </DockPanel>
           </Border>
         </DockPanel>
@@ -151,6 +151,10 @@
             </GroupStyle.ContainerStyle>
           </GroupStyle>
         </ListBox.GroupStyle>
+        <i:Interaction.Behaviors>
+          <behaviors:EntityFilter FilterText="{Binding Text, ElementName=EntityFilter}"/>
+          <behaviors:SelectAllBehavior AreAllFilesSelected="{Binding IsChecked, ElementName=SelectAll}"/>
+        </i:Interaction.Behaviors>
       </ListBox>
     </DockPanel>
 

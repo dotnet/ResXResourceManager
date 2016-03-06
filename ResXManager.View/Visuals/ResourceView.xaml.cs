@@ -8,12 +8,10 @@
     using System.IO;
     using System.Linq;
     using System.Windows;
-    using System.Windows.Data;
 
     using Microsoft.Win32;
 
     using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Wpf;
@@ -40,15 +38,9 @@
 
             _resourceManager = resourceManager;
             _resourceManager.Loaded += ResourceManager_Loaded;
-            _resourceManager.EntityFilter = Settings.Default.ResourceFilter;
-
-            BindingOperations.SetBinding(this, EntityFilterProperty, new Binding("EntityFilter") { Source = _resourceManager });
 
             DataGrid.SetupColumns(_resourceManager);
         }
-
-        private static readonly DependencyProperty EntityFilterProperty =
-            DependencyProperty.Register("EntityFilter", typeof(string), typeof(ResourceView), new FrameworkPropertyMetadata(null, (sender, e) => Settings.Default.ResourceFilter = (string)e.NewValue));
 
         private void ResourceManager_Loaded(object sender, EventArgs e)
         {

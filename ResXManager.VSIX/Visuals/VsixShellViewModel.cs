@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows.Input;
@@ -14,17 +15,19 @@
     using TomsToolbox.Wpf;
 
     [Export]
-    public sealed class VsixShellViewModel : ObservableObject, IDisposable
+    public sealed class VsixShellViewModel : ObservableObject
     {
         private readonly ResourceManager _resourceManager;
+        private readonly DispatcherThrottle _selectedEntitiesChangedThrottle;
 
         [ImportingConstructor]
         public VsixShellViewModel(ResourceManager resourceManager)
         {
             Contract.Requires(resourceManager != null);
 
+            _selectedEntitiesChangedThrottle = new DispatcherThrottle(() => OnPropertyChanged(nameof(SelectedCodeGenerators)));
             _resourceManager = resourceManager;
-            _resourceManager.SelectedEntitiesChanged += ResourceManager_SelectedEntitiesChanged;
+            _resourceManager.SelectedEntities.CollectionChanged += (_, __) => _selectedEntitiesChangedThrottle.Tick();
         }
 
         void ResourceManager_SelectedEntitiesChanged(object sender, EventArgs e)
@@ -80,13 +83,8 @@
             OnPropertyChanged(() => SelectedCodeGenerators);
         }
 
-        public void Dispose()
-        {
-            _resourceManager.SelectedEntitiesChanged -= ResourceManager_SelectedEntitiesChanged;
-        }
-
         [ContractInvariantMethod]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_resourceManager != null);

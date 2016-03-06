@@ -10,7 +10,6 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Text.RegularExpressions;
     using System.Windows;
     using System.Windows.Data;
 
@@ -41,16 +40,13 @@
         private readonly ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
 
         private ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
-        private ListCollectionViewListAdapter<ResourceEntity> _filteredResourceEntities;
 
-        private string _entityFilter;
         private string _snapshot;
 
         public event EventHandler<LanguageEventArgs> LanguageSaved;
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
         public event EventHandler<EventArgs> Loaded;
         public event EventHandler<EventArgs> ReloadRequested;
-        public event EventHandler<EventArgs> SelectedEntitiesChanged;
 
         [ImportingConstructor]
         private ResourceManager(Configuration configuration, CodeReferenceTracker codeReferenceTracker, ITracer tracer)
@@ -62,7 +58,6 @@
             _configuration = configuration;
             _codeReferenceTracker = codeReferenceTracker;
             _tracer = tracer;
-            _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
             _resourceTableEntries = _selectedEntities.ObservableSelectMany(entity => entity.Entries);
         }
 
@@ -112,16 +107,6 @@
             }
         }
 
-        public IList FilteredResourceEntities
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IList>() != null);
-
-                return _filteredResourceEntities;
-            }
-        }
-
         public ICollection<ResourceTableEntry> ResourceTableEntries
         {
             get
@@ -142,7 +127,7 @@
             }
         }
 
-        public IList<ResourceEntity> SelectedEntities
+        public ObservableCollection<ResourceEntity> SelectedEntities
         {
             get
             {
@@ -169,49 +154,6 @@
                 Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
 
                 return _specificCultures;
-            }
-        }
-
-        public string EntityFilter
-        {
-            get
-            {
-                return _entityFilter;
-            }
-            set
-            {
-                if (_entityFilter == value)
-                    return;
-
-                ApplyEntityFilter(value);
-
-                OnPropertyChanged(() => EntityFilter);
-                OnPropertyChanged(() => AreAllFilesSelected);
-            }
-        }
-
-        public bool? AreAllFilesSelected
-        {
-            get
-            {
-                if (_selectedEntities.Count == 0)
-                    return false;
-
-                if (_selectedEntities.Count == _filteredResourceEntities.Count)
-                    return true;
-
-                return null;
-            }
-            set
-            {
-                if (value == AreAllFilesSelected)
-                    return;
-
-                var selected = (value == true) ? _filteredResourceEntities : Enumerable.Empty<ResourceEntity>();
-
-                _selectedEntities.SynchronizeWith(selected.ToArray());
-
-                OnPropertyChanged(() => AreAllFilesSelected);
             }
         }
 
@@ -308,7 +250,8 @@
                 .OrderBy(e => e.ProjectName)
                 .ThenBy(e => e.BaseName);
 
-            var reload = _resourceEntities.Any();
+            var isReloading = _resourceEntities.Any();
+
             var selectedEntities = _selectedEntities.ToArray();
             var selectedTableEntries = _selectedTableEntries.ToArray();
 
@@ -318,21 +261,15 @@
             if (!string.IsNullOrEmpty(_snapshot))
                 _resourceEntities.LoadSnapshot(_snapshot);
 
-            _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
-            if (!string.IsNullOrEmpty(_entityFilter))
-                ApplyEntityFilter(_entityFilter);
-
             var cultureKeys = _resourceEntities.SelectMany(entity => entity.Languages).Distinct().Select(lang => lang.CultureKey);
             _cultureKeys = new ObservableCollection<CultureKey>(cultureKeys);
 
             _selectedEntities.Clear();
-            _selectedEntities.AddRange(reload ? _resourceEntities.Where(selectedEntities.Contains) : _resourceEntities);
+            _selectedEntities.AddRange(isReloading ? _resourceEntities.Where(selectedEntities.Contains) : _resourceEntities);
 
             _selectedTableEntries.Clear();
             _selectedTableEntries.AddRange(_resourceTableEntries.Where(entry => selectedTableEntries.Contains(entry, ResourceTableEntry.EqualityComparer)));
 
-            OnSelectedEntitiesChanged();
-            OnPropertyChanged(() => FilteredResourceEntities);
             OnPropertyChanged(() => CultureKeys);
             OnLoaded();
         }
@@ -422,15 +359,6 @@
             });
         }
 
-        private void OnSelectedEntitiesChanged()
-        {
-            OnPropertyChanged(() => AreAllFilesSelected);
-
-            var eventHandler = SelectedEntitiesChanged;
-            if (eventHandler != null)
-                eventHandler(this, EventArgs.Empty);
-        }
-
         public static bool IsValidLanguageName(string languageName)
         {
             return Array.BinarySearch(_sortedCultureNames, languageName, StringComparer.OrdinalIgnoreCase) >= 0;
@@ -460,26 +388,6 @@
             return specificCultures;
         }
 
-        private void ApplyEntityFilter(string value)
-        {
-            _entityFilter = value;
-
-            if (!string.IsNullOrEmpty(value))
-            {
-                try
-                {
-                    var regex = new Regex(value.Trim(), RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                    _filteredResourceEntities.CollectionView.Filter = item => regex.Match(item.ToString()).Success;
-                    return;
-                }
-                catch (ArgumentException)
-                {
-                }
-            }
-
-            _filteredResourceEntities.CollectionView.Filter = null;
-        }
-
         public void LoadSnapshot(string value)
         {
             ResourceEntities.LoadSnapshot(value);
@@ -500,8 +408,6 @@
         {
             Contract.Invariant(_resourceEntities != null);
             Contract.Invariant(_selectedEntities != null);
-            Contract.Invariant(_filteredResourceEntities != null);
-            Contract.Invariant(FilteredResourceEntities != null);
             Contract.Invariant(_selectedTableEntries != null);
             Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(_configuration != null);

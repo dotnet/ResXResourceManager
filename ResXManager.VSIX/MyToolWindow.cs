@@ -49,7 +49,6 @@
 
         private EnvDTE.DTE _dte;
         private string _solutionFingerPrint;
-        private string _currentSolutionFullName;
         private readonly CodeReferenceTracker _codeReferenceTracker;
 
         /// <summary>
@@ -472,12 +471,6 @@
             _resourceManager.Load(projectFiles);
 
             PreserveCommentsInWinFormsDesignerResources(oldItems);
-
-            if (!string.Equals(solutionFullName, _currentSolutionFullName, StringComparison.OrdinalIgnoreCase))
-            {
-                _currentSolutionFullName = solutionFullName;
-                _resourceManager.AreAllFilesSelected = true;
-            }
 
             if (Settings.Default.IsFindCodeReferencesEnabled)
             {

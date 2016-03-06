@@ -198,7 +198,9 @@
       <Link>Version.cs</Link>
     </Compile>
     <Compile Include="Behaviors\DataGridTryBeginEditBehavior.cs" />
+    <Compile Include="Behaviors\EntityFilter.cs" />
     <Compile Include="Behaviors\PopupFocusManagerBehavior.cs" />
+    <Compile Include="Behaviors\SelectAllBehavior.cs" />
     <Compile Include="Behaviors\SelectGroupOnGroupHeaderClickBehavior.cs" />
     <Compile Include="Behaviors\ShowErrorsOnlyBehavior.cs" />
     <Compile Include="Behaviors\SynchronizeTextBoxWithDataGridCellBehavior.cs" />
