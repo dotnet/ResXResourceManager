@@ -58,14 +58,6 @@
 
             _languages = languageQuery.ToDictionary(language => language.CultureKey);
 
-            foreach (var language in _languages.Values)
-            {
-                Contract.Assume(language != null);
-
-                language.Changed += language_Changed;
-                language.Changing += language_Changing;
-            }
-
             var entriesQuery = _languages.Values.SelectMany(language => language.ResourceKeys)
                 .Distinct()
                 .Select((key, index) => new ResourceTableEntry(this, key, index, _languages));
@@ -105,10 +97,6 @@
 
             return string.Empty;
         }
-
-        public event EventHandler<LanguageChangingEventArgs> LanguageChanging;
-        public event EventHandler<LanguageChangedEventArgs> LanguageChanged;
-        public event EventHandler<LanguageChangedEventArgs> LanguageAdded;
 
         public ResourceManager Container
         {
@@ -265,13 +253,10 @@
             var cultureKey = file.GetCultureKey();
             var resourceLanguage = new ResourceLanguage(this, cultureKey, file);
 
-            resourceLanguage.Changed += language_Changed;
-            resourceLanguage.Changing += language_Changing;
-
             _languages.Add(cultureKey, resourceLanguage);
             _resourceTableEntries.ForEach(entry => entry.Refresh());
 
-            OnLanguageAdded(new LanguageChangedEventArgs(this, resourceLanguage));
+            Container.LanguageAdded(resourceLanguage.CultureKey);
         }
 
         public override string ToString()
@@ -281,41 +266,7 @@
 
         public bool CanEdit(CultureInfo culture)
         {
-            if (LanguageChanging == null)
-                return false;
-
-            var args = new LanguageChangingEventArgs(this, culture);
-            LanguageChanging(this, args);
-            return !args.Cancel;
-        }
-
-        private void language_Changing(object sender, CancelEventArgs e)
-        {
-            if (LanguageChanging != null)
-            {
-                var language = (ResourceLanguage) sender;
-                Contract.Assume(language != null);
-                var args = new LanguageChangingEventArgs(this, language.Culture);
-                LanguageChanging(this, args);
-                e.Cancel = args.Cancel;
-            }
-        }
-
-        private void language_Changed(object sender, EventArgs e)
-        {
-            if (LanguageChanged != null)
-            {
-                var language = (ResourceLanguage) sender;
-                Contract.Assume(language != null);
-                LanguageChanged(this, new LanguageChangedEventArgs(this, language));
-            }
-        }
-
-        private void OnLanguageAdded(LanguageChangedEventArgs e)
-        {
-            var handler = LanguageAdded;
-            if (handler != null)
-                handler(this, e);
+            return Container.CanEdit(this, culture);
         }
 
         internal void OnIndexChanged(ResourceTableEntry resourceTableEntry)
@@ -330,7 +281,7 @@
             if (!previousEntries.Any())
                 return;
 
-            if (!_languages.Values.All(l => l.CanChange()))
+            if (!_languages.Values.All(l => l.CanEdit()))
                 return;
 
             foreach (var language in _languages.Values)

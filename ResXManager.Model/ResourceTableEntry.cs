@@ -112,7 +112,7 @@
 
                 var resourceLanguages = _languages.Values;
 
-                if (resourceLanguages.Any(language => language.KeyExists(value)) || !resourceLanguages.All(language => language.CanChange()))
+                if (resourceLanguages.Any(language => language.KeyExists(value)) || !resourceLanguages.All(language => language.CanEdit()))
                 {
                     Dispatcher.BeginInvoke(() => OnPropertyChanged(() => Key));
                     throw new InvalidOperationException("Key already exists: " + value);

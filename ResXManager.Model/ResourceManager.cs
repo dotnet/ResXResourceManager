@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel.Composition;
@@ -11,7 +10,6 @@
     using System.IO;
     using System.Linq;
     using System.Windows;
-    using System.Windows.Data;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
@@ -19,7 +17,6 @@
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
     using TomsToolbox.ObservableCollections;
-    using TomsToolbox.Wpf;
 
     /// <summary>
     /// Represents all resources found in a folder and its's sub folders.
@@ -186,7 +183,7 @@
             _selectedTableEntries.Add(entry);
         }
 
-        public void LanguageAdded(CultureInfo culture)
+        public void NewLanguageAdded(CultureInfo culture)
         {
             if (!_configuration.AutoCreateNewLanguageFiles)
                 return;
@@ -309,47 +306,33 @@
 
                         var resourceEntity = new ResourceEntity(this, projectName, baseName, directoryName, files.ToArray());
 
-                        resourceEntity.LanguageChanging += ResourceEntity_LanguageChanging;
-                        resourceEntity.LanguageChanged += ResourceEntity_LanguageChanged;
-                        resourceEntity.LanguageAdded += ResourceEntity_LanguageAdded;
-
                         yield return resourceEntity;
                     }
                 }
             }
         }
 
-        private void ResourceEntity_LanguageAdded(object sender, LanguageChangedEventArgs e)
+        internal void LanguageAdded(CultureKey cultureKey)
         {
-            var cultureKey = e.Language.CultureKey;
-
             if (!_cultureKeys.Contains(cultureKey))
             {
                 _cultureKeys.Add(cultureKey);
             }
         }
 
-        private void ResourceEntity_LanguageChanging(object sender, LanguageChangingEventArgs e)
-        {
-            if (!CanEdit(e.Entity, e.Culture))
-            {
-                e.Cancel = true;
-            }
-        }
-
-        private void ResourceEntity_LanguageChanged(object sender, LanguageChangedEventArgs e)
+        internal void LanguageChanged(ResourceLanguage language)
         {
             // Defer save to avoid repeated file access
             Dispatcher.BeginInvoke(() =>
             {
                 try
                 {
-                    if (!e.Language.HasChanges)
+                    if (!language.HasChanges)
                         return;
 
-                    e.Language.Save();
+                    language.Save();
 
-                    OnLanguageSaved(e);
+                    OnLanguageSaved(new LanguageEventArgs(language));
                 }
                 catch (Exception ex)
                 {

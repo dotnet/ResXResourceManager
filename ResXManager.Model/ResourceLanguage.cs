@@ -105,9 +105,6 @@
             }
         }
 
-        public event EventHandler<CancelEventArgs> Changing;
-        public event EventHandler Changed;
-
         /// <summary>
         /// Gets the culture of this language.
         /// </summary>
@@ -248,22 +245,12 @@
 
         private void OnChanged()
         {
-            var handler = Changed;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            Container.Container.LanguageChanged(this);
         }
 
-        private bool OnChanging()
+        internal bool CanEdit()
         {
-            var handler = Changing;
-            if (handler == null)
-                return true;
-
-            var eventArgs = new CancelEventArgs();
-            handler(this, eventArgs);
-            return !eventArgs.Cancel;
+            return Container.CanEdit(Culture);
         }
 
         /// <summary>
@@ -341,7 +328,7 @@
             Contract.Requires(key != null);
             Contract.Requires(updateCallback != null);
 
-            if (!OnChanging())
+            if (!CanEdit())
                 return false;
 
             try
@@ -400,7 +387,7 @@
 
             Node node;
 
-            if (!OnChanging())
+            if (!CanEdit())
                 return false;
 
             if (!_nodes.TryGetValue(oldKey, out node) || (node == null))
@@ -422,7 +409,7 @@
         {
             Contract.Requires(key != null);
 
-            if (!OnChanging())
+            if (!CanEdit())
                 return false;
 
             try
@@ -449,11 +436,6 @@
             }
         }
 
-        internal bool CanChange()
-        {
-            return OnChanging();
-        }
-
         internal bool KeyExists(string key)
         {
             Contract.Requires(key != null);
@@ -466,7 +448,7 @@
             Contract.Requires(resourceTableEntry != null);
             Contract.Requires(previousEntries != null);
 
-            if (!OnChanging())
+            if (!CanEdit())
                 return;
 
             var node = _nodes.GetValueOrDefault(resourceTableEntry.Key);

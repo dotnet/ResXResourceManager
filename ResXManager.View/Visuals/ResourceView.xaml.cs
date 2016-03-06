@@ -68,7 +68,7 @@
 
             DataGrid.CreateNewLanguageColumn(_resourceManager, culture);
 
-            _resourceManager.LanguageAdded(culture);
+            _resourceManager.NewLanguageAdded(culture);
         }
 
         private void CreateSnapshotCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
