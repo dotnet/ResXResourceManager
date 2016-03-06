@@ -30,6 +30,7 @@
         private readonly Configuration _configuration;
         private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly ITracer _tracer;
+        private readonly ISourceFilesProvider _sourceFilesProvider;
 
         private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
         private readonly IObservableCollection<ResourceTableEntry> _resourceTableEntries;
@@ -43,18 +44,19 @@
         public event EventHandler<LanguageEventArgs> LanguageSaved;
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
         public event EventHandler<EventArgs> Loaded;
-        public event EventHandler<EventArgs> ReloadRequested;
 
         [ImportingConstructor]
-        private ResourceManager(Configuration configuration, CodeReferenceTracker codeReferenceTracker, ITracer tracer)
+        private ResourceManager(Configuration configuration, CodeReferenceTracker codeReferenceTracker, ITracer tracer, ISourceFilesProvider sourceFilesProvider)
         {
             Contract.Requires(configuration != null);
             Contract.Requires(codeReferenceTracker != null);
             Contract.Requires(tracer != null);
+            Contract.Requires(sourceFilesProvider != null);
 
             _configuration = configuration;
             _codeReferenceTracker = codeReferenceTracker;
             _tracer = tracer;
+            _sourceFilesProvider = sourceFilesProvider;
             _resourceTableEntries = _selectedEntities.ObservableSelectMany(entity => entity.Entries);
         }
 
@@ -74,6 +76,11 @@
                 .GroupBy(file => file.GetBaseDirectory());
 
             InternalLoad(resourceFilesByDirectory);
+
+            if (Settings.Default.IsFindCodeReferencesEnabled)
+            {
+                _codeReferenceTracker.BeginFind(this, _configuration.CodeReferences, allSourceFiles, _tracer);
+            }
         }
 
         /// <summary>
@@ -199,7 +206,7 @@
 
         public void Reload()
         {
-            OnReloadRequested();
+            Load(_sourceFilesProvider.SourceFiles.ToArray());
         }
 
         public bool CanEdit(ResourceEntity resourceEntity, CultureInfo culture)
@@ -230,13 +237,6 @@
             var handler = LanguageSaved;
             if (handler != null)
                 handler(this, e);
-        }
-
-        private void OnReloadRequested()
-        {
-            var handler = ReloadRequested;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
         }
 
         private void InternalLoad(IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory)

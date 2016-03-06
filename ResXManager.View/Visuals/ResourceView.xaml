@@ -216,7 +216,7 @@
         <DockPanel Grid.Row="0">
           <ToolBarTray DockPanel.Dock="Left" Background="{x:Static SystemColors.MenuBarBrush}">
             <ToolBar x:Name="ToolBar" IsOverflowOpen="False" Background="{x:Static SystemColors.MenuBarBrush}" KeyboardNavigation.TabNavigation="Continue">
-              <Button ToolTip="{x:Static properties:Resources.RefreshViewToolTip}" Command="{Binding ReloadCommand}">
+              <Button ToolTip="{x:Static properties:Resources.RefreshViewToolTip}" Command="{Binding ReloadCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/refresh.png" />
               </Button>
               <Separator />
@@ -243,8 +243,8 @@
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/addColumns.png" />
               </Button>
               <ToggleButton ToolTip="{x:Static properties:Resources.FindCodeReferencesButtonToolTip}"
-                            IsChecked="{Binding IsFindCodeReferencesEnabled, Source={x:Static properties:Settings.Default}, Mode=TwoWay}"
-                            Command="{Binding ReloadCommand}">
+                            IsChecked="{Binding IsFindCodeReferencesEnabled, Source={x:Static model:Settings.Default}, Mode=TwoWay}"
+                            Command="{Binding ReloadCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/references.png" />
               </ToggleButton>
               <ToggleButton ToolTip="{x:Static properties:Resources.IndexColumnToggleButtonToolTip}"

@@ -38,7 +38,7 @@
     /// This class implements the tool window exposed by this package and hosts a user control.
     /// </summary>
     [Guid("79664857-03bf-4bca-aa54-ec998b3328f8")]
-    public sealed class MyToolWindow : ToolWindowPane, IVsServiceProvider
+    public sealed class MyToolWindow : ToolWindowPane, IVsServiceProvider, ISourceFilesProvider
     {
         private readonly ICompositionHost _compositionHost = new CompositionHost();
 
@@ -71,13 +71,13 @@
 
             _compositionHost.AddCatalog(new DirectoryCatalog(path, "*.dll"));
             _compositionHost.ComposeExportedValue((IVsServiceProvider)this);
+            _compositionHost.ComposeExportedValue((ISourceFilesProvider)this);
 
             _trace = _compositionHost.GetExportedValue<ITracer>();
             _configuration = _compositionHost.GetExportedValue<Configuration>();
 
             _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
             _resourceManager.BeginEditing += ResourceManager_BeginEditing;
-            _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
             _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
 
             _codeReferenceTracker = _compositionHost.GetExportedValue<CodeReferenceTracker>();
@@ -410,11 +410,6 @@
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
 
-        private void ResourceManager_ReloadRequested(object sender, EventArgs e)
-        {
-            Solution_Changed(true);
-        }
-
         private void ResourceManager_LanguageSaved(object sender, LanguageEventArgs e)
         {
             // WE have saved the files - update the finger print so we don't reload unnecessarily
@@ -447,11 +442,21 @@
             }
         }
 
+        public IEnumerable<ProjectFile> SourceFiles => DteSourceFiles;
+
+        private IEnumerable<DteProjectFile> DteSourceFiles
+        {
+            get
+            {
+                var sourceFileFilter = new SourceFileFilter(_configuration);
+
+                return GetProjectFiles().Where(p => p.IsResourceFile() || sourceFileFilter.IsSourceFile(p));
+            }
+        }
+
         internal void ReloadSolution(bool forceReload = false)
         {
-            var sourceFileFilter = new SourceFileFilter(_configuration);
-
-            var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || sourceFileFilter.IsSourceFile(p)).ToArray();
+            var projectFiles = DteSourceFiles.ToArray();
 
             // The solution events are not reliable, so we check the solution on every load/unload of our window.
             // To avoid loosing the scope every time this method is called we only call load if we detect changes.
@@ -462,8 +467,6 @@
                 && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
                 return;
 
-            var solutionFullName = _compositionHost.GetExportedValue<DteSolution>().FullName;
-
             _solutionFingerPrint = fingerPrint;
 
             var oldItems = _resourceManager.ResourceEntities.ToArray();
@@ -471,11 +474,6 @@
             _resourceManager.Load(projectFiles);
 
             PreserveCommentsInWinFormsDesignerResources(oldItems);
-
-            if (Settings.Default.IsFindCodeReferencesEnabled)
-            {
-                _codeReferenceTracker.BeginFind(_resourceManager, _configuration.CodeReferences, projectFiles, _trace);
-            }
         }
 
         private void PreserveCommentsInWinFormsDesignerResources(ICollection<ResourceEntity> oldValues)

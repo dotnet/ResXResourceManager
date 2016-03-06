@@ -217,7 +217,7 @@
             };
 
             column.SetIsFilterVisible(false);
-            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, new Binding(@"IsFindCodeReferencesEnabled") { Source = Settings.Default, Converter = BooleanToVisibilityConverter.Default });
+            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, new Binding(@"IsFindCodeReferencesEnabled") { Source = Model.Properties.Settings.Default, Converter = BooleanToVisibilityConverter.Default });
 
             return column;
         }

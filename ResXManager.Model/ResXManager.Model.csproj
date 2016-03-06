@@ -206,6 +206,7 @@
     <Compile Include="ConfigurationBase.cs" />
     <Compile Include="IExportParameters.cs" />
     <Compile Include="ImportException.cs" />
+    <Compile Include="ISourceFilesProvider.cs" />
     <Compile Include="JsonSerializerTypeConverter.cs" />
     <Compile Include="LanguageEventArgs.cs" />
     <Compile Include="ProjectFileExtensions.cs" />
@@ -215,6 +216,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.Designer.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="ResourceData.cs" />
     <Compile Include="ResourceEntityExtensions.cs" />
@@ -242,6 +249,10 @@
       <Link>Key.snk</Link>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">

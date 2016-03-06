@@ -5,9 +5,6 @@
     <Setting Name="ResourceFilter" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="IsFindCodeReferencesEnabled" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="NeutralCultureCountyOverrides" Type="System.String" Scope="User">
       <Value Profile="(Default)">en=en-US</Value>
     </Setting>
