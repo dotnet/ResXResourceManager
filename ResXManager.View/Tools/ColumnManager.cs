@@ -46,7 +46,6 @@
             Contract.Requires(dataGrid != null);
             Contract.Requires(resourceManager != null);
 
-            IEnumerable<CultureKey> cultureKeys = resourceManager.CultureKeys;
             var dataGridEvents = dataGrid.GetAdditionalEvents();
 
             dataGridEvents.ColumnVisibilityChanged -= DataGrid_ColumnVisibilityChanged;
@@ -62,6 +61,8 @@
             }
 
             var languageColumns = columns.Skip(3).ToArray();
+
+            IEnumerable<CultureKey> cultureKeys = resourceManager.CultureKeys;
 
             var disconnectedColumns = languageColumns.Where(col => cultureKeys.All(cultureKey => !Equals(col.GetCultureKey(), cultureKey)));
 

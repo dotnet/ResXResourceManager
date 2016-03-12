@@ -15,6 +15,7 @@
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
+    using TomsToolbox.ObservableCollections;
     using TomsToolbox.Wpf;
 
     [Export]
@@ -57,7 +58,9 @@
             {
                 if (SetProperty(ref _sourceCulture, value, () => SourceCulture))
                 {
-                    AllTargetCultures = _resourceManager.CultureKeys.Where(key => key != _sourceCulture).ToArray();
+                    AllTargetCultures = _resourceManager
+                        .CultureKeys
+                        .ObservableWhere(key => key != _sourceCulture);
                 }
             }
         }
@@ -102,6 +105,7 @@
             private set
             {
                 Contract.Requires(value != null);
+
                 SetProperty(ref _items, value, () => Items);
             }
         }
@@ -188,8 +192,7 @@
 
         private void Stop()
         {
-            if (_session != null)
-                _session.Cancel();
+            _session?.Cancel();
         }
 
         private void Apply(IEnumerable<TranslationItem> items)

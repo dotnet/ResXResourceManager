@@ -37,7 +37,7 @@
         private readonly ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
         private readonly ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
 
-        private ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
+        private readonly ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
 
         private string _snapshot;
 
@@ -121,7 +121,7 @@
             }
         }
 
-        public ICollection<CultureKey> CultureKeys
+        public ObservableCollection<CultureKey> CultureKeys
         {
             get
             {
@@ -258,8 +258,13 @@
             if (!string.IsNullOrEmpty(_snapshot))
                 _resourceEntities.LoadSnapshot(_snapshot);
 
-            var cultureKeys = _resourceEntities.SelectMany(entity => entity.Languages).Distinct().Select(lang => lang.CultureKey);
-            _cultureKeys = new ObservableCollection<CultureKey>(cultureKeys);
+            var cultureKeys = _resourceEntities
+                .SelectMany(entity => entity.Languages)
+                .Distinct()
+                .Select(lang => lang.CultureKey)
+                .ToArray();
+
+            _cultureKeys.SynchronizeWith(cultureKeys);
 
             _selectedEntities.Clear();
             _selectedEntities.AddRange(isReloading ? _resourceEntities.Where(selectedEntities.Contains) : _resourceEntities);
@@ -267,7 +272,6 @@
             _selectedTableEntries.Clear();
             _selectedTableEntries.AddRange(_resourceTableEntries.Where(entry => selectedTableEntries.Contains(entry, ResourceTableEntry.EqualityComparer)));
 
-            OnPropertyChanged(() => CultureKeys);
             OnLoaded();
         }
 
