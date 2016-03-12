@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -22,49 +21,76 @@
     /// </summary>
     public class ResourceEntity : ObservableObject, IComparable<ResourceEntity>, IComparable, IEquatable<ResourceEntity>
     {
-        private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
+        private IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly ResourceManager _container;
         private readonly string _projectName;
         private readonly string _baseName;
-        private readonly string _directory;
+        private readonly string _directoryName;
         private readonly ObservableCollection<ResourceTableEntry> _resourceTableEntries;
         private readonly string _displayName;
         private readonly string _relativePath;
         private readonly string _sortKey;
         private readonly ProjectFile _neutralProjectFile;
 
-        internal ResourceEntity(ResourceManager container, string projectName, string baseName, string directory, ICollection<ProjectFile> files)
+        internal ResourceEntity(ResourceManager container, string projectName, string baseName, string directoryName, ICollection<ProjectFile> files)
         {
             Contract.Requires(container != null);
             Contract.Requires(!string.IsNullOrEmpty(projectName));
             Contract.Requires(!string.IsNullOrEmpty(baseName));
-            Contract.Requires(!string.IsNullOrEmpty(directory));
+            Contract.Requires(!string.IsNullOrEmpty(directoryName));
             Contract.Requires(files != null);
 
             _container = container;
             _projectName = projectName;
             _baseName = baseName;
-            _directory = directory;
+            _directoryName = directoryName;
             _relativePath = GetRelativePath(files);
             _displayName = projectName + @" - " + _relativePath + baseName;
-            _sortKey = string.Concat(@" - ", _displayName, _directory);
+            _sortKey = string.Concat(@" - ", _displayName, _directoryName);
             _neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
 
-            var languageQuery =
-                from file in files
-                let cultureKey = file.GetCultureKey()
-                orderby cultureKey
-                select new ResourceLanguage(this, cultureKey, file);
+            _languages = GetResourceLanguages(files);
 
-            _languages = languageQuery.ToDictionary(language => language.CultureKey);
-
-            var entriesQuery = _languages.Values.SelectMany(language => language.ResourceKeys)
+            var entriesQuery = _languages.Values
+                .SelectMany(language => language.ResourceKeys)
                 .Distinct()
                 .Select((key, index) => new ResourceTableEntry(this, key, index, _languages));
 
             _resourceTableEntries = new ObservableCollection<ResourceTableEntry>(entriesQuery);
 
             Contract.Assume(_languages.Any());
+        }
+
+        internal void Update(ICollection<ProjectFile> files)
+        {
+            _languages = GetResourceLanguages(files);
+
+            var unmatchedTableEntries = _resourceTableEntries.ToList();
+
+            var keys = _languages.Values
+                .SelectMany(language => language.ResourceKeys)
+                .Distinct()
+                .ToArray();
+
+            var index = 0;
+
+            foreach (var key in keys)
+            {
+                var existingEntry = _resourceTableEntries.FirstOrDefault(entry => entry.Key == key);
+                if (existingEntry != null)
+                {
+                    existingEntry.Update(index, _languages);
+                    unmatchedTableEntries.Remove(existingEntry);
+                }
+                else
+                {
+                    _resourceTableEntries.Add(new ResourceTableEntry(this, key, index, _languages));
+                }
+
+                index += 1;
+            }
+
+            _resourceTableEntries.RemoveRange(unmatchedTableEntries);
         }
 
         private static string GetRelativePath(ICollection<ProjectFile> files)
@@ -161,12 +187,12 @@
         /// <summary>
         /// Gets the directory where the physical files are located.
         /// </summary>
-        public string Directory
+        public string DirectoryName
         {
             get
             {
                 Contract.Ensures(Contract.Result<string>() != null);
-                return _directory;
+                return _directoryName;
             }
         }
 
@@ -290,6 +316,33 @@
 
                 language.MoveNode(resourceTableEntry, previousEntries);
             }
+        }
+
+        internal bool EqualsAll(string projectName, string baseName, string directoryName)
+        {
+            return string.Equals(projectName, _projectName, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(baseName, _baseName, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(directoryName, _directoryName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private Dictionary<CultureKey, ResourceLanguage> GetResourceLanguages(IEnumerable<ProjectFile> files)
+        {
+            Contract.Requires(files != null);
+            Contract.Requires(files.Any());
+            Contract.Ensures(Contract.Result<Dictionary<CultureKey, ResourceLanguage>>() != null);
+            Contract.Ensures(Contract.Result<Dictionary<CultureKey, ResourceLanguage>>().Any());
+
+            var languageQuery =
+                from file in files
+                let cultureKey = file.GetCultureKey()
+                orderby cultureKey
+                select new ResourceLanguage(this, cultureKey, file);
+
+            var languages = languageQuery.ToDictionary(language => language.CultureKey);
+
+            Contract.Assume(languages.Any());
+
+            return languages;
         }
 
         #region IComparable/IEquatable implementation
@@ -425,7 +478,7 @@
             Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(!string.IsNullOrEmpty(_projectName));
             Contract.Invariant(!string.IsNullOrEmpty(_baseName));
-            Contract.Invariant(!string.IsNullOrEmpty(_directory));
+            Contract.Invariant(!string.IsNullOrEmpty(_directoryName));
             Contract.Invariant(_displayName != null);
             Contract.Invariant(_relativePath != null);
             Contract.Invariant(_sortKey != null);

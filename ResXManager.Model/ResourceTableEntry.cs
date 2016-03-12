@@ -22,16 +22,17 @@
         private const string InvariantKey = "@Invariant";
         private readonly Regex _duplicateKeyExpression = new Regex(@"_Duplicate\[\d+\]$");
         private readonly ResourceEntity _container;
-        private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
-        private readonly ResourceLanguage _neutralLanguage;
-        private readonly ResourceTableValues<bool> _fileExists;
-        private readonly ResourceTableValues<ICollection<string>> _valueAnnotations;
-        private readonly ResourceTableValues<ICollection<string>> _commentAnnotations;
 
         private string _key;
 
+        private IDictionary<CultureKey, ResourceLanguage> _languages;
         private ResourceTableValues<string> _values;
         private ResourceTableValues<string> _comments;
+        private ResourceTableValues<bool> _fileExists;
+        private ResourceTableValues<ICollection<string>> _valueAnnotations;
+        private ResourceTableValues<ICollection<string>> _commentAnnotations;
+        private ResourceLanguage _neutralLanguage;
+
         private IList<CodeReference> _codeReferences;
         private double _index;
         private IDictionary<CultureKey, ResourceData> _snapshot;
@@ -68,8 +69,6 @@
 
             Contract.Assume(languages.Any());
             _neutralLanguage = languages.First().Value;
-            Contract.Assume(_neutralLanguage != null);
-            _neutralLanguage.IsNeutralLanguage = true;
         }
 
         private void ResetTableValues()
@@ -81,7 +80,27 @@
             _comments.ValueChanged -= Comments_ValueChanged;
             _comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(_key), (lang, value) => lang.SetComment(_key, value));
             _comments.ValueChanged += Comments_ValueChanged;
+
+            _fileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
+
+            _valueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
+            _commentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
         }
+
+        internal void Update(int index, IDictionary<CultureKey, ResourceLanguage> languages)
+        {
+            Index = index;
+
+            _languages = languages;
+
+            ResetTableValues();
+
+            Contract.Assume(languages.Any());
+            _neutralLanguage = languages.First().Value;
+
+            Refresh();
+        }
+
 
         public ResourceEntity Container
         {
@@ -127,7 +146,7 @@
                 _key = value;
 
                 ResetTableValues();
-                OnPropertyChanged("Key");
+                OnPropertyChanged(nameof(Key));
             }
         }
 
@@ -205,7 +224,7 @@
             }
         }
 
-        public ICollection<CultureKey> Languages
+        internal ICollection<CultureKey> Languages
         {
             get
             {
@@ -313,8 +332,8 @@
 
         public void Refresh()
         {
-            OnPropertyChanged(() => Values);
-            OnPropertyChanged(() => Comment);
+            OnPropertyChanged(nameof(Values));
+            OnPropertyChanged(nameof(Comment));
         }
 
         public bool HasStringFormatParameterMismatches(IEnumerable<CultureKey> cultures)

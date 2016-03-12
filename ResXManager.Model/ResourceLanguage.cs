@@ -167,11 +167,7 @@
             }
         }
 
-        public bool IsNeutralLanguage
-        {
-            get;
-            internal set;
-        }
+        public bool IsNeutralLanguage => Container.Languages.FirstOrDefault() == this;
 
         public CultureKey CultureKey
         {

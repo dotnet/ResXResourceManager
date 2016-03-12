@@ -218,11 +218,7 @@
             Contract.Requires(projectItem != null);
             Contract.Requires(propertyName != null);
 
-            var properties = projectItem.Properties;
-            if (properties == null)
-                return;
-
-            var item = properties.Item(propertyName);
+            var item = projectItem.Properties?.Item(propertyName);
             if (item != null)
                 item.Value = value;
         }
@@ -232,15 +228,9 @@
             Contract.Requires(projectItem != null);
             Contract.Requires(propertyName != null);
 
-            var properties = projectItem.Properties;
-            if (properties == null)
-                return null;
-
             try
             {
-                var item = properties.Item(propertyName);
-
-                return item != null ? item.Value : null;
+                return projectItem.Properties?.Item(propertyName)?.Value;
             }
             catch (ArgumentException)
             {

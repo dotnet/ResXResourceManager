@@ -114,7 +114,7 @@
                ContextMenu="{toms:CompositeContextMenu RegionId={x:Static infrastructure:RegionId.ProjectListContextMenu} }">
         <ListBox.ItemTemplate>
           <DataTemplate DataType="model:ResourceEntity">
-            <StackPanel ToolTip="{Binding Path=Directory, Mode=OneWay}" Margin="5,2" HorizontalAlignment="Left" Orientation="Horizontal">
+            <StackPanel ToolTip="{Binding Path=DirectoryName, Mode=OneWay}" Margin="5,2" HorizontalAlignment="Left" Orientation="Horizontal">
               <CheckBox IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Focusable="False" />
               <Decorator Width="5" />
               <TextBlock Background="Transparent" VerticalAlignment="Center">
@@ -171,14 +171,14 @@
               <DataTemplate DataType="{x:Type model:ResourceEntity}">
                 <TextBlock>
                   <Run Text="{Binding Path=BaseName, Mode=OneWay}" FontWeight="Bold" />
-                  (<Run Text="{Binding Path=Directory, Mode=OneWay}" />)
+                  (<Run Text="{Binding Path=DirectoryName, Mode=OneWay}" />)
                 </TextBlock>
               </DataTemplate>
               <DataTemplate DataType="{x:Type model:ResourceTableEntry}">
                 <TextBlock>
                   <Run Text="{Binding Path=Key, Mode=OneWay}" Foreground="Black" />:
                   <Run Text="{Binding Path=Container.BaseName, Mode=OneWay}" FontWeight="Bold" />
-                  (<Run Text="{Binding Path=Container.Directory, Mode=OneWay}" />)
+                  (<Run Text="{Binding Path=Container.DirectoryName, Mode=OneWay}" />)
                 </TextBlock>
               </DataTemplate>
             </Control.Resources>

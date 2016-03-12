@@ -227,9 +227,7 @@
 
         private void OnLoaded()
         {
-            var handler = Loaded;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            Loaded?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnLanguageSaved(LanguageEventArgs e)
@@ -243,17 +241,9 @@
         {
             Contract.Requires(resourceFilesByDirectory != null);
 
-            var entities = GetResourceEntities(resourceFilesByDirectory)
-                .OrderBy(e => e.ProjectName)
-                .ThenBy(e => e.BaseName);
-
             var isReloading = _resourceEntities.Any();
 
-            var selectedEntities = _selectedEntities.ToArray();
-            var selectedTableEntries = _selectedTableEntries.ToArray();
-
-            _resourceEntities.Clear();
-            _resourceEntities.AddRange(entities);
+            GetResourceEntities(resourceFilesByDirectory);
 
             if (!string.IsNullOrEmpty(_snapshot))
                 _resourceEntities.LoadSnapshot(_snapshot);
@@ -266,18 +256,14 @@
 
             _cultureKeys.SynchronizeWith(cultureKeys);
 
-            _selectedEntities.Clear();
-            _selectedEntities.AddRange(isReloading ? _resourceEntities.Where(selectedEntities.Contains) : _resourceEntities);
-
-            _selectedTableEntries.Clear();
-            _selectedTableEntries.AddRange(_resourceTableEntries.Where(entry => selectedTableEntries.Contains(entry, ResourceTableEntry.EqualityComparer)));
-
             OnLoaded();
         }
 
-        private IEnumerable<ResourceEntity> GetResourceEntities(IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory)
+        private void GetResourceEntities(IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory)
         {
             Contract.Requires(fileNamesByDirectory != null);
+
+            var unmatchedEntities = _resourceEntities.ToList();
 
             foreach (var directory in fileNamesByDirectory)
             {
@@ -300,20 +286,27 @@
 
                     foreach (var projectFiles in filesByProject)
                     {
-                        if (projectFiles == null)
-                            continue;
-
-                        var projectName = projectFiles.Key;
+                        var projectName = projectFiles?.Key;
 
                         if (string.IsNullOrEmpty(projectName))
                             continue;
 
-                        var resourceEntity = new ResourceEntity(this, projectName, baseName, directoryName, files.ToArray());
+                        var existingEntity = _resourceEntities.FirstOrDefault(entity => entity.EqualsAll(projectName, baseName, directoryName));
 
-                        yield return resourceEntity;
+                        if (existingEntity != null)
+                        {
+                            existingEntity.Update(projectFiles.ToArray());
+                            unmatchedEntities.Remove(existingEntity);
+                        }
+                        else
+                        {
+                            _resourceEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles.ToArray()));
+                        }
                     }
                 }
             }
+
+            _resourceEntities.RemoveRange(unmatchedEntities);
         }
 
         internal void LanguageAdded(CultureKey cultureKey)
