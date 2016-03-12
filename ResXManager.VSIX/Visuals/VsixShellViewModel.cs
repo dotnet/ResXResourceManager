@@ -30,11 +30,6 @@
             _resourceManager.SelectedEntities.CollectionChanged += (_, __) => _selectedEntitiesChangedThrottle.Tick();
         }
 
-        void ResourceManager_SelectedEntitiesChanged(object sender, EventArgs e)
-        {
-            OnPropertyChanged(() => SelectedCodeGenerators);
-        }
-
         public ICommand SetCodeProviderCommand
         {
             get

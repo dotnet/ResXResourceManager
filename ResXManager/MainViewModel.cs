@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-namespace tomenglertde.ResXManager
+﻿namespace tomenglertde.ResXManager
 {
     using System;
     using System.Collections.Generic;
@@ -24,8 +23,7 @@ namespace tomenglertde.ResXManager
     using TomsToolbox.Wpf.Composition;
 
     [VisualCompositionExport(RegionId.Main)]
-    [Export]
-    class MainViewModel : ObservableObject, IComposablePart
+    internal class MainViewModel : ObservableObject, IComposablePart
     {
         private readonly ResourceManager _resourceManager;
         private readonly CodeReferenceTracker _codeReferenceTracker;
