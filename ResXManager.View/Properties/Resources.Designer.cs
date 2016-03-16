@@ -744,7 +744,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to A regular expression to filter resource files.
+        ///   Looks up a localized string similar to A regular expression to filter resource files.&amp....
         /// </summary>
         public static string ResourceFilterToolTip {
             get {
@@ -1236,7 +1236,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         RegularExpression,
         /// <summary>
-        ///   Looks up a localized string similar to A regular expression to filter resource files.
+        ///   Looks up a localized string similar to A regular expression to filter resource files.&amp....
         /// </summary>
         ResourceFilterToolTip,
         /// <summary>
