@@ -74,6 +74,8 @@
       </CollectionViewSource.GroupDescriptions>
     </CollectionViewSource>
 
+    <dgx:RegexContentFilterFactory x:Key="RegexContentFilterFactory" />
+
   </UserControl.Resources>
 
   <UserControl.InputBindings>
@@ -385,9 +387,12 @@
         </DockPanel>
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
         <DataGrid Grid.Row="2" x:Name="DataGrid" FrozenColumnCount="1"
-                  HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" Padding="2" BorderThickness="0"
-                  dgx:DataGridFilter.IsAutoFilterEnabled="True" AutoGenerateColumns="False"
-                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
+                  HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
+                  Padding="2" BorderThickness="0"
+                  AutoGenerateColumns="False" CanUserAddRows="False"
+                  CanUserDeleteRows="False" CanUserResizeRows="False"
+                  dgx:DataGridFilter.IsAutoFilterEnabled="True"
+                  dgx:DataGridFilter.ContentFilterFactory="{StaticResource RegexContentFilterFactory}"
                   toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedTableEntries}">
           <DataGrid.Resources>
 
