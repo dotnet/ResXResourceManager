@@ -58,6 +58,16 @@
             _tracer = tracer;
             _sourceFilesProvider = sourceFilesProvider;
             _resourceTableEntries = _selectedEntities.ObservableSelectMany(entity => entity.Entries);
+            _resourceTableEntries.CollectionChanged += _resourceTableEntries_CollectionChanged;
+            _resourceTableEntries.PropertyChanged += _resourceTableEntries_PropertyChanged;
+        }
+
+        private void _resourceTableEntries_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+        }
+
+        private void _resourceTableEntries_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
         }
 
         /// <summary>
