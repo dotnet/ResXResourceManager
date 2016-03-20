@@ -169,7 +169,8 @@
   <data name="ResourceFilterToolTip" xml:space="preserve">
     <value>A regular expression to filter resource files.
 The pattern will be compared against the string "{project} - {folder}\{file}",
-which is the same as the group header in the grouped view </value>
+which is the same as the group header in the grouped view 
+Use e.g. ".* - (?!Migrations)" to hide EF migrations.</value>
   </data>
   <data name="RefreshViewToolTip" xml:space="preserve">
     <value>Refresh view</value>

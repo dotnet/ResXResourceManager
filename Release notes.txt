@@ -1,3 +1,9 @@
+1.0.0.72:
+* Speed up refresh of the grid
+* Allow regular expressions in the grids columns filters.
+* Improve filter tool tip in the project list.
+* Fix: new cultures are not instantly available for translation.
+* 4689: After inserting a new key automatically scroll to the newly inserted key.
 1.0.0.71:
 * Fix broken grouping view.
 1.0.0.70:

@@ -165,7 +165,8 @@
   <data name="ResourceFilterToolTip" xml:space="preserve">
     <value>Ein regulärer Ausdruck zum Filtern der Dateien.
 Die Suche wird auf den Text  "{Projekt} - {Ordner}\{Datei}" angewendet.
-Der Text entspricht der Gruppenüberschrift in der gruppierten Ansicht.</value>
+Der Text entspricht der Gruppenüberschrift in der gruppierten Ansicht.
+Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
   </data>
   <data name="ShowOnlyMissingToolTip" xml:space="preserve">
     <value>Nur Zeilen anzeigen, die Warnungen oder Änderungen enthalten</value>
