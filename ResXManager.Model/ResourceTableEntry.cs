@@ -69,6 +69,7 @@
 
             Contract.Assume(languages.Any());
             _neutralLanguage = languages.First().Value;
+            Contract.Assume(_neutralLanguage != null);
         }
 
         private void ResetTableValues()
@@ -89,15 +90,16 @@
 
         internal void Update(int index, IDictionary<CultureKey, ResourceLanguage> languages)
         {
+            Contract.Requires(languages != null);
+            Contract.Requires(languages.Any());
+
             Index = index;
 
             _languages = languages;
+            _neutralLanguage = languages.First().Value;
+            Contract.Assume(_neutralLanguage != null);
 
             ResetTableValues();
-
-            Contract.Assume(languages.Any());
-            _neutralLanguage = languages.First().Value;
-
             Refresh();
         }
 

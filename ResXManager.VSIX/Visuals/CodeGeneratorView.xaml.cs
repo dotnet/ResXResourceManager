@@ -12,7 +12,7 @@
     /// </summary>
     [VisualCompositionExport(RegionId.ProjectListItemDecorator)]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public partial class CodeGeneratorView : IComposablePart
+    public partial class CodeGeneratorView 
     {
         [ImportingConstructor]
         public CodeGeneratorView(ExportProvider exportProvider)

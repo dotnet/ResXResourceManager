@@ -21,7 +21,7 @@
 
     [Export]
     [VisualCompositionExport("Content", Sequence = 1)]
-    class ResourceViewModel : ObservableObject, IComposablePart
+    class ResourceViewModel : ObservableObject
     {
         private readonly ResourceManager _resourceManager;
         private string _loadedSnapshot;

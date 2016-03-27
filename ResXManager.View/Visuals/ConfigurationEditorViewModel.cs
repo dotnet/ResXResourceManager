@@ -13,7 +13,7 @@
     using TomsToolbox.Wpf.Composition;
 
     [VisualCompositionExport("Content", Sequence = 3)]
-    class ConfigurationEditorViewModel : ObservableObject, IComposablePart
+    class ConfigurationEditorViewModel : ObservableObject
     {
         private readonly ResourceManager _resourceManager;
         private readonly Configuration _configuration;

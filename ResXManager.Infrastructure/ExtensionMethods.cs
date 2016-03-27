@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.Infrastructure
 {
     using System;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     using TomsToolbox.Core;
@@ -37,6 +38,7 @@
         /// <returns>
         /// The cultureKey, or <c>null</c> if the culture is invalid.
         /// </returns>
+        [ContractVerification(false)] // because of try/catch
         public static CultureKey ToCultureKey(this string cultureKeyName)
         {
             try

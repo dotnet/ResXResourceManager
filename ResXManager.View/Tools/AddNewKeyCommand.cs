@@ -36,7 +36,7 @@
 
         private void Execute()
         {
-            if (_resourceManager.SelectedEntities.Count != 1)
+            if (_resourceManager.SelectedEntities.Count() != 1)
                 return;
 
             var resourceFile = _resourceManager.SelectedEntities.Single();

@@ -165,7 +165,7 @@
         {
             var toolWindow = FindToolWindow(true);
 
-            var entry = toolWindow.Refactorings.MoveToResource(_dte.ActiveDocument);
+            var entry = toolWindow.Refactorings.MoveToResource(_dte?.ActiveDocument);
             if (entry != null)
             {
                 ShowToolWindow();
@@ -192,7 +192,7 @@
                 return;
 
             menuCommand.Text = "Move to Resource";
-            menuCommand.Visible = FindToolWindow(true).Refactorings.CanMoveToResource(_dte.ActiveDocument);
+            menuCommand.Visible = FindToolWindow(true).Refactorings.CanMoveToResource(_dte?.ActiveDocument);
         }
 
         private void DocumentEvents_DocumentOpened(EnvDTE.Document document)

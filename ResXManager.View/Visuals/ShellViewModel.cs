@@ -5,7 +5,7 @@
     using TomsToolbox.Wpf.Composition;
 
     [VisualCompositionExport(RegionId.Shell)]
-    class ShellViewModel : IComposablePart
+    class ShellViewModel 
     {
     }
 }

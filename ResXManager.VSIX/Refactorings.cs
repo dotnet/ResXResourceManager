@@ -78,6 +78,9 @@
 
             Contract.Assume(document != null);
             var selection = GetSelection(document);
+            if (selection == null)
+                return null;
+
             var parser = new Parser();
 
             var stringInfo = parser.LocateString(selection);
@@ -101,7 +104,10 @@
             {
                 var entity = viewModel.SelectedResourceEntity;
 
-                var entry = entity.Add(viewModel.Key);
+                var entry = entity?.Add(viewModel.Key);
+                if (entry == null)
+                    return null;
+
                 entry.Values[null] = viewModel.Value;
                 entry.Comments[null] = viewModel.Comment;
 
@@ -158,13 +164,11 @@
             if (topPoint == null)
                 return null;
 
-            var editPoint = textDocument.CreateEditPoint();
-            if (editPoint == null)
+            var line = textDocument.CreateEditPoint()?.GetLines(topPoint.Line, topPoint.Line + 1);
+            if (line == null)
                 return null;
 
-            var line = editPoint.GetLines(topPoint.Line, topPoint.Line + 1);
-
-            var codeLanguage = document.ProjectItem.FileCodeModel?.Language;
+            var codeLanguage = document.ProjectItem?.FileCodeModel?.Language;
 
             return new Selection(textDocument, topPoint, line, codeLanguage);
         }
@@ -284,13 +288,19 @@
         {
             public StringInfo LocateString(Selection selection)
             {
+                Contract.Requires(selection != null);
+
                 var secondQuote = -1;
                 var column = selection.Point.LineCharOffset - 1;
                 var line = selection.Line;
+                if (string.IsNullOrEmpty(line))
+                    return null;
 
-                while (true)
+                while (secondQuote < line.Length)
                 {
                     var firstQuote = line.IndexOf("\"", secondQuote + 1, StringComparison.Ordinal);
+                    if (firstQuote == -1)
+                        return null;
 
                     if (line.Length <= firstQuote + 1)
                         return null;
@@ -303,8 +313,18 @@
                         return null;
 
                     if (column < secondQuote)
-                        return new StringInfo(firstQuote + 1, secondQuote + 2, line.Substring(firstQuote + 1, secondQuote - firstQuote - 1));
+                    {
+                        var startIndex = firstQuote + 1;
+                        var length = secondQuote - firstQuote - 1;
+                        Contract.Assume(startIndex + length <= line.Length);
+
+                        var value = line.Substring(startIndex, length);
+
+                        return new StringInfo(firstQuote + 1, secondQuote + 2, value);
+                    }
                 }
+
+                return null;
             }
         }
     }

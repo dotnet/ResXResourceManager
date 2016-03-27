@@ -33,17 +33,23 @@
 
             var visual = (FrameworkElement)sender;
             var group = visual.DataContext as CollectionViewGroup;
-            if ((group == null) || (group.Items == null))
+            if (group?.Items == null)
                 return;
 
             var selector = visual.TryFindAncestor<Selector>();
-
             if (selector == null)
                 return;
 
-            var multiSelector = (dynamic)selector;
             selector.BeginInit();
 
+            SetSelectedItems((dynamic)selector, group);
+
+            selector.EndInit();
+        }
+
+        [ContractVerification(false)] // because of dynamic...
+        private static void SetSelectedItems(dynamic multiSelector, CollectionViewGroup group)
+        {
             try
             {
                 if ((Keyboard.Modifiers & ModifierKeys.Control) == 0)
@@ -56,9 +62,9 @@
                     multiSelector.SelectedItems.Add(item);
                 }
             }
-            catch {} // Element did not have a SelectedItems property.
-
-            selector.EndInit();
+            catch
+            {
+            } // Element did not have a SelectedItems property.
         }
     }
 }

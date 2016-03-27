@@ -12,7 +12,7 @@
     using TomsToolbox.Wpf.Composition;
 
     [VisualCompositionExport("Content", Sequence = 2)]
-    class TranslationsViewModel : ObservableObject, IComposablePart
+    class TranslationsViewModel : ObservableObject
     {
         private readonly TranslatorHost _translatorHost;
         private readonly Translations _translations;

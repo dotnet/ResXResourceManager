@@ -151,8 +151,8 @@
                 var resxPath = resxItem.FileNames[0];
                 var resxFolder = Path.GetDirectoryName(resxPath);
                 var project = resxItem.ContainingProject;
-                var projectFolder = Path.GetDirectoryName(project.FullName);
-                var rootNamespace = project.Properties.Item("RootNamespace").Value.ToString();
+                var projectFolder = Path.GetDirectoryName(project?.FullName);
+                var rootNamespace = project?.Properties?.Item("RootNamespace")?.Value?.ToString();
 
                 if ((resxFolder == null) || (projectFolder == null))
                     return string.Empty;
@@ -181,6 +181,8 @@
 
         private string EvaluatePattern(string pattern)
         {
+            Contract.Requires(pattern != null);
+
             return pattern.Replace("$File", SelectedResourceEntity?.BaseName).Replace("$Key", Key).Replace("$Namespace", _namespace);
         }
 

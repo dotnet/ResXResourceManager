@@ -294,23 +294,26 @@
 
                     var filesByProject = files.GroupBy(file => file.ProjectName);
 
-                    foreach (var projectFiles in filesByProject)
+                    foreach (var item in filesByProject)
                     {
-                        var projectName = projectFiles?.Key;
+                        Contract.Assume(item != null);
 
-                        if (string.IsNullOrEmpty(projectName))
+                        var projectName = item.Key;
+                        var projectFiles = item.ToArray();
+
+                        if (string.IsNullOrEmpty(projectName) || !projectFiles.Any())
                             continue;
 
                         var existingEntity = _resourceEntities.FirstOrDefault(entity => entity.EqualsAll(projectName, baseName, directoryName));
 
                         if (existingEntity != null)
                         {
-                            existingEntity.Update(projectFiles.ToArray());
+                            existingEntity.Update(projectFiles);
                             unmatchedEntities.Remove(existingEntity);
                         }
                         else
                         {
-                            _resourceEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles.ToArray()));
+                            _resourceEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles));
                         }
                     }
                 }

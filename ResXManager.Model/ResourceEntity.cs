@@ -39,17 +39,17 @@
             Contract.Requires(!string.IsNullOrEmpty(baseName));
             Contract.Requires(!string.IsNullOrEmpty(directoryName));
             Contract.Requires(files != null);
+            Contract.Requires(files.Any());
 
             _container = container;
             _projectName = projectName;
             _baseName = baseName;
             _directoryName = directoryName;
+            _languages = GetResourceLanguages(files);
             _relativePath = GetRelativePath(files);
             _displayName = projectName + @" - " + _relativePath + baseName;
             _sortKey = string.Concat(@" - ", _displayName, _directoryName);
             _neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
-
-            _languages = GetResourceLanguages(files);
 
             var entriesQuery = _languages.Values
                 .SelectMany(language => language.ResourceKeys)
@@ -63,6 +63,9 @@
 
         internal void Update(ICollection<ProjectFile> files)
         {
+            Contract.Requires(files != null);
+            Contract.Requires(files.Any());
+
             _languages = GetResourceLanguages(files);
 
             var unmatchedTableEntries = _resourceTableEntries.ToList();
@@ -76,6 +79,7 @@
 
             foreach (var key in keys)
             {
+                Contract.Assume(!string.IsNullOrEmpty(key));
                 var existingEntry = _resourceTableEntries.FirstOrDefault(entry => entry.Key == key);
                 if (existingEntry != null)
                 {
@@ -253,7 +257,6 @@
         public ResourceTableEntry Add(string key)
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
-            Contract.Ensures(Contract.Result<ResourceTableEntry>() != null);
 
             if (!_languages.Any() || !_languages.Values.Any())
                 return null;
