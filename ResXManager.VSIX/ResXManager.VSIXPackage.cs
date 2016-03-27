@@ -166,13 +166,16 @@
             var toolWindow = FindToolWindow(true);
 
             var entry = toolWindow.Refactorings.MoveToResource(_dte?.ActiveDocument);
-            if (entry != null)
+            if (entry == null)
+                return;
+
+            var dispatcher = Dispatcher.CurrentDispatcher;
+
+            dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
             {
                 ShowToolWindow();
 
                 var resourceManager = toolWindow.ResourceManager;
-
-                var dispatcher = Dispatcher.CurrentDispatcher;
 
                 dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
                 {
@@ -182,7 +185,7 @@
                     resourceManager.SelectedTableEntries.Clear();
                     resourceManager.SelectedTableEntries.Add(entry);
                 });
-            }
+            });
         }
 
         private void TextEditorContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)

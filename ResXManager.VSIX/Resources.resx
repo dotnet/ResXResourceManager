@@ -194,4 +194,22 @@ See output window for details.</value>
   <data name="CodeGenerator_CommandTextTemplate" xml:space="preserve">
     <value>Text template</value>
   </data>
+  <data name="MoveToResource" xml:space="preserve">
+    <value>Move to resource</value>
+  </data>
+  <data name="ResourceHeader" xml:space="preserve">
+    <value>Resource:</value>
+  </data>
+  <data name="KeyHeader" xml:space="preserve">
+    <value>Key:</value>
+  </data>
+  <data name="CodeHeader" xml:space="preserve">
+    <value>Code:</value>
+  </data>
+  <data name="ValueHeader" xml:space="preserve">
+    <value>Value:</value>
+  </data>
+  <data name="CommentHeader" xml:space="preserve">
+    <value>Comment:</value>
+  </data>
 </root>

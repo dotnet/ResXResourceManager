@@ -54,7 +54,7 @@
             if (selection == null)
                 return false;
 
-            var parser = new Parser();
+            IParser parser = new GenericParser();
 
             var s = parser.LocateString(selection);
 
@@ -67,13 +67,10 @@
             if (extension == null)
                 return null;
 
-            var configuration = _exportProvider.GetExportedValue<DteConfiguration>();
+            var configuration = _exportProvider.GetExportedValue<DteConfiguration>().MoveToResources.Items
+                .FirstOrDefault(item => item.ParseExtensions().Contains(extension, StringComparer.OrdinalIgnoreCase));
 
-            var configurations = configuration.MoveToResources.Items
-                .Where(item => item.ParseExtensions().Contains(extension, StringComparer.OrdinalIgnoreCase))
-                .ToArray();
-
-            if (!configurations.Any())
+            if (configuration == null)
                 return null;
 
             Contract.Assume(document != null);
@@ -81,7 +78,7 @@
             if (selection == null)
                 return null;
 
-            var parser = new Parser();
+            IParser parser = new GenericParser();
 
             var stringInfo = parser.LocateString(selection);
 
@@ -89,7 +86,7 @@
                 return null;
 
             selection.MoveTo(stringInfo.StartColumn, stringInfo.EndColumn);
-            var patterns = configurations.Select(config => config.Pattern).ToArray();
+            var patterns = configuration.ParsePatterns().ToArray();
 
             var viewModel = new MoveToResourceViewModel(_exportProvider, patterns)
             {
@@ -99,7 +96,7 @@
                 Comment = ""
             };
 
-            var confirmed = new ConfirmationDialog(_exportProvider) {Content = viewModel}.ShowDialog().GetValueOrDefault();
+            var confirmed = new ConfirmationDialog(_exportProvider) { Content = viewModel }.ShowDialog().GetValueOrDefault();
             if (confirmed && !string.IsNullOrEmpty(viewModel.Key))
             {
                 var entity = viewModel.SelectedResourceEntity;
@@ -284,7 +281,12 @@
             }
         }
 
-        private class Parser
+        private interface IParser
+        {
+            StringInfo LocateString(Selection selection);
+        }
+
+        private class GenericParser : IParser
         {
             public StringInfo LocateString(Selection selection)
             {

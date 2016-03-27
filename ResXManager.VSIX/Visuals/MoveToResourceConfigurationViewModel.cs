@@ -1,11 +1,10 @@
 ﻿namespace tomenglertde.ResXManager.VSIX.Visuals
 {
-    using System.ComponentModel;
     using System.ComponentModel.Composition;
 
     using TomsToolbox.Wpf.Composition;
 
-    [DisplayName("Move to resource")]
+    [LocalizedDisplayName(StringResourceKey.MoveToResource)]
     [VisualCompositionExport("Configuration")]
     internal class MoveToResourceConfigurationViewModel
     {

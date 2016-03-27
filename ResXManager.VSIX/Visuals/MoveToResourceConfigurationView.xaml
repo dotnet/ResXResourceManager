@@ -14,7 +14,7 @@
                   Margin="10" MinHeight="50" MaxHeight="250" MinWidth="700">
       <DataGrid.Columns>
         <DataGridTextColumn Header="{x:Static properties:Resources.FileExtensions}" Binding="{Binding Extensions}" Width="2*" HeaderStyle="{DynamicResource LabelStyle}" />
-        <DataGridTextColumn Header="Pattern" Binding="{Binding Pattern}" Width="5*" HeaderStyle="{DynamicResource LabelStyle}" />
+        <DataGridTextColumn Header="{x:Static properties:Resources.Patterns}" Binding="{Binding Patterns}" Width="5*" HeaderStyle="{DynamicResource LabelStyle}" />
       </DataGrid.Columns>
     </DataGrid>
   </Grid>

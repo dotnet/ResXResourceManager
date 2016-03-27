@@ -79,7 +79,7 @@
 
   </UserControl.Resources>
 
-  <Grid Background="LightGray" Width="800" HorizontalAlignment="Left">
+  <ScrollViewer Background="LightGray" Width="800" HorizontalAlignment="Left" VerticalScrollBarVisibility="Auto">
     <StackPanel Margin="10">
 
       <HeaderedContentControl Header="{x:Static properties:Resources.ConfigurationScopeHeader}" Style="{StaticResource GroupStyle}" Visibility="{Binding Configuration.IsScopeSupported, Converter={x:Static toms:BooleanToVisibilityConverter.Default}}">
@@ -204,5 +204,5 @@
       </ItemsControl>
 
     </StackPanel>
-  </Grid>
+  </ScrollViewer>
 </UserControl>

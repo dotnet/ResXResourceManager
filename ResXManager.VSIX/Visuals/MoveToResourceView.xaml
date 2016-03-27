@@ -22,7 +22,7 @@
   </UserControl.Resources>
   <StackPanel Margin="10">
     <StackPanel Grid.IsSharedSizeScope="True">
-      <toms:SharedWidthHeaderedContentControl Header="Source file:">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.ResourceHeader}">
         <ComboBox ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}" 
                   SelectedItem="{Binding SelectedResourceEntity, ValidatesOnDataErrors=True}" 
                   Style="{StaticResource {x:Static toms:ResourceKeys.ControlWithValidationErrorToolTipStyle}}">
@@ -55,22 +55,22 @@
         </ComboBox>
       </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10"/>
-      <toms:SharedWidthHeaderedContentControl Header="Key:">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.KeyHeader}">
         <TextBox Text="{Binding Key, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
                  Style="{StaticResource {x:Static toms:ResourceKeys.ControlWithValidationErrorToolTipStyle}}"/>
       </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10"/>
-      <toms:SharedWidthHeaderedContentControl Header="Code:">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.CodeHeader}">
         <ComboBox ItemsSource="{Binding Replacements}" SelectedItem="{Binding Replacement}"/>
       </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10"/>
-      <toms:SharedWidthHeaderedContentControl Header="Value:" VerticalContentAlignment="Top" HeaderPadding="0,2">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.ValueHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
         <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=ValueTextBox}" WhiteSpaceOpacity="0.4" WhiteSpaces="All">
           <TextBox x:Name="ValueTextBox" Height="40" Text="{Binding Value}" AcceptsReturn="True"/>
         </toms:TextBoxVisibleWhiteSpaceDecorator>
       </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10"/>
-      <toms:SharedWidthHeaderedContentControl Header="Comment:" VerticalContentAlignment="Top" HeaderPadding="0,2">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.CommentHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
         <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=CommentTextBox}" WhiteSpaceOpacity="0.4" WhiteSpaces="All">
           <TextBox x:Name="CommentTextBox" Height="40" Text="{Binding Comment}" AcceptsReturn="True"/>
         </toms:TextBoxVisibleWhiteSpaceDecorator>

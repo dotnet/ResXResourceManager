@@ -5,6 +5,18 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
+// 
+// This template generates PublicResXFileCodeGenerator compatible code plus some
+// useful extensions. 
+// 
+// The original version provided by ResXResourceManager is restricted to resource key names
+// that are valid c# identifiers to keep this template simple (KISS!).
+// 
+// Us it as it is or as a scaffold to generate the code you need.
+//
+// As long as you have ResXResourceManager running in the background, the generated code 
+// will be kept up to date.
+//  
 //------------------------------------------------------------------------------
 
 namespace tomenglertde.ResXManager.VSIX {
@@ -159,6 +171,26 @@ namespace tomenglertde.ResXManager.VSIX {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Code:.
+        /// </summary>
+        public static string CodeHeader {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("CodeHeader", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Comment:.
+        /// </summary>
+        public static string CommentHeader {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("CommentHeader", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Error:.
         /// </summary>
         public static string Error {
@@ -189,6 +221,26 @@ namespace tomenglertde.ResXManager.VSIX {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Key:.
+        /// </summary>
+        public static string KeyHeader {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("KeyHeader", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Move to resource.
+        /// </summary>
+        public static string MoveToResource {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("MoveToResource", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Open in ResX Manager.
         /// </summary>
         public static string OpenInResXManager {
@@ -215,6 +267,16 @@ namespace tomenglertde.ResXManager.VSIX {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ProjectHasReadOnlyFiles", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Resource:.
+        /// </summary>
+        public static string ResourceHeader {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ResourceHeader", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -258,6 +320,16 @@ namespace tomenglertde.ResXManager.VSIX {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ToolWindowTitle", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Value:.
+        /// </summary>
+        public static string ValueHeader {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ValueHeader", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -330,6 +402,14 @@ namespace tomenglertde.ResXManager.VSIX {
         /// </summary>
         CodeGenerator_Unkown,
         /// <summary>
+        ///   Looks up a localized string similar to Code:.
+        /// </summary>
+        CodeHeader,
+        /// <summary>
+        ///   Looks up a localized string similar to Comment:.
+        /// </summary>
+        CommentHeader,
+        /// <summary>
         ///   Looks up a localized string similar to Error:.
         /// </summary>
         Error,
@@ -341,6 +421,14 @@ namespace tomenglertde.ResXManager.VSIX {
         ///   Looks up a localized string similar to ResX Resource Manager loaded.&amp;#13;&amp;#10;Hom....
         /// </summary>
         IntroMessage,
+        /// <summary>
+        ///   Looks up a localized string similar to Key:.
+        /// </summary>
+        KeyHeader,
+        /// <summary>
+        ///   Looks up a localized string similar to Move to resource.
+        /// </summary>
+        MoveToResource,
         /// <summary>
         ///   Looks up a localized string similar to Open in ResX Manager.
         /// </summary>
@@ -354,6 +442,10 @@ namespace tomenglertde.ResXManager.VSIX {
         /// </summary>
         ProjectHasReadOnlyFiles,
         /// <summary>
+        ///   Looks up a localized string similar to Resource:.
+        /// </summary>
+        ResourceHeader,
+        /// <summary>
         ///   Looks up a localized string similar to Error loading resource files: {0}. &amp;#13;&amp;#....
         /// </summary>
         ResourceLoadingError,
@@ -364,6 +456,10 @@ namespace tomenglertde.ResXManager.VSIX {
         /// @Invariant
         /// </remarks>
         ToolWindowTitle,
+        /// <summary>
+        ///   Looks up a localized string similar to Value:.
+        /// </summary>
+        ValueHeader,
         /// <summary>
         ///   Looks up a localized string similar to Version: {0}.
         /// </summary>

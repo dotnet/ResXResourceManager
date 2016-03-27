@@ -19,7 +19,7 @@
     public class MoveToResourceConfigurationItem : INotifyPropertyChanged
     {
         private string _extensions;
-        private string _pattern;
+        private string _patterns;
 
         [DataMember]
         public string Extensions
@@ -35,15 +35,15 @@
         }
 
         [DataMember]
-        public string Pattern
+        public string Patterns
         {
             get
             {
-                return _pattern;
+                return _patterns;
             }
             set
             {
-                SetProperty(ref _pattern, value, nameof(Pattern));
+                SetProperty(ref _patterns, value, nameof(Patterns));
             }
         }
 
@@ -55,6 +55,18 @@
                 return Enumerable.Empty<string>();
 
             return Extensions.Split(',')
+                .Select(ext => ext.Trim())
+                .Where(ext => !string.IsNullOrEmpty(ext));
+        }
+
+        public IEnumerable<string> ParsePatterns()
+        {
+            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
+
+            if (string.IsNullOrEmpty(Patterns))
+                return Enumerable.Empty<string>();
+
+            return Patterns.Split('|')
                 .Select(ext => ext.Trim())
                 .Where(ext => !string.IsNullOrEmpty(ext));
         }
@@ -120,10 +132,8 @@
 
                 var value = new MoveToResourceConfiguration();
 
-                value.Add(".cs,.cshtml,.vb,.vbhtml", @"$File.$Key");
-                value.Add(".cs,.cshtml,.vb,.vbhtml", @"$Namespace.$File.$Key");
-                value.Add(".cs,.cshtml,.vb,.vbhtml", @"StringResourceKey.$Key");
-                value.Add(".cs,.cshtml,.vb,.vbhtml", @"$Namespace.StringResourceKey.$Key");
+                value.Add(".cs,.vb", "$File.$Key|$Namespace.$File.$Key|StringResourceKey.$Key|$Namespace.StringResourceKey.$Key");
+                value.Add(".cshtml,.vbhtml", "$@File.$Key|@$Namespace.$File.$Key|@StringResourceKey.$Key|@$Namespace.StringResourceKey.$Key");
                 value.Add(".cpp,.c,.hxx,.h", @"$File::$Key");
                 value.Add(".aspx,.ascx", @"<%$ Resources:$File,$Key %>");
                 value.Add(".xaml", "\"{x:Static properties:$File.$Key}\"");
@@ -137,7 +147,7 @@
             Items.Add(new MoveToResourceConfigurationItem
             {
                 Extensions = extensions,
-                Pattern = pattern,
+                Patterns = pattern,
             });
         }
 

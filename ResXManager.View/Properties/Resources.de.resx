@@ -375,4 +375,7 @@ Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
   <data name="CellSelectionToolTip" xml:space="preserve">
     <value>Das markieren einzelner Zellen erlauben, um deren Inhalt zu kopieren oder einzufügen.</value>
   </data>
+  <data name="Patterns" xml:space="preserve">
+    <value>Muster</value>
+  </data>
 </root>

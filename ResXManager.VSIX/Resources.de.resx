@@ -163,4 +163,22 @@ Mehr Details finden sich im Ausgabefenster.</value>
   <data name="CodeGenerator_CommandTextTemplate" xml:space="preserve">
     <value>Text-Template</value>
   </data>
+  <data name="MoveToResource" xml:space="preserve">
+    <value>Zu Ressource konvertieren</value>
+  </data>
+  <data name="ResourceHeader" xml:space="preserve">
+    <value>Ressource:</value>
+  </data>
+  <data name="KeyHeader" xml:space="preserve">
+    <value>Schlüssel:</value>
+  </data>
+  <data name="CodeHeader" xml:space="preserve">
+    <value>Code:</value>
+  </data>
+  <data name="ValueHeader" xml:space="preserve">
+    <value>Text:</value>
+  </data>
+  <data name="CommentHeader" xml:space="preserve">
+    <value>Kommentar:</value>
+  </data>
 </root>

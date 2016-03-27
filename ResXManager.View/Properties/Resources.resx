@@ -386,4 +386,7 @@ Use e.g. ".* - (?!Migrations)" to hide EF migrations.</value>
   <data name="CellSelectionToolTip" xml:space="preserve">
     <value>Allow selection of individual cells to copy/paste the content.</value>
   </data>
+  <data name="Patterns" xml:space="preserve">
+    <value>Patterns</value>
+  </data>
 </root>

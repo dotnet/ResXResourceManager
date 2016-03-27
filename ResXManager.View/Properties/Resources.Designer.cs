@@ -724,6 +724,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Patterns.
+        /// </summary>
+        public static string Patterns {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("Patterns", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Refresh view.
         /// </summary>
         public static string RefreshViewToolTip {
@@ -1227,6 +1237,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Paste the clipboard content (Ctrl+V).
         /// </summary>
         PasteToolTip,
+        /// <summary>
+        ///   Looks up a localized string similar to Patterns.
+        /// </summary>
+        Patterns,
         /// <summary>
         ///   Looks up a localized string similar to Refresh view.
         /// </summary>
