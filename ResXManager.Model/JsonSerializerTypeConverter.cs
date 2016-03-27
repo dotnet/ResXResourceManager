@@ -99,10 +99,10 @@
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
             if (value == null)
-                throw new ArgumentNullException(@"value");
+                throw new ArgumentNullException(nameof(value));
 
             if (value.GetType() != typeof(T))
-                throw new ArgumentException(typeof(T).Name + @" expected", "value");
+                throw new ArgumentException(typeof(T).Name + @" expected", nameof(value));
 
             if (destinationType != typeof(string))
                 throw new InvalidOperationException(@"Only string conversion is supported.");

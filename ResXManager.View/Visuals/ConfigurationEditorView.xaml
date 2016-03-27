@@ -190,6 +190,19 @@
         </DataGrid>
       </HeaderedContentControl>
 
+      <ItemsControl toms:VisualComposition.RegionId="Configuration">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <StackPanel>
+              <Decorator Height="5" />
+              <HeaderedContentControl Header="{Binding Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}" Style="{StaticResource GroupStyle}">
+                <ContentControl Content="{Binding}"  Margin="10"/>
+              </HeaderedContentControl>
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
     </StackPanel>
   </Grid>
 </UserControl>

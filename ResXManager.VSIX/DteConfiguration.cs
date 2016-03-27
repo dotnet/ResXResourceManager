@@ -5,16 +5,21 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
+    using System.Windows.Threading;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Core;
+    using TomsToolbox.Desktop;
 
     [Export(typeof(Configuration))]
+    [Export(typeof(DteConfiguration))]
     internal class DteConfiguration : Configuration
     {
         private readonly DteSolution _solution;
+        private readonly DispatcherThrottle _moveToResourcesChangeThrottle;
+        private MoveToResourceConfiguration _moveToResources;
 
         [ImportingConstructor]
         public DteConfiguration(DteSolution solution, ITracer tracer)
@@ -24,23 +29,35 @@
             Contract.Requires(tracer != null);
 
             _solution = solution;
+            _moveToResourcesChangeThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, PersistMoveToResources);
         }
 
-        public override bool IsScopeSupported
+        public MoveToResourceConfiguration MoveToResources
         {
             get
             {
-                return true;
+                Contract.Ensures(Contract.Result<MoveToResourceConfiguration>() != null);
+
+                return _moveToResources ?? CreateMoveToResourceConfiguration();
             }
         }
 
-        public override ConfigurationScope Scope
+        private void PersistMoveToResources()
         {
-            get
-            {
-                return (_solution.Globals != null) ? ConfigurationScope.Solution : ConfigurationScope.Global;
-            }
+            SetValue(MoveToResources, () => MoveToResources);
         }
+
+        private MoveToResourceConfiguration CreateMoveToResourceConfiguration()
+        {
+            _moveToResources = GetValue(() => MoveToResources) ?? MoveToResourceConfiguration.Default;
+            _moveToResources.ItemPropertyChanged += (_, __) => _moveToResourcesChangeThrottle.Tick();
+
+            return _moveToResources;
+        }
+
+        public override bool IsScopeSupported => true;
+
+        public override ConfigurationScope Scope => (_solution.Globals != null) ? ConfigurationScope.Solution : ConfigurationScope.Global;
 
         protected override T GetValue<T>(Expression<Func<T>> propertyExpression, T defaultValue)
         {

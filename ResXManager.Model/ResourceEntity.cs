@@ -253,6 +253,7 @@
         public ResourceTableEntry Add(string key)
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
+            Contract.Ensures(Contract.Result<ResourceTableEntry>() != null);
 
             if (!_languages.Any() || !_languages.Values.Any())
                 return null;

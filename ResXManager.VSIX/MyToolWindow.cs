@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.Composition.Hosting;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -30,9 +31,6 @@
     using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
-
-    using Configuration = tomenglertde.ResXManager.Model.Configuration;
-    using Process = System.Diagnostics.Process;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
@@ -97,6 +95,16 @@
                 Contract.Ensures(Contract.Result<ResourceManager>() != null);
 
                 return _resourceManager;
+            }
+        }
+
+        public IRefactorings Refactorings
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<IRefactorings>() != null);
+
+                return _compositionHost.GetExportedValue<IRefactorings>();
             }
         }
 

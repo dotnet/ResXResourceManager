@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿namespace tomenglertde.ResXManager.VSIX
 {
     using System;
     using System.Collections.Generic;
@@ -11,15 +11,15 @@
 
     using JetBrains.Annotations;
 
+    using tomenglertde.ResXManager.Model;
+
     using TomsToolbox.ObservableCollections;
 
     [DataContract]
-    public class CodeReferenceConfigurationItem : INotifyPropertyChanged
+    public class MoveToResourceConfigurationItem : INotifyPropertyChanged
     {
         private string _extensions;
-        private bool _isCaseSensitive;
-        private string _expression;
-        private string _singleLineComment;
+        private string _pattern;
 
         [DataMember]
         public string Extensions
@@ -35,41 +35,15 @@
         }
 
         [DataMember]
-        public bool IsCaseSensitive
+        public string Pattern
         {
             get
             {
-                return _isCaseSensitive;
+                return _pattern;
             }
             set
             {
-                SetProperty(ref _isCaseSensitive, value, nameof(IsCaseSensitive));
-            }
-        }
-
-        [DataMember]
-        public string Expression
-        {
-            get
-            {
-                return _expression;
-            }
-            set
-            {
-                SetProperty(ref _expression, value, nameof(Expression));
-            }
-        }
-
-        [DataMember]
-        public string SingleLineComment
-        {
-            get
-            {
-                return _singleLineComment;
-            }
-            set
-            {
-                SetProperty(ref _singleLineComment, value, nameof(SingleLineComment));
+                SetProperty(ref _pattern, value, nameof(Pattern));
             }
         }
 
@@ -105,20 +79,20 @@
         #endregion
     }
 
-    [KnownType(typeof(CodeReferenceConfigurationItem))]
+    [KnownType(typeof(MoveToResourceConfigurationItem))]
     [DataContract]
-    [TypeConverter(typeof(JsonSerializerTypeConverter<CodeReferenceConfiguration>))]
-    public class CodeReferenceConfiguration
+    [TypeConverter(typeof(JsonSerializerTypeConverter<MoveToResourceConfiguration>))]
+    public class MoveToResourceConfiguration
     {
-        private ObservableCollection<CodeReferenceConfigurationItem> _items;
-        private ObservablePropertyChangeTracker<CodeReferenceConfigurationItem> _changeTracker;
+        private ObservableCollection<MoveToResourceConfigurationItem> _items;
+        private ObservablePropertyChangeTracker<MoveToResourceConfigurationItem> _changeTracker;
 
         [DataMember(Name = "Items")]
-        public ObservableCollection<CodeReferenceConfigurationItem> Items
+        public ObservableCollection<MoveToResourceConfigurationItem> Items
         {
             get
             {
-                Contract.Ensures(Contract.Result<ObservableCollection<CodeReferenceConfigurationItem>>() != null);
+                Contract.Ensures(Contract.Result<ObservableCollection<MoveToResourceConfigurationItem>>() != null);
                 CreateCollection();
                 return _items;
             }
@@ -138,36 +112,33 @@
             }
         }
 
-        public static CodeReferenceConfiguration Default
+        public static MoveToResourceConfiguration Default
         {
             get
             {
-                Contract.Ensures(Contract.Result<CodeReferenceConfiguration>() != null);
+                Contract.Ensures(Contract.Result<MoveToResourceConfiguration>() != null);
 
-                var value = new CodeReferenceConfiguration();
+                var value = new MoveToResourceConfiguration();
 
-                value.Add(".cs,.xaml,.cshtml", true, @"\W($File.$Key)\W", @"//");
-                value.Add(".cs", true, @"ResourceManager.GetString\(""($Key)""\)", @"//");
-                value.Add(".cs", true, @"typeof\((\w+\.)*($File)\).+""($Key)""|""($Key)"".+typeof\((\w+\.)*($File)\)", @"//");
-                value.Add(".vb", false, @"\W($Key)\W", @"'");
-                value.Add(".cpp,.c,.hxx,.h", true, @"\W($File::$Key)\W", @"//");
-                value.Add(".aspx,.ascx", true, @"<%\$\s+Resources:\s*($File)\s*,\s*($Key)\s*%>", null);
-                value.Add("*cs", true, @"StringResourceKey\.($Key)", @"//");
+                value.Add(".cs,.cshtml,.vb,.vbhtml", @"$File.$Key");
+                value.Add(".cs,.cshtml,.vb,.vbhtml", @"$Namespace.$File.$Key");
+                value.Add(".cs,.cshtml,.vb,.vbhtml", @"StringResourceKey.$Key");
+                value.Add(".cs,.cshtml,.vb,.vbhtml", @"$Namespace.StringResourceKey.$Key");
+                value.Add(".cpp,.c,.hxx,.h", @"$File::$Key");
+                value.Add(".aspx,.ascx", @"<%$ Resources:$File,$Key %>");
+                value.Add(".xaml", "\"{x:Static properties:$File.$Key}\"");
 
                 return value;
             }
         }
 
-        private void Add(string extensions, bool isCaseSensitive, string expression, string singleLineComment)
+        private void Add(string extensions, string pattern)
         {
-            Items.Add(
-                new CodeReferenceConfigurationItem
-                {
-                    Extensions = extensions,
-                    IsCaseSensitive = isCaseSensitive,
-                    Expression = expression,
-                    SingleLineComment = singleLineComment
-                });
+            Items.Add(new MoveToResourceConfigurationItem
+            {
+                Extensions = extensions,
+                Pattern = pattern,
+            });
         }
 
         private void CreateCollection()
@@ -178,8 +149,8 @@
             if (_items != null)
                 return;
 
-            _items = new ObservableCollection<CodeReferenceConfigurationItem>();
-            _changeTracker = new ObservablePropertyChangeTracker<CodeReferenceConfigurationItem>(_items);
+            _items = new ObservableCollection<MoveToResourceConfigurationItem>();
+            _changeTracker = new ObservablePropertyChangeTracker<MoveToResourceConfigurationItem>(_items);
         }
 
         [ContractInvariantMethod]

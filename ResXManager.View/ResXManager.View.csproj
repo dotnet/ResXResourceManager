@@ -141,8 +141,8 @@
     <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DataGridExtensions, Version=1.0.29.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DataGridExtensions.1.0.29.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
+    <Reference Include="DataGridExtensions">
+      <HintPath>..\packages\DataGridExtensions.1.0.30.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -156,8 +156,8 @@
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -172,20 +172,20 @@
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
-    <Reference Include="TomsToolbox.Core, Version=1.0.39.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Core.1.0.39.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
+    <Reference Include="TomsToolbox.Core">
+      <HintPath>..\packages\TomsToolbox.Core.1.0.41.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TomsToolbox.Desktop, Version=1.0.39.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.39.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
+    <Reference Include="TomsToolbox.Desktop">
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.41.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.39.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.39.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
+    <Reference Include="TomsToolbox.ObservableCollections">
+      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.41.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TomsToolbox.Wpf, Version=1.0.39.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Wpf.1.0.39.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
+    <Reference Include="TomsToolbox.Wpf">
+      <HintPath>..\packages\TomsToolbox.Wpf.1.0.41.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
@@ -228,6 +228,9 @@
       <DependentUpon>ConfigurationEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Visuals\ConfigurationEditorViewModel.cs" />
+    <Compile Include="Visuals\ConfirmationDialog.xaml.cs">
+      <DependentUpon>ConfirmationDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Visuals\LanguageConfigurationView.xaml.cs">
       <DependentUpon>LanguageConfigurationView.xaml</DependentUpon>
     </Compile>
@@ -273,6 +276,10 @@
     <Page Include="Visuals\ConfigurationEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visuals\ConfirmationDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Visuals\LanguageConfigurationView.xaml">
       <SubType>Designer</SubType>

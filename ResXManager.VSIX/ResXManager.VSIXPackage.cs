@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.Design;
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
@@ -162,16 +163,36 @@
 
         private void MoveToResource(object sender, EventArgs e)
         {
+            var toolWindow = FindToolWindow(true);
+
+            var entry = toolWindow.Refactorings.MoveToResource(_dte.ActiveDocument);
+            if (entry != null)
+            {
+                ShowToolWindow();
+
+                var resourceManager = toolWindow.ResourceManager;
+
+                var dispatcher = Dispatcher.CurrentDispatcher;
+
+                dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
+                {
+                    if (!resourceManager.SelectedEntities.Contains(entry.Container))
+                        resourceManager.SelectedEntities.Add(entry.Container);
+
+                    resourceManager.SelectedTableEntries.Clear();
+                    resourceManager.SelectedTableEntries.Add(entry);
+                });
+            }
         }
 
-        private static void TextEditorContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
+        private void TextEditorContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
         {
             var menuCommand = sender as OleMenuCommand;
             if (menuCommand == null)
                 return;
 
             menuCommand.Text = "Move to Resource";
-            menuCommand.Visible = false;
+            menuCommand.Visible = FindToolWindow(true).Refactorings.CanMoveToResource(_dte.ActiveDocument);
         }
 
         private void DocumentEvents_DocumentOpened(EnvDTE.Document document)
@@ -189,18 +210,12 @@
 
             var toolWindow = FindToolWindow(false);
 
-            if (toolWindow != null)
-            {
-                if (toolWindow.ResourceManager.ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.ProjectFile.IsSaving))
-                    return;
-            }
+            if ((toolWindow?.ResourceManager.ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.ProjectFile.IsSaving)).GetValueOrDefault())
+                return;
 
             document.ProjectItem.Descendants().ForEach(projectItem => projectItem.RunCustomTool());
 
-            if (toolWindow != null)
-            {
-                toolWindow.ReloadSolution();
-            }
+            toolWindow?.ReloadSolution();
         }
 
         private static bool AffectsResourceFile(Document document)
