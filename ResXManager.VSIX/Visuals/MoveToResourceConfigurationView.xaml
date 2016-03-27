@@ -4,17 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
              xmlns:local="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
-             xmlns:properties="urn:ResXManager.View"
+             xmlns:view="urn:ResXManager.View"
              d:DataContext="{d:DesignInstance local:MoveToResourceConfigurationViewModel}"
             >
   <Grid>
     <DataGrid ItemsSource="{Binding Configuration.MoveToResources.Items}"
                   AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False"
                   HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
-                  Margin="10" MinHeight="50" MaxHeight="250" MinWidth="700">
+                  MinHeight="50" MaxHeight="250" MinWidth="700">
       <DataGrid.Columns>
-        <DataGridTextColumn Header="{x:Static properties:Resources.FileExtensions}" Binding="{Binding Extensions}" Width="2*" HeaderStyle="{DynamicResource LabelStyle}" />
-        <DataGridTextColumn Header="{x:Static properties:Resources.Patterns}" Binding="{Binding Patterns}" Width="5*" HeaderStyle="{DynamicResource LabelStyle}" />
+        <DataGridTextColumn Header="{x:Static view:Resources.FileExtensions}" Binding="{Binding Extensions}" Width="*" HeaderStyle="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}" />
+        <DataGridTextColumn Header="{x:Static view:Resources.Patterns}" Binding="{Binding Patterns}" Width="5*" HeaderStyle="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}" />
       </DataGrid.Columns>
     </DataGrid>
   </Grid>

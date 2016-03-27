@@ -290,7 +290,8 @@
         {
             public StringInfo LocateString(Selection selection)
             {
-                Contract.Requires(selection != null);
+                if (selection == null)
+                    return null;
 
                 var secondQuote = -1;
                 var column = selection.Point.LineCharOffset - 1;

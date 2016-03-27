@@ -211,6 +211,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.Designer.tt</DependentUpon>
     </Compile>
+    <Compile Include="ResourceKeys.cs" />
     <Compile Include="Tools\AddNewKeyCommand.cs" />
     <Compile Include="Converters\CultureToXmlLanguageConverter.cs" />
     <Compile Include="Tools\ColumnManager.cs" />
@@ -269,6 +270,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Themes\generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Visuals\CodeReferencesToolTip.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

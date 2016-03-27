@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Markup;
 
 [assembly: AssemblyTitle("ResXManager.View")]
@@ -11,7 +12,9 @@ using System.Windows.Markup;
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(false)]
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
+[assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
 
+[assembly: XmlnsPrefix("urn:ResXManager.View", "view")]
 [assembly: XmlnsDefinition("urn:ResXManager.View", "tomenglertde.ResXManager.View")]
 [assembly: XmlnsDefinition("urn:ResXManager.View", "tomenglertde.ResXManager.View.Properties")]
 [assembly: XmlnsDefinition("urn:ResXManager.View", "tomenglertde.ResXManager.View.Behaviors")]

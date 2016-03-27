@@ -133,7 +133,7 @@
                 var value = new MoveToResourceConfiguration();
 
                 value.Add(".cs,.vb", "$File.$Key|$Namespace.$File.$Key|StringResourceKey.$Key|$Namespace.StringResourceKey.$Key");
-                value.Add(".cshtml,.vbhtml", "$@File.$Key|@$Namespace.$File.$Key|@StringResourceKey.$Key|@$Namespace.StringResourceKey.$Key");
+                value.Add(".cshtml,.vbhtml", "@$File.$Key|@$Namespace.$File.$Key|@StringResourceKey.$Key|@$Namespace.StringResourceKey.$Key");
                 value.Add(".cpp,.c,.hxx,.h", @"$File::$Key");
                 value.Add(".aspx,.ascx", @"<%$ Resources:$File,$Key %>");
                 value.Add(".xaml", "\"{x:Static properties:$File.$Key}\"");

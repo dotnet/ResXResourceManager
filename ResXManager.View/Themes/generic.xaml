@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:view="clr-namespace:tomenglertde.ResXManager.View">
+
+  <Style x:Key="{x:Static view:ResourceKeys.LableTextStyle}">
+    <Setter Property="TextElement.Foreground" Value="DarkSlateGray" />
+    <Setter Property="TextElement.FontWeight" Value="DemiBold" />
+    <Setter Property="FrameworkElement.VerticalAlignment" Value="Center" />
+  </Style>
+
+</ResourceDictionary>
