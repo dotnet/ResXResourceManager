@@ -10,6 +10,7 @@
 
     using tomenglertde.ResXManager.Translators.Properties;
 
+    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
     [Export]
@@ -25,6 +26,7 @@
 
             _changeThrottle = new Throttle(TimeSpan.FromSeconds(1), SaveConfiguration);
             _translators = translators;
+            _translators.ForEach(translator => translator.PropertyChanged += (_, __) => _changeThrottle.Tick());
 
             var settings = Settings.Default;
             var configuration = settings.Configuration;
@@ -55,8 +57,6 @@
                     catch // Newtonsoft.Jason has not documented any exceptions...
                     {
                     }
-
-                    translator.PropertyChanged += (_, __) => _changeThrottle.Tick();
                 }
             }
             catch // Newtonsoft.Jason has not documented any exceptions...
