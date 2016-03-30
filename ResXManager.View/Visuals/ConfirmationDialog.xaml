@@ -4,25 +4,32 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         xmlns:toms="urn:TomsToolbox"
+        xmlns:visuals="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
         Title="Move To Resource" Width="600" SizeToContent="Height"
         WindowStyle="ThreeDBorderWindow" ResizeMode="NoResize"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
   <Window.Template>
-    <ControlTemplate TargetType="Window">
-      <DockPanel Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-        <Grid DockPanel.Dock="Bottom" Background="#F0F0F0">
-          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.IsSharedSizeScope="True" Margin="10">
-            <Button Padding="15,5" IsDefault="True" Command="{Binding CommitCommand}">
-              <ContentControl Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" Content="OK" HorizontalContentAlignment="Center"/>
-            </Button>
-            <Decorator Width="10"></Decorator>
-            <Button Padding="15,5" IsCancel="True">
-              <ContentControl Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" Content="Cancel" HorizontalContentAlignment="Center"/>
-            </Button>
-          </StackPanel>
-        </Grid>
-        <ContentPresenter />
-      </DockPanel>
+    <ControlTemplate TargetType="visuals:ConfirmationDialog">
+      <AdornerDecorator>
+        <DockPanel Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+          <Grid DockPanel.Dock="Bottom" Background="#F0F0F0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.IsSharedSizeScope="True" Margin="10">
+              <Button Padding="15,5" IsDefault="True" Command="{Binding CommitCommand}">
+                <ContentControl Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" Content="OK" HorizontalContentAlignment="Center"/>
+              </Button>
+              <Decorator Width="10"></Decorator>
+              <Button Padding="15,5" IsCancel="True">
+                <ContentControl Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" Content="Cancel" HorizontalContentAlignment="Center"/>
+              </Button>
+            </StackPanel>
+          </Grid>
+          <ContentPresenter>
+            <ContentPresenter.ContentTemplateSelector>
+              <toms:RoleBasedDataTemplateSelector Role="{}"></toms:RoleBasedDataTemplateSelector>
+            </ContentPresenter.ContentTemplateSelector>
+          </ContentPresenter>
+        </DockPanel>
+      </AdornerDecorator>
     </ControlTemplate>
   </Window.Template>
 </Window>

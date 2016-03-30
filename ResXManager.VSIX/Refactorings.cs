@@ -8,7 +8,6 @@
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
-    using System.Text;
 
     using EnvDTE;
 
@@ -54,6 +53,9 @@
             if (selection == null)
                 return false;
 
+            if (!selection.Begin.EqualTo(selection.End))
+                return true;
+
             IParser parser = new GenericParser();
 
             var s = parser.LocateString(selection);
@@ -80,33 +82,45 @@
 
             IParser parser = new GenericParser();
 
-            var stringInfo = parser.LocateString(selection);
-
-            if (stringInfo == null)
+            var text = !selection.Begin.EqualTo(selection.End) ? selection.Text?.Trim('"') : parser.LocateString(selection);
+            if (text == null)
                 return null;
 
-            selection.MoveTo(stringInfo.StartColumn, stringInfo.EndColumn);
             var patterns = configuration.ParsePatterns().ToArray();
 
-            var viewModel = new MoveToResourceViewModel(_exportProvider, patterns)
+            var resourceManager = _exportProvider.GetExportedValue<ResourceManager>();
+
+            resourceManager.Reload();
+
+            var existingEntries = resourceManager.ResourceEntities
+                .SelectMany(entity => entity.Entries)
+                .Where(entry => entry.Values[null] == text)
+                .ToArray();
+
+            var viewModel = new MoveToResourceViewModel(_exportProvider, patterns, existingEntries, text)
             {
                 SelectedResourceEntity = GetPreferredResourceEntity(document),
-                Key = CreateKey(stringInfo.Value),
-                Value = stringInfo.Value,
-                Comment = ""
             };
 
-            var confirmed = new ConfirmationDialog(_exportProvider) { Content = viewModel }.ShowDialog().GetValueOrDefault();
+            var confirmationDialog = new ConfirmationDialog(_exportProvider) { Content = viewModel };
+
+            var confirmed = confirmationDialog.ShowDialog().GetValueOrDefault();
+
             if (confirmed && !string.IsNullOrEmpty(viewModel.Key))
             {
-                var entity = viewModel.SelectedResourceEntity;
+                ResourceTableEntry entry = null;
 
-                var entry = entity?.Add(viewModel.Key);
-                if (entry == null)
-                    return null;
+                if (!viewModel.ReuseExisiting)
+                {
+                    var entity = viewModel.SelectedResourceEntity;
 
-                entry.Values[null] = viewModel.Value;
-                entry.Comments[null] = viewModel.Comment;
+                    entry = entity?.Add(viewModel.Key);
+                    if (entry == null)
+                        return null;
+
+                    entry.Values[null] = viewModel.Value;
+                    entry.Comment = viewModel.Comment;
+                }
 
                 selection.ReplaceWith(viewModel.Replacement);
 
@@ -114,16 +128,6 @@
             };
 
             return null;
-        }
-
-        private static string CreateKey(string value)
-        {
-            value = value?.Aggregate(new StringBuilder(), (builder, c) => builder.Append(IsCharValidForSymbol(c) ? c : '_'))?.ToString() ?? "_";
-
-            if (!IsCharValidForSymbolStart(value.FirstOrDefault()))
-                value = "_" + value;
-
-            return value;
         }
 
         private ResourceEntity GetPreferredResourceEntity(Document document)
@@ -167,43 +171,51 @@
 
             var codeLanguage = document.ProjectItem?.FileCodeModel?.Language;
 
-            return new Selection(textDocument, topPoint, line, codeLanguage);
-        }
-
-        private static bool IsCharValidForSymbol(char c)
-        {
-            return (c == '_') || char.IsLetterOrDigit(c);
-        }
-        private static bool IsCharValidForSymbolStart(char c)
-        {
-            return (c == '_') || char.IsLetter(c);
+            return new Selection(textDocument, line, codeLanguage);
         }
 
         private class Selection
         {
             private readonly TextDocument _textDocument;
-            private readonly VirtualPoint _point;
             private readonly string _line;
 
-            public Selection(TextDocument textDocument, VirtualPoint point, string line, string codeLanguage)
+            public Selection(TextDocument textDocument, string line, string codeLanguage)
             {
                 Contract.Requires(textDocument != null);
-                Contract.Requires(point != null);
                 Contract.Requires(line != null);
 
                 _textDocument = textDocument;
-                _point = point;
                 _line = line;
 
                 CodeLanguage = codeLanguage;
             }
 
-            public VirtualPoint Point
+            [ContractVerification(false)]
+            public VirtualPoint Begin
             {
                 get
                 {
                     Contract.Ensures(Contract.Result<VirtualPoint>() != null);
-                    return _point;
+                    return _textDocument.Selection.TopPoint;
+                }
+            }
+
+            [ContractVerification(false)]
+            public VirtualPoint End
+            {
+                get
+                {
+                    Contract.Ensures(Contract.Result<VirtualPoint>() != null);
+                    return _textDocument.Selection.BottomPoint;
+                }
+            }
+
+            [ContractVerification(false)]
+            public string Text
+            {
+                get
+                {
+                    return _textDocument.Selection.Text;
                 }
             }
 
@@ -224,8 +236,8 @@
                 if (selection == null)
                     return;
 
-                selection.MoveToLineAndOffset(Point.Line, startColumn);
-                selection.MoveToLineAndOffset(Point.Line, endColumn, true);
+                selection.MoveToLineAndOffset(Begin.Line, startColumn);
+                selection.MoveToLineAndOffset(Begin.Line, endColumn, true);
             }
 
             public void ReplaceWith(string replacement)
@@ -242,59 +254,24 @@
             private void ObjectInvariant()
             {
                 Contract.Invariant(_textDocument != null);
-                Contract.Invariant(_point != null);
                 Contract.Invariant(_line != null);
-            }
-        }
-
-        private class StringInfo
-        {
-            private readonly string _value;
-
-            public StringInfo(int startColumn, int endColumn, string value)
-            {
-                Contract.Requires(value != null);
-
-                StartColumn = startColumn;
-                EndColumn = endColumn;
-                _value = value;
-            }
-
-            public int StartColumn { get; }
-
-            public int EndColumn { get; }
-
-            public string Value
-            {
-                get
-                {
-                    Contract.Ensures(Contract.Result<string>() != null);
-                    return _value;
-                }
-            }
-
-            [ContractInvariantMethod]
-            [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-            private void ObjectInvariant()
-            {
-                Contract.Invariant(_value != null);
             }
         }
 
         private interface IParser
         {
-            StringInfo LocateString(Selection selection);
+            string LocateString(Selection selection);
         }
 
         private class GenericParser : IParser
         {
-            public StringInfo LocateString(Selection selection)
+            public string LocateString(Selection selection)
             {
                 if (selection == null)
                     return null;
 
                 var secondQuote = -1;
-                var column = selection.Point.LineCharOffset - 1;
+                var column = selection.Begin.LineCharOffset - 1;
                 var line = selection.Line;
                 if (string.IsNullOrEmpty(line))
                     return null;
@@ -315,16 +292,21 @@
                     if (secondQuote == -1)
                         return null;
 
-                    if (column < secondQuote)
-                    {
-                        var startIndex = firstQuote + 1;
-                        var length = secondQuote - firstQuote - 1;
-                        Contract.Assume(startIndex + length <= line.Length);
+                    if (column >= secondQuote)
+                        continue;
 
-                        var value = line.Substring(startIndex, length);
+                    var startIndex = firstQuote + 1;
+                    var length = secondQuote - firstQuote - 1;
+                    Contract.Assume(startIndex + length <= line.Length);
 
-                        return new StringInfo(firstQuote + 1, secondQuote + 2, value);
-                    }
+                    var value = line.Substring(startIndex, length);
+
+                    var startColumn = firstQuote + 1;
+                    var endColumn = secondQuote + 2;
+
+                    selection.MoveTo(startColumn, endColumn);
+
+                    return value;
                 }
 
                 return null;

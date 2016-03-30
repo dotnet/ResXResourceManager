@@ -9,6 +9,7 @@
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
+    using System.Text;
 
     using EnvDTE;
 
@@ -20,24 +21,34 @@
     internal class MoveToResourceViewModel : ObservableObject
     {
         private readonly ICollection<string> _patterns;
+        private readonly ICollection<ResourceTableEntry> _existingEntries;
         private readonly ResourceManager _resourceManager;
         private readonly ObservableCollection<string> _replacements = new ObservableCollection<string>();
         private ResourceEntity _selectedResourceEntity;
+        private ResourceTableEntry _selectedResourceEntry;
         private string _key;
         private string _value;
         private string _comment;
         private string _replacement;
-        private string _namespace;
+        private bool _reuseExisiting;
 
-        public MoveToResourceViewModel(ExportProvider exportProvider, ICollection<string> patterns)
+        public MoveToResourceViewModel(ExportProvider exportProvider, ICollection<string> patterns, ICollection<ResourceTableEntry> existingEntries, string text)
         {
             Contract.Requires(exportProvider != null);
             Contract.Requires(patterns != null);
+            Contract.Requires(existingEntries != null);
+            Contract.Requires(text != null);
 
             _patterns = patterns;
+            _existingEntries = existingEntries;
+            _reuseExisiting = existingEntries.Any();
+            _selectedResourceEntry = existingEntries.FirstOrDefault();
+            _value = text;
+
+            if (!_reuseExisiting)
+                _key = CreateKey(text);
 
             _resourceManager = exportProvider.GetExportedValue<ResourceManager>();
-            _resourceManager.Reload();
         }
 
         public ICollection<ResourceEntity> ResourceEntities => _resourceManager.ResourceEntities;
@@ -51,10 +62,24 @@
             }
             set
             {
-                if (SetProperty(ref _selectedResourceEntity, value, nameof(SelectedResourceEntity)) && (value != null))
+                if (SetProperty(ref _selectedResourceEntity, value, nameof(SelectedResourceEntity)))
                 {
-                    _namespace = GetLocalNamespace(((DteProjectFile)value.NeutralProjectFile)?.DefaultProjectItem);
-                    UpdateReplacements();
+                    Update();
+                }
+            }
+        }
+
+        public ResourceTableEntry SelectedResourceEntry
+        {
+            get
+            {
+                return _selectedResourceEntry;
+            }
+            set
+            {
+                if (SetProperty(ref _selectedResourceEntry, value, nameof(SelectedResourceEntry)))
+                {
+                    Update();
                 }
             }
         }
@@ -70,7 +95,7 @@
             {
                 if (SetProperty(ref _key, value, nameof(Key)))
                 {
-                    UpdateReplacements();
+                    Update();
                 }
             }
         }
@@ -115,6 +140,33 @@
             }
         }
 
+        public bool ReuseExisiting
+        {
+            get
+            {
+                return _reuseExisiting;
+            }
+            set
+            {
+                if (SetProperty(ref _reuseExisiting, value, nameof(ReuseExisiting)))
+                {
+                    if (value)
+                    {
+                        Key = _selectedResourceEntry?.Key;
+                        Comment = _selectedResourceEntry?.Comment;
+                    }
+                    else
+                    {
+                        Comment = string.Empty;
+                    }
+
+                    Update();
+                }
+            }
+        }
+
+        public ICollection<ResourceTableEntry> ExistingEntries => _existingEntries;
+
         protected override IEnumerable<string> GetDataErrors(string propertyName)
         {
             return GetKeyErrors(propertyName).Concat(base.GetDataErrors(propertyName));
@@ -122,6 +174,9 @@
 
         private IEnumerable<string> GetKeyErrors(string propertyName)
         {
+            if (ReuseExisiting)
+                yield break;
+
             if (!string.Equals(propertyName, nameof(Key)))
                 yield break;
 
@@ -171,19 +226,52 @@
             }
         }
 
-        private void UpdateReplacements()
+        private void Update()
         {
             _replacements.Clear();
             _replacements.AddRange(_patterns.Select(EvaluatePattern));
 
             Replacement = _replacements.FirstOrDefault();
+
+            if (ReuseExisiting)
+            {
+                Key = _selectedResourceEntry?.Key;
+                Value = _selectedResourceEntry?.Values[null];
+                Comment = _selectedResourceEntry?.Comment;
+            }
+
+            OnPropertyChanged(nameof(Key)); // to force new validation...
         }
 
         private string EvaluatePattern(string pattern)
         {
             Contract.Requires(pattern != null);
 
-            return pattern.Replace("$File", SelectedResourceEntity?.BaseName).Replace("$Key", Key).Replace("$Namespace", _namespace);
+            var entity = ReuseExisiting ? _selectedResourceEntry?.Container : _selectedResourceEntity;
+
+            var localNamespace = GetLocalNamespace(((DteProjectFile)entity?.NeutralProjectFile)?.DefaultProjectItem);
+
+            return pattern.Replace("$File", SelectedResourceEntity?.BaseName).Replace("$Key", Key).Replace("$Namespace", localNamespace);
+        }
+
+        private static string CreateKey(string text)
+        {
+            var key = text?.Aggregate(new StringBuilder(), (builder, c) => builder.Append(IsCharValidForSymbol(c) ? c : '_'))?.ToString() ?? "_";
+
+            if (!IsCharValidForSymbolStart(key.FirstOrDefault()))
+                key = "_" + key;
+
+            return key;
+        }
+
+        private static bool IsCharValidForSymbol(char c)
+        {
+            return (c == '_') || char.IsLetterOrDigit(c);
+        }
+
+        private static bool IsCharValidForSymbolStart(char c)
+        {
+            return (c == '_') || char.IsLetter(c);
         }
 
         [ContractInvariantMethod]

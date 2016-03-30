@@ -1,79 +1,57 @@
 ﻿<UserControl x:Class="tomenglertde.ResXManager.VSIX.Visuals.MoveToResourceView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="600"
              xmlns:toms="urn:TomsToolbox"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
-             xmlns:model="urn:ResXManager.Model"
-             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.VSIX"
              d:DataContext="{d:DesignInstance visuals:MoveToResourceViewModel}">
-  <UserControl.Resources>
-    <CollectionViewSource x:Key="ResourceEntitiesSource" Source="{Binding ResourceEntities}">
-      <CollectionViewSource.SortDescriptions>
-        <componentModel:SortDescription PropertyName="ProjectName" />
-        <componentModel:SortDescription PropertyName="RelativePath" />
-        <componentModel:SortDescription PropertyName="BaseName" />
-      </CollectionViewSource.SortDescriptions>
-      <CollectionViewSource.GroupDescriptions>
-        <PropertyGroupDescription PropertyName="ProjectName" />
-      </CollectionViewSource.GroupDescriptions>
-    </CollectionViewSource>
-  </UserControl.Resources>
   <StackPanel Margin="10">
     <StackPanel Grid.IsSharedSizeScope="True">
+      <toms:SharedWidthHeaderedContentControl>
+        <StackPanel Orientation="Horizontal">
+          <RadioButton Content="New entry" IsChecked="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}"/>
+          <Decorator Width="10" />
+          <RadioButton Content="Reuse existing" 
+                       IsChecked="{Binding ReuseExisiting}" 
+                       IsEnabled="{Binding ExistingEntries.Count, Converter={x:Static toms:BinaryOperationConverter.GreaterThan}, ConverterParameter=0}"/>
+        </StackPanel>
+      </toms:SharedWidthHeaderedContentControl>
+      <Decorator Height="15" />
       <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.ResourceHeader}">
-        <ComboBox ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}" 
-                  SelectedItem="{Binding SelectedResourceEntity, ValidatesOnDataErrors=True}" 
-                  Style="{StaticResource {x:Static toms:ResourceKeys.ControlWithValidationErrorToolTipStyle}}">
-          <ComboBox.ItemTemplate>
-            <DataTemplate DataType="model:ResourceEntity">
-              <TextBlock Background="Transparent" VerticalAlignment="Center">
-                <Run Text="{Binding Path=RelativePath, Mode=OneWay}" /><Run Text="{Binding Path=BaseName, Mode=OneWay}" />
-              </TextBlock>
-            </DataTemplate>
-          </ComboBox.ItemTemplate>
-          <ComboBox.GroupStyle>
-            <GroupStyle>
-              <GroupStyle.ContainerStyle>
-                <Style TargetType="{x:Type GroupItem}">
-                  <Setter Property="Margin" Value="0,0,0,5" />
-                  <Setter Property="Template">
-                    <Setter.Value>
-                      <ControlTemplate TargetType="{x:Type GroupItem}">
-                        <StackPanel d:DataContext="{d:DesignInstance GroupItem}">
-                          <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" />
-                          <ItemsPresenter />
-                        </StackPanel>
-                      </ControlTemplate>
-                    </Setter.Value>
-                  </Setter>
-                </Style>
-              </GroupStyle.ContainerStyle>
-            </GroupStyle>
-          </ComboBox.GroupStyle>
-        </ComboBox>
+        <Grid>
+          <ComboBox ItemsSource="{Binding ResourceEntities}"
+                    SelectedItem="{Binding SelectedResourceEntity, ValidatesOnDataErrors=True}"
+                    Style="{StaticResource {x:Static toms:ResourceKeys.ControlWithValidationErrorToolTipStyle}}"
+                    DisplayMemberPath="DisplayName"/>
+          <ComboBox ItemsSource="{Binding ExistingEntries}"
+                    SelectedItem="{Binding SelectedResourceEntry, ValidatesOnDataErrors=True}"
+                    Style="{StaticResource {x:Static toms:ResourceKeys.ControlWithValidationErrorToolTipStyle}}"
+                    Visibility="{Binding ReuseExisiting, Converter={x:Static toms:BooleanToVisibilityConverter.Default}}"
+                    DisplayMemberPath="Container.DisplayName"/>
+        </Grid>
       </toms:SharedWidthHeaderedContentControl>
-      <Decorator Height="10"/>
+      <Decorator Height="10" />
       <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.KeyHeader}">
-        <TextBox Text="{Binding Key, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
-                 Style="{StaticResource {x:Static toms:ResourceKeys.ControlWithValidationErrorToolTipStyle}}"/>
+        <TextBox Text="{Binding Key, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                 Style="{StaticResource {x:Static toms:ResourceKeys.ControlWithValidationErrorToolTipStyle}}" 
+                 IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}"/>
       </toms:SharedWidthHeaderedContentControl>
-      <Decorator Height="10"/>
+      <Decorator Height="10" />
       <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.CodeHeader}">
-        <ComboBox ItemsSource="{Binding Replacements}" SelectedItem="{Binding Replacement}"/>
+        <ComboBox ItemsSource="{Binding Replacements}" SelectedItem="{Binding Replacement}" />
       </toms:SharedWidthHeaderedContentControl>
-      <Decorator Height="10"/>
+      <Decorator Height="10" />
       <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.ValueHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
         <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=ValueTextBox}" WhiteSpaceOpacity="0.4" WhiteSpaces="All">
-          <TextBox x:Name="ValueTextBox" Height="40" Text="{Binding Value}" AcceptsReturn="True"/>
+          <TextBox x:Name="ValueTextBox" Height="40" Text="{Binding Value}" AcceptsReturn="True" IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}" />
         </toms:TextBoxVisibleWhiteSpaceDecorator>
       </toms:SharedWidthHeaderedContentControl>
-      <Decorator Height="10"/>
+      <Decorator Height="10" />
       <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.CommentHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
         <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=CommentTextBox}" WhiteSpaceOpacity="0.4" WhiteSpaces="All">
-          <TextBox x:Name="CommentTextBox" Height="40" Text="{Binding Comment}" AcceptsReturn="True"/>
+          <TextBox x:Name="CommentTextBox" Height="40" Text="{Binding Comment}" AcceptsReturn="True" IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}" />
         </toms:TextBoxVisibleWhiteSpaceDecorator>
       </toms:SharedWidthHeaderedContentControl>
     </StackPanel>
