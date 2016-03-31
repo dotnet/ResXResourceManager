@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
     using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -16,7 +17,6 @@
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
-    using TomsToolbox.ObservableCollections;
 
     /// <summary>
     /// Represents all resources found in a folder and its's sub folders.
@@ -59,7 +59,7 @@
             _tracer = tracer;
             _sourceFilesProvider = sourceFilesProvider;
             _selectedEntitiesChangeThrottle = new Throttle(SelectedEntities_Changed);
-            _selectedEntities.CollectionChanged += (_, __) => _selectedEntitiesChangeThrottle.Tick();
+            _selectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
         }
 
         /// <summary>
@@ -387,7 +387,45 @@
 
         private void SelectedEntities_Changed()
         {
-            _resourceTableEntries.SynchronizeWith(_selectedEntities.SelectMany(entity => entity.Entries).ToArray());
+            var resourceTableEntries = _selectedEntities.SelectMany(entity => entity.Entries).ToArray();
+
+            _resourceTableEntries.SynchronizeWith(resourceTableEntries);
+        }
+
+        [ContractVerification(false)]
+        private void SelectedEntities_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            _selectedEntitiesChangeThrottle.Tick();
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    var newValue = (ResourceEntity)e.NewItems[0];
+                    ((INotifyCollectionChanged)newValue.Entries).CollectionChanged += SelectedEntries_CollectionChanged;
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                    var oldValue = (ResourceEntity)e.OldItems[0];
+                    ((INotifyCollectionChanged)oldValue.Entries).CollectionChanged -= SelectedEntries_CollectionChanged;
+                    break;
+            }
+        }
+
+        [ContractVerification(false)]
+        private void SelectedEntries_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    var newValue = (ResourceTableEntry)e.NewItems[0];
+                    _resourceTableEntries.Add(newValue);
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                    var oldValue = (ResourceTableEntry)e.OldItems[0];
+                    _resourceTableEntries.Remove(oldValue);
+                    break;
+            }
         }
 
         [ContractInvariantMethod]
