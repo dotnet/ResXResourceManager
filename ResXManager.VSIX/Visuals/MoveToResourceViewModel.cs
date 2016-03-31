@@ -196,7 +196,7 @@
             yield return "Duplicate key";
         }
 
-        private string GetLocalNamespace(ProjectItem resxItem)
+        private static string GetLocalNamespace(ProjectItem resxItem)
         {
             try
             {

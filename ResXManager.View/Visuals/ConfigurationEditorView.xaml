@@ -48,7 +48,7 @@
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition SharedSizeGroup="LeftColum" />
                 </Grid.ColumnDefinitions>
-                <ContentPresenter ContentSource="Header" Style="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}" />
+                <ContentPresenter ContentSource="Header" Style="{StaticResource {x:Static view:ResourceKeys.LabelTextStyle}}" />
               </Grid>
               <ContentPresenter VerticalAlignment="Center" />
             </DockPanel>
@@ -66,7 +66,7 @@
             <RadioButton Margin="0,2" IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                          Content="{TemplateBinding Content, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
                          ToolTip="{TemplateBinding Content, Converter={x:Static toms:ObjectToDescriptionConverter.Default}}"
-                         Style="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}" Focusable="True" />
+                         Style="{StaticResource {x:Static view:ResourceKeys.LabelTextStyle}}" Focusable="True" />
           </ControlTemplate>
         </Setter.Value>
       </Setter>
@@ -98,7 +98,7 @@
       <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_General}" Style="{StaticResource GroupStyle}">
         <StackPanel Margin="10">
           <StackPanel Orientation="Horizontal">
-            <TextBlock Text="{x:Static properties:Resources.NeutralResourceLanguageHeader}" Style="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}" />
+            <TextBlock Text="{x:Static properties:Resources.NeutralResourceLanguageHeader}" Style="{StaticResource {x:Static view:ResourceKeys.LabelTextStyle}}" />
             <Decorator Width="5" />
             <ComboBox Width="175" ItemsSource="{Binding Source={x:Static Member=model:ResourceManager.SpecificCultures}}" SelectedItem="{Binding Configuration.NeutralResourcesLanguage}">
               <ComboBox.ItemTemplate>
@@ -121,12 +121,12 @@
         <Grid Margin="10" KeyboardNavigation.TabNavigation="Local">
           <StackPanel>
             <CheckBox IsChecked="{Binding Configuration.SortFileContentOnSave}" TabIndex="0"
-                      Style="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}"
+                      Style="{StaticResource {x:Static view:ResourceKeys.LabelTextStyle}}"
                       Content="{x:Static properties:Resources.SortNodesByKey}" />
             <Decorator Height="5" />
             <StackPanel Orientation="Horizontal">
               <Decorator Width="22" />
-              <TextBlock Text="{x:Static properties:Resources.SortBy}" Style="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}" />
+              <TextBlock Text="{x:Static properties:Resources.SortBy}" Style="{StaticResource {x:Static view:ResourceKeys.LabelTextStyle}}" />
               <Decorator Width="8" />
               <ComboBox ItemsSource="{Binding Source={x:Type system:StringComparison}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
                         SelectedItem="{Binding Configuration.ResXSortingComparison}" Width="175" />
@@ -142,9 +142,9 @@
 
       <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_FileCreationHeader}" Style="{StaticResource GroupStyle}">
         <StackPanel Margin="10" KeyboardNavigation.TabNavigation="Local">
-          <CheckBox IsChecked="{Binding Configuration.AutoCreateNewLanguageFiles}" Content="{x:Static properties:Resources.AutoCreateNewLanguageFiles}" Style="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}" />
+          <CheckBox IsChecked="{Binding Configuration.AutoCreateNewLanguageFiles}" Content="{x:Static properties:Resources.AutoCreateNewLanguageFiles}" Style="{StaticResource {x:Static view:ResourceKeys.LabelTextStyle}}" />
           <Decorator Height="5" />
-          <CheckBox IsChecked="{Binding Configuration.ConfirmAddLanguageFile}" Content="{x:Static properties:Resources.ConfirmAddLanguage}" Style="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}" />
+          <CheckBox IsChecked="{Binding Configuration.ConfirmAddLanguageFile}" Content="{x:Static properties:Resources.ConfirmAddLanguage}" Style="{StaticResource {x:Static view:ResourceKeys.LabelTextStyle}}" />
         </StackPanel>
       </HeaderedContentControl>
 
@@ -174,10 +174,10 @@
                   HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
                   Margin="10" MinHeight="50" MaxHeight="250" MinWidth="700">
           <DataGrid.Columns>
-            <DataGridTextColumn Header="{x:Static properties:Resources.FileExtensions}" Binding="{Binding Extensions}" Width="2*" HeaderStyle="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}" />
-            <DataGridTextColumn Header="{x:Static properties:Resources.RegularExpression}" Binding="{Binding Expression}" Width="5*" HeaderStyle="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}" />
-            <DataGridCheckBoxColumn Header="{x:Static properties:Resources.CaseSensitive}" Binding="{Binding IsCaseSensitive}" Width="*" HeaderStyle="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}" />
-            <DataGridTextColumn Header="{x:Static properties:Resources.CommentToken}" Binding="{Binding SingleLineComment}" Width="2*" HeaderStyle="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}" />
+            <DataGridTextColumn Header="{x:Static properties:Resources.FileExtensions}" Binding="{Binding Extensions}" Width="2*" HeaderStyle="{StaticResource {x:Static view:ResourceKeys.LabelTextStyle}}" />
+            <DataGridTextColumn Header="{x:Static properties:Resources.RegularExpression}" Binding="{Binding Expression}" Width="5*" HeaderStyle="{StaticResource {x:Static view:ResourceKeys.LabelTextStyle}}" />
+            <DataGridCheckBoxColumn Header="{x:Static properties:Resources.CaseSensitive}" Binding="{Binding IsCaseSensitive}" Width="*" HeaderStyle="{StaticResource {x:Static view:ResourceKeys.LabelTextStyle}}" />
+            <DataGridTextColumn Header="{x:Static properties:Resources.CommentToken}" Binding="{Binding SingleLineComment}" Width="2*" HeaderStyle="{StaticResource {x:Static view:ResourceKeys.LabelTextStyle}}" />
           </DataGrid.Columns>
           <i:Interaction.Behaviors>
             <dgx:ExtendedStarSizeBehavior />

@@ -13,8 +13,8 @@
                   HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
                   MinHeight="50" MaxHeight="250" MinWidth="700">
       <DataGrid.Columns>
-        <DataGridTextColumn Header="{x:Static view:Resources.FileExtensions}" Binding="{Binding Extensions}" Width="*" HeaderStyle="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}" />
-        <DataGridTextColumn Header="{x:Static view:Resources.Patterns}" Binding="{Binding Patterns}" Width="5*" HeaderStyle="{StaticResource {x:Static view:ResourceKeys.LableTextStyle}}" />
+        <DataGridTextColumn Header="{x:Static view:Resources.FileExtensions}" Binding="{Binding Extensions}" Width="*" HeaderStyle="{StaticResource {x:Static view:ResourceKeys.LabelTextStyle}}" />
+        <DataGridTextColumn Header="{x:Static view:Resources.Patterns}" Binding="{Binding Patterns}" Width="5*" HeaderStyle="{StaticResource {x:Static view:ResourceKeys.LabelTextStyle}}" />
       </DataGrid.Columns>
     </DataGrid>
   </Grid>
