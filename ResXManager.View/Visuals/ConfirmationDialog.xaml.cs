@@ -1,6 +1,7 @@
-﻿namespace tomenglertde.ResXManager.VSIX.Visuals
+﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System.ComponentModel.Composition.Hosting;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -22,7 +23,14 @@
             Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(exportProvider));
         }
 
-        public ICommand CommitCommand => new DelegateCommand(CanCommit, Commit);
+        public ICommand CommitCommand
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+                return new DelegateCommand(CanCommit, Commit);
+            }
+        }
 
         private void Commit()
         {

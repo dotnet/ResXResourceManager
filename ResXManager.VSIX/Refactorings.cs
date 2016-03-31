@@ -12,6 +12,7 @@
     using EnvDTE;
 
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.Visuals;
     using tomenglertde.ResXManager.VSIX.Visuals;
 
     public interface IRefactorings
@@ -210,12 +211,11 @@
                 }
             }
 
-            [ContractVerification(false)]
             public string Text
             {
                 get
                 {
-                    return _textDocument.Selection.Text;
+                    return _textDocument.Selection?.Text;
                 }
             }
 
