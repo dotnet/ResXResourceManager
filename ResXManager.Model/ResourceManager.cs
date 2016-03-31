@@ -27,15 +27,16 @@
         private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
         private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
 
+        private readonly Throttle _selectedEntitiesChangeThrottle;
         private readonly Configuration _configuration;
         private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly ITracer _tracer;
         private readonly ISourceFilesProvider _sourceFilesProvider;
 
-        private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
-        private readonly IObservableCollection<ResourceTableEntry> _resourceTableEntries;
-        private readonly ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
         private readonly ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
+        private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
+        private readonly ObservableCollection<ResourceTableEntry> _resourceTableEntries = new ObservableCollection<ResourceTableEntry>();
+        private readonly ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
 
         private readonly ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
 
@@ -57,7 +58,8 @@
             _codeReferenceTracker = codeReferenceTracker;
             _tracer = tracer;
             _sourceFilesProvider = sourceFilesProvider;
-            _resourceTableEntries = _selectedEntities.ObservableSelectMany(entity => entity.Entries);
+            _selectedEntitiesChangeThrottle = new Throttle(SelectedEntities_Changed);
+            _selectedEntities.CollectionChanged += (_, __) => _selectedEntitiesChangeThrottle.Tick();
         }
 
         /// <summary>
@@ -381,6 +383,11 @@
             Contract.Ensures(Contract.Result<string>() != null);
 
             return _snapshot = ResourceEntities.CreateSnapshot();
+        }
+
+        private void SelectedEntities_Changed()
+        {
+            _resourceTableEntries.SynchronizeWith(_selectedEntities.SelectMany(entity => entity.Entries).ToArray());
         }
 
         [ContractInvariantMethod]
