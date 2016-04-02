@@ -11,6 +11,7 @@
     public class SelectAllBehavior : Behavior<ListBox>
     {
         private readonly DispatcherThrottle _collectionChangedThrottle;
+        private bool _isListBoxUpdating;
 
         public SelectAllBehavior()
         {
@@ -48,17 +49,26 @@
             if (listBox == null)
                 return;
 
-            if (listBox.Items.Count == listBox.SelectedItems.Count)
+            try
             {
-                AreAllFilesSelected = true;
+                _isListBoxUpdating = true;
+
+                if (listBox.Items.Count == listBox.SelectedItems.Count)
+                {
+                    AreAllFilesSelected = true;
+                }
+                else if (listBox.SelectedItems.Count == 0)
+                {
+                    AreAllFilesSelected = false;
+                }
+                else
+                {
+                    AreAllFilesSelected = null;
+                }
             }
-            else if (listBox.SelectedItems.Count == 0)
+            finally
             {
-                AreAllFilesSelected = false;
-            }
-            else
-            {
-                AreAllFilesSelected = null;
+                _isListBoxUpdating = false;
             }
         }
 
@@ -78,10 +88,16 @@
             if (listBox == null)
                 return;
 
-            if (!newValue.HasValue)
+            if (_isListBoxUpdating)
                 return;
 
-            if (newValue.Value)
+            if (newValue == null)
+            {
+                Dispatcher.BeginInvoke(() => AreAllFilesSelected = false);
+                return;
+            }
+
+            if (newValue.GetValueOrDefault())
             {
                 listBox.SelectAll();
             }
