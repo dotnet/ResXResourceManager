@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Collections.Specialized;
     using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -17,6 +16,7 @@
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
+    using TomsToolbox.ObservableCollections;
 
     /// <summary>
     /// Represents all resources found in a folder and its's sub folders.
@@ -27,7 +27,6 @@
         private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
         private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
 
-        private readonly Throttle _selectedEntitiesChangeThrottle;
         private readonly Configuration _configuration;
         private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly ITracer _tracer;
@@ -35,7 +34,7 @@
 
         private readonly ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
         private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
-        private readonly ObservableCollection<ResourceTableEntry> _resourceTableEntries = new ObservableCollection<ResourceTableEntry>();
+        private readonly IObservableCollection<ResourceTableEntry> _resourceTableEntries;
         private readonly ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
 
         private readonly ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
@@ -58,8 +57,7 @@
             _codeReferenceTracker = codeReferenceTracker;
             _tracer = tracer;
             _sourceFilesProvider = sourceFilesProvider;
-            _selectedEntitiesChangeThrottle = new Throttle(SelectedEntities_Changed);
-            _selectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
+            _resourceTableEntries = _selectedEntities.ObservableSelectMany(entity => entity.Entries);
         }
 
         /// <summary>
@@ -383,49 +381,6 @@
             Contract.Ensures(Contract.Result<string>() != null);
 
             return _snapshot = ResourceEntities.CreateSnapshot();
-        }
-
-        private void SelectedEntities_Changed()
-        {
-            var resourceTableEntries = _selectedEntities.SelectMany(entity => entity.Entries).ToArray();
-
-            _resourceTableEntries.SynchronizeWith(resourceTableEntries);
-        }
-
-        [ContractVerification(false)]
-        private void SelectedEntities_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            _selectedEntitiesChangeThrottle.Tick();
-
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    var newValue = (ResourceEntity)e.NewItems[0];
-                    ((INotifyCollectionChanged)newValue.Entries).CollectionChanged += SelectedEntries_CollectionChanged;
-                    break;
-
-                case NotifyCollectionChangedAction.Remove:
-                    var oldValue = (ResourceEntity)e.OldItems[0];
-                    ((INotifyCollectionChanged)oldValue.Entries).CollectionChanged -= SelectedEntries_CollectionChanged;
-                    break;
-            }
-        }
-
-        [ContractVerification(false)]
-        private void SelectedEntries_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    var newValue = (ResourceTableEntry)e.NewItems[0];
-                    _resourceTableEntries.Add(newValue);
-                    break;
-
-                case NotifyCollectionChangedAction.Remove:
-                    var oldValue = (ResourceTableEntry)e.OldItems[0];
-                    _resourceTableEntries.Remove(oldValue);
-                    break;
-            }
         }
 
         [ContractInvariantMethod]
