@@ -9,6 +9,15 @@
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
              d:DataContext="{d:DesignInstance visuals:ShellViewModel}">
+  <UserControl.Style>
+    <Style TargetType="UserControl">
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding IsLoading}" Value="True">
+          <Setter Property="Cursor" Value="{x:Static Cursors.Wait}"/>
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+  </UserControl.Style>
 
   <Grid Background="{x:Static SystemColors.WindowBrush}">
     <TabControl x:Name="TabControl"  TabStripPlacement="Bottom" Margin="-1" Padding="0" BorderThickness="1">
