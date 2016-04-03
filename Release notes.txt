@@ -1,3 +1,5 @@
+1.0.0.75:
+* Use new DGX to decouple resource location to resolve conflicts with other plugins.
 1.0.0.74:
 * Fix missing synchronization of main table.
 1.0.0.73:
