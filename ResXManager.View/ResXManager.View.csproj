@@ -141,8 +141,8 @@
     <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DataGridExtensions">
-      <HintPath>..\packages\DataGridExtensions.1.0.30.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
+    <Reference Include="DataGridExtensions, Version=1.0.31.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
+      <HintPath>..\packages\DataGridExtensions.1.0.31.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -211,7 +211,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.Designer.tt</DependentUpon>
     </Compile>
-    <Compile Include="ResourceKeys.cs" />
+    <Compile Include="Themes\ResourceKeys.cs" />
+    <Compile Include="Themes\ResourceLocator.cs" />
     <Compile Include="Tools\AddNewKeyCommand.cs" />
     <Compile Include="Converters\CultureToXmlLanguageConverter.cs" />
     <Compile Include="Tools\ColumnManager.cs" />

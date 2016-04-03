@@ -22,7 +22,7 @@
   <UserControl.Resources>
 
     <Color x:Key="HighlightColor">#FFE3E3</Color>
-    <SolidColorBrush x:Key="HighlightBrush" Color="{StaticResource HighlightColor}"/>
+    <SolidColorBrush x:Key="HighlightBrush" Color="{StaticResource HighlightColor}" />
     <LinearGradientBrush x:Key="HatchBrush" StartPoint="0,0" EndPoint="4,4" SpreadMethod="Repeat" MappingMode="Absolute">
       <GradientStop Offset="0" Color="{StaticResource HighlightColor}" />
       <GradientStop Offset="0.75" Color="{StaticResource HighlightColor}" />
@@ -57,7 +57,7 @@
       </Style.Triggers>
     </Style>
 
-    <CollectionViewSource x:Key="ResourceEntitiesSource" Source="{Binding ResourceManager.ResourceEntities}" >
+    <CollectionViewSource x:Key="ResourceEntitiesSource" Source="{Binding ResourceManager.ResourceEntities}">
       <CollectionViewSource.SortDescriptions>
         <componentModel:SortDescription PropertyName="ProjectName" />
         <componentModel:SortDescription PropertyName="RelativePath" />
@@ -94,7 +94,7 @@
         <DockPanel Margin="0,5">
           <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
             <Decorator Width="16" />
-            <CheckBox x:Name="SelectAll" VerticalAlignment="Center" IsThreeState="True" IsChecked="True"/>
+            <CheckBox x:Name="SelectAll" VerticalAlignment="Center" IsThreeState="True" IsChecked="True" />
             <Decorator Width="7" />
           </StackPanel>
           <Border Background="{x:Static SystemColors.WindowBrush}">
@@ -125,7 +125,7 @@
               <Decorator Width="5" />
               <ContentControl>
                 <i:Interaction.Behaviors>
-                  <toms:ContentControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListItemDecorator}" CompositionContext="{Binding}"/>
+                  <toms:ContentControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListItemDecorator}" CompositionContext="{Binding}" />
                 </i:Interaction.Behaviors>
               </ContentControl>
             </StackPanel>
@@ -154,8 +154,8 @@
           </GroupStyle>
         </ListBox.GroupStyle>
         <i:Interaction.Behaviors>
-          <behaviors:EntityFilter FilterText="{Binding Text, ElementName=EntityFilter}"/>
-          <behaviors:SelectAllBehavior AreAllFilesSelected="{Binding IsChecked, ElementName=SelectAll}"/>
+          <behaviors:EntityFilter FilterText="{Binding Text, ElementName=EntityFilter}" />
+          <behaviors:SelectAllBehavior AreAllFilesSelected="{Binding IsChecked, ElementName=SelectAll}" />
         </i:Interaction.Behaviors>
       </ListBox>
     </DockPanel>
@@ -291,7 +291,7 @@
                     <StackPanel Orientation="Horizontal">
                       <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/excel.png" />
                       <Decorator Width="2" />
-                      <Path Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="Black" VerticalAlignment="Center"/>
+                      <Path Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="Black" VerticalAlignment="Center" />
                     </StackPanel>
                   </MenuItem.Header>
                   <MenuItem Header="{x:Static properties:Resources.ExportExcelAll}"
@@ -305,12 +305,12 @@
                 <MenuItem Padding="2">
                   <MenuItem.Header>
                     <StackPanel Orientation="Horizontal" ToolTip="{Binding LoadedSnapshot}" Background="Transparent">
-                      <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/snapshot.png" >
+                      <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/snapshot.png">
                         <Image.Style>
                           <Style TargetType="Image">
                             <Style.Triggers>
                               <DataTrigger Binding="{Binding LoadedSnapshot}" Value="{x:Null}">
-                                <Setter Property="Opacity" Value=".5"/>
+                                <Setter Property="Opacity" Value=".5" />
                               </DataTrigger>
                             </Style.Triggers>
                           </Style>
@@ -320,9 +320,9 @@
                       <Path Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="Black" VerticalAlignment="Center" />
                     </StackPanel>
                   </MenuItem.Header>
-                  <MenuItem Header="{x:Static properties:Resources.CreateSnapshot}" Command="{Binding CreateSnapshotCommand, Converter={StaticResource CreateSnapshotCommandConverter}}"/>
-                  <MenuItem Header="{x:Static properties:Resources.LoadSnapshot}" Command="{Binding LoadSnapshotCommand, Converter={StaticResource LoadSnapshotCommandConverter}}"/>
-                  <MenuItem Header="{x:Static properties:Resources.UnloadSnapshot}" Command="{Binding UnloadSnapshotCommand}"/>
+                  <MenuItem Header="{x:Static properties:Resources.CreateSnapshot}" Command="{Binding CreateSnapshotCommand, Converter={StaticResource CreateSnapshotCommandConverter}}" />
+                  <MenuItem Header="{x:Static properties:Resources.LoadSnapshot}" Command="{Binding LoadSnapshotCommand, Converter={StaticResource LoadSnapshotCommandConverter}}" />
+                  <MenuItem Header="{x:Static properties:Resources.UnloadSnapshot}" Command="{Binding UnloadSnapshotCommand}" />
                 </MenuItem>
               </Menu>
               <Separator />
@@ -392,6 +392,7 @@
                   AutoGenerateColumns="False" CanUserAddRows="False"
                   CanUserDeleteRows="False" CanUserResizeRows="False"
                   dgx:DataGridFilter.IsAutoFilterEnabled="True"
+                  dgx:DataGridFilter.ResourceLocator="{toms:Import dgx:IResourceLocator}"
                   dgx:DataGridFilter.ContentFilterFactory="{StaticResource RegexContentFilterFactory}"
                   toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedTableEntries}">
           <DataGrid.Resources>
@@ -429,7 +430,7 @@
             <KeyBinding Key="Delete" Command="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" />
             <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
             <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
-            <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}"/>
+            <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
             <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
           </DataGrid.InputBindings>
 
@@ -462,9 +463,9 @@
           <DataGrid.CellStyle>
             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
 
-              <Setter Property="BorderThickness" Value="1"/>
+              <Setter Property="BorderThickness" Value="1" />
               <Setter Property="Background" Value="{StaticResource HighlightBrush}" />
-              <Setter Property="BorderBrush" Value="{Binding Background, RelativeSource={RelativeSource Self}}"/>
+              <Setter Property="BorderBrush" Value="{Binding Background, RelativeSource={RelativeSource Self}}" />
               <Setter Property="ToolTip">
                 <Setter.Value>
                   <ToolTip>
@@ -521,7 +522,7 @@
                   <Setter Property="toms:StyleBindings.GroupStyle" Value="{StaticResource GroupStyle}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsCellSelectionEnabled}" Value="True">
-                  <Setter Property="SelectionUnit" Value="CellOrRowHeader"/>
+                  <Setter Property="SelectionUnit" Value="CellOrRowHeader" />
                 </DataTrigger>
               </Style.Triggers>
             </Style>
@@ -530,7 +531,7 @@
           <i:Interaction.Behaviors>
             <dgx:BeginEditOnCtrlEnterBehavior />
             <dgx:DisableTargetWhileEditingBehavior Target="{Binding ElementName=ToolBar}" />
-            <dgx:ExtendedStarSizeBehavior />
+            <dgx:ExtendedStarSizeBehavior ResourceLocator="{toms:Import dgx:IResourceLocator}" />
             <behaviors:ShowErrorsOnlyBehavior x:Name="ShowErrorsOnlyBehavior" ToggleButton="{Binding ElementName=ErrorsOnlyFilterButton}" />
             <behaviors:DataGridTryBeginEditBehavior />
           </i:Interaction.Behaviors>
@@ -538,7 +539,7 @@
           <i:Interaction.Triggers>
             <ix:PropertyChangedTrigger Binding="{Binding LoadedSnapshot}">
               <ix:PropertyChangedTrigger.Actions>
-                <ix:CallMethodAction TargetObject="{Binding ElementName=ShowErrorsOnlyBehavior}" MethodName="Refresh"/>
+                <ix:CallMethodAction TargetObject="{Binding ElementName=ShowErrorsOnlyBehavior}" MethodName="Refresh" />
               </ix:PropertyChangedTrigger.Actions>
             </ix:PropertyChangedTrigger>
           </i:Interaction.Triggers>
@@ -550,8 +551,8 @@
   <i:Interaction.Behaviors>
     <toms:CommandRoutingBehavior CommandSource="view:DeleteCommand" CommandTarget="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" />
     <toms:CommandRoutingBehavior CommandSource="view:CutCommand" CommandTarget="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
-    <toms:CommandRoutingBehavior CommandSource="view:CopyCommand" CommandTarget="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}"/>
-    <toms:CommandRoutingBehavior CommandSource="view:PasteCommand" CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}"/>
+    <toms:CommandRoutingBehavior CommandSource="view:CopyCommand" CommandTarget="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
+    <toms:CommandRoutingBehavior CommandSource="view:PasteCommand" CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
     <toms:CommandRoutingBehavior CommandSource="view:IsInvariantCommand" CommandTarget="{Binding ToggleInvariantCommand}" IsChecked="{Binding Path=SelectedItem.IsInvariant, Mode=OneWay, ElementName=DataGrid}" />
     <toms:CommandRoutingBehavior CommandSource="view:ToggleCellSelectionCommand" CommandTarget="{Binding ToggleCellSelectionCommand}" IsChecked="{Binding IsCellSelectionEnabled, Mode=OneWay}" />
   </i:Interaction.Behaviors>
