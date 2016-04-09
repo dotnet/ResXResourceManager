@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Windows;
@@ -20,9 +21,11 @@
         private readonly ITracer _tracer;
 
         [ImportingConstructor]
-        public ConfigurationEditorView(ITracer tracer)
+        public ConfigurationEditorView(ExportProvider exportProvider, ITracer tracer)
         {
             Contract.Requires(tracer != null);
+
+            this.SetExportProvider(exportProvider);
 
             _tracer = tracer;
 

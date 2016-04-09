@@ -11,8 +11,8 @@
              xmlns:toms="urn:TomsToolbox"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
-             xmlns:view="clr-namespace:tomenglertde.ResXManager.View"
              xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
+             xmlns:infrastructure="urn:ResXManager.Infrastructure"
              d:DataContext="{d:DesignInstance visuals:ConfigurationEditorViewModel}">
   <UserControl.Resources>
 
@@ -30,7 +30,7 @@
       <Setter Property="HeaderTemplate">
         <Setter.Value>
           <DataTemplate>
-            <Border Background="{x:Static SystemColors.ControlBrush}">
+            <Border Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
               <TextBlock Text="{Binding}" Margin="3" FontWeight="Bold" />
             </Border>
           </DataTemplate>
@@ -186,7 +186,7 @@
         </DataGrid>
       </HeaderedContentControl>
 
-      <ItemsControl toms:VisualComposition.RegionId="Configuration">
+      <ItemsControl toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Configuration}">
         <ItemsControl.ItemTemplate>
           <DataTemplate>
             <StackPanel>
@@ -198,7 +198,7 @@
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
-
+      
     </StackPanel>
   </ScrollViewer>
 </UserControl>

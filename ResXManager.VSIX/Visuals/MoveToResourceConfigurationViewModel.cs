@@ -2,10 +2,12 @@
 {
     using System.ComponentModel.Composition;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     using TomsToolbox.Wpf.Composition;
 
     [LocalizedDisplayName(StringResourceKey.MoveToResource)]
-    [VisualCompositionExport("Configuration")]
+    [VisualCompositionExport(RegionId.Configuration)]
     internal class MoveToResourceConfigurationViewModel
     {
         [ImportingConstructor]
