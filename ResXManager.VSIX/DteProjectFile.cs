@@ -235,6 +235,12 @@
                 _solution.AddFile(fullName);
             }
 
+            // Ensure DataAnnotations is referenced, used by TT generated code.
+            const string dataAnnotations = "System.ComponentModel.DataAnnotations";
+
+            var vsProject = projectItem.ContainingProject?.Object as VSLangProj.VSProject;
+            vsProject?.References?.Add(dataAnnotations);
+
             var fileName = Path.ChangeExtension(FilePath, "Designer.tt");
 
             File.WriteAllBytes(fileName, Resources.Resources_Designer_tt);

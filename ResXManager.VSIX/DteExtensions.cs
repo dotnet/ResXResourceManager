@@ -258,7 +258,14 @@
 
             var projectItems = projectItem.ProjectItems;
 
-            return projectItems?.AddFromFile(fileName);
+            try
+            {
+                return projectItems?.AddFromFile(fileName);
+            }
+            catch (ExternalException)
+            {
+                return null;
+            }
         }
 
         public static EnvDTE.ProjectItem AddFromFile(this EnvDTE.Project project, string fileName)
@@ -267,7 +274,14 @@
 
             var projectItems = project.ProjectItems;
 
-            return projectItems?.AddFromFile(fileName);
+            try
+            {
+                return projectItems?.AddFromFile(fileName);
+            }
+            catch (ExternalException)
+            {
+                return null;
+            }
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
