@@ -5,6 +5,7 @@
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Windows;
@@ -80,7 +81,7 @@
                 DefaultExt = ".snapshot",
                 Filter = "Snapshots|*.snapshot|All Files|*.*",
                 FilterIndex = 0,
-                FileName = DateTime.Today.ToShortDateString().ReplaceInvalidFileNameChars('_')
+                FileName = DateTime.Today.ToString("yyyy_MM_dd", CultureInfo.InvariantCulture)
             };
 
             if (!dlg.ShowDialog().GetValueOrDefault())

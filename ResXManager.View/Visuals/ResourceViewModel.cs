@@ -31,6 +31,7 @@
         public ResourceViewModel(ResourceManager resourceManager)
         {
             Contract.Requires(resourceManager != null);
+
             _resourceManager = resourceManager;
         }
 
@@ -38,6 +39,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ResourceManager>() != null);
+
                 return _resourceManager;
             }
         }
@@ -70,6 +73,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(() => IsCellSelectionEnabled = !IsCellSelectionEnabled);
             }
         }
@@ -158,6 +163,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand<string>(CreateSnapshot);
             }
         }
@@ -166,6 +173,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand<string>(LoadSnapshot);
             }
         }
@@ -174,6 +183,8 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
                 return new DelegateCommand(() => LoadSnapshot(null));
             }
         }
