@@ -170,19 +170,19 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="TomsToolbox.Core">
-      <HintPath>..\packages\TomsToolbox.Core.1.0.43.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Core.1.0.44.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="TomsToolbox.Desktop">
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.43.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.44.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="TomsToolbox.ObservableCollections">
-      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.43.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.44.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="TomsToolbox.Wpf">
-      <HintPath>..\packages\TomsToolbox.Wpf.1.0.43.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Wpf.1.0.44.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
