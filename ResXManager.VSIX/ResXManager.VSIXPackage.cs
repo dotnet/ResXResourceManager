@@ -1,6 +1,8 @@
-﻿namespace tomenglertde.ResXManager.VSIX
+﻿using System.Diagnostics.Contracts;
+namespace tomenglertde.ResXManager.VSIX
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.Design;
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
@@ -12,6 +14,7 @@
     using EnvDTE;
 
     using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.PlatformUI;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
@@ -121,26 +124,18 @@
             var toolWindow = ShowToolWindow();
             var resourceManager = toolWindow.ResourceManager;
 
-            var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
-            Contract.Assume(monitorSelection != null);
-
-            var selection = monitorSelection.GetSelectedProjectItems();
-
-            var selectedFiles = selection
-                .Select(item => item.GetMkDocument())
-                .Where(file => !string.IsNullOrEmpty(file));
+            var selectedResourceEntites = GetSelectedResourceEntites()?.Distinct().ToArray();
+            if (selectedResourceEntites == null)
+                return;
 
             Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Input, () =>
             {
-                var selectedResourceEntites = resourceManager.ResourceEntities
-                    .Where(entity => entity.Languages.Any(lang => selectedFiles.Any(file => lang.FileName.Equals(file, StringComparison.OrdinalIgnoreCase))));
-
                 resourceManager.SelectedEntities.Clear();
                 resourceManager.SelectedEntities.AddRange(selectedResourceEntites);
             });
         }
 
-        private static void SolutionExplorerContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
+        private void SolutionExplorerContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
         {
             var menuCommand = sender as OleMenuCommand;
             if (menuCommand == null)
@@ -148,17 +143,52 @@
 
             menuCommand.Text = Resources.OpenInResXManager;
 
+            menuCommand.Visible = GetSelectedResourceEntites() != null;
+        }
+
+        private IEnumerable<ResourceEntity> GetSelectedResourceEntites()
+        {
             var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
             Contract.Assume(monitorSelection != null);
 
             var selection = monitorSelection.GetSelectedProjectItems();
 
-            var selectedFiles = selection
+            var entities = selection
                 .Select(item => item.GetMkDocument())
                 .Where(file => !string.IsNullOrEmpty(file))
+                .SelectMany(GetSelectedResourceEntites)
                 .ToArray();
 
-            menuCommand.Visible = selectedFiles.Any() && selectedFiles.All(file => ProjectFileExtensions.SupportedFileExtensions.Any(ext => Path.GetExtension(file).Equals(ext, StringComparison.OrdinalIgnoreCase)));
+            return (entities.Length > 0) && (entities.Length == selection.Count) ? entities : null;
+        }
+
+        private IEnumerable<ResourceEntity> GetSelectedResourceEntites(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                return Enumerable.Empty<ResourceEntity>();
+
+            var toolWindow = FindToolWindow(true);
+            var resourceEntities = toolWindow.ResourceManager.ResourceEntities;
+
+            return resourceEntities
+                .Where(entity => ContainsFile(entity, fileName) || ContainsChildOfWinFormsDesignerItem(entity, fileName))
+                .ToArray();
+        }
+
+        private static bool ContainsChildOfWinFormsDesignerItem(ResourceEntity entity, string fileName)
+        {
+            Contract.Requires(entity != null);
+
+            return entity.Languages.Select(lang => lang.ProjectFile)
+                .OfType<DteProjectFile>()
+                .Any(projectFile => string.Equals(projectFile.ParentItem?.TryGetFileName(), fileName) && projectFile.IsWinFormsDesignerResource);
+        }
+
+        private static bool ContainsFile(ResourceEntity entity, string fileName)
+        {
+            Contract.Requires(entity != null);
+
+            return entity.Languages.Any(lang => lang.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
         }
 
         private void MoveToResource(object sender, EventArgs e)
@@ -230,32 +260,10 @@
 
             return document.ProjectItem
                 .DescendantsAndSelf()
-                .Select(TryGetFileName)
+                .Select(item => item.TryGetFileName())
                 .Where(fileName => fileName != null)
                 .Select(Path.GetExtension)
                 .Any(extension => ProjectFileExtensions.SupportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase));
-        }
-
-        private static string TryGetFileName(EnvDTE.ProjectItem projectItem)
-        {
-            Contract.Requires(projectItem != null);
-
-            var name = projectItem.Name;
-            Contract.Assume(name != null);
-
-            try
-            {
-                if (string.Equals(projectItem.Kind, ItemKind.PhysicalFile, StringComparison.OrdinalIgnoreCase))
-                {
-                    // some items report a file count > 0 but don't return a file name!
-                    return projectItem.FileNames[0];
-                }
-            }
-            catch (ArgumentException)
-            {
-            }
-
-            return null;
         }
     }
 }

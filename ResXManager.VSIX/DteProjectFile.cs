@@ -6,6 +6,7 @@
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Xml.Linq;
 
     using tomenglertde.ResXManager.Model;
@@ -132,6 +133,21 @@
             {
                 Contract.Ensures(Contract.Result<EnvDTE.ProjectItem>() != null);
                 return ProjectItems.First();
+            }
+        }
+
+        public EnvDTE.ProjectItem ParentItem
+        {
+            get
+            {
+                try
+                {
+                    return DefaultProjectItem.Collection?.Parent as EnvDTE.ProjectItem;
+                }
+                catch (ExternalException)
+                {
+                    return null;
+                }
             }
         }
 

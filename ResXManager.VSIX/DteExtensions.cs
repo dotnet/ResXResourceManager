@@ -120,14 +120,10 @@
         {
             try
             {
-                if (document == null)
-                    return null;
+                var textDocument = (EnvDTE.TextDocument)document?.Object("TextDocument");
+                var text = textDocument?.CreateEditPoint().GetText(textDocument.EndPoint);
 
-                var textDocument = (EnvDTE.TextDocument)document.Object("TextDocument");
-                if (textDocument == null)
-                    return null;
-
-                return XDocument.Parse(textDocument.CreateEditPoint().GetText(textDocument.EndPoint));
+                return text == null ? null : XDocument.Parse(text);
             }
             catch (ExternalException)
             {
@@ -149,17 +145,11 @@
         {
             try
             {
-                if (document == null)
-                    return false;
-
-                var textDocument = (EnvDTE.TextDocument)document.Object("TextDocument");
-                if (textDocument == null)
-                    return false;
-
+                var textDocument = (EnvDTE.TextDocument)document?.Object("TextDocument");
                 var text = value.Declaration + Environment.NewLine + value;
 
-                textDocument.CreateEditPoint().ReplaceText(textDocument.EndPoint, text, 0);
-                document.Save();
+                textDocument?.CreateEditPoint().ReplaceText(textDocument.EndPoint, text, 0);
+                document?.Save();
 
                 return true;
             }
@@ -243,10 +233,9 @@
         {
             Contract.Requires(projectItem != null);
 
-            var vsProjectItem = (projectItem.Object as VSLangProj.VSProjectItem);
-            
-            if (vsProjectItem != null)
-                vsProjectItem.RunCustomTool();
+            var vsProjectItem = projectItem.Object as VSLangProj.VSProjectItem;
+
+            vsProjectItem?.RunCustomTool();
         }
 
         public static void SetCustomTool(this EnvDTE.ProjectItem projectItem, string value)
@@ -268,10 +257,8 @@
             Contract.Requires(projectItem != null);
 
             var projectItems = projectItem.ProjectItems;
-            if (projectItems == null)
-                return null;
-            
-            return projectItems.AddFromFile(fileName);
+
+            return projectItems?.AddFromFile(fileName);
         }
 
         public static EnvDTE.ProjectItem AddFromFile(this EnvDTE.Project project, string fileName)
@@ -279,10 +266,8 @@
             Contract.Requires(project != null);
 
             var projectItems = project.ProjectItems;
-            if (projectItems == null)
-                return null;
 
-            return projectItems.AddFromFile(fileName);
+            return projectItems?.AddFromFile(fileName);
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -313,5 +298,28 @@
             {
             }
         }
+
+        public static string TryGetFileName(this EnvDTE.ProjectItem projectItem)
+        {
+            Contract.Requires(projectItem != null);
+
+            var name = projectItem.Name;
+            Contract.Assume(name != null);
+
+            try
+            {
+                if (string.Equals(projectItem.Kind, ItemKind.PhysicalFile, StringComparison.OrdinalIgnoreCase))
+                {
+                    // some items report a file count > 0 but don't return a file name!
+                    return projectItem.FileNames[0];
+                }
+            }
+            catch (ArgumentException)
+            {
+            }
+
+            return null;
+        }
+
     }
 }
