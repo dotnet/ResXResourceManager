@@ -33,6 +33,10 @@
         <Edition>Premium</Edition>
         <Edition>Pro</Edition>
       </VisualStudio>
+      <VisualStudio Version="15.0">
+        <Edition>Pro</Edition>
+        <Edition>Community</Edition>
+      </VisualStudio>
     </SupportedProducts>
     <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
   </Identifier>
