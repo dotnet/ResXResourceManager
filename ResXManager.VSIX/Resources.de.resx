@@ -181,4 +181,7 @@ Mehr Details finden sich im Ausgabefenster.</value>
   <data name="CommentHeader" xml:space="preserve">
     <value>Kommentar:</value>
   </data>
+  <data name="CodeGenerator_WinForms" xml:space="preserve">
+    <value>WinForms Designer</value>
+  </data>
 </root>

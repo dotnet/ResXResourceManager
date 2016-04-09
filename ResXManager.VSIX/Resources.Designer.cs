@@ -171,6 +171,16 @@ namespace tomenglertde.ResXManager.VSIX {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to WinForms Designer.
+        /// </summary>
+        public static string CodeGenerator_WinForms {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("CodeGenerator_WinForms", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Code:.
         /// </summary>
         public static string CodeHeader {
@@ -401,6 +411,10 @@ namespace tomenglertde.ResXManager.VSIX {
         ///   Looks up a localized string similar to Unknown code generator..
         /// </summary>
         CodeGenerator_Unkown,
+        /// <summary>
+        ///   Looks up a localized string similar to WinForms Designer.
+        /// </summary>
+        CodeGenerator_WinForms,
         /// <summary>
         ///   Looks up a localized string similar to Code:.
         /// </summary>

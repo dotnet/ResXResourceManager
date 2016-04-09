@@ -38,17 +38,6 @@
     <toms:ConfirmedCommandConverter x:Key="LoadSnapshotCommandConverter" Executing="LoadSnapshotCommandConverter_Executing" Error="CommandConverter_Error" />
     <toms:ConfirmedCommandConverter x:Key="ErrorHandlerCommandConverter" Error="CommandConverter_Error" />
 
-    <Style TargetType="{x:Type Control}" x:Key="SingleSelectElementStyle">
-      <Setter Property="IsEnabled" Value="False" />
-      <Setter Property="Opacity" Value="0.5" />
-      <Style.Triggers>
-        <DataTrigger Binding="{Binding Path=SelectedItems.Count, ElementName=ListBox}" Value="1">
-          <Setter Property="IsEnabled" Value="True" />
-          <Setter Property="Opacity" Value="1" />
-        </DataTrigger>
-      </Style.Triggers>
-    </Style>
-
     <Style TargetType="{x:Type Control}" x:Key="ToolbarCommandButtonStyle">
       <Style.Triggers>
         <Trigger Property="IsEnabled" Value="False">
@@ -280,7 +269,7 @@
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
               </Button>
               <Button ToolTip="{x:Static properties:Resources.AddKeyToolTip}"
-                      Style="{StaticResource SingleSelectElementStyle}"
+                      Style="{StaticResource ToolbarCommandButtonStyle}"
                       Command="{toms:Import tools:AddNewKeyCommand}">
                 <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/add.png" />
               </Button>

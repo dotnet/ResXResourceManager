@@ -141,6 +141,8 @@
             protected set;
         }
 
+        public virtual bool IsWinFormsDesignerResource => false;
+
         private static string GetRelativePath(string solutionFolder, string filePath)
         {
             Contract.Requires(solutionFolder != null);

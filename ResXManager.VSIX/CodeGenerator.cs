@@ -1,7 +1,5 @@
 namespace tomenglertde.ResXManager.VSIX
 {
-    using System.ComponentModel;
-
     using TomsToolbox.Desktop;
 
     public enum CodeGenerator
@@ -23,6 +21,11 @@ namespace tomenglertde.ResXManager.VSIX
 
         [LocalizedDescription(StringResourceKey.CodeGenerator_TextTemplate)]
         [Text("Icon", @"pack://application:,,,/ResXManager.VSIX;component/Assets/TextTemplate.png")]
-        TextTemplate
+        TextTemplate,
+
+        [LocalizedDescription(StringResourceKey.CodeGenerator_WinForms)]
+        [Text("Icon", @"pack://application:,,,/ResXManager.VSIX;component/Assets/WinForms.png")]
+        WinForms,
+
     }
 }

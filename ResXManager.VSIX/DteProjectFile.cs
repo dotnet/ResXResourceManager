@@ -135,21 +135,16 @@
             }
         }
 
-        public bool IsWinFormsDesignerResource
+        public override bool IsWinFormsDesignerResource
         {
             get
             {
                 var projectItem = DefaultProjectItem;
-
                 var projectItems = projectItem.Collection;
-                if (projectItems == null)
-                    return false;
 
-                var parent = projectItems.Parent as EnvDTE.ProjectItem;
-                if (parent == null)
-                    return false;
+                var parent = projectItems?.Parent as EnvDTE.ProjectItem;
+                var subType = parent?.GetProperty("SubType") as string;
 
-                var subType = parent.GetProperty("SubType") as string;
                 return (subType == "Form") || (subType == "UserControl");
             }
         }
@@ -164,13 +159,16 @@
 
             var customTool = projectItem.GetCustomTool();
 
-            if (!string.IsNullOrEmpty(customTool))
+            if (string.IsNullOrEmpty(customTool))
             {
-                CodeGenerator codeGenerator;
-                return Enum.TryParse(customTool, out codeGenerator) ? codeGenerator : CodeGenerator.Unknown;
+                if (IsWinFormsDesignerResource)
+                    return CodeGenerator.WinForms;
+
+                return projectItem.Children().Any(IsTextTemplate) ? CodeGenerator.TextTemplate : CodeGenerator.None;
             }
 
-            return projectItem.Children().Any(IsTextTemplate) ? CodeGenerator.TextTemplate : CodeGenerator.None;
+            CodeGenerator codeGenerator;
+            return Enum.TryParse(customTool, out codeGenerator) ? codeGenerator : CodeGenerator.Unknown;
         }
 
         private static bool IsTextTemplate(EnvDTE.ProjectItem item)

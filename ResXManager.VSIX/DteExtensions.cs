@@ -42,10 +42,10 @@
             return !projectItem.IsOpen ? null : TryGetContent(projectItem.TryGetDocument());
         }
 
-        public static IEnumerable<VSITEMSELECTION> GetSelectedProjectItems(this IVsMonitorSelection monitorSelection)
+        public static ICollection<VSITEMSELECTION> GetSelectedProjectItems(this IVsMonitorSelection monitorSelection)
         {
             Contract.Requires(monitorSelection != null);
-            Contract.Ensures(Contract.Result<IEnumerable<VSITEMSELECTION>>() != null);
+            Contract.Ensures(Contract.Result<ICollection<VSITEMSELECTION>>() != null);
 
             var hierarchyPtr = IntPtr.Zero;
             var selectionContainerPtr = IntPtr.Zero;
@@ -58,7 +58,7 @@
                 var hr = monitorSelection.GetCurrentSelection(out hierarchyPtr, out itemId, out multiItemSelect, out selectionContainerPtr);
 
                 if (ErrorHandler.Failed(hr))
-                    return Enumerable.Empty<VSITEMSELECTION>();
+                    return new VSITEMSELECTION[0];
 
                 if ((itemId == VSConstants.VSITEMID_SELECTION) && (multiItemSelect != null))
                 {
@@ -72,7 +72,7 @@
                 }
 
                 if ((hierarchyPtr == IntPtr.Zero) || (itemId == VSConstants.VSITEMID_ROOT))
-                    return Enumerable.Empty<VSITEMSELECTION>();
+                    return new VSITEMSELECTION[0];
 
                 return new[]
                 {
