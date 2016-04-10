@@ -1,3 +1,10 @@
+1.0.0.76:
+* WI4693: Automatically referencing System.ComponentModel.DataAnnotations.
+* WI4698: Changes in  designer delete resources => disable "add" for WinForms designer resources.
+* WI4699: Use  an invariant sortable name as default file name for snapshots.
+* WI4700: Open ResxManager to specific form resource.
+* WI4701: Crashes VS 2015 on click Configuration tab.
+* WI4702: Can't install your extension in new VS"15"Preview.
 1.0.0.75:
 * Use new DGX to decouple resource location to resolve conflicts with other plugins.
 1.0.0.74:
