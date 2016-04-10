@@ -27,11 +27,11 @@
         private readonly string _baseName;
         private readonly string _directoryName;
         private readonly ObservableCollection<ResourceTableEntry> _resourceTableEntries;
+        private readonly ReadOnlyObservableCollection<ResourceTableEntry> _readOnlyResourceTableEntries;
         private readonly string _displayName;
         private readonly string _relativePath;
         private readonly string _sortKey;
         private readonly ProjectFile _neutralProjectFile;
-        private ReadOnlyObservableCollection<ResourceTableEntry> _readOnlyEntries;
 
         internal ResourceEntity(ResourceManager container, string projectName, string baseName, string directoryName, ICollection<ProjectFile> files)
         {
@@ -58,7 +58,7 @@
                 .Select((key, index) => new ResourceTableEntry(this, key, index, _languages));
 
             _resourceTableEntries = new ObservableCollection<ResourceTableEntry>(entriesQuery);
-            _readOnlyEntries = new ReadOnlyObservableCollection<ResourceTableEntry>(_resourceTableEntries);
+            _readOnlyResourceTableEntries = new ReadOnlyObservableCollection<ResourceTableEntry>(_resourceTableEntries);
 
             Contract.Assume(_languages.Any());
         }
@@ -230,7 +230,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<ReadOnlyObservableCollection<ResourceTableEntry>>() != null);
-                return _readOnlyEntries;
+                return _readOnlyResourceTableEntries;
             }
         }
 

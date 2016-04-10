@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System.ComponentModel.Composition;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Windows.Threading;
 
@@ -46,6 +47,13 @@
             IsLoading = true;
 
             Dispatcher.ProcessMessages(DispatcherPriority.Render);
+        }
+
+        [ContractInvariantMethod]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_updateThrottle != null);
         }
     }
 }
