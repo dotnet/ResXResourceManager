@@ -7,7 +7,6 @@
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
-    using System.Runtime.InteropServices;
 
     using EnvDTE;
 
@@ -143,7 +142,7 @@
 
                 return resourceManager.ResourceEntities.FirstOrDefault(entity => IsInProject(entity, project));
             }
-            catch (ExternalException)
+            catch (Exception)
             {
                 return null;
             }

@@ -144,7 +144,7 @@
                 {
                     return DefaultProjectItem.Collection?.Parent as EnvDTE.ProjectItem;
                 }
-                catch (ExternalException)
+                catch (Exception)
                 {
                     return null;
                 }

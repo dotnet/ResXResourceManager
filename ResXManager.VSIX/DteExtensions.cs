@@ -21,25 +21,28 @@
     {
         public static EnvDTE.Document TryGetDocument(this EnvDTE.ProjectItem projectItem)
         {
-            if (projectItem == null)
-                return null;
-
             try
             {
-                return projectItem.Document;
+                return projectItem?.Document;
             }
-            catch (ExternalException)
+            catch
             {
+                return null;
             }
-
-            return null;
         }
 
         public static XDocument TryGetContent(this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
 
-            return !projectItem.IsOpen ? null : TryGetContent(projectItem.TryGetDocument());
+            try
+            {
+                return !projectItem.IsOpen ? null : TryGetContent(projectItem.TryGetDocument());
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public static ICollection<VSITEMSELECTION> GetSelectedProjectItems(this IVsMonitorSelection monitorSelection)
@@ -109,7 +112,7 @@
 
                 return itemFullPath;
             }
-            catch (ExternalException)
+            catch (Exception)
             {
                 return null;
             }
@@ -125,11 +128,10 @@
 
                 return text == null ? null : XDocument.Parse(text);
             }
-            catch (ExternalException)
+            catch (Exception)
             {
+                return null;
             }
-
-            return null;
         }
 
         public static bool TrySetContent(this EnvDTE.ProjectItem projectItem, XDocument value)
@@ -153,11 +155,10 @@
 
                 return true;
             }
-            catch (ExternalException)
+            catch (Exception)
             {
+                return false;
             }
-
-            return false;
         }
 
         public static IEnumerable<EnvDTE.ProjectItem> Children(this EnvDTE.ProjectItem projectItem)
@@ -262,7 +263,7 @@
             {
                 return projectItems?.AddFromFile(fileName);
             }
-            catch (ExternalException)
+            catch (Exception)
             {
                 return null;
             }
@@ -278,7 +279,7 @@
             {
                 return projectItems?.AddFromFile(fileName);
             }
-            catch (ExternalException)
+            catch (Exception)
             {
                 return null;
             }
