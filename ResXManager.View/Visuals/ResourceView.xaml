@@ -383,6 +383,7 @@
                   dgx:DataGridFilter.IsAutoFilterEnabled="True"
                   dgx:DataGridFilter.ResourceLocator="{toms:Import dgx:IResourceLocator}"
                   dgx:DataGridFilter.ContentFilterFactory="{StaticResource RegexContentFilterFactory}"
+                  dgx:Tools.ForceCommitOnLostFocus="True"
                   toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedTableEntries}">
           <DataGrid.Resources>
 
@@ -519,7 +520,6 @@
 
           <i:Interaction.Behaviors>
             <dgx:BeginEditOnCtrlEnterBehavior />
-            <dgx:DisableTargetWhileEditingBehavior Target="{Binding ElementName=ToolBar}" />
             <dgx:ExtendedStarSizeBehavior ResourceLocator="{toms:Import dgx:IResourceLocator}" />
             <behaviors:ShowErrorsOnlyBehavior x:Name="ShowErrorsOnlyBehavior" ToggleButton="{Binding ElementName=ErrorsOnlyFilterButton}" />
             <behaviors:DataGridTryBeginEditBehavior />

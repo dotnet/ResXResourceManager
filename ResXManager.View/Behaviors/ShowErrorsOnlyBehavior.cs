@@ -86,15 +86,7 @@
             if ((button == null) || (dataGrid == null))
                 return;
 
-            if (button.IsChecked.GetValueOrDefault())
-            {
-                UpdateErrorsOnlyFilter();
-            }
-            else
-            {
-                dataGrid.Items.Filter = null;
-                dataGrid.SetIsAutoFilterEnabled(true);
-            }
+            UpdateErrorsOnlyFilter(button.IsChecked.GetValueOrDefault());
 
             var selectedItem = dataGrid.SelectedItem;
             if (selectedItem != null)
@@ -110,36 +102,45 @@
 
             if (toggleButton.IsChecked.GetValueOrDefault())
             {
-                toggleButton.BeginInvoke(UpdateErrorsOnlyFilter);
+                toggleButton.BeginInvoke(() => UpdateErrorsOnlyFilter(true));
             }
         }
 
-        private void UpdateErrorsOnlyFilter()
+        private void UpdateErrorsOnlyFilter(bool isEnabled)
         {
-            if (DataGrid == null)
+            var dataGrid = DataGrid;
+
+            if (dataGrid == null)
                 return;
 
             try
             {
-                DataGrid.CommitEdit();
+                dataGrid.CommitEdit();
 
-                var visibleLanguages = DataGrid.Columns
+                if (!isEnabled)
+                {
+                    dataGrid.Items.Filter = null;
+                    dataGrid.SetIsAutoFilterEnabled(true);
+                    return;
+                }
+
+                var visibleLanguages = dataGrid.Columns
                     .Where(column => column.Visibility == Visibility.Visible)
                     .Select(column => column.Header)
                     .OfType<LanguageHeader>()
                     .Select(header => header.CultureKey)
                     .ToArray();
 
-                DataGrid.SetIsAutoFilterEnabled(false);
+                dataGrid.SetIsAutoFilterEnabled(false);
 
-                DataGrid.Items.Filter = row =>
+                dataGrid.Items.Filter = row =>
                 {
                     var entry = (ResourceTableEntry)row;
                     var values = visibleLanguages.Select(lang => entry.Values.GetValue(lang));
 
                     return entry.IsDuplicateKey
-                        || (!entry.IsInvariant && (values.Any(string.IsNullOrEmpty) || entry.HasStringFormatParameterMismatches(visibleLanguages)))
-                        || entry.HasSnapshotDifferences(visibleLanguages);
+                           || (!entry.IsInvariant && (values.Any(string.IsNullOrEmpty) || entry.HasStringFormatParameterMismatches(visibleLanguages)))
+                           || entry.HasSnapshotDifferences(visibleLanguages);
                 };
             }
             catch (InvalidOperationException)
