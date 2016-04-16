@@ -1,3 +1,6 @@
+1.0.0.77:
+* WI4704: Unable to run extension (when there are broken items in the project)
+* WI4668: VS Crashes when showing lines with warnings (changing the filter while there are uncomitted changes in the data grid)
 1.0.0.76:
 * WI4693: Automatically referencing System.ComponentModel.DataAnnotations.
 * WI4698: Changes in  designer delete resources => disable "add" for WinForms designer resources.
