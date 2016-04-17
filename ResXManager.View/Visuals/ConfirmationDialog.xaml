@@ -6,6 +6,7 @@
         xmlns:toms="urn:TomsToolbox"
         xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
         Title="Move To Resource" Width="600" SizeToContent="Height"
+        WindowStartupLocation="CenterScreen"
         WindowStyle="ThreeDBorderWindow" ResizeMode="NoResize"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
   <Window.Template>
@@ -23,11 +24,7 @@
               </Button>
             </StackPanel>
           </Grid>
-          <ContentPresenter>
-            <ContentPresenter.ContentTemplateSelector>
-              <toms:RoleBasedDataTemplateSelector Role="{}"></toms:RoleBasedDataTemplateSelector>
-            </ContentPresenter.ContentTemplateSelector>
-          </ContentPresenter>
+          <ContentPresenter/>
         </DockPanel>
       </AdornerDecorator>
     </ControlTemplate>
