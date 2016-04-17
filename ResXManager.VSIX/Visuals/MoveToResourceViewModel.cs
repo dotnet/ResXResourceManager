@@ -22,7 +22,7 @@
     {
         private readonly ICollection<string> _patterns;
         private readonly ICollection<ResourceTableEntry> _existingEntries;
-        private readonly ResourceManager _resourceManager;
+        private readonly ICollection<ResourceEntity> _resourceEntities;
         private readonly ObservableCollection<string> _replacements = new ObservableCollection<string>();
         private ResourceEntity _selectedResourceEntity;
         private ResourceTableEntry _selectedResourceEntry;
@@ -32,26 +32,28 @@
         private string _replacement;
         private bool _reuseExisiting;
 
-        public MoveToResourceViewModel(ExportProvider exportProvider, ICollection<string> patterns, ICollection<ResourceTableEntry> existingEntries, string text)
+        public MoveToResourceViewModel(ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text)
         {
-            Contract.Requires(exportProvider != null);
             Contract.Requires(patterns != null);
-            Contract.Requires(existingEntries != null);
+            Contract.Requires(resourceEntities != null);
             Contract.Requires(text != null);
 
             _patterns = patterns;
-            _existingEntries = existingEntries;
-            _reuseExisiting = existingEntries.Any();
-            _selectedResourceEntry = existingEntries.FirstOrDefault();
+            _resourceEntities = resourceEntities;
+            _existingEntries = resourceEntities
+                .SelectMany(entity => entity.Entries)
+                .Where(entry => entry.Values[null] == text)
+                .ToArray();
+
+            _reuseExisiting = _existingEntries.Any();
+            _selectedResourceEntry = _existingEntries.FirstOrDefault();
             _value = text;
 
             if (!_reuseExisiting)
                 _key = CreateKey(text);
-
-            _resourceManager = exportProvider.GetExportedValue<ResourceManager>();
         }
 
-        public ICollection<ResourceEntity> ResourceEntities => _resourceManager.ResourceEntities;
+        public ICollection<ResourceEntity> ResourceEntities => _resourceEntities;
 
         [Required]
         public ResourceEntity SelectedResourceEntity
@@ -279,7 +281,7 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_patterns != null);
-            Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(_resourceEntities != null);
             Contract.Invariant(_replacements != null);
         }
     }

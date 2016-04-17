@@ -93,8 +93,7 @@
             Contract.Requires(languages != null);
             Contract.Requires(languages.Any());
 
-            Index = index;
-
+            _index = index;
             _languages = languages;
             _neutralLanguage = languages.First().Value;
             Contract.Assume(_neutralLanguage != null);
@@ -336,6 +335,7 @@
         {
             OnPropertyChanged(nameof(Values));
             OnPropertyChanged(nameof(Comment));
+            OnPropertyChanged(nameof(Index));
         }
 
         public bool HasStringFormatParameterMismatches(IEnumerable<CultureKey> cultures)

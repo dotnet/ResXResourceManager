@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.VSIX
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.CodeAnalysis;
@@ -92,14 +93,13 @@
 
             resourceManager.Reload();
 
-            var existingEntries = resourceManager.ResourceEntities
-                .SelectMany(entity => entity.Entries)
-                .Where(entry => entry.Values[null] == text)
+            var entities = resourceManager.ResourceEntities
+                .Where(entity => entity.NeutralProjectFile?.IsWinFormsDesignerResource != true)
                 .ToArray();
 
-            var viewModel = new MoveToResourceViewModel(_exportProvider, patterns, existingEntries, text)
+            var viewModel = new MoveToResourceViewModel(patterns, entities, text)
             {
-                SelectedResourceEntity = GetPreferredResourceEntity(document),
+                SelectedResourceEntity = GetPreferredResourceEntity(document, entities),
             };
 
             var confirmationDialog = new ConfirmationDialog(_exportProvider) { Content = viewModel };
@@ -130,17 +130,15 @@
             return null;
         }
 
-        private ResourceEntity GetPreferredResourceEntity(Document document)
+        private ResourceEntity GetPreferredResourceEntity(Document document, IEnumerable<ResourceEntity> entities)
         {
             Contract.Requires(document != null);
 
             try
             {
-                var resourceManager = _exportProvider.GetExportedValue<ResourceManager>();
-
                 var project = document.ProjectItem?.ContainingProject;
 
-                return resourceManager.ResourceEntities.FirstOrDefault(entity => IsInProject(entity, project));
+                return entities.FirstOrDefault(entity => IsInProject(entity, project));
             }
             catch (Exception)
             {
