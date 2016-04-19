@@ -1,10 +1,8 @@
-﻿using System.Diagnostics.Contracts;
-namespace tomenglertde.ResXManager.VSIX
+﻿namespace tomenglertde.ResXManager.VSIX
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Design;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
@@ -14,7 +12,6 @@ namespace tomenglertde.ResXManager.VSIX
     using EnvDTE;
 
     using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.PlatformUI;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
@@ -38,8 +35,18 @@ namespace tomenglertde.ResXManager.VSIX
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     public sealed class ResXManagerVsixPackage : Package
     {
+        private readonly DispatcherThrottle _deferedReloadThrottle;
+
         private EnvDTE.DTE _dte;
         private EnvDTE.DocumentEvents _documentEvents;
+        private EnvDTE.SolutionEvents _solutionEvents;
+        private EnvDTE.ProjectItemsEvents _solutionItemEvents;
+        private MyToolWindow _toolWindow;
+
+        public ResXManagerVsixPackage()
+        {
+            _deferedReloadThrottle = new DispatcherThrottle(DispatcherPriority.Background, () => FindToolWindow().ReloadSolution());
+        }
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -50,6 +57,8 @@ namespace tomenglertde.ResXManager.VSIX
             base.Initialize();
 
             ConnectEvents();
+
+            _toolWindow = FindToolWindow();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             var mcs = GetService(typeof(IMenuCommandService)) as IMenuCommandService;
@@ -72,7 +81,21 @@ namespace tomenglertde.ResXManager.VSIX
             _dte = (EnvDTE.DTE)GetService(typeof(SDTE));
             _documentEvents = _dte.Events.DocumentEvents;
             _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
-            _documentEvents.DocumentOpened += DocumentEvents_DocumentOpened;
+
+            _solutionEvents = _dte.Events.SolutionEvents;
+            _solutionEvents.Opened += AnyItem_Changed;
+            _solutionEvents.ProjectAdded += _ => AnyItem_Changed();
+            _solutionEvents.ProjectRemoved += _ => AnyItem_Changed();
+
+            _solutionItemEvents = _dte.Events.SolutionItemsEvents;
+            _solutionItemEvents.ItemAdded += _ => AnyItem_Changed();
+            _solutionItemEvents.ItemRemoved += _ => AnyItem_Changed();
+            _solutionItemEvents.ItemRenamed += (_,__) => AnyItem_Changed();
+        }
+
+        private void AnyItem_Changed()
+        {
+            _deferedReloadThrottle.Tick();
         }
 
         private static OleMenuCommand CreateMenuCommand(IMenuCommandService mcs, int cmdId, EventHandler invokeHandler)
@@ -90,15 +113,18 @@ namespace tomenglertde.ResXManager.VSIX
             ShowToolWindow();
         }
 
-        private MyToolWindow FindToolWindow(bool create)
+        private MyToolWindow FindToolWindow()
         {
-            Contract.Ensures((create == false) || (Contract.Result<MyToolWindow>() != null));
+            Contract.Ensures(Contract.Result<MyToolWindow>() != null);
+
+            if (_toolWindow != null)
+                return _toolWindow;
 
             // Get the instance number 0 of this tool window. This window is single instance so this instance is actually the only one.
             // The last flag is set to true so that if the tool window does not exists it will be created.
-            var window = FindToolWindow(typeof(MyToolWindow), 0, create);
+            var window = FindToolWindow(typeof(MyToolWindow), 0, true);
 
-            if (create && (window == null))
+            if (window == null)
                 throw new NotSupportedException(Resources.CanNotCreateWindow);
 
             return (MyToolWindow)window;
@@ -108,7 +134,7 @@ namespace tomenglertde.ResXManager.VSIX
         {
             Contract.Ensures(Contract.Result<MyToolWindow>() != null);
 
-            var window = FindToolWindow(true);
+            var window = FindToolWindow();
 
             var windowFrame = (IVsWindowFrame)window.Frame;
             if (windowFrame == null)
@@ -167,7 +193,7 @@ namespace tomenglertde.ResXManager.VSIX
             if (string.IsNullOrEmpty(fileName))
                 return Enumerable.Empty<ResourceEntity>();
 
-            var toolWindow = FindToolWindow(true);
+            var toolWindow = FindToolWindow();
             var resourceEntities = toolWindow.ResourceManager.ResourceEntities;
 
             return resourceEntities
@@ -193,7 +219,7 @@ namespace tomenglertde.ResXManager.VSIX
 
         private void MoveToResource(object sender, EventArgs e)
         {
-            var toolWindow = FindToolWindow(true);
+            var toolWindow = FindToolWindow();
 
             var entry = toolWindow.Refactorings.MoveToResource(_dte?.ActiveDocument);
             if (entry == null)
@@ -225,15 +251,7 @@ namespace tomenglertde.ResXManager.VSIX
                 return;
 
             menuCommand.Text = "Move to Resource";
-            menuCommand.Visible = FindToolWindow(true).Refactorings.CanMoveToResource(_dte?.ActiveDocument);
-        }
-
-        private void DocumentEvents_DocumentOpened(EnvDTE.Document document)
-        {
-            if (!AffectsResourceFile(document))
-                return;
-
-            FindToolWindow(true);
+            menuCommand.Visible = FindToolWindow().Refactorings.CanMoveToResource(_dte?.ActiveDocument);
         }
 
         private void DocumentEvents_DocumentSaved(EnvDTE.Document document)
@@ -241,17 +259,17 @@ namespace tomenglertde.ResXManager.VSIX
             if (!AffectsResourceFile(document))
                 return;
 
-            var toolWindow = FindToolWindow(false);
+            var toolWindow = FindToolWindow();
 
-            if ((toolWindow?.ResourceManager.ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.ProjectFile.IsSaving)).GetValueOrDefault())
+            if (toolWindow.ResourceManager.ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.ProjectFile.IsSaving))
                 return;
 
             document.ProjectItem.Descendants().ForEach(projectItem => projectItem.RunCustomTool());
 
-            toolWindow?.ReloadSolution();
+            toolWindow.ReloadSolution();
         }
 
-        private static bool AffectsResourceFile(Document document)
+        private static bool AffectsResourceFile(EnvDTE.Document document)
         {
             Contract.Ensures((Contract.Result<bool>() == false) || (document != null));
 

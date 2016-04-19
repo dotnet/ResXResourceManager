@@ -94,7 +94,7 @@
             resourceManager.Reload();
 
             var entities = resourceManager.ResourceEntities
-                .Where(entity => entity.NeutralProjectFile?.IsWinFormsDesignerResource != true)
+                .Where(entity => !entity.IsWinFormsDesignerResource)
                 .ToArray();
 
             var viewModel = new MoveToResourceViewModel(patterns, entities, text)

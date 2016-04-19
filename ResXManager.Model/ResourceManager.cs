@@ -76,11 +76,6 @@
                 .GroupBy(file => file.GetBaseDirectory());
 
             InternalLoad(resourceFilesByDirectory);
-
-            if (Settings.Default.IsFindCodeReferencesEnabled)
-            {
-                _codeReferenceTracker.BeginFind(this, _configuration.CodeReferences, allSourceFiles, _tracer);
-            }
         }
 
         /// <summary>
@@ -209,6 +204,24 @@
             Load(_sourceFilesProvider.SourceFiles.ToArray());
         }
 
+        public void ReloadAndBeginFindCoreReferences()
+        {
+            var allSourceFiles = _sourceFilesProvider.SourceFiles.ToArray();
+
+            Load(allSourceFiles);
+            BeginFindCodeReferences(allSourceFiles);
+        }
+
+        public void BeginFindCoreReferences()
+        {
+            if (_codeReferenceTracker.IsActive)
+                return;
+            
+            var allSourceFiles = _sourceFilesProvider.SourceFiles.ToArray();
+
+            BeginFindCodeReferences(allSourceFiles);
+        }
+
         public bool CanEdit(ResourceEntity resourceEntity, CultureInfo culture)
         {
             Contract.Requires(resourceEntity != null);
@@ -225,6 +238,17 @@
             return !args.Cancel;
         }
 
+        private void BeginFindCodeReferences<T>(IList<T> allSourceFiles)
+            where T : ProjectFile
+        {
+            _codeReferenceTracker.StopFind();
+
+            if (Settings.Default.IsFindCodeReferencesEnabled)
+            {
+                _codeReferenceTracker.BeginFind(this, _configuration.CodeReferences, allSourceFiles, _tracer);
+            }
+        }
+
         private void OnLoaded()
         {
             Loaded?.Invoke(this, EventArgs.Empty);
@@ -232,9 +256,7 @@
 
         private void OnLanguageSaved(LanguageEventArgs e)
         {
-            var handler = LanguageSaved;
-            if (handler != null)
-                handler(this, e);
+            LanguageSaved?.Invoke(this, e);
         }
 
         private void InternalLoad(IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory)

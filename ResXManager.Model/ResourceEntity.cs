@@ -202,13 +202,9 @@
             }
         }
 
-        public ProjectFile NeutralProjectFile
-        {
-            get
-            {
-                return _neutralProjectFile;
-            }
-        }
+        public ProjectFile NeutralProjectFile => _neutralProjectFile;
+
+        public bool IsWinFormsDesignerResource => _neutralProjectFile?.IsWinFormsDesignerResource ?? false;
 
         /// <summary>
         /// Gets the available languages of this resource entity.

@@ -135,7 +135,7 @@
 
                 _dte.SetFontSize(_view);
 
-                ReloadSolution();
+                InternalReloadSolution();
             }
             catch (Exception ex)
             {
@@ -185,7 +185,7 @@
 
         private void view_Loaded(object sender, RoutedEventArgs e)
         {
-            Solution_Changed();
+            ReloadSolution();
         }
 
         private void Navigate_Click(object sender, RoutedEventArgs e)
@@ -224,14 +224,7 @@
             if (!true.Equals(e.NewValue))
                 return;
 
-            try
-            {
-                ReloadSolution();
-            }
-            catch (Exception ex)
-            {
-                _trace.TraceError(ex.ToString());
-            }
+            ReloadSolution();
         }
 
         private void view_IsMouseOverChanged(object sender, EventArgs e)
@@ -239,14 +232,7 @@
             if (!_view.IsMouseOver)
                 return;
 
-            try
-            {
-                ReloadSolution();
-            }
-            catch (Exception ex)
-            {
-                _trace.TraceError(ex.ToString());
-            }
+            ReloadSolution();
         }
 
         [Localizable(false)]
@@ -437,19 +423,6 @@
                 .ForEach(projectItem => projectItem.RunCustomTool());
         }
 
-        private void Solution_Changed(bool forceReload = false)
-        {
-            try
-            {
-                ReloadSolution(forceReload);
-            }
-            catch (Exception ex)
-            {
-                _trace.TraceError(ex.ToString());
-                MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ResourceLoadingError, ex.Message));
-            }
-        }
-
         public IEnumerable<ProjectFile> SourceFiles => DteSourceFiles;
 
         private IEnumerable<DteProjectFile> DteSourceFiles
@@ -462,7 +435,19 @@
             }
         }
 
-        internal void ReloadSolution(bool forceReload = false)
+        internal void ReloadSolution()
+        {
+            try
+            {
+                InternalReloadSolution();
+            }
+            catch (Exception ex)
+            {
+                _trace.TraceError(ex.ToString());
+            }
+        }
+
+        private void InternalReloadSolution()
         {
             var projectFiles = DteSourceFiles.ToArray();
 
@@ -470,9 +455,7 @@
             // To avoid loosing the scope every time this method is called we only call load if we detect changes.
             var fingerPrint = GetFingerprint(projectFiles);
 
-            if (!forceReload
-                && !projectFiles.Where(p => p.IsResourceFile()).Any(p => p.HasChanges)
-                && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
+            if (!projectFiles.Where(p => p.IsResourceFile()).Any(p => p.HasChanges) && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
                 return;
 
             _solutionFingerPrint = fingerPrint;
@@ -515,7 +498,7 @@
                     if (!string.IsNullOrEmpty(oldComment))
                     {
                         if (string.IsNullOrEmpty(newEntry.Comment))
-                        newEntry.Comment = oldComment;
+                            newEntry.Comment = oldComment;
                     }
                 }
             }

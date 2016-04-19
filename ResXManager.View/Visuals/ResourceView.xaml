@@ -545,4 +545,11 @@
     <toms:CommandRoutingBehavior CommandSource="view:IsInvariantCommand" CommandTarget="{Binding ToggleInvariantCommand}" IsChecked="{Binding Path=SelectedItem.IsInvariant, Mode=OneWay, ElementName=DataGrid}" />
     <toms:CommandRoutingBehavior CommandSource="view:ToggleCellSelectionCommand" CommandTarget="{Binding ToggleCellSelectionCommand}" IsChecked="{Binding IsCellSelectionEnabled, Mode=OneWay}" />
   </i:Interaction.Behaviors>
+  
+  <i:Interaction.Triggers>
+    <i:EventTrigger EventName="Loaded">
+      <i:InvokeCommandAction Command="{Binding BeginFindCodeReferencesCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"/>
+    </i:EventTrigger>
+  </i:Interaction.Triggers>
+  
 </UserControl>

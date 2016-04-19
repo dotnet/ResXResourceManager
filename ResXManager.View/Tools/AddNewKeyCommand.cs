@@ -34,7 +34,7 @@
             if (_resourceManager.SelectedEntities.Count() != 1)
                 return false;
 
-            return _resourceManager.SelectedEntities.Single()?.NeutralProjectFile?.IsWinFormsDesignerResource != true;
+            return _resourceManager.SelectedEntities.Single()?.IsWinFormsDesignerResource != true;
         }
 
         private void Execute()
