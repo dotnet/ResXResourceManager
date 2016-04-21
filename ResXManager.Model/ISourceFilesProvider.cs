@@ -6,17 +6,17 @@
     [ContractClass(typeof (SourceFilesProviderContract))]
     public interface ISourceFilesProvider
     {
-        IEnumerable<ProjectFile> SourceFiles { get; }
+        IList<ProjectFile> SourceFiles { get; }
     }
 
     [ContractClassFor(typeof (ISourceFilesProvider))]
     abstract class SourceFilesProviderContract : ISourceFilesProvider
     {
-        public IEnumerable<ProjectFile> SourceFiles
+        public IList<ProjectFile> SourceFiles
         {
             get
             {
-                Contract.Ensures(Contract.Result<IEnumerable<ProjectFile>>() != null);
+                Contract.Ensures(Contract.Result<IList<ProjectFile>>() != null);
                 throw new System.NotImplementedException();
             }
         }

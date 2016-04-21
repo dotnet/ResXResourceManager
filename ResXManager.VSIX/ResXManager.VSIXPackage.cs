@@ -15,10 +15,12 @@
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
+    using TomsToolbox.Desktop.Composition;
 
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -37,15 +39,20 @@
     {
         private readonly DispatcherThrottle _deferedReloadThrottle;
 
-        private EnvDTE.DTE _dte;
+        private EnvDTE80.DTE2 _dte;
         private EnvDTE.DocumentEvents _documentEvents;
         private EnvDTE.SolutionEvents _solutionEvents;
-        private EnvDTE.ProjectItemsEvents _solutionItemEvents;
+        private EnvDTE.ProjectItemsEvents _projectItemsEvents;
         private MyToolWindow _toolWindow;
+
+        private ICompositionHost _compositionHost;
+        private ITracer _tracer;
+        private IRefactorings _refactorings;
+        private PerformanceTracer _performanceTracer;
 
         public ResXManagerVsixPackage()
         {
-            _deferedReloadThrottle = new DispatcherThrottle(DispatcherPriority.Background, () => FindToolWindow().ReloadSolution());
+            _deferedReloadThrottle = new DispatcherThrottle(DispatcherPriority.ApplicationIdle, () => ToolWindow.ReloadSolution());
         }
 
         /// <summary>
@@ -58,7 +65,10 @@
 
             ConnectEvents();
 
-            _toolWindow = FindToolWindow();
+            _compositionHost = ToolWindow.CompositionHost;
+            _tracer = _compositionHost.GetExportedValue<ITracer>();
+            _refactorings = _compositionHost.GetExportedValue<IRefactorings>();
+            _performanceTracer = _compositionHost.GetExportedValue<PerformanceTracer>();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             var mcs = GetService(typeof(IMenuCommandService)) as IMenuCommandService;
@@ -78,23 +88,26 @@
         [ContractVerification(false)]
         private void ConnectEvents()
         {
-            _dte = (EnvDTE.DTE)GetService(typeof(SDTE));
-            _documentEvents = _dte.Events.DocumentEvents;
+            _dte = (EnvDTE80.DTE2)GetService(typeof(SDTE));
+            var events = (EnvDTE80.Events2)_dte.Events;
+
+            _documentEvents = events.DocumentEvents;
             _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
 
-            _solutionEvents = _dte.Events.SolutionEvents;
-            _solutionEvents.Opened += AnyItem_Changed;
-            _solutionEvents.ProjectAdded += _ => AnyItem_Changed();
-            _solutionEvents.ProjectRemoved += _ => AnyItem_Changed();
+            _solutionEvents = events.SolutionEvents;
+            _solutionEvents.Opened += () => OnDteEvent("Solution openend");
+            _solutionEvents.ProjectAdded += _ => OnDteEvent("Project added");
+            _solutionEvents.ProjectRemoved += _ => OnDteEvent("Project removed");
 
-            _solutionItemEvents = _dte.Events.SolutionItemsEvents;
-            _solutionItemEvents.ItemAdded += _ => AnyItem_Changed();
-            _solutionItemEvents.ItemRemoved += _ => AnyItem_Changed();
-            _solutionItemEvents.ItemRenamed += (_,__) => AnyItem_Changed();
+            _projectItemsEvents = events.ProjectItemsEvents;
+            _projectItemsEvents.ItemAdded += _ => OnDteEvent("Project item added");
+            _projectItemsEvents.ItemRemoved += _ => OnDteEvent("Project item removed");
+            _projectItemsEvents.ItemRenamed += (_,__) => OnDteEvent("Project item renamed");
         }
 
-        private void AnyItem_Changed()
+        private void OnDteEvent(string name)
         {
+            _tracer?.WriteLine("DTE event: {0}", name);
             _deferedReloadThrottle.Tick();
         }
 
@@ -113,28 +126,31 @@
             ShowToolWindow();
         }
 
-        private MyToolWindow FindToolWindow()
+        private MyToolWindow ToolWindow
         {
-            Contract.Ensures(Contract.Result<MyToolWindow>() != null);
+            get
+            {
+                Contract.Ensures(Contract.Result<MyToolWindow>() != null);
 
-            if (_toolWindow != null)
+                if (_toolWindow != null)
+                    return _toolWindow;
+
+                // Get the instance number 0 of this tool window. This window is single instance so this instance is actually the only one.
+                // The last flag is set to true so that if the tool window does not exists it will be created.
+                _toolWindow = (MyToolWindow)FindToolWindow(typeof(MyToolWindow), 0, true);
+
+                if (_toolWindow == null)
+                    throw new NotSupportedException(Resources.CanNotCreateWindow);
+
                 return _toolWindow;
-
-            // Get the instance number 0 of this tool window. This window is single instance so this instance is actually the only one.
-            // The last flag is set to true so that if the tool window does not exists it will be created.
-            var window = FindToolWindow(typeof(MyToolWindow), 0, true);
-
-            if (window == null)
-                throw new NotSupportedException(Resources.CanNotCreateWindow);
-
-            return (MyToolWindow)window;
+            }
         }
 
         private MyToolWindow ShowToolWindow()
         {
             Contract.Ensures(Contract.Result<MyToolWindow>() != null);
 
-            var window = FindToolWindow();
+            var window = ToolWindow;
 
             var windowFrame = (IVsWindowFrame)window.Frame;
             if (windowFrame == null)
@@ -193,7 +209,7 @@
             if (string.IsNullOrEmpty(fileName))
                 return Enumerable.Empty<ResourceEntity>();
 
-            var toolWindow = FindToolWindow();
+            var toolWindow = ToolWindow;
             var resourceEntities = toolWindow.ResourceManager.ResourceEntities;
 
             return resourceEntities
@@ -219,9 +235,9 @@
 
         private void MoveToResource(object sender, EventArgs e)
         {
-            var toolWindow = FindToolWindow();
+            var toolWindow = ToolWindow;
 
-            var entry = toolWindow.Refactorings.MoveToResource(_dte?.ActiveDocument);
+            var entry = _refactorings?.MoveToResource(_dte?.ActiveDocument);
             if (entry == null)
                 return;
 
@@ -250,16 +266,21 @@
             if (menuCommand == null)
                 return;
 
-            menuCommand.Text = "Move to Resource";
-            menuCommand.Visible = FindToolWindow().Refactorings.CanMoveToResource(_dte?.ActiveDocument);
+            using (_performanceTracer?.Start("Can move to resource"))
+            {
+                menuCommand.Text = "Move to Resource";
+                menuCommand.Visible = _refactorings?.CanMoveToResource(_dte?.ActiveDocument) ?? false;
+            }
         }
 
         private void DocumentEvents_DocumentSaved(EnvDTE.Document document)
         {
+            _tracer?.WriteLine("DTE event: {0}", "Document saved");
+
             if (!AffectsResourceFile(document))
                 return;
 
-            var toolWindow = FindToolWindow();
+            var toolWindow = ToolWindow;
 
             if (toolWindow.ResourceManager.ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.ProjectFile.IsSaving))
                 return;

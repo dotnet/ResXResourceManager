@@ -48,6 +48,7 @@
         private EnvDTE.DTE _dte;
         private string _solutionFingerPrint;
         private readonly CodeReferenceTracker _codeReferenceTracker;
+        private readonly PerformanceTracer _performanceTracer;
 
         /// <summary>
         /// Standard constructor for the tool window.
@@ -72,6 +73,7 @@
             _compositionHost.ComposeExportedValue((ISourceFilesProvider)this);
 
             _trace = _compositionHost.GetExportedValue<ITracer>();
+            _performanceTracer = _compositionHost.GetExportedValue<PerformanceTracer>();
             _configuration = _compositionHost.GetExportedValue<Configuration>();
 
             _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
@@ -98,13 +100,12 @@
             }
         }
 
-        public IRefactorings Refactorings
+        public ICompositionHost CompositionHost
         {
             get
             {
-                Contract.Ensures(Contract.Result<IRefactorings>() != null);
-
-                return _compositionHost.GetExportedValue<IRefactorings>();
+                Contract.Ensures(Contract.Result<ICompositionHost>() != null);
+                return _compositionHost;
             }
         }
 
@@ -134,8 +135,6 @@
                 Content = _view;
 
                 _dte.SetFontSize(_view);
-
-                InternalReloadSolution();
             }
             catch (Exception ex)
             {
@@ -423,7 +422,16 @@
                 .ForEach(projectItem => projectItem.RunCustomTool());
         }
 
-        public IEnumerable<ProjectFile> SourceFiles => DteSourceFiles;
+        public IList<ProjectFile> SourceFiles
+        {
+            get
+            {
+                using (_performanceTracer.Start("Enumerate source files"))
+                {
+                    return DteSourceFiles.Cast<ProjectFile>().ToArray();
+                }
+            }
+        }
 
         private IEnumerable<DteProjectFile> DteSourceFiles
         {
@@ -439,7 +447,10 @@
         {
             try
             {
-                InternalReloadSolution();
+                using (_performanceTracer.Start("Reload solution"))
+                {
+                    InternalReloadSolution();
+                }
             }
             catch (Exception ex)
             {

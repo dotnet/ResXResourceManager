@@ -31,6 +31,7 @@
         private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly ITracer _tracer;
         private readonly ISourceFilesProvider _sourceFilesProvider;
+        private readonly PerformanceTracer _performanceTracer;
 
         private readonly ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
         private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
@@ -46,17 +47,19 @@
         public event EventHandler<EventArgs> Loaded;
 
         [ImportingConstructor]
-        private ResourceManager(Configuration configuration, CodeReferenceTracker codeReferenceTracker, ITracer tracer, ISourceFilesProvider sourceFilesProvider)
+        private ResourceManager(Configuration configuration, CodeReferenceTracker codeReferenceTracker, ITracer tracer, ISourceFilesProvider sourceFilesProvider, PerformanceTracer performanceTracer)
         {
             Contract.Requires(configuration != null);
             Contract.Requires(codeReferenceTracker != null);
             Contract.Requires(tracer != null);
             Contract.Requires(sourceFilesProvider != null);
+            Contract.Requires(performanceTracer != null);
 
             _configuration = configuration;
             _codeReferenceTracker = codeReferenceTracker;
             _tracer = tracer;
             _sourceFilesProvider = sourceFilesProvider;
+            _performanceTracer = performanceTracer;
             _resourceTableEntries = _selectedEntities.ObservableSelectMany(entity => entity.Entries);
         }
 
@@ -69,13 +72,16 @@
         {
             Contract.Requires(allSourceFiles != null);
 
-            _codeReferenceTracker.StopFind();
+            using (_performanceTracer.Start("ResourceManager.Load"))
+            {
+                _codeReferenceTracker.StopFind();
 
-            var resourceFilesByDirectory = allSourceFiles
-                .Where(file => file.IsResourceFile())
-                .GroupBy(file => file.GetBaseDirectory());
+                var resourceFilesByDirectory = allSourceFiles
+                    .Where(file => file.IsResourceFile())
+                    .GroupBy(file => file.GetBaseDirectory());
 
-            InternalLoad(resourceFilesByDirectory);
+                InternalLoad(resourceFilesByDirectory);
+            }
         }
 
         /// <summary>
@@ -201,12 +207,12 @@
 
         public void Reload()
         {
-            Load(_sourceFilesProvider.SourceFiles.ToArray());
+            Load(_sourceFilesProvider.SourceFiles);
         }
 
         public void ReloadAndBeginFindCoreReferences()
         {
-            var allSourceFiles = _sourceFilesProvider.SourceFiles.ToArray();
+            var allSourceFiles = _sourceFilesProvider.SourceFiles;
 
             Load(allSourceFiles);
             BeginFindCodeReferences(allSourceFiles);
@@ -217,7 +223,7 @@
             if (_codeReferenceTracker.IsActive)
                 return;
             
-            var allSourceFiles = _sourceFilesProvider.SourceFiles.ToArray();
+            var allSourceFiles = _sourceFilesProvider.SourceFiles;
 
             BeginFindCodeReferences(allSourceFiles);
         }

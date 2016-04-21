@@ -131,7 +131,7 @@
         {
             try
             {
-                var sourceFiles = SourceFilesProvider.SourceFiles.ToArray();
+                var sourceFiles = SourceFilesProvider.SourceFiles;
 
                 _resourceManager.Load(sourceFiles);
             }
@@ -260,13 +260,13 @@
         }
 
 
-        public IEnumerable<ProjectFile> SourceFiles
+        public IList<ProjectFile> SourceFiles
         {
             get
             {
                 var folder = Folder;
                 if (string.IsNullOrEmpty(folder))
-                    return Enumerable.Empty<ProjectFile>();
+                    return new ProjectFile[0];
 
                 return new DirectoryInfo(folder).GetAllSourceFiles(_configuration);
             }

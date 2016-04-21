@@ -8,6 +8,8 @@
     using System.IO;
     using System.Linq;
 
+    using EnvDTE;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
@@ -39,36 +41,28 @@
 
             var items = new Dictionary<string, DteProjectFile>();
 
-            foreach (var project in GetProjects())
+            try
             {
-                Contract.Assume(project != null);
 
-                _tracer.WriteLine("Loading project " + project.Name);
+                foreach (var project in GetProjects())
+                {
+                    Contract.Assume(project != null);
 
-                GetProjectFiles(project.ProjectItems, items);
+                    GetProjectFiles(project.Name, project.ProjectItems, items);
+                }
+            }
+            catch (Exception ex)
+            {
+                _tracer.TraceError("Error loading projects: {0}", ex);
             }
 
             return items.Values;
         }
 
         // ReSharper disable once SuspiciousTypeConversion.Global
-        public EnvDTE80.Solution2 Solution
-        {
-            get
-            {
-                var dte = Dte;
+        public EnvDTE80.Solution2 Solution => Dte?.Solution as EnvDTE80.Solution2;
 
-                return (dte == null) ? null : dte.Solution as EnvDTE80.Solution2;
-            }
-        }
-
-        public EnvDTE80.DTE2 Dte
-        {
-            get
-            {
-                return _vsServiceProvider.GetService(typeof (EnvDTE.DTE)) as EnvDTE80.DTE2;
-            }
-        }
+        public EnvDTE80.DTE2 Dte => _vsServiceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
 
         public EnvDTE.Globals Globals
         {
@@ -76,7 +70,7 @@
             {
                 var solution = Solution;
 
-                return string.IsNullOrEmpty(FullName) ? null : ((solution == null) ? null : solution.Globals);
+                return string.IsNullOrEmpty(FullName) ? null : solution?.Globals;
             }
         }
 
@@ -98,29 +92,15 @@
             }
         }
 
-        public string FullName
-        {
-            get
-            {
-                var solution = Solution;
-
-                return solution == null ? null : solution.FullName;
-            }
-        }
+        public string FullName => Solution?.FullName;
 
         public EnvDTE.ProjectItem AddFile(string fullName)
         {
             Contract.Requires(fullName != null);
 
-            var solution = Solution;
-            if (solution == null)
-                return null;
+            var solutionItemsProject = GetProjects().FirstOrDefault(IsSolutionItemsFolder) ?? Solution?.AddSolutionFolder(SolutionItemsFolderName);
 
-            var solutionItemsProject = GetProjects().FirstOrDefault(IsSolutionItemsFolder) ?? solution.AddSolutionFolder(SolutionItemsFolderName);
-            if (solutionItemsProject == null)
-                return null;
-
-            return solutionItemsProject.AddFromFile(fullName);
+            return solutionItemsProject?.AddFromFile(fullName);
         }
 
         private static bool IsSolutionItemsFolder(EnvDTE.Project project)
@@ -128,7 +108,7 @@
             if (project == null)
                 return false;
 
-            return string.Equals(project.Kind, ItemKind.SolutionFolder, StringComparison.OrdinalIgnoreCase) 
+            return string.Equals(project.Kind, ItemKind.SolutionFolder, StringComparison.OrdinalIgnoreCase)
                 && string.Equals(project.Name, SolutionItemsFolderName, StringComparison.CurrentCultureIgnoreCase);
         }
 
@@ -137,10 +117,8 @@
             Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.Project>>() != null);
 
             var solution = Solution;
-            if (solution == null)
-                yield break;
 
-            var projects = solution.Projects;
+            var projects = solution?.Projects;
             if (projects == null)
                 yield break;
 
@@ -161,7 +139,7 @@
             }
         }
 
-        private void GetProjectFiles(EnvDTE.ProjectItems projectItems, IDictionary<string, DteProjectFile> items)
+        private void GetProjectFiles(string projectName, ProjectItems projectItems, IDictionary<string, DteProjectFile> items)
         {
             Contract.Requires(items != null);
 
@@ -177,11 +155,11 @@
                 {
                     try
                     {
-                        GetProjectFiles(projectItem, items);
+                        GetProjectFiles(projectName, projectItem, items);
                     }
                     catch
                     {
-                        _tracer.TraceError("Error loading project item #{0}.", index);
+                        _tracer.TraceError("Error loading project item #{0} in project {1}.", index, projectName);
                     }
 
                     index += 1;
@@ -189,11 +167,11 @@
             }
             catch
             {
-                _tracer.TraceError("Error loading a project item.");
+                _tracer.TraceError("Error loading a project item in project {0}.", projectName);
             }
         }
 
-        private void GetProjectFiles(EnvDTE.ProjectItem projectItem, IDictionary<string, DteProjectFile> items)
+        private void GetProjectFiles(string projectName, EnvDTE.ProjectItem projectItem, IDictionary<string, DteProjectFile> items)
         {
             Contract.Requires(projectItem != null);
             Contract.Requires(items != null);
@@ -222,11 +200,11 @@
                 }
             }
 
-            GetProjectFiles(projectItem.ProjectItems, items);
+            GetProjectFiles(projectName, projectItem.ProjectItems, items);
 
             if (projectItem.SubProject != null)
             {
-                GetProjectFiles(projectItem.SubProject.ProjectItems, items);
+                GetProjectFiles(projectName, projectItem.SubProject.ProjectItems, items);
             }
         }
 

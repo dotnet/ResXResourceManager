@@ -133,6 +133,7 @@
         private ResourceEntity GetPreferredResourceEntity(Document document, IEnumerable<ResourceEntity> entities)
         {
             Contract.Requires(document != null);
+            Contract.Requires(entities != null);
 
             try
             {
