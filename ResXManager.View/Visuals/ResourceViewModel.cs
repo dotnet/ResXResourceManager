@@ -383,7 +383,7 @@
         {
             Contract.Requires(fileName != null);
 
-            var changes = _resourceManager.ImportExcelFile(fileName).ToArray();
+            var changes = _resourceManager.ImportExcelFile(fileName);
 
             changes.Apply();
         }

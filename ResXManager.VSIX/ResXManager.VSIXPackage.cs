@@ -52,7 +52,7 @@
 
         public ResXManagerVsixPackage()
         {
-            _deferedReloadThrottle = new DispatcherThrottle(DispatcherPriority.ApplicationIdle, () => ToolWindow.ReloadSolution());
+            _deferedReloadThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, () => ToolWindow.ReloadSolution());
         }
 
         /// <summary>

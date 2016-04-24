@@ -104,7 +104,7 @@
             worksheet.AppendItem(rows.Aggregate(new SheetData(), AppendRow));
         }
 
-        public static IEnumerable<EntryChange> ImportExcelFile(this ResourceManager resourceManager, string filePath)
+        public static IList<EntryChange> ImportExcelFile(this ResourceManager resourceManager, string filePath)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(filePath != null);
@@ -126,7 +126,7 @@
 
                 var firstSheet = sheets.OfType<Sheet>().FirstOrDefault();
                 if (firstSheet == null)
-                    return Enumerable.Empty<EntryChange>();
+                    return new EntryChange[0];
 
                 var firstRow = firstSheet.GetRows(workbookPart).FirstOrDefault();
 
@@ -134,7 +134,7 @@
                     ? ImportSingleSheet(resourceManager, firstSheet, workbookPart, sharedStrings) 
                     : ImportMultipleSheets(resourceManager, sheets, workbookPart, sharedStrings);
 
-                return changes;
+                return changes.ToArray();
             }
         }
 
@@ -204,9 +204,16 @@
             var entities = GetMultipleSheetEntities(resourceManager).ToArray();
 
             var changes = sheets.OfType<Sheet>()
-                .SelectMany(sheet => FindResourceEntity(entities, sheet).ImportTable(_fixedColumnHeaders, sheet.GetRows(workbookPart).Select(row => row.GetCellValues(sharedStrings)).ToArray()));
+                .SelectMany(sheet => FindResourceEntity(entities, sheet).ImportTable(_fixedColumnHeaders, sheet.GetTable(workbookPart, sharedStrings)));
 
             return changes;
+        }
+
+        private static IList<string>[] GetTable(this Sheet sheet, WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
+        {
+            return sheet.GetRows(workbookPart)
+                .Select(row => row.GetCellValues(sharedStrings))
+                .ToArray();
         }
 
         private static bool IsSingleSheetHeader(Row firstRow, IList<SharedStringItem> sharedStrings)
