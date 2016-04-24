@@ -122,7 +122,7 @@
                 DefaultExt = ".xlsx",
                 Filter = "Excel Worksheets|*.xlsx|All Files|*.*",
                 FilterIndex = 0,
-                FileName = DateTime.Today.ToShortDateString().ReplaceInvalidFileNameChars('_')
+                FileName = DateTime.Today.ToString("yyyy_MM_dd", CultureInfo.InvariantCulture)
             };
 
             if (!dlg.ShowDialog().GetValueOrDefault())
