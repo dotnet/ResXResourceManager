@@ -9,8 +9,6 @@
     using System.Runtime.InteropServices;
     using System.Windows.Threading;
 
-    using EnvDTE;
-
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -39,7 +37,6 @@
     {
         private readonly DispatcherThrottle _deferedReloadThrottle;
 
-        private EnvDTE80.DTE2 _dte;
         private EnvDTE.DocumentEvents _documentEvents;
         private EnvDTE.SolutionEvents _solutionEvents;
         private EnvDTE.ProjectItemsEvents _projectItemsEvents;
@@ -53,6 +50,18 @@
         public ResXManagerVsixPackage()
         {
             _deferedReloadThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, () => ToolWindow.ReloadSolution());
+        }
+
+        private EnvDTE80.DTE2 Dte
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<EnvDTE80.DTE2>() != null);
+
+                var dte = (EnvDTE80.DTE2)GetService(typeof(SDTE));
+                Contract.Assume(dte != null);
+                return dte;
+            }
         }
 
         /// <summary>
@@ -88,8 +97,7 @@
         [ContractVerification(false)]
         private void ConnectEvents()
         {
-            _dte = (EnvDTE80.DTE2)GetService(typeof(SDTE));
-            var events = (EnvDTE80.Events2)_dte.Events;
+            var events = (EnvDTE80.Events2)Dte.Events;
 
             _documentEvents = events.DocumentEvents;
             _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
@@ -237,7 +245,7 @@
         {
             var toolWindow = ToolWindow;
 
-            var entry = _refactorings?.MoveToResource(_dte?.ActiveDocument);
+            var entry = _refactorings?.MoveToResource(Dte.ActiveDocument);
             if (entry == null)
                 return;
 
@@ -269,7 +277,7 @@
             using (_performanceTracer?.Start("Can move to resource"))
             {
                 menuCommand.Text = "Move to Resource";
-                menuCommand.Visible = _refactorings?.CanMoveToResource(_dte?.ActiveDocument) ?? false;
+                menuCommand.Visible = _refactorings?.CanMoveToResource(Dte.ActiveDocument) ?? false;
             }
         }
 

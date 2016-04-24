@@ -247,6 +247,8 @@
         private void BeginFindCodeReferences<T>(IList<T> allSourceFiles)
             where T : ProjectFile
         {
+            Contract.Requires(allSourceFiles != null);
+
             _codeReferenceTracker.StopFind();
 
             if (Settings.Default.IsFindCodeReferencesEnabled)

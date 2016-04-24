@@ -42,14 +42,16 @@
 
             selector.BeginInit();
 
-            SetSelectedItems((dynamic)selector, group);
+            SetSelectedItems(selector, group);
 
             selector.EndInit();
         }
 
         [ContractVerification(false)] // because of dynamic...
-        private static void SetSelectedItems(dynamic multiSelector, CollectionViewGroup group)
+        private static void SetSelectedItems(Selector selector, CollectionViewGroup group)
         {
+            dynamic multiSelector = selector;
+
             try
             {
                 if ((Keyboard.Modifiers & ModifierKeys.Control) == 0)

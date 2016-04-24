@@ -490,6 +490,8 @@
             Contract.Invariant(_values != null);
             Contract.Invariant(_comments != null);
             Contract.Invariant(_fileExists != null);
+            Contract.Invariant(_valueAnnotations != null);
+            Contract.Invariant(_commentAnnotations != null);
             Contract.Invariant(_neutralLanguage != null);
             Contract.Invariant(_container != null);
             Contract.Invariant(_languages != null);

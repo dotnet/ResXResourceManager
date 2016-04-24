@@ -44,11 +44,11 @@
         private readonly ResourceManager _resourceManager;
         private readonly Configuration _configuration;
         private readonly Control _view;
+        private readonly CodeReferenceTracker _codeReferenceTracker;
+        private readonly PerformanceTracer _performanceTracer;
 
         private EnvDTE.DTE _dte;
         private string _solutionFingerPrint;
-        private readonly CodeReferenceTracker _codeReferenceTracker;
-        private readonly PerformanceTracer _performanceTracer;
 
         /// <summary>
         /// Standard constructor for the tool window.
@@ -543,6 +543,7 @@
             Contract.Invariant(_trace != null);
             Contract.Invariant(_view != null);
             Contract.Invariant(_codeReferenceTracker != null);
+            Contract.Invariant(_performanceTracer != null);
         }
     }
 }
