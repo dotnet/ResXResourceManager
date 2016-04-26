@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-        xmlns:toms="urn:TomsToolbox"
+        xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
         xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
         Title="Move To Resource" Width="600" SizeToContent="Height"
         WindowStartupLocation="CenterScreen"
@@ -16,11 +16,11 @@
           <Grid DockPanel.Dock="Bottom" Background="#F0F0F0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.IsSharedSizeScope="True" Margin="10">
               <Button Padding="15,5" IsDefault="True" Command="{Binding CommitCommand}">
-                <ContentControl Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" Content="OK" HorizontalContentAlignment="Center"/>
+                <ContentControl Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" Content="OK" HorizontalContentAlignment="Center"/>
               </Button>
               <Decorator Width="10"></Decorator>
               <Button Padding="15,5" IsCancel="True">
-                <ContentControl Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" Content="Cancel" HorizontalContentAlignment="Center"/>
+                <ContentControl Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" Content="Cancel" HorizontalContentAlignment="Center"/>
               </Button>
             </StackPanel>
           </Grid>

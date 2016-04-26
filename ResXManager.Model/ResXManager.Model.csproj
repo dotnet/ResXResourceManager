@@ -236,7 +236,6 @@
     <Compile Include="ResourceBeginEditingEventArgs.cs" />
     <Compile Include="Snapshot.cs" />
     <Compile Include="SourceFileFilter.cs" />
-    <Compile Include="TextEnumerator.cs" />
     <Compile Include="TranslationExtensions.cs" />
     <Compile Include="TranslationItem.cs" />
     <Compile Include="Translations.cs" />

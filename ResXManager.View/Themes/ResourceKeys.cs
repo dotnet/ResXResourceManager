@@ -13,6 +13,21 @@
         public static readonly ResourceKey AutoToolTipTextBoxStyle = new ComponentResourceKey(typeof(ResourceKeys), "AutoToolTipTextBoxStyle");
 
         /// <summary>
+        /// Resource key for a style applying a shared with to associated container controls.
+        /// </summary>
+        public static readonly ResourceKey SharedWidthContainerStyle = new ComponentResourceKey(typeof(ResourceKeys), "SharedWidthContainerStyle");
+
+        /// <summary>
+        /// Data grid with check boxes for row selection: Style to be applied to the check box inside the row header template.
+        /// </summary>
+        public static readonly ResourceKey DataGridRowCheckBoxStyle = new ComponentResourceKey(typeof(ResourceKeys), "DataGridRowCheckBoxStyle");
+
+        /// <summary>
+        /// A control that shows validation errors in the tool tip.
+        /// </summary>
+        public static readonly ResourceKey ControlWithValidationErrorToolTipStyle = new ComponentResourceKey(typeof(ResourceKeys), "ControlWithValidationErrorToolTipStyle");
+
+        /// <summary>
         /// Template for the filter on a column represented by a DataGridTextColumn.
         /// </summary>
         public static readonly ResourceKey TextColumnFilterTemplateKey = new ComponentResourceKey(typeof(ResourceKeys), typeof(DataGridTextColumn));

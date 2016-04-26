@@ -3,7 +3,8 @@
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                     xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
                     xmlns:wpf="urn:TomsToolbox"
-                    xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes">
+                    xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
+                    xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals">
 
   <Style x:Key="{x:Static themes:ResourceKeys.LabelTextStyle}">
     <Setter Property="TextElement.Foreground" Value="DarkSlateGray" />
@@ -20,6 +21,70 @@
         </MultiTrigger.Conditions>
         <Setter Property="ToolTip" Value="{Binding Path=Text, RelativeSource={x:Static RelativeSource.Self}}" />
       </MultiTrigger>
+    </Style.Triggers>
+  </Style>
+
+  <ControlTemplate TargetType="ContentControl" x:Key="SharedWidthContainerTemplate">
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition SharedSizeGroup="SharedWidthDefaultGroup" />
+      </Grid.ColumnDefinitions>
+      <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                        ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                        ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
+    </Grid>
+  </ControlTemplate>
+
+  <Style TargetType="ContentControl" x:Key="{x:Static themes:ResourceKeys.SharedWidthContainerStyle}">
+    <Setter Property="Template" Value="{StaticResource SharedWidthContainerTemplate}" />
+    <Setter Property="Focusable" Value="False" />
+  </Style>
+
+  <Style TargetType="{x:Type visuals:SharedWidthHeaderedContentControl}">
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Focusable" Value="False" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type visuals:SharedWidthHeaderedContentControl}">
+          <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+            <DockPanel Margin="{TemplateBinding Padding}">
+              <ContentControl DockPanel.Dock="Left" Style="{DynamicResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}"
+                              Margin="{TemplateBinding HeaderPadding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                              Content="{TemplateBinding Header}" ContentStringFormat="{TemplateBinding HeaderStringFormat}"
+                              ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"/>
+              <Decorator DockPanel.Dock="Left" Width="10" />
+              <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}" ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
+            </DockPanel>
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- Data grid with check boxes for row selection: Style to be applied to the check box inside the row header template. -->
+  <Style TargetType="CheckBox" x:Key="{x:Static themes:ResourceKeys.DataGridRowCheckBoxStyle}">
+    <Setter Property="Focusable" Value="False" />
+    <Setter Property="DockPanel.Dock" Value="Left" />
+    <Setter Property="Margin" Value="2" />
+    <Setter Property="IsChecked"
+            Value="{Binding Path=IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGridRow}, Mode=TwoWay}" />
+    <Style.Triggers>
+      <DataTrigger Binding="{Binding Path=SelectionMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" Value="Single">
+        <Setter Property="Visibility" Value="Hidden" />
+      </DataTrigger>
+    </Style.Triggers>
+  </Style>
+
+  <!-- A control that shows validation errors in the tool tip. -->
+  <Style x:Key="{x:Static themes:ResourceKeys.ControlWithValidationErrorToolTipStyle}" TargetType="{x:Type Control}">
+    <Style.Triggers>
+      <Trigger Property="Validation.HasError" Value="True">
+        <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+      </Trigger>
     </Style.Triggers>
   </Style>
 
