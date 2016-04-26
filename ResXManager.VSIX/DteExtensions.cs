@@ -148,10 +148,13 @@
             try
             {
                 var textDocument = (EnvDTE.TextDocument)document?.Object("TextDocument");
+                if (textDocument == null)
+                    return false;
+
                 var text = value.Declaration + Environment.NewLine + value;
 
-                textDocument?.CreateEditPoint().ReplaceText(textDocument.EndPoint, text, 0);
-                document?.Save();
+                textDocument.CreateEditPoint().ReplaceText(textDocument.EndPoint, text, 0);
+                document.Save();
 
                 return true;
             }
