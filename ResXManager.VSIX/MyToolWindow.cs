@@ -56,38 +56,46 @@
         public MyToolWindow()
             : base(null)
         {
-            // Set the window title reading it from the resources.
-            Caption = Resources.ToolWindowTitle;
+            try
+            {
+                // Set the window title reading it from the resources.
+                Caption = Resources.ToolWindowTitle;
 
-            // Set the image that will appear on the tab of the window frame when docked with an other window.
-            // The resource ID correspond to the one defined in the resx file while the Index is the offset in the bitmap strip.
-            // Each image in the strip being 16x16.
-            BitmapResourceID = 301;
-            BitmapIndex = 1;
+                // Set the image that will appear on the tab of the window frame when docked with an other window.
+                // The resource ID correspond to the one defined in the resx file while the Index is the offset in the bitmap strip.
+                // Each image in the strip being 16x16.
+                BitmapResourceID = 301;
+                BitmapIndex = 1;
 
-            var path = Path.GetDirectoryName(GetType().Assembly.Location);
-            Contract.Assume(path != null);
+                var path = Path.GetDirectoryName(GetType().Assembly.Location);
+                Contract.Assume(path != null);
 
-            _compositionHost.AddCatalog(new DirectoryCatalog(path, "*.dll"));
-            _compositionHost.ComposeExportedValue((IVsServiceProvider)this);
-            _compositionHost.ComposeExportedValue((ISourceFilesProvider)this);
+                _compositionHost.AddCatalog(new DirectoryCatalog(path, "*.dll"));
+                _compositionHost.ComposeExportedValue((IVsServiceProvider) this);
+                _compositionHost.ComposeExportedValue((ISourceFilesProvider) this);
 
-            _trace = _compositionHost.GetExportedValue<ITracer>();
-            _performanceTracer = _compositionHost.GetExportedValue<PerformanceTracer>();
-            _configuration = _compositionHost.GetExportedValue<Configuration>();
+                _trace = _compositionHost.GetExportedValue<ITracer>();
+                _performanceTracer = _compositionHost.GetExportedValue<PerformanceTracer>();
+                _configuration = _compositionHost.GetExportedValue<Configuration>();
 
-            _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
-            _resourceManager.BeginEditing += ResourceManager_BeginEditing;
-            _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
+                _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
+                _resourceManager.BeginEditing += ResourceManager_BeginEditing;
+                _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
 
-            _codeReferenceTracker = _compositionHost.GetExportedValue<CodeReferenceTracker>();
+                _codeReferenceTracker = _compositionHost.GetExportedValue<CodeReferenceTracker>();
 
-            _view = _compositionHost.GetExportedValue<VsixShellView>();
-            _view.DataContext = _compositionHost.GetExportedValue<VsixShellViewModel>();
-            _view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
-            _view.Loaded += view_Loaded;
-            _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
-            _view.Track(UIElement.IsMouseOverProperty).Changed += view_IsMouseOverChanged;
+                _view = _compositionHost.GetExportedValue<VsixShellView>();
+                _view.DataContext = _compositionHost.GetExportedValue<VsixShellViewModel>();
+                _view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
+                _view.Loaded += view_Loaded;
+                _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
+                _view.Track(UIElement.IsMouseOverProperty).Changed += view_IsMouseOverChanged;
+            }
+            catch (Exception ex)
+            {
+                _trace.TraceError("MyToolWindow .ctor failed: " + ex);
+                MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
+            }
         }
 
         public ResourceManager ResourceManager
@@ -138,7 +146,7 @@
             }
             catch (Exception ex)
             {
-                _trace.TraceError(ex.ToString());
+                _trace.TraceError("MyToolWindow OnCreate failed: " + ex);
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
             }
         }

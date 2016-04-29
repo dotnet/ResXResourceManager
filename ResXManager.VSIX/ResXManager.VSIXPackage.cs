@@ -4,9 +4,11 @@
     using System.Collections.Generic;
     using System.ComponentModel.Design;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using System.Windows;
     using System.Windows.Threading;
 
     using Microsoft.VisualStudio;
@@ -110,7 +112,7 @@
             _projectItemsEvents = events.ProjectItemsEvents;
             _projectItemsEvents.ItemAdded += _ => OnDteEvent("Project item added");
             _projectItemsEvents.ItemRemoved += _ => OnDteEvent("Project item removed");
-            _projectItemsEvents.ItemRenamed += (_,__) => OnDteEvent("Project item renamed");
+            _projectItemsEvents.ItemRenamed += (_, __) => OnDteEvent("Project item renamed");
         }
 
         private void OnDteEvent(string name)
@@ -154,25 +156,33 @@
             }
         }
 
-        private MyToolWindow ShowToolWindow()
+        private bool ShowToolWindow()
         {
-            Contract.Ensures(Contract.Result<MyToolWindow>() != null);
+            try
+            {
+                var window = ToolWindow;
 
-            var window = ToolWindow;
+                var windowFrame = (IVsWindowFrame)window.Frame;
+                if (windowFrame == null)
+                    throw new NotSupportedException(Resources.CanNotCreateWindow);
 
-            var windowFrame = (IVsWindowFrame)window.Frame;
-            if (windowFrame == null)
-                throw new NotSupportedException(Resources.CanNotCreateWindow);
-
-            ErrorHandler.ThrowOnFailure(windowFrame.Show());
-
-            return window;
+                ErrorHandler.ThrowOnFailure(windowFrame.Show());
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _tracer.TraceError("MyToolWindow OnCreate failed: " + ex);
+                MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
+                return false;
+            }
         }
 
         private void ShowSelectedResourceFiles(object sender, EventArgs e)
         {
-            var toolWindow = ShowToolWindow();
-            var resourceManager = toolWindow.ResourceManager;
+            if (!ShowToolWindow())
+                return;
+
+            var resourceManager = ToolWindow.ResourceManager;
 
             var selectedResourceEntites = GetSelectedResourceEntites()?.Distinct().ToArray();
             if (selectedResourceEntites == null)

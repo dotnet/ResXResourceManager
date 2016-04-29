@@ -40,7 +40,7 @@ namespace tomenglertde.ResXManager.View.Tools
             setters.Add(new EventSetter(UIElement.PreviewKeyDownEvent, (KeyEventHandler)EditingElement_PreviewKeyDown));
             setters.Add(new Setter(TextBoxBase.AcceptsReturnProperty, true));
 
-            setters.Add(new Setter(SpellCheck.IsEnabledProperty, true));
+            setters.Add(new Setter(SpellChecker.IsEnabledProperty, true));
             setters.Add(new Setter(FrameworkElement.LanguageProperty, languageBinding));
 
             setters.Add(new Setter(FrameworkElement.FlowDirectionProperty, flowDirectionBinding));
