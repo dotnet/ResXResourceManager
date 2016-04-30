@@ -26,36 +26,48 @@ namespace tomenglertde.ResXManager.VSIX.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool MoveToResource_ValueShowWhitespace {
+        public bool MoveToResourceValueShowWhitespace {
             get {
-                return ((bool)(this["MoveToResource_ValueShowWhitespace"]));
+                return ((bool)(this["MoveToResourceValueShowWhitespace"]));
             }
             set {
-                this["MoveToResource_ValueShowWhitespace"] = value;
+                this["MoveToResourceValueShowWhitespace"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool MoveToResource_CommentShowWhitespace {
+        public bool MoveToResourceCommentShowWhitespace {
             get {
-                return ((bool)(this["MoveToResource_CommentShowWhitespace"]));
+                return ((bool)(this["MoveToResourceCommentShowWhitespace"]));
             }
             set {
-                this["MoveToResource_CommentShowWhitespace"] = value;
+                this["MoveToResourceCommentShowWhitespace"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool MoveToResource_OpenInResXManager {
+        public bool MoveToResourceOpenInResXManager {
             get {
-                return ((bool)(this["MoveToResource_OpenInResXManager"]));
+                return ((bool)(this["MoveToResourceOpenInResXManager"]));
             }
             set {
-                this["MoveToResource_OpenInResXManager"] = value;
+                this["MoveToResourceOpenInResXManager"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MoveToResourcePreferedReplacementPatterns {
+            get {
+                return ((string)(this["MoveToResourcePreferedReplacementPatterns"]));
+            }
+            set {
+                this["MoveToResourcePreferedReplacementPatterns"] = value;
             }
         }
     }

@@ -26,6 +26,7 @@
     internal class Refactorings : IRefactorings
     {
         private readonly ExportProvider _exportProvider;
+        private ResourceEntity _lastUsedEntity;
 
         [ImportingConstructor]
         public Refactorings(ExportProvider exportProvider)
@@ -70,7 +71,9 @@
             if (extension == null)
                 return null;
 
-            var configuration = _exportProvider.GetExportedValue<DteConfiguration>().MoveToResources.Items
+            var configurationItems = _exportProvider.GetExportedValue<DteConfiguration>().MoveToResources.Items;
+
+            var configuration = configurationItems
                 .FirstOrDefault(item => item.ParseExtensions().Contains(extension, StringComparer.OrdinalIgnoreCase));
 
             if (configuration == null)
@@ -97,9 +100,9 @@
                 .Where(entity => !entity.IsWinFormsDesignerResource)
                 .ToArray();
 
-            var viewModel = new MoveToResourceViewModel(patterns, entities, text)
+            var viewModel = new MoveToResourceViewModel(patterns, entities, text, extension)
             {
-                SelectedResourceEntity = GetPreferredResourceEntity(document, entities),
+                SelectedResourceEntity = GetPreferredResourceEntity(document, entities) ?? _lastUsedEntity
             };
 
             var confirmationDialog = new ConfirmationDialog(_exportProvider) { Content = viewModel };
@@ -112,7 +115,7 @@
 
                 if (!viewModel.ReuseExisiting)
                 {
-                    var entity = viewModel.SelectedResourceEntity;
+                    var entity = _lastUsedEntity = viewModel.SelectedResourceEntity;
 
                     entry = entity?.Add(viewModel.Key);
                     if (entry == null)
@@ -151,7 +154,11 @@
         {
             Contract.Requires(entity != null);
 
-            return ((DteProjectFile)entity.NeutralProjectFile)?.ProjectItems.Select(item => item.ContainingProject).Contains(project) ?? false;
+            var projectFile = (DteProjectFile)entity.NeutralProjectFile;
+
+            return projectFile?.ProjectItems
+                .Select(item => item.ContainingProject)
+                .Contains(project) ?? false;
         }
 
         private static Selection GetSelection(Document document)

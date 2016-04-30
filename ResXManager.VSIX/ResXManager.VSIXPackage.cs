@@ -259,7 +259,7 @@
             if (entry == null)
                 return;
 
-            if (!Properties.Settings.Default.MoveToResource_OpenInResXManager)
+            if (!Properties.Settings.Default.MoveToResourceOpenInResXManager)
                 return;
 
             var dispatcher = Dispatcher.CurrentDispatcher;

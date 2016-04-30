@@ -2,14 +2,17 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="tomenglertde.ResXManager.VSIX.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="MoveToResource_ValueShowWhitespace" Type="System.Boolean" Scope="User">
+    <Setting Name="MoveToResourceValueShowWhitespace" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="MoveToResource_CommentShowWhitespace" Type="System.Boolean" Scope="User">
+    <Setting Name="MoveToResourceCommentShowWhitespace" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="MoveToResource_OpenInResXManager" Type="System.Boolean" Scope="User">
+    <Setting Name="MoveToResourceOpenInResXManager" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="MoveToResourcePreferedReplacementPatterns" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

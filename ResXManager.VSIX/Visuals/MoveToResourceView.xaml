@@ -52,12 +52,12 @@
       </view:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
       <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.CodeHeader}">
-        <ComboBox ItemsSource="{Binding Replacements}" SelectedItem="{Binding Replacement}" />
+        <ComboBox ItemsSource="{Binding Replacements}" SelectedItem="{Binding Replacement}" SelectedIndex="{Binding SelectedReplacementIndex}" />
       </view:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
       <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.ValueHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
         <DockPanel>
-          <ToggleButton x:Name="ValueShowWhiteSpaces" Style="{StaticResource ToggleWhiteSpaceButtonStyle}" IsChecked="{Binding MoveToResource_ValueShowWhitespace, Source={x:Static properties:Settings.Default}}"/>
+          <ToggleButton x:Name="ValueShowWhiteSpaces" Style="{StaticResource ToggleWhiteSpaceButtonStyle}" IsChecked="{Binding MoveToResourceValueShowWhitespace, Source={x:Static properties:Settings.Default}}"/>
           <Decorator DockPanel.Dock="Right" Width="5"/>
           <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=ValueTextBox}" WhiteSpaceOpacity="0.4">
             <TextBox x:Name="ValueTextBox" Height="40" Text="{Binding Value}" AcceptsReturn="True" IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}" />
@@ -77,7 +77,7 @@
       <Decorator Height="10" />
       <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.CommentHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
         <DockPanel>
-          <ToggleButton x:Name="CommentShowWhiteSpaces" Style="{StaticResource ToggleWhiteSpaceButtonStyle}" IsChecked="{Binding MoveToResource_CommentShowWhitespace, Source={x:Static properties:Settings.Default}}"/>
+          <ToggleButton x:Name="CommentShowWhiteSpaces" Style="{StaticResource ToggleWhiteSpaceButtonStyle}" IsChecked="{Binding MoveToResourceCommentShowWhitespace, Source={x:Static properties:Settings.Default}}"/>
           <Decorator DockPanel.Dock="Right" Width="5"/>
           <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=CommentTextBox}" WhiteSpaceOpacity="0.4" WhiteSpaces="All">
             <TextBox x:Name="CommentTextBox" Height="40" Text="{Binding Comment}" AcceptsReturn="True" IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}" />
@@ -96,7 +96,7 @@
       </view:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
       <view:SharedWidthHeaderedContentControl>
-        <CheckBox Content="Edit new entry in ResX Resource Manager" IsChecked="{Binding MoveToResource_OpenInResXManager, Source={x:Static properties:Settings.Default}}"/>
+        <CheckBox Content="Edit new entry in ResX Resource Manager" IsChecked="{Binding MoveToResourceOpenInResXManager, Source={x:Static properties:Settings.Default}}"/>
       </view:SharedWidthHeaderedContentControl>
     </StackPanel>
   </StackPanel>

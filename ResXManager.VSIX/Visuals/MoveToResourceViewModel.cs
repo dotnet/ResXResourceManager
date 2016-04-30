@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.ComponentModel.Composition.Hosting;
     using System.ComponentModel.DataAnnotations;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -15,6 +14,7 @@
     using EnvDTE;
 
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.VSIX.Properties;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
@@ -25,6 +25,8 @@
         private readonly ICollection<ResourceTableEntry> _existingEntries;
         private readonly ICollection<ResourceEntity> _resourceEntities;
         private readonly ObservableCollection<string> _replacements = new ObservableCollection<string>();
+        private readonly string _extension;
+
         private ResourceEntity _selectedResourceEntity;
         private ResourceTableEntry _selectedResourceEntry;
         private string _key;
@@ -32,12 +34,15 @@
         private string _comment;
         private string _replacement;
         private bool _reuseExisiting;
+        private int _selectedReplacementIndex;
+        private bool _isUpdating;
 
-        public MoveToResourceViewModel(ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text)
+        public MoveToResourceViewModel(ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text, string extension)
         {
             Contract.Requires(patterns != null);
             Contract.Requires(resourceEntities != null);
             Contract.Requires(text != null);
+            Contract.Requires(extension != null);
 
             _patterns = patterns;
             _resourceEntities = resourceEntities;
@@ -49,6 +54,7 @@
             _reuseExisiting = _existingEntries.Any();
             _selectedResourceEntry = _existingEntries.FirstOrDefault();
             _value = text;
+            _extension = extension;
 
             if (!_reuseExisiting)
                 _key = CreateKey(text);
@@ -170,6 +176,21 @@
 
         public ICollection<ResourceTableEntry> ExistingEntries => _existingEntries;
 
+        public int SelectedReplacementIndex
+        {
+            get
+            {
+                return _selectedReplacementIndex;
+            }
+            set
+            {
+                if (SetProperty(ref _selectedReplacementIndex, value, nameof(SelectedReplacementIndex)) && !_isUpdating)
+                {
+                    Settings.Default.MoveToResourcePreferedReplacementPatternIndex[_extension] = value;
+                }
+            }
+        }
+
         protected override IEnumerable<string> GetDataErrors(string propertyName)
         {
             return GetKeyErrors(propertyName).Concat(base.GetDataErrors(propertyName));
@@ -231,10 +252,13 @@
 
         private void Update()
         {
+            _isUpdating = true;
+
             _replacements.Clear();
             _replacements.AddRange(_patterns.Select(EvaluatePattern));
 
-            Replacement = _replacements.FirstOrDefault();
+            SelectedReplacementIndex = Settings.Default.MoveToResourcePreferedReplacementPatternIndex[_extension];
+            Replacement = _replacements.Skip(SelectedReplacementIndex).FirstOrDefault() ?? _replacements.FirstOrDefault();
 
             if (ReuseExisiting)
             {
@@ -244,6 +268,8 @@
             }
 
             OnPropertyChanged(nameof(Key)); // to force new validation...
+
+            _isUpdating = false;
         }
 
         private string EvaluatePattern(string pattern)
@@ -300,6 +326,7 @@
             Contract.Invariant(_patterns != null);
             Contract.Invariant(_resourceEntities != null);
             Contract.Invariant(_replacements != null);
+            Contract.Invariant(_extension != null);
         }
     }
 }
