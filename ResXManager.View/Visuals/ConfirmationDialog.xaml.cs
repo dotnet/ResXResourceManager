@@ -3,6 +3,7 @@
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
 
@@ -17,6 +18,8 @@
         public ConfirmationDialog(ExportProvider exportProvider)
         {
             this.SetExportProvider(exportProvider);
+
+            Owner = Application.Current?.MainWindow;
 
             InitializeComponent();
 

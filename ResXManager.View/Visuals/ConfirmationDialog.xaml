@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
         xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
-        Title="Move To Resource" Width="600" SizeToContent="Height"
-        WindowStartupLocation="CenterScreen"
+        Width="600" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
         WindowStyle="ThreeDBorderWindow" ResizeMode="NoResize"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
   <Window.Template>
