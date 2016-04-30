@@ -59,7 +59,7 @@
 
             IParser parser = new GenericParser();
 
-            var s = parser.LocateString(selection);
+            var s = parser.LocateString(selection, false);
 
             return s != null;
         }
@@ -83,7 +83,7 @@
 
             IParser parser = new GenericParser();
 
-            var text = !selection.Begin.EqualTo(selection.End) ? selection.Text?.Trim('"') : parser.LocateString(selection);
+            var text = !selection.Begin.EqualTo(selection.End) ? selection.Text?.Trim('"') : parser.LocateString(selection, true);
             if (text == null)
                 return null;
 
@@ -209,13 +209,7 @@
                 }
             }
 
-            public string Text
-            {
-                get
-                {
-                    return _textDocument.Selection?.Text;
-                }
-            }
+            public string Text => _textDocument.Selection?.Text;
 
             public string Line
             {
@@ -241,10 +235,9 @@
             public void ReplaceWith(string replacement)
             {
                 var selection = _textDocument.Selection;
-                if (selection == null)
-                    return;
-
-                selection.Text = replacement;
+                // using "selection.Text = replacement" does not work here, since it will trigger auto-complete, 
+                // and this may add unwanted additional characters, resulting in bad code.
+                selection?.ReplaceText(selection.Text, replacement);
             }
 
             [ContractInvariantMethod]
@@ -258,12 +251,12 @@
 
         private interface IParser
         {
-            string LocateString(Selection selection);
+            string LocateString(Selection selection, bool moveSelection);
         }
 
         private class GenericParser : IParser
         {
-            public string LocateString(Selection selection)
+            public string LocateString(Selection selection, bool moveSelection)
             {
                 if (selection == null)
                     return null;
@@ -297,14 +290,15 @@
                     var length = secondQuote - firstQuote - 1;
                     Contract.Assume(startIndex + length <= line.Length);
 
-                    var value = line.Substring(startIndex, length);
+                    if (moveSelection)
+                    {
+                        var startColumn = firstQuote + 1;
+                        var endColumn = secondQuote + 2;
 
-                    var startColumn = firstQuote + 1;
-                    var endColumn = secondQuote + 2;
+                        selection.MoveTo(startColumn, endColumn);
+                    }
 
-                    selection.MoveTo(startColumn, endColumn);
-
-                    return value;
+                    return line.Substring(startIndex, length);
                 }
 
                 return null;
