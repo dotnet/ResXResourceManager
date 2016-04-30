@@ -351,7 +351,7 @@ namespace tomenglertde.ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Show whitespace and formatting symbols.
+        ///   Looks up a localized string similar to Show white space and formatting symbols.
         /// </summary>
         public static string ShowWhitespaceToolTip {
             get {
@@ -516,7 +516,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// </summary>
         ResourceLoadingError,
         /// <summary>
-        ///   Looks up a localized string similar to Show whitespace and formatting symbols.
+        ///   Looks up a localized string similar to Show white space and formatting symbols.
         /// </summary>
         ShowWhitespaceToolTip,
         /// <summary>

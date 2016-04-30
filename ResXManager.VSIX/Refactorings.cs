@@ -133,7 +133,7 @@
             return null;
         }
 
-        private ResourceEntity GetPreferredResourceEntity(Document document, IEnumerable<ResourceEntity> entities)
+        private static ResourceEntity GetPreferredResourceEntity(Document document, IEnumerable<ResourceEntity> entities)
         {
             Contract.Requires(document != null);
             Contract.Requires(entities != null);

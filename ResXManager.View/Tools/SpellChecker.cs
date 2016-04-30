@@ -14,7 +14,7 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
-    public static class SpellChecker
+    public static class Spellchecker
     {
         private static bool _exceptionTraced;
 
@@ -31,7 +31,7 @@
         }
 
         /// <summary>
-        /// Identifies the <see cref="P:tomenglertde.ResXManager.View.Tools.SpellChecker.IsEnabled"/> attached property
+        /// Identifies the <see cref="P:tomenglertde.ResXManager.View.Tools.Spellchecker.IsEnabled"/> attached property
         /// </summary>
         /// <AttachedPropertyComments>
         /// <summary>
@@ -39,7 +39,7 @@
         /// </summary>
         /// </AttachedPropertyComments>
         public static readonly DependencyProperty IsEnabledProperty =
-            DependencyProperty.RegisterAttached("IsEnabled", typeof(bool), typeof(SpellChecker), new FrameworkPropertyMetadata(false, IsEnabled_Changed));
+            DependencyProperty.RegisterAttached("IsEnabled", typeof(bool), typeof(Spellchecker), new FrameworkPropertyMetadata(false, IsEnabled_Changed));
 
         private static void IsEnabled_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
