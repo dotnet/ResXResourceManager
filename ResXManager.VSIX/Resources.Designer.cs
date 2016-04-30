@@ -251,6 +251,16 @@ namespace tomenglertde.ResXManager.VSIX {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Edit new entry in ResX Resource Manager.
+        /// </summary>
+        public static string MoveToResourceEditNewEntry {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("MoveToResourceEditNewEntry", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Open in ResX Manager.
         /// </summary>
         public static string OpenInResXManager {
@@ -317,6 +327,16 @@ namespace tomenglertde.ResXManager.VSIX {
             get {
                 object obj = ResourceManager.GetObject("Resources_Designer_tt", resourceCulture);
                 return ((System.Byte[])(obj));
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Show whitespace and formatting symbols.
+        /// </summary>
+        public static string ShowWhitespaceToolTip {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ShowWhitespaceToolTip", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -444,6 +464,10 @@ namespace tomenglertde.ResXManager.VSIX {
         /// </summary>
         MoveToResource,
         /// <summary>
+        ///   Looks up a localized string similar to Edit new entry in ResX Resource Manager.
+        /// </summary>
+        MoveToResourceEditNewEntry,
+        /// <summary>
         ///   Looks up a localized string similar to Open in ResX Manager.
         /// </summary>
         OpenInResXManager,
@@ -463,6 +487,10 @@ namespace tomenglertde.ResXManager.VSIX {
         ///   Looks up a localized string similar to Error loading resource files: {0}. &amp;#13;&amp;#....
         /// </summary>
         ResourceLoadingError,
+        /// <summary>
+        ///   Looks up a localized string similar to Show whitespace and formatting symbols.
+        /// </summary>
+        ShowWhitespaceToolTip,
         /// <summary>
         ///   Looks up a localized string similar to ResX Resource Manager.
         /// </summary>

@@ -184,4 +184,10 @@ Mehr Details finden sich im Ausgabefenster.</value>
   <data name="CodeGenerator_WinForms" xml:space="preserve">
     <value>WinForms Designer</value>
   </data>
+  <data name="ShowWhitespaceToolTip" xml:space="preserve">
+    <value>Leerzeichen und Formatierung anzeigen</value>
+  </data>
+  <data name="MoveToResourceEditNewEntry" xml:space="preserve">
+    <value>Neuen Eintrag im ResX Resource Manager anzeigen</value>
+  </data>
 </root>

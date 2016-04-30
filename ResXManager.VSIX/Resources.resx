@@ -215,4 +215,10 @@ See output window for details.</value>
   <data name="CodeGenerator_WinForms" xml:space="preserve">
     <value>WinForms Designer</value>
   </data>
+  <data name="ShowWhitespaceToolTip" xml:space="preserve">
+    <value>Show whitespace and formatting symbols</value>
+  </data>
+  <data name="MoveToResourceEditNewEntry" xml:space="preserve">
+    <value>Edit new entry in ResX Resource Manager</value>
+  </data>
 </root>

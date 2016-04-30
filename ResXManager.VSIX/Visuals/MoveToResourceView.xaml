@@ -16,7 +16,7 @@
       <Setter Property="Content" Value="¶" />
       <Setter Property="VerticalAlignment" Value="Top"/>
       <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
-      <Setter Property="ToolTip" Value="Show whitespace and formatting symbols"/>
+      <Setter Property="ToolTip" Value="{x:Static local:Resources.ShowWhitespaceToolTip}"/>
     </Style>
   </UserControl.Resources>
   <StackPanel Margin="10">
@@ -96,7 +96,7 @@
       </view:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
       <view:SharedWidthHeaderedContentControl>
-        <CheckBox Content="Edit new entry in ResX Resource Manager" IsChecked="{Binding MoveToResourceOpenInResXManager, Source={x:Static properties:Settings.Default}}"/>
+        <CheckBox Content="{x:Static local:Resources.MoveToResourceEditNewEntry}" IsChecked="{Binding MoveToResourceOpenInResXManager, Source={x:Static properties:Settings.Default}}"/>
       </view:SharedWidthHeaderedContentControl>
     </StackPanel>
   </StackPanel>

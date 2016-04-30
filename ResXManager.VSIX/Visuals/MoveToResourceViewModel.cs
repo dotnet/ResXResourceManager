@@ -285,6 +285,8 @@
 
         private static string CreateKey(string text)
         {
+            Contract.Requires(text != null);
+
             var keyBuilder = new StringBuilder();
             var makeUpper = true;
 
