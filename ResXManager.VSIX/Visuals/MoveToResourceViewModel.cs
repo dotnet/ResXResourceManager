@@ -7,6 +7,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -258,7 +259,23 @@
 
         private static string CreateKey(string text)
         {
-            var key = text?.Aggregate(new StringBuilder(), (builder, c) => builder.Append(IsCharValidForSymbol(c) ? c : '_'))?.ToString() ?? "_";
+            var keyBuilder = new StringBuilder();
+            var makeUpper = true;
+
+            foreach (var c in text)
+            {
+                if (!IsCharValidForSymbol(c))
+                {
+                    makeUpper = true;
+                }
+                else
+                {
+                    keyBuilder.Append(makeUpper ? char.ToUpper(c, CultureInfo.CurrentCulture) : c);
+                    makeUpper = false;
+                }
+            }
+
+            var key = keyBuilder.ToString();
 
             if (!IsCharValidForSymbolStart(key.FirstOrDefault()))
                 key = "_" + key;
