@@ -10,6 +10,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Windows.Threading;
 
     using EnvDTE;
 
@@ -58,6 +59,8 @@
 
             if (!_reuseExisiting)
                 _key = CreateKey(text);
+
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, () => OnPropertyChanged(nameof(Key)));
         }
 
         public ICollection<ResourceEntity> ResourceEntities => _resourceEntities;
@@ -93,6 +96,7 @@
             }
         }
 
+        [PropertyDependency(nameof(ReuseExisiting), nameof(SelectedResourceEntity))]
         [Required(AllowEmptyStrings = false)]
         public string Key
         {
@@ -204,20 +208,21 @@
             if (!string.Equals(propertyName, nameof(Key)))
                 yield break;
 
-            if (string.IsNullOrEmpty(Key))
+            var key = Key;
+
+            if (string.IsNullOrEmpty(key))
                 yield break;
 
-            if (!Key.All(c => (c == '_') || char.IsLetterOrDigit(c)) || char.IsDigit(Key.FirstOrDefault()))
-                yield return "The key contains invalid characters.";
+            if (!key.All(c => (c == '_') || char.IsLetterOrDigit(c)) || char.IsDigit(key.FirstOrDefault()))
+                yield return Resources.KeyContainsInvalidCharacters;
 
-            var selectedResourceEntity = _selectedResourceEntity;
-            if (selectedResourceEntity == null)
-                yield break;
+            if (KeyExists(key))
+                yield return Resources.DuplicateKey;
+        }
 
-            if (!selectedResourceEntity.Entries.Any(entry => string.Equals(entry.Key, Key, StringComparison.OrdinalIgnoreCase)))
-                yield break;
-
-            yield return "Duplicate key";
+        private bool KeyExists(string value)
+        {
+            return _selectedResourceEntity?.Entries.Any(entry => string.Equals(entry.Key, value, StringComparison.OrdinalIgnoreCase)) ?? false;
         }
 
         private static string GetLocalNamespace(ProjectItem resxItem)
@@ -231,7 +236,7 @@
                 var resxFolder = Path.GetDirectoryName(resxPath);
                 var project = resxItem.ContainingProject;
                 var projectFolder = Path.GetDirectoryName(project?.FullName);
-                var rootNamespace = project?.Properties?.Item("RootNamespace")?.Value?.ToString();
+                var rootNamespace = project?.Properties?.Item(@"RootNamespace")?.Value?.ToString();
 
                 if ((resxFolder == null) || (projectFolder == null))
                     return string.Empty;
@@ -267,7 +272,7 @@
                 Comment = _selectedResourceEntry?.Comment;
             }
 
-            OnPropertyChanged(nameof(Key)); // to force new validation...
+            Dispatcher.BeginInvoke(() => OnPropertyChanged(nameof(Key))); // to force new validation...
 
             _isUpdating = false;
         }
@@ -280,7 +285,7 @@
 
             var localNamespace = GetLocalNamespace(((DteProjectFile)entity?.NeutralProjectFile)?.DefaultProjectItem);
 
-            return pattern.Replace("$File", SelectedResourceEntity?.BaseName).Replace("$Key", Key).Replace("$Namespace", localNamespace);
+            return pattern.Replace(@"$File", SelectedResourceEntity?.BaseName).Replace(@"$Key", Key).Replace(@"$Namespace", localNamespace);
         }
 
         private static string CreateKey(string text)
@@ -306,7 +311,7 @@
             var key = keyBuilder.ToString();
 
             if (!IsCharValidForSymbolStart(key.FirstOrDefault()))
-                key = "_" + key;
+                key = @"_" + key;
 
             return key;
         }

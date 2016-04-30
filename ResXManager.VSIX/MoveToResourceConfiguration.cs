@@ -99,7 +99,7 @@
         private ObservableCollection<MoveToResourceConfigurationItem> _items;
         private ObservablePropertyChangeTracker<MoveToResourceConfigurationItem> _changeTracker;
 
-        [DataMember(Name = "Items")]
+        [DataMember(Name = @"Items")]
         public ObservableCollection<MoveToResourceConfigurationItem> Items
         {
             get
@@ -132,11 +132,11 @@
 
                 var value = new MoveToResourceConfiguration();
 
-                value.Add(".cs,.vb", "$Namespace.$File.$Key|$File.$Key|StringResourceKey.$Key|$Namespace.StringResourceKey.$Key");
-                value.Add(".cshtml,.vbhtml", "@$Namespace.$File.$Key|@$File.$Key|@StringResourceKey.$Key|@$Namespace.StringResourceKey.$Key");
-                value.Add(".cpp,.c,.hxx,.h", @"$File::$Key");
-                value.Add(".aspx,.ascx", @"<%$ Resources:$File,$Key %>");
-                value.Add(".xaml", "\"{x:Static properties:$File.$Key}\"");
+                value.Add(@".cs,.vb", @"$Namespace.$File.$Key|$File.$Key|StringResourceKey.$Key|$Namespace.StringResourceKey.$Key");
+                value.Add(@".cshtml,.vbhtml", @"@$Namespace.$File.$Key|@$File.$Key|@StringResourceKey.$Key|@$Namespace.StringResourceKey.$Key");
+                value.Add(@".cpp,.c,.hxx,.h", @"$File::$Key");
+                value.Add(@".aspx,.ascx", @"<%$ Resources:$File,$Key %>");
+                value.Add(@".xaml", @"""{ x:Static properties:$File.$Key}""");
 
                 return value;
             }

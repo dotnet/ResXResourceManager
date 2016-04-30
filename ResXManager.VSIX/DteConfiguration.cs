@@ -69,7 +69,7 @@
         private bool TryGetValue<T>(string key, out T value)
         {
             value = default(T);
-            
+
             return TryGetValue(_solution.Globals, key, ref value);
         }
 
@@ -112,7 +112,7 @@
 
         private static string GetKey(string propertyName)
         {
-            return "RESX_" + propertyName;
+            return @"RESX_" + propertyName;
         }
 
         [ContractInvariantMethod]

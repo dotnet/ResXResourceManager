@@ -195,7 +195,7 @@ See output window for details.</value>
     <value>Text template</value>
   </data>
   <data name="MoveToResource" xml:space="preserve">
-    <value>Move to resource</value>
+    <value>Move to Resource</value>
   </data>
   <data name="ResourceHeader" xml:space="preserve">
     <value>Resource:</value>
@@ -220,5 +220,11 @@ See output window for details.</value>
   </data>
   <data name="MoveToResourceEditNewEntry" xml:space="preserve">
     <value>Edit new entry in ResX Resource Manager</value>
+  </data>
+  <data name="KeyContainsInvalidCharacters" xml:space="preserve">
+    <value>The key contains invalid characters.</value>
+  </data>
+  <data name="DuplicateKey" xml:space="preserve">
+    <value>Duplicate key</value>
   </data>
 </root>

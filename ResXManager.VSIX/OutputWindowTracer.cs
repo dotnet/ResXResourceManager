@@ -47,12 +47,12 @@
 
         public void TraceError(string value)
         {
-            WriteLine(string.Concat(Resources.Error, " ", value));
+            WriteLine(string.Concat(Resources.Error, @" ", value));
         }
 
         public void TraceWarning(string value)
         {
-            WriteLine(string.Concat(Resources.Warning, " ", value));
+            WriteLine(string.Concat(Resources.Warning, @" ", value));
         }
 
         public void WriteLine(string value)

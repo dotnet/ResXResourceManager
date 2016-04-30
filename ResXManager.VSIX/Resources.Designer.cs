@@ -201,6 +201,16 @@ namespace tomenglertde.ResXManager.VSIX {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Duplicate key.
+        /// </summary>
+        public static string DuplicateKey {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("DuplicateKey", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Error:.
         /// </summary>
         public static string Error {
@@ -231,6 +241,16 @@ namespace tomenglertde.ResXManager.VSIX {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to The key contains invalid characters..
+        /// </summary>
+        public static string KeyContainsInvalidCharacters {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("KeyContainsInvalidCharacters", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Key:.
         /// </summary>
         public static string KeyHeader {
@@ -241,7 +261,7 @@ namespace tomenglertde.ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Move to resource.
+        ///   Looks up a localized string similar to Move to Resource.
         /// </summary>
         public static string MoveToResource {
             get {
@@ -444,6 +464,10 @@ namespace tomenglertde.ResXManager.VSIX {
         /// </summary>
         CommentHeader,
         /// <summary>
+        ///   Looks up a localized string similar to Duplicate key.
+        /// </summary>
+        DuplicateKey,
+        /// <summary>
         ///   Looks up a localized string similar to Error:.
         /// </summary>
         Error,
@@ -456,11 +480,15 @@ namespace tomenglertde.ResXManager.VSIX {
         /// </summary>
         IntroMessage,
         /// <summary>
+        ///   Looks up a localized string similar to The key contains invalid characters..
+        /// </summary>
+        KeyContainsInvalidCharacters,
+        /// <summary>
         ///   Looks up a localized string similar to Key:.
         /// </summary>
         KeyHeader,
         /// <summary>
-        ///   Looks up a localized string similar to Move to resource.
+        ///   Looks up a localized string similar to Move to Resource.
         /// </summary>
         MoveToResource,
         /// <summary>

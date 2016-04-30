@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.Design;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -115,7 +116,7 @@
             _projectItemsEvents.ItemRenamed += (_, __) => OnDteEvent("Project item renamed");
         }
 
-        private void OnDteEvent(string name)
+        private void OnDteEvent([Localizable(false)] string name)
         {
             _tracer?.WriteLine("DTE event: {0}", name);
             _deferedReloadThrottle.Tick();
@@ -289,14 +290,14 @@
 
             using (_performanceTracer?.Start("Can move to resource"))
             {
-                menuCommand.Text = "Move to Resource";
+                menuCommand.Text = Resources.MoveToResource;
                 menuCommand.Visible = _refactorings?.CanMoveToResource(Dte.ActiveDocument) ?? false;
             }
         }
 
         private void DocumentEvents_DocumentSaved(EnvDTE.Document document)
         {
-            _tracer?.WriteLine("DTE event: {0}", "Document saved");
+            _tracer?.WriteLine("DTE event: Document saved");
 
             if (!AffectsResourceFile(document))
                 return;

@@ -190,4 +190,10 @@ Mehr Details finden sich im Ausgabefenster.</value>
   <data name="MoveToResourceEditNewEntry" xml:space="preserve">
     <value>Neuen Eintrag im ResX Resource Manager anzeigen</value>
   </data>
+  <data name="DuplicateKey" xml:space="preserve">
+    <value>Doppelter Schlüssel</value>
+  </data>
+  <data name="KeyContainsInvalidCharacters" xml:space="preserve">
+    <value>Der Schlüssel enthält ungültige Zeichen.</value>
+  </data>
 </root>

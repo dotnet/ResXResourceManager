@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.Infrastructure
 {
     using System;
+    using System.ComponentModel;
     using System.ComponentModel.Composition;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -21,7 +22,7 @@
             _tracer = tracer;
         }
 
-        public IDisposable Start(string message)
+        public IDisposable Start([Localizable(false)] string message)
         {
             Contract.Requires(message != null);
             Contract.Ensures(Contract.Result<IDisposable>() != null);

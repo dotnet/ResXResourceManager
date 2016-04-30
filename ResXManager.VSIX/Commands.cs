@@ -10,31 +10,31 @@
     [Export]
     [VisualCompositionExport(RegionId.ProjectListContextMenu)]
     [LocalizedDisplayName(StringResourceKey.CodeGenerator_CommandGroup)]
-    [Text(SubRegionIdKey, "CodeGen")]
+    [Text(SubRegionIdKey, @"CodeGen")]
     public class CodeGeneratorGroupCommand : CommandSourceFactory
     {
     }
 
     [Export]
-    [VisualCompositionExport("CodeGen")]
+    [VisualCompositionExport(@"CodeGen")]
     [LocalizedDisplayName(StringResourceKey.CodeGenerator_CommandInternal)]
-    [Text(IsCheckableKey, "True")]
+    [Text(IsCheckableKey, @"True")]
     public class ResXFileCodeGeneratorCommand : CommandSourceFactory
     {
     }
 
     [Export]
-    [VisualCompositionExport("CodeGen")]
+    [VisualCompositionExport(@"CodeGen")]
     [LocalizedDisplayName(StringResourceKey.CodeGenerator_CommandPublic)]
-    [Text(IsCheckableKey, "True")]
+    [Text(IsCheckableKey, @"True")]
     public class PublicResXFileCodeGeneratorCommand : CommandSourceFactory
     {
     }
 
     [Export]
-    [VisualCompositionExport("CodeGen")]
+    [VisualCompositionExport(@"CodeGen")]
     [LocalizedDisplayName(StringResourceKey.CodeGenerator_CommandTextTemplate)]
-    [Text(IsCheckableKey, "True")]
+    [Text(IsCheckableKey, @"True")]
     public class TextTemplateCodeGeneratorCommand : CommandSourceFactory
     {
     }

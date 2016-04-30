@@ -105,7 +105,7 @@
                 SelectedResourceEntity = GetPreferredResourceEntity(document, entities) ?? _lastUsedEntity
             };
 
-            var confirmationDialog = new ConfirmationDialog(_exportProvider) { Content = viewModel };
+            var confirmationDialog = new ConfirmationDialog(_exportProvider) { Content = viewModel, Title = Resources.MoveToResource };
 
             var confirmed = confirmationDialog.ShowDialog().GetValueOrDefault();
 
@@ -165,7 +165,7 @@
         {
             Contract.Requires(document != null);
 
-            var textDocument = (TextDocument)document.Object("TextDocument");
+            var textDocument = (TextDocument)document.Object(@"TextDocument");
 
             var topPoint = textDocument?.Selection?.TopPoint;
             if (topPoint == null)
@@ -276,7 +276,7 @@
 
                 while (secondQuote < line.Length)
                 {
-                    var firstQuote = line.IndexOf("\"", secondQuote + 1, StringComparison.Ordinal);
+                    var firstQuote = line.IndexOf(@"""", secondQuote + 1, StringComparison.Ordinal);
                     if (firstQuote == -1)
                         return null;
 
@@ -286,7 +286,7 @@
                     if (column < firstQuote)
                         return null;
 
-                    secondQuote = line.IndexOf("\"", firstQuote + 1, StringComparison.Ordinal);
+                    secondQuote = line.IndexOf(@"""", firstQuote + 1, StringComparison.Ordinal);
                     if (secondQuote == -1)
                         return null;
 

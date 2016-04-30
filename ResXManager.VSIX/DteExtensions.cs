@@ -81,7 +81,7 @@
                 {
                     new VSITEMSELECTION
                     {
-                        pHier = Marshal.GetObjectForIUnknown(hierarchyPtr) as IVsHierarchy, 
+                        pHier = Marshal.GetObjectForIUnknown(hierarchyPtr) as IVsHierarchy,
                         itemid = itemId
                     }
                 };
@@ -123,7 +123,7 @@
         {
             try
             {
-                var textDocument = (EnvDTE.TextDocument)document?.Object("TextDocument");
+                var textDocument = (EnvDTE.TextDocument)document?.Object(@"TextDocument");
                 var text = textDocument?.CreateEditPoint().GetText(textDocument.EndPoint);
 
                 return text == null ? null : XDocument.Parse(text);
@@ -147,7 +147,7 @@
         {
             try
             {
-                var textDocument = (EnvDTE.TextDocument)document?.Object("TextDocument");
+                var textDocument = (EnvDTE.TextDocument)document?.Object(@"TextDocument");
                 if (textDocument == null)
                     return false;
 
@@ -246,14 +246,14 @@
         {
             Contract.Requires(projectItem != null);
 
-            SetProperty(projectItem, "CustomTool", value);
+            SetProperty(projectItem, @"CustomTool", value);
         }
 
         public static string GetCustomTool(this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
 
-            return GetProperty(projectItem, "CustomTool") as string;
+            return GetProperty(projectItem, @"CustomTool") as string;
         }
 
         public static EnvDTE.ProjectItem AddFromFile(this EnvDTE.ProjectItem projectItem, string fileName)

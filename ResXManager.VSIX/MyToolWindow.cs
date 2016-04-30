@@ -70,9 +70,9 @@
                 var path = Path.GetDirectoryName(GetType().Assembly.Location);
                 Contract.Assume(path != null);
 
-                _compositionHost.AddCatalog(new DirectoryCatalog(path, "*.dll"));
-                _compositionHost.ComposeExportedValue((IVsServiceProvider) this);
-                _compositionHost.ComposeExportedValue((ISourceFilesProvider) this);
+                _compositionHost.AddCatalog(new DirectoryCatalog(path, @"*.dll"));
+                _compositionHost.ComposeExportedValue((IVsServiceProvider)this);
+                _compositionHost.ComposeExportedValue((ISourceFilesProvider)this);
 
                 _trace = _compositionHost.GetExportedValue<ITracer>();
                 _performanceTracer = _compositionHost.GetExportedValue<PerformanceTracer>();
@@ -207,7 +207,7 @@
                     return;
 
                 url = source.Tag as string;
-                if (string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrEmpty(url) || !url.StartsWith(@"http", StringComparison.OrdinalIgnoreCase))
                     return;
             }
             else

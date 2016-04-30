@@ -159,9 +159,9 @@
                 var projectItems = projectItem.Collection;
 
                 var parent = projectItems?.Parent as EnvDTE.ProjectItem;
-                var subType = parent?.GetProperty("SubType") as string;
+                var subType = parent?.GetProperty(@"SubType") as string;
 
-                return (subType == "Form") || (subType == "UserControl");
+                return (subType == @"Form") || (subType == @"UserControl");
             }
         }
 
@@ -193,7 +193,7 @@
 
             var name = item.Name;
 
-            return (name != null) && name.EndsWith(".tt", StringComparison.OrdinalIgnoreCase);
+            return (name != null) && name.EndsWith(@".tt", StringComparison.OrdinalIgnoreCase);
         }
 
         public void SetCodeGenerator(CodeGenerator value)
@@ -249,7 +249,7 @@
             if (item == null)
                 return;
 
-            item.SetProperty("BuildAction", 0);
+            item.SetProperty(@"BuildAction", 0);
 
             Dispatcher.BeginInvoke(() => item.RunCustomTool());
         }
