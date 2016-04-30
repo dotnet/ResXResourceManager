@@ -259,6 +259,9 @@
             if (entry == null)
                 return;
 
+            if (!Properties.Settings.Default.MoveToResource_OpenInResXManager)
+                return;
+
             var dispatcher = Dispatcher.CurrentDispatcher;
 
             dispatcher.BeginInvoke(DispatcherPriority.Background, () =>

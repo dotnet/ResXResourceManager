@@ -46,5 +46,17 @@ namespace tomenglertde.ResXManager.VSIX.Properties {
                 this["MoveToResource_CommentShowWhitespace"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MoveToResource_OpenInResXManager {
+            get {
+                return ((bool)(this["MoveToResource_OpenInResXManager"]));
+            }
+            set {
+                this["MoveToResource_OpenInResXManager"] = value;
+            }
+        }
     }
 }

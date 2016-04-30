@@ -94,6 +94,10 @@
           </toms:TextBoxVisibleWhiteSpaceDecorator>
         </DockPanel>
       </view:SharedWidthHeaderedContentControl>
+      <Decorator Height="10" />
+      <view:SharedWidthHeaderedContentControl>
+        <CheckBox Content="Edit new entry in ResX Resource Manager" IsChecked="{Binding MoveToResource_OpenInResXManager, Source={x:Static properties:Settings.Default}}"/>
+      </view:SharedWidthHeaderedContentControl>
     </StackPanel>
   </StackPanel>
 </UserControl>
