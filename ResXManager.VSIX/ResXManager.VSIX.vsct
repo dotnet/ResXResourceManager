@@ -98,8 +98,8 @@
         <Parent guid="guidResXManager_VSIXCmdSet" id="cmdidMyCodeContextMenuGroup"></Parent>
         <Icon guid="guidImages" id="bmpPic1" />
         <CommandFlag>TextChanges</CommandFlag>
-        <!--<CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>-->
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>MoveToResource</CommandName>
           <ButtonText>Move to resource...</ButtonText>
