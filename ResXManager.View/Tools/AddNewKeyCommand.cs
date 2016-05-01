@@ -31,12 +31,15 @@
 
         private bool CanExecute()
         {
-            return _resourceManager.SelectedEntities.Count == 1;
+            if (_resourceManager.SelectedEntities.Count() != 1)
+                return false;
+
+            return _resourceManager.SelectedEntities.Single()?.IsWinFormsDesignerResource != true;
         }
 
         private void Execute()
         {
-            if (_resourceManager.SelectedEntities.Count != 1)
+            if (_resourceManager.SelectedEntities.Count() != 1)
                 return;
 
             var resourceFile = _resourceManager.SelectedEntities.Single();

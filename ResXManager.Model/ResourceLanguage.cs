@@ -24,7 +24,12 @@
     public class ResourceLanguage : IEquatable<ResourceLanguage>
     {
         private const string Quote = "\"";
-        private const string DataElementTemplate = "<data name=\"{0}\" xml:space=\"preserve\"/>";
+        private const string WinFormsMemberNamePrefix = @">>";
+
+        private static readonly XName _spaceAttributeName = XNamespace.Xml.GetName(@"space");
+        private static readonly XName _typeAttributeName = XNamespace.None.GetName(@"type");
+        private static readonly XName _mimetypeAttributeName = XNamespace.None.GetName(@"mimetype");
+        private static readonly XName _nameAttributeName = XNamespace.None.GetName(@"name");
 
         private readonly XDocument _document;
         private readonly XElement _documentRoot;
@@ -32,28 +37,34 @@
         private readonly IDictionary<string, Node> _nodes;
         private readonly ResourceManager _resourceManager;
         private readonly CultureKey _cultureKey;
+        
+        private readonly XName _dataNodeName;
+        private readonly XName _valueNodeName;
+        private readonly XName _commentNodeName;
+        private readonly ResourceEntity _container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceLanguage" /> class.
         /// </summary>
-        /// <param name="resourceManager">The resource manager.</param>
+        /// <param name="container">The containing resource entity.</param>
         /// <param name="cultureKey">The culture key.</param>
         /// <param name="file">The .resx file having all the localization.</param>
         /// <exception cref="System.InvalidOperationException">
         /// </exception>
-        internal ResourceLanguage(ResourceManager resourceManager, CultureKey cultureKey, ProjectFile file)
+        internal ResourceLanguage(ResourceEntity container, CultureKey cultureKey, ProjectFile file)
         {
-            Contract.Requires(resourceManager != null);
+            _container = container;
+            Contract.Requires(container != null);
             Contract.Requires(cultureKey != null);
             Contract.Requires(file != null);
 
-            _resourceManager = resourceManager;
+            _resourceManager = container.Container;
             _cultureKey = cultureKey;
             _file = file;
 
             try
             {
-                _document = XDocument.Parse(file.Content);
+                _document = file.Load();
                 _documentRoot = _document.Root;
             }
             catch (XmlException ex)
@@ -64,12 +75,18 @@
             if (_documentRoot == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileError, file.FilePath));
 
-            var data = _documentRoot.Elements(@"data");
+            var defaultNamespace = _documentRoot.GetDefaultNamespace();
+
+            _dataNodeName = defaultNamespace.GetName(@"data");
+            _valueNodeName = defaultNamespace.GetName(@"value");
+            _commentNodeName = defaultNamespace.GetName(@"comment");
+
+            var data = _documentRoot.Elements(_dataNodeName);
 
             var elements = data
                 .Where(IsStringType)
                 .Select(item => new Node(this, item))
-                .Where(item => !item.Key.StartsWith(@">>", StringComparison.OrdinalIgnoreCase))
+                .Where(item => !item.Key.StartsWith(WinFormsMemberNamePrefix, StringComparison.OrdinalIgnoreCase))
                 .ToArray();
 
             if (_resourceManager.Configuration.DuplicateKeyHandling == DuplicateKeyHandling.Rename)
@@ -87,9 +104,6 @@
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.DuplicateKeyError, file.FilePath, duplicateKeys), ex);
             }
         }
-
-        public event EventHandler<CancelEventArgs> Changing;
-        public event EventHandler Changed;
 
         /// <summary>
         /// Gets the culture of this language.
@@ -153,11 +167,7 @@
             }
         }
 
-        public bool IsNeutralLanguage
-        {
-            get;
-            internal set;
-        }
+        public bool IsNeutralLanguage => Container.Languages.FirstOrDefault() == this;
 
         public CultureKey CultureKey
         {
@@ -169,18 +179,28 @@
             }
         }
 
+        public ResourceEntity Container
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ResourceEntity>() != null);
+
+                return _container;
+            }
+        }
+
         private static bool IsStringType(XElement entry)
         {
             Contract.Requires(entry != null);
 
-            var typeAttribute = entry.Attribute(@"type");
+            var typeAttribute = entry.Attribute(_typeAttributeName);
 
             if (typeAttribute != null)
             {
                 return string.IsNullOrEmpty(typeAttribute.Value) || typeAttribute.Value.StartsWith(typeof(string).Name, StringComparison.OrdinalIgnoreCase);
             }
 
-            var mimeTypeAttribute = entry.Attribute(@"mimetype");
+            var mimeTypeAttribute = entry.Attribute(_mimetypeAttributeName);
 
             return mimeTypeAttribute == null;
         }
@@ -221,22 +241,12 @@
 
         private void OnChanged()
         {
-            var handler = Changed;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            Container.Container.LanguageChanged(this);
         }
 
-        private bool OnChanging()
+        internal bool CanEdit()
         {
-            var handler = Changing;
-            if (handler == null)
-                return true;
-
-            var eventArgs = new CancelEventArgs();
-            handler(this, eventArgs);
-            return !eventArgs.Cancel;
+            return Container.CanEdit(Culture);
         }
 
         /// <summary>
@@ -264,16 +274,14 @@
                 SortNodes(configuration.ResXSortingComparison);
             }
 
-            const string declaration = @"<?xml version=""1.0"" encoding=""utf-8""?>";
-
-            _file.Content = declaration + Environment.NewLine + _document;
+            _file.Save(_document);
 
             HasChanges = false;
         }
 
         private void SortNodes(StringComparison stringComparison)
         {
-            var nodes = _documentRoot.Elements(@"data").ToArray();
+            var nodes = _documentRoot.Elements(_dataNodeName).ToArray();
 
             foreach (var item in nodes)
             {
@@ -283,7 +291,7 @@
 
             var comparer = new DelegateComparer<string>((left, right) => string.Compare(left, right, stringComparison));
 
-            foreach (var item in nodes.OrderBy(node => node.TryGetAttribute("name").TrimStart('>'), comparer))
+            foreach (var item in nodes.OrderBy(node => node.TryGetAttribute(_nameAttributeName).TrimStart('>'), comparer))
             {
                 _documentRoot.Add(item);
             }
@@ -316,7 +324,7 @@
             Contract.Requires(key != null);
             Contract.Requires(updateCallback != null);
 
-            if (!OnChanging())
+            if (!CanEdit())
                 return false;
 
             try
@@ -357,10 +365,10 @@
             Contract.Requires(key != null);
 
             Node node;
-            var content = new XElement(@"value");
+            var content = new XElement(_valueNodeName);
             content.Add(new XText(string.Empty));
-            // create from a string template to be able to add the xml:space="preserve"
-            var entry = XElement.Parse(string.Format(CultureInfo.InvariantCulture, DataElementTemplate, key));
+
+            var entry = new XElement(_dataNodeName, new XAttribute(_nameAttributeName, key), new XAttribute(_spaceAttributeName, @"preserve"));
             entry.Add(content);
 
             _documentRoot.Add(entry);
@@ -375,7 +383,7 @@
 
             Node node;
 
-            if (!OnChanging())
+            if (!CanEdit())
                 return false;
 
             if (!_nodes.TryGetValue(oldKey, out node) || (node == null))
@@ -397,7 +405,7 @@
         {
             Contract.Requires(key != null);
 
-            if (!OnChanging())
+            if (!CanEdit())
                 return false;
 
             try
@@ -424,11 +432,6 @@
             }
         }
 
-        internal bool CanChange()
-        {
-            return OnChanging();
-        }
-
         internal bool KeyExists(string key)
         {
             Contract.Requires(key != null);
@@ -441,7 +444,7 @@
             Contract.Requires(resourceTableEntry != null);
             Contract.Requires(previousEntries != null);
 
-            if (!OnChanging())
+            if (!CanEdit())
                 return;
 
             var node = _nodes.GetValueOrDefault(resourceTableEntry.Key);
@@ -514,6 +517,7 @@
             {
                 Contract.Requires(owner != null);
                 Contract.Requires(element != null);
+                Contract.Requires(owner._commentNodeName != null);
 
                 _element = element;
                 _owner = owner;
@@ -557,7 +561,7 @@
 
                     var entry = Element;
 
-                    var valueElement = entry.Element(@"value");
+                    var valueElement = entry.Element(_owner._valueNodeName);
                     if (valueElement == null)
                         throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileValueAttributeMissingError, _owner.FileName));
 
@@ -584,7 +588,7 @@
 
                     var entry = Element;
 
-                    var valueElement = entry.Element(@"comment");
+                    var valueElement = entry.Element(_owner._commentNodeName);
 
                     if (string.IsNullOrWhiteSpace(value))
                     {
@@ -597,7 +601,7 @@
                     {
                         if (valueElement == null)
                         {
-                            valueElement = new XElement(@"comment");
+                            valueElement = new XElement(_owner._commentNodeName);
                             entry.Add(valueElement);
                         }
 
@@ -619,7 +623,7 @@
             {
                 var entry = Element;
 
-                var valueElement = entry.Element(@"value");
+                var valueElement = entry.Element(_owner._valueNodeName);
                 if (valueElement == null)
                 {
                     throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileValueAttributeMissingError, _owner.FileName));
@@ -634,7 +638,7 @@
             {
                 var entry = Element;
 
-                var valueElement = entry.Element(@"comment");
+                var valueElement = entry.Element(_owner._commentNodeName);
                 if (valueElement == null)
                     return string.Empty;
 
@@ -648,7 +652,7 @@
                 Contract.Requires(entry != null);
                 Contract.Ensures(Contract.Result<XAttribute>() != null);
 
-                var nameAttribute = entry.Attribute(@"name");
+                var nameAttribute = entry.Attribute(_nameAttributeName);
                 if (nameAttribute == null)
                 {
                     throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileNameAttributeMissingError, _owner.ProjectFile.FilePath));
@@ -665,6 +669,7 @@
             {
                 Contract.Invariant(_element != null);
                 Contract.Invariant(_owner != null);
+                Contract.Invariant(_owner._commentNodeName != null);
             }
         }
 
@@ -742,6 +747,10 @@
             Contract.Invariant(_nodes != null);
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_cultureKey != null);
+            Contract.Invariant(_dataNodeName != null);
+            Contract.Invariant(_valueNodeName != null);
+            Contract.Invariant(_commentNodeName != null);
+            Contract.Invariant(_container != null);
         }
     }
 }

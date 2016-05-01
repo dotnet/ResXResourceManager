@@ -13,6 +13,8 @@
       <Word>workitem</Word>
       <Word>dte</Word>
       <Word>ResX</Word>
+      <Word>Refactoring</Word>
+      <Word>Refactorings</Word>
     </Recognized>
     <Deprecated>
       <Term PreferredAlternate=""></Term>

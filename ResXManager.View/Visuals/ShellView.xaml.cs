@@ -12,7 +12,7 @@
     [Export]
     [DataTemplate(typeof(ShellViewModel))]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public partial class ShellView : IComposablePart
+    public partial class ShellView 
     {
         [ImportingConstructor]
         public ShellView(ICompositionHost compositionHost)
@@ -20,8 +20,6 @@
             Contract.Requires(compositionHost != null);
 
             this.SetExportProvider(compositionHost.Container);
-
-            References.Resolve(this);
 
             InitializeComponent();
         }

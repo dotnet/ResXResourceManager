@@ -1,54 +1,58 @@
 ﻿namespace tomenglertde.ResXManager.VSIX
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
-
-    using EnvDTE;
+    using System.Runtime.InteropServices;
+    using System.Xml.Linq;
 
     using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Core;
+    using TomsToolbox.Desktop;
 
     internal class DteProjectFile : ProjectFile
     {
-        private readonly List<ProjectItem> _projectItems = new List<ProjectItem>();
+        private readonly DteSolution _solution;
+        private readonly List<EnvDTE.ProjectItem> _projectItems = new List<EnvDTE.ProjectItem>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DteProjectFile" /> class.
         /// </summary>
+        /// <param name="solution">The solution.</param>
         /// <param name="filePath">Name of the file.</param>
-        /// <param name="rootFolder"></param>
         /// <param name="projectName">Name of the project.</param>
         /// <param name="uniqueProjectName">Unique name of the project file.</param>
         /// <param name="projectItem">The project item, or null if the projectItem is not known.</param>
-        public DteProjectFile(string filePath, string rootFolder, string projectName, string uniqueProjectName, ProjectItem projectItem)
-            : base(filePath, rootFolder, projectName, uniqueProjectName)
+        public DteProjectFile(DteSolution solution, string filePath, string projectName, string uniqueProjectName, EnvDTE.ProjectItem projectItem)
+            : base(filePath, solution.SolutionFolder, projectName, uniqueProjectName)
         {
+            Contract.Requires(solution != null);
             Contract.Requires(!string.IsNullOrEmpty(filePath));
-            Contract.Requires(rootFolder != null);
             Contract.Requires(projectItem != null);
 
+            _solution = solution;
             _projectItems.Add(projectItem);
         }
 
         /// <summary>
         /// Gets the project items.
         /// </summary>
-        public IList<ProjectItem> ProjectItems
+        public IList<EnvDTE.ProjectItem> ProjectItems
         {
             get
             {
-                Contract.Ensures(Contract.Result<IList<ProjectItem>>() != null);
-                Contract.Ensures(Contract.Result<IList<ProjectItem>>().Count > 0);
+                Contract.Ensures(Contract.Result<IList<EnvDTE.ProjectItem>>() != null);
+                Contract.Ensures(Contract.Result<IList<EnvDTE.ProjectItem>>().Count > 0);
 
                 return _projectItems;
             }
         }
 
-        public void AddProject(string projectName, ProjectItem projectItem)
+        public void AddProject(string projectName, EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectName != null);
             Contract.Requires(projectItem != null);
@@ -57,57 +61,48 @@
             ProjectName += @", " + projectName;
         }
 
-        public override string Content
+        public override XDocument Load()
         {
-            get
+            var projectItem = DefaultProjectItem;
+
+            try
             {
-                var projectItem = ProjectItem;
-
-                try
-                {
-                    return projectItem.TryGetContent() ?? base.Content;
-                }
-                catch (IOException)
-                {
-                }
-
-                projectItem.Open();
-                return projectItem.TryGetContent() ?? string.Empty;
+                return projectItem.TryGetContent() ?? base.Load();
             }
-            set
+            catch (IOException)
             {
-                try
+                // The file does not exist locally, but VS may download it when we call projectItem.Open()
+            }
+
+            projectItem.Open();
+            return projectItem.TryGetContent() ?? new XDocument();
+        }
+
+        protected override void InternalSave(XDocument document)
+        {
+            var projectItem = DefaultProjectItem;
+
+            try
+            {
+                if (!projectItem.TrySetContent(document))
                 {
-                    IsSaving = true;
-
-                    var projectItem = ProjectItem;
-
-                    try
-                    {
-                        if (!projectItem.TrySetContent(value))
-                        {
-                            base.Content = value;
-                        }
-                    }
-                    catch (IOException)
-                    {
-                    }
-
-                    projectItem.Open();
-                    projectItem.TrySetContent(value);
-                }
-                finally
-                {
-                    IsSaving = false;
+                    base.InternalSave(document);
                 }
             }
+            catch (IOException)
+            {
+                // The file does not exist locally, but VS may download it when we call projectItem.Open()
+            }
+
+            projectItem.Open();
+            projectItem.TrySetContent(document);
         }
 
         public override bool IsWritable
         {
             get
             {
-                return ProjectItem.Document.Maybe().Return(d => !d.ReadOnly, base.IsWritable);
+                return DefaultProjectItem.TryGetDocument().Maybe().Return(d => !d.ReadOnly, base.IsWritable);
             }
         }
 
@@ -115,17 +110,160 @@
         {
             get
             {
-                return ProjectItem.Document.Maybe().Return(d => !d.Saved);
+                return DefaultProjectItem.TryGetDocument().Maybe().Return(d => !d.Saved);
             }
         }
 
-        private ProjectItem ProjectItem
+        public CodeGenerator CodeGenerator
         {
             get
             {
-                Contract.Ensures(Contract.Result<ProjectItem>() != null);
+                return GetCodeGenerator();
+            }
+            set
+            {
+                this.SetCodeGenerator(value);
+                OnPropertyChanged(() => CodeGenerator);
+            }
+        }
+
+        public EnvDTE.ProjectItem DefaultProjectItem
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<EnvDTE.ProjectItem>() != null);
                 return ProjectItems.First();
             }
+        }
+
+        public EnvDTE.ProjectItem ParentItem
+        {
+            get
+            {
+                try
+                {
+                    return DefaultProjectItem.Collection?.Parent as EnvDTE.ProjectItem;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+        }
+
+        public override bool IsWinFormsDesignerResource
+        {
+            get
+            {
+                var projectItem = DefaultProjectItem;
+                var projectItems = projectItem.Collection;
+
+                var parent = projectItems?.Parent as EnvDTE.ProjectItem;
+                var subType = parent?.GetProperty(@"SubType") as string;
+
+                return (subType == @"Form") || (subType == @"UserControl");
+            }
+        }
+
+        public CodeGenerator GetCodeGenerator()
+        {
+            var projectItem = DefaultProjectItem;
+            var containingProject = projectItem.ContainingProject;
+
+            if ((containingProject == null) || (containingProject.Kind != ItemKind.CSharpProject))
+                return CodeGenerator.None;
+
+            var customTool = projectItem.GetCustomTool();
+
+            if (string.IsNullOrEmpty(customTool))
+            {
+                if (IsWinFormsDesignerResource)
+                    return CodeGenerator.WinForms;
+
+                return projectItem.Children().Any(IsTextTemplate) ? CodeGenerator.TextTemplate : CodeGenerator.None;
+            }
+
+            CodeGenerator codeGenerator;
+            return Enum.TryParse(customTool, out codeGenerator) ? codeGenerator : CodeGenerator.Unknown;
+        }
+
+        private static bool IsTextTemplate(EnvDTE.ProjectItem item)
+        {
+            Contract.Requires(item != null);
+
+            var name = item.Name;
+
+            return (name != null) && name.EndsWith(@".tt", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public void SetCodeGenerator(CodeGenerator value)
+        {
+            foreach (var projectItem in ProjectItems)
+            {
+                Contract.Assume(projectItem != null);
+                var containingProject = projectItem.ContainingProject;
+
+                if ((containingProject == null) || (containingProject.Kind != ItemKind.CSharpProject))
+                    return;
+
+                switch (value)
+                {
+                    case CodeGenerator.ResXFileCodeGenerator:
+                    case CodeGenerator.PublicResXFileCodeGenerator:
+                        SetCustomToolCodeGenerator(projectItem, value);
+                        break;
+
+                    case CodeGenerator.TextTemplate:
+                        SetTextTemplateCodeGenerator(projectItem);
+                        break;
+                }
+            }
+        }
+
+        private void SetTextTemplateCodeGenerator(EnvDTE.ProjectItem projectItem)
+        {
+            Contract.Requires(projectItem != null);
+
+            projectItem.SetCustomTool(null);
+
+            const string t4FileName = "Resources.Designer.t4";
+
+            if (!_solution.GetProjectFiles().Any(file => file.RelativeFilePath.Equals(t4FileName)))
+            {
+                var fullName = Path.Combine(_solution.SolutionFolder, t4FileName);
+                File.WriteAllBytes(fullName, Resources.Resources_Designer_t4);
+                _solution.AddFile(fullName);
+            }
+
+            // Ensure DataAnnotations is referenced, used by TT generated code.
+            const string dataAnnotations = "System.ComponentModel.DataAnnotations";
+
+            var vsProject = projectItem.ContainingProject?.Object as VSLangProj.VSProject;
+            vsProject?.References?.Add(dataAnnotations);
+
+            var fileName = Path.ChangeExtension(FilePath, "Designer.tt");
+
+            File.WriteAllBytes(fileName, Resources.Resources_Designer_tt);
+
+            var item = projectItem.AddFromFile(fileName);
+            if (item == null)
+                return;
+
+            item.SetProperty(@"BuildAction", 0);
+
+            Dispatcher.BeginInvoke(() => item.RunCustomTool());
+        }
+
+        private static void SetCustomToolCodeGenerator(EnvDTE.ProjectItem projectItem, CodeGenerator value)
+        {
+            Contract.Requires(projectItem != null);
+
+            projectItem.Children()
+                .Where(IsTextTemplate)
+                .ToArray()
+                .ForEach(i => i.Delete());
+
+            projectItem.SetCustomTool(value.ToString());
         }
 
         [ContractInvariantMethod]

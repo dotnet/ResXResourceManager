@@ -5,46 +5,59 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
+    using System.Windows.Threading;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Core;
+    using TomsToolbox.Desktop;
 
     [Export(typeof(Configuration))]
-    public class DteConfiguration : Configuration
+    [Export(typeof(DteConfiguration))]
+    internal class DteConfiguration : Configuration
     {
-        private readonly IVsServiceProvider _vsServiceProvider;
+        private readonly DteSolution _solution;
+        private readonly DispatcherThrottle _moveToResourcesChangeThrottle;
+        private MoveToResourceConfiguration _moveToResources;
 
         [ImportingConstructor]
-        public DteConfiguration(IVsServiceProvider vsServiceProvider, ITracer tracer)
+        public DteConfiguration(DteSolution solution, ITracer tracer)
             : base(tracer)
         {
-            Contract.Requires(vsServiceProvider != null);
+            Contract.Requires(solution != null);
             Contract.Requires(tracer != null);
 
-            _vsServiceProvider = vsServiceProvider;
+            _solution = solution;
+            _moveToResourcesChangeThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, PersistMoveToResources);
         }
 
-        public override bool IsScopeSupported
+        public MoveToResourceConfiguration MoveToResources
         {
             get
             {
-                return true;
+                Contract.Ensures(Contract.Result<MoveToResourceConfiguration>() != null);
+
+                return _moveToResources ?? CreateMoveToResourceConfiguration();
             }
         }
 
-        public override ConfigurationScope Scope
+        private void PersistMoveToResources()
         {
-            get
-            {
-                var solution = Solution;
-
-                return (solution != null) && !string.IsNullOrEmpty(solution.FullName) && (solution.Globals != null)
-                    ? ConfigurationScope.Solution
-                    : ConfigurationScope.Global;
-            }
+            SetValue(MoveToResources, () => MoveToResources);
         }
+
+        private MoveToResourceConfiguration CreateMoveToResourceConfiguration()
+        {
+            _moveToResources = GetValue(() => MoveToResources) ?? MoveToResourceConfiguration.Default;
+            _moveToResources.ItemPropertyChanged += (_, __) => _moveToResourcesChangeThrottle.Tick();
+
+            return _moveToResources;
+        }
+
+        public override bool IsScopeSupported => true;
+
+        public override ConfigurationScope Scope => (_solution.Globals != null) ? ConfigurationScope.Solution : ConfigurationScope.Global;
 
         protected override T GetValue<T>(Expression<Func<T>> propertyExpression, T defaultValue)
         {
@@ -56,9 +69,8 @@
         private bool TryGetValue<T>(string key, out T value)
         {
             value = default(T);
-            var solution = Solution;
 
-            return (solution != null) && !string.IsNullOrEmpty(solution.FullName) && TryGetValue(solution.Globals, key, ref value);
+            return TryGetValue(_solution.Globals, key, ref value);
         }
 
         private static bool TryGetValue<T>(EnvDTE.Globals globals, string key, ref T value)
@@ -80,11 +92,10 @@
 
         protected override void InternalSetValue<T>(T value, Expression<Func<T>> propertyExpression)
         {
-            var solution = Solution;
+            var globals = _solution.Globals;
 
-            if ((solution != null) && !string.IsNullOrEmpty(solution.FullName) && (solution.Globals != null))
+            if (globals != null)
             {
-                var globals = solution.Globals;
                 var propertyName = PropertySupport.ExtractPropertyName(propertyExpression);
                 var key = GetKey(propertyName);
 
@@ -101,23 +112,14 @@
 
         private static string GetKey(string propertyName)
         {
-            return "RESX_" + propertyName;
-        }
-
-        private EnvDTE.Solution Solution
-        {
-            get
-            {
-                var dte = (EnvDTE.DTE)_vsServiceProvider.GetService(typeof(EnvDTE.DTE));
-                return dte == null ? null : dte.Solution;
-            }
+            return @"RESX_" + propertyName;
         }
 
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_vsServiceProvider != null);
+            Contract.Invariant(_solution != null);
         }
     }
 }

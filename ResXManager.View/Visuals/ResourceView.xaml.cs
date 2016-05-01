@@ -2,22 +2,19 @@
 {
     using System;
     using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
 
     using Microsoft.Win32;
 
     using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
-    using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Converters;
@@ -32,25 +29,19 @@
         private readonly ResourceManager _resourceManager;
 
         [ImportingConstructor]
-        public ResourceView(ICompositionHost compositionHost, ResourceManager resourceManager)
+        public ResourceView(ExportProvider exportProvider, ResourceManager resourceManager)
         {
-            Contract.Requires(compositionHost != null);
+            Contract.Requires(exportProvider != null);
 
-            this.SetExportProvider(compositionHost.Container);
+            this.SetExportProvider(exportProvider);
 
             InitializeComponent();
 
             _resourceManager = resourceManager;
             _resourceManager.Loaded += ResourceManager_Loaded;
-            _resourceManager.EntityFilter = Settings.Default.ResourceFilter;
-
-            BindingOperations.SetBinding(this, EntityFilterProperty, new Binding("EntityFilter") { Source = _resourceManager });
 
             DataGrid.SetupColumns(_resourceManager);
         }
-
-        private static readonly DependencyProperty EntityFilterProperty =
-            DependencyProperty.Register("EntityFilter", typeof(string), typeof(ResourceView), new FrameworkPropertyMetadata(null, (sender, e) => Settings.Default.ResourceFilter = (string)e.NewValue));
 
         private void ResourceManager_Loaded(object sender, EventArgs e)
         {
@@ -78,7 +69,48 @@
 
             DataGrid.CreateNewLanguageColumn(_resourceManager, culture);
 
-            _resourceManager.LanguageAdded(culture);
+            _resourceManager.NewLanguageAdded(culture);
+        }
+
+        private void CreateSnapshotCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        {
+            var dlg = new SaveFileDialog
+            {
+                AddExtension = true,
+                CheckPathExists = true,
+                DefaultExt = ".snapshot",
+                Filter = "Snapshots|*.snapshot|All Files|*.*",
+                FilterIndex = 0,
+                FileName = DateTime.Today.ToString("yyyy_MM_dd", CultureInfo.InvariantCulture)
+            };
+
+            if (!dlg.ShowDialog().GetValueOrDefault())
+                e.Cancel = true;
+            else
+                e.Parameter = dlg.FileName;
+
+            WaitCursor.Start(this);
+        }
+
+        private void LoadSnapshotCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        {
+            var dlg = new OpenFileDialog
+            {
+                AddExtension = true,
+                CheckPathExists = true,
+                CheckFileExists = true,
+                DefaultExt = ".snapshot",
+                Filter = "Snapshots|*.snapshot|All Files|*.*",
+                FilterIndex = 0,
+                Multiselect = false
+            };
+
+            if (!dlg.ShowDialog().GetValueOrDefault())
+                e.Cancel = true;
+            else
+                e.Parameter = dlg.FileName;
+
+            WaitCursor.Start(this);
         }
 
         private void ExportExcelCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
@@ -89,7 +121,8 @@
                 CheckPathExists = true,
                 DefaultExt = ".xlsx",
                 Filter = "Excel Worksheets|*.xlsx|All Files|*.*",
-                FilterIndex = 0
+                FilterIndex = 0,
+                FileName = DateTime.Today.ToString("yyyy_MM_dd", CultureInfo.InvariantCulture)
             };
 
             if (!dlg.ShowDialog().GetValueOrDefault())

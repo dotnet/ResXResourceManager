@@ -1,3 +1,58 @@
+1.0.0.78:
+* "Move to Resource": many small improvements.
+* WI4707: New resource values are not saved / lost if  Visual Localizer is installed.
+* WI4706: Crash when starting elevated as different user.
+* WI4703: Excel import from multiple sheet export is broken.
+1.0.0.77:
+* WI4704: Unable to run extension (when there are broken items in the project)
+* WI4668: VS Crashes when showing lines with warnings (changing the filter while there are uncomitted changes in the data grid)
+1.0.0.76:
+* WI4693: Automatically referencing System.ComponentModel.DataAnnotations.
+* WI4698: Changes in  designer delete resources => disable "add" for WinForms designer resources.
+* WI4699: Use  an invariant sortable name as default file name for snapshots.
+* WI4700: Open ResxManager to specific form resource.
+* WI4701: Crashes VS 2015 on click Configuration tab.
+* WI4702: Can't install your extension in new VS"15"Preview.
+1.0.0.75:
+* Use new DGX to decouple resource location to resolve conflicts with other plugins.
+1.0.0.74:
+* Fix missing synchronization of main table.
+1.0.0.73:
+* WI4694: Fix load time degration.
+* WI4694: Bing Credentials not saving.
+* WI4669: "Move to resource" feature addeed.
+1.0.0.72:
+* Speed up refresh of the grid
+* Allow regular expressions in the grids columns filters.
+* Improve filter tool tip in the project list.
+* Fix: new cultures are not instantly available for translation.
+* WI4689: After inserting a new key automatically scroll to the newly inserted key.
+1.0.0.71:
+* Fix broken grouping view.
+1.0.0.70:
+* WI4683: T4 Templates are added as build action "Content", should be "None".
+* WI4685: Cell selection should not be active by default.
+* WI4686: Trigger custom tool when any language changes.
+* WI4687: WinForms designer drops comments in resx, removing @Invariant.
+* WI4653: Keep sorting after file change.
+1.0.0.69:
+* WI4680: Problem when copying/cutting unicode resource strings.
+1.0.0.68:
+* Fix broken copy/paste for complex content.
+1.0.0.67:
+* WI4650: Show namespace in the resource list (for project residing in the solution folder)
+* WI4651: Resources are not found if the resx file has a default namespace
+* WI4668: VS Crashes when showing lines with warnings
+* WI4660: Select & Copy in column mode
+1.0.0.66:
+* WI4604, WI4638, WI4642: New snapshot feature allows to filter for changes (https://resxresourcemanager.codeplex.com/wikipage?title=Snapshots)
+* WI4657: Allow to enter tab characters in the top-right edit field.
+1.0.0.65:
+* WI4646: Cannot add new key time to time - exception triggered.
+* WI4652: Code generator can be selected in the project list (VS Extension only).
+* WI4654: Properly handle xml files with encodings other than UTF8
+1.0.0.64:
+* WI4645: VS extension fails to load: "The composition produced a single composition error. ..." 
 1.0.0.63:
 * WI4634: Fix: Duplicate keys prevent application to open.
 * WI4637: Entries can be ordered by specifying an index.

@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -13,101 +12,130 @@
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Core;
+    using TomsToolbox.Desktop;
 
     /// <summary>
     /// Represents a logical resource file, e.g. "Resources".
-    /// A logical resource entity is linked to multiple physical resource files, one per langueage, e.g. "Resources.resx", "Resources.de.resx", "Resources.fr.resx".
-    /// For windows store apps "de\Resources.resm", "en-us\Resources.resm" are also supported.
+    /// A logical resource entity is linked to multiple physical resource files, one per language, e.g. "Resources.resx", "Resources.de.resx", "Resources.fr.resx".
+    /// For windows store apps "de\Resources.resw", "en-us\Resources.resw" are also supported.
     /// </summary>
-    public class ResourceEntity : IComparable<ResourceEntity>, IComparable, IEquatable<ResourceEntity>
+    public class ResourceEntity : ObservableObject, IComparable<ResourceEntity>, IComparable, IEquatable<ResourceEntity>
     {
-        private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
-        private readonly ResourceManager _owner;
+        private IDictionary<CultureKey, ResourceLanguage> _languages;
+        private readonly ResourceManager _container;
         private readonly string _projectName;
         private readonly string _baseName;
-        private readonly string _directory;
+        private readonly string _directoryName;
         private readonly ObservableCollection<ResourceTableEntry> _resourceTableEntries;
+        private readonly ReadOnlyObservableCollection<ResourceTableEntry> _readOnlyResourceTableEntries;
         private readonly string _displayName;
         private readonly string _relativePath;
         private readonly string _sortKey;
+        private readonly ProjectFile _neutralProjectFile;
 
-        internal ResourceEntity(ResourceManager owner, string projectName, string baseName, string directory, ICollection<ProjectFile> files)
+        internal ResourceEntity(ResourceManager container, string projectName, string baseName, string directoryName, ICollection<ProjectFile> files)
         {
-            Contract.Requires(owner != null);
+            Contract.Requires(container != null);
             Contract.Requires(!string.IsNullOrEmpty(projectName));
             Contract.Requires(!string.IsNullOrEmpty(baseName));
-            Contract.Requires(!string.IsNullOrEmpty(directory));
+            Contract.Requires(!string.IsNullOrEmpty(directoryName));
             Contract.Requires(files != null);
+            Contract.Requires(files.Any());
 
-            _owner = owner;
+            _container = container;
             _projectName = projectName;
             _baseName = baseName;
-            _directory = directory;
-            _relativePath = GetRelativePath(directory, files);
+            _directoryName = directoryName;
+            _languages = GetResourceLanguages(files);
+            _relativePath = GetRelativePath(files);
             _displayName = projectName + @" - " + _relativePath + baseName;
-            _sortKey = string.Concat(@" - ", _displayName, _directory);
+            _sortKey = string.Concat(@" - ", _displayName, _directoryName);
+            _neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
 
-            var languageQuery =
-                from file in files
-                let cultureKey = file.GetCultureKey()
-                orderby cultureKey
-                select new ResourceLanguage(owner, cultureKey, file);
-
-            _languages = languageQuery.ToDictionary(language => language.CultureKey);
-
-            foreach (var language in _languages.Values)
-            {
-                Contract.Assume(language != null);
-
-                language.Changed += language_Changed;
-                language.Changing += language_Changing;
-            }
-
-            var entriesQuery = _languages.Values.SelectMany(language => language.ResourceKeys)
+            var entriesQuery = _languages.Values
+                .SelectMany(language => language.ResourceKeys)
                 .Distinct()
                 .Select((key, index) => new ResourceTableEntry(this, key, index, _languages));
 
             _resourceTableEntries = new ObservableCollection<ResourceTableEntry>(entriesQuery);
+            _readOnlyResourceTableEntries = new ReadOnlyObservableCollection<ResourceTableEntry>(_resourceTableEntries);
 
             Contract.Assume(_languages.Any());
         }
 
-        private static string GetRelativePath(string directory, IEnumerable<ProjectFile> files)
+        internal void Update(ICollection<ProjectFile> files)
         {
-            Contract.Requires(!string.IsNullOrEmpty(directory));
+            Contract.Requires(files != null);
+            Contract.Requires(files.Any());
+
+            _languages = GetResourceLanguages(files);
+
+            var unmatchedTableEntries = _resourceTableEntries.ToList();
+
+            var keys = _languages.Values
+                .SelectMany(language => language.ResourceKeys)
+                .Distinct()
+                .ToArray();
+
+            var index = 0;
+
+            foreach (var key in keys)
+            {
+                Contract.Assume(!string.IsNullOrEmpty(key));
+                var existingEntry = _resourceTableEntries.FirstOrDefault(entry => entry.Key == key);
+                if (existingEntry != null)
+                {
+                    existingEntry.Update(index, _languages);
+                    unmatchedTableEntries.Remove(existingEntry);
+                }
+                else
+                {
+                    _resourceTableEntries.Add(new ResourceTableEntry(this, key, index, _languages));
+                }
+
+                index += 1;
+            }
+
+            _resourceTableEntries.RemoveRange(unmatchedTableEntries);
+        }
+
+        private static string GetRelativePath(ICollection<ProjectFile> files)
+        {
             Contract.Requires(files != null);
             Contract.Ensures(Contract.Result<string>() != null);
 
             var uniqueProjectName = files.Select(file => file.UniqueProjectName).FirstOrDefault();
-
             if (uniqueProjectName == null)
                 return string.Empty;
 
-            directory += Path.DirectorySeparatorChar;
-
-            var subFolder = Path.DirectorySeparatorChar + Path.GetDirectoryName(uniqueProjectName) + Path.DirectorySeparatorChar;
-            var pos = directory.LastIndexOf(subFolder, StringComparison.OrdinalIgnoreCase);
-            if (pos < 0)
+            var relativeFilePath = files.Select(file => file.RelativeFilePath).FirstOrDefault();
+            if (string.IsNullOrEmpty(relativeFilePath))
                 return string.Empty;
 
-            pos += subFolder.Length;
+            var relativeFileDirectory = Path.GetDirectoryName(relativeFilePath) + Path.DirectorySeparatorChar;
 
-            Contract.Assume(pos <= directory.Length);
-            var relativePath = directory.Substring(pos);
+            var relativeProjectPath = Path.GetDirectoryName(uniqueProjectName);
+            if (string.IsNullOrEmpty(relativeProjectPath))
+            {
+                return relativeFileDirectory;
+            }
 
-            return relativePath;
+            var relativeProjectDirectory = Path.GetDirectoryName(uniqueProjectName) + Path.DirectorySeparatorChar;
+            if ((relativeFileDirectory.Length > relativeProjectDirectory.Length)
+                && (relativeFileDirectory.StartsWith(relativeProjectDirectory, StringComparison.OrdinalIgnoreCase)))
+            {
+                return relativeFileDirectory.Substring(relativeProjectDirectory.Length);
+            }
+
+            return string.Empty;
         }
 
-        public event EventHandler<LanguageChangingEventArgs> LanguageChanging;
-        public event EventHandler<LanguageChangedEventArgs> LanguageChanged;
-        public event EventHandler<LanguageChangedEventArgs> LanguageAdded;
-
-        public ResourceManager Owner
+        public ResourceManager Container
         {
             get
             {
                 Contract.Ensures(Contract.Result<ResourceManager>() != null);
-                return _owner;
+                return _container;
             }
         }
 
@@ -165,14 +193,18 @@
         /// <summary>
         /// Gets the directory where the physical files are located.
         /// </summary>
-        public string Directory
+        public string DirectoryName
         {
             get
             {
                 Contract.Ensures(Contract.Result<string>() != null);
-                return _directory;
+                return _directoryName;
             }
         }
+
+        public ProjectFile NeutralProjectFile => _neutralProjectFile;
+
+        public bool IsWinFormsDesignerResource => _neutralProjectFile?.IsWinFormsDesignerResource ?? false;
 
         /// <summary>
         /// Gets the available languages of this resource entity.
@@ -189,13 +221,12 @@
         /// <summary>
         /// Gets all the entries of this resource entity.
         /// </summary>
-        public IList<ResourceTableEntry> Entries
+        public ReadOnlyObservableCollection<ResourceTableEntry> Entries
         {
             get
             {
-                Contract.Ensures(Contract.Result<IList<ResourceTableEntry>>() != null);
-
-                return _resourceTableEntries;
+                Contract.Ensures(Contract.Result<ReadOnlyObservableCollection<ResourceTableEntry>>() != null);
+                return _readOnlyResourceTableEntries;
             }
         }
 
@@ -247,15 +278,12 @@
             Contract.Requires(file != null);
 
             var cultureKey = file.GetCultureKey();
-            var resourceLanguage = new ResourceLanguage(_owner, cultureKey, file);
-
-            resourceLanguage.Changed += language_Changed;
-            resourceLanguage.Changing += language_Changing;
+            var resourceLanguage = new ResourceLanguage(this, cultureKey, file);
 
             _languages.Add(cultureKey, resourceLanguage);
             _resourceTableEntries.ForEach(entry => entry.Refresh());
 
-            OnLanguageAdded(new LanguageChangedEventArgs(this, resourceLanguage));
+            Container.LanguageAdded(resourceLanguage.CultureKey);
         }
 
         public override string ToString()
@@ -265,41 +293,7 @@
 
         public bool CanEdit(CultureInfo culture)
         {
-            if (LanguageChanging == null)
-                return false;
-
-            var args = new LanguageChangingEventArgs(this, culture);
-            LanguageChanging(this, args);
-            return !args.Cancel;
-        }
-
-        private void language_Changing(object sender, CancelEventArgs e)
-        {
-            if (LanguageChanging != null)
-            {
-                var language = (ResourceLanguage) sender;
-                Contract.Assume(language != null);
-                var args = new LanguageChangingEventArgs(this, language.Culture);
-                LanguageChanging(this, args);
-                e.Cancel = args.Cancel;
-            }
-        }
-
-        private void language_Changed(object sender, EventArgs e)
-        {
-            if (LanguageChanged != null)
-            {
-                var language = (ResourceLanguage) sender;
-                Contract.Assume(language != null);
-                LanguageChanged(this, new LanguageChangedEventArgs(this, language));
-            }
-        }
-
-        private void OnLanguageAdded(LanguageChangedEventArgs e)
-        {
-            var handler = LanguageAdded;
-            if (handler != null)
-                handler(this, e);
+            return Container.CanEdit(this, culture);
         }
 
         internal void OnIndexChanged(ResourceTableEntry resourceTableEntry)
@@ -314,7 +308,7 @@
             if (!previousEntries.Any())
                 return;
 
-            if (!_languages.Values.All(l => l.CanChange()))
+            if (!_languages.Values.All(l => l.CanEdit()))
                 return;
 
             foreach (var language in _languages.Values)
@@ -323,6 +317,33 @@
 
                 language.MoveNode(resourceTableEntry, previousEntries);
             }
+        }
+
+        internal bool EqualsAll(string projectName, string baseName, string directoryName)
+        {
+            return string.Equals(projectName, _projectName, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(baseName, _baseName, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(directoryName, _directoryName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private Dictionary<CultureKey, ResourceLanguage> GetResourceLanguages(IEnumerable<ProjectFile> files)
+        {
+            Contract.Requires(files != null);
+            Contract.Requires(files.Any());
+            Contract.Ensures(Contract.Result<Dictionary<CultureKey, ResourceLanguage>>() != null);
+            Contract.Ensures(Contract.Result<Dictionary<CultureKey, ResourceLanguage>>().Any());
+
+            var languageQuery =
+                from file in files
+                let cultureKey = file.GetCultureKey()
+                orderby cultureKey
+                select new ResourceLanguage(this, cultureKey, file);
+
+            var languages = languageQuery.ToDictionary(language => language.CultureKey);
+
+            Contract.Assume(languages.Any());
+
+            return languages;
         }
 
         #region IComparable/IEquatable implementation
@@ -453,12 +474,12 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_owner != null);
+            Contract.Invariant(_container != null);
             Contract.Invariant(_languages != null);
             Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(!string.IsNullOrEmpty(_projectName));
             Contract.Invariant(!string.IsNullOrEmpty(_baseName));
-            Contract.Invariant(!string.IsNullOrEmpty(_directory));
+            Contract.Invariant(!string.IsNullOrEmpty(_directoryName));
             Contract.Invariant(_displayName != null);
             Contract.Invariant(_relativePath != null);
             Contract.Invariant(_sortKey != null);

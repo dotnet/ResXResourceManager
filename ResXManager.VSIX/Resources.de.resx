@@ -107,7 +107,7 @@
     <value>ResX Resource Manager wurde geladen.
 Webseite: http://resxresourcemanager.codeplex.com/
 Fehler melden:  http://resxresourcemanager.codeplex.com/workitem/list/basic
-Projekt unterstützen: Schreiben sie ein kurzes Review auf http://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68</value>
+Projekt unterstützen: Schreiben sie ein kurzes Review auf http://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68/view/Reviews</value>
   </data>
   <data name="ProjectHasNoResourceFile">
     <value>Das Projekt hat keine Ressourcedatei für die Sprache {0}.
@@ -138,5 +138,62 @@ Mehr Details finden sich im Ausgabefenster.</value>
   </data>
   <data name="OpenInResXManager" xml:space="preserve">
     <value>Im ResX Manager öffnen</value>
+  </data>
+  <data name="CodeGenerator_Unkown" xml:space="preserve">
+    <value>Unbekannter Code-Generator</value>
+  </data>
+  <data name="CodeGenerator_Internal" xml:space="preserve">
+    <value>Custom-Tool Codegenerator (interner Zugriff)</value>
+  </data>
+  <data name="CodeGenerator_Public" xml:space="preserve">
+    <value>Custom-Tool Codegenerator (öffentlicher Zugriff)</value>
+  </data>
+  <data name="CodeGenerator_TextTemplate" xml:space="preserve">
+    <value>Text-Template Codegenerator</value>
+  </data>
+  <data name="CodeGenerator_CommandGroup" xml:space="preserve">
+    <value>Codegenerator</value>
+  </data>
+  <data name="CodeGenerator_CommandInternal" xml:space="preserve">
+    <value>Custom-Tool (interner Zugriff)</value>
+  </data>
+  <data name="CodeGenerator_CommandPublic" xml:space="preserve">
+    <value>Custom-Tool (öffentlicher Zugriff)</value>
+  </data>
+  <data name="CodeGenerator_CommandTextTemplate" xml:space="preserve">
+    <value>Text-Template</value>
+  </data>
+  <data name="MoveToResource" xml:space="preserve">
+    <value>Zu Ressource konvertieren</value>
+  </data>
+  <data name="ResourceHeader" xml:space="preserve">
+    <value>Ressource:</value>
+  </data>
+  <data name="KeyHeader" xml:space="preserve">
+    <value>Schlüssel:</value>
+  </data>
+  <data name="CodeHeader" xml:space="preserve">
+    <value>Code:</value>
+  </data>
+  <data name="ValueHeader" xml:space="preserve">
+    <value>Text:</value>
+  </data>
+  <data name="CommentHeader" xml:space="preserve">
+    <value>Kommentar:</value>
+  </data>
+  <data name="CodeGenerator_WinForms" xml:space="preserve">
+    <value>WinForms Designer</value>
+  </data>
+  <data name="ShowWhitespaceToolTip" xml:space="preserve">
+    <value>Leerzeichen und Formatierung anzeigen</value>
+  </data>
+  <data name="MoveToResourceEditNewEntry" xml:space="preserve">
+    <value>Neuen Eintrag im ResX Resource Manager anzeigen</value>
+  </data>
+  <data name="DuplicateKey" xml:space="preserve">
+    <value>Doppelter Schlüssel</value>
+  </data>
+  <data name="KeyContainsInvalidCharacters" xml:space="preserve">
+    <value>Der Schlüssel enthält ungültige Zeichen.</value>
   </data>
 </root>

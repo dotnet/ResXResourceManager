@@ -49,7 +49,6 @@
       </Group>
 
       <Group guid="guidResXManager_VSIXCmdSet" id="cmdidMyCodeContextMenuGroup" priority="0x200">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
       </Group>
 
     </Groups>
@@ -122,6 +121,24 @@
  
   </Commands>
 
+  <CommandPlacements>
+    <CommandPlacement guid="guidResXManager_VSIXCmdSet" id="cmdidMyCodeContextMenuGroup" priority="0x100">
+      <Parent guid="guidXamlEditor" id="cmdidXaml"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="guidResXManager_VSIXCmdSet" id="cmdidMyCodeContextMenuGroup" priority="0x100">
+      <Parent guid="guidHtmlEditor" id="cmdidHtml"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="guidResXManager_VSIXCmdSet" id="cmdidMyCodeContextMenuGroup" priority="0x100">
+      <Parent guid="guidHtmlEditor" id="cmdidJs"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="guidResXManager_VSIXCmdSet" id="cmdidMyCodeContextMenuGroup" priority="0x100">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
+    </CommandPlacement>
+  </CommandPlacements>
+
   <Symbols>
     <!-- This is the package guid. -->
     <GuidSymbol name="guidResXManager_VSIXPkg" value="{43b35fe0-1f30-48de-887a-68256474202a}" />
@@ -143,6 +160,16 @@
       <IDSymbol name="bmpPicX" value="4" />
       <IDSymbol name="bmpPicArrows" value="5" />
     </GuidSymbol>
+
+    <GuidSymbol name="guidXamlEditor" value="{4C87B692-1202-46AA-B64C-EF01FAEC53DA}">
+      <IDSymbol name="cmdidXaml" value="259"/>
+    </GuidSymbol>
+
+    <GuidSymbol name="guidHtmlEditor" value="{D7E8C5E1-BDB8-11D0-9C88-0000F8040A53}">
+      <IDSymbol name="cmdidHtml" value="51"/>
+      <IDSymbol name="cmdidJs" value="52"/>
+    </GuidSymbol>
+
   </Symbols>
 
 </CommandTable>

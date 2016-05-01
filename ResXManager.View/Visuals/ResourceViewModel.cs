@@ -3,26 +3,35 @@
     using System;
     using System.ComponentModel.Composition;
     using System.Diagnostics.Contracts;
+    using System.IO;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Input;
+
+    using DataGridExtensions;
 
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
+    using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
+    [Export]
     [VisualCompositionExport("Content", Sequence = 1)]
-    class ResourceViewModel : ObservableObject, IComposablePart
+    class ResourceViewModel : ObservableObject
     {
         private readonly ResourceManager _resourceManager;
+        private string _loadedSnapshot;
+        private bool _isCellSelectionEnabled;
 
         [ImportingConstructor]
         public ResourceViewModel(ResourceManager resourceManager)
         {
             Contract.Requires(resourceManager != null);
+
             _resourceManager = resourceManager;
         }
 
@@ -30,7 +39,43 @@
         {
             get
             {
+                Contract.Ensures(Contract.Result<ResourceManager>() != null);
+
                 return _resourceManager;
+            }
+        }
+
+        public string LoadedSnapshot
+        {
+            get
+            {
+                return _loadedSnapshot;
+            }
+            set
+            {
+                SetProperty(ref _loadedSnapshot, value, () => LoadedSnapshot);
+            }
+        }
+
+        public bool IsCellSelectionEnabled
+        {
+            get
+            {
+                return _isCellSelectionEnabled;
+            }
+            set
+            {
+                SetProperty(ref _isCellSelectionEnabled, value, () => IsCellSelectionEnabled);
+            }
+        }
+
+        public ICommand ToggleCellSelectionCommand
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
+                return new DelegateCommand(() => IsCellSelectionEnabled = !IsCellSelectionEnabled);
             }
         }
 
@@ -40,7 +85,7 @@
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(CanCutOrCopy, CopySelected);
+                return new DelegateCommand<DataGrid>(CanCopy, CopySelected);
             }
         }
 
@@ -50,7 +95,7 @@
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(CanCutOrCopy, CutSelected);
+                return new DelegateCommand(CanCut, CutSelected);
             }
         }
 
@@ -70,7 +115,7 @@
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(CanPaste, Paste);
+                return new DelegateCommand<DataGrid>(CanPaste, Paste);
             }
         }
 
@@ -94,16 +139,6 @@
             }
         }
 
-        public ICommand CopyKeysCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => _resourceManager.SelectedTableEntries.Any(), CopyKeys);
-            }
-        }
-
         public ICommand ToggleInvariantCommand
         {
             get
@@ -120,8 +155,64 @@
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(_resourceManager.Reload);
+                return new DelegateCommand(_resourceManager.ReloadAndBeginFindCoreReferences);
             }
+        }
+
+        public ICommand BeginFindCodeReferencesCommand
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
+                return new DelegateCommand(_resourceManager.BeginFindCoreReferences);
+            }
+        }
+
+        public ICommand CreateSnapshotCommand
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
+                return new DelegateCommand<string>(CreateSnapshot);
+            }
+        }
+
+        public ICommand LoadSnapshotCommand
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
+                return new DelegateCommand<string>(LoadSnapshot);
+            }
+        }
+
+        public ICommand UnloadSnapshotCommand
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
+                return new DelegateCommand(() => LoadSnapshot(null));
+            }
+        }
+
+        private void LoadSnapshot(string fileName)
+        {
+            _resourceManager.LoadSnapshot(string.IsNullOrEmpty(fileName) ? null : File.ReadAllText(fileName));
+
+            LoadedSnapshot = fileName;
+        }
+
+        private void CreateSnapshot(string fileName)
+        {
+            var snapshot = _resourceManager.CreateSnapshot();
+
+            File.WriteAllText(fileName, snapshot);
+
+            LoadedSnapshot = fileName;
         }
 
         private bool CanDelete()
@@ -129,7 +220,7 @@
             return _resourceManager.SelectedTableEntries.Any();
         }
 
-        private bool CanCutOrCopy()
+        private bool CanCut()
         {
             var entries = _resourceManager.SelectedTableEntries;
 
@@ -143,31 +234,51 @@
             return numberOfDistinctEntries == totalNumberOfEntries;
         }
 
-        private bool CanPaste()
+        private bool CanCopy(DataGrid dataGrid)
         {
-            return _resourceManager.SelectedEntities.Count == 1;
+            if (!dataGrid.HasRectangularCellSelection())
+                return false;
+
+            var entries = _resourceManager.SelectedTableEntries;
+
+            var totalNumberOfEntries = entries.Count;
+            if (totalNumberOfEntries == 0)
+                return true; // cell selection
+
+            // Only allow if all keys are different.
+            var numberOfDistinctEntries = entries.Select(e => e.Key).Distinct().Count();
+
+            return numberOfDistinctEntries == totalNumberOfEntries;
         }
 
         private void CutSelected()
         {
             var selectedItems = _resourceManager.SelectedTableEntries.ToList();
 
-            var resourceFiles = selectedItems.Select(item => item.Owner).Distinct();
+            var resourceFiles = selectedItems.Select(item => item.Container).Distinct();
 
             if (resourceFiles.Any(resourceFile => !_resourceManager.CanEdit(resourceFile, null)))
                 return;
 
-            Clipboard.SetText(selectedItems.ToTextTable());
+            selectedItems.ToTable().SetClipboardData();
 
-            selectedItems.ForEach(item => item.Owner.Remove(item));
+            selectedItems.ForEach(item => item.Container.Remove(item));
         }
 
-        private void CopySelected()
+        private void CopySelected(DataGrid dataGrid)
         {
-            var selectedItems = _resourceManager.SelectedTableEntries.ToList();
+            Contract.Requires(dataGrid != null);
 
-            var entries = selectedItems.Cast<ResourceTableEntry>().ToArray();
-            Clipboard.SetText(entries.ToTextTable());
+            var selectedItems = _resourceManager.SelectedTableEntries.ToArray();
+
+            if (selectedItems.Length == 0)
+            {
+                dataGrid.GetCellSelection().SetClipboardData();
+            }
+            else
+            {
+                selectedItems.ToTable().SetClipboardData();
+            }
         }
 
         public void DeleteSelected()
@@ -177,16 +288,33 @@
             if (selectedItems.Count == 0)
                 return;
 
-            var resourceFiles = selectedItems.Select(item => item.Owner).Distinct();
+            var resourceFiles = selectedItems.Select(item => item.Container).Distinct();
 
             if (resourceFiles.Any(resourceFile => !_resourceManager.CanEdit(resourceFile, null)))
                 return;
 
-            selectedItems.ForEach(item => item.Owner.Remove(item));
+            selectedItems.ForEach(item => item.Container.Remove(item));
         }
 
-        private void Paste()
+        private bool CanPaste(DataGrid dataGrid)
         {
+            if (dataGrid == null)
+                return false;
+
+            if (!Clipboard.ContainsText())
+                return false;
+
+            if (_resourceManager.SelectedEntities.Count != 1)
+                return false;
+
+            return (((dataGrid.SelectedCells == null) || !dataGrid.SelectedCells.Any())
+                || dataGrid.HasRectangularCellSelection());
+        }
+
+        private void Paste(DataGrid dataGrid)
+        {
+            Contract.Requires(dataGrid != null);
+
             var selectedItems = _resourceManager.SelectedEntities.ToList();
 
             if (selectedItems.Count != 1)
@@ -199,7 +327,26 @@
             if (!_resourceManager.CanEdit(entity, null))
                 return;
 
-            entity.ImportTextTable(Clipboard.GetText());
+            var table = ClipboardHelper.GetClipboardDataAsTable();
+            if (table == null)
+                throw new ImportException(Resources.ImportNormalizedTableExpected);
+
+            try
+            {
+                if (table.HasValidTableHeaderRow())
+                {
+                    entity.ImportTable(table);
+                }
+                else
+                {
+                    if (!dataGrid.PasteCells(table))
+                        throw new ImportException(Resources.PasteSelectionSizeMismatch);
+                }
+            }
+            catch (ImportException ex)
+            {
+                throw new ImportException(Resources.PasteFailed + " " + ex.Message);
+            }
         }
 
         private void ToggleInvariant()
@@ -236,16 +383,9 @@
         {
             Contract.Requires(fileName != null);
 
-            var changes = _resourceManager.ImportExcelFile(fileName).ToArray();
+            var changes = _resourceManager.ImportExcelFile(fileName);
 
             changes.Apply();
-        }
-
-        private void CopyKeys()
-        {
-            var selectedKeys = _resourceManager.SelectedTableEntries.Select(item => item.Key);
-
-            Clipboard.SetText(string.Join(Environment.NewLine, selectedKeys));
         }
 
         public override string ToString()

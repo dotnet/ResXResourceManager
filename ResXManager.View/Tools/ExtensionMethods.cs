@@ -10,7 +10,6 @@ namespace tomenglertde.ResXManager.View.Tools
     using System.Windows.Input;
 
     using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
     using TomsToolbox.Core;
@@ -41,7 +40,7 @@ namespace tomenglertde.ResXManager.View.Tools
             setters.Add(new EventSetter(UIElement.PreviewKeyDownEvent, (KeyEventHandler)EditingElement_PreviewKeyDown));
             setters.Add(new Setter(TextBoxBase.AcceptsReturnProperty, true));
 
-            setters.Add(new Setter(SpellCheck.IsEnabledProperty, true));
+            setters.Add(new Setter(Spellchecker.IsEnabledProperty, true));
             setters.Add(new Setter(FrameworkElement.LanguageProperty, languageBinding));
 
             setters.Add(new Setter(FrameworkElement.FlowDirectionProperty, flowDirectionBinding));

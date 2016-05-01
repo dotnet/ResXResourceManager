@@ -22,30 +22,31 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
-    [VisualCompositionExport("Main")]
-    class MainViewModel : ObservableObject, IComposablePart
+    [VisualCompositionExport(RegionId.Main)]
+    internal class MainViewModel : ObservableObject
     {
         private readonly ResourceManager _resourceManager;
         private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly ITracer _tracer;
+        private readonly SourceFilesProvider _sourceFilesProvider;
         private readonly Configuration _configuration;
-        private string _folder;
 
         [ImportingConstructor]
-        public MainViewModel(ResourceManager resourceManager, CodeReferenceTracker codeReferenceTracker, Configuration configuration, ITracer tracer)
+        public MainViewModel(ResourceManager resourceManager, CodeReferenceTracker codeReferenceTracker, Configuration configuration, ITracer tracer, SourceFilesProvider sourceFilesProvider)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(codeReferenceTracker != null);
             Contract.Requires(configuration != null);
             Contract.Requires(tracer != null);
+            Contract.Requires(sourceFilesProvider != null);
 
             _resourceManager = resourceManager;
             _codeReferenceTracker = codeReferenceTracker;
             _configuration = configuration;
             _tracer = tracer;
+            _sourceFilesProvider = sourceFilesProvider;
 
             resourceManager.BeginEditing += ResourceManager_BeginEditing;
-            resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
 
             try
             {
@@ -54,7 +55,7 @@
                 if (string.IsNullOrEmpty(folder))
                     return;
 
-                Folder = folder;
+                SourceFilesProvider.Folder = folder;
 
                 if (Directory.Exists(folder))
                 {
@@ -65,18 +66,6 @@
             {
                 _tracer.TraceError(ex.ToString());
                 MessageBox.Show(ex.Message);
-            }
-        }
-
-        public string Folder
-        {
-            get
-            {
-                return _folder;
-            }
-            set
-            {
-                SetProperty(ref _folder, value, () => Folder);
             }
         }
 
@@ -96,6 +85,15 @@
             }
         }
 
+        public SourceFilesProvider SourceFilesProvider
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<SourceFilesProvider>() != null);
+                return _sourceFilesProvider;
+            }
+        }
+
         private void Browse()
         {
             var settings = Settings.Default;
@@ -107,7 +105,7 @@
                     if (dlg.ShowDialog() != CommonFileDialogResult.Ok)
                         return;
 
-                    Folder = settings.StartupFolder = dlg.FileName;
+                    SourceFilesProvider.Folder = settings.StartupFolder = dlg.FileName;
 
                     Load();
                     return;
@@ -123,7 +121,7 @@
                 if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                     return;
 
-                Folder = Settings.Default.StartupFolder = dlg.SelectedPath;
+                SourceFilesProvider.Folder = Settings.Default.StartupFolder = dlg.SelectedPath;
 
                 Load();
             }
@@ -133,18 +131,9 @@
         {
             try
             {
-                var folder = Folder;
-                if (string.IsNullOrEmpty(folder))
-                    return;
-
-                var sourceFiles = new DirectoryInfo(folder).GetAllSourceFiles(_configuration);
+                var sourceFiles = SourceFilesProvider.SourceFiles;
 
                 _resourceManager.Load(sourceFiles);
-
-                if (View.Properties.Settings.Default.IsFindCodeReferencesEnabled)
-                {
-                    _codeReferenceTracker.BeginFind(_resourceManager, _configuration.CodeReferences, sourceFiles, _tracer);
-                }
             }
             catch (Exception ex)
             {
@@ -168,7 +157,7 @@
             string message;
             var languages = entity.Languages.Where(lang => (culture == null) || culture.Equals(lang.Culture)).ToArray();
 
-            var rootFolder = Folder;
+            var rootFolder = SourceFilesProvider.Folder;
             if (string.IsNullOrEmpty(rootFolder))
                 return false;
 
@@ -232,18 +221,62 @@
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
 
-        private void ResourceManager_ReloadRequested(object sender, EventArgs e)
-        {
-            Load();
-        }
-
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_tracer != null);
+            Contract.Invariant(_sourceFilesProvider != null);
             Contract.Invariant(_codeReferenceTracker != null);
+        }
+    }
+
+    [Export]
+    [Export(typeof(ISourceFilesProvider))]
+    class SourceFilesProvider : ObservableObject, ISourceFilesProvider
+    {
+        private readonly Configuration _configuration;
+        private string _folder;
+
+        [ImportingConstructor]
+        public SourceFilesProvider(Configuration configuration)
+        {
+            Contract.Requires(configuration != null);
+
+            _configuration = configuration;
+        }
+
+        public string Folder
+        {
+            get
+            {
+                return _folder;
+            }
+            set
+            {
+                SetProperty(ref _folder, value, () => Folder);
+            }
+        }
+
+
+        public IList<ProjectFile> SourceFiles
+        {
+            get
+            {
+                var folder = Folder;
+                if (string.IsNullOrEmpty(folder))
+                    return new ProjectFile[0];
+
+                return new DirectoryInfo(folder).GetAllSourceFiles(_configuration);
+            }
+        }
+
+        [ContractInvariantMethod]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_configuration != null);
         }
     }
 }

@@ -25,12 +25,12 @@
 
             InitializeComponent();
 
-            EventManager.RegisterClassHandler(typeof(MainWindow), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
+            AddHandler(ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
         }
 
         private static void Navigate_Click(object sender, RoutedEventArgs e)
         {
-            string url = null;
+            string url;
 
             var source = e.OriginalSource as FrameworkElement;
             if (source != null)

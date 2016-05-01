@@ -28,6 +28,11 @@
         public static readonly DependencyProperty ToggleButtonProperty =
             DependencyProperty.Register("ToggleButton", typeof(ToggleButton), typeof(ShowErrorsOnlyBehavior), new FrameworkPropertyMetadata(null, (sender, e) => ((ShowErrorsOnlyBehavior)sender).ToggleButton_Changed((ToggleButton)e.OldValue, (ToggleButton)e.NewValue)));
 
+        public void Refresh()
+        {
+            Refresh(ToggleButton);
+        }
+
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -71,22 +76,17 @@
 
         private void ToggleButton_StateChanged(object sender, EventArgs e)
         {
+            Refresh((ToggleButton)sender);
+        }
+
+        private void Refresh(ToggleButton button)
+        {
             var dataGrid = DataGrid;
 
-            if ((sender == null) || (dataGrid == null))
+            if ((button == null) || (dataGrid == null))
                 return;
 
-            var button = (ToggleButton)sender;
-
-            if (button.IsChecked.GetValueOrDefault())
-            {
-                UpdateErrorsOnlyFilter();
-            }
-            else
-            {
-                dataGrid.Items.Filter = null;
-                dataGrid.SetIsAutoFilterEnabled(true);
-            }
+            UpdateErrorsOnlyFilter(button.IsChecked.GetValueOrDefault());
 
             var selectedItem = dataGrid.SelectedItem;
             if (selectedItem != null)
@@ -102,30 +102,50 @@
 
             if (toggleButton.IsChecked.GetValueOrDefault())
             {
-                toggleButton.BeginInvoke(UpdateErrorsOnlyFilter);
+                toggleButton.BeginInvoke(() => UpdateErrorsOnlyFilter(true));
             }
         }
 
-        private void UpdateErrorsOnlyFilter()
+        private void UpdateErrorsOnlyFilter(bool isEnabled)
         {
-            if (DataGrid == null)
+            var dataGrid = DataGrid;
+
+            if (dataGrid == null)
                 return;
 
-            var visibleLanguages = DataGrid.Columns
-                .Where(column => column.Visibility == Visibility.Visible)
-                .Select(column => column.Header)
-                .OfType<LanguageHeader>()
-                .Select(header => header.CultureKey)
-                .ToArray();
-
-            DataGrid.SetIsAutoFilterEnabled(false);
-            DataGrid.Items.Filter = row =>
+            try
             {
-                var entry = (ResourceTableEntry)row;
-                var values = visibleLanguages.Select(lang => entry.Values.GetValue(lang));
+                dataGrid.CommitEdit();
 
-                return entry.IsDuplicateKey || (!entry.IsInvariant && (values.Any(string.IsNullOrEmpty) || entry.HasStringFormatParameterMismatches(visibleLanguages)));
-            };
+                if (!isEnabled)
+                {
+                    dataGrid.Items.Filter = null;
+                    dataGrid.SetIsAutoFilterEnabled(true);
+                    return;
+                }
+
+                var visibleLanguages = dataGrid.Columns
+                    .Where(column => column.Visibility == Visibility.Visible)
+                    .Select(column => column.Header)
+                    .OfType<LanguageHeader>()
+                    .Select(header => header.CultureKey)
+                    .ToArray();
+
+                dataGrid.SetIsAutoFilterEnabled(false);
+
+                dataGrid.Items.Filter = row =>
+                {
+                    var entry = (ResourceTableEntry)row;
+                    var values = visibleLanguages.Select(lang => entry.Values.GetValue(lang));
+
+                    return entry.IsDuplicateKey
+                           || (!entry.IsInvariant && (values.Any(string.IsNullOrEmpty) || entry.HasStringFormatParameterMismatches(visibleLanguages)))
+                           || entry.HasSnapshotDifferences(visibleLanguages);
+                };
+            }
+            catch (InvalidOperationException)
+            {
+            }
         }
     }
 }

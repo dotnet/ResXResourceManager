@@ -82,9 +82,9 @@
             var specificCulture =
                 // If a specific culture exists with "subtag == primary tag" (e.g. de-DE), use this
                 specificCultures.FirstOrDefault(c => c.Name.Equals(preferredSpecificCultureName, StringComparison.OrdinalIgnoreCase))
-                    // else it's more likely that the default one starts with the same letter as the neutral culture name (sv-SE, not sv-FI)
+                // else it's more likely that the default one starts with the same letter as the neutral culture name (sv-SE, not sv-FI)
                 ?? specificCultures.FirstOrDefault(c => c.Name.Split('-').Last().StartsWith(cultureName.Substring(0, 1), StringComparison.OrdinalIgnoreCase))
-                    // If nothing else matches, use the first.
+                // If nothing else matches, use the first.
                 ?? specificCultures.FirstOrDefault();
 
             return specificCulture;

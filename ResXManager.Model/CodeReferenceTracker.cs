@@ -24,13 +24,9 @@
         {
         }
 
-        public int Progress
-        {
-            get
-            {
-                return (int)(_total > 0 ? Math.Max(1, (100 * _visited) / _total) : 0);
-            }
-        }
+        public int Progress => (int)(_total > 0 ? Math.Max(1, (100 * _visited) / _total) : 0);
+
+        public bool IsActive => _backgroundThread != null;
 
         public void StopFind()
         {
@@ -49,7 +45,10 @@
             StopFind();
 
             var sourceFiles = allSourceFiles.Where(item => !item.IsResourceFile() && !item.IsDesignerFile()).ToArray();
-            var resourceTableEntries = resourceManager.ResourceEntities.SelectMany(entity => entity.Entries).ToArray();
+
+            var resourceTableEntries = resourceManager.ResourceEntities
+                .Where(entity => !entity.IsWinFormsDesignerResource)
+                .SelectMany(entity => entity.Entries).ToArray();
 
             _backgroundThread = new Thread(() => FindCodeReferences(configuration, sourceFiles, resourceTableEntries, tracer))
             {
@@ -81,7 +80,7 @@
                 _total = sourceFiles.Select(sf => sf.Lines.Length).Sum() * resourceTableEntries.Count;
                 _visited = 0;
 
-                var entriesByBaseName = resourceTableEntries.GroupBy(entry => entry.Owner.BaseName);
+                var entriesByBaseName = resourceTableEntries.GroupBy(entry => entry.Container.BaseName);
 
                 foreach (var entriesGroup in entriesByBaseName.AsParallel())
                 {

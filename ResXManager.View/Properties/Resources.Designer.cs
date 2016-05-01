@@ -5,6 +5,18 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
+// 
+// This template generates PublicResXFileCodeGenerator compatible code plus some
+// useful extensions. 
+// 
+// The original version provided by ResXResourceManager is restricted to resource key names
+// that are valid c# identifiers to keep this template simple (KISS!).
+// 
+// Us it as it is or as a scaffold to generate the code you need.
+//
+// As long as you have ResXResourceManager running in the background, the generated code 
+// will be kept up to date.
+//  
 //------------------------------------------------------------------------------
 
 namespace tomenglertde.ResXManager.View.Properties {
@@ -108,6 +120,26 @@ namespace tomenglertde.ResXManager.View.Properties {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CaseSensitive", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cell selection.
+        /// </summary>
+        public static string CellSelection {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("CellSelection", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Allow selection of individual cells to copy/paste ....
+        /// </summary>
+        public static string CellSelectionToolTip {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("CellSelectionToolTip", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -272,22 +304,22 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Copy key(s).
-        /// </summary>
-        public static string CopyKeys {
-            get {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("CopyKeys", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Copy selected rows (Ctrl+C).
+        ///   Looks up a localized string similar to Copy the selected rows or cells (Ctrl+C).
         /// </summary>
         public static string CopyToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CopyToolTip", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Create Snapshot.
+        /// </summary>
+        public static string CreateSnapshot {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("CreateSnapshot", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -482,6 +514,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to A normalized table is expected..
+        /// </summary>
+        public static string ImportNormalizedTableExpected {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ImportNormalizedTableExpected", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Index of the entry in the resource file..
         /// </summary>
         public static string IndexColumnHeaderToolTip {
@@ -548,6 +590,16 @@ namespace tomenglertde.ResXManager.View.Properties {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("LikeButtonToolTip", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Load Snapshot.
+        /// </summary>
+        public static string LoadSnapshot {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("LoadSnapshot", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -642,12 +694,42 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Paste rows (Ctrl+V).
+        ///   Looks up a localized string similar to Error parsing the data from clipboard:.
+        /// </summary>
+        public static string PasteFailed {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("PasteFailed", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The data you're pasting isn't the same size as you....
+        /// </summary>
+        public static string PasteSelectionSizeMismatch {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("PasteSelectionSizeMismatch", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Paste the clipboard content (Ctrl+V).
         /// </summary>
         public static string PasteToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("PasteToolTip", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Patterns.
+        /// </summary>
+        public static string Patterns {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("Patterns", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -672,7 +754,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to A regular expression to filter resource files.
+        ///   Looks up a localized string similar to A regular expression to filter resource files.&amp....
         /// </summary>
         public static string ResourceFilterToolTip {
             get {
@@ -732,7 +814,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Show only lines with missing strings.
+        ///   Looks up a localized string similar to Show only lines with warnings or changes.
         /// </summary>
         public static string ShowOnlyMissingToolTip {
             get {
@@ -873,6 +955,16 @@ namespace tomenglertde.ResXManager.View.Properties {
                 return ResourceManager.GetString("TranslatorConfiguration_SaveCredentials", resourceCulture) ?? string.Empty;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unload Snapshot.
+        /// </summary>
+        public static string UnloadSnapshot {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("UnloadSnapshot", resourceCulture) ?? string.Empty;
+            }
+        }
     }
 
     /// <summary>
@@ -905,6 +997,14 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// @Invariant
         /// </remarks>
         CaseSensitive,
+        /// <summary>
+        ///   Looks up a localized string similar to Cell selection.
+        /// </summary>
+        CellSelection,
+        /// <summary>
+        ///   Looks up a localized string similar to Allow selection of individual cells to copy/paste ....
+        /// </summary>
+        CellSelectionToolTip,
         /// <summary>
         ///   Looks up a localized string similar to Choose columns.
         /// </summary>
@@ -970,13 +1070,13 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         Copy,
         /// <summary>
-        ///   Looks up a localized string similar to Copy key(s).
-        /// </summary>
-        CopyKeys,
-        /// <summary>
-        ///   Looks up a localized string similar to Copy selected rows (Ctrl+C).
+        ///   Looks up a localized string similar to Copy the selected rows or cells (Ctrl+C).
         /// </summary>
         CopyToolTip,
+        /// <summary>
+        ///   Looks up a localized string similar to Create Snapshot.
+        /// </summary>
+        CreateSnapshot,
         /// <summary>
         ///   Looks up a localized string similar to Cut (Ctrl+X).
         /// </summary>
@@ -1054,6 +1154,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         ImportExcel,
         /// <summary>
+        ///   Looks up a localized string similar to A normalized table is expected..
+        /// </summary>
+        ImportNormalizedTableExpected,
+        /// <summary>
         ///   Looks up a localized string similar to Index of the entry in the resource file..
         /// </summary>
         IndexColumnHeaderToolTip,
@@ -1081,6 +1185,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Like it? Support the project by writing a short re....
         /// </summary>
         LikeButtonToolTip,
+        /// <summary>
+        ///   Looks up a localized string similar to Load Snapshot.
+        /// </summary>
+        LoadSnapshot,
         /// <summary>
         ///   Looks up a localized string similar to Multiple selection..
         /// </summary>
@@ -1118,9 +1226,21 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         Paste,
         /// <summary>
-        ///   Looks up a localized string similar to Paste rows (Ctrl+V).
+        ///   Looks up a localized string similar to Error parsing the data from clipboard:.
+        /// </summary>
+        PasteFailed,
+        /// <summary>
+        ///   Looks up a localized string similar to The data you're pasting isn't the same size as you....
+        /// </summary>
+        PasteSelectionSizeMismatch,
+        /// <summary>
+        ///   Looks up a localized string similar to Paste the clipboard content (Ctrl+V).
         /// </summary>
         PasteToolTip,
+        /// <summary>
+        ///   Looks up a localized string similar to Patterns.
+        /// </summary>
+        Patterns,
         /// <summary>
         ///   Looks up a localized string similar to Refresh view.
         /// </summary>
@@ -1130,7 +1250,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         RegularExpression,
         /// <summary>
-        ///   Looks up a localized string similar to A regular expression to filter resource files.
+        ///   Looks up a localized string similar to A regular expression to filter resource files.&amp....
         /// </summary>
         ResourceFilterToolTip,
         /// <summary>
@@ -1154,7 +1274,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         ShellTabHeader_Translate,
         /// <summary>
-        ///   Looks up a localized string similar to Show only lines with missing strings.
+        ///   Looks up a localized string similar to Show only lines with warnings or changes.
         /// </summary>
         ShowOnlyMissingToolTip,
         /// <summary>
@@ -1212,6 +1332,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Save credentials (Credentials will be stored as cl....
         /// </summary>
         TranslatorConfiguration_SaveCredentials,
+        /// <summary>
+        ///   Looks up a localized string similar to Unload Snapshot.
+        /// </summary>
+        UnloadSnapshot,
     }
 
     /// <summary>
@@ -1276,6 +1400,31 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
     }
 
+    /// <summary>
+    /// Specifies a localized display name for an object.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [AttributeUsage(AttributeTargets.All, AllowMultiple=false)]
+    public sealed class LocalizedCategoryAttribute : System.ComponentModel.CategoryAttribute
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocalizedCategoryAttribute"/> class.
+        /// </summary>
+        /// <param name="resourceKey">The resource key of the associated resource.</param>
+        public LocalizedCategoryAttribute(StringResourceKey resourceKey)
+            : base(resourceKey.ToString())
+        {
+        }
+
+        /// <summary>
+        /// Gets the localized category name from the resource id stored in this attribute.
+        /// </summary>
+        protected override string GetLocalizedString(string value)
+        {
+            return Resources.ResourceManager.GetString(value);
+        }
+    }
 
     /// <summary>
     /// Specifies a localized display name for an object.
@@ -1285,6 +1434,10 @@ namespace tomenglertde.ResXManager.View.Properties {
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public sealed class LocalizedTextAttribute : global::TomsToolbox.Desktop.TextAttribute
     {
+        // This code is generated by Resources.Designer.t4
+        // If you get compile errors because you don't use the TomsToolbox.Desktop NuGet package, remove this part in the Resources.Designer.t4 file. 
+        // Just search for this text and follow the instructions above.
+
         private readonly StringResourceKey _resourceKey;
 
         /// <summary>
@@ -1310,7 +1463,217 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
     }
 
+    /// <summary>
+    /// A localizable version of the <see cref="System.ComponentModel.DataAnnotations.DataTypeAttribute"/> class.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
+    public class DataTypeAttribute : System.ComponentModel.DataAnnotations.DataTypeAttribute
+    {
+        private StringResourceKey _resourceKey;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataTypeAttribute"/> class.
+        /// </summary>
+        public DataTypeAttribute(StringResourceKey resourceKey, System.ComponentModel.DataAnnotations.DataType dataType)
+            : base(dataType)
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataTypeAttribute"/> class.
+        /// </summary>
+        public DataTypeAttribute(StringResourceKey resourceKey, string customDataType)
+            : base(customDataType)
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Gets or sets the resource key.
+        /// </summary>
+        public StringResourceKey ResourceKey
+        {
+            get
+            {
+                return _resourceKey;
+            }
+            set
+            {
+                _resourceKey = value;
+                ErrorMessageResourceType = typeof(Resources);
+                ErrorMessageResourceName = value.ToString();
+            }
+        }
+    }
+    
+    /// <summary>
+    /// A localizable version of the <see cref="System.ComponentModel.DataAnnotations.RangeAttribute"/> class.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
+    public class RangeAttribute : System.ComponentModel.DataAnnotations.RangeAttribute
+    {
+        private StringResourceKey _resourceKey;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RangeAttribute"/> class.
+        /// </summary>
+        public RangeAttribute(StringResourceKey resourceKey, int minimum, int maximum)
+            : base(minimum, maximum)
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RangeAttribute"/> class.
+        /// </summary>
+        public RangeAttribute(StringResourceKey resourceKey, double minimum, double maximum)
+            : base(minimum, maximum)
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RangeAttribute"/> class.
+        /// </summary>
+        public RangeAttribute(StringResourceKey resourceKey, Type type, string minimum, string maximum)
+            : base(type, minimum, maximum)
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Gets or sets the resource key.
+        /// </summary>
+        public StringResourceKey ResourceKey
+        {
+            get
+            {
+                return _resourceKey;
+            }
+            set
+            {
+                _resourceKey = value;
+                ErrorMessageResourceType = typeof(Resources);
+                ErrorMessageResourceName = value.ToString();
+            }
+        }
+    }
+    
+    /// <summary>
+    /// A localizable version of the <see cref="System.ComponentModel.DataAnnotations.RegularExpressionAttribute"/> class.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
+    public class RegularExpressionAttribute : System.ComponentModel.DataAnnotations.RegularExpressionAttribute
+    {
+        private StringResourceKey _resourceKey;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RegularExpressionAttribute"/> class.
+        /// </summary>
+        public RegularExpressionAttribute(StringResourceKey resourceKey, string pattern)
+            : base(pattern)
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Gets or sets the resource key.
+        /// </summary>
+        public StringResourceKey ResourceKey
+        {
+            get
+            {
+                return _resourceKey;
+            }
+            set
+            {
+                _resourceKey = value;
+                ErrorMessageResourceType = typeof(Resources);
+                ErrorMessageResourceName = value.ToString();
+            }
+        }
+    }
+    
+    /// <summary>
+    /// A localizable version of the <see cref="System.ComponentModel.DataAnnotations.RequiredAttribute"/> class.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
+    public class RequiredAttribute : System.ComponentModel.DataAnnotations.RequiredAttribute
+    {
+        private StringResourceKey _resourceKey;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RequiredAttribute"/> class.
+        /// </summary>
+        public RequiredAttribute(StringResourceKey resourceKey)
+            : base()
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Gets or sets the resource key.
+        /// </summary>
+        public StringResourceKey ResourceKey
+        {
+            get
+            {
+                return _resourceKey;
+            }
+            set
+            {
+                _resourceKey = value;
+                ErrorMessageResourceType = typeof(Resources);
+                ErrorMessageResourceName = value.ToString();
+            }
+        }
+    }
+    
+    /// <summary>
+    /// A localizable version of the <see cref="System.ComponentModel.DataAnnotations.StringLengthAttribute"/> class.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
+    public class StringLengthAttribute : System.ComponentModel.DataAnnotations.StringLengthAttribute
+    {
+        private StringResourceKey _resourceKey;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringLengthAttribute"/> class.
+        /// </summary>
+        public StringLengthAttribute(StringResourceKey resourceKey, int maximumLength)
+            : base(maximumLength)
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Gets or sets the resource key.
+        /// </summary>
+        public StringResourceKey ResourceKey
+        {
+            get
+            {
+                return _resourceKey;
+            }
+            set
+            {
+                _resourceKey = value;
+                ErrorMessageResourceType = typeof(Resources);
+                ErrorMessageResourceName = value.ToString();
+            }
+        }
+    }
+    
 
 }
-

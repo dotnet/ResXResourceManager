@@ -62,7 +62,7 @@
 
             if (scope != null)
             {
-                var entitiesInScope = scope.Entries.Select(entry => entry.Owner).Distinct().ToArray();
+                var entitiesInScope = scope.Entries.Select(entry => entry.Container).Distinct().ToArray();
                 entitiesQuery = entitiesQuery.Where(entity => entitiesInScope.Contains(entity.ResourceEntity));
             }
 
@@ -97,14 +97,14 @@
             worksheetPart.Worksheet = worksheet;
 
             var headerRow = _singleSheetFixedColumnHeaders.Concat(languages.GetLanguageColumnHeaders(scope));
-            var dataRows = entries.Select(e => new[] { e.Owner.ProjectName, e.Owner.UniqueName }.Concat(e.GetDataRow(languages, scope)));
+            var dataRows = entries.Select(e => new[] { e.Container.ProjectName, e.Container.UniqueName }.Concat(e.GetDataRow(languages, scope)));
 
             var rows = new[] { headerRow }.Concat(dataRows);
 
             worksheet.AppendItem(rows.Aggregate(new SheetData(), AppendRow));
         }
 
-        public static IEnumerable<EntryChange> ImportExcelFile(this ResourceManager resourceManager, string filePath)
+        public static IList<EntryChange> ImportExcelFile(this ResourceManager resourceManager, string filePath)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(filePath != null);
@@ -126,7 +126,7 @@
 
                 var firstSheet = sheets.OfType<Sheet>().FirstOrDefault();
                 if (firstSheet == null)
-                    return Enumerable.Empty<EntryChange>();
+                    return new EntryChange[0];
 
                 var firstRow = firstSheet.GetRows(workbookPart).FirstOrDefault();
 
@@ -134,7 +134,7 @@
                     ? ImportSingleSheet(resourceManager, firstSheet, workbookPart, sharedStrings) 
                     : ImportMultipleSheets(resourceManager, sheets, workbookPart, sharedStrings);
 
-                return changes;
+                return changes.ToArray();
             }
         }
 
@@ -186,7 +186,7 @@
 
                     var tableData = new[] { headerRow }.Concat(fileRows).ToArray();
 
-                    foreach (var change in entity.ImportTable(FixedColumnHeaders, tableData))
+                    foreach (var change in entity.ImportTable(_fixedColumnHeaders, tableData))
                     {
                         yield return change;
                     }
@@ -204,9 +204,16 @@
             var entities = GetMultipleSheetEntities(resourceManager).ToArray();
 
             var changes = sheets.OfType<Sheet>()
-                .SelectMany(sheet => FindResourceEntity(entities, sheet).ImportTable(FixedColumnHeaders, sheet.GetRows(workbookPart).Select(row => row.GetCellValues(sharedStrings)).ToArray()));
+                .SelectMany(sheet => FindResourceEntity(entities, sheet).ImportTable(_fixedColumnHeaders, sheet.GetTable(workbookPart, sharedStrings)));
 
             return changes;
+        }
+
+        private static IList<string>[] GetTable(this Sheet sheet, WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
+        {
+            return sheet.GetRows(workbookPart)
+                .Select(row => row.GetCellValues(sharedStrings))
+                .ToArray();
         }
 
         private static bool IsSingleSheetHeader(Row firstRow, IList<SharedStringItem> sharedStrings)
@@ -400,7 +407,7 @@
 
             var languageColumnHeaders = languages.GetLanguageColumnHeaders(scope);
 
-            yield return FixedColumnHeaders.Concat(languageColumnHeaders);
+            yield return _fixedColumnHeaders.Concat(languageColumnHeaders);
         }
 
         private static IEnumerable<string> GetLanguageColumnHeaders(this IEnumerable<CultureKey> languages, IResourceScope scope)
@@ -425,7 +432,7 @@
             Contract.Ensures(Contract.Result<IEnumerable<IEnumerable<string>>>() != null);
 
             var entries = (scope != null)
-                ? scope.Entries.Where(entry => entry.Owner == entity)
+                ? scope.Entries.Where(entry => entry.Container == entity)
                 : entity.Entries;
 
             return entries.Select(entry => entry.GetDataRow(languages, scope));
@@ -460,7 +467,9 @@
             where TContainer : OpenXmlElement
             where TItem : OpenXmlElement
         {
-            container.Append(item);
+            if ((container != null) && (item != null))
+                container.Append(item);
+
             return container;
         }
 

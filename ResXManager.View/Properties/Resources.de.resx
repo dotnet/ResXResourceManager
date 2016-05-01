@@ -133,7 +133,7 @@
     <value>Möchten sie die ausgewählten Einträge löschen?</value>
   </data>
   <data name="CopyToolTip" xml:space="preserve">
-    <value>Markierte Zeilen kopieren (Strg+C)</value>
+    <value>Markierte Zeilen oder Zellen kopieren (Strg+C)</value>
   </data>
   <data name="DonateButtonToolTip" xml:space="preserve">
     <value>Unterstützen Sie die Open-Source Community</value>
@@ -157,25 +157,25 @@
     <value>Wählen sie die neue Sprache aus:</value>
   </data>
   <data name="PasteToolTip" xml:space="preserve">
-    <value>Zeilen einfügen (Strg+V)</value>
+    <value>Zwischenablage einfügen (Strg+V)</value>
   </data>
   <data name="RefreshViewToolTip" xml:space="preserve">
     <value>Ansicht neu laden</value>
   </data>
   <data name="ResourceFilterToolTip" xml:space="preserve">
-    <value>Ein regulärer Ausdruck zum Filtern der Dateien</value>
+    <value>Ein regulärer Ausdruck zum Filtern der Dateien.
+Die Suche wird auf den Text  "{Projekt} - {Ordner}\{Datei}" angewendet.
+Der Text entspricht der Gruppenüberschrift in der gruppierten Ansicht.
+Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
   </data>
   <data name="ShowOnlyMissingToolTip" xml:space="preserve">
-    <value>Nur Zeilen mit fehlenden Einträgen anzeigen</value>
+    <value>Nur Zeilen anzeigen, die Warnungen oder Änderungen enthalten</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Löschen (Entf)</value>
   </data>
   <data name="Invariant" xml:space="preserve">
     <value>Nicht lokalisiert</value>
-  </data>
-  <data name="CopyKeys" xml:space="preserve">
-    <value>Schlüssel kopieren</value>
   </data>
   <data name="ErrorAddingNewResourceFile" xml:space="preserve">
     <value>Fehler beim Hinzufügen der neuen Ressourcedatei '{0}'</value>
@@ -350,5 +350,32 @@
   </data>
   <data name="IndexColumnHeaderToolTip" xml:space="preserve">
     <value>Index des Eintrags in der Ressourcendatei.</value>
+  </data>
+  <data name="PasteFailed" xml:space="preserve">
+    <value>Fehler beim interpretieren der Daten aus der Zwischenablage:</value>
+  </data>
+  <data name="CreateSnapshot" xml:space="preserve">
+    <value>Snapshot erzeugen</value>
+  </data>
+  <data name="LoadSnapshot" xml:space="preserve">
+    <value>Snapshot laden</value>
+  </data>
+  <data name="UnloadSnapshot" xml:space="preserve">
+    <value>Snapshot entladen</value>
+  </data>
+  <data name="ImportNormalizedTableExpected" xml:space="preserve">
+    <value>Die Tabelle muß normalisiert sein.</value>
+  </data>
+  <data name="PasteSelectionSizeMismatch" xml:space="preserve">
+    <value>Die Daten in der Zwischenablage haben nicht die gleiche Größe wie die Auswahl.</value>
+  </data>
+  <data name="CellSelection" xml:space="preserve">
+    <value>Einzelne Zellen markieren</value>
+  </data>
+  <data name="CellSelectionToolTip" xml:space="preserve">
+    <value>Das markieren einzelner Zellen erlauben, um deren Inhalt zu kopieren oder einzufügen.</value>
+  </data>
+  <data name="Patterns" xml:space="preserve">
+    <value>Muster</value>
   </data>
 </root>

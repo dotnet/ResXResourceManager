@@ -5,6 +5,18 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
+// 
+// This template generates PublicResXFileCodeGenerator compatible code plus some
+// useful extensions. 
+// 
+// The original version provided by ResXResourceManager is restricted to resource key names
+// that are valid c# identifiers to keep this template simple (KISS!).
+// 
+// Us it as it is or as a scaffold to generate the code you need.
+//
+// As long as you have ResXResourceManager running in the background, the generated code 
+// will be kept up to date.
+//  
 //------------------------------------------------------------------------------
 
 namespace tomenglertde.ResXManager.Model.Properties {
@@ -55,16 +67,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Clipboard is empty..
-        /// </summary>
-        public static string ClipboardIsEmpty {
-            get {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("ClipboardIsEmpty", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -179,16 +181,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Inconsistent usage of double quote..
-        /// </summary>
-        public static string ImportInconsistentDoubleQuoteError {
-            get {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("ImportInconsistentDoubleQuoteError", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to The language "{0}" can't be edited. The operation ....
         /// </summary>
         public static string ImportLanguageNotEditable {
@@ -205,26 +197,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ImportMapSheetError", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to A normalized table is expected..
-        /// </summary>
-        public static string ImportNormalizedTableExpected {
-            get {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("ImportNormalizedTableExpected", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Can't parse empty text..
-        /// </summary>
-        public static string ImportParseEmptyTextError {
-            get {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("ImportParseEmptyTextError", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -279,7 +251,17 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to This item contains string format parameter mismatc....
+        ///   Looks up a localized string similar to Snapshot: "{0}".
+        /// </summary>
+        public static string SnapshotAnnotation {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("SnapshotAnnotation", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Warning: This item contains string format paramete....
         /// </summary>
         public static string StringFormatParameterMismatchError {
             get {
@@ -309,10 +291,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
     [global::System.Runtime.CompilerServices.CompilerGenerated]
     public enum StringResourceKey
     {
-        /// <summary>
-        ///   Looks up a localized string similar to Clipboard is empty..
-        /// </summary>
-        ClipboardIsEmpty,
         /// <summary>
         ///   Looks up a localized string similar to Duplicate keys in '{0}':&amp;#13;&amp;#10;{1}&amp;....
         /// </summary>
@@ -358,10 +336,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         ImportHeaderMismatchError,
         /// <summary>
-        ///   Looks up a localized string similar to Inconsistent usage of double quote..
-        /// </summary>
-        ImportInconsistentDoubleQuoteError,
-        /// <summary>
         ///   Looks up a localized string similar to The language "{0}" can't be edited. The operation ....
         /// </summary>
         ImportLanguageNotEditable,
@@ -369,14 +343,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
         ///   Looks up a localized string similar to The sheet "{0}" can't be imported; there is no mat....
         /// </summary>
         ImportMapSheetError,
-        /// <summary>
-        ///   Looks up a localized string similar to A normalized table is expected..
-        /// </summary>
-        ImportNormalizedTableExpected,
-        /// <summary>
-        ///   Looks up a localized string similar to Can't parse empty text..
-        /// </summary>
-        ImportParseEmptyTextError,
         /// <summary>
         ///   Looks up a localized string similar to {0} is not a valid RESX resource file: No xml root....
         /// </summary>
@@ -398,7 +364,11 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         Neutral,
         /// <summary>
-        ///   Looks up a localized string similar to This item contains string format parameter mismatc....
+        ///   Looks up a localized string similar to Snapshot: "{0}".
+        /// </summary>
+        SnapshotAnnotation,
+        /// <summary>
+        ///   Looks up a localized string similar to Warning: This item contains string format paramete....
         /// </summary>
         StringFormatParameterMismatchError,
         /// <summary>
@@ -472,6 +442,31 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
     }
 
+    /// <summary>
+    /// Specifies a localized display name for an object.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [AttributeUsage(AttributeTargets.All, AllowMultiple=false)]
+    public sealed class LocalizedCategoryAttribute : System.ComponentModel.CategoryAttribute
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocalizedCategoryAttribute"/> class.
+        /// </summary>
+        /// <param name="resourceKey">The resource key of the associated resource.</param>
+        public LocalizedCategoryAttribute(StringResourceKey resourceKey)
+            : base(resourceKey.ToString())
+        {
+        }
+
+        /// <summary>
+        /// Gets the localized category name from the resource id stored in this attribute.
+        /// </summary>
+        protected override string GetLocalizedString(string value)
+        {
+            return Resources.ResourceManager.GetString(value);
+        }
+    }
 
     /// <summary>
     /// Specifies a localized display name for an object.
@@ -481,6 +476,10 @@ namespace tomenglertde.ResXManager.Model.Properties {
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public sealed class LocalizedTextAttribute : global::TomsToolbox.Desktop.TextAttribute
     {
+        // This code is generated by Resources.Designer.t4
+        // If you get compile errors because you don't use the TomsToolbox.Desktop NuGet package, remove this part in the Resources.Designer.t4 file. 
+        // Just search for this text and follow the instructions above.
+
         private readonly StringResourceKey _resourceKey;
 
         /// <summary>
@@ -506,7 +505,217 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
     }
 
+    /// <summary>
+    /// A localizable version of the <see cref="System.ComponentModel.DataAnnotations.DataTypeAttribute"/> class.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
+    public class DataTypeAttribute : System.ComponentModel.DataAnnotations.DataTypeAttribute
+    {
+        private StringResourceKey _resourceKey;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataTypeAttribute"/> class.
+        /// </summary>
+        public DataTypeAttribute(StringResourceKey resourceKey, System.ComponentModel.DataAnnotations.DataType dataType)
+            : base(dataType)
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataTypeAttribute"/> class.
+        /// </summary>
+        public DataTypeAttribute(StringResourceKey resourceKey, string customDataType)
+            : base(customDataType)
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Gets or sets the resource key.
+        /// </summary>
+        public StringResourceKey ResourceKey
+        {
+            get
+            {
+                return _resourceKey;
+            }
+            set
+            {
+                _resourceKey = value;
+                ErrorMessageResourceType = typeof(Resources);
+                ErrorMessageResourceName = value.ToString();
+            }
+        }
+    }
+    
+    /// <summary>
+    /// A localizable version of the <see cref="System.ComponentModel.DataAnnotations.RangeAttribute"/> class.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
+    public class RangeAttribute : System.ComponentModel.DataAnnotations.RangeAttribute
+    {
+        private StringResourceKey _resourceKey;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RangeAttribute"/> class.
+        /// </summary>
+        public RangeAttribute(StringResourceKey resourceKey, int minimum, int maximum)
+            : base(minimum, maximum)
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RangeAttribute"/> class.
+        /// </summary>
+        public RangeAttribute(StringResourceKey resourceKey, double minimum, double maximum)
+            : base(minimum, maximum)
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RangeAttribute"/> class.
+        /// </summary>
+        public RangeAttribute(StringResourceKey resourceKey, Type type, string minimum, string maximum)
+            : base(type, minimum, maximum)
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Gets or sets the resource key.
+        /// </summary>
+        public StringResourceKey ResourceKey
+        {
+            get
+            {
+                return _resourceKey;
+            }
+            set
+            {
+                _resourceKey = value;
+                ErrorMessageResourceType = typeof(Resources);
+                ErrorMessageResourceName = value.ToString();
+            }
+        }
+    }
+    
+    /// <summary>
+    /// A localizable version of the <see cref="System.ComponentModel.DataAnnotations.RegularExpressionAttribute"/> class.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
+    public class RegularExpressionAttribute : System.ComponentModel.DataAnnotations.RegularExpressionAttribute
+    {
+        private StringResourceKey _resourceKey;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RegularExpressionAttribute"/> class.
+        /// </summary>
+        public RegularExpressionAttribute(StringResourceKey resourceKey, string pattern)
+            : base(pattern)
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Gets or sets the resource key.
+        /// </summary>
+        public StringResourceKey ResourceKey
+        {
+            get
+            {
+                return _resourceKey;
+            }
+            set
+            {
+                _resourceKey = value;
+                ErrorMessageResourceType = typeof(Resources);
+                ErrorMessageResourceName = value.ToString();
+            }
+        }
+    }
+    
+    /// <summary>
+    /// A localizable version of the <see cref="System.ComponentModel.DataAnnotations.RequiredAttribute"/> class.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
+    public class RequiredAttribute : System.ComponentModel.DataAnnotations.RequiredAttribute
+    {
+        private StringResourceKey _resourceKey;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RequiredAttribute"/> class.
+        /// </summary>
+        public RequiredAttribute(StringResourceKey resourceKey)
+            : base()
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Gets or sets the resource key.
+        /// </summary>
+        public StringResourceKey ResourceKey
+        {
+            get
+            {
+                return _resourceKey;
+            }
+            set
+            {
+                _resourceKey = value;
+                ErrorMessageResourceType = typeof(Resources);
+                ErrorMessageResourceName = value.ToString();
+            }
+        }
+    }
+    
+    /// <summary>
+    /// A localizable version of the <see cref="System.ComponentModel.DataAnnotations.StringLengthAttribute"/> class.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
+    public class StringLengthAttribute : System.ComponentModel.DataAnnotations.StringLengthAttribute
+    {
+        private StringResourceKey _resourceKey;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringLengthAttribute"/> class.
+        /// </summary>
+        public StringLengthAttribute(StringResourceKey resourceKey, int maximumLength)
+            : base(maximumLength)
+        {
+            ResourceKey = resourceKey;
+        }
+
+        /// <summary>
+        /// Gets or sets the resource key.
+        /// </summary>
+        public StringResourceKey ResourceKey
+        {
+            get
+            {
+                return _resourceKey;
+            }
+            set
+            {
+                _resourceKey = value;
+                ErrorMessageResourceType = typeof(Resources);
+                ErrorMessageResourceName = value.ToString();
+            }
+        }
+    }
+    
 
 }
-

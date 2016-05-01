@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="tomenglertde.ResXManager.VSIX.Visuals.MoveToResourceConfigurationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
+             xmlns:local="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
+             xmlns:view="urn:ResXManager.View"
+             xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes;assembly=ResXManager.View"
+             d:DataContext="{d:DesignInstance local:MoveToResourceConfigurationViewModel}"
+            >
+  <Grid>
+    <DataGrid ItemsSource="{Binding Configuration.MoveToResources.Items}"
+                  AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False"
+                  HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
+                  MinHeight="50" MaxHeight="250" MinWidth="700">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="{x:Static view:Resources.FileExtensions}" Binding="{Binding Extensions}" Width="*" HeaderStyle="{StaticResource {x:Static themes:ResourceKeys.LabelTextStyle}}" />
+        <DataGridTextColumn Header="{x:Static view:Resources.Patterns}" Binding="{Binding Patterns}" Width="5*" HeaderStyle="{StaticResource {x:Static themes:ResourceKeys.LabelTextStyle}}" />
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

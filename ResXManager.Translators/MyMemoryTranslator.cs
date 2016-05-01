@@ -14,8 +14,6 @@
 
     using Newtonsoft.Json;
 
-    using tomenglertde.ResXManager.Infrastructure;
-
     using TomsToolbox.Desktop;
 
     [Export(typeof(ITranslator))]
@@ -70,12 +68,18 @@
                         {
                             foreach (var match in result.Matches)
                             {
-                                translationItem.Results.Add(new TranslationMatch(this, match.Translation, match.Match.GetValueOrDefault() * match.Quality.GetValueOrDefault() / 100.0));
+                                var translation = match.Translation;
+                                if (string.IsNullOrEmpty(translation))
+                                    continue;
+
+                                translationItem.Results.Add(new TranslationMatch(this, translation, match.Match.GetValueOrDefault() * match.Quality.GetValueOrDefault() / 100.0));
                             }
                         }
                         else
                         {
-                            translationItem.Results.Add(new TranslationMatch(this, result.ResponseData.TranslatedText, result.ResponseData.Match));
+                            var translation = result.ResponseData.TranslatedText;
+                            if (!string.IsNullOrEmpty(translation))
+                                translationItem.Results.Add(new TranslationMatch(this, translation, result.ResponseData.Match.GetValueOrDefault()));
                         }
                     });
                 }
@@ -130,7 +134,7 @@
             }
 
             [DataMember(Name = "match")]
-            public double Match
+            public double? Match
             {
                 get;
                 set;

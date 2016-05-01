@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.Composition.Hosting;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -16,8 +17,6 @@
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
 
-    using EnvDTE;
-
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -25,7 +24,7 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
-    using tomenglertde.ResXManager.View.Visuals;
+    using tomenglertde.ResXManager.VSIX.Visuals;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
@@ -33,16 +32,11 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
-    using VSLangProj;
-
-    using Configuration = tomenglertde.ResXManager.Model.Configuration;
-    using Process = System.Diagnostics.Process;
-
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
     /// </summary>
     [Guid("79664857-03bf-4bca-aa54-ec998b3328f8")]
-    public sealed class MyToolWindow : ToolWindowPane, IVsServiceProvider
+    public sealed class MyToolWindow : ToolWindowPane, IVsServiceProvider, ISourceFilesProvider
     {
         private readonly ICompositionHost _compositionHost = new CompositionHost();
 
@@ -50,11 +44,11 @@
         private readonly ResourceManager _resourceManager;
         private readonly Configuration _configuration;
         private readonly Control _view;
-
-        private DTE _dte;
-        private string _solutionFingerPrint;
-        private string _currentSolutionFullName;
         private readonly CodeReferenceTracker _codeReferenceTracker;
+        private readonly PerformanceTracer _performanceTracer;
+
+        private EnvDTE.DTE _dte;
+        private string _solutionFingerPrint;
 
         /// <summary>
         /// Standard constructor for the tool window.
@@ -62,36 +56,46 @@
         public MyToolWindow()
             : base(null)
         {
-            // Set the window title reading it from the resources.
-            Caption = Resources.ToolWindowTitle;
+            try
+            {
+                // Set the window title reading it from the resources.
+                Caption = Resources.ToolWindowTitle;
 
-            // Set the image that will appear on the tab of the window frame when docked with an other window.
-            // The resource ID correspond to the one defined in the resx file while the Index is the offset in the bitmap strip.
-            // Each image in the strip being 16x16.
-            BitmapResourceID = 301;
-            BitmapIndex = 1;
+                // Set the image that will appear on the tab of the window frame when docked with an other window.
+                // The resource ID correspond to the one defined in the resx file while the Index is the offset in the bitmap strip.
+                // Each image in the strip being 16x16.
+                BitmapResourceID = 301;
+                BitmapIndex = 1;
 
-            var path = Path.GetDirectoryName(GetType().Assembly.Location);
-            Contract.Assume(path != null);
+                var path = Path.GetDirectoryName(GetType().Assembly.Location);
+                Contract.Assume(path != null);
 
-            _compositionHost.AddCatalog(new DirectoryCatalog(path, "ResXManager.*.dll"));
-            _compositionHost.ComposeExportedValue((IVsServiceProvider)this);
+                _compositionHost.AddCatalog(new DirectoryCatalog(path, @"*.dll"));
+                _compositionHost.ComposeExportedValue((IVsServiceProvider)this);
+                _compositionHost.ComposeExportedValue((ISourceFilesProvider)this);
 
-            _trace = _compositionHost.GetExportedValue<ITracer>();
-            _configuration = _compositionHost.GetExportedValue<Configuration>();
+                _trace = _compositionHost.GetExportedValue<ITracer>();
+                _performanceTracer = _compositionHost.GetExportedValue<PerformanceTracer>();
+                _configuration = _compositionHost.GetExportedValue<Configuration>();
 
-            _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
-            _resourceManager.BeginEditing += ResourceManager_BeginEditing;
-            _resourceManager.ReloadRequested += ResourceManager_ReloadRequested;
-            _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
+                _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
+                _resourceManager.BeginEditing += ResourceManager_BeginEditing;
+                _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
 
-            _codeReferenceTracker = _compositionHost.GetExportedValue<CodeReferenceTracker>();
+                _codeReferenceTracker = _compositionHost.GetExportedValue<CodeReferenceTracker>();
 
-            _view = _compositionHost.GetExportedValue<ShellView>();
-            _view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
-            _view.Loaded += view_Loaded;
-            _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
-            _view.Track(UIElement.IsMouseOverProperty).Changed += view_IsMouseOverChanged;
+                _view = _compositionHost.GetExportedValue<VsixShellView>();
+                _view.DataContext = _compositionHost.GetExportedValue<VsixShellViewModel>();
+                _view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
+                _view.Loaded += view_Loaded;
+                _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
+                _view.Track(UIElement.IsMouseOverProperty).Changed += view_IsMouseOverChanged;
+            }
+            catch (Exception ex)
+            {
+                _trace.TraceError("MyToolWindow .ctor failed: " + ex);
+                MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
+            }
         }
 
         public ResourceManager ResourceManager
@@ -104,6 +108,15 @@
             }
         }
 
+        public ICompositionHost CompositionHost
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICompositionHost>() != null);
+                return _compositionHost;
+            }
+        }
+
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         protected override void OnCreate()
         {
@@ -113,7 +126,7 @@
             {
                 _trace.WriteLine(Resources.IntroMessage);
 
-                _dte = (DTE)GetService(typeof(DTE));
+                _dte = (EnvDTE.DTE)GetService(typeof(EnvDTE.DTE));
                 Contract.Assume(_dte != null);
 
                 var executingAssembly = Assembly.GetExecutingAssembly();
@@ -122,7 +135,7 @@
                 _trace.WriteLine(Resources.AssemblyLocation, folder);
                 _trace.WriteLine(Resources.Version, new AssemblyName(executingAssembly.FullName).Version);
 
-                EventManager.RegisterClassHandler(typeof(ShellView), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
+                EventManager.RegisterClassHandler(typeof(VsixShellView), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
 
                 // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
                 // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
@@ -130,12 +143,10 @@
                 Content = _view;
 
                 _dte.SetFontSize(_view);
-
-                ReloadSolution();
             }
             catch (Exception ex)
             {
-                _trace.TraceError(ex.ToString());
+                _trace.TraceError("MyToolWindow OnCreate failed: " + ex);
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
             }
         }
@@ -181,7 +192,7 @@
 
         private void view_Loaded(object sender, RoutedEventArgs e)
         {
-            Solution_Changed();
+            ReloadSolution();
         }
 
         private void Navigate_Click(object sender, RoutedEventArgs e)
@@ -196,7 +207,7 @@
                     return;
 
                 url = source.Tag as string;
-                if (string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrEmpty(url) || !url.StartsWith(@"http", StringComparison.OrdinalIgnoreCase))
                     return;
             }
             else
@@ -220,14 +231,7 @@
             if (!true.Equals(e.NewValue))
                 return;
 
-            try
-            {
-                ReloadSolution();
-            }
-            catch (Exception ex)
-            {
-                _trace.TraceError(ex.ToString());
-            }
+            ReloadSolution();
         }
 
         private void view_IsMouseOverChanged(object sender, EventArgs e)
@@ -235,14 +239,7 @@
             if (!_view.IsMouseOver)
                 return;
 
-            try
-            {
-                ReloadSolution();
-            }
-            catch (Exception ex)
-            {
-                _trace.TraceError(ex.ToString());
-            }
+            ReloadSolution();
         }
 
         [Localizable(false)]
@@ -371,11 +368,6 @@
             Contract.Requires(!string.IsNullOrEmpty(languageFileName));
 
             DteProjectFile projectFile = null;
-            if (_dte == null)
-                return;
-            var solution = _dte.Solution;
-            if (solution == null)
-                return;
 
             foreach (var neutralLanguageProjectItem in ((DteProjectFile)neutralLanguage.ProjectFile).ProjectItems)
             {
@@ -395,9 +387,7 @@
 
                 if (projectFile == null)
                 {
-                    var solutionFolder = Path.GetDirectoryName(solution.FullName);
-                    Contract.Assume(solutionFolder != null);
-                    projectFile = new DteProjectFile(languageFileName, solutionFolder, projectName, containingProject.UniqueName, projectItem);
+                    projectFile = new DteProjectFile(_compositionHost.GetExportedValue<DteSolution>(), languageFileName, projectName, containingProject.UniqueName, projectItem);
                 }
                 else
                 {
@@ -421,83 +411,121 @@
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
 
-        private void ResourceManager_ReloadRequested(object sender, EventArgs e)
-        {
-            Solution_Changed(true);
-        }
-
         private void ResourceManager_LanguageSaved(object sender, LanguageEventArgs e)
         {
             // WE have saved the files - update the finger print so we don't reload unnecessarily
             _solutionFingerPrint = GetFingerprint(GetProjectFiles());
 
-            ((DteProjectFile)e.Language.ProjectFile).ProjectItems
+            var language = e.Language;
+            var entity = language.Container;
+
+            // Run custom tool (usually attached to neutral language) even if a localized language changes,
+            // e.g. if custom tool is a text template, we might want not only to generate the designer file but also 
+            // extract some localization information.
+            entity.Languages.Select(lang => lang.ProjectFile)
+                .OfType<DteProjectFile>()
+                .SelectMany(projectFile => projectFile.ProjectItems)
                 .Where(projectItem => projectItem != null)
                 .SelectMany(item => item.DescendantsAndSelf())
-                .Select(projectItem => projectItem.Object)
-                .OfType<VSProjectItem>()
-                .ForEach(vsProjectItem => vsProjectItem.RunCustomTool());
+                .ForEach(projectItem => projectItem.RunCustomTool());
         }
 
-        private void Solution_Changed(bool forceReload = false)
+        public IList<ProjectFile> SourceFiles
+        {
+            get
+            {
+                using (_performanceTracer.Start("Enumerate source files"))
+                {
+                    return DteSourceFiles.Cast<ProjectFile>().ToArray();
+                }
+            }
+        }
+
+        private IEnumerable<DteProjectFile> DteSourceFiles
+        {
+            get
+            {
+                var sourceFileFilter = new SourceFileFilter(_configuration);
+
+                return GetProjectFiles().Where(p => p.IsResourceFile() || sourceFileFilter.IsSourceFile(p));
+            }
+        }
+
+        internal void ReloadSolution()
         {
             try
             {
-                ReloadSolution(forceReload);
+                using (_performanceTracer.Start("Reload solution"))
+                {
+                    InternalReloadSolution();
+                }
             }
             catch (Exception ex)
             {
                 _trace.TraceError(ex.ToString());
-                MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ResourceLoadingError, ex.Message));
             }
         }
 
-        private void ReloadSolution(bool forceReload = false)
+        private void InternalReloadSolution()
         {
-            Contract.Assume(_dte != null);
-
-            var solution = _dte.Solution;
-            var sourceFileFilter = new SourceFileFilter(_configuration);
-
-            var projectFiles = GetProjectFiles().Where(p => p.IsResourceFile() || sourceFileFilter.IsSourceFile(p)).ToArray();
+            var projectFiles = DteSourceFiles.ToArray();
 
             // The solution events are not reliable, so we check the solution on every load/unload of our window.
             // To avoid loosing the scope every time this method is called we only call load if we detect changes.
             var fingerPrint = GetFingerprint(projectFiles);
 
-            if (!forceReload
-                && !projectFiles.Where(p => p.IsResourceFile()).Any(p => p.HasChanges)
-                && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
+            if (!projectFiles.Where(p => p.IsResourceFile()).Any(p => p.HasChanges) && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
                 return;
-
-            var solutionFullName = solution.Maybe().Return(s => s.FullName);
 
             _solutionFingerPrint = fingerPrint;
 
+            var oldItems = _resourceManager.ResourceEntities.ToArray();
+
             _resourceManager.Load(projectFiles);
 
-            if (!string.Equals(solutionFullName, _currentSolutionFullName, StringComparison.OrdinalIgnoreCase))
-            {
-                _currentSolutionFullName = solutionFullName;
-                _resourceManager.AreAllFilesSelected = true;
-            }
+            PreserveCommentsInWinFormsDesignerResources(oldItems);
+        }
 
-            if (Settings.Default.IsFindCodeReferencesEnabled)
+        private void PreserveCommentsInWinFormsDesignerResources(ICollection<ResourceEntity> oldValues)
+        {
+            Contract.Requires(oldValues != null);
+
+            foreach (var newEntity in _resourceManager.ResourceEntities)
             {
-                _codeReferenceTracker.BeginFind(_resourceManager, _configuration.CodeReferences, projectFiles, _trace);
+                Contract.Assume(newEntity != null);
+
+                var oldEntity = oldValues.FirstOrDefault(entity => entity.Equals(newEntity));
+                if (oldEntity == null)
+                    continue;
+
+                var projectFile = (DteProjectFile)newEntity.NeutralProjectFile;
+                if (projectFile == null)
+                    continue;
+
+                if (!projectFile.IsWinFormsDesignerResource)
+                    continue;
+
+                foreach (var newEntry in newEntity.Entries)
+                {
+                    Contract.Assume(newEntry != null);
+
+                    var oldEntry = oldEntity.Entries.FirstOrDefault(entry => ResourceTableEntry.EqualityComparer.Equals(entry, newEntry));
+                    if (oldEntry == null)
+                        continue;
+
+                    var oldComment = oldEntry.Comment;
+                    if (!string.IsNullOrEmpty(oldComment))
+                    {
+                        if (string.IsNullOrEmpty(newEntry.Comment))
+                            newEntry.Comment = oldComment;
+                    }
+                }
             }
         }
 
         private IEnumerable<DteProjectFile> GetProjectFiles()
         {
-            if (_dte == null)
-                return Enumerable.Empty<DteProjectFile>();
-
-            var solution = _dte.Solution;
-            if ((solution == null) || (solution.Projects == null))
-                return Enumerable.Empty<DteProjectFile>();
-
-            return solution.GetProjectFiles(_trace);
+            return _compositionHost.GetExportedValue<DteSolution>().GetProjectFiles();
         }
 
         private static string GetFingerprint(IEnumerable<DteProjectFile> allFiles)
@@ -523,6 +551,7 @@
             Contract.Invariant(_trace != null);
             Contract.Invariant(_view != null);
             Contract.Invariant(_codeReferenceTracker != null);
+            Contract.Invariant(_performanceTracer != null);
         }
     }
 }

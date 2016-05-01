@@ -1,26 +1,22 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Collections.Specialized;
     using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Text.RegularExpressions;
     using System.Windows;
-    using System.Windows.Data;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
 
+    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
     using TomsToolbox.ObservableCollections;
-    using TomsToolbox.Wpf;
 
     /// <summary>
     /// Represents all resources found in a folder and its's sub folders.
@@ -31,38 +27,40 @@
         private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
         private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
 
-        private readonly DispatcherThrottle _selectedEntitiesChangeThrottle;
         private readonly Configuration _configuration;
         private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly ITracer _tracer;
+        private readonly ISourceFilesProvider _sourceFilesProvider;
+        private readonly PerformanceTracer _performanceTracer;
 
-        private ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
-        private ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
-        private ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
-        private ListCollectionViewListAdapter<ResourceEntity> _filteredResourceEntities;
+        private readonly ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
+        private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
+        private readonly IObservableCollection<ResourceTableEntry> _resourceTableEntries;
+        private readonly ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
 
-        private ObservableCompositeCollection<ResourceTableEntry> _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>();
-        private IList<ResourceTableEntry> _selectedTableEntries = new List<ResourceTableEntry>();
+        private readonly ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
 
-        private string _entityFilter;
+        private string _snapshot;
 
         public event EventHandler<LanguageEventArgs> LanguageSaved;
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
         public event EventHandler<EventArgs> Loaded;
-        public event EventHandler<EventArgs> ReloadRequested;
 
         [ImportingConstructor]
-        private ResourceManager(Configuration configuration, CodeReferenceTracker codeReferenceTracker, ITracer tracer)
+        private ResourceManager(Configuration configuration, CodeReferenceTracker codeReferenceTracker, ITracer tracer, ISourceFilesProvider sourceFilesProvider, PerformanceTracer performanceTracer)
         {
             Contract.Requires(configuration != null);
             Contract.Requires(codeReferenceTracker != null);
             Contract.Requires(tracer != null);
+            Contract.Requires(sourceFilesProvider != null);
+            Contract.Requires(performanceTracer != null);
 
             _configuration = configuration;
             _codeReferenceTracker = codeReferenceTracker;
             _tracer = tracer;
-            _selectedEntitiesChangeThrottle = new DispatcherThrottle(OnSelectedEntitiesChanged);
-            _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
+            _sourceFilesProvider = sourceFilesProvider;
+            _performanceTracer = performanceTracer;
+            _resourceTableEntries = _selectedEntities.ObservableSelectMany(entity => entity.Entries);
         }
 
         /// <summary>
@@ -74,13 +72,16 @@
         {
             Contract.Requires(allSourceFiles != null);
 
-            _codeReferenceTracker.StopFind();
+            using (_performanceTracer.Start("ResourceManager.Load"))
+            {
+                _codeReferenceTracker.StopFind();
 
-            var resourceFilesByDirectory = allSourceFiles
-                .Where(file => file.IsResourceFile())
-                .GroupBy(file => file.GetBaseDirectory());
+                var resourceFilesByDirectory = allSourceFiles
+                    .Where(file => file.IsResourceFile())
+                    .GroupBy(file => file.GetBaseDirectory());
 
-            InternalLoad(resourceFilesByDirectory);
+                InternalLoad(resourceFilesByDirectory);
+            }
         }
 
         /// <summary>
@@ -111,16 +112,6 @@
             }
         }
 
-        public IList FilteredResourceEntities
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IList>() != null);
-
-                return _filteredResourceEntities;
-            }
-        }
-
         public ICollection<ResourceTableEntry> ResourceTableEntries
         {
             get
@@ -131,7 +122,7 @@
             }
         }
 
-        public ICollection<CultureKey> CultureKeys
+        public ObservableCollection<CultureKey> CultureKeys
         {
             get
             {
@@ -141,7 +132,7 @@
             }
         }
 
-        public IList<ResourceEntity> SelectedEntities
+        public ObservableCollection<ResourceEntity> SelectedEntities
         {
             get
             {
@@ -171,52 +162,6 @@
             }
         }
 
-        public string EntityFilter
-        {
-            get
-            {
-                return _entityFilter;
-            }
-            set
-            {
-                if (_entityFilter == value)
-                    return;
-
-                ApplyEntityFilter(value);
-
-                OnPropertyChanged(() => EntityFilter);
-                OnPropertyChanged(() => AreAllFilesSelected);
-            }
-        }
-
-        public bool? AreAllFilesSelected
-        {
-            get
-            {
-                if (_selectedEntities.Count == 0)
-                    return false;
-
-                if (_selectedEntities.Count == _filteredResourceEntities.Count)
-                    return true;
-
-                return null;
-            }
-            set
-            {
-                if (value == AreAllFilesSelected)
-                    return;
-
-                var selected = (value == true) ? _filteredResourceEntities.Cast<ResourceEntity>() : Enumerable.Empty<ResourceEntity>();
-
-                _selectedEntities.CollectionChanged -= SelectedEntities_CollectionChanged;
-                _selectedEntities = new ObservableCollection<ResourceEntity>(selected);
-                _selectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
-
-                _selectedEntitiesChangeThrottle.Tick();
-                OnPropertyChanged(() => SelectedEntities);
-            }
-        }
-
         public Configuration Configuration
         {
             get
@@ -230,7 +175,7 @@
         public void AddNewKey(ResourceEntity entity, string key)
         {
             Contract.Requires(entity != null);
-            Contract.Requires(!String.IsNullOrEmpty(key));
+            Contract.Requires(!string.IsNullOrEmpty(key));
 
             if (!entity.CanEdit(null))
                 return;
@@ -239,11 +184,14 @@
             if (entry == null)
                 return;
 
-            _selectedTableEntries = new List<ResourceTableEntry> { entry };
-            OnPropertyChanged(() => SelectedTableEntries);
+            if (!string.IsNullOrEmpty(_snapshot))
+                _resourceEntities.LoadSnapshot(_snapshot);
+
+            _selectedTableEntries.Clear();
+            _selectedTableEntries.Add(entry);
         }
 
-        public void LanguageAdded(CultureInfo culture)
+        public void NewLanguageAdded(CultureInfo culture)
         {
             if (!_configuration.AutoCreateNewLanguageFiles)
                 return;
@@ -259,7 +207,25 @@
 
         public void Reload()
         {
-            OnReloadRequested();
+            Load(_sourceFilesProvider.SourceFiles);
+        }
+
+        public void ReloadAndBeginFindCoreReferences()
+        {
+            var allSourceFiles = _sourceFilesProvider.SourceFiles;
+
+            Load(allSourceFiles);
+            BeginFindCodeReferences(allSourceFiles);
+        }
+
+        public void BeginFindCoreReferences()
+        {
+            if (_codeReferenceTracker.IsActive)
+                return;
+            
+            var allSourceFiles = _sourceFilesProvider.SourceFiles;
+
+            BeginFindCodeReferences(allSourceFiles);
         }
 
         public bool CanEdit(ResourceEntity resourceEntity, CultureInfo culture)
@@ -278,61 +244,54 @@
             return !args.Cancel;
         }
 
+        private void BeginFindCodeReferences<T>(IList<T> allSourceFiles)
+            where T : ProjectFile
+        {
+            Contract.Requires(allSourceFiles != null);
+
+            _codeReferenceTracker.StopFind();
+
+            if (Settings.Default.IsFindCodeReferencesEnabled)
+            {
+                _codeReferenceTracker.BeginFind(this, _configuration.CodeReferences, allSourceFiles, _tracer);
+            }
+        }
+
         private void OnLoaded()
         {
-            var handler = Loaded;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            Loaded?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnLanguageSaved(LanguageEventArgs e)
         {
-            var handler = LanguageSaved;
-            if (handler != null)
-                handler(this, e);
-        }
-
-        private void OnReloadRequested()
-        {
-            var handler = ReloadRequested;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            LanguageSaved?.Invoke(this, e);
         }
 
         private void InternalLoad(IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory)
         {
             Contract.Requires(resourceFilesByDirectory != null);
 
-            var entities = GetResourceEntities(resourceFilesByDirectory)
-                .OrderBy(e => e.ProjectName)
-                .ThenBy(e => e.BaseName);
+            GetResourceEntities(resourceFilesByDirectory);
 
-            var reload = _resourceEntities.Any();
+            if (!string.IsNullOrEmpty(_snapshot))
+                _resourceEntities.LoadSnapshot(_snapshot);
 
-            _resourceEntities = new ObservableCollection<ResourceEntity>(entities);
-            _filteredResourceEntities = new ListCollectionViewListAdapter<ResourceEntity>(new ListCollectionView(_resourceEntities));
-            if (!string.IsNullOrEmpty(_entityFilter))
-                ApplyEntityFilter(_entityFilter);
+            var cultureKeys = _resourceEntities
+                .SelectMany(entity => entity.Languages)
+                .Distinct()
+                .Select(lang => lang.CultureKey)
+                .ToArray();
 
-            _selectedEntities.CollectionChanged -= SelectedEntities_CollectionChanged;
-            _selectedEntities = new ObservableCollection<ResourceEntity>(reload ? _resourceEntities.Where(_selectedEntities.Contains) : _resourceEntities);
-            _selectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
+            _cultureKeys.SynchronizeWith(cultureKeys);
 
-            var cultureKeys = _resourceEntities.SelectMany(entity => entity.Languages).Distinct().Select(lang => lang.CultureKey);
-            _cultureKeys = new ObservableCollection<CultureKey>(cultureKeys);
-
-            OnPropertyChanged(() => ResourceEntities);
-            OnPropertyChanged(() => FilteredResourceEntities);
-            OnPropertyChanged(() => SelectedEntities);
-            OnPropertyChanged(() => CultureKeys);
-
-            OnSelectedEntitiesChanged();
             OnLoaded();
         }
 
-        private IEnumerable<ResourceEntity> GetResourceEntities(IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory)
+        private void GetResourceEntities(IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory)
         {
             Contract.Requires(fileNamesByDirectory != null);
+
+            var unmatchedEntities = _resourceEntities.ToList();
 
             foreach (var directory in fileNamesByDirectory)
             {
@@ -353,87 +312,62 @@
 
                     var filesByProject = files.GroupBy(file => file.ProjectName);
 
-                    foreach (var projectFiles in filesByProject)
+                    foreach (var item in filesByProject)
                     {
-                        if (projectFiles == null)
+                        Contract.Assume(item != null);
+
+                        var projectName = item.Key;
+                        var projectFiles = item.ToArray();
+
+                        if (string.IsNullOrEmpty(projectName) || !projectFiles.Any())
                             continue;
 
-                        var projectName = projectFiles.Key;
+                        var existingEntity = _resourceEntities.FirstOrDefault(entity => entity.EqualsAll(projectName, baseName, directoryName));
 
-                        if (string.IsNullOrEmpty(projectName))
-                            continue;
-
-                        var resourceEntity = new ResourceEntity(this, projectName, baseName, directoryName, files.ToArray());
-
-                        resourceEntity.LanguageChanging += ResourceEntity_LanguageChanging;
-                        resourceEntity.LanguageChanged += ResourceEntity_LanguageChanged;
-                        resourceEntity.LanguageAdded += ResourceEntity_LanguageAdded;
-
-                        yield return resourceEntity;
+                        if (existingEntity != null)
+                        {
+                            existingEntity.Update(projectFiles);
+                            unmatchedEntities.Remove(existingEntity);
+                        }
+                        else
+                        {
+                            _resourceEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles));
+                        }
                     }
                 }
             }
+
+            _resourceEntities.RemoveRange(unmatchedEntities);
         }
 
-        void ResourceEntity_LanguageAdded(object sender, LanguageChangedEventArgs e)
+        internal void LanguageAdded(CultureKey cultureKey)
         {
-            var cultureKey = e.Language.CultureKey;
-
             if (!_cultureKeys.Contains(cultureKey))
             {
                 _cultureKeys.Add(cultureKey);
             }
         }
 
-        private void ResourceEntity_LanguageChanging(object sender, LanguageChangingEventArgs e)
-        {
-            if (!CanEdit(e.Entity, e.Culture))
-            {
-                e.Cancel = true;
-            }
-        }
-
-        private void ResourceEntity_LanguageChanged(object sender, LanguageChangedEventArgs e)
+        internal void LanguageChanged(ResourceLanguage language)
         {
             // Defer save to avoid repeated file access
-            Dispatcher.BeginInvoke(new Action(
-                delegate
+            Dispatcher.BeginInvoke(() =>
+            {
+                try
                 {
-                    try
-                    {
-                        if (!e.Language.HasChanges)
-                            return;
+                    if (!language.HasChanges)
+                        return;
 
-                        e.Language.Save();
+                    language.Save();
 
-                        OnLanguageSaved(e);
-                    }
-                    catch (Exception ex)
-                    {
-                        _tracer.TraceError(ex.ToString());
-                        MessageBox.Show(ex.Message, Resources.Title);
-                    }
-                }));
-        }
-
-        private void SelectedEntities_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            _selectedEntitiesChangeThrottle.Tick();
-        }
-
-        private void OnSelectedEntitiesChanged()
-        {
-            var selectedTableEntries = _selectedTableEntries.ToArray();
-
-            _resourceTableEntries = new ObservableCompositeCollection<ResourceTableEntry>(_selectedEntities.Select(entity => entity.Entries).ToArray());
-
-            _selectedTableEntries = new ObservableCollection<ResourceTableEntry>(_resourceEntities.SelectMany(entity => entity.Entries)
-                .Where(item => selectedTableEntries.Contains(item, ResourceTableEntry.EqualityComparer))
-                .Where(item => _resourceTableEntries.Contains(item, ResourceTableEntry.EqualityComparer)));
-
-            OnPropertyChanged(() => ResourceTableEntries);
-            OnPropertyChanged(() => SelectedTableEntries);
-            OnPropertyChanged(() => AreAllFilesSelected);
+                    OnLanguageSaved(new LanguageEventArgs(language));
+                }
+                catch (Exception ex)
+                {
+                    _tracer.TraceError(ex.ToString());
+                    MessageBox.Show(ex.Message, Resources.Title);
+                }
+            });
         }
 
         public static bool IsValidLanguageName(string languageName)
@@ -465,24 +399,18 @@
             return specificCultures;
         }
 
-        private void ApplyEntityFilter(string value)
+        public void LoadSnapshot(string value)
         {
-            _entityFilter = value;
+            ResourceEntities.LoadSnapshot(value);
 
-            if (!string.IsNullOrEmpty(value))
-            {
-                try
-                {
-                    var regex = new Regex(value.Trim(), RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                    _filteredResourceEntities.CollectionView.Filter = item => regex.Match(item.ToString()).Success;
-                    return;
-                }
-                catch (ArgumentException)
-                {
-                }
-            }
+            _snapshot = value;
+        }
 
-            _filteredResourceEntities.CollectionView.Filter = null;
+        public string CreateSnapshot()
+        {
+            Contract.Ensures(Contract.Result<string>() != null);
+
+            return _snapshot = ResourceEntities.CreateSnapshot();
         }
 
         [ContractInvariantMethod]
@@ -491,11 +419,8 @@
         {
             Contract.Invariant(_resourceEntities != null);
             Contract.Invariant(_selectedEntities != null);
-            Contract.Invariant(_filteredResourceEntities != null);
-            Contract.Invariant(FilteredResourceEntities != null);
             Contract.Invariant(_selectedTableEntries != null);
             Contract.Invariant(_resourceTableEntries != null);
-            Contract.Invariant(_selectedEntitiesChangeThrottle != null);
             Contract.Invariant(_configuration != null);
             Contract.Invariant(_cultureKeys != null);
         }

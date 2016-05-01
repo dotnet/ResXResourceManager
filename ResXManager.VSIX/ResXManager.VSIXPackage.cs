@@ -1,28 +1,27 @@
 ﻿namespace tomenglertde.ResXManager.VSIX
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.Design;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using System.Windows;
     using System.Windows.Threading;
-
-    using EnvDTE;
-    using EnvDTE80;
 
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.VisualStudio.TextManager.Interop;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
-
-    using VSLangProj;
+    using TomsToolbox.Desktop.Composition;
 
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -30,7 +29,7 @@
     // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is a package.
     [PackageRegistration(UseManagedResourcesOnly = true)]
     // This attribute is used to register the informations needed to show the this package in the Help/About dialog of Visual Studio.
-    [InstalledProductRegistration(@"#110", @"#112", @"1.0.0.63", IconResourceID = 400)]
+    [InstalledProductRegistration(@"#110", @"#112", Product.Version, IconResourceID = 400)]
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource(@"Menus.ctmenu", 1)]
     // This attribute registers a tool window exposed by this package.
@@ -39,8 +38,34 @@
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     public sealed class ResXManagerVsixPackage : Package
     {
-        private DTE _dte;
-        private DocumentEvents _documentEvents;
+        private readonly DispatcherThrottle _deferedReloadThrottle;
+
+        private EnvDTE.DocumentEvents _documentEvents;
+        private EnvDTE.SolutionEvents _solutionEvents;
+        private EnvDTE.ProjectItemsEvents _projectItemsEvents;
+        private MyToolWindow _toolWindow;
+
+        private ICompositionHost _compositionHost;
+        private ITracer _tracer;
+        private IRefactorings _refactorings;
+        private PerformanceTracer _performanceTracer;
+
+        public ResXManagerVsixPackage()
+        {
+            _deferedReloadThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, () => ToolWindow.ReloadSolution());
+        }
+
+        private EnvDTE80.DTE2 Dte
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<EnvDTE80.DTE2>() != null);
+
+                var dte = (EnvDTE80.DTE2)GetService(typeof(SDTE));
+                Contract.Assume(dte != null);
+                return dte;
+            }
+        }
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -51,6 +76,11 @@
             base.Initialize();
 
             ConnectEvents();
+
+            _compositionHost = ToolWindow.CompositionHost;
+            _tracer = _compositionHost.GetExportedValue<ITracer>();
+            _refactorings = _compositionHost.GetExportedValue<IRefactorings>();
+            _performanceTracer = _compositionHost.GetExportedValue<PerformanceTracer>();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             var mcs = GetService(typeof(IMenuCommandService)) as IMenuCommandService;
@@ -70,9 +100,26 @@
         [ContractVerification(false)]
         private void ConnectEvents()
         {
-            _dte = (DTE)GetService(typeof(SDTE));
-            _documentEvents = _dte.Events.DocumentEvents;
+            var events = (EnvDTE80.Events2)Dte.Events;
+
+            _documentEvents = events.DocumentEvents;
             _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
+
+            _solutionEvents = events.SolutionEvents;
+            _solutionEvents.Opened += () => OnDteEvent("Solution openend");
+            _solutionEvents.ProjectAdded += _ => OnDteEvent("Project added");
+            _solutionEvents.ProjectRemoved += _ => OnDteEvent("Project removed");
+
+            _projectItemsEvents = events.ProjectItemsEvents;
+            _projectItemsEvents.ItemAdded += _ => OnDteEvent("Project item added");
+            _projectItemsEvents.ItemRemoved += _ => OnDteEvent("Project item removed");
+            _projectItemsEvents.ItemRenamed += (_, __) => OnDteEvent("Project item renamed");
+        }
+
+        private void OnDteEvent([Localizable(false)] string name)
+        {
+            _tracer?.WriteLine("DTE event: {0}", name);
+            _deferedReloadThrottle.Tick();
         }
 
         private static OleMenuCommand CreateMenuCommand(IMenuCommandService mcs, int cmdId, EventHandler invokeHandler)
@@ -90,60 +137,66 @@
             ShowToolWindow();
         }
 
-        private MyToolWindow FindToolWindow(bool create)
+        private MyToolWindow ToolWindow
         {
-            Contract.Ensures((create == false) || (Contract.Result<MyToolWindow>() != null));
+            get
+            {
+                Contract.Ensures(Contract.Result<MyToolWindow>() != null);
 
-            // Get the instance number 0 of this tool window. This window is single instance so this instance is actually the only one.
-            // The last flag is set to true so that if the tool window does not exists it will be created.
-            var window = FindToolWindow(typeof(MyToolWindow), 0, create);
+                if (_toolWindow != null)
+                    return _toolWindow;
 
-            if (create && (window == null))
-                throw new NotSupportedException(Resources.CanNotCreateWindow);
+                // Get the instance number 0 of this tool window. This window is single instance so this instance is actually the only one.
+                // The last flag is set to true so that if the tool window does not exists it will be created.
+                _toolWindow = (MyToolWindow)FindToolWindow(typeof(MyToolWindow), 0, true);
 
-            return (MyToolWindow)window;
+                if (_toolWindow == null)
+                    throw new NotSupportedException(Resources.CanNotCreateWindow);
+
+                return _toolWindow;
+            }
         }
 
-        private MyToolWindow ShowToolWindow()
+        private bool ShowToolWindow()
         {
-            Contract.Ensures(Contract.Result<MyToolWindow>() != null);
+            try
+            {
+                var window = ToolWindow;
 
-            var window = FindToolWindow(true);
+                var windowFrame = (IVsWindowFrame)window.Frame;
+                if (windowFrame == null)
+                    throw new NotSupportedException(Resources.CanNotCreateWindow);
 
-            var windowFrame = (IVsWindowFrame)window.Frame;
-            if (windowFrame == null)
-                throw new NotSupportedException(Resources.CanNotCreateWindow);
-
-            ErrorHandler.ThrowOnFailure(windowFrame.Show());
-
-            return window;
+                ErrorHandler.ThrowOnFailure(windowFrame.Show());
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _tracer.TraceError("MyToolWindow OnCreate failed: " + ex);
+                MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
+                return false;
+            }
         }
 
         private void ShowSelectedResourceFiles(object sender, EventArgs e)
         {
-            var toolWindow = ShowToolWindow();
-            var resourceManager = toolWindow.ResourceManager;
+            if (!ShowToolWindow())
+                return;
 
-            var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
-            Contract.Assume(monitorSelection != null);
+            var resourceManager = ToolWindow.ResourceManager;
 
-            var selection = monitorSelection.GetSelectedProjectItems();
-
-            var selectedFiles = selection
-                .Select(item => item.GetMkDocument())
-                .Where(file => !string.IsNullOrEmpty(file));
+            var selectedResourceEntites = GetSelectedResourceEntites()?.Distinct().ToArray();
+            if (selectedResourceEntites == null)
+                return;
 
             Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Input, () =>
             {
-                var selectedResourceEntites = resourceManager.ResourceEntities
-                    .Where(entity => entity.Languages.Any(lang => selectedFiles.Any(file => lang.FileName.Equals(file, StringComparison.OrdinalIgnoreCase))));
-
                 resourceManager.SelectedEntities.Clear();
                 resourceManager.SelectedEntities.AddRange(selectedResourceEntites);
             });
         }
 
-        private static void SolutionExplorerContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
+        private void SolutionExplorerContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
         {
             var menuCommand = sender as OleMenuCommand;
             if (menuCommand == null)
@@ -151,112 +204,127 @@
 
             menuCommand.Text = Resources.OpenInResXManager;
 
+            menuCommand.Visible = GetSelectedResourceEntites() != null;
+        }
+
+        private IEnumerable<ResourceEntity> GetSelectedResourceEntites()
+        {
             var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
             Contract.Assume(monitorSelection != null);
 
             var selection = monitorSelection.GetSelectedProjectItems();
 
-            var selectedFiles = selection
+            var entities = selection
                 .Select(item => item.GetMkDocument())
                 .Where(file => !string.IsNullOrEmpty(file))
+                .SelectMany(GetSelectedResourceEntites)
                 .ToArray();
 
-            menuCommand.Visible = selectedFiles.Any() && selectedFiles.All(file => ProjectFileExtensions.SupportedFileExtensions.Any(ext => Path.GetExtension(file).Equals(ext, StringComparison.OrdinalIgnoreCase)));
+            return (entities.Length > 0) && (entities.Length == selection.Count) ? entities : null;
+        }
+
+        private IEnumerable<ResourceEntity> GetSelectedResourceEntites(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                return Enumerable.Empty<ResourceEntity>();
+
+            var toolWindow = ToolWindow;
+            var resourceEntities = toolWindow.ResourceManager.ResourceEntities;
+
+            return resourceEntities
+                .Where(entity => ContainsFile(entity, fileName) || ContainsChildOfWinFormsDesignerItem(entity, fileName))
+                .ToArray();
+        }
+
+        private static bool ContainsChildOfWinFormsDesignerItem(ResourceEntity entity, string fileName)
+        {
+            Contract.Requires(entity != null);
+
+            return entity.Languages.Select(lang => lang.ProjectFile)
+                .OfType<DteProjectFile>()
+                .Any(projectFile => string.Equals(projectFile.ParentItem?.TryGetFileName(), fileName) && projectFile.IsWinFormsDesignerResource);
+        }
+
+        private static bool ContainsFile(ResourceEntity entity, string fileName)
+        {
+            Contract.Requires(entity != null);
+
+            return entity.Languages.Any(lang => lang.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
         }
 
         private void MoveToResource(object sender, EventArgs e)
         {
-            var _textManager = (IVsTextManager)GetGlobalService(typeof(SVsTextManager));
-            if (_textManager == null)
-                throw new Exception("Cannot consume IVsTextManager service");
+            var toolWindow = ToolWindow;
 
-            IVsTextView _textView;
-            var hr = _textManager.GetActiveView(1, null, out _textView);
-            Marshal.ThrowExceptionForHR(hr);
+            var entry = _refactorings?.MoveToResource(Dte.ActiveDocument);
+            if (entry == null)
+                return;
 
-            IVsTextLines _textLines;
-            hr = _textView.GetBuffer(out _textLines);
-            Marshal.ThrowExceptionForHR(hr);
+            if (!Properties.Settings.Default.MoveToResourceOpenInResXManager)
+                return;
 
-            //hr = _textLines.GetUndoManager(out _undoManager);
-            //Marshal.ThrowExceptionForHR(hr);           
-            TextSpan[] spans = new TextSpan[1];
-            hr = _textView.GetSelectionSpan(spans);
-            Marshal.ThrowExceptionForHR(hr);
+            var dispatcher = Dispatcher.CurrentDispatcher;
 
-            var selectionSpan = spans[0];
-
-            object startPoint;
-            hr = _textLines.CreateTextPoint(selectionSpan.iStartLine, 0, out startPoint);
-            var textPoint = (TextPoint)startPoint;
-
-            string text;
-            _textLines.GetLineText(selectionSpan.iStartLine, 0, selectionSpan.iStartLine, textPoint.LineLength, out text);
-
-            Marshal.ThrowExceptionForHR(hr);
-            TextPoint selectionPoint = (TextPoint)startPoint;
-
-            var _currentDocument = _dte.ActiveDocument;
-
-            if (_currentDocument == null)
-                throw new Exception("No selected document");
-            if (_currentDocument.ReadOnly)
-                throw new Exception("Cannot perform this operation - active document is readonly");
-
-            var _currentCodeModel = _currentDocument.ProjectItem.FileCodeModel;
-
-            foreach (var x in _currentCodeModel.CodeElements.OfType<CodeElement2>())
+            dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
             {
-                Inspect(x);
-            }
+                ShowToolWindow();
 
-            CodeFunction2 codeFunction = (CodeFunction2)_currentCodeModel.CodeElementFromPoint(selectionPoint, vsCMElement.vsCMElementFunction);
+                var resourceManager = toolWindow.ResourceManager;
 
+                dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
+                {
+                    if (!resourceManager.SelectedEntities.Contains(entry.Container))
+                        resourceManager.SelectedEntities.Add(entry.Container);
 
+                    resourceManager.SelectedTableEntries.Clear();
+                    resourceManager.SelectedTableEntries.Add(entry);
+                });
+            });
         }
 
-        private void Inspect(CodeElement2 x)
-        {
-            Debug.WriteLine(x.Kind);
-
-            foreach (var item in x.Children.OfType<CodeElement2>())
-            {
-                Debug.Indent();
-                Inspect(item);
-                Debug.Unindent();
-            }
-        }
-
-        private static void TextEditorContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
+        private void TextEditorContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
         {
             var menuCommand = sender as OleMenuCommand;
             if (menuCommand == null)
                 return;
 
-            menuCommand.Text = "Move to Resource";
+            using (_performanceTracer?.Start("Can move to resource"))
+            {
+                menuCommand.Text = Resources.MoveToResource;
+                menuCommand.Visible = _refactorings?.CanMoveToResource(Dte.ActiveDocument) ?? false;
+            }
         }
 
-        private void DocumentEvents_DocumentSaved(Document document)
+        private void DocumentEvents_DocumentSaved(EnvDTE.Document document)
         {
+            _tracer?.WriteLine("DTE event: Document saved");
+
+            if (!AffectsResourceFile(document))
+                return;
+
+            var toolWindow = ToolWindow;
+
+            if (toolWindow.ResourceManager.ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.ProjectFile.IsSaving))
+                return;
+
+            document.ProjectItem.Descendants().ForEach(projectItem => projectItem.RunCustomTool());
+
+            toolWindow.ReloadSolution();
+        }
+
+        private static bool AffectsResourceFile(EnvDTE.Document document)
+        {
+            Contract.Ensures((Contract.Result<bool>() == false) || (document != null));
+
             if (document == null)
-                return;
+                return false;
 
-            var extension = Path.GetExtension(document.Name);
-            if (extension == null)
-                return;
-
-            if (!ProjectFileExtensions.SupportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
-                return;
-
-            var toolWindow = FindToolWindow(false);
-
-            if ((toolWindow != null) && toolWindow.ResourceManager.ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.ProjectFile.IsSaving))
-                return;
-
-            document.ProjectItem.Descendants()
-                .Select(projectItem => projectItem.Object)
-                .OfType<VSProjectItem>()
-                .ForEach(vsProjectItem => vsProjectItem.RunCustomTool());
+            return document.ProjectItem
+                .DescendantsAndSelf()
+                .Select(item => item.TryGetFileName())
+                .Where(fileName => fileName != null)
+                .Select(Path.GetExtension)
+                .Any(extension => ProjectFileExtensions.SupportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase));
         }
     }
 }

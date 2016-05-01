@@ -6,6 +6,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:composition="urn:TomsToolbox"
              xmlns:resXManager="clr-namespace:tomenglertde.ResXManager"
+             xmlns:infrastructure="urn:ResXManager.Infrastructure"
              d:DataContext="{d:DesignInstance resXManager:MainViewModel}">
   <DockPanel>
     <Menu  DockPanel.Dock="Top">
@@ -13,7 +14,7 @@
         <MenuItem.Header>
           <TextBlock Margin="3">
               <Run Text="Directory:" TextBlock.FontWeight="Bold" />
-              <Run Text="{Binding Folder, Mode=OneWay}" />
+              <Run Text="{Binding SourceFilesProvider.Folder, Mode=OneWay}" />
           </TextBlock>
         </MenuItem.Header>
         <MenuItem Header="Browse" Command="{Binding BrowseCommand}" />
@@ -22,7 +23,7 @@
 
     <ContentControl DataContext="{Binding ResourceManager}">
       <i:Interaction.Behaviors>
-        <composition:ContentControlCompositionBehavior RegionId="Shell" />
+        <composition:ContentControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.Shell}" />
       </i:Interaction.Behaviors>
     </ContentControl>
   </DockPanel>

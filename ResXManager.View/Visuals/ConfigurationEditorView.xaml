@@ -11,16 +11,12 @@
              xmlns:toms="urn:TomsToolbox"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
+             xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
+             xmlns:infrastructure="urn:ResXManager.Infrastructure"
              d:DataContext="{d:DesignInstance visuals:ConfigurationEditorViewModel}">
   <UserControl.Resources>
 
     <toms:ConfirmedCommandConverter x:Key="SortNodesByKeyCommandConverter" Executing="SortNodesByKeyCommandConverter_Executing" Error="CommandConverter_Error" />
-
-    <Style x:Key="LabelStyle">
-      <Setter Property="TextElement.Foreground" Value="DarkSlateGray" />
-      <Setter Property="TextElement.FontWeight" Value="DemiBold" />
-      <Setter Property="FrameworkElement.VerticalAlignment" Value="Center" />
-    </Style>
 
     <Style TargetType="Control" x:Key="ControlWithErrorToolTipStyle">
       <Style.Triggers>
@@ -34,7 +30,7 @@
       <Setter Property="HeaderTemplate">
         <Setter.Value>
           <DataTemplate>
-            <Border Background="{x:Static SystemColors.ControlBrush}">
+            <Border Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
               <TextBlock Text="{Binding}" Margin="3" FontWeight="Bold" />
             </Border>
           </DataTemplate>
@@ -53,7 +49,7 @@
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition SharedSizeGroup="LeftColum" />
                 </Grid.ColumnDefinitions>
-                <ContentPresenter ContentSource="Header" Style="{StaticResource LabelStyle}" />
+                <ContentPresenter ContentSource="Header" Style="{StaticResource {x:Static themes:ResourceKeys.LabelTextStyle}}" />
               </Grid>
               <ContentPresenter VerticalAlignment="Center" />
             </DockPanel>
@@ -71,7 +67,7 @@
             <RadioButton Margin="0,2" IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                          Content="{TemplateBinding Content, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
                          ToolTip="{TemplateBinding Content, Converter={x:Static toms:ObjectToDescriptionConverter.Default}}"
-                         Style="{StaticResource LabelStyle}" Focusable="True" />
+                         Style="{StaticResource {x:Static themes:ResourceKeys.LabelTextStyle}}" Focusable="True" />
           </ControlTemplate>
         </Setter.Value>
       </Setter>
@@ -79,7 +75,7 @@
 
   </UserControl.Resources>
 
-  <Grid Background="LightGray" Width="800" HorizontalAlignment="Left">
+  <ScrollViewer Background="LightGray" Width="800" HorizontalAlignment="Left" VerticalScrollBarVisibility="Auto">
     <StackPanel Margin="10">
 
       <HeaderedContentControl Header="{x:Static properties:Resources.ConfigurationScopeHeader}" Style="{StaticResource GroupStyle}" Visibility="{Binding Configuration.IsScopeSupported, Converter={x:Static toms:BooleanToVisibilityConverter.Default}}">
@@ -103,7 +99,7 @@
       <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_General}" Style="{StaticResource GroupStyle}">
         <StackPanel Margin="10">
           <StackPanel Orientation="Horizontal">
-            <TextBlock Text="{x:Static properties:Resources.NeutralResourceLanguageHeader}" Style="{StaticResource LabelStyle}" />
+            <TextBlock Text="{x:Static properties:Resources.NeutralResourceLanguageHeader}" Style="{StaticResource {x:Static themes:ResourceKeys.LabelTextStyle}}" />
             <Decorator Width="5" />
             <ComboBox Width="175" ItemsSource="{Binding Source={x:Static Member=model:ResourceManager.SpecificCultures}}" SelectedItem="{Binding Configuration.NeutralResourcesLanguage}">
               <ComboBox.ItemTemplate>
@@ -126,12 +122,12 @@
         <Grid Margin="10" KeyboardNavigation.TabNavigation="Local">
           <StackPanel>
             <CheckBox IsChecked="{Binding Configuration.SortFileContentOnSave}" TabIndex="0"
-                      Style="{StaticResource LabelStyle}"
+                      Style="{StaticResource {x:Static themes:ResourceKeys.LabelTextStyle}}"
                       Content="{x:Static properties:Resources.SortNodesByKey}" />
             <Decorator Height="5" />
             <StackPanel Orientation="Horizontal">
               <Decorator Width="22" />
-              <TextBlock Text="{x:Static properties:Resources.SortBy}" Style="{StaticResource LabelStyle}" />
+              <TextBlock Text="{x:Static properties:Resources.SortBy}" Style="{StaticResource {x:Static themes:ResourceKeys.LabelTextStyle}}" />
               <Decorator Width="8" />
               <ComboBox ItemsSource="{Binding Source={x:Type system:StringComparison}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
                         SelectedItem="{Binding Configuration.ResXSortingComparison}" Width="175" />
@@ -147,9 +143,9 @@
 
       <HeaderedContentControl Header="{x:Static properties:Resources.Configuration_FileCreationHeader}" Style="{StaticResource GroupStyle}">
         <StackPanel Margin="10" KeyboardNavigation.TabNavigation="Local">
-          <CheckBox IsChecked="{Binding Configuration.AutoCreateNewLanguageFiles}" Content="{x:Static properties:Resources.AutoCreateNewLanguageFiles}" Style="{StaticResource LabelStyle}" />
+          <CheckBox IsChecked="{Binding Configuration.AutoCreateNewLanguageFiles}" Content="{x:Static properties:Resources.AutoCreateNewLanguageFiles}" Style="{StaticResource {x:Static themes:ResourceKeys.LabelTextStyle}}" />
           <Decorator Height="5" />
-          <CheckBox IsChecked="{Binding Configuration.ConfirmAddLanguageFile}" Content="{x:Static properties:Resources.ConfirmAddLanguage}" Style="{StaticResource LabelStyle}" />
+          <CheckBox IsChecked="{Binding Configuration.ConfirmAddLanguageFile}" Content="{x:Static properties:Resources.ConfirmAddLanguage}" Style="{StaticResource {x:Static themes:ResourceKeys.LabelTextStyle}}" />
         </StackPanel>
       </HeaderedContentControl>
 
@@ -179,17 +175,30 @@
                   HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
                   Margin="10" MinHeight="50" MaxHeight="250" MinWidth="700">
           <DataGrid.Columns>
-            <DataGridTextColumn Header="{x:Static properties:Resources.FileExtensions}" Binding="{Binding Extensions}" Width="2*" HeaderStyle="{StaticResource LabelStyle}" />
-            <DataGridTextColumn Header="{x:Static properties:Resources.RegularExpression}" Binding="{Binding Expression}" Width="5*" HeaderStyle="{StaticResource LabelStyle}" />
-            <DataGridCheckBoxColumn Header="{x:Static properties:Resources.CaseSensitive}" Binding="{Binding IsCaseSensitive}" Width="*" HeaderStyle="{StaticResource LabelStyle}" />
-            <DataGridTextColumn Header="{x:Static properties:Resources.CommentToken}" Binding="{Binding SingleLineComment}" Width="2*" HeaderStyle="{StaticResource LabelStyle}" />
+            <DataGridTextColumn Header="{x:Static properties:Resources.FileExtensions}" Binding="{Binding Extensions}" Width="2*" HeaderStyle="{StaticResource {x:Static themes:ResourceKeys.LabelTextStyle}}" />
+            <DataGridTextColumn Header="{x:Static properties:Resources.RegularExpression}" Binding="{Binding Expression}" Width="5*" HeaderStyle="{StaticResource {x:Static themes:ResourceKeys.LabelTextStyle}}" />
+            <DataGridCheckBoxColumn Header="{x:Static properties:Resources.CaseSensitive}" Binding="{Binding IsCaseSensitive}" Width="*" HeaderStyle="{StaticResource {x:Static themes:ResourceKeys.LabelTextStyle}}" />
+            <DataGridTextColumn Header="{x:Static properties:Resources.CommentToken}" Binding="{Binding SingleLineComment}" Width="2*" HeaderStyle="{StaticResource {x:Static themes:ResourceKeys.LabelTextStyle}}" />
           </DataGrid.Columns>
           <i:Interaction.Behaviors>
-            <dgx:ExtendedStarSizeBehavior />
+            <dgx:ExtendedStarSizeBehavior ResourceLocator="{toms:Import dgx:IResourceLocator}" />
           </i:Interaction.Behaviors>
         </DataGrid>
       </HeaderedContentControl>
 
+      <ItemsControl toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Configuration}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <StackPanel>
+              <Decorator Height="5" />
+              <HeaderedContentControl Header="{Binding Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}" Style="{StaticResource GroupStyle}">
+                <ContentControl Content="{Binding}"  Margin="10"/>
+              </HeaderedContentControl>
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      
     </StackPanel>
-  </Grid>
+  </ScrollViewer>
 </UserControl>

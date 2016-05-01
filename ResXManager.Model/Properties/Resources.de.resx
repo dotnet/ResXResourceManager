@@ -123,10 +123,6 @@
   <data name="ImportFailedPartiallyError">
     <value>Import teilweise fehlgeschlagen. Einige Spalten wurden überschrieben, aber nicht alle.</value>
   </data>
-  <data name="ClipboardIsEmpty">
-    <value>Die Zwischenablage ist leer.</value>
-    <comment>Deutscher kommentar</comment>
-  </data>
   <data name="DuplicateKeyError">
     <value>Doppelte Schlüssel in '{0}':
 {1}
@@ -145,15 +141,6 @@
   </data>
   <data name="ImportHeaderMismatchError">
     <value>Kopfzeile entspricht nicht dem Standard.</value>
-  </data>
-  <data name="ImportInconsistentDoubleQuoteError">
-    <value>Inkonsistente Benutzung von doppelten Anführungszeichen.</value>
-  </data>
-  <data name="ImportNormalizedTableExpected">
-    <value>Die Tabelle muß normalisiert sein.</value>
-  </data>
-  <data name="ImportParseEmptyTextError">
-    <value>Leerer Text kann nicht gelesen werden.</value>
   </data>
   <data name="InvalidResourceFileError">
     <value>{0} ist keine gültige Ressourcedatei: Kein xml root.</value>
@@ -183,12 +170,15 @@
     <value>In ein einziges Arbeitsblatt</value>
   </data>
   <data name="StringFormatParameterMismatchError" xml:space="preserve">
-    <value>Dieser Text enthält String-Format Parameterinkonsistenzen!</value>
+    <value>Warnung: Dieser Text enthält String-Format Parameterinkonsistenzen!</value>
   </data>
   <data name="DuplicateKeyHandling_Fail" xml:space="preserve">
     <value>Eine Fehlermeldung anzeigen und die Datei nicht laden.</value>
   </data>
   <data name="DuplicateKeyHandling_Rename" xml:space="preserve">
     <value>Doppelte Schlüssel umbenennen ("_Duplicate[#]" anhängen)</value>
+  </data>
+  <data name="SnapshotAnnotation" xml:space="preserve">
+    <value>Snapshot: "{0}"</value>
   </data>
 </root>

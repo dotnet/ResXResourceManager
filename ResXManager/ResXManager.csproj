@@ -37,8 +37,8 @@
     <SupportUrl>https://resxresourcemanager.codeplex.com</SupportUrl>
     <ProductName>ResX Resource Manager</ProductName>
     <PublisherName>tom-englert.de</PublisherName>
-    <ApplicationRevision>63</ApplicationRevision>
-    <ApplicationVersion>1.0.0.63</ApplicationVersion>
+    <ApplicationRevision>78</ApplicationRevision>
+    <ApplicationVersion>1.0.0.78</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -163,7 +163,7 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' != 'Debug'">
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
@@ -172,7 +172,7 @@
   <PropertyGroup>
     <ManifestCertificateThumbprint>30B066A127A046DC56D01AFD38C932F11D29AC18</ManifestCertificateThumbprint>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' != 'Debug'">
     <ManifestKeyFile>ResXManager_Key.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
@@ -197,12 +197,13 @@
       <HintPath>..\packages\WindowsAPICodePack-Shell.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Net" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -214,20 +215,20 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="TomsToolbox.Core, Version=1.0.24.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Core.1.0.24.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
+    <Reference Include="TomsToolbox.Core, Version=1.0.44.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Core.1.0.44.0\lib\net40-Client\TomsToolbox.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TomsToolbox.Desktop, Version=1.0.24.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.24.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
+    <Reference Include="TomsToolbox.Desktop, Version=1.0.44.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.44.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.24.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.24.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
+    <Reference Include="TomsToolbox.ObservableCollections">
+      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.44.0\lib\net40-Client\TomsToolbox.ObservableCollections.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TomsToolbox.Wpf, Version=1.0.24.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Wpf.1.0.24.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
+    <Reference Include="TomsToolbox.Wpf">
+      <HintPath>..\packages\TomsToolbox.Wpf.1.0.44.0\lib\net40-Client\TomsToolbox.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />

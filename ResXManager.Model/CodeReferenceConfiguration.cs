@@ -7,12 +7,10 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Runtime.Serialization;
 
     using JetBrains.Annotations;
 
-    using TomsToolbox.Core;
     using TomsToolbox.ObservableCollections;
 
     [DataContract]
@@ -32,7 +30,7 @@
             }
             set
             {
-                SetProperty(ref _extensions, value, () => Extensions);
+                SetProperty(ref _extensions, value, nameof(Extensions));
             }
         }
 
@@ -45,7 +43,7 @@
             }
             set
             {
-                SetProperty(ref _isCaseSensitive, value, () => IsCaseSensitive);
+                SetProperty(ref _isCaseSensitive, value, nameof(IsCaseSensitive));
             }
         }
 
@@ -58,7 +56,7 @@
             }
             set
             {
-                SetProperty(ref _expression, value, () => Expression);
+                SetProperty(ref _expression, value, nameof(Expression));
             }
         }
 
@@ -71,7 +69,7 @@
             }
             set
             {
-                SetProperty(ref _singleLineComment, value, () => SingleLineComment);
+                SetProperty(ref _singleLineComment, value, nameof(SingleLineComment));
             }
         }
 
@@ -92,23 +90,6 @@
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            Contract.Requires(!string.IsNullOrEmpty(propertyName));
-
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void SetProperty<T>(ref T backingField, T value, Expression<Func<T>> propertyExpression)
-        {
-            Contract.Requires(propertyExpression != null);
-
-            SetProperty(ref backingField, value, PropertySupport.ExtractPropertyName(propertyExpression));
-        }
-
-        [NotifyPropertyChangedInvocator]
         private void SetProperty<T>(ref T backingField, T value, string propertyName)
         {
             Contract.Requires(!string.IsNullOrEmpty(propertyName));
@@ -118,7 +99,7 @@
 
             backingField = value;
 
-            OnPropertyChanged(propertyName);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion
@@ -171,6 +152,7 @@
                 value.Add(".vb", false, @"\W($Key)\W", @"'");
                 value.Add(".cpp,.c,.hxx,.h", true, @"\W($File::$Key)\W", @"//");
                 value.Add(".aspx,.ascx", true, @"<%\$\s+Resources:\s*($File)\s*,\s*($Key)\s*%>", null);
+                value.Add("*cs", true, @"StringResourceKey\.($Key)", @"//");
 
                 return value;
             }

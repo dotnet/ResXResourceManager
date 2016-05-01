@@ -2,10 +2,7 @@
 {
     using System.Diagnostics.Contracts;
     using System.IO;
-    using System.Linq;
     using System.Text.RegularExpressions;
-    using System.Windows;
-    using System.Windows.Interactivity;
     using System.Xml.Linq;
 
     using TomsToolbox.Core;
@@ -36,14 +33,25 @@
             return value;
         }
 
-        [ContractVerification(false)]
-        public static string TryGetAttribute(this XElement element, string name)
+        public static string TryGetAttribute(this XElement element, XName name)
         {
             Contract.Requires(element != null);
-            Contract.Requires(!string.IsNullOrEmpty(name));
+            Contract.Requires(name != null);
             Contract.Ensures(Contract.Result<string>() != null);
 
-            return element.Attribute(name).Maybe().Return(x => x.Value, string.Empty);
+            var attribute = element.Attribute(name);
+
+            return attribute != null ? attribute.Value : string.Empty;
+        }
+
+        public static string ReplaceInvalidFileNameChars(this string value, char replacement)
+        {
+            Contract.Requires(value != null);
+            Contract.Ensures(Contract.Result<string>() != null);
+
+            Path.GetInvalidFileNameChars().ForEach(c => value = value.Replace(c, replacement));
+
+            return value;
         }
     }
 }

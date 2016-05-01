@@ -1,0 +1,103 @@
+﻿<UserControl x:Class="tomenglertde.ResXManager.VSIX.Visuals.MoveToResourceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="600"
+             xmlns:toms="urn:TomsToolbox"
+             xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes;assembly=ResXManager.View"
+             xmlns:view="clr-namespace:tomenglertde.ResXManager.View.Visuals;assembly=ResXManager.View"
+             xmlns:visuals="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
+             xmlns:local="clr-namespace:tomenglertde.ResXManager.VSIX"
+             xmlns:properties="clr-namespace:tomenglertde.ResXManager.VSIX.Properties"
+             d:DataContext="{d:DesignInstance visuals:MoveToResourceViewModel}">
+  <UserControl.Resources>
+    <Style TargetType="ToggleButton" x:Key="ToggleWhiteSpaceButtonStyle">
+      <Setter Property="DockPanel.Dock" Value="Right"/>
+      <Setter Property="Content" Value="¶" />
+      <Setter Property="VerticalAlignment" Value="Top"/>
+      <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+      <Setter Property="ToolTip" Value="{x:Static local:Resources.ShowWhitespaceToolTip}"/>
+    </Style>
+  </UserControl.Resources>
+  <StackPanel Margin="10">
+    <StackPanel Grid.IsSharedSizeScope="True">
+      <view:SharedWidthHeaderedContentControl>
+        <StackPanel Orientation="Horizontal">
+          <RadioButton Content="New entry" IsChecked="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}"/>
+          <Decorator Width="10" />
+          <RadioButton Content="Reuse existing" 
+                       IsChecked="{Binding ReuseExisiting}" 
+                       IsEnabled="{Binding ExistingEntries.Count, Converter={x:Static toms:BinaryOperationConverter.GreaterThan}, ConverterParameter=0}"/>
+        </StackPanel>
+      </view:SharedWidthHeaderedContentControl>
+      <Decorator Height="15" />
+      <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.ResourceHeader}">
+        <Grid>
+          <ComboBox ItemsSource="{Binding ResourceEntities}"
+                    SelectedItem="{Binding SelectedResourceEntity, ValidatesOnDataErrors=True}"
+                    Style="{StaticResource {x:Static themes:ResourceKeys.ControlWithValidationErrorToolTipStyle}}"
+                    DisplayMemberPath="DisplayName"/>
+          <ComboBox ItemsSource="{Binding ExistingEntries}"
+                    SelectedItem="{Binding SelectedResourceEntry, ValidatesOnDataErrors=True}"
+                    Style="{StaticResource {x:Static themes:ResourceKeys.ControlWithValidationErrorToolTipStyle}}"
+                    Visibility="{Binding ReuseExisiting, Converter={x:Static toms:BooleanToVisibilityConverter.Default}}"
+                    DisplayMemberPath="Container.DisplayName"/>
+        </Grid>
+      </view:SharedWidthHeaderedContentControl>
+      <Decorator Height="10" />
+      <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.KeyHeader}">
+        <TextBox Text="{Binding Key, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                 Style="{StaticResource {x:Static themes:ResourceKeys.ControlWithValidationErrorToolTipStyle}}" 
+                 IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}"/>
+      </view:SharedWidthHeaderedContentControl>
+      <Decorator Height="10" />
+      <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.CodeHeader}">
+        <ComboBox ItemsSource="{Binding Replacements}" SelectedItem="{Binding Replacement}" SelectedIndex="{Binding SelectedReplacementIndex}" />
+      </view:SharedWidthHeaderedContentControl>
+      <Decorator Height="10" />
+      <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.ValueHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
+        <DockPanel>
+          <ToggleButton x:Name="ValueShowWhiteSpaces" Style="{StaticResource ToggleWhiteSpaceButtonStyle}" IsChecked="{Binding MoveToResourceValueShowWhitespace, Source={x:Static properties:Settings.Default}}"/>
+          <Decorator DockPanel.Dock="Right" Width="5"/>
+          <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=ValueTextBox}" WhiteSpaceOpacity="0.4">
+            <TextBox x:Name="ValueTextBox" Height="40" Text="{Binding Value}" AcceptsReturn="True" IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}" />
+            <toms:TextBoxVisibleWhiteSpaceDecorator.Style>
+              <Style TargetType="toms:TextBoxVisibleWhiteSpaceDecorator">
+                <Setter Property="WhiteSpaces" Value="None"/>
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding ElementName=ValueShowWhiteSpaces, Path=IsChecked}" Value="True">
+                    <Setter Property="WhiteSpaces" Value="All"/>
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </toms:TextBoxVisibleWhiteSpaceDecorator.Style>
+          </toms:TextBoxVisibleWhiteSpaceDecorator>
+        </DockPanel>
+      </view:SharedWidthHeaderedContentControl>
+      <Decorator Height="10" />
+      <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.CommentHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
+        <DockPanel>
+          <ToggleButton x:Name="CommentShowWhiteSpaces" Style="{StaticResource ToggleWhiteSpaceButtonStyle}" IsChecked="{Binding MoveToResourceCommentShowWhitespace, Source={x:Static properties:Settings.Default}}"/>
+          <Decorator DockPanel.Dock="Right" Width="5"/>
+          <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=CommentTextBox}" WhiteSpaceOpacity="0.4" WhiteSpaces="All">
+            <TextBox x:Name="CommentTextBox" Height="40" Text="{Binding Comment}" AcceptsReturn="True" IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}" />
+            <toms:TextBoxVisibleWhiteSpaceDecorator.Style>
+              <Style TargetType="toms:TextBoxVisibleWhiteSpaceDecorator">
+                <Setter Property="WhiteSpaces" Value="None"/>
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding ElementName=CommentShowWhiteSpaces, Path=IsChecked}" Value="True">
+                    <Setter Property="WhiteSpaces" Value="All"/>
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </toms:TextBoxVisibleWhiteSpaceDecorator.Style>
+          </toms:TextBoxVisibleWhiteSpaceDecorator>
+        </DockPanel>
+      </view:SharedWidthHeaderedContentControl>
+      <Decorator Height="10" />
+      <view:SharedWidthHeaderedContentControl>
+        <CheckBox Content="{x:Static local:Resources.MoveToResourceEditNewEntry}" IsChecked="{Binding MoveToResourceOpenInResXManager, Source={x:Static properties:Settings.Default}}"/>
+      </view:SharedWidthHeaderedContentControl>
+    </StackPanel>
+  </StackPanel>
+</UserControl>
