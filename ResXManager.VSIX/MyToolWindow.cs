@@ -43,7 +43,6 @@
         private readonly ITracer _trace;
         private readonly ResourceManager _resourceManager;
         private readonly Configuration _configuration;
-        private readonly Control _view;
         private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly PerformanceTracer _performanceTracer;
 
@@ -83,13 +82,6 @@
                 _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
 
                 _codeReferenceTracker = _compositionHost.GetExportedValue<CodeReferenceTracker>();
-
-                _view = _compositionHost.GetExportedValue<VsixShellView>();
-                _view.DataContext = _compositionHost.GetExportedValue<VsixShellViewModel>();
-                _view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
-                _view.Loaded += view_Loaded;
-                _view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
-                _view.Track(UIElement.IsMouseOverProperty).Changed += view_IsMouseOverChanged;
             }
             catch (Exception ex)
             {
@@ -126,6 +118,14 @@
             {
                 _trace.WriteLine(Resources.IntroMessage);
 
+                var view = _compositionHost.GetExportedValue<VsixShellView>();
+
+                view.DataContext = _compositionHost.GetExportedValue<VsixShellViewModel>();
+                view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
+                view.Loaded += view_Loaded;
+                view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
+                view.Track(UIElement.IsMouseOverProperty).Changed += view_IsMouseOverChanged;
+
                 _dte = (EnvDTE.DTE)GetService(typeof(EnvDTE.DTE));
                 Contract.Assume(_dte != null);
 
@@ -140,9 +140,9 @@
                 // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
                 // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
                 // the object returned by the Content property.
-                Content = _view;
+                Content = view;
 
-                _dte.SetFontSize(_view);
+                _dte.SetFontSize(view);
             }
             catch (Exception ex)
             {
@@ -197,7 +197,7 @@
 
         private void Navigate_Click(object sender, RoutedEventArgs e)
         {
-            string url = null;
+            string url;
 
             var source = e.OriginalSource as FrameworkElement;
             if (source != null)
@@ -213,10 +213,8 @@
             else
             {
                 var link = e.OriginalSource as Hyperlink;
-                if (link == null)
-                    return;
 
-                var navigateUri = link.NavigateUri;
+                var navigateUri = link?.NavigateUri;
                 if (navigateUri == null)
                     return;
 
@@ -236,7 +234,9 @@
 
         private void view_IsMouseOverChanged(object sender, EventArgs e)
         {
-            if (!_view.IsMouseOver)
+            var view = sender as UIElement;
+
+            if ((view == null) || !view.IsMouseOver)
                 return;
 
             ReloadSolution();
@@ -549,7 +549,6 @@
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_configuration != null);
             Contract.Invariant(_trace != null);
-            Contract.Invariant(_view != null);
             Contract.Invariant(_codeReferenceTracker != null);
             Contract.Invariant(_performanceTracer != null);
         }
