@@ -7,9 +7,38 @@
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:styles="urn:ResXManager.Styles"
              xmlns:vsix="clr-namespace:tomenglertde.ResXManager.VSIX"
+             xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.10.0"
              d:DataContext="{d:DesignInstance visuals:VsixShellViewModel}"
-             toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Shell}">
+             toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Shell}"
+             Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
+             Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}">
+  <UserControl.Resources>
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowBackgroundKey}}" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlLightBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ButtonHighlightKey}}" />
+    
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlDarkBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.GrayTextKey}}" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowTextKey}}" />
+
+    <SolidColorBrush x:Key="{x:Static SystemColors.GrayTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.GrayTextKey}}" />
+
+    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.HighlightKey}}" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.HighlightTextKey}}" />
+
+    <SolidColorBrush x:Key="{x:Static SystemColors.InfoTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowTextKey}}" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.InfoBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowBackgroundKey}}" />
+
+    <SolidColorBrush x:Key="{x:Static SystemColors.MenuBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.MenuKey}}" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.MenuBarBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.MenuKey}}" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.MenuTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.MenuTextKey}}" />
+
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowBackgroundKey}}" />
+
+    <SolidColorBrush x:Key="{x:Static styles:ResourceKeys.BorderBrush}" Color="{DynamicResource {x:Static vsfx:VsColors.ActiveBorderKey}}" />
+    <SolidColorBrush x:Key="{x:Static styles:ResourceKeys.DisabledBrush}" Color="{DynamicResource {x:Static vsfx:VsColors.ComboBoxDisabledBackgroundKey}}" />
+
+  </UserControl.Resources>
   <i:Interaction.Behaviors>
     <toms:CommandRoutingBehavior CommandSource="{x:Type vsix:ResXFileCodeGeneratorCommand}" 
                                  CommandTarget="{Binding SetCodeProviderCommand}" 

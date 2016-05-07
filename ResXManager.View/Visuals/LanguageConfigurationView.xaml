@@ -7,6 +7,7 @@
              xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
+             xmlns:styles="urn:ResXManager.Styles"
              d:DataContext="{d:DesignInstance visuals:LanguageConfigurationViewModel}">
   <UserControl.Resources>
 
@@ -27,8 +28,8 @@
     </DataTemplate>
 
     <DataTemplate x:Key="LanguageGroupHeaderDataTemplate" DataType="{x:Type CollectionViewGroup}">
-      <Border Margin="0,5,0,0" Background="LightGray">
-        <Control Template="{StaticResource LanguageControlTemplate}" DataContext="{Binding Name}" />
+      <Border Margin="0,5,0,0" Background="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
+        <Control Template="{StaticResource LanguageControlTemplate}" DataContext="{Binding Name}" Focusable="False" />
       </Border>
     </DataTemplate>
 
@@ -42,10 +43,11 @@
   <DockPanel>
     <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Margin="5" Foreground="Gray"
                Text="{x:Static properties:Resources.LanguageConfiguration_Description}" />
-    <ListBox x:Name="ListBox"
+    <ListBox x:Name="ListBox" Style="{DynamicResource {x:Static styles:ResourceKeys.ListBoxStyle}}"
              ItemsSource="{Binding Source={StaticResource CollectionViewSource}}"
              ItemTemplate="{StaticResource LanguageDataTemplate}"
-             ScrollViewer.VerticalScrollBarVisibility="Disabled">
+             ScrollViewer.VerticalScrollBarVisibility="Disabled"
+             BorderThickness="0,1,0,0">
       <ListBox.GroupStyle>
         <GroupStyle HeaderTemplate="{StaticResource LanguageGroupHeaderDataTemplate}">
           <GroupStyle.Panel>

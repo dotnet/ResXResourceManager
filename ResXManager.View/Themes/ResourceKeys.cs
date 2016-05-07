@@ -5,14 +5,17 @@
 
     public static class ResourceKeys
     {
-        public static readonly ResourceKey LabelTextStyle = new ComponentResourceKey(typeof(ResourceKeys), "LabelTextStyle");
-
         /// <summary>
+        /// A data template for top level menus with an image.
+        /// </summary>
+        public static readonly ResourceKey MenuItemDropDownDataTemplate = new ComponentResourceKey(typeof(ResourceKeys), "MenuItemDropDownDataTemplate");
+
+         /// <summary>
         /// A style for text boxes that automatically sets the tool tip if the text is trimmed.
         /// </summary>
         public static readonly ResourceKey AutoToolTipTextBoxStyle = new ComponentResourceKey(typeof(ResourceKeys), "AutoToolTipTextBoxStyle");
 
-        /// <summary>
+       /// <summary>
         /// Resource key for a style applying a shared with to associated container controls.
         /// </summary>
         public static readonly ResourceKey SharedWidthContainerStyle = new ComponentResourceKey(typeof(ResourceKeys), "SharedWidthContainerStyle");

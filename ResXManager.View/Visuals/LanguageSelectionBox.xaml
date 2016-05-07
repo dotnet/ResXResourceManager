@@ -4,6 +4,7 @@
         xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
         xmlns:model="urn:ResXManager.Model"
         xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
+        xmlns:styles="urn:ResXManager.Styles"
         ShowInTaskbar="False" Width="300" SizeToContent="Height" WindowStyle="ToolWindow" ResizeMode="NoResize"
         Title="{x:Static properties:Resources.Title}"
         FocusManager.FocusedElement="{Binding ElementName=ComboBox}"
@@ -14,7 +15,8 @@
     <ComboBox x:Name="ComboBox" IsEditable="True"
               ItemsSource="{Binding Languages}" 
               HorizontalAlignment="Stretch" 
-              SelectedItem="{Binding SelectedLanguage}" >
+              SelectedItem="{Binding SelectedLanguage}"
+              Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
       <ComboBox.ItemTemplate>
         <DataTemplate>
           <StackPanel Orientation="Horizontal">
@@ -39,8 +41,8 @@
           <Setter Property="Padding" Value="10,2" />
         </Style>
       </Grid.Resources>
-      <Button Grid.Column="0" Content="OK" IsDefault="True" Command="{Binding CommitCommand}"/>
-      <Button Grid.Column="2" Content="Cancel" IsCancel="True" />
+      <Button Grid.Column="0" Content="OK" IsDefault="True" Command="{Binding CommitCommand}" Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}"/>
+      <Button Grid.Column="2" Content="Cancel" IsCancel="True" Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}"/>
     </Grid>
   </StackPanel>
 </Window>

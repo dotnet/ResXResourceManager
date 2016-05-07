@@ -14,8 +14,9 @@
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:behaviors="clr-namespace:tomenglertde.ResXManager.View.Behaviors"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:styles="urn:ResXManager.Styles"
              x:Name="UserControl"
-             d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}" Background="LightGray">
+             d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
   <UserControl.Resources>
     <DataTemplate DataType="{x:Type infrastructure:CultureKey}">
       <DockPanel>
@@ -32,7 +33,7 @@
   </UserControl.Resources>
   <DockPanel Margin="10" Grid.IsSharedSizeScope="True">
     <DockPanel.Resources>
-      <Style TargetType="Button" x:Key="PushButtonStyle">
+      <Style TargetType="Button" x:Key="PushButtonStyle" BasedOn="{StaticResource {x:Static styles:ResourceKeys.ButtonStyle}}">
         <Setter Property="Margin" Value="5" />
         <Setter Property="Padding" Value="15,3" />
       </Style>
@@ -64,7 +65,7 @@
       <DockPanel>
         <visuals:TranslatorConfiguration DockPanel.Dock="Top" IsEnabled="{Binding Translations.Session.IsComplete}" Translators="{Binding Translators}" />
         <Decorator Height="10" DockPanel.Dock="Top" />
-        <DataGrid ItemsSource="{Binding Translations.Items}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
+        <DataGrid ItemsSource="{Binding Translations.Items}" Style="{DynamicResource {x:Static styles:ResourceKeys.DataGridStyle}}"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
                   IsEnabled="{Binding Translations.Session.IsComplete}" toms:MultiSelectorExtensions.SelectionBinding="{Binding Translations.SelectedItems}">
           <DataGrid.RowHeaderTemplate>
@@ -84,7 +85,8 @@
                   <StackPanel Orientation="Horizontal" DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridCellsPanel}}" d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}">
                     <TextBlock Text="{x:Static properties:Resources.Translations_Source}" VerticalAlignment="Center" />
                     <Decorator Width="5" />
-                    <ComboBox Width="150" ItemsSource="{Binding ResourceManager.CultureKeys}" SelectedItem="{Binding Translations.SourceCulture}" />
+                    <ComboBox Width="150" ItemsSource="{Binding ResourceManager.CultureKeys}"
+                              SelectedItem="{Binding Translations.SourceCulture}" Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}" />
                   </StackPanel>
                 </DataTemplate>
               </DataGridTextColumn.HeaderTemplate>
@@ -103,17 +105,12 @@
               </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>
             <DataGridTemplateColumn Width="3*" IsReadOnly="True">
-              <DataGridTemplateColumn.HeaderStyle>
-                <Style TargetType="DataGridColumnHeader">
-                  <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                </Style>
-              </DataGridTemplateColumn.HeaderStyle>
               <DataGridTemplateColumn.HeaderTemplate>
                 <DataTemplate>
                   <DockPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridCellsPanel}}" d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}">
                     <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" Orientation="Horizontal">
                       <Decorator Width="20" />
-                      <CheckBox Content="{x:Static properties:Resources.TranslationsPrefixHeader}" IsChecked="{Binding Configuration.PrefixTranslations}" />
+                      <CheckBox Content="{x:Static properties:Resources.TranslationsPrefixHeader}" IsChecked="{Binding Configuration.PrefixTranslations}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
                       <StackPanel Orientation="Horizontal" MinWidth="40">
                         <TextBlock Text="&quot;" />
                         <TextBox Text="{Binding Configuration.TranslationPrefix}" BorderThickness="0" Padding="-1" Background="Transparent" />
@@ -123,11 +120,11 @@
                     <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                       <TextBlock Text="{x:Static properties:Resources.Translations_Targets}" VerticalAlignment="Center" />
                       <Decorator Width="5" />
-                      <ToggleButton x:Name="TargetCulturesButton">
+                      <ToggleButton x:Name="TargetCulturesButton" Style="{DynamicResource {x:Static styles:ResourceKeys.ToggleButtonStyle}}">
                         <ToggleButton.Resources>
-                          <CollectionViewSource x:Key="SelectedTargetCulturesSource" Source="{Binding  Translations.SelectedTargetCultures}" >
+                          <CollectionViewSource x:Key="SelectedTargetCulturesSource" Source="{Binding  Translations.SelectedTargetCultures}">
                             <CollectionViewSource.SortDescriptions>
-                              <componentModel:SortDescription PropertyName="."/>
+                              <componentModel:SortDescription PropertyName="." />
                             </CollectionViewSource.SortDescriptions>
                           </CollectionViewSource>
                         </ToggleButton.Resources>
@@ -139,7 +136,7 @@
                           </ItemsControl.ItemsPanel>
                           <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="infrastructure:CultureKey">
-                              <Image x:Name="image"  Source="{Binding Culture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" Stretch="None" Margin="2,4" />
+                              <Image x:Name="image" Source="{Binding Culture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" Stretch="None" Margin="2,4" />
                               <DataTemplate.Triggers>
                                 <DataTrigger Binding="{Binding Culture}" Value="{x:Null}">
                                   <Setter TargetName="image" Property="Source" Value="{Binding Path=DataContext.Configuration.NeutralResourcesLanguage, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
@@ -157,15 +154,17 @@
                         </i:Interaction.Behaviors>
                         <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
                           <ListBox ItemsSource="{Binding Translations.AllTargetCultures}"
+                                   Style="{DynamicResource {x:Static styles:ResourceKeys.ListBoxStyle}}"
                                    toms:MultiSelectorExtensions.SelectionBinding="{Binding Translations.SelectedTargetCultures}"
                                    SelectionMode="Multiple" KeyboardNavigation.TabNavigation="Once">
                             <ListBox.ItemTemplate>
                               <DataTemplate DataType="infrastructure:CultureKey">
                                 <DockPanel Margin="2">
                                   <CheckBox DockPanel.Dock="Left"
-                                            IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" />
+                                            IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}"
+                                            Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
                                   <Decorator DockPanel.Dock="Left" Width="3" />
-                                  <Image x:Name="image"  DockPanel.Dock="Left"
+                                  <Image x:Name="image" DockPanel.Dock="Left"
                                          Source="{Binding Culture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
                                   <Decorator DockPanel.Dock="Left" Width="3" />
                                   <Decorator DockPanel.Dock="Right" Width="3" />
@@ -202,7 +201,8 @@
                   <ComboBox Margin="0" Padding="0" BorderThickness="0" DisplayMemberPath="TranslatedText"
                             ItemsSource="{Binding OrderedResults}" IsEditable="True"
                             Text="{Binding Translation, UpdateSourceTrigger=PropertyChanged}"
-                            IsKeyboardFocusWithinChanged="ComboBox_IsKeyboardFocusWithinChanged">
+                            IsKeyboardFocusWithinChanged="ComboBox_IsKeyboardFocusWithinChanged"
+                            Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
                     <ComboBox.ItemTemplate>
                       <DataTemplate DataType="translators:ITranslationMatch">
                         <TextBlock>
@@ -226,7 +226,7 @@
   </DockPanel>
   <i:Interaction.Triggers>
     <i:EventTrigger EventName="Loaded">
-      <i:InvokeCommandAction Command="{Binding Translations.StartCommand}"/>
+      <i:InvokeCommandAction Command="{Binding Translations.StartCommand}" />
     </i:EventTrigger>
   </i:Interaction.Triggers>
 </UserControl>

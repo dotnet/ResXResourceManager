@@ -180,6 +180,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
@@ -320,6 +321,10 @@
       <Project>{6AF977DB-2C9F-4D9C-8C2D-CFDDF7E022FC}</Project>
       <Name>ResXManager.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ResXManager.Styles\ResXManager.Styles.csproj">
+      <Project>{e5d732d2-0294-48fd-8314-63dc1a9155fe}</Project>
+      <Name>ResXManager.Styles</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ResXManager.Translators\ResXManager.Translators.csproj">
       <Project>{d8b0b04f-4273-45db-ae2d-5a91c89e1225}</Project>
       <Name>ResXManager.Translators</Name>
@@ -378,7 +383,7 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <Target Name="BeforeBuild">
-    <Exec ContinueOnError="false" Command="&quot;$(SolutionDir)packages\Brutal.Dev.StrongNameSigner.1.5.0\tools\StrongNameSigner.Console.exe&quot; -in &quot;$(SolutionDir)packages\WindowsAPICodePack-Core.1.1.1|$(SolutionDir)packages\WindowsAPICodePack-Shell.1.1.1&quot; -k &quot;$(SolutionDir)key.snk&quot;" />
+    <Exec ContinueOnError="false" Command="&quot;$(SolutionDir)packages\Brutal.Dev.StrongNameSigner.1.7.0\tools\StrongNameSigner.Console.exe&quot; -in &quot;$(SolutionDir)packages\WindowsAPICodePack-Core.1.1.1|$(SolutionDir)packages\WindowsAPICodePack-Shell.1.1.1&quot; -k &quot;$(SolutionDir)key.snk&quot;" />
   </Target>
   <Target Name="AfterBuild">
   </Target>
