@@ -130,8 +130,8 @@
 
                 var firstRow = firstSheet.GetRows(workbookPart).FirstOrDefault();
 
-                var changes = IsSingleSheetHeader(firstRow, sharedStrings) 
-                    ? ImportSingleSheet(resourceManager, firstSheet, workbookPart, sharedStrings) 
+                var changes = IsSingleSheetHeader(firstRow, sharedStrings)
+                    ? ImportSingleSheet(resourceManager, firstSheet, workbookPart, sharedStrings)
                     : ImportMultipleSheets(resourceManager, sheets, workbookPart, sharedStrings);
 
                 return changes.ToArray();
@@ -281,7 +281,17 @@
 
         private static Cell CreateCell(string text)
         {
-            return new Cell { DataType = CellValues.InlineString }.AppendItem(new InlineString().AppendItem(new Text(text ?? string.Empty)));
+            return new Cell
+            {
+                DataType = CellValues.InlineString,
+                InlineString = new InlineString
+                {
+                    Text = new Text(text ?? string.Empty)
+                    {
+                        Space = SpaceProcessingModeValues.Preserve
+                    }
+                }
+            };
         }
 
         private static IList<SharedStringItem> GetSharedStrings(this WorkbookPart workbookPart)
@@ -289,15 +299,10 @@
             Contract.Requires(workbookPart != null);
 
             var sharedStringsPart = workbookPart.SharedStringTablePart;
-            if (sharedStringsPart == null)
-                return null;
 
-            var stringTable = sharedStringsPart.SharedStringTable;
+            var stringTable = sharedStringsPart?.SharedStringTable;
 
-            if (stringTable == null)
-                return null;
-
-            return stringTable.OfType<SharedStringItem>().ToArray();
+            return stringTable?.OfType<SharedStringItem>().ToArray();
         }
 
         private static string GetText(this CellType cell, IList<SharedStringItem> sharedStrings)
