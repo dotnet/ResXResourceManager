@@ -8,8 +8,6 @@
     using System.IO;
     using System.Linq;
 
-    using EnvDTE;
-
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
@@ -139,7 +137,7 @@
             }
         }
 
-        private void GetProjectFiles(string projectName, ProjectItems projectItems, IDictionary<string, DteProjectFile> items)
+        private void GetProjectFiles(string projectName, EnvDTE.ProjectItems projectItems, IDictionary<string, DteProjectFile> items)
         {
             Contract.Requires(items != null);
 
@@ -175,6 +173,9 @@
         {
             Contract.Requires(projectItem != null);
             Contract.Requires(items != null);
+
+            if (projectItem.Object is VSLangProj.References) // MPF project (e.g. WiX) references folder, do not traverse...
+                return;
 
             if (projectItem.FileCount > 0)
             {
