@@ -1,0 +1,62 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:styles="clr-namespace:ResXManager.Styles"
+                    xmlns:toms="urn:TomsToolbox">
+
+  <Style x:Key="{x:Static styles:ResourceKeys.RadioButtonStyle}" TargetType="{x:Type RadioButton}">
+    <Setter Property="UseLayoutRounding" Value="False" />
+    <Setter Property="SnapsToDevicePixels" Value="True" />
+    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Padding" Value="4,1,0,0" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="RadioButton">
+          <BulletDecorator Background="Transparent">
+            <BulletDecorator.Bullet>
+              <Grid>
+                <Ellipse x:Name="Bullet" Width="12" Height="12"
+                         Fill="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                         Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                         StrokeThickness="1" />
+                <Ellipse x:Name="CheckMark" Width="6" Height="6" HorizontalAlignment="Center" VerticalAlignment="Center"
+                         Fill="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" Visibility="Hidden" />
+              </Grid>
+            </BulletDecorator.Bullet>
+            <Grid Margin="{TemplateBinding Padding}"
+                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+              <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" />
+              <Rectangle x:Name="FocusVisual" StrokeThickness="1" Visibility="Hidden"
+                         Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" 
+                         StrokeDashArray="1 2" Margin="-2,-1" SnapsToDevicePixels="True" />
+            </Grid>
+          </BulletDecorator>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="Bullet" Property="Stroke" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+            </Trigger>
+            <MultiDataTrigger>
+              <MultiDataTrigger.Conditions>
+                <Condition Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="True" />
+                <Condition Binding="{Binding IsFocusVisualVisible, Source={x:Static toms:KeyboardNavigation.Current}}" Value="True" />
+              </MultiDataTrigger.Conditions>
+              <Setter Property="Visibility" TargetName="FocusVisual" Value="Visible" />
+            </MultiDataTrigger>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter TargetName="Bullet" Property="Fill" Value="{DynamicResource {x:Static styles:ResourceKeys.DisabledBrush}}" />
+              <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+</ResourceDictionary>
