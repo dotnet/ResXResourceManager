@@ -9,6 +9,7 @@
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
              xmlns:local="clr-namespace:tomenglertde.ResXManager.VSIX"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.VSIX.Properties"
+             xmlns:styles="urn:ResXManager.Styles"
              d:DataContext="{d:DesignInstance visuals:MoveToResourceViewModel}">
   <UserControl.Resources>
     <Style TargetType="ToggleButton" x:Key="ToggleWhiteSpaceButtonStyle">
@@ -35,11 +36,11 @@
         <Grid>
           <ComboBox ItemsSource="{Binding ResourceEntities}"
                     SelectedItem="{Binding SelectedResourceEntity, ValidatesOnDataErrors=True}"
-                    Style="{StaticResource {x:Static themes:ResourceKeys.ControlWithValidationErrorToolTipStyle}}"
+                    Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}"
                     DisplayMemberPath="DisplayName"/>
           <ComboBox ItemsSource="{Binding ExistingEntries}"
                     SelectedItem="{Binding SelectedResourceEntry, ValidatesOnDataErrors=True}"
-                    Style="{StaticResource {x:Static themes:ResourceKeys.ControlWithValidationErrorToolTipStyle}}"
+                    Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}"
                     Visibility="{Binding ReuseExisiting, Converter={x:Static toms:BooleanToVisibilityConverter.Default}}"
                     DisplayMemberPath="Container.DisplayName"/>
         </Grid>
@@ -52,7 +53,8 @@
       </view:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
       <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.CodeHeader}">
-        <ComboBox ItemsSource="{Binding Replacements}" SelectedItem="{Binding Replacement}" SelectedIndex="{Binding SelectedReplacementIndex}" />
+        <ComboBox ItemsSource="{Binding Replacements}" SelectedItem="{Binding Replacement}" 
+                  SelectedIndex="{Binding SelectedReplacementIndex}" Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}"/>
       </view:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
       <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.ValueHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
