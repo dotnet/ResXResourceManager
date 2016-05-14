@@ -71,6 +71,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to You are about to add new entries to a WinForms des....
+        /// </summary>
+        public static string AddEntryToWinFormsResourceWarning {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("AddEntryToWinFormsResourceWarning", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Add new key (Shift+Insert).
         /// </summary>
         public static string AddKeyToolTip {
@@ -614,6 +624,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to You must select a single resource in the left side....
+        /// </summary>
+        public static string NeedSingleEntitySelection {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("NeedSingleEntitySelection", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Neutral.
         /// </summary>
         public static string Neutral {
@@ -975,6 +995,10 @@ namespace tomenglertde.ResXManager.View.Properties {
     public enum StringResourceKey
     {
         /// <summary>
+        ///   Looks up a localized string similar to You are about to add new entries to a WinForms des....
+        /// </summary>
+        AddEntryToWinFormsResourceWarning,
+        /// <summary>
         ///   Looks up a localized string similar to Add new key (Shift+Insert).
         /// </summary>
         AddKeyToolTip,
@@ -1193,6 +1217,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Multiple selection..
         /// </summary>
         MultipleSelection,
+        /// <summary>
+        ///   Looks up a localized string similar to You must select a single resource in the left side....
+        /// </summary>
+        NeedSingleEntitySelection,
         /// <summary>
         ///   Looks up a localized string similar to Neutral.
         /// </summary>

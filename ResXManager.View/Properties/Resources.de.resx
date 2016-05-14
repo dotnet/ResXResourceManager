@@ -378,4 +378,11 @@ Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
   <data name="Patterns" xml:space="preserve">
     <value>Muster</value>
   </data>
+  <data name="NeedSingleEntitySelection" xml:space="preserve">
+    <value>Sie müssen eine einzelne Ressource in der linken Liste auswählen um Einträge hinzuzufügen.</value>
+  </data>
+  <data name="AddEntryToWinFormsResourceWarning" xml:space="preserve">
+    <value>Zusätzliche Einträge in WinForms-Designer Ressourcen gehen verloren, wenn Sie das Formular bearbeiten.
+Wollen Sie trotzdem einen neuen Eintrag hinzufügen?</value>
+  </data>
 </root>

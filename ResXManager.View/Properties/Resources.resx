@@ -389,4 +389,12 @@ Use e.g. ".* - (?!Migrations)" to hide EF migrations.</value>
   <data name="Patterns" xml:space="preserve">
     <value>Patterns</value>
   </data>
+  <data name="NeedSingleEntitySelection" xml:space="preserve">
+    <value>You must select a single resource in the left side list to add entries.</value>
+  </data>
+  <data name="AddEntryToWinFormsResourceWarning" xml:space="preserve">
+    <value>You are about to add new entries to a WinForms designer resource.
+Additional entries will be lost if you edit the form.
+Do you want to add a new entry anyway?</value>
+  </data>
 </root>

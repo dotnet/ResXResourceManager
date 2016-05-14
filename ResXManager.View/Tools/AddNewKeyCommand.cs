@@ -25,24 +25,24 @@
 
             _resourceManager = resourceManager;
 
-            CanExecuteCallback = CanExecute;
             ExecuteCallback = Execute;
-        }
-
-        private bool CanExecute()
-        {
-            if (_resourceManager.SelectedEntities.Count() != 1)
-                return false;
-
-            return _resourceManager.SelectedEntities.Single()?.IsWinFormsDesignerResource != true;
         }
 
         private void Execute()
         {
             if (_resourceManager.SelectedEntities.Count() != 1)
+            {
+                MessageBox.Show(Resources.NeedSingleEntitySelection);
                 return;
+            }
 
             var resourceFile = _resourceManager.SelectedEntities.Single();
+
+            if (resourceFile.IsWinFormsDesignerResource)
+            {
+                if (MessageBox.Show(Resources.AddEntryToWinFormsResourceWarning, Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No)
+                    return;
+            }
 
             if (!resourceFile.CanEdit(null))
                 return;
