@@ -32,7 +32,7 @@
         {
             if (_resourceManager.SelectedEntities.Count() != 1)
             {
-                MessageBox.Show(Resources.NeedSingleEntitySelection);
+                MessageBox.Show(Resources.NeedSingleEntitySelection, Resources.Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
 
@@ -75,7 +75,7 @@
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), Resources.Title);
+                MessageBox.Show(ex.ToString(), Resources.Title, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

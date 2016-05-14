@@ -54,12 +54,7 @@
 
         private void Text_Changed(string newValue)
         {
-            var eventHandler = TextChanged;
-
-            if (eventHandler != null)
-            {
-                eventHandler(this, new TextEventArgs(newValue ?? string.Empty));
-            }
+            TextChanged?.Invoke(this, new TextEventArgs(newValue ?? string.Empty));
         }
 
         /// <summary>
@@ -80,6 +75,6 @@
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
-        } 
+        }
     }
 }
