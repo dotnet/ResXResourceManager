@@ -1,3 +1,9 @@
+1.0.0.79:
+* WI1146: UI follows VS color themes.
+* WI4712: Error messages in output window when loading MPF (e.g. wix installer) projects
+* WI4709, 4717: Allways enable the add key button and show a hint if it's not possible to add one now.
+* WI4715: Excel export: Preserve leading whitespace.
+* WI4711: Avoid crash when VS is unable to create the view.
 1.0.0.78:
 * "Move to Resource": many small improvements.
 * WI4707: New resource values are not saved / lost if  Visual Localizer is installed.
