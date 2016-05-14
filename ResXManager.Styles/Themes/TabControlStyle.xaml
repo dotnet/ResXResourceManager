@@ -60,7 +60,7 @@
               </MultiTrigger.Conditions>
               <Setter Property="Margin" Value="-1" />
               <Setter Property="BorderThickness" TargetName="TabItemBorder" Value="1,1,1,0" />
-              <Setter Property="Margin" TargetName="Content" Value="0,0,0,1" />
+              <Setter Property="Margin" TargetName="Content" Value="-1,0,-1,1" />
             </MultiTrigger>
             <MultiTrigger>
               <MultiTrigger.Conditions>
@@ -69,7 +69,7 @@
               </MultiTrigger.Conditions>
               <Setter Property="Margin" Value="-1" />
               <Setter Property="BorderThickness" TargetName="TabItemBorder" Value="1,0,1,1" />
-              <Setter Property="Margin" TargetName="Content" Value="0,1,0,0" />
+              <Setter Property="Margin" TargetName="Content" Value="-1,1,-1,0" />
             </MultiTrigger>
             <MultiTrigger>
               <MultiTrigger.Conditions>
@@ -78,7 +78,7 @@
               </MultiTrigger.Conditions>
               <Setter Property="Margin" Value="-1" />
               <Setter Property="BorderThickness" TargetName="TabItemBorder" Value="1,1,0,1" />
-              <Setter Property="Margin" TargetName="Content" Value="0,0,1,0" />
+              <Setter Property="Margin" TargetName="Content" Value="-1,-1,0,-1" />
             </MultiTrigger>
             <MultiTrigger>
               <MultiTrigger.Conditions>
@@ -87,7 +87,7 @@
               </MultiTrigger.Conditions>
               <Setter Property="Margin" Value="-1" />
               <Setter Property="BorderThickness" TargetName="TabItemBorder" Value="0,1,1,1" />
-              <Setter Property="Margin" TargetName="Content" Value="1,0,0,0" />
+              <Setter Property="Margin" TargetName="Content" Value="0,-1,-1,-1" />
             </MultiTrigger>
             <Trigger Property="IsEnabled" Value="False">
               <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />

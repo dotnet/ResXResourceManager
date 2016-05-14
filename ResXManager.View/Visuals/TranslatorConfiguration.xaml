@@ -29,7 +29,7 @@
             </Button>
           </DockPanel>
           <Decorator Height="5"/>
-          <GroupBox x:Name="AuthenticationGroup" Header="{x:Static properties:Resources.Authentication}" 
+          <GroupBox x:Name="AuthenticationGroup" Header="{x:Static properties:Resources.Authentication}"
                     Grid.IsSharedSizeScope="True" Style="{DynamicResource {x:Static styles:ResourceKeys.GroupBoxStyle}}">
             <StackPanel>
               <ItemsControl ItemsSource="{Binding Credentials}" Margin="2" Focusable="False">
