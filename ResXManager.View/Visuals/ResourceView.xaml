@@ -77,7 +77,7 @@
       </Style.Triggers>
     </Style>
 
-    <Style TargetType="Image" BasedOn="{StaticResource ImageStyle}"/>
+    <Style TargetType="Image" BasedOn="{StaticResource ImageStyle}" />
 
   </UserControl.Resources>
 
@@ -111,10 +111,10 @@
           <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
             <Decorator Width="3" />
             <Path Data="M0,0 L10,0 6,4 6,9 4,9 4,4 Z" Fill="Gray"
-                      VerticalAlignment="Center" HorizontalAlignment="Right" Margin="2,0" />
+                  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="2,0" />
           </StackPanel>
           <TextBox x:Name="EntityFilter" Text="{Binding Path=ResourceFilter, Source={x:Static properties:Settings.Default}, Mode=TwoWay}"
-                       ToolTip="{x:Static properties:Resources.ResourceFilterToolTip}" BorderThickness="0" />
+                   ToolTip="{x:Static properties:Resources.ResourceFilterToolTip}" BorderThickness="0" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
         </DockPanel>
       </Border>
     </DockPanel>
@@ -361,7 +361,7 @@
       </Popup>
       <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=TextBox}" WhiteSpaceOpacity="0.4" WhiteSpaces="All">
         <TextBox x:Name="TextBox" AcceptsReturn="True" AcceptsTab="True" tools:Spellchecker.IsEnabled="True"
-                 TextWrapping="Wrap" IsTabStop="False" BorderThickness="0" Margin="1">
+                 TextWrapping="Wrap" IsTabStop="False" BorderThickness="0" Margin="1" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}">
           <i:Interaction.Behaviors>
             <toms:ZoomFontSizeOnMouseWheelBehavior />
             <behaviors:SynchronizeTextBoxWithDataGridCellBehavior DataGrid="{Binding ElementName=DataGrid}" />

@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="600"
              xmlns:toms="urn:TomsToolbox"
-             xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes;assembly=ResXManager.View"
              xmlns:view="clr-namespace:tomenglertde.ResXManager.View.Visuals;assembly=ResXManager.View"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
              xmlns:local="clr-namespace:tomenglertde.ResXManager.VSIX"
@@ -48,7 +47,7 @@
       <Decorator Height="10" />
       <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.KeyHeader}">
         <TextBox Text="{Binding Key, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                 Style="{StaticResource {x:Static themes:ResourceKeys.ControlWithValidationErrorToolTipStyle}}" 
+                 Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" 
                  IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}"/>
       </view:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
@@ -62,7 +61,9 @@
           <ToggleButton x:Name="ValueShowWhiteSpaces" Style="{StaticResource ToggleWhiteSpaceButtonStyle}" IsChecked="{Binding MoveToResourceValueShowWhitespace, Source={x:Static properties:Settings.Default}}"/>
           <Decorator DockPanel.Dock="Right" Width="5"/>
           <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=ValueTextBox}" WhiteSpaceOpacity="0.4">
-            <TextBox x:Name="ValueTextBox" Height="40" Text="{Binding Value}" AcceptsReturn="True" IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}" />
+            <TextBox x:Name="ValueTextBox" Height="40" Text="{Binding Value}" AcceptsReturn="True" 
+                     IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}" 
+                     Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
             <toms:TextBoxVisibleWhiteSpaceDecorator.Style>
               <Style TargetType="toms:TextBoxVisibleWhiteSpaceDecorator">
                 <Setter Property="WhiteSpaces" Value="None"/>
@@ -82,7 +83,9 @@
           <ToggleButton x:Name="CommentShowWhiteSpaces" Style="{StaticResource ToggleWhiteSpaceButtonStyle}" IsChecked="{Binding MoveToResourceCommentShowWhitespace, Source={x:Static properties:Settings.Default}}"/>
           <Decorator DockPanel.Dock="Right" Width="5"/>
           <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=CommentTextBox}" WhiteSpaceOpacity="0.4" WhiteSpaces="All">
-            <TextBox x:Name="CommentTextBox" Height="40" Text="{Binding Comment}" AcceptsReturn="True" IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}" />
+            <TextBox x:Name="CommentTextBox" Height="40" Text="{Binding Comment}" AcceptsReturn="True" 
+                     IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}"
+                     Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}"/>
             <toms:TextBoxVisibleWhiteSpaceDecorator.Style>
               <Style TargetType="toms:TextBoxVisibleWhiteSpaceDecorator">
                 <Setter Property="WhiteSpaces" Value="None"/>

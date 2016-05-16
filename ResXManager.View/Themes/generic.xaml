@@ -86,15 +86,6 @@
     </Style.Triggers>
   </Style>
 
-  <!-- A control that shows validation errors in the tool tip. -->
-  <Style x:Key="{x:Static themes:ResourceKeys.ControlWithValidationErrorToolTipStyle}" TargetType="{x:Type Control}">
-    <Style.Triggers>
-      <Trigger Property="Validation.HasError" Value="True">
-        <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
-      </Trigger>
-    </Style.Triggers>
-  </Style>
-
   <!-- Style for a filter check box. The check box is only visible when it's hovered, focused or has a value.  -->
   <Style x:Key="{x:Static themes:ResourceKeys.ColumnHeaderSearchCheckBoxStyleKey}" TargetType="CheckBox">
     <Setter Property="IsThreeState" Value="True" />

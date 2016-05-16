@@ -65,7 +65,7 @@
             var header = column.Header as ILanguageColumnHeader;
             if (header != null)
             {
-                textBox.IsEnabled = true;
+                textBox.IsHitTestVisible = true;
                 textBox.DataContext = currentCell.Item;
 
                 var ieftLanguageTag = header.EffectiveCulture.IetfLanguageTag;
@@ -75,7 +75,7 @@
             }
             else
             {
-                textBox.IsEnabled = false;
+                textBox.IsHitTestVisible = false;
                 textBox.DataContext = null;
                 BindingOperations.ClearBinding(textBox, TextBox.TextProperty);
             }

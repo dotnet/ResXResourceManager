@@ -24,7 +24,7 @@
                           Data="M7,0 3,5 1,3 0,4 3,7 9,0 z"
                           Fill="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
                           Visibility="Hidden" UseLayoutRounding="False" />
-                    <Rectangle x:Name="IndeterminateCheckMark" Width="9" Height="9"
+                    <Rectangle x:Name="IndeterminateCheckMark" Width="7" Height="7"
                                Visibility="Hidden"
                                Fill="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
                   </Grid>
@@ -41,9 +41,13 @@
             </BulletDecorator>
           </Grid>
           <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-              <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
-            </Trigger>
+            <MultiTrigger>
+              <MultiTrigger.Conditions>
+                <Condition Property="IsMouseOver" Value="True"/>
+                <Condition Property="IsEnabled" Value="True"/>
+              </MultiTrigger.Conditions>
+              <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+            </MultiTrigger>
             <MultiDataTrigger>
               <MultiDataTrigger.Conditions>
                 <Condition Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="True" />

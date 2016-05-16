@@ -7,6 +7,7 @@
         xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
         xmlns:styles="urn:ResXManager.Styles"
         Width="600" SizeToContent="Height"
+        UseLayoutRounding="True"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ThreeDBorderWindow" ResizeMode="NoResize"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">

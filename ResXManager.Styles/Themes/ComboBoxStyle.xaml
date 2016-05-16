@@ -236,6 +236,13 @@
       <Trigger Property="Validation.HasError" Value="True">
         <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
       </Trigger>
+      <MultiTrigger>
+        <MultiTrigger.Conditions>
+          <Condition Property="IsMouseOver" Value="True"/>
+          <Condition Property="IsEnabled" Value="True"/>
+        </MultiTrigger.Conditions>
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+      </MultiTrigger>
     </Style.Triggers>
   </Style>
 

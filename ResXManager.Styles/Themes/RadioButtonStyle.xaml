@@ -36,9 +36,13 @@
             </Grid>
           </BulletDecorator>
           <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-              <Setter TargetName="Bullet" Property="Stroke" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
-            </Trigger>
+            <MultiTrigger>
+              <MultiTrigger.Conditions>
+                <Condition Property="IsMouseOver" Value="True"/>
+                <Condition Property="IsEnabled" Value="True"/>
+              </MultiTrigger.Conditions>
+              <Setter TargetName="Bullet" Property="Stroke" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+            </MultiTrigger>
             <MultiDataTrigger>
               <MultiDataTrigger.Conditions>
                 <Condition Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="True" />

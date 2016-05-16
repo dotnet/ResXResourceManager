@@ -4,11 +4,12 @@
     xmlns:styles="urn:ResXManager.Styles"
     ShowInTaskbar="False" Width="300" SizeToContent="Height" WindowStyle="ToolWindow" ResizeMode="NoResize"
     FocusManager.FocusedElement="{Binding ElementName=TextBox}"
+    UseLayoutRounding="True"
     DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
   <StackPanel Margin="10">
     <TextBlock Text="{Binding Prompt}" TextWrapping="Wrap"/>
     <Decorator Height="10"/>
-    <TextBox x:Name="TextBox" HorizontalAlignment="Stretch" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"/>
+    <TextBox x:Name="TextBox" HorizontalAlignment="Stretch" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}"/>
     <Decorator Height="10"/>
     <Grid HorizontalAlignment="Right" Grid.IsSharedSizeScope="True">
       <Grid.ColumnDefinitions>

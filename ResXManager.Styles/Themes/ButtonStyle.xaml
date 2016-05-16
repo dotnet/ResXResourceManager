@@ -30,14 +30,13 @@
               <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
             </Trigger>
             <Trigger Property="IsDefault" Value="True">
-              <Setter TargetName="InnerFrame" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+              <Setter TargetName="InnerFrame" Property="BorderBrush" Value="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
               <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
               <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
-              <Setter TargetName="InnerFrame" Property="BorderBrush" Value="Transparent" />
             </Trigger>
           </ControlTemplate.Triggers>
         </ControlTemplate>

@@ -38,7 +38,7 @@
         private int _selectedReplacementIndex;
         private bool _isUpdating;
 
-        public MoveToResourceViewModel(ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text, string extension)
+        public MoveToResourceViewModel(ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text, string extension, string className, string functionName)
         {
             Contract.Requires(patterns != null);
             Contract.Requires(resourceEntities != null);
@@ -58,7 +58,7 @@
             _extension = extension;
 
             if (!_reuseExisiting)
-                _key = CreateKey(text);
+                _key = CreateKey(text, className, functionName);
 
             Dispatcher.BeginInvoke(DispatcherPriority.Background, () => OnPropertyChanged(nameof(Key)));
         }
@@ -285,14 +285,22 @@
 
             var localNamespace = GetLocalNamespace(((DteProjectFile)entity?.NeutralProjectFile)?.DefaultProjectItem);
 
-            return pattern.Replace(@"$File", SelectedResourceEntity?.BaseName).Replace(@"$Key", Key).Replace(@"$Namespace", localNamespace);
+            return pattern.Replace(@"$File", SelectedResourceEntity?.BaseName)
+                .Replace(@"$Key", Key)
+                .Replace(@"$Namespace", localNamespace);
         }
 
-        private static string CreateKey(string text)
+        private static string CreateKey(string text, string className, string functionName)
         {
             Contract.Requires(text != null);
 
             var keyBuilder = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(className))
+                keyBuilder.AppendFormat(@"{0}_", className);
+            if (!string.IsNullOrEmpty(functionName))
+                keyBuilder.AppendFormat(@"{0}_", functionName);
+
             var makeUpper = true;
 
             foreach (var c in text)

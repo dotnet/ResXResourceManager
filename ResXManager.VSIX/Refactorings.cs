@@ -86,8 +86,8 @@
 
             IParser parser = new GenericParser();
 
-            var text = !selection.Begin.EqualTo(selection.End) ? selection.Text?.Trim('"') : parser.LocateString(selection, true);
-            if (text == null)
+            var text = !selection.IsEmpty ? selection.Text?.Trim('"') : parser.LocateString(selection, true);
+            if (string.IsNullOrEmpty(text))
                 return null;
 
             var patterns = configuration.ParsePatterns().ToArray();
@@ -100,7 +100,7 @@
                 .Where(entity => !entity.IsWinFormsDesignerResource)
                 .ToArray();
 
-            var viewModel = new MoveToResourceViewModel(patterns, entities, text, extension)
+            var viewModel = new MoveToResourceViewModel(patterns, entities, text, extension, selection.ClassName, selection.FunctionName)
             {
                 SelectedResourceEntity = GetPreferredResourceEntity(document, entities) ?? _lastUsedEntity
             };
@@ -175,25 +175,25 @@
             if (line == null)
                 return null;
 
-            var codeLanguage = document.ProjectItem?.FileCodeModel?.Language;
+            var fileCodeModel = document.ProjectItem?.FileCodeModel;
 
-            return new Selection(textDocument, line, codeLanguage);
+            return new Selection(textDocument, line, fileCodeModel);
         }
 
         private class Selection
         {
             private readonly TextDocument _textDocument;
             private readonly string _line;
+            private readonly FileCodeModel _codeModel;
 
-            public Selection(TextDocument textDocument, string line, string codeLanguage)
+            public Selection(TextDocument textDocument, string line, FileCodeModel codeModel)
             {
                 Contract.Requires(textDocument != null);
                 Contract.Requires(line != null);
 
                 _textDocument = textDocument;
                 _line = line;
-
-                CodeLanguage = codeLanguage;
+                _codeModel = codeModel;
             }
 
             [ContractVerification(false)]
@@ -216,6 +216,8 @@
                 }
             }
 
+            public bool IsEmpty => Begin.EqualTo(End);
+
             public string Text => _textDocument.Selection?.Text;
 
             public string Line
@@ -227,7 +229,9 @@
                 }
             }
 
-            public string CodeLanguage { get; }
+            public string FunctionName => GetCodeElement(vsCMElement.vsCMElementFunction)?.Name;
+
+            public string ClassName => GetCodeElement(vsCMElement.vsCMElementClass)?.Name;
 
             public void MoveTo(int startColumn, int endColumn)
             {
@@ -245,6 +249,18 @@
                 // using "selection.Text = replacement" does not work here, since it will trigger auto-complete, 
                 // and this may add unwanted additional characters, resulting in bad code.
                 selection?.ReplaceText(selection.Text, replacement);
+            }
+
+            private EnvDTE.CodeElement GetCodeElement(vsCMElement scope)
+            {
+                try
+                {
+                    return _codeModel?.CodeElementFromPoint(Begin, scope);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
             }
 
             [ContractInvariantMethod]

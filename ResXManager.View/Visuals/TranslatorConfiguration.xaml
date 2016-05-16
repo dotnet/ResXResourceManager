@@ -39,7 +39,7 @@
                       <wpf:SharedWidthHeaderedContentControl.Header>
                         <TextBlock DockPanel.Dock="Left"><Run Text="{Binding Description, Mode=OneWay}"/><Run Text=": "/></TextBlock>
                       </wpf:SharedWidthHeaderedContentControl.Header>
-                      <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                      <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}"/>
                     </wpf:SharedWidthHeaderedContentControl>
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>

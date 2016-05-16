@@ -1,13 +1,14 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:styles="clr-namespace:ResXManager.Styles">
+                    xmlns:styles="clr-namespace:ResXManager.Styles"
+                    xmlns:toms="urn:TomsToolbox">
 
   <Style x:Key="{x:Static styles:ResourceKeys.TextBoxStyle}" TargetType="{x:Type TextBox}">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
     <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
     <Setter Property="BorderBrush" Value="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}" />
     <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="Padding" Value="3,2" />
+    <Setter Property="Padding" Value="2,1" />
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="TextBox">
@@ -15,13 +16,18 @@
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="{TemplateBinding BorderThickness}">
             <ScrollViewer x:Name="PART_ContentHost"
-                          Padding="{TemplateBinding Padding}" 
+                          Margin="{TemplateBinding Padding}"
                           SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}"/>
           </Border>
           <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-              <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
-            </Trigger>
+            <MultiTrigger>
+              <MultiTrigger.Conditions>
+                <Condition Property="IsMouseOver" Value="True"/>
+                <Condition Property="IsEnabled" Value="True"/>
+                <Condition Property="IsReadOnly" Value="True"/>
+              </MultiTrigger.Conditions>
+              <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+            </MultiTrigger>
             <Trigger Property="IsEnabled" Value="False">
               <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
               <Setter Property="Background" Value="{DynamicResource {x:Static styles:ResourceKeys.DisabledBrush}}" />
@@ -29,6 +35,9 @@
             <Trigger Property="IsReadOnly" Value="True">
               <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
               <Setter Property="Background" Value="{DynamicResource {x:Static styles:ResourceKeys.DisabledBrush}}" />
+            </Trigger>
+            <Trigger Property="Validation.HasError" Value="True">
+              <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
             </Trigger>
           </ControlTemplate.Triggers>
         </ControlTemplate>
