@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
     using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -11,6 +12,7 @@
     using System.Windows.Input;
 
     using tomenglertde.ResXManager.Infrastructure;
+    using tomenglertde.ResXManager.Model.Properties;
     using tomenglertde.ResXManager.Translators;
 
     using TomsToolbox.Core;
@@ -46,6 +48,8 @@
             _resourceManager.Loaded += ResourceManager_Loaded;
 
             SourceCulture = _resourceManager.CultureKeys.FirstOrDefault();
+
+            _selectedTargetCultures.CollectionChanged += SelectedTargetCultures_CollectionChanged;
         }
 
         public CultureKey SourceCulture
@@ -77,9 +81,9 @@
             {
                 Contract.Requires(value != null);
 
-                if (SetProperty(ref _allTargetCultures, value, () => AllTargetCultures))
+                if (SetProperty(ref _allTargetCultures, value, nameof(AllTargetCultures)))
                 {
-                    _selectedTargetCultures.SynchronizeWith(value);
+                    _selectedTargetCultures.SynchronizeWith(value.Except(UnselectedTargetCultures).ToArray());
                 }
             }
         }
@@ -215,26 +219,29 @@
             }
         }
 
-        private bool IsSessionComplete
-        {
-            get
-            {
-                return _session != null && _session.IsComplete;
-            }
-        }
+        private bool IsSessionComplete => _session != null && _session.IsComplete;
 
-        private bool IsSessionRunning
+        private bool IsSessionRunning => _session != null && !_session.IsComplete && !_session.IsCanceled;
+
+        private static IEnumerable<CultureKey> UnselectedTargetCultures
         {
             get
             {
-                return _session != null && !_session.IsComplete && !_session.IsCanceled;
+                Contract.Ensures(Contract.Result<IEnumerable<CultureKey>>() != null);
+
+                return (Settings.Default.TranslationUnselectedTargetCultures ?? string.Empty).Split(',').Select(c => c.ToCultureKey()).Where(c => c != null);
+            }
+            set
+            {
+                Contract.Requires(value != null);
+
+                Settings.Default.TranslationUnselectedTargetCultures = string.Join(",", value);
             }
         }
 
         private void UpdateTargetList()
         {
-            if (Session != null)
-                Session.Cancel();
+            Session?.Cancel();
 
             SelectedItems.Clear();
 
@@ -251,6 +258,11 @@
             Session = new Session(_sourceCulture.Culture, _configuration.NeutralResourcesLanguage, Items.Cast<ITranslationItem>().ToArray());
 
             _translatorHost.Translate(Session);
+        }
+
+        private void SelectedTargetCultures_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            UnselectedTargetCultures = _allTargetCultures.Concat(UnselectedTargetCultures).Distinct().Except(_selectedTargetCultures);
         }
 
         [ContractInvariantMethod]

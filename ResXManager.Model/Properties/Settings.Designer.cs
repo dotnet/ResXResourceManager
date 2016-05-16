@@ -34,5 +34,17 @@ namespace tomenglertde.ResXManager.Model.Properties {
                 this["IsFindCodeReferencesEnabled"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TranslationUnselectedTargetCultures {
+            get {
+                return ((string)(this["TranslationUnselectedTargetCultures"]));
+            }
+            set {
+                this["TranslationUnselectedTargetCultures"] = value;
+            }
+        }
     }
 }

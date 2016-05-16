@@ -221,7 +221,7 @@
           </DataGrid.Columns>
         </DataGrid>
       </DockPanel>
-      <toms:LoadingIndicator IsActive="{Binding Translations.Session.IsActive}" Header="Translating..." />
+      <toms:LoadingIndicator IsActive="{Binding Translations.Session.IsActive}" Header="Translating..." d:IsHidden="True" />
     </Grid>
   </DockPanel>
   <i:Interaction.Triggers>

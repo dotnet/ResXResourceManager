@@ -25,13 +25,7 @@
             _culture = culture;
         }
 
-        public CultureInfo Culture
-        {
-            get
-            {
-                return _culture;
-            }
-        }
+        public CultureInfo Culture => _culture;
 
         public override string ToString()
         {
@@ -56,7 +50,7 @@
         /// </returns>
         public override int GetHashCode()
         {
-            return _culture.Maybe().Return(l => l.GetHashCode());
+            return _culture?.GetHashCode() ?? 0;
         }
 
         /// <summary>
@@ -173,7 +167,7 @@
         public static implicit operator CultureKey(CultureInfo culture)
         {
             Contract.Ensures(Contract.Result<CultureKey>() != null);
-            
+
             return new CultureKey(culture);
         }
     }
