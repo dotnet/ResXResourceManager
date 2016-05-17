@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics.Contracts;
+    using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
@@ -49,7 +50,13 @@
 
             try
             {
-                SpellCheck.SetIsEnabled(textBox, e.NewValue.SafeCast<bool>());
+                // Ensure factory is creatable, speller might be initialized in background thread.
+                var factory = new SpellCheckerFactoryCoClass();
+
+                textBox.SpellCheck.IsEnabled = e.NewValue.SafeCast<bool>();
+
+                if (Marshal.IsComObject(factory))
+                    Marshal.ReleaseComObject(factory);
             }
             catch (Exception ex)
             {
@@ -67,6 +74,15 @@
 
                 _exceptionTraced = true;
             }
+        }
+
+
+        [Guid("7AB36653-1796-484B-BDFA-E74F1DB7C1DC")]
+        [TypeLibType(TypeLibTypeFlags.FCanCreate)]
+        [ClassInterface(ClassInterfaceType.None)]
+        [ComImport]
+        private class SpellCheckerFactoryCoClass
+        {
         }
     }
 }
