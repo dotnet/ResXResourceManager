@@ -1,3 +1,6 @@
+* WI4716: Another crash when starting elevated as different user due to unavailable spell checker.
+* WI4714: Preserve target culture selection for translations
+* "Move to Resource": include type and member name in key if possible
 1.0.0.79:
 * WI1146: UI follows VS color themes.
 * WI4712: Error messages in output window when loading MPF (e.g. wix installer) projects
