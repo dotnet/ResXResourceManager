@@ -41,12 +41,25 @@
 
             try
             {
+                var index = 0;
 
                 foreach (var project in GetProjects())
                 {
                     Contract.Assume(project != null);
 
-                    GetProjectFiles(project.Name, project.ProjectItems, items);
+                    var name = @"<unknown>";
+
+                    try
+                    {
+                        index += 1;
+                        name = project.Name;
+
+                        GetProjectFiles(name, project.ProjectItems, items);
+                    }
+                    catch (Exception ex)
+                    {
+                        _tracer.TraceWarning("Error loading project {0}[{1}]: {2}", name, index, ex);
+                    }
                 }
             }
             catch (Exception ex)
