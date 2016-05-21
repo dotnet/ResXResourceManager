@@ -102,9 +102,11 @@
 
     <DockPanel Margin="5" VerticalAlignment="Top" Grid.Column="0" Grid.Row="0">
       <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Height="16" VerticalAlignment="Top">
-        <Decorator Width="16" />
-        <CheckBox x:Name="SelectAll" VerticalAlignment="Center" IsThreeState="True" IsChecked="True" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
-        <Decorator Width="7" />
+        <Decorator Width="14" />
+        <CheckBox x:Name="SelectAll" VerticalAlignment="Center" 
+                  IsThreeState="True" IsChecked="True" Focusable="False"
+                  Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+        <Decorator Width="5" />
       </StackPanel>
       <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
         <DockPanel>
@@ -121,20 +123,20 @@
 
     <ListBox x:Name="ListBox" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Margin="5,3,0,5"
              ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
-             Padding="5" BorderThickness="0" SelectionMode="Extended"
+             Padding="5,0" BorderThickness="0" SelectionMode="Extended"
              toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedEntities}"
              ContextMenu="{toms:CompositeContextMenu RegionId={x:Static infrastructure:RegionId.ProjectListContextMenu}}"
              Style="{DynamicResource {x:Static styles:ResourceKeys.ListBoxStyle}}">
       <ListBox.ItemTemplate>
         <DataTemplate DataType="model:ResourceEntity">
-          <StackPanel ToolTip="{Binding Path=DirectoryName, Mode=OneWay}" Margin="5,2" HorizontalAlignment="Left" Orientation="Horizontal">
-            <CheckBox IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Focusable="False" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+          <StackPanel ToolTip="{Binding Path=DirectoryName, Mode=OneWay}" HorizontalAlignment="Left" Orientation="Horizontal">
+            <CheckBox IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Focusable="False" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center"/>
             <Decorator Width="5" />
             <TextBlock Background="Transparent" VerticalAlignment="Center">
               <Run Text="{Binding Path=RelativePath, Mode=OneWay}" /><Run Text="{Binding Path=BaseName, Mode=OneWay}" />
             </TextBlock>
             <Decorator Width="5" />
-            <ContentControl>
+            <ContentControl Focusable="False">
               <i:Interaction.Behaviors>
                 <toms:ContentControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListItemDecorator}" CompositionContext="{Binding}" />
               </i:Interaction.Behaviors>
@@ -146,7 +148,6 @@
         <GroupStyle>
           <GroupStyle.ContainerStyle>
             <Style TargetType="{x:Type GroupItem}">
-              <Setter Property="Margin" Value="0,0,0,5" />
               <Setter Property="Template">
                 <Setter.Value>
                   <ControlTemplate TargetType="{x:Type GroupItem}">
@@ -154,8 +155,8 @@
                       <i:Interaction.Behaviors>
                         <behaviors:SelectGroupOnGroupHeaderClickBehavior />
                       </i:Interaction.Behaviors>
-                      <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" />
-                      <ItemsPresenter />
+                      <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Margin="0,5,0,3"/>
+                      <ItemsPresenter Margin="4,0,0,0"/>
                     </StackPanel>
                   </ControlTemplate>
                 </Setter.Value>

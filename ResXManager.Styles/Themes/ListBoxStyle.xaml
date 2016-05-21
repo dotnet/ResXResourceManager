@@ -4,7 +4,6 @@
 
   <Style x:Key="{x:Static styles:ResourceKeys.ListBoxItemStyle}" TargetType="{x:Type ListBoxItem}">
     <Setter Property="SnapsToDevicePixels" Value="True" />
-    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
     <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Padding" Value="6,3" />
@@ -22,9 +21,6 @@
                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 Focusable="False" TextElement.Foreground="{TemplateBinding Foreground}" />
             </Border>
-            <Rectangle x:Name="FocusVisual" IsHitTestVisible="False"
-                       Stroke="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
-                       StrokeThickness="2" Visibility="Collapsed" />
           </Grid>
           <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
