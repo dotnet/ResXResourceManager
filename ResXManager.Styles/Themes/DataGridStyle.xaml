@@ -33,7 +33,7 @@
 
   <Style x:Key="DataGridColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}">
     <Setter Property="VerticalContentAlignment" Value="Center" />
-    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
     <Setter Property="BorderThickness" Value="0,0,1,1" />
     <Setter Property="BorderBrush" Value="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}" />
     <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
@@ -88,8 +88,8 @@
       </Setter.Value>
     </Setter>
   </Style>
-  
-  <Style x:Key="{x:Static styles:ResourceKeys.DataGridColumnHeaderStyle}" BasedOn="{StaticResource DataGridColumnHeaderStyle}"/>
+
+  <Style x:Key="{x:Static styles:ResourceKeys.DataGridColumnHeaderStyle}" BasedOn="{StaticResource DataGridColumnHeaderStyle}" />
 
   <Style x:Key="DataGridRowHeaderStyle" TargetType="{x:Type DataGridRowHeader}">
     <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -111,7 +111,7 @@
                 <ContentPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" VerticalAlignment="Center" RecognizesAccessKey="True" />
                 <Control SnapsToDevicePixels="False"
                          Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}, Path=(Validation.HasError), Converter={x:Static toms:BooleanToVisibilityConverter.Default}}"
-                         Template="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}, Path=ValidationErrorTemplate}"/>
+                         Template="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}, Path=ValidationErrorTemplate}" />
               </StackPanel>
               <Border.Style>
                 <Style TargetType="{x:Type Border}">
@@ -146,7 +146,7 @@
     </Setter>
   </Style>
 
-  <Style x:Key="{x:Static styles:ResourceKeys.DataGridRowHeaderStyle}" BasedOn="{StaticResource DataGridRowHeaderStyle}"/>
+  <Style x:Key="{x:Static styles:ResourceKeys.DataGridRowHeaderStyle}" BasedOn="{StaticResource DataGridRowHeaderStyle}" />
 
   <Style x:Key="DataGridSelectAllButtonStyle" TargetType="{x:Type Button}">
     <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
@@ -183,9 +183,9 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type DataGridCell}">
-          <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" 
+          <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
                   Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-            <ContentPresenter Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+            <ContentPresenter Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                               VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" />
           </Border>
         </ControlTemplate>
@@ -203,7 +203,7 @@
     </Style.Triggers>
   </Style>
 
-  <Style x:Key="{x:Static styles:ResourceKeys.DataGridRowStyle}" TargetType="DataGridRow" >
+  <Style x:Key="{x:Static styles:ResourceKeys.DataGridRowStyle}" TargetType="DataGridRow">
     <Style.Triggers>
       <Trigger Property="IsSelected" Value="True">
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
@@ -222,10 +222,10 @@
     <Setter Property="BorderBrush" Value="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}" />
     <Setter Property="VerticalContentAlignment" Value="Stretch" />
     <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}" />
-        <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}" />
-    <Setter Property="RowHeaderStyle" Value="{StaticResource DataGridRowHeaderStyle}"/>
-    <Setter Property="ColumnHeaderStyle" Value="{StaticResource DataGridColumnHeaderStyle}"/>
-    <Setter Property="dgx:Tools.ApplyInitialSorting" Value="True"/>
+    <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}" />
+    <Setter Property="RowHeaderStyle" Value="{StaticResource DataGridRowHeaderStyle}" />
+    <Setter Property="ColumnHeaderStyle" Value="{StaticResource DataGridColumnHeaderStyle}" />
+    <Setter Property="dgx:Tools.ApplyInitialSorting" Value="True" />
     <Setter Property="dgx:ColumnStyles.DefaultColumnStyles">
       <Setter.Value>
         <dgx:DataGridColumnStyleCollection>
@@ -241,7 +241,7 @@
     <Setter Property="RowValidationErrorTemplate">
       <Setter.Value>
         <ControlTemplate>
-          <TextBlock Margin="2,0,0,0" VerticalAlignment="Center" Foreground="Red" Text="!" FontWeight="Bold"/>
+          <TextBlock Margin="2,0,0,0" VerticalAlignment="Center" Foreground="Red" Text="!" FontWeight="Bold" />
         </ControlTemplate>
       </Setter.Value>
     </Setter>

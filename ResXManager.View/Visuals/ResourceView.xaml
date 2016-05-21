@@ -449,11 +449,22 @@
               </DataTemplate>
 
               <GroupStyle x:Key="GroupStyle">
-                <GroupStyle.HeaderTemplate>
-                  <DataTemplate>
-                    <TextBlock Text="{Binding Path=Name}" Margin="5" FontWeight="Bold" />
-                  </DataTemplate>
-                </GroupStyle.HeaderTemplate>
+                <GroupStyle.ContainerStyle>
+                  <Style TargetType="GroupItem">
+                    <Setter Property="Template">
+                      <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type GroupItem}">
+                          <StackPanel Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" d:DataContext="{d:DesignInstance GroupItem}">
+                            <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Margin="5"/>
+                            <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
+                              <ItemsPresenter />
+                            </Border>
+                          </StackPanel>
+                        </ControlTemplate>
+                      </Setter.Value>
+                    </Setter>
+                  </Style>
+                </GroupStyle.ContainerStyle>
               </GroupStyle>
 
             </DataGrid.Resources>
