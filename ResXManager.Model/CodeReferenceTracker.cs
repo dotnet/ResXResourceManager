@@ -78,8 +78,7 @@
 
                 try
                 {
-                    _visited = 0;
-                    _total = resourceTableEntries.Count + projectFiles.Count();
+                    _total = resourceTableEntries.Count + projectFiles.Count;
 
                     resourceTableEntries.ForEach(entry => entry.CodeReferences = null);
 
@@ -113,11 +112,10 @@
 
                         files?.ForEach(file => file.FindCodeReferences(entry, references, tracer));
 
-                        entry.CodeReferences = references.ToArray();
+                        entry.CodeReferences = references.AsReadOnly();
 
                         Interlocked.Increment(ref _visited);
                     });
-
 
                     Contract.Assume(_visited == _total);
 

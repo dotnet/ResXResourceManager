@@ -15,7 +15,6 @@
     public class NeutralCultureCountryOverrides
     {
         private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,";
-        private static readonly CultureInfo[] _allSpecificCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
         private static readonly IEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>> _comparer = new DelegateEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>>(item => item.Key);
 
         private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
@@ -131,7 +130,6 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_allSpecificCultures != null);
             Contract.Invariant(_overrides != null);
         }
     }

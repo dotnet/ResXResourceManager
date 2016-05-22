@@ -26,22 +26,19 @@
     internal class MainViewModel : ObservableObject
     {
         private readonly ResourceManager _resourceManager;
-        private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly ITracer _tracer;
         private readonly SourceFilesProvider _sourceFilesProvider;
         private readonly Configuration _configuration;
 
         [ImportingConstructor]
-        public MainViewModel(ResourceManager resourceManager, CodeReferenceTracker codeReferenceTracker, Configuration configuration, ITracer tracer, SourceFilesProvider sourceFilesProvider)
+        public MainViewModel(ResourceManager resourceManager, Configuration configuration, ITracer tracer, SourceFilesProvider sourceFilesProvider)
         {
             Contract.Requires(resourceManager != null);
-            Contract.Requires(codeReferenceTracker != null);
             Contract.Requires(configuration != null);
             Contract.Requires(tracer != null);
             Contract.Requires(sourceFilesProvider != null);
 
             _resourceManager = resourceManager;
-            _codeReferenceTracker = codeReferenceTracker;
             _configuration = configuration;
             _tracer = tracer;
             _sourceFilesProvider = sourceFilesProvider;
@@ -226,7 +223,6 @@
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_tracer != null);
             Contract.Invariant(_sourceFilesProvider != null);
-            Contract.Invariant(_codeReferenceTracker != null);
         }
     }
 

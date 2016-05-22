@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -34,7 +35,7 @@
         private ResourceTableValues<ICollection<string>> _commentAnnotations;
         private ResourceLanguage _neutralLanguage;
 
-        private CodeReference[] _codeReferences;
+        private ReadOnlyCollection<CodeReference> _codeReferences;
         private double _index;
         private IDictionary<CultureKey, ResourceData> _snapshot;
 
@@ -277,7 +278,7 @@
             }
         }
 
-        public CodeReference[] CodeReferences
+        public ReadOnlyCollection<CodeReference> CodeReferences
         {
             get
             {
