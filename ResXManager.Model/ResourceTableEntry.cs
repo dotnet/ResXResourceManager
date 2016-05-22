@@ -289,22 +289,6 @@
             }
         }
 
-        public void AddCodeReference(CodeReference value)
-        {
-            var codeReference = new[] { value };
-
-            while (true)
-            {
-                var oldValue = _codeReferences;
-                var newValue = oldValue?.Concat(codeReference).ToArray() ?? codeReference;
-
-                if (Interlocked.CompareExchange(ref _codeReferences, newValue, oldValue) == oldValue)
-                    break;
-            }
-
-            OnPropertyChanged(nameof(CodeReferences));
-        }
-
         public double Index
         {
             get

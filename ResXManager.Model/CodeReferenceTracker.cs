@@ -105,22 +105,19 @@
 
                     resourceTableEntries.AsParallel().ForAll(entry =>
                     {
-                        var baseName = entry.Container.BaseName;
                         var key = entry.Key;
 
                         var files = keyFilesLookup.GetValueOrDefault(key);
 
-                        files?.ForEach(file => file.FindCodeReferences(baseName, entry, tracer));
+                        var references = new List<CodeReference>();
+
+                        files?.ForEach(file => file.FindCodeReferences(entry, references, tracer));
+
+                        entry.CodeReferences = references.ToArray();
 
                         Interlocked.Increment(ref _visited);
                     });
 
-                    foreach (var entry in resourceTableEntries.Where(entry => entry.CodeReferences == null))
-                    {
-                        Contract.Assume(entry != null);
-                        // Show 0 code references in UI
-                        entry.CodeReferences = new CodeReference[0];
-                    }
 
                     Contract.Assume(_visited == _total);
 
@@ -271,13 +268,15 @@
 
             public bool HasConfigurations => _configurations.Any();
 
-            public ICollection<string> Keys => _keyLinesLookup.Keys;
+            public IEnumerable<string> Keys => _keyLinesLookup.Keys;
 
-
-            public void FindCodeReferences(string baseName, ResourceTableEntry entry, ITracer tracer)
+            public void FindCodeReferences(ResourceTableEntry entry, ICollection<CodeReference> references, ITracer tracer)
             {
-                Contract.Requires(baseName != null);
                 Contract.Requires(entry != null);
+                Contract.Requires(references != null);
+                Contract.Requires(tracer != null);
+
+                var baseName = entry.Container.BaseName;
 
                 try
                 {
@@ -313,7 +312,7 @@
                                 if (!match.Success)
                                     continue;
 
-                                entry.AddCodeReference(new CodeReference(_projectFile, lineNumber, match.Segments));
+                                references.Add(new CodeReference(_projectFile, lineNumber, match.Segments));
                                 break;
                             }
                             catch (Exception ex) // Should not happen, but was reported by someone.
