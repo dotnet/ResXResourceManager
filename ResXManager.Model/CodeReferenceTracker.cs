@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.ComponentModel.Composition;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -11,7 +10,6 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading;
-    using System.Windows.Threading;
 
     using tomenglertde.ResXManager.Infrastructure;
 
@@ -22,30 +20,19 @@
     [Export]
     public class CodeReferenceTracker
     {
-        private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
-
-        private Thread _backgroundThread;
-        private long _total;
-        private long _visited;
+        private Engine _engine;
 
         private CodeReferenceTracker()
         {
         }
 
-        public int Progress => (int)(_total > 0 ? Math.Max(1, (100 * _visited) / _total) : 0);
+        public int Progress => _engine?.Progress ?? 0;
 
-        public bool IsActive => _backgroundThread != null;
+        public bool IsActive => _engine != null;
 
         public void StopFind()
         {
-            _dispatcher.VerifyAccess();
-
-            if ((_backgroundThread == null) || (_backgroundThread.ThreadState != ThreadState.Background))
-                return;
-
-            _backgroundThread.Abort();
-            _backgroundThread.Join();
-            _backgroundThread = null;
+            Interlocked.Exchange(ref _engine, null)?.Dispose();
         }
 
         public void BeginFind(ResourceManager resourceManager, CodeReferenceConfiguration configuration, IEnumerable<ProjectFile> allSourceFiles, ITracer tracer)
@@ -53,88 +40,114 @@
             Contract.Requires(resourceManager != null);
             Contract.Requires(allSourceFiles != null);
 
-            StopFind();
-
-            _visited = 0;
-            _total = 0;
-
             var sourceFiles = allSourceFiles.Where(item => !item.IsResourceFile() && !item.IsDesignerFile()).ToArray();
 
             var resourceTableEntries = resourceManager.ResourceEntities
                 .Where(entity => !entity.IsWinFormsDesignerResource)
                 .SelectMany(entity => entity.Entries).ToArray();
 
-            _backgroundThread = new Thread(() => FindCodeReferences(configuration, sourceFiles, resourceTableEntries, tracer))
-            {
-                IsBackground = true,
-                Priority = ThreadPriority.Lowest
-            };
-
-            _backgroundThread.Start();
+            Interlocked.Exchange(ref _engine, new Engine(configuration, sourceFiles, resourceTableEntries, tracer))?.Dispose();
         }
 
-        private void FindCodeReferences(CodeReferenceConfiguration configuration, ICollection<ProjectFile> projectFiles, ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
+        private sealed class Engine : IDisposable
         {
-            Contract.Requires(configuration != null);
-            Contract.Requires(projectFiles != null);
-            Contract.Requires(resourceTableEntries != null);
+            private readonly Thread _backgroundThread;
+            private long _total;
+            private long _visited;
 
-            var stopwatch = Stopwatch.StartNew();
+            public int Progress => (int)(_total > 0 ? Math.Max(1, (100 * _visited) / _total) : 0);
 
-            try
+            public Engine(CodeReferenceConfiguration configuration, ICollection<ProjectFile> sourceFiles, ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
             {
-                _visited = 0;
-                _total = resourceTableEntries.Count + projectFiles.Count();
+                _backgroundThread = new Thread(() => FindCodeReferences(configuration, sourceFiles, resourceTableEntries, tracer))
+                {
+                    IsBackground = true,
+                    Priority = ThreadPriority.Lowest
+                };
 
-                resourceTableEntries.ForEach(entry => entry.CodeReferences = null);
+                _backgroundThread.Start();
+            }
 
-                var keys = new HashSet<string>(resourceTableEntries.Select(entry => entry.Key));
+            private void FindCodeReferences(CodeReferenceConfiguration configuration, ICollection<ProjectFile> projectFiles, ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
+            {
+                Contract.Requires(configuration != null);
+                Contract.Requires(projectFiles != null);
+                Contract.Requires(resourceTableEntries != null);
 
-                var sourceFiles = projectFiles.AsParallel()
-                    .Select(file => new FileInfo(file, configuration.Items, keys, ref _visited))
-                    .Where(file => file.HasConfigurations)
-                    .ToArray();
+                var stopwatch = Stopwatch.StartNew();
 
-                Contract.Assume(sourceFiles != null); // no contracts in Parallel yet...
+                try
+                {
+                    _visited = 0;
+                    _total = resourceTableEntries.Count + projectFiles.Count();
 
-                var keyFilesLookup = sourceFiles.Aggregate(new Dictionary<string, HashSet<FileInfo>>(),
-                    (accumulator, file) =>
+                    resourceTableEntries.ForEach(entry => entry.CodeReferences = null);
+
+                    var keys = new HashSet<string>(resourceTableEntries.Select(entry => entry.Key));
+
+                    var sourceFiles = projectFiles.AsParallel()
+                        .Select(file => new FileInfo(file, configuration.Items, keys, ref _visited))
+                        .Where(file => file.HasConfigurations)
+                        .ToArray();
+
+                    Contract.Assume(_visited == projectFiles.Count);
+
+                    Contract.Assume(sourceFiles != null); // no contracts in Parallel yet...
+
+                    var keyFilesLookup = sourceFiles.Aggregate(new Dictionary<string, HashSet<FileInfo>>(),
+                        (accumulator, file) =>
+                        {
+                            file.Keys.ForEach(key => accumulator.ForceValue(key, _ => new HashSet<FileInfo>()).Add(file));
+                            return accumulator;
+                        });
+
+                    Contract.Assume(keyFilesLookup != null);
+
+                    resourceTableEntries.AsParallel().ForAll(entry =>
                     {
-                        file.Keys.ForEach(key => accumulator.ForceValue(key, _ => new HashSet<FileInfo>()).Add(file));
-                        return accumulator;
+                        var baseName = entry.Container.BaseName;
+                        var key = entry.Key;
+
+                        var files = keyFilesLookup.GetValueOrDefault(key);
+
+                        files?.ForEach(file => file.FindCodeReferences(baseName, entry, tracer));
+
+                        Interlocked.Increment(ref _visited);
                     });
 
-                Contract.Assume(keyFilesLookup != null);
+                    foreach (var entry in resourceTableEntries.Where(entry => entry.CodeReferences == null))
+                    {
+                        Contract.Assume(entry != null);
+                        // Show 0 code references in UI
+                        entry.CodeReferences = new CodeReference[0];
+                    }
 
-                resourceTableEntries.AsParallel().ForAll(entry =>
-                {
-                    var baseName = entry.Container.BaseName;
-                    var key = entry.Key;
+                    Contract.Assume(_visited == _total);
 
-                    var files = keyFilesLookup.GetValueOrDefault(key);
-
-                    files?.ForEach(file => file.FindCodeReferences(baseName, entry, tracer));
-
-                    Interlocked.Increment(ref _visited);
-                });
-
-                foreach (var entry in resourceTableEntries.Where(entry => entry.CodeReferences == null))
-                {
-                    Contract.Assume(entry != null);
-                    // Show 0 code references in UI
-                    entry.CodeReferences = new CodeReference[0];
+                    Debug.WriteLine(stopwatch.Elapsed);
                 }
-
-                Contract.Assume(_visited == _total);
-
-                Debug.WriteLine(stopwatch.Elapsed);
+                catch (ThreadAbortException)
+                {
+                }
+                finally
+                {
+                    stopwatch.Stop();
+                }
             }
-            catch (ThreadAbortException)
+
+            public void Dispose()
             {
+                if (_backgroundThread.ThreadState == ThreadState.Background)
+                {
+                    _backgroundThread.Abort();
+                }
             }
-            finally
+
+            [ContractInvariantMethod]
+            [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+            private void ObjectInvariant()
             {
-                stopwatch.Stop();
+                Contract.Invariant(_backgroundThread != null);
             }
         }
 
