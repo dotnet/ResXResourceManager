@@ -7,6 +7,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using System.Threading;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
@@ -33,7 +34,7 @@
         private ResourceTableValues<ICollection<string>> _commentAnnotations;
         private ResourceLanguage _neutralLanguage;
 
-        private IList<CodeReference> _codeReferences;
+        private CodeReference[] _codeReferences;
         private double _index;
         private IDictionary<CultureKey, ResourceData> _snapshot;
 
@@ -276,7 +277,7 @@
             }
         }
 
-        public IList<CodeReference> CodeReferences
+        public CodeReference[] CodeReferences
         {
             get
             {
@@ -284,8 +285,24 @@
             }
             internal set
             {
-                SetProperty(ref _codeReferences, value, () => CodeReferences);
+                SetProperty(ref _codeReferences, value, nameof(CodeReferences));
             }
+        }
+
+        public void AddCodeReference(CodeReference value)
+        {
+            var codeReference = new[] { value };
+
+            while (true)
+            {
+                var oldValue = _codeReferences;
+                var newValue = oldValue?.Concat(codeReference).ToArray() ?? codeReference;
+
+                if (Interlocked.CompareExchange(ref _codeReferences, newValue, oldValue) == oldValue)
+                    break;
+            }
+
+            OnPropertyChanged(nameof(CodeReferences));
         }
 
         public double Index

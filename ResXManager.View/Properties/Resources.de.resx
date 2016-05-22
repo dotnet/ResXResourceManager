@@ -385,4 +385,7 @@ Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
     <value>Zusätzliche Einträge in WinForms-Designer Ressourcen gehen verloren, wenn Sie das Formular bearbeiten.
 Wollen Sie trotzdem einen neuen Eintrag hinzufügen?</value>
   </data>
+  <data name="CodeReferencesTooManyDetailsToolTip" xml:space="preserve">
+    <value>Es sind zu viele Referenzen, um Einzelheiten anzuzeigen.</value>
+  </data>
 </root>

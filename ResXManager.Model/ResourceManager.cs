@@ -10,6 +10,7 @@
     using System.IO;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Threading;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
@@ -222,7 +223,7 @@
         {
             if (_codeReferenceTracker.IsActive)
                 return;
-            
+
             var allSourceFiles = _sourceFilesProvider.SourceFiles;
 
             BeginFindCodeReferences(allSourceFiles);
@@ -253,7 +254,10 @@
 
             if (Settings.Default.IsFindCodeReferencesEnabled)
             {
-                _codeReferenceTracker.BeginFind(this, _configuration.CodeReferences, allSourceFiles, _tracer);
+                Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, () =>
+                {
+                    _codeReferenceTracker.BeginFind(this, _configuration.CodeReferences, allSourceFiles, _tracer);
+                });
             }
         }
 

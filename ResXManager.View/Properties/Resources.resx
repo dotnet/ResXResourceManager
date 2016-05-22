@@ -397,4 +397,7 @@ Use e.g. ".* - (?!Migrations)" to hide EF migrations.</value>
 Additional entries will be lost if you edit the form.
 Do you want to add a new entry anyway?</value>
   </data>
+  <data name="CodeReferencesTooManyDetailsToolTip" xml:space="preserve">
+    <value>Too many references to show details!</value>
+  </data>
 </root>

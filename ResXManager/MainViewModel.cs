@@ -131,9 +131,7 @@
         {
             try
             {
-                var sourceFiles = SourceFilesProvider.SourceFiles;
-
-                _resourceManager.Load(sourceFiles);
+                _resourceManager.ReloadAndBeginFindCoreReferences();
             }
             catch (Exception ex)
             {

@@ -11,6 +11,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading;
+    using System.Windows.Threading;
 
     using tomenglertde.ResXManager.Infrastructure;
 
@@ -21,6 +22,8 @@
     [Export]
     public class CodeReferenceTracker
     {
+        private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
+
         private Thread _backgroundThread;
         private long _total;
         private long _visited;
@@ -35,10 +38,13 @@
 
         public void StopFind()
         {
+            _dispatcher.VerifyAccess();
+
             if ((_backgroundThread == null) || (_backgroundThread.ThreadState != ThreadState.Background))
                 return;
 
             _backgroundThread.Abort();
+            _backgroundThread.Join();
             _backgroundThread = null;
         }
 
@@ -48,6 +54,9 @@
             Contract.Requires(allSourceFiles != null);
 
             StopFind();
+
+            _visited = 0;
+            _total = 0;
 
             var sourceFiles = allSourceFiles.Where(item => !item.IsResourceFile() && !item.IsDesignerFile()).ToArray();
 
@@ -64,7 +73,7 @@
             _backgroundThread.Start();
         }
 
-        private void FindCodeReferences(CodeReferenceConfiguration configuration, IEnumerable<ProjectFile> projectFiles, IList<ResourceTableEntry> resourceTableEntries, ITracer tracer)
+        private void FindCodeReferences(CodeReferenceConfiguration configuration, ICollection<ProjectFile> projectFiles, ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
         {
             Contract.Requires(configuration != null);
             Contract.Requires(projectFiles != null);
@@ -74,37 +83,40 @@
 
             try
             {
+                _visited = 0;
+                _total = resourceTableEntries.Count + projectFiles.Count();
+
                 resourceTableEntries.ForEach(entry => entry.CodeReferences = null);
 
                 var keys = new HashSet<string>(resourceTableEntries.Select(entry => entry.Key));
 
                 var sourceFiles = projectFiles.AsParallel()
-                    .Select(file => new FileInfo(file, configuration.Items, keys))
+                    .Select(file => new FileInfo(file, configuration.Items, keys, ref _visited))
                     .Where(file => file.HasConfigurations)
                     .ToArray();
 
                 Contract.Assume(sourceFiles != null); // no contracts in Parallel yet...
 
-                var entriesByBaseName = resourceTableEntries
-                    .GroupBy(entry => entry.Container.BaseName)
-                    .ToArray();
-
-                _visited = 0;
-                _total = entriesByBaseName.Sum(entry => entry.Count()) * sourceFiles.Length;
-
-                foreach (var entriesGroup in entriesByBaseName.AsParallel())
-                {
-                    Contract.Assume(entriesGroup != null);
-
-                    var baseName = entriesGroup.Key;
-                    var tableEntries = entriesGroup.ToArray();
-
-                    sourceFiles.ForEach(sourceFile => tableEntries.ForEach(entry =>
+                var keyFilesLookup = sourceFiles.Aggregate(new Dictionary<string, HashSet<FileInfo>>(),
+                    (accumulator, file) =>
                     {
-                        Interlocked.Increment(ref _visited);
-                        sourceFile.FindCodeReferences(baseName, entry, tracer);
-                    }));
-                }
+                        file.Keys.ForEach(key => accumulator.ForceValue(key, _ => new HashSet<FileInfo>()).Add(file));
+                        return accumulator;
+                    });
+
+                Contract.Assume(keyFilesLookup != null);
+
+                resourceTableEntries.AsParallel().ForAll(entry =>
+                {
+                    var baseName = entry.Container.BaseName;
+                    var key = entry.Key;
+
+                    var files = keyFilesLookup.GetValueOrDefault(key);
+
+                    files?.ForEach(file => file.FindCodeReferences(baseName, entry, tracer));
+
+                    Interlocked.Increment(ref _visited);
+                });
 
                 foreach (var entry in resourceTableEntries.Where(entry => entry.CodeReferences == null))
                 {
@@ -217,10 +229,10 @@
             private static readonly Regex _regex = new Regex(@"\W+", RegexOptions.Compiled);
             private readonly ProjectFile _projectFile;
             private readonly string[] _lines;
-            private readonly Dictionary<string, HashSet<int>> _keyLines = new Dictionary<string, HashSet<int>>();
+            private readonly Dictionary<string, HashSet<int>> _keyLinesLookup = new Dictionary<string, HashSet<int>>();
             private readonly CodeReferenceConfigurationItem[] _configurations;
 
-            public FileInfo(ProjectFile projectFile, IEnumerable<CodeReferenceConfigurationItem> configurations, ICollection<string> keys)
+            public FileInfo(ProjectFile projectFile, IEnumerable<CodeReferenceConfigurationItem> configurations, ICollection<string> keys, ref long visited)
             {
                 Contract.Requires(projectFile != null);
                 Contract.Requires(configurations != null);
@@ -231,18 +243,22 @@
                     .Where(item => item.ParseExtensions().Contains(projectFile.Extension, StringComparer.OrdinalIgnoreCase))
                     .ToArray();
 
-                if (!_configurations.Any())
-                    return;
+                if (_configurations.Any())
+                {
+                    _lines = _projectFile.ReadAllLines();
 
-                _lines = _projectFile.ReadAllLines();
+                    _lines.ForEach((line, index) =>
+                        _regex.Split(line)
+                            .Where(keys.Contains)
+                            .ForEach(key => _keyLinesLookup.ForceValue(key, _ => new HashSet<int>()).Add(index)));
+                }
 
-                _lines.ForEach((line, index) =>
-                    _regex.Split(line)
-                        .Where(keys.Contains)
-                        .ForEach(key => _keyLines.ForceValue(key, _ => new HashSet<int>()).Add(index)));
+                Interlocked.Increment(ref visited);
             }
 
             public bool HasConfigurations => _configurations.Any();
+
+            public ICollection<string> Keys => _keyLinesLookup.Keys;
 
 
             public void FindCodeReferences(string baseName, ResourceTableEntry entry, ITracer tracer)
@@ -257,7 +273,7 @@
 
                     var key = entry.Key;
 
-                    var lineIndices = _keyLines.GetValueOrDefault(key);
+                    var lineIndices = _keyLinesLookup.GetValueOrDefault(key);
                     if (lineIndices == null)
                         return;
 
@@ -284,10 +300,7 @@
                                 if (!match.Success)
                                     continue;
 
-                                var codeReference = new CodeReference(_projectFile, lineNumber, match.Segments);
-
-                                var codeReferences = entry.CodeReferences ?? (entry.CodeReferences = new ObservableCollection<CodeReference>());
-                                codeReferences.Add(codeReference);
+                                entry.AddCodeReference(new CodeReference(_projectFile, lineNumber, match.Segments));
                                 break;
                             }
                             catch (Exception ex) // Should not happen, but was reported by someone.
@@ -341,7 +354,6 @@
 
             try
             {
-                Thread.Sleep(1);
                 return File.ReadAllLines(file.FilePath);
             }
             catch

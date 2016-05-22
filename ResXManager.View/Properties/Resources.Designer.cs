@@ -174,6 +174,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Too many references to show details!.
+        /// </summary>
+        public static string CodeReferencesTooManyDetailsToolTip {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("CodeReferencesTooManyDetailsToolTip", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Code reference detection is still in progress ({0}....
         /// </summary>
         public static string CodeReferenceTrackingInProgress {
@@ -1037,6 +1047,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to The number of references found in code files. This....
         /// </summary>
         CodeReferencesToolTip,
+        /// <summary>
+        ///   Looks up a localized string similar to Too many references to show details!.
+        /// </summary>
+        CodeReferencesTooManyDetailsToolTip,
         /// <summary>
         ///   Looks up a localized string similar to Code reference detection is still in progress ({0}....
         /// </summary>

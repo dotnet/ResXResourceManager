@@ -161,7 +161,7 @@
         {
             return new Image
             {
-                Source = _codeReferencesImage, 
+                Source = _codeReferencesImage,
                 SnapsToDevicePixels = true
             };
         }
@@ -202,7 +202,20 @@
                 {
                     new Setter(ToolTipService.ShowDurationProperty, int.MaxValue),
                     new Setter(FrameworkElement.ToolTipProperty, new CodeReferencesToolTip(dataGrid.GetExportProvider()))
+                },
+                Triggers =
+                {
+                    new DataTrigger
+                    {
+                        Binding = new Binding(@"CodeReferences.Count") { Converter = BinaryOperationConverter.GreaterThan, ConverterParameter = 50},
+                        Value = true,
+                        Setters =
+                        {
+                            new Setter(FrameworkElement.ToolTipProperty, Resources.CodeReferencesTooManyDetailsToolTip)
+                        }
+                    }
                 }
+
             };
 
             var column = new DataGridTextColumn
