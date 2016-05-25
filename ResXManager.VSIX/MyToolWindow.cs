@@ -43,7 +43,6 @@
         private readonly ITracer _trace;
         private readonly ResourceManager _resourceManager;
         private readonly Configuration _configuration;
-        private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly PerformanceTracer _performanceTracer;
 
         private EnvDTE.DTE _dte;
@@ -80,8 +79,6 @@
                 _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
                 _resourceManager.BeginEditing += ResourceManager_BeginEditing;
                 _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
-
-                _codeReferenceTracker = _compositionHost.GetExportedValue<CodeReferenceTracker>();
             }
             catch (Exception ex)
             {
@@ -549,7 +546,6 @@
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_configuration != null);
             Contract.Invariant(_trace != null);
-            Contract.Invariant(_codeReferenceTracker != null);
             Contract.Invariant(_performanceTracer != null);
         }
     }
