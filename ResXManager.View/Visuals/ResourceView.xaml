@@ -77,8 +77,10 @@
       </Style.Triggers>
     </Style>
 
-    <Style TargetType="Image" BasedOn="{StaticResource ImageStyle}" />
-
+    <Style TargetType="Image" BasedOn="{StaticResource ImageStyle}">
+      <Setter Property="Stretch" Value="None"/>
+    </Style>
+    
   </UserControl.Resources>
 
   <UserControl.InputBindings>
@@ -125,7 +127,6 @@
              ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
              Padding="5,0" BorderThickness="0" SelectionMode="Extended"
              toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedEntities}"
-             ContextMenu="{toms:CompositeContextMenu RegionId={x:Static infrastructure:RegionId.ProjectListContextMenu}}"
              Style="{DynamicResource {x:Static styles:ResourceKeys.ListBoxStyle}}">
       <ListBox.ItemTemplate>
         <DataTemplate DataType="model:ResourceEntity">
@@ -165,6 +166,13 @@
           </GroupStyle.ContainerStyle>
         </GroupStyle>
       </ListBox.GroupStyle>
+      <ListBox.ContextMenu>
+        <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}">
+          <i:Interaction.Behaviors>
+            <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListContextMenu}"/>
+          </i:Interaction.Behaviors>
+        </ContextMenu>
+      </ListBox.ContextMenu>
       <i:Interaction.Behaviors>
         <behaviors:EntityFilter FilterText="{Binding Text, ElementName=EntityFilter}" />
         <behaviors:SelectAllBehavior AreAllFilesSelected="{Binding IsChecked, ElementName=SelectAll}" />
@@ -480,9 +488,15 @@
             <DataGrid.ItemsPanel>
               <ItemsPanelTemplate>
                 <VirtualizingStackPanel
-                  ContextMenu="{toms:CompositeContextMenu {x:Static infrastructure:RegionId.ResourceTableContextMenu}}"
                   DataContext="{Binding ElementName=DataGrid}"
                   TextElement.FontSize="{Binding Path=(infrastructure:Appearance.TextFontSize), RelativeSource={RelativeSource Self}}">
+                  <VirtualizingStackPanel.ContextMenu>
+                    <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}">
+                      <i:Interaction.Behaviors>
+                        <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ResourceTableContextMenu}"/>
+                      </i:Interaction.Behaviors>
+                    </ContextMenu>
+                  </VirtualizingStackPanel.ContextMenu>
                   <i:Interaction.Behaviors>
                     <toms:ZoomFontSizeOnMouseWheelBehavior />
                   </i:Interaction.Behaviors>

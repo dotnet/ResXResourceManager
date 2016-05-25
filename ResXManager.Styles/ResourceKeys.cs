@@ -71,6 +71,11 @@
         public static readonly ResourceKey ContextMenuStyle = new ComponentResourceKey(typeof(ResourceKeys), "ContextMenuStyle");
 
         /// <summary>
+        /// The resource key for a composite <see cref="ContextMenu"/> style.
+        /// </summary>
+        public static readonly ResourceKey CompositeContextMenuStyle = new ComponentResourceKey(typeof(ResourceKeys), "CompositeContextMenuStyle");
+
+        /// <summary>
         /// The resource key for the <see cref="Menu"/> style.
         /// </summary>
         public static readonly ResourceKey MenuStyle = new ComponentResourceKey(typeof(ResourceKeys), "MenuStyle");
@@ -79,6 +84,11 @@
         /// The resource key for the <see cref="MenuItem"/> style.
         /// </summary>
         public static readonly ResourceKey MenuItemStyle = new ComponentResourceKey(typeof(ResourceKeys), "MenuItemStyle");
+
+        /// <summary>
+        /// The resource key for the <see cref="Separator"/> style.
+        /// </summary>
+        public static readonly ResourceKey MenuItemSeparatorStyle = new ComponentResourceKey(typeof(ResourceKeys), "MenuItemSeparatorStyle");
 
         /// <summary>
         /// The resource key for the <see cref="GridSplitter"/> style.
