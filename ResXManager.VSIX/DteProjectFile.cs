@@ -98,21 +98,9 @@
             projectItem.TrySetContent(document);
         }
 
-        public override bool IsWritable
-        {
-            get
-            {
-                return DefaultProjectItem.TryGetDocument().Maybe().Return(d => !d.ReadOnly, base.IsWritable);
-            }
-        }
+        public override bool IsWritable => !DefaultProjectItem.TryGetDocument()?.ReadOnly ?? base.IsWritable;
 
-        public bool HasChanges
-        {
-            get
-            {
-                return DefaultProjectItem.TryGetDocument().Maybe().Return(d => !d.Saved);
-            }
-        }
+        public bool HasChanges => DefaultProjectItem.TryGetDocument()?.Saved != true;
 
         public CodeGenerator CodeGenerator
         {
@@ -157,13 +145,21 @@
         {
             get
             {
-                var projectItem = DefaultProjectItem;
-                var projectItems = projectItem.Collection;
+                try
+                {
+                    var projectItem = DefaultProjectItem;
+                    var projectItems = projectItem.Collection;
 
-                var parent = projectItems?.Parent as EnvDTE.ProjectItem;
-                var subType = parent?.GetProperty(@"SubType") as string;
+                    var parent = projectItems?.Parent as EnvDTE.ProjectItem;
+                    var subType = parent?.GetProperty(@"SubType") as string;
 
-                return (subType == @"Form") || (subType == @"UserControl");
+                    return (subType == @"Form") || (subType == @"UserControl");
+                }
+                catch (ExternalException)
+                {
+                }
+
+                return false;
             }
         }
 
