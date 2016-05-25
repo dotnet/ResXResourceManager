@@ -122,7 +122,9 @@
             }
             set
             {
-                this.SetCodeGenerator(value);
+                if (GetCodeGenerator() != value)
+                    SetCodeGenerator(value);
+
                 OnPropertyChanged(() => CodeGenerator);
             }
         }
@@ -167,24 +169,32 @@
 
         public CodeGenerator GetCodeGenerator()
         {
-            var projectItem = DefaultProjectItem;
-            var containingProject = projectItem.ContainingProject;
-
-            if ((containingProject == null) || (containingProject.Kind != ItemKind.CSharpProject))
-                return CodeGenerator.None;
-
-            var customTool = projectItem.GetCustomTool();
-
-            if (string.IsNullOrEmpty(customTool))
+            try
             {
-                if (IsWinFormsDesignerResource)
-                    return CodeGenerator.WinForms;
+                var projectItem = DefaultProjectItem;
+                var containingProject = projectItem.ContainingProject;
 
-                return projectItem.Children().Any(IsTextTemplate) ? CodeGenerator.TextTemplate : CodeGenerator.None;
+                if ((containingProject == null) || (containingProject.Kind != ItemKind.CSharpProject))
+                    return CodeGenerator.None;
+
+                var customTool = projectItem.GetCustomTool();
+
+                if (string.IsNullOrEmpty(customTool))
+                {
+                    if (IsWinFormsDesignerResource)
+                        return CodeGenerator.WinForms;
+
+                    return projectItem.Children().Any(IsTextTemplate) ? CodeGenerator.TextTemplate : CodeGenerator.None;
+                }
+
+                CodeGenerator codeGenerator;
+                return Enum.TryParse(customTool, out codeGenerator) ? codeGenerator : CodeGenerator.Unknown;
+            }
+            catch (ExternalException)
+            {
             }
 
-            CodeGenerator codeGenerator;
-            return Enum.TryParse(customTool, out codeGenerator) ? codeGenerator : CodeGenerator.Unknown;
+            return CodeGenerator.Unknown;
         }
 
         private static bool IsTextTemplate(EnvDTE.ProjectItem item)
@@ -198,25 +208,31 @@
 
         public void SetCodeGenerator(CodeGenerator value)
         {
-            foreach (var projectItem in ProjectItems)
+            try
             {
-                Contract.Assume(projectItem != null);
-                var containingProject = projectItem.ContainingProject;
-
-                if ((containingProject == null) || (containingProject.Kind != ItemKind.CSharpProject))
-                    return;
-
-                switch (value)
+                foreach (var projectItem in ProjectItems)
                 {
-                    case CodeGenerator.ResXFileCodeGenerator:
-                    case CodeGenerator.PublicResXFileCodeGenerator:
-                        SetCustomToolCodeGenerator(projectItem, value);
-                        break;
+                    Contract.Assume(projectItem != null);
+                    var containingProject = projectItem.ContainingProject;
 
-                    case CodeGenerator.TextTemplate:
-                        SetTextTemplateCodeGenerator(projectItem);
-                        break;
+                    if ((containingProject == null) || (containingProject.Kind != ItemKind.CSharpProject))
+                        return;
+
+                    switch (value)
+                    {
+                        case CodeGenerator.ResXFileCodeGenerator:
+                        case CodeGenerator.PublicResXFileCodeGenerator:
+                            SetCustomToolCodeGenerator(projectItem, value);
+                            break;
+
+                        case CodeGenerator.TextTemplate:
+                            SetTextTemplateCodeGenerator(projectItem);
+                            break;
+                    }
                 }
+            }
+            catch (ExternalException)
+            {
             }
         }
 

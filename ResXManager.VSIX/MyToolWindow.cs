@@ -448,13 +448,13 @@
             }
         }
 
-        internal void ReloadSolution()
+        internal void ReloadSolution(bool force = false)
         {
             try
             {
                 using (_performanceTracer.Start("Reload solution"))
                 {
-                    InternalReloadSolution();
+                    InternalReloadSolution(force);
                 }
             }
             catch (Exception ex)
@@ -463,7 +463,7 @@
             }
         }
 
-        private void InternalReloadSolution()
+        private void InternalReloadSolution(bool force)
         {
             var projectFiles = DteSourceFiles.ToArray();
 
@@ -471,7 +471,7 @@
             // To avoid loosing the scope every time this method is called we only call load if we detect changes.
             var fingerPrint = GetFingerprint(projectFiles);
 
-            if (!projectFiles.Where(p => p.IsResourceFile()).Any(p => p.HasChanges) && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
+            if (!force && !projectFiles.Where(p => p.IsResourceFile()).Any(p => p.HasChanges) && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
                 return;
 
             _solutionFingerPrint = fingerPrint;

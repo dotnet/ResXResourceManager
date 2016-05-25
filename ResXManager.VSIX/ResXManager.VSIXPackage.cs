@@ -52,7 +52,7 @@
 
         public ResXManagerVsixPackage()
         {
-            _deferedReloadThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, () => ToolWindow.ReloadSolution());
+            _deferedReloadThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, () => ToolWindow.ReloadSolution(true));
         }
 
         private EnvDTE80.DTE2 Dte

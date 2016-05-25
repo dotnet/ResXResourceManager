@@ -7,6 +7,7 @@
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows.Input;
+    using System.Windows.Threading;
 
     using tomenglertde.ResXManager.Model;
 
@@ -18,16 +19,17 @@
     public sealed class VsixShellViewModel : ObservableObject
     {
         private readonly ResourceManager _resourceManager;
-        private readonly DispatcherThrottle _selectedEntitiesChangedThrottle;
+        private readonly DispatcherThrottle _selectedCodeGeneratorsChangedThrottle;
 
         [ImportingConstructor]
         public VsixShellViewModel(ResourceManager resourceManager)
         {
             Contract.Requires(resourceManager != null);
 
-            _selectedEntitiesChangedThrottle = new DispatcherThrottle(() => OnPropertyChanged(nameof(SelectedCodeGenerators)));
+            _selectedCodeGeneratorsChangedThrottle = new DispatcherThrottle(() => OnPropertyChanged(nameof(SelectedCodeGenerators)));
             _resourceManager = resourceManager;
-            _resourceManager.SelectedEntities.CollectionChanged += (_, __) => _selectedEntitiesChangedThrottle.Tick();
+            _resourceManager.SelectedEntities.CollectionChanged += (_, __) => _selectedCodeGeneratorsChangedThrottle.Tick();
+            _resourceManager.Loaded += (_, __) => _selectedCodeGeneratorsChangedThrottle.Tick();
         }
 
         public ICommand SetCodeProviderCommand
@@ -75,7 +77,7 @@
                 .OfType<DteProjectFile>()
                 .ForEach(pf => pf.CodeGenerator = codeGenerator);
 
-            OnPropertyChanged(() => SelectedCodeGenerators);
+            _selectedCodeGeneratorsChangedThrottle.Tick();
         }
 
         [ContractInvariantMethod]

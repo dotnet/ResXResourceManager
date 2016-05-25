@@ -31,7 +31,8 @@
         private readonly string _displayName;
         private readonly string _relativePath;
         private readonly string _sortKey;
-        private readonly ProjectFile _neutralProjectFile;
+
+        private ProjectFile _neutralProjectFile;
 
         internal ResourceEntity(ResourceManager container, string projectName, string baseName, string directoryName, ICollection<ProjectFile> files)
         {
@@ -69,6 +70,7 @@
             Contract.Requires(files.Any());
 
             _languages = GetResourceLanguages(files);
+            _neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
 
             var unmatchedTableEntries = _resourceTableEntries.ToList();
 
@@ -97,6 +99,8 @@
             }
 
             _resourceTableEntries.RemoveRange(unmatchedTableEntries);
+
+            OnPropertyChanged(nameof(NeutralProjectFile));
         }
 
         private static string GetRelativePath(ICollection<ProjectFile> files)
