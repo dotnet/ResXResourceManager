@@ -1,3 +1,11 @@
+﻿Other places:
+[url:Visual Studio Extension Download|https://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68]
+[url:Reviews|https://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68/view/Reviews]
+
+1.0.0.80:
+* WI4721: Fix context menu style and some other visual improvements.
+* Improve speed of code reference tracker analysis (thanks to Pavel Kotrč!)
+* WI7419: Continue loading other projects if one fails.
 * WI4716: Another crash when starting elevated as different user due to unavailable spell checker.
 * WI4714: Preserve target culture selection for translations
 * "Move to Resource": include type and member name in key if possible
