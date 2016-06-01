@@ -43,7 +43,6 @@
         private EnvDTE.DocumentEvents _documentEvents;
         private EnvDTE.SolutionEvents _solutionEvents;
         private EnvDTE.ProjectItemsEvents _projectItemsEvents;
-        private MyToolWindow _toolWindow;
 
         private ICompositionHost _compositionHost;
         private ITracer _tracer;
@@ -52,7 +51,7 @@
 
         public ResXManagerVsixPackage()
         {
-            _deferedReloadThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, () => ToolWindow.ReloadSolution(true));
+            _deferedReloadThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, () => ToolWindow?.ReloadSolution(true));
         }
 
         private EnvDTE80.DTE2 Dte
@@ -77,7 +76,10 @@
 
             ConnectEvents();
 
-            _compositionHost = ToolWindow.CompositionHost;
+            _compositionHost = ToolWindow?.CompositionHost;
+            if (_compositionHost == null)
+                return;
+
             _tracer = _compositionHost.GetExportedValue<ITracer>();
             _refactorings = _compositionHost.GetExportedValue<IRefactorings>();
             _performanceTracer = _compositionHost.GetExportedValue<PerformanceTracer>();
@@ -137,23 +139,20 @@
             ShowToolWindow();
         }
 
-        private MyToolWindow ToolWindow
+        // Get the instance number 0 of this tool window. This window is single instance so this instance is actually the only one.
+        // The last flag is set to true so that if the tool window does not exists it will be created.
+        private MyToolWindow ToolWindow => FindToolWindow();
+
+        private MyToolWindow FindToolWindow()
         {
-            get
+            try
             {
-                Contract.Ensures(Contract.Result<MyToolWindow>() != null);
-
-                if (_toolWindow != null)
-                    return _toolWindow;
-
-                // Get the instance number 0 of this tool window. This window is single instance so this instance is actually the only one.
-                // The last flag is set to true so that if the tool window does not exists it will be created.
-                _toolWindow = (MyToolWindow)FindToolWindow(typeof(MyToolWindow), 0, true);
-
-                if (_toolWindow == null)
-                    throw new NotSupportedException(Resources.CanNotCreateWindow);
-
-                return _toolWindow;
+                return (MyToolWindow)FindToolWindow(typeof(MyToolWindow), 0, true);
+            }
+            catch (Exception ex)
+            {
+                _tracer.TraceError("FindToolWindow failed: " + ex);
+                return null;
             }
         }
 
@@ -163,7 +162,7 @@
             {
                 var window = ToolWindow;
 
-                var windowFrame = (IVsWindowFrame)window.Frame;
+                var windowFrame = (IVsWindowFrame)window?.Frame;
                 if (windowFrame == null)
                     throw new NotSupportedException(Resources.CanNotCreateWindow);
 
@@ -172,7 +171,7 @@
             }
             catch (Exception ex)
             {
-                _tracer.TraceError("MyToolWindow OnCreate failed: " + ex);
+                _tracer.TraceError("ShowToolWindow failed: " + ex);
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
                 return false;
             }
@@ -183,7 +182,9 @@
             if (!ShowToolWindow())
                 return;
 
-            var resourceManager = ToolWindow.ResourceManager;
+            var resourceManager = ToolWindow?.ResourceManager;
+            if (resourceManager == null)
+                return;
 
             var selectedResourceEntites = GetSelectedResourceEntites()?.Distinct().ToArray();
             if (selectedResourceEntites == null)
@@ -229,6 +230,9 @@
                 return Enumerable.Empty<ResourceEntity>();
 
             var toolWindow = ToolWindow;
+            if (toolWindow == null)
+                return Enumerable.Empty<ResourceEntity>();
+
             var resourceEntities = toolWindow.ResourceManager.ResourceEntities;
 
             return resourceEntities
@@ -255,6 +259,8 @@
         private void MoveToResource(object sender, EventArgs e)
         {
             var toolWindow = ToolWindow;
+            if (toolWindow == null)
+                return;
 
             var entry = _refactorings?.MoveToResource(Dte.ActiveDocument);
             if (entry == null)
@@ -303,6 +309,8 @@
                 return;
 
             var toolWindow = ToolWindow;
+            if (toolWindow == null)
+                return;
 
             if (toolWindow.ResourceManager.ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.ProjectFile.IsSaving))
                 return;
