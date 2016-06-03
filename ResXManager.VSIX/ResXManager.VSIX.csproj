@@ -281,6 +281,11 @@
     <None Include="..\Key.snk">
       <Link>Key.snk</Link>
     </None>
+    <Content Include="..\License">
+      <Link>License</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -339,10 +344,6 @@
     <Resource Include="Assets\PublicTool.png" />
     <Resource Include="Assets\TextTemplate.png" />
     <Resource Include="Assets\Unknown.png" />
-    <Content Include="License.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ResXManager.Infrastructure\ResXManager.Infrastructure.csproj">
