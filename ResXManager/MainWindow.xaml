@@ -5,8 +5,9 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:toms="urn:TomsToolbox"
         xmlns:infrastructure="urn:ResXManager.Infrastructure"
+        xmlns:styles="urn:ResXManager.Styles"
         Title="ResX Resource Manager" Height="1024" Width="1200" Icon="/ResXManager;component/ResourceManager.ico"
-        UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
+        Style="{StaticResource {x:Static styles:ResourceKeys.WindowStyle}}">
   <ContentControl>
     <i:Interaction.Behaviors>
       <toms:ContentControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.Main}" />

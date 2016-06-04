@@ -165,6 +165,10 @@
         /// </summary>
         public static readonly ResourceKey DataGridRowHeaderStyle = new ComponentResourceKey(typeof(ResourceKeys), "DataGridRowHeaderStyle");
 
+        /// <summary>
+        /// The resource key for the <see cref="Window"/> style.
+        /// </summary>
+        public static readonly ResourceKey WindowStyle = new ComponentResourceKey(typeof(ResourceKeys), "WindowStyle");
         #endregion // Styles
     }
 }

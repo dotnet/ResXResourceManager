@@ -229,6 +229,10 @@
       <Link>Key.snk</Link>
     </None>
     <None Include="Effects\Build.cmd" />
+    <Page Include="Themes\WindowStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Resource Include="Effects\invertGray.ps" />
     <None Include="packages.config" />
     <Page Include="Themes\generic.xaml">
@@ -278,6 +282,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Effects\InvertGray.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\ResourceManager.ico">
+      <Link>ResourceManager.ico</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="16x16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

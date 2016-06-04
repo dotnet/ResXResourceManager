@@ -1,0 +1,145 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:toms="urn:TomsToolbox"
+                    xmlns:styles="clr-namespace:ResXManager.Styles">
+
+  <Style TargetType="Window" x:Key="{x:Static styles:ResourceKeys.WindowStyle}">
+    <Setter Property="WindowStyle" Value="None" />
+    <Setter Property="AllowsTransparency" Value="True"/>
+    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+    <Setter Property="UseLayoutRounding" Value="True" />
+    <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+    <Setter Property="SnapsToDevicePixels" Value="True" />
+    <Setter Property="toms:StyleBindings.Behaviors">
+      <Setter.Value>
+        <toms:BehaviorCollection>
+          <toms:WindowButtonsHandlingBehavior />
+        </toms:BehaviorCollection>
+      </Setter.Value>
+    </Setter>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Window">
+          <AdornerDecorator>
+            <Grid x:Name="OuterShadowArea" Margin="4">
+              <i:Interaction.Behaviors>
+                <toms:CustomNonClientAreaBehavior BorderSize="4,4" CornerSize="8,8" />
+              </i:Interaction.Behaviors>
+              <Grid x:Name="NCShadowArea" Margin="4">
+                <Border x:Name="Background" Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}">
+                  <Border.Effect>
+                    <DropShadowEffect Opacity=".4" RenderingBias="Performance" ShadowDepth="0" BlurRadius="8" />
+                  </Border.Effect>
+                  <DockPanel>
+                    <Border x:Name="Caption" DockPanel.Dock="Top" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}"
+                            TextElement.Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}"
+                            Tag="{x:Static toms:HitTest.Caption}" MinHeight="28">
+                      <DockPanel>
+                        <DockPanel.Resources>
+                          <Style TargetType="Button">
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" />
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Focusable" Value="False" />
+                            <Setter Property="Template">
+                              <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                  <Border x:Name="background" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Background="{TemplateBinding Background}">
+                                    <ContentPresenter />
+                                  </Border>
+                                  <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                      <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                      <Setter Property="Background" Value="#80808080" />
+                                    </Trigger>
+                                  </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                              </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                              <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                              </Trigger>
+                            </Style.Triggers>
+                          </Style>
+                          <Style TargetType="Path">
+                            <Setter Property="Stroke" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}" />
+                            <Setter Property="StrokeStartLineCap" Value="Square" />
+                            <Setter Property="StrokeEndLineCap" Value="Square" />
+                            <Setter Property="StrokeThickness" Value="3" />
+                          </Style>
+                        </DockPanel.Resources>
+                        <Border DockPanel.Dock="Left" Tag="{x:Static toms:HitTest.SysMenu}" Background="Transparent" Margin="10,0">
+                          <Image Source="/ResXManager.Styles;component/16x16.png" Stretch="None"/>
+                        </Border>
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" UseLayoutRounding="True" SnapsToDevicePixels="True" VerticalAlignment="Stretch">
+                          <StackPanel x:Name="SizeButtons" Orientation="Horizontal">
+                            <Button Command="{x:Static toms:WindowCommands.Minimize}">
+                              <Path Width="12" Height="12" Data="M1.5,10.5 L10.5,10.5" />
+                            </Button>
+                            <Button Command="{x:Static toms:WindowCommands.Maximize}">
+                              <Grid>
+                                <Path Width="12" Height="12" Data="M1.5,1.5 L10.5,1.5" />
+                                <Path Width="12" Height="12" Data="M0.5,0.5 L0.5,11.5 L11.5,11.5 L11.5,0.5" StrokeThickness="1" />
+                              </Grid>
+                            </Button>
+                            <Button Command="{x:Static toms:WindowCommands.Restore}">
+                              <Grid>
+                                <Path Width="12" Height="12" Data="M5.5,1.5 L10.5,1.5" />
+                                <Path Width="12" Height="12" Data="M4.5,0.5 L4.5,7.5 L11.5,7.5 L11.5,0.5" StrokeThickness="1" />
+                                <Path Width="12" Height="12" Data="M0,4 L8,4 L8,12 L0,12 Z" Fill="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" StrokeThickness="0" />
+                                <Path Width="12" Height="12" Data="M1.5,5.5 L6.5,5.5" />
+                                <Path Width="12" Height="12" Data="M0.5,4.5 L0.5,11.5 L7.5,11.5 L7.5,4.5" StrokeThickness="1" />
+                              </Grid>
+                            </Button>
+                          </StackPanel>
+                          <Button Command="{x:Static toms:WindowCommands.Close}" Tag="{x:Static toms:HitTest.Close}">
+                            <Path Width="12" Height="12" Data="M2,2 L10,10 M10,2 L2,10" />
+                          </Button>
+                        </StackPanel>
+                        <TextBlock x:Name="Title" Text="{TemplateBinding Title}" VerticalAlignment="Center" FontWeight="SemiBold" 
+                                   FontSize="14" IsHitTestVisible="False" TextAlignment="Left"/>
+                      </DockPanel>
+                    </Border>
+                    <Border x:Name="ClientArea" ClipToBounds="True"
+                            Background="{TemplateBinding Background}"
+                            TextElement.Foreground="{TemplateBinding Foreground}">
+                      <ContentPresenter />
+                    </Border>
+                  </DockPanel>
+                </Border>
+              </Grid>
+            </Grid>
+          </AdornerDecorator>
+          <ControlTemplate.Triggers>
+            <Trigger Property="WindowState" Value="Maximized">
+              <Setter TargetName="OuterShadowArea" Property="Margin" Value="0" />
+              <Setter TargetName="NCShadowArea" Property="Margin" Value="0" />
+            </Trigger>
+            <Trigger Property="IsActive" Value="False">
+              <Setter TargetName="Caption" Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.InactiveCaptionTextBrushKey}}" />
+              <Setter TargetName="Caption" Property="Background" Value="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}" />
+            </Trigger>
+            <Trigger Property="WindowStyle" Value="ToolWindow">
+              <Setter TargetName="Title" Property="TextAlignment" Value="Left" />
+              <Setter TargetName="Title" Property="FontWeight" Value="Normal" />
+              <Setter TargetName="Title" Property="FontSize" Value="12" />
+              <Setter TargetName="SizeButtons" Property="Visibility" Value="Collapsed" />
+            </Trigger>
+            <Trigger Property="WindowStyle" Value="SingleBorderWindow">
+              <Setter TargetName="Title" Property="TextAlignment" Value="Left" />
+              <Setter TargetName="Title" Property="FontWeight" Value="Normal" />
+              <Setter TargetName="Title" Property="FontSize" Value="12" />
+              <Setter TargetName="SizeButtons" Property="Visibility" Value="Collapsed" />
+              <Setter Property="ResizeMode" Value="NoResize" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+</ResourceDictionary>

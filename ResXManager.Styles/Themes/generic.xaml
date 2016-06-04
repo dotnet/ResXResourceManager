@@ -16,6 +16,7 @@
     <ResourceDictionary Source="/ResXManager.Styles;component/Themes/ToggleButtonStyle.xaml"/>
     <ResourceDictionary Source="/ResXManager.Styles;component/Themes/ToolTipStyle.xaml"/>
     <ResourceDictionary Source="/ResXManager.Styles;component/Themes/DataGridStyle.xaml"/>
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/WindowStyle.xaml"/>
   </ResourceDictionary.MergedDictionaries>
 
   <!--  Brushes -->
