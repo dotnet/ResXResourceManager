@@ -4,8 +4,8 @@
         xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
         xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
         xmlns:styles="urn:ResXManager.Styles"
-        UseLayoutRounding="True"
-        ShowInTaskbar="False" Width="300" SizeToContent="Height" WindowStyle="ToolWindow" ResizeMode="NoResize"
+        Style="{DynamicResource {x:Static styles:ResourceKeys.WindowStyle}}"
+        ShowInTaskbar="False" Width="300" SizeToContent="Height" ResizeMode="NoResize"
         Title="{x:Static properties:Resources.Title}"
         FocusManager.FocusedElement="{Binding ElementName=ComboBox}"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
@@ -13,8 +13,8 @@
     <TextBlock Text="{x:Static properties:Resources.NewLanguageIdPrompt}" TextWrapping="Wrap" />
     <Decorator Height="10" />
     <ComboBox x:Name="ComboBox" IsEditable="True"
-              ItemsSource="{Binding Languages}" 
-              HorizontalAlignment="Stretch" 
+              ItemsSource="{Binding Languages}"
+              HorizontalAlignment="Stretch"
               SelectedItem="{Binding SelectedLanguage}"
               Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
       <ComboBox.ItemTemplate>

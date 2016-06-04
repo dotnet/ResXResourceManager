@@ -17,7 +17,7 @@
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
              xmlns:view="clr-namespace:tomenglertde.ResXManager.View"
              xmlns:styles="urn:ResXManager.Styles"
-             xmlns:effects="clr-namespace:ResXManager.Styles.Effects;assembly=ResXManager.Styles"
+             xmlns:effects="clr-namespace:tomenglertde.ResXManager.Styles.Effects;assembly=ResXManager.Styles"
              xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
              x:Name="LayoutRoot"
              d:DataContext="{d:DesignInstance visuals:ResourceViewModel}">
@@ -80,7 +80,7 @@
     <Style TargetType="Image" BasedOn="{StaticResource ImageStyle}">
       <Setter Property="Stretch" Value="None"/>
     </Style>
-    
+
   </UserControl.Resources>
 
   <UserControl.InputBindings>
@@ -105,7 +105,7 @@
     <DockPanel Margin="5" VerticalAlignment="Top" Grid.Column="0" Grid.Row="0">
       <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Height="16" VerticalAlignment="Top">
         <Decorator Width="14" />
-        <CheckBox x:Name="SelectAll" VerticalAlignment="Center" 
+        <CheckBox x:Name="SelectAll" VerticalAlignment="Center"
                   IsThreeState="True" IsChecked="True" Focusable="False"
                   Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
         <Decorator Width="5" />

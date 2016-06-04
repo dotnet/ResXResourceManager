@@ -2,9 +2,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:styles="urn:ResXManager.Styles"
-    ShowInTaskbar="False" Width="300" SizeToContent="Height" WindowStyle="ToolWindow" ResizeMode="NoResize"
+    ShowInTaskbar="False" Width="300" SizeToContent="Height" ResizeMode="NoResize"
     FocusManager.FocusedElement="{Binding ElementName=TextBox}"
-    UseLayoutRounding="True"
+    Style="{DynamicResource {x:Static styles:ResourceKeys.WindowStyle}}"
     DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
   <StackPanel Margin="10">
     <TextBlock Text="{Binding Prompt}" TextWrapping="Wrap"/>

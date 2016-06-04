@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                     xmlns:toms="urn:TomsToolbox"
-                    xmlns:styles="clr-namespace:ResXManager.Styles">
+                    xmlns:styles="clr-namespace:tomenglertde.ResXManager.Styles">
 
   <Style TargetType="Window" x:Key="{x:Static styles:ResourceKeys.WindowStyle}">
     <Setter Property="WindowStyle" Value="None" />
@@ -50,10 +50,10 @@
                                   </Border>
                                   <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                      <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+                                      <Setter Property="Background" Value="#80808080" />
                                     </Trigger>
                                     <Trigger Property="IsPressed" Value="True">
-                                      <Setter Property="Background" Value="#80808080" />
+                                      <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
                                     </Trigger>
                                   </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -73,7 +73,7 @@
                           </Style>
                         </DockPanel.Resources>
                         <Border DockPanel.Dock="Left" Tag="{x:Static toms:HitTest.SysMenu}" Background="Transparent" Margin="10,0">
-                          <Image Source="/ResXManager.Styles;component/16x16.png" Stretch="None"/>
+                          <Image Source="/ResXManager.Styles;component/16x16.png" Stretch="None" IsHitTestVisible="False"/>
                         </Border>
                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" UseLayoutRounding="True" SnapsToDevicePixels="True" VerticalAlignment="Stretch">
                           <StackPanel x:Name="SizeButtons" Orientation="Horizontal">
@@ -100,14 +100,16 @@
                             <Path Width="12" Height="12" Data="M2,2 L10,10 M10,2 L2,10" />
                           </Button>
                         </StackPanel>
-                        <TextBlock x:Name="Title" Text="{TemplateBinding Title}" VerticalAlignment="Center" FontWeight="SemiBold" 
+                        <TextBlock x:Name="Title" Text="{TemplateBinding Title}" VerticalAlignment="Center" FontWeight="SemiBold"
                                    FontSize="14" IsHitTestVisible="False" TextAlignment="Left"/>
                       </DockPanel>
                     </Border>
                     <Border x:Name="ClientArea" ClipToBounds="True"
                             Background="{TemplateBinding Background}"
                             TextElement.Foreground="{TemplateBinding Foreground}">
-                      <ContentPresenter />
+                      <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}"
+                                        ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                        ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"/>
                     </Border>
                   </DockPanel>
                 </Border>
@@ -123,18 +125,11 @@
               <Setter TargetName="Caption" Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.InactiveCaptionTextBrushKey}}" />
               <Setter TargetName="Caption" Property="Background" Value="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}" />
             </Trigger>
-            <Trigger Property="WindowStyle" Value="ToolWindow">
+            <Trigger Property="ResizeMode" Value="NoResize">
               <Setter TargetName="Title" Property="TextAlignment" Value="Left" />
               <Setter TargetName="Title" Property="FontWeight" Value="Normal" />
               <Setter TargetName="Title" Property="FontSize" Value="12" />
               <Setter TargetName="SizeButtons" Property="Visibility" Value="Collapsed" />
-            </Trigger>
-            <Trigger Property="WindowStyle" Value="SingleBorderWindow">
-              <Setter TargetName="Title" Property="TextAlignment" Value="Left" />
-              <Setter TargetName="Title" Property="FontWeight" Value="Normal" />
-              <Setter TargetName="Title" Property="FontSize" Value="12" />
-              <Setter TargetName="SizeButtons" Property="Visibility" Value="Collapsed" />
-              <Setter Property="ResizeMode" Value="NoResize" />
             </Trigger>
           </ControlTemplate.Triggers>
         </ControlTemplate>

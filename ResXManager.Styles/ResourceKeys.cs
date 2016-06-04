@@ -1,4 +1,4 @@
-﻿namespace ResXManager.Styles
+﻿namespace tomenglertde.ResXManager.Styles
 {
     using System.Windows;
     using System.Windows.Controls;

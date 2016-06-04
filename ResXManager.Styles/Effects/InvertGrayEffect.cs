@@ -1,4 +1,4 @@
-﻿namespace ResXManager.Styles.Effects
+﻿namespace tomenglertde.ResXManager.Styles.Effects
 {
     using System.Windows;
     using System.Windows.Media.Effects;

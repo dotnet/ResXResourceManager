@@ -15,4 +15,4 @@ using System.Windows.Markup;
 [assembly: CLSCompliant(true)]
 
 [assembly: XmlnsPrefix("urn:ResXManager.Styles", "styles")]
-[assembly: XmlnsDefinition("urn:ResXManager.Styles", "ResXManager.Styles")]
+[assembly: XmlnsDefinition("urn:ResXManager.Styles", "tomenglertde.ResXManager.Styles")]

@@ -3,7 +3,7 @@
                     xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=System"
                     xmlns:toms="urn:TomsToolbox"
                     xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
-                    xmlns:styles="clr-namespace:ResXManager.Styles">
+                    xmlns:styles="clr-namespace:tomenglertde.ResXManager.Styles">
 
   <Style x:Key="DataGridColumnHeaderThumbStyle" TargetType="{x:Type Thumb}">
     <Setter Property="Width" Value="4" />

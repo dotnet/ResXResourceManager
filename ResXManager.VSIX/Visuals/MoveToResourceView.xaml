@@ -25,8 +25,8 @@
         <StackPanel Orientation="Horizontal">
           <RadioButton Content="New entry" IsChecked="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}"/>
           <Decorator Width="10" />
-          <RadioButton Content="Reuse existing" 
-                       IsChecked="{Binding ReuseExisiting}" 
+          <RadioButton Content="Reuse existing"
+                       IsChecked="{Binding ReuseExisiting}"
                        IsEnabled="{Binding ExistingEntries.Count, Converter={x:Static toms:BinaryOperationConverter.GreaterThan}, ConverterParameter=0}"/>
         </StackPanel>
       </view:SharedWidthHeaderedContentControl>
@@ -47,12 +47,12 @@
       <Decorator Height="10" />
       <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.KeyHeader}">
         <TextBox Text="{Binding Key, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                 Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" 
+                 Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}"
                  IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}"/>
       </view:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
       <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.CodeHeader}">
-        <ComboBox ItemsSource="{Binding Replacements}" SelectedItem="{Binding Replacement}" 
+        <ComboBox ItemsSource="{Binding Replacements}" SelectedItem="{Binding Replacement}"
                   SelectedIndex="{Binding SelectedReplacementIndex}" Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}"/>
       </view:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
@@ -61,8 +61,8 @@
           <ToggleButton x:Name="ValueShowWhiteSpaces" Style="{StaticResource ToggleWhiteSpaceButtonStyle}" IsChecked="{Binding MoveToResourceValueShowWhitespace, Source={x:Static properties:Settings.Default}}"/>
           <Decorator DockPanel.Dock="Right" Width="5"/>
           <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=ValueTextBox}" WhiteSpaceOpacity="0.4">
-            <TextBox x:Name="ValueTextBox" Height="40" Text="{Binding Value}" AcceptsReturn="True" 
-                     IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}" 
+            <TextBox x:Name="ValueTextBox" Height="40" Text="{Binding Value}" AcceptsReturn="True"
+                     IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}"
                      Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
             <toms:TextBoxVisibleWhiteSpaceDecorator.Style>
               <Style TargetType="toms:TextBoxVisibleWhiteSpaceDecorator">
@@ -83,7 +83,7 @@
           <ToggleButton x:Name="CommentShowWhiteSpaces" Style="{StaticResource ToggleWhiteSpaceButtonStyle}" IsChecked="{Binding MoveToResourceCommentShowWhitespace, Source={x:Static properties:Settings.Default}}"/>
           <Decorator DockPanel.Dock="Right" Width="5"/>
           <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=CommentTextBox}" WhiteSpaceOpacity="0.4" WhiteSpaces="All">
-            <TextBox x:Name="CommentTextBox" Height="40" Text="{Binding Comment}" AcceptsReturn="True" 
+            <TextBox x:Name="CommentTextBox" Height="40" Text="{Binding Comment}" AcceptsReturn="True"
                      IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}"
                      Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}"/>
             <toms:TextBoxVisibleWhiteSpaceDecorator.Style>

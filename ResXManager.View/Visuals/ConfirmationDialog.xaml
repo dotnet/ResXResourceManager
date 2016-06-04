@@ -1,34 +1,29 @@
-﻿<Window x:Class="tomenglertde.ResXManager.View.Visuals.ConfirmationDialog"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-        xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
-        xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
-        xmlns:styles="urn:ResXManager.Styles"
-        Width="600" SizeToContent="Height"
-        UseLayoutRounding="True"
-        WindowStartupLocation="CenterOwner"
-        WindowStyle="ThreeDBorderWindow" ResizeMode="NoResize"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
-  <Window.Template>
-    <ControlTemplate TargetType="visuals:ConfirmationDialog">
-      <AdornerDecorator>
-        <DockPanel Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-          <Grid DockPanel.Dock="Bottom" Background="#F0F0F0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.IsSharedSizeScope="True" Margin="10">
-              <Button Padding="15,5" IsDefault="True" Command="{Binding CommitCommand}" Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
-                <ContentControl Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" Content="OK" HorizontalContentAlignment="Center"/>
-              </Button>
-              <Decorator Width="10"></Decorator>
-              <Button Padding="15,5" IsCancel="True" Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
-                <ContentControl Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" Content="Cancel" HorizontalContentAlignment="Center"/>
-              </Button>
-            </StackPanel>
-          </Grid>
-          <ContentPresenter/>
-        </DockPanel>
-      </AdornerDecorator>
+﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.ConfirmationDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+             xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
+             xmlns:styles="clr-namespace:tomenglertde.ResXManager.Styles;assembly=ResXManager.Styles">
+  <UserControl.Template>
+    <ControlTemplate TargetType="UserControl">
+      <DockPanel Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+        <Grid DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.IsSharedSizeScope="True" Margin="10">
+            <Button Padding="15,5" IsDefault="True"
+                Command="{Binding CommitCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
+                Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
+              <ContentControl Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" Content="OK" HorizontalContentAlignment="Center" />
+            </Button>
+            <Decorator Width="10" />
+            <Button Padding="15,5" IsCancel="True"
+                Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
+              <ContentControl Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" Content="Cancel" HorizontalContentAlignment="Center" />
+            </Button>
+          </StackPanel>
+        </Grid>
+        <ContentPresenter />
+      </DockPanel>
     </ControlTemplate>
-  </Window.Template>
-</Window>
+  </UserControl.Template>
+</UserControl>

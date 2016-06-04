@@ -105,9 +105,7 @@
                 SelectedResourceEntity = GetPreferredResourceEntity(document, entities) ?? _lastUsedEntity
             };
 
-            var confirmationDialog = new ConfirmationDialog(_exportProvider) { Content = viewModel, Title = Resources.MoveToResource };
-
-            var confirmed = confirmationDialog.ShowDialog().GetValueOrDefault();
+            var confirmed = ConfirmationDialog.Show(_exportProvider, viewModel, Resources.MoveToResource).GetValueOrDefault();
 
             if (confirmed && !string.IsNullOrEmpty(viewModel.Key))
             {

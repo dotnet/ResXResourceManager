@@ -15,15 +15,29 @@
     /// </summary>
     public partial class ConfirmationDialog
     {
-        public ConfirmationDialog(ExportProvider exportProvider)
+        private ConfirmationDialog()
         {
-            this.SetExportProvider(exportProvider);
-
-            Owner = Application.Current?.MainWindow;
-
             InitializeComponent();
+        }
 
-            Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(exportProvider));
+        public static bool? Show(ExportProvider exportProvider, object content, string title)
+        {
+            var window = new Window
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Owner = Application.Current?.MainWindow,
+                Title = title,
+                ResizeMode = ResizeMode.NoResize,
+                Width = 600,
+                SizeToContent = SizeToContent.Height
+            };
+
+            window.SetExportProvider(exportProvider);
+            window.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(exportProvider));
+            window.SetResourceReference(StyleProperty, Styles.ResourceKeys.WindowStyle);
+            window.Content = new ConfirmationDialog { Content = content };
+
+            return window.ShowDialog();
         }
 
         public ICommand CommitCommand
@@ -37,7 +51,11 @@
 
         private void Commit()
         {
-            DialogResult = true;
+            var window = Window.GetWindow(this);
+            if (window == null)
+                return;
+
+            window.DialogResult = true;
         }
 
         private bool CanCommit()
