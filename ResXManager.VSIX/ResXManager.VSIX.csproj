@@ -247,6 +247,7 @@
     <Compile Include="ResXManager.VSIXPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
+    <Compile Include="ThemeResourceProvider.cs" />
     <Compile Include="Visuals\CodeGeneratorView.xaml.cs">
       <DependentUpon>CodeGeneratorView.xaml</DependentUpon>
     </Compile>
@@ -368,6 +369,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Resources\VSColorScheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Visuals\CodeGeneratorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

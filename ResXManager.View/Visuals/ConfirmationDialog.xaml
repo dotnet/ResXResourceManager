@@ -1,29 +1,29 @@
-﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.ConfirmationDialog"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-             xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
-             xmlns:styles="clr-namespace:tomenglertde.ResXManager.Styles;assembly=ResXManager.Styles">
-  <UserControl.Template>
-    <ControlTemplate TargetType="UserControl">
-      <DockPanel Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-        <Grid DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+﻿<ContentControl x:Class="tomenglertde.ResXManager.View.Visuals.ConfirmationDialog"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+                xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
+                xmlns:styles="clr-namespace:tomenglertde.ResXManager.Styles;assembly=ResXManager.Styles" Focusable="False">
+  <ContentControl.Template>
+    <ControlTemplate TargetType="ContentControl">
+      <DockPanel FocusManager.FocusedElement="{Binding ElementName=Content}">
+        <Grid DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" KeyboardNavigation.TabIndex="1">
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.IsSharedSizeScope="True" Margin="10">
-            <Button Padding="15,5" IsDefault="True"
-                Command="{Binding CommitCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
-                Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
+            <Button Padding="12,3" IsDefault="True"
+                    Command="{Binding CommitCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ContentControl}}"
+                    Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
               <ContentControl Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" Content="OK" HorizontalContentAlignment="Center" />
             </Button>
             <Decorator Width="10" />
-            <Button Padding="15,5" IsCancel="True"
-                Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
+            <Button Padding="12,3" IsCancel="True"
+                    Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
               <ContentControl Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" Content="Cancel" HorizontalContentAlignment="Center" />
             </Button>
           </StackPanel>
         </Grid>
-        <ContentPresenter />
+        <ContentPresenter x:Name="Content" KeyboardNavigation.TabIndex="0" />
       </DockPanel>
     </ControlTemplate>
-  </UserControl.Template>
-</UserControl>
+  </ContentControl.Template>
+</ContentControl>

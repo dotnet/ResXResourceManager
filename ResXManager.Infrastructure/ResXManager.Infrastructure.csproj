@@ -190,6 +190,7 @@
     <Compile Include="Appearance.cs" />
     <Compile Include="CultureKey.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="IThemeResourceProvider.cs" />
     <Compile Include="ThemeManager.cs" />
     <Compile Include="ITracer.cs" />
     <Compile Include="PerformanceTracer.cs" />

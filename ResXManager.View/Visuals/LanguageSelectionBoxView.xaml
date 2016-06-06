@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.LanguageSelectionBoxView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+             xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
+             xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
+             xmlns:styles="urn:ResXManager.Styles"
+             xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
+             FocusManager.FocusedElement="{Binding ElementName=ComboBox}"
+             d:DataContext="{d:DesignInstance visuals:LanguageSelectionBoxViewModel}">
+  <StackPanel Margin="10,20" Width="300">
+    <TextBlock Text="{x:Static properties:Resources.NewLanguageIdPrompt}" TextWrapping="Wrap" />
+    <Decorator Height="10" />
+    <ComboBox x:Name="ComboBox" IsEditable="True"
+              ItemsSource="{Binding Languages}"
+              HorizontalAlignment="Stretch"
+              SelectedItem="{Binding SelectedLanguage, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+              Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
+      <ComboBox.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Orientation="Horizontal">
+            <Image Source="{Binding Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+            <Decorator Width="10" />
+            <TextBlock Text="{Binding}" FontWeight="Bold" />
+            <Decorator Width="10" />
+            <TextBlock Text="{Binding DisplayName}" />
+          </StackPanel>
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
+  </StackPanel>
+</UserControl>

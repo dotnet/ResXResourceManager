@@ -11,7 +11,7 @@
              xmlns:styles="urn:ResXManager.Styles"
              d:DataContext="{d:DesignInstance visuals:MoveToResourceViewModel}">
   <UserControl.Resources>
-    <Style TargetType="ToggleButton" x:Key="ToggleWhiteSpaceButtonStyle">
+    <Style TargetType="ToggleButton" x:Key="ToggleWhiteSpaceButtonStyle" BasedOn="{StaticResource {x:Static styles:ResourceKeys.ToggleButtonStyle}}">
       <Setter Property="DockPanel.Dock" Value="Right"/>
       <Setter Property="Content" Value="¶" />
       <Setter Property="VerticalAlignment" Value="Top"/>
@@ -19,13 +19,16 @@
       <Setter Property="ToolTip" Value="{x:Static local:Resources.ShowWhitespaceToolTip}"/>
     </Style>
   </UserControl.Resources>
-  <StackPanel Margin="10">
+  <StackPanel Margin="10" Width="600">
     <StackPanel Grid.IsSharedSizeScope="True">
       <view:SharedWidthHeaderedContentControl>
         <StackPanel Orientation="Horizontal">
-          <RadioButton Content="New entry" IsChecked="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}"/>
+          <RadioButton Content="New entry" 
+                       Style="{DynamicResource {x:Static styles:ResourceKeys.RadioButtonStyle}}"
+                       IsChecked="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}"/>
           <Decorator Width="10" />
           <RadioButton Content="Reuse existing"
+                       Style="{DynamicResource {x:Static styles:ResourceKeys.RadioButtonStyle}}"
                        IsChecked="{Binding ReuseExisiting}"
                        IsEnabled="{Binding ExistingEntries.Count, Converter={x:Static toms:BinaryOperationConverter.GreaterThan}, ConverterParameter=0}"/>
         </StackPanel>
@@ -101,7 +104,9 @@
       </view:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
       <view:SharedWidthHeaderedContentControl>
-        <CheckBox Content="{x:Static local:Resources.MoveToResourceEditNewEntry}" IsChecked="{Binding MoveToResourceOpenInResXManager, Source={x:Static properties:Settings.Default}}"/>
+        <CheckBox Content="{x:Static local:Resources.MoveToResourceEditNewEntry}" 
+                  Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
+                  IsChecked="{Binding MoveToResourceOpenInResXManager, Source={x:Static properties:Settings.Default}}"/>
       </view:SharedWidthHeaderedContentControl>
     </StackPanel>
   </StackPanel>

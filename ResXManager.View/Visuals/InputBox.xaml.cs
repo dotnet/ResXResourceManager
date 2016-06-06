@@ -1,21 +1,28 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System;
+    using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.Windows;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf.Composition;
 
     /// <summary>
     /// Input box shows a prompt to enter a string.
     /// </summary>
+    [Export(typeof(InputBox))]
     public partial class InputBox
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InputBox"/> class.
         /// </summary>
-        public InputBox()
+        [ImportingConstructor]
+        public InputBox(ExportProvider exportProvider)
         {
+            this.SetExportProvider(exportProvider);
+
             InitializeComponent();
         }
 

@@ -1,0 +1,38 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.10.0"
+                    xmlns:styles="urn:ResXManager.Styles">
+
+  <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowBackgroundKey}}" />
+  <SolidColorBrush x:Key="{x:Static SystemColors.ControlLightBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ButtonFaceKey}}" />
+
+  <SolidColorBrush x:Key="{x:Static SystemColors.ControlDarkBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.GrayTextKey}}" />
+  <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowTextKey}}" />
+
+  <SolidColorBrush x:Key="{x:Static SystemColors.GrayTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.GrayTextKey}}" />
+
+  <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.HighlightKey}}" />
+  <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.HighlightTextKey}}" />
+
+  <SolidColorBrush x:Key="{x:Static SystemColors.InfoTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowTextKey}}" />
+  <SolidColorBrush x:Key="{x:Static SystemColors.InfoBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowBackgroundKey}}" />
+
+  <SolidColorBrush x:Key="{x:Static SystemColors.MenuBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.MenuKey}}" />
+  <SolidColorBrush x:Key="{x:Static SystemColors.MenuBarBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.MenuKey}}" />
+  <SolidColorBrush x:Key="{x:Static SystemColors.MenuTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.MenuTextKey}}" />
+
+  <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ComboBoxBackgroundKey}}" />
+  <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.WindowTextKey}}" />
+  
+  <SolidColorBrush x:Key="{x:Static SystemColors.ActiveCaptionBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.TitleBarActiveKey}}"/>
+  <SolidColorBrush x:Key="{x:Static SystemColors.ActiveBorderBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ComboBoxMouseOverBorderKey}}"/>
+  <SolidColorBrush x:Key="{x:Static SystemColors.ActiveCaptionTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowTextKey}}" Opacity=".8"/>
+
+  <SolidColorBrush x:Key="{x:Static SystemColors.InactiveCaptionBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.TitleBarInactiveKey}}"/>
+  <SolidColorBrush x:Key="{x:Static SystemColors.InactiveBorderBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ComboBoxDisabledBorderKey}}"/>
+  <SolidColorBrush x:Key="{x:Static SystemColors.InactiveCaptionTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowTextKey}}" Opacity=".5"/>
+
+  <SolidColorBrush x:Key="{x:Static styles:ResourceKeys.BorderBrush}" Color="{DynamicResource {x:Static vsfx:VsColors.ActiveBorderKey}}" />
+  <SolidColorBrush x:Key="{x:Static styles:ResourceKeys.DisabledBrush}" Color="{DynamicResource {x:Static vsfx:VsColors.ComboBoxDisabledBackgroundKey}}" />
+  
+</ResourceDictionary>

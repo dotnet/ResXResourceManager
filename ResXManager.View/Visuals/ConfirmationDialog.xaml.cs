@@ -15,7 +15,7 @@
     /// </summary>
     public partial class ConfirmationDialog
     {
-        private ConfirmationDialog()
+        public ConfirmationDialog()
         {
             InitializeComponent();
         }
@@ -28,8 +28,7 @@
                 Owner = Application.Current?.MainWindow,
                 Title = title,
                 ResizeMode = ResizeMode.NoResize,
-                Width = 600,
-                SizeToContent = SizeToContent.Height
+                SizeToContent = SizeToContent.WidthAndHeight
             };
 
             window.SetExportProvider(exportProvider);

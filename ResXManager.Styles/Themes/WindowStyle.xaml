@@ -9,6 +9,8 @@
     <Setter Property="AllowsTransparency" Value="True"/>
     <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
     <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
     <Setter Property="UseLayoutRounding" Value="True" />
     <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
     <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -16,6 +18,7 @@
       <Setter.Value>
         <toms:BehaviorCollection>
           <toms:WindowButtonsHandlingBehavior />
+          <styles:ThemeResourceLoaderBehavior />
         </toms:BehaviorCollection>
       </Setter.Value>
     </Setter>
@@ -28,7 +31,7 @@
                 <toms:CustomNonClientAreaBehavior BorderSize="4,4" CornerSize="8,8" />
               </i:Interaction.Behaviors>
               <Grid x:Name="NCShadowArea" Margin="4">
-                <Border x:Name="Background" Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}">
+                <Border x:Name="Background" Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
                   <Border.Effect>
                     <DropShadowEffect Opacity=".4" RenderingBias="Performance" ShadowDepth="0" BlurRadius="8" />
                   </Border.Effect>
@@ -124,10 +127,11 @@
             <Trigger Property="IsActive" Value="False">
               <Setter TargetName="Caption" Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.InactiveCaptionTextBrushKey}}" />
               <Setter TargetName="Caption" Property="Background" Value="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}" />
+              <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}"/>
             </Trigger>
             <Trigger Property="ResizeMode" Value="NoResize">
               <Setter TargetName="Title" Property="TextAlignment" Value="Left" />
-              <Setter TargetName="Title" Property="FontWeight" Value="Normal" />
+              <Setter TargetName="Caption" Property="MinHeight" Value="24"/>
               <Setter TargetName="Title" Property="FontSize" Value="12" />
               <Setter TargetName="SizeButtons" Property="Visibility" Value="Collapsed" />
             </Trigger>

@@ -54,18 +54,14 @@
                 .Select(c => c.Culture)
                 .Where(c => c != null);
 
-            var inputBox = new LanguageSelectionBox(exisitingCultures)
-            {
-                Owner = Window.GetWindow(this),
-                WindowStartupLocation = WindowStartupLocation.CenterOwner
-            };
+            var languageSelection = new LanguageSelectionBoxViewModel(exisitingCultures);
 
-            if (!inputBox.ShowDialog().GetValueOrDefault())
+            if (!ConfirmationDialog.Show(this.GetExportProvider(), languageSelection, Properties.Resources.Title).GetValueOrDefault())
                 return;
 
             WaitCursor.Start(this);
 
-            var culture = inputBox.SelectedLanguage;
+            var culture = languageSelection.SelectedLanguage;
 
             DataGrid.CreateNewLanguageColumn(_resourceManager, culture);
 

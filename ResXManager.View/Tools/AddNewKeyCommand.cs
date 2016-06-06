@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -17,13 +18,16 @@
     public class AddNewKeyCommand : DelegateCommand
     {
         private readonly ResourceManager _resourceManager;
+        private readonly ExportProvider _exportProvider;
 
         [ImportingConstructor]
-        public AddNewKeyCommand(ResourceManager resourceManager)
+        public AddNewKeyCommand(ResourceManager resourceManager, ExportProvider exportProvider)
         {
             Contract.Requires(resourceManager != null);
+            Contract.Requires(exportProvider != null);
 
             _resourceManager = resourceManager;
+            _exportProvider = exportProvider;
 
             ExecuteCallback = Execute;
         }
@@ -50,7 +54,7 @@
             var application = Application.Current;
             Contract.Assume(application != null);
 
-            var inputBox = new InputBox
+            var inputBox = new InputBox(_exportProvider)
             {
                 Title = Resources.Title,
                 Prompt = Resources.NewKeyPrompt,
@@ -84,6 +88,7 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(_exportProvider != null);
         }
     }
 }

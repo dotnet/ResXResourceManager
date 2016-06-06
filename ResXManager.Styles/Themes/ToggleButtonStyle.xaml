@@ -34,7 +34,7 @@
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
       </Trigger>
       <Trigger Property="IsChecked" Value="True">
-        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
       </Trigger>
       <Trigger Property="IsEnabled" Value="False">

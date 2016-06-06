@@ -252,9 +252,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Visuals\LanguageConfigurationViewModel.cs" />
-    <Compile Include="Visuals\LanguageSelectionBox.xaml.cs">
-      <DependentUpon>LanguageSelectionBox.xaml</DependentUpon>
+    <Compile Include="Visuals\LanguageSelectionBoxView.xaml.cs">
+      <DependentUpon>LanguageSelectionBoxView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Visuals\LanguageSelectionBoxViewModel.cs" />
     <Compile Include="Visuals\ResourceView.xaml.cs">
       <DependentUpon>ResourceView.xaml</DependentUpon>
     </Compile>
@@ -298,7 +299,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Visuals\LanguageSelectionBox.xaml">
+    <Page Include="Visuals\LanguageSelectionBoxView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

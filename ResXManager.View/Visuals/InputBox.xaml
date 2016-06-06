@@ -1,29 +1,32 @@
 ﻿<Window x:Class="tomenglertde.ResXManager.View.Visuals.InputBox"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:styles="urn:ResXManager.Styles"
-    ShowInTaskbar="False" Width="300" SizeToContent="Height" ResizeMode="NoResize"
-    FocusManager.FocusedElement="{Binding ElementName=TextBox}"
-    Style="{DynamicResource {x:Static styles:ResourceKeys.WindowStyle}}"
-    DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
-  <StackPanel Margin="10">
-    <TextBlock Text="{Binding Prompt}" TextWrapping="Wrap"/>
-    <Decorator Height="10"/>
-    <TextBox x:Name="TextBox" HorizontalAlignment="Stretch" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}"/>
-    <Decorator Height="10"/>
-    <Grid HorizontalAlignment="Right" Grid.IsSharedSizeScope="True">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition SharedSizeGroup="A"/>
-        <ColumnDefinition Width="20"/>
-        <ColumnDefinition SharedSizeGroup="A"/>
-      </Grid.ColumnDefinitions>
-      <Grid.Resources>
-        <Style TargetType="{x:Type Button}">
-          <Setter Property="Padding" Value="10,2"/>
-        </Style>
-      </Grid.Resources>
-      <Button Grid.Column="0" Content="OK" IsDefault="True" Click="OK_Click" IsEnabled="{Binding IsInputValid}" Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}"/>
-      <Button Grid.Column="2" Content="Cancel" IsCancel="True" Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}" />
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:styles="urn:ResXManager.Styles"
+        xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
+        ShowInTaskbar="False" SizeToContent="WidthAndHeight" ResizeMode="NoResize"
+        FocusManager.FocusedElement="{Binding ElementName=TextBox}"
+        Style="{DynamicResource {x:Static styles:ResourceKeys.WindowStyle}}"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+  <StackPanel Width="400">
+    <StackPanel Margin="10,20">
+      <TextBlock Text="{Binding Prompt}" TextWrapping="Wrap" />
+      <Decorator Height="10" />
+      <TextBox x:Name="TextBox" HorizontalAlignment="Stretch" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
+      <Decorator Height="10" />
+    </StackPanel>
+    <Grid Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.IsSharedSizeScope="True" Margin="10">
+        <Button Padding="12,3" IsDefault="True" Click="OK_Click"
+                Command="{Binding CommitCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ContentControl}}"
+                Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
+          <ContentControl Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" Content="OK" HorizontalContentAlignment="Center" />
+        </Button>
+        <Decorator Width="10" />
+        <Button Padding="12,3" IsCancel="True"
+                Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
+          <ContentControl Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" Content="Cancel" HorizontalContentAlignment="Center" />
+        </Button>
+      </StackPanel>
     </Grid>
   </StackPanel>
 </Window>

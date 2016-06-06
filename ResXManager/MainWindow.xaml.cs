@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
     using System.Windows;
     using System.Windows.Controls.Primitives;
@@ -19,9 +20,9 @@
     public partial class MainWindow
     {
         [ImportingConstructor]
-        public MainWindow(ICompositionHost compositionHost)
+        public MainWindow(ExportProvider exportProvider)
         {
-            this.SetExportProvider(compositionHost.Container);
+            this.SetExportProvider(exportProvider);
 
             InitializeComponent();
 
@@ -46,10 +47,8 @@
             else
             {
                 var link = e.OriginalSource as Hyperlink;
-                if (link == null)
-                    return;
 
-                var navigateUri = link.NavigateUri;
+                var navigateUri = link?.NavigateUri;
                 if (navigateUri == null)
                     return;
 

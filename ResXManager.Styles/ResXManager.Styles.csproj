@@ -156,6 +156,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
@@ -203,6 +204,7 @@
     </Compile>
     <AppDesigner Include="Properties\" />
     <Compile Include="ResourceKeys.cs" />
+    <Compile Include="ThemeResourceLoaderBehavior.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Themes\ButtonStyle.xaml">
@@ -290,6 +292,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ResXManager.Infrastructure\ResXManager.Infrastructure.csproj">
+      <Project>{A20586DF-CBE9-4A6F-807C-10960D13E848}</Project>
+      <Name>ResXManager.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
