@@ -100,7 +100,7 @@
 
         public override bool IsWritable => !DefaultProjectItem.TryGetDocument()?.ReadOnly ?? base.IsWritable;
 
-        public bool HasChanges => DefaultProjectItem.TryGetDocument()?.Saved != true;
+        public bool HasChanges => DefaultProjectItem.TryGetDocument()?.Saved == false;
 
         public CodeGenerator CodeGenerator
         {

@@ -471,7 +471,9 @@
             // To avoid loosing the scope every time this method is called we only call load if we detect changes.
             var fingerPrint = GetFingerprint(projectFiles);
 
-            if (!force && !projectFiles.Where(p => p.IsResourceFile()).Any(p => p.HasChanges) && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
+            if (!force
+                && !projectFiles.Where(p => p.IsResourceFile()).Any(p => p.HasChanges) // ignore the finger print if any document is open in VS and has changes, the finger print is only looking at disk files...
+                && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
                 return;
 
             _solutionFingerPrint = fingerPrint;
@@ -507,15 +509,13 @@
                     Contract.Assume(newEntry != null);
 
                     var oldEntry = oldEntity.Entries.FirstOrDefault(entry => ResourceTableEntry.EqualityComparer.Equals(entry, newEntry));
-                    if (oldEntry == null)
+
+                    var oldComment = oldEntry?.Comment;
+                    if (string.IsNullOrEmpty(oldComment))
                         continue;
 
-                    var oldComment = oldEntry.Comment;
-                    if (!string.IsNullOrEmpty(oldComment))
-                    {
-                        if (string.IsNullOrEmpty(newEntry.Comment))
-                            newEntry.Comment = oldComment;
-                    }
+                    if (string.IsNullOrEmpty(newEntry.Comment))
+                        newEntry.Comment = oldComment;
                 }
             }
         }
