@@ -36,7 +36,7 @@
 
         private readonly ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
         private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
-        private readonly IObservableCollection<ResourceTableEntry> _resourceTableEntries;
+        private readonly ICollection<ResourceTableEntry> _resourceTableEntries;
         private readonly ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
 
         private readonly ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
@@ -107,7 +107,7 @@
         {
             get
             {
-                Contract.Ensures(Contract.Result<IEnumerable<ResourceEntity>>() != null);
+                Contract.Ensures(Contract.Result<ICollection<ResourceEntity>>() != null);
 
                 return _resourceEntities;
             }
@@ -117,7 +117,7 @@
         {
             get
             {
-                Contract.Ensures(Contract.Result<IEnumerable<ResourceTableEntry>>() != null);
+                Contract.Ensures(Contract.Result<ICollection<ResourceTableEntry>>() != null);
 
                 return _resourceTableEntries;
             }
@@ -127,7 +127,7 @@
         {
             get
             {
-                Contract.Ensures(Contract.Result<IEnumerable<CultureKey>>() != null);
+                Contract.Ensures(Contract.Result<ObservableCollection<CultureKey>>() != null);
 
                 return _cultureKeys;
             }
@@ -137,7 +137,7 @@
         {
             get
             {
-                Contract.Ensures(Contract.Result<IList<ResourceEntity>>() != null);
+                Contract.Ensures(Contract.Result<ObservableCollection<ResourceEntity>>() != null);
 
                 return _selectedEntities;
             }
