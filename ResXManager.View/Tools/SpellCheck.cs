@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics.Contracts;
-    using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
@@ -15,7 +14,7 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
-    public static class Spellchecker
+    public static class SpellCheck
     {
         private static bool _exceptionTraced;
 
@@ -32,15 +31,15 @@
         }
 
         /// <summary>
-        /// Identifies the <see cref="P:tomenglertde.ResXManager.View.Tools.Spellchecker.IsEnabled"/> attached property
+        /// Identifies the <see cref="P:tomenglertde.ResXManager.View.Tools.SpellCheck.IsEnabled"/> attached property
         /// </summary>
         /// <AttachedPropertyComments>
         /// <summary>
-        /// A exception safe wrapper around <see cref="SpellCheck"/>
+        /// A exception safe wrapper around <see cref="System.Windows.Controls.SpellCheck"/>
         /// </summary>
         /// </AttachedPropertyComments>
         public static readonly DependencyProperty IsEnabledProperty =
-            DependencyProperty.RegisterAttached("IsEnabled", typeof(bool), typeof(Spellchecker), new FrameworkPropertyMetadata(false, IsEnabled_Changed));
+            DependencyProperty.RegisterAttached("IsEnabled", typeof(bool), typeof(SpellCheck), new FrameworkPropertyMetadata(false, IsEnabled_Changed));
 
         private static void IsEnabled_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -50,16 +49,12 @@
 
             try
             {
-                // Ensure factory is creatable, speller might be initialized in background thread.
-                var factory = new SpellCheckerFactoryCoClass();
-
                 textBox.SpellCheck.IsEnabled = e.NewValue.SafeCast<bool>();
-
-                if (Marshal.IsComObject(factory))
-                    Marshal.ReleaseComObject(factory);
             }
             catch (Exception ex)
             {
+                textBox.SpellCheck.IsEnabled = false;
+
                 if (_exceptionTraced)
                     return;
 
@@ -74,15 +69,6 @@
 
                 _exceptionTraced = true;
             }
-        }
-
-
-        [Guid("7AB36653-1796-484B-BDFA-E74F1DB7C1DC")]
-        [TypeLibType(TypeLibTypeFlags.FCanCreate)]
-        [ClassInterface(ClassInterfaceType.None)]
-        [ComImport]
-        private class SpellCheckerFactoryCoClass
-        {
         }
     }
 }
