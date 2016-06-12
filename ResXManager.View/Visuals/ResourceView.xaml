@@ -369,7 +369,7 @@
         </Border>
       </Popup>
       <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=TextBox}" WhiteSpaceOpacity="0.4" WhiteSpaces="All">
-        <TextBox x:Name="TextBox" AcceptsReturn="True" AcceptsTab="True" tools:SpellCheck.IsEnabled="True"
+        <TextBox x:Name="TextBox" AcceptsReturn="True" AcceptsTab="True" tools:Spellcheck.IsEnabled="True"
                  TextWrapping="Wrap" IsTabStop="False" BorderThickness="0" Margin="1" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}">
           <i:Interaction.Behaviors>
             <toms:ZoomFontSizeOnMouseWheelBehavior />
