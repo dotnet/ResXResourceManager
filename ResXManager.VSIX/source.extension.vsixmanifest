@@ -7,7 +7,7 @@
     <Description xml:space="preserve">Manage localization of all ResX-Based resources in one place. Shows all resources of a solution and let's you edit the strings and their localizations in a well-arranged data grid.</Description>
     <Locale>1033</Locale>
     <MoreInfoUrl>http://resxresourcemanager.codeplex.com/</MoreInfoUrl>
-    <License>License.txt</License>
+    <License>License</License>
     <GettingStartedGuide>http://resxresourcemanager.codeplex.com/documentation</GettingStartedGuide>
     <Icon>32x32.png</Icon>
     <PreviewImage>200x200.png</PreviewImage>
