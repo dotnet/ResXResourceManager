@@ -219,7 +219,7 @@
     <Compile Include="Tools\ColumnManager.cs" />
     <Compile Include="Tools\CultureOverrideEventArgs.cs" />
     <Compile Include="Tools\NeutralCultureCountryOverrides.cs" />
-    <Compile Include="Tools\SpellCheck.cs" />
+    <Compile Include="Tools\Spellcheck.cs" />
     <Compile Include="Visuals\CodeReferencesToolTip.xaml.cs">
       <DependentUpon>CodeReferencesToolTip.xaml</DependentUpon>
     </Compile>
