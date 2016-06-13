@@ -295,9 +295,9 @@
             return _displayName;
         }
 
-        public bool CanEdit(CultureInfo culture)
+        public bool CanEdit(CultureKey cultureKey)
         {
-            return Container.CanEdit(this, culture);
+            return Container.CanEdit(this, cultureKey);
         }
 
         internal void OnIndexChanged(ResourceTableEntry resourceTableEntry)

@@ -221,6 +221,16 @@ namespace tomenglertde.ResXManager.VSIX {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Some files are open in another editor. Please save....
+        /// </summary>
+        public static string ErrorOpenFilesInEditor {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ErrorOpenFilesInEditor", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Error loading the ResX Manager extension: {0}.&amp....
         /// </summary>
         public static string ExtensionLoadingError {
@@ -471,6 +481,10 @@ namespace tomenglertde.ResXManager.VSIX {
         ///   Looks up a localized string similar to Error:.
         /// </summary>
         Error,
+        /// <summary>
+        ///   Looks up a localized string similar to Some files are open in another editor. Please save....
+        /// </summary>
+        ErrorOpenFilesInEditor,
         /// <summary>
         ///   Looks up a localized string similar to Error loading the ResX Manager extension: {0}.&amp....
         /// </summary>

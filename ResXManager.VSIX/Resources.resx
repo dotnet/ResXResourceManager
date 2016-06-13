@@ -227,4 +227,9 @@ See output window for details.</value>
   <data name="DuplicateKey" xml:space="preserve">
     <value>Duplicate key</value>
   </data>
+  <data name="ErrorOpenFilesInEditor" xml:space="preserve">
+    <value>Some files are open in another editor. Please save the files to make changes here:
+
+{0}</value>
+  </data>
 </root>

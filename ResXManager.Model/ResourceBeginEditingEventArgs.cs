@@ -5,28 +5,25 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     /// <summary>
     /// Provides data for the <see cref="ResourceManager.BeginEditing"/> event.
     /// </summary>
     public class ResourceBeginEditingEventArgs : CancelEventArgs
     {
         private readonly ResourceEntity _entity;
-        private readonly CultureInfo _culture;
+        private readonly CultureKey _cultureKey;
 
-        public ResourceBeginEditingEventArgs(ResourceEntity entity, CultureInfo culture)
+        public ResourceBeginEditingEventArgs(ResourceEntity entity, CultureKey cultureKey)
         {
             Contract.Requires(entity != null);
+
             _entity = entity;
-            _culture = culture;
+            _cultureKey = cultureKey;
         }
 
-        public CultureInfo Culture
-        {
-            get
-            {
-                return _culture;
-            }
-        }
+        public CultureKey CultureKey => _cultureKey;
 
         public ResourceEntity Entity
         {

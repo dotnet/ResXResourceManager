@@ -37,7 +37,7 @@
         private readonly IDictionary<string, Node> _nodes;
         private readonly ResourceManager _resourceManager;
         private readonly CultureKey _cultureKey;
-        
+
         private readonly XName _dataNodeName;
         private readonly XName _valueNodeName;
         private readonly XName _commentNodeName;
@@ -246,7 +246,7 @@
 
         internal bool CanEdit()
         {
-            return Container.CanEdit(Culture);
+            return Container.CanEdit(CultureKey);
         }
 
         /// <summary>

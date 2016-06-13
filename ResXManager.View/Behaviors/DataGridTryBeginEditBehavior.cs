@@ -49,7 +49,7 @@
                 cultureKey = languageHeader.CultureKey;
             }
 
-            if (!resourceEntity.CanEdit(cultureKey.Culture))
+            if (!resourceEntity.CanEdit(cultureKey))
             {
                 e.Cancel = true;
             }

@@ -211,7 +211,7 @@
 
                 var entry = item.Entry;
 
-                if (!entry.CanEdit(item.TargetCulture.Culture))
+                if (!entry.CanEdit(item.TargetCulture))
                     break;
 
                 entry.Values.SetValue(item.TargetCulture, prefix + item.Translation);

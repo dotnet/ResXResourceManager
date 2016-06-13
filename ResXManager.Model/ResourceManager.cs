@@ -229,7 +229,7 @@
             BeginFindCodeReferences(allSourceFiles);
         }
 
-        public bool CanEdit(ResourceEntity resourceEntity, CultureInfo culture)
+        public bool CanEdit(ResourceEntity resourceEntity, CultureKey cultureKey)
         {
             Contract.Requires(resourceEntity != null);
 
@@ -238,7 +238,7 @@
             if (eventHandler == null)
                 return true;
 
-            var args = new ResourceBeginEditingEventArgs(resourceEntity, culture);
+            var args = new ResourceBeginEditingEventArgs(resourceEntity, cultureKey);
 
             eventHandler(this, args);
 

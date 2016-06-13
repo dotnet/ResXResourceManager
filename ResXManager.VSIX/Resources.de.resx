@@ -196,4 +196,9 @@ Mehr Details finden sich im Ausgabefenster.</value>
   <data name="KeyContainsInvalidCharacters" xml:space="preserve">
     <value>Der Schlüssel enthält ungültige Zeichen.</value>
   </data>
+  <data name="ErrorOpenFilesInEditor" xml:space="preserve">
+    <value>Es sind Dateien in anderen Editoren geöffnet. Bitte speichern sie die Dateien, um sie hier ändern zu können:
+
+{0}</value>
+  </data>
 </root>

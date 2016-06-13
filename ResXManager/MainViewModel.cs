@@ -139,18 +139,18 @@
 
         private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
         {
-            if (!CanEdit(e.Entity, e.Culture))
+            if (!CanEdit(e.Entity, e.CultureKey))
             {
                 e.Cancel = true;
             }
         }
 
-        private bool CanEdit(ResourceEntity entity, CultureInfo culture)
+        private bool CanEdit(ResourceEntity entity, CultureKey cultureKey)
         {
             Contract.Requires(entity != null);
 
             string message;
-            var languages = entity.Languages.Where(lang => (culture == null) || culture.Equals(lang.Culture)).ToArray();
+            var languages = entity.Languages.Where(lang => (cultureKey == null) || cultureKey.Equals(lang.CultureKey)).ToArray();
 
             var rootFolder = SourceFilesProvider.Folder;
             if (string.IsNullOrEmpty(rootFolder))
@@ -160,8 +160,10 @@
             {
                 try
                 {
-                    // because entity.Languages.Any() => languages can only be empty if language != null!
-                    Contract.Assume(culture != null);
+                    var culture = cultureKey?.Culture;
+
+                    if (culture == null)
+                        return false; // no neutral culture => this should never happen.
 
                     if (_configuration.ConfirmAddLanguageFile)
                     {

@@ -328,9 +328,9 @@
             }
         }
 
-        public bool CanEdit(CultureInfo culture)
+        public bool CanEdit(CultureKey cultureKey)
         {
-            return _container.CanEdit(culture);
+            return _container.CanEdit(cultureKey);
         }
 
         public void Refresh()

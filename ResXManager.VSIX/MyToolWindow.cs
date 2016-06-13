@@ -266,25 +266,27 @@
 
             var resourceManager = (ResourceManager)sender;
 
-            if (!CanEdit(resourceManager, e.Entity, e.Culture))
+            if (!CanEdit(resourceManager, e.Entity, e.CultureKey))
             {
                 e.Cancel = true;
             }
         }
 
-        private bool CanEdit(ResourceManager resourceManager, ResourceEntity entity, CultureInfo culture)
+        private bool CanEdit(ResourceManager resourceManager, ResourceEntity entity, CultureKey cultureKey)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(entity != null);
 
-            var languages = entity.Languages.Where(lang => (culture == null) || culture.Equals(lang.Culture)).ToArray();
+            var languages = entity.Languages.Where(lang => (cultureKey == null) || cultureKey.Equals(lang.CultureKey)).ToArray();
 
             if (!languages.Any())
             {
                 try
                 {
-                    // because entity.Languages.Any() => languages can only be empty if culture != null!
-                    Contract.Assume(culture != null);
+                    var culture = cultureKey?.Culture;
+
+                    if (culture == null)
+                        return false; // no neutral culture => this should never happen.
 
                     return AddLanguage(resourceManager, entity, culture);
                 }
@@ -292,6 +294,20 @@
                 {
                     MessageBox.Show(string.Format(CultureInfo.CurrentCulture, View.Properties.Resources.ErrorAddingNewResourceFile, ex), Resources.ToolWindowTitle);
                 }
+            }
+
+            var filesWithChanges = languages
+                .Where(lang => (lang.ProjectFile as DteProjectFile)?.HasChanges == true)
+                .ToArray();
+
+            string message;
+
+            if (filesWithChanges.Any())
+            {
+                message = string.Format(CultureInfo.CurrentCulture, Resources.ErrorOpenFilesInEditor, FormatFileNames(filesWithChanges.Select(file => file.FileName)));
+                MessageBox.Show(message, Resources.ToolWindowTitle);
+
+                return false;
             }
 
             var service = (IVsQueryEditQuerySave2)GetService(typeof(SVsQueryEditQuerySave));
@@ -315,8 +331,7 @@
             if (!lockedFiles.Any())
                 return true;
 
-            var message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasReadOnlyFiles, FormatFileNames(lockedFiles));
-
+            message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasReadOnlyFiles, FormatFileNames(lockedFiles));
             MessageBox.Show(message, Resources.ToolWindowTitle);
             return false;
         }
