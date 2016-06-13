@@ -2,6 +2,11 @@
 [url:Visual Studio Extension Download|https://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68]
 [url:Reviews|https://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68/view/Reviews]
 
+1.0.0.81:
+* WI4716: Fix: Spell check is always disabled in Win7
+* Refresh of model is running too ofthen.
+* Add color schemed styles for windows.
+* WI4711: Shield packages against crashes when VS installation is broken.
 1.0.0.80:
 * WI4721: Fix context menu style and some other visual improvements.
 * Improve speed of code reference tracker analysis (thanks to Pavel Kotrč!)
