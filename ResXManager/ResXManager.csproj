@@ -371,13 +371,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-  </Target>
   <Target Name="BeforeBuild">
     <Exec ContinueOnError="false" Command="&quot;$(SolutionDir)packages\Brutal.Dev.StrongNameSigner.1.7.0\tools\StrongNameSigner.Console.exe&quot; -in &quot;$(SolutionDir)packages\WindowsAPICodePack-Core.1.1.1|$(SolutionDir)packages\WindowsAPICodePack-Shell.1.1.1&quot; -k &quot;$(SolutionDir)key.snk&quot;" />
   </Target>
