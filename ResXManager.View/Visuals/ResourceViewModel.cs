@@ -15,6 +15,7 @@
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
+    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
@@ -196,6 +197,24 @@
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
                 return new DelegateCommand(() => LoadSnapshot(null));
+            }
+        }
+
+        public ICommand SelectEntityCommand
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+
+                return new DelegateCommand<ResourceEntity>(entity =>
+                {
+                    var selectedEntities = _resourceManager.SelectedEntities;
+
+                    selectedEntities.RemoveRange(item => item != entity);
+
+                    if (!selectedEntities.Any())
+                        selectedEntities.Add(entity);
+                });
             }
         }
 
