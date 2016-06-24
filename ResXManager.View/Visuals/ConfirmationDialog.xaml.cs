@@ -28,7 +28,8 @@
                 Owner = Application.Current?.MainWindow,
                 Title = title,
                 ResizeMode = ResizeMode.NoResize,
-                SizeToContent = SizeToContent.WidthAndHeight
+                WindowStyle = WindowStyle.SingleBorderWindow,
+                SizeToContent = SizeToContent.WidthAndHeight,
             };
 
             window.SetExportProvider(exportProvider);
