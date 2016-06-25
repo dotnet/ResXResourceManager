@@ -3,10 +3,13 @@
     using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
+    using System.Diagnostics.Contracts;
     using System.Windows;
+    using System.Windows.Input;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
     /// <summary>
@@ -76,12 +79,26 @@
         /// Identifies the IsInputValid dependency property
         /// </summary>
         public static readonly DependencyProperty IsInputValidProperty =
-            DependencyProperty.Register("IsInputValid", typeof(bool), typeof(InputBox));
+            DependencyProperty.Register("IsInputValid", typeof(bool), typeof(InputBox), new FrameworkPropertyMetadata(false));
 
 
-        private void OK_Click(object sender, RoutedEventArgs e)
+        public ICommand CommitCommand
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICommand>() != null);
+                return new DelegateCommand(CanCommit, Commit);
+            }
+        }
+
+        private void Commit()
         {
             DialogResult = true;
+        }
+
+        private bool CanCommit()
+        {
+            return IsInputValid;
         }
     }
 }

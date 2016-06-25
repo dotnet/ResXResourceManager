@@ -19,8 +19,8 @@
     </StackPanel>
     <Grid Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.IsSharedSizeScope="True" Margin="10">
-        <Button Padding="12,3" IsDefault="True" Click="OK_Click"
-                Command="{Binding CommitCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ContentControl}}"
+        <Button Padding="12,3" IsDefault="True"
+                Command="{Binding CommitCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                 Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
           <ContentControl Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" Content="OK" HorizontalContentAlignment="Center" />
         </Button>
