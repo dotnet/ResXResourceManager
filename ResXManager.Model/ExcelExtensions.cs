@@ -211,6 +211,9 @@
 
         private static IList<string>[] GetTable(this Sheet sheet, WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
         {
+            Contract.Requires(sheet != null);
+            Contract.Requires(workbookPart != null);
+
             return sheet.GetRows(workbookPart)
                 .Select(row => row.GetCellValues(sharedStrings))
                 .ToArray();

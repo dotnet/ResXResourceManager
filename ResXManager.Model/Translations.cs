@@ -7,7 +7,6 @@
     using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
     using System.Linq;
     using System.Windows.Input;
 
@@ -270,6 +269,8 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(_configuration != null);
+            Contract.Invariant(_translatorHost != null);
             Contract.Invariant(_selectedItems != null);
             Contract.Invariant(_selectedTargetCultures != null);
             Contract.Invariant(_items != null);

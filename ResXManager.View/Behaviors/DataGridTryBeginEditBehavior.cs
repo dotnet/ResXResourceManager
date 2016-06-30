@@ -41,7 +41,7 @@
             if (!resourceLanguages.Any())
                 return;
 
-            var cultureKey = resourceLanguages.First().CultureKey;
+            var cultureKey = resourceLanguages.First()?.CultureKey;
 
             var languageHeader = e.Column.Header as ILanguageColumnHeader;
             if (languageHeader != null)

@@ -13,7 +13,6 @@
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
 
@@ -23,7 +22,6 @@
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.VSIX.Visuals;
 
     using TomsToolbox.Core;

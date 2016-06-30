@@ -5,7 +5,6 @@
     using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
 
@@ -87,11 +86,15 @@
                 var existingEntry = _resourceTableEntries.FirstOrDefault(entry => entry.Key == key);
                 if (existingEntry != null)
                 {
+                    Contract.Assume(_languages.Any());
+
                     existingEntry.Update(index, _languages);
                     unmatchedTableEntries.Remove(existingEntry);
                 }
                 else
                 {
+                    Contract.Assume(_languages.Any());
+
                     _resourceTableEntries.Add(new ResourceTableEntry(this, key, index, _languages));
                 }
 
@@ -481,6 +484,7 @@
             Contract.Invariant(_container != null);
             Contract.Invariant(_languages != null);
             Contract.Invariant(_resourceTableEntries != null);
+            Contract.Invariant(_readOnlyResourceTableEntries != null);
             Contract.Invariant(!string.IsNullOrEmpty(_projectName));
             Contract.Invariant(!string.IsNullOrEmpty(_baseName));
             Contract.Invariant(!string.IsNullOrEmpty(_directoryName));

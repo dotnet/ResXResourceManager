@@ -7,7 +7,6 @@
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows.Input;
-    using System.Windows.Threading;
 
     using tomenglertde.ResXManager.Model;
 
@@ -85,6 +84,7 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(_selectedCodeGeneratorsChangedThrottle != null);
         }
     }
 }

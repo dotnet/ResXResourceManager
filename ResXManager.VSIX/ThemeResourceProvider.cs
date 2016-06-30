@@ -1,6 +1,5 @@
 ﻿namespace tomenglertde.ResXManager.VSIX
 {
-    using System;
     using System.ComponentModel.Composition;
     using System.Windows;
 

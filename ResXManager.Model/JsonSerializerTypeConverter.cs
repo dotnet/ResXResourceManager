@@ -2,6 +2,8 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Runtime.Serialization;
@@ -113,6 +115,13 @@
 
                 return Encoding.Default.GetString(stream.GetBuffer(), 0, (int)stream.Length);
             }
+        }
+
+        [ContractInvariantMethod]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_serializer != null);
         }
     }
 }

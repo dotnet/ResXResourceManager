@@ -5,13 +5,11 @@ namespace tomenglertde.ResXManager.Translators
     using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
     using System.Linq;
     using System.Runtime.Serialization;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
 
-    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Translators.BingServiceReference;
 
     using TomsToolbox.Core;

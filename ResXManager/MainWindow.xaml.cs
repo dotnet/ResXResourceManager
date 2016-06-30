@@ -8,7 +8,6 @@
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
 
-    using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 

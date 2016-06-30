@@ -244,6 +244,7 @@
             {
                 Contract.Requires(projectFile != null);
                 Contract.Requires(configurations != null);
+                Contract.Requires(keys != null);
 
                 _projectFile = projectFile;
 
@@ -255,7 +256,7 @@
                 {
                     _lines = _projectFile.ReadAllLines();
 
-                    _lines.ForEach((line, index) =>
+                    _lines?.ForEach((line, index) =>
                         _regex.Split(line)
                             .Where(keys.Contains)
                             .ForEach(key => _keyLinesLookup.ForceValue(key, _ => new HashSet<int>()).Add(index)));
@@ -332,6 +333,7 @@
             private void ObjectInvariant()
             {
                 Contract.Invariant(_projectFile != null);
+                Contract.Invariant(_keyLinesLookup != null);
                 Contract.Invariant(_configurations != null);
             }
         }

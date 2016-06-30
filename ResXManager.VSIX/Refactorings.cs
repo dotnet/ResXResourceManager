@@ -325,5 +325,12 @@
                 return null;
             }
         }
+
+        [ContractInvariantMethod]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_exportProvider != null);
+        }
     }
 }

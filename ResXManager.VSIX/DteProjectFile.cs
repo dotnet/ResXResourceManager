@@ -122,7 +122,10 @@
             get
             {
                 Contract.Ensures(Contract.Result<EnvDTE.ProjectItem>() != null);
-                return ProjectItems.First();
+
+                var item = ProjectItems.First();
+                Contract.Assume(item != null);
+                return item;
             }
         }
 
@@ -282,6 +285,7 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
+            Contract.Invariant(_solution != null);
             Contract.Invariant(_projectItems != null);
             Contract.Invariant(_projectItems.Count > 0);
         }

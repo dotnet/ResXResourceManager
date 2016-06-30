@@ -1,6 +1,5 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
-    using System;
     using System.ComponentModel.Composition;
     using System.Diagnostics.Contracts;
     using System.IO;
@@ -13,7 +12,6 @@
 
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
-    using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
@@ -375,7 +373,11 @@
             if (!items.Any())
                 return;
 
-            var newValue = !items.First().IsInvariant;
+            var first = items.First();
+            if (first == null)
+                return;
+
+            var newValue = !first.IsInvariant;
 
             items.ForEach(item => item.IsInvariant = newValue);
         }

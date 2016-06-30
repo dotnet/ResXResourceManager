@@ -269,6 +269,7 @@
             Contract.Ensures(table.Count() == Contract.OldValue(table.Count()));
 
             var headerColumns = table.First();
+            Contract.Assume(headerColumns != null);
 
             var fixedColumnHeadersCount = fixedColumnHeaders.Count;
 
@@ -288,6 +289,7 @@
             Contract.Requires(table.Count > 0);
 
             var headerColumns = table.First();
+            Contract.Assume(headerColumns != null);
 
             if (headerColumns.Count < 2)
                 return false;

@@ -8,7 +8,6 @@
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using System.Threading;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
@@ -463,6 +462,7 @@
         {
             public static readonly Comparer Default = new Comparer();
 
+            [ContractVerification(false)]
             public bool Equals(ResourceTableEntry x, ResourceTableEntry y)
             {
                 if (ReferenceEquals(x, y))
@@ -488,6 +488,7 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
+            Contract.Invariant(_duplicateKeyExpression != null);
             Contract.Invariant(!string.IsNullOrEmpty(_key));
             Contract.Invariant(_values != null);
             Contract.Invariant(_comments != null);

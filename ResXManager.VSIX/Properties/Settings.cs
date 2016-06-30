@@ -1,9 +1,11 @@
 ﻿namespace tomenglertde.ResXManager.VSIX.Properties
 {
-    using Newtonsoft.Json;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+
+    using Newtonsoft.Json;
+
     using TomsToolbox.Core;
     using TomsToolbox.ObservableCollections;
 

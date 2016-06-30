@@ -3,7 +3,6 @@
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
 
     using tomenglertde.ResXManager.Infrastructure;
 

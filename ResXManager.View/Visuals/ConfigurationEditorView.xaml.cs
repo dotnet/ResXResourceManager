@@ -2,6 +2,7 @@
 {
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Windows;
@@ -49,6 +50,13 @@
             {
                 e.Cancel = true;
             }
+        }
+
+        [ContractInvariantMethod]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_tracer != null);
         }
     }
 }

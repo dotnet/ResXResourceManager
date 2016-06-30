@@ -1,8 +1,9 @@
 ﻿namespace tomenglertde.ResXManager.Styles
 {
-    using Infrastructure;
     using System.Windows;
     using System.Windows.Interactivity;
+
+    using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf.Composition;
 
@@ -23,7 +24,7 @@
 
             foreach (var resourceProvider in resourceProviders)
             {
-                resourceProvider.LoadThemeResources(window.Resources);
+                resourceProvider?.LoadThemeResources(window.Resources);
             }
         }
     }

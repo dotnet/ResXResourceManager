@@ -41,6 +41,7 @@
             }
 
             var resourceFile = _resourceManager.SelectedEntities.Single();
+            Contract.Assume(resourceFile != null);
 
             if (resourceFile.IsWinFormsDesignerResource)
             {

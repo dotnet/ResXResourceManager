@@ -2,11 +2,12 @@
 {
     using System;
     using System.ComponentModel.Composition.Hosting;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Windows;
 
- using tomenglertde.ResXManager.Infrastructure;
+    using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf.Composition;
@@ -54,6 +55,13 @@
         public void Dispose()
         {
             _compositionHost.Dispose();
+        }
+
+        [ContractInvariantMethod]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_compositionHost != null);
         }
     }
 }

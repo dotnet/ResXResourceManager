@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;

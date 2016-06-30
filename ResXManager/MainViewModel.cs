@@ -225,6 +225,7 @@
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_tracer != null);
             Contract.Invariant(_sourceFilesProvider != null);
+            Contract.Invariant(_configuration != null);
         }
     }
 

@@ -93,7 +93,7 @@
 
             if (newValue == null)
             {
-                Dispatcher.BeginInvoke(() => AreAllFilesSelected = false);
+                Dispatcher?.BeginInvoke(() => AreAllFilesSelected = false);
                 return;
             }
 
