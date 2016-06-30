@@ -141,8 +141,8 @@
     <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DataGridExtensions, Version=1.0.31.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DataGridExtensions.1.0.31.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
+    <Reference Include="DataGridExtensions, Version=1.0.32.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
+      <HintPath>..\packages\DataGridExtensions.1.0.32.0\lib\net40-Client\DataGridExtensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
@@ -174,7 +174,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="TomsToolbox.Desktop, Version=1.0.46.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.46.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.46.0\lib\net45\TomsToolbox.Desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.46.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">

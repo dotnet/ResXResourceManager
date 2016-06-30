@@ -165,7 +165,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="TomsToolbox.Desktop, Version=1.0.46.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.46.0\lib\net40-Client\TomsToolbox.Desktop.dll</HintPath>
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.46.0\lib\net45\TomsToolbox.Desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.46.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
