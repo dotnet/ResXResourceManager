@@ -127,6 +127,7 @@
              ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
              Padding="5,0" BorderThickness="0" SelectionMode="Extended"
              toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedEntities}"
+             VirtualizingPanel.IsVirtualizingWhenGrouping="True"
              Style="{DynamicResource {x:Static styles:ResourceKeys.ListBoxStyle}}">
       <ListBox.ItemTemplate>
         <DataTemplate DataType="model:ResourceEntity">
@@ -434,6 +435,7 @@
                     dgx:DataGridFilter.ResourceLocator="{toms:Import dgx:IResourceLocator}"
                     dgx:DataGridFilter.ContentFilterFactory="{StaticResource RegexContentFilterFactory}"
                     dgx:Tools.ForceCommitOnLostFocus="True"
+                    VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                     toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedTableEntries}">
             <DataGrid.Resources>
 

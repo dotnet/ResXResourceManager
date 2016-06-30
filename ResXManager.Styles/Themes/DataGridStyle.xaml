@@ -300,6 +300,15 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
+    <Style.Triggers>
+      <MultiTrigger>
+        <MultiTrigger.Conditions>
+          <Condition Property="ItemsControl.IsGrouping" Value="True"/>
+          <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="False"/>
+        </MultiTrigger.Conditions>
+        <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+      </MultiTrigger>
+    </Style.Triggers>
   </Style>
 
 </ResourceDictionary>
