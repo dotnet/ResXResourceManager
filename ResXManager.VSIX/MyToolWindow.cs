@@ -308,26 +308,35 @@
                 return false;
             }
 
+            // if file is not read only, assume file is either 
+            // - already checked out
+            // - not under source control
+            // - or does not need special SCM handling (e.g. TFS local workspace)
+            var lockedFiles = languages.Where(l => !l.ProjectFile.IsWritable)
+                .Select(l => l.FileName)
+                .ToArray();
+
+            if (!lockedFiles.Any())
+                return true;
+
             var service = (IVsQueryEditQuerySave2)GetService(typeof(SVsQueryEditQuerySave));
             if (service != null)
             {
-                var files = languages.Select(l => l.FileName).ToArray();
-
                 uint editVerdict;
                 uint moreInfo;
 
-                if ((0 != service.QueryEditFiles(0, files.Length, files, null, null, out editVerdict, out moreInfo))
+                if ((0 != service.QueryEditFiles(0, lockedFiles.Length, lockedFiles, null, null, out editVerdict, out moreInfo))
                     || (editVerdict != (uint)tagVSQueryEditResult.QER_EditOK))
                 {
                     return false;
                 }
             }
 
-            // if file is not under source control, we get an OK even if the file is read only!
-            var lockedFiles = languages.Where(l => !l.ProjectFile.IsWritable).Select(l => l.FileName).ToArray();
+            // if file is not under source control, we get an OK from QueryEditFiles even if the file is read only, so we have to test again:
+            lockedFiles = languages.Where(l => !l.ProjectFile.IsWritable)
+                .Select(l => l.FileName)
+                .ToArray();
 
-            if (!lockedFiles.Any())
-                return true;
 
             message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasReadOnlyFiles, FormatFileNames(lockedFiles));
             MessageBox.Show(message, Resources.ToolWindowTitle);

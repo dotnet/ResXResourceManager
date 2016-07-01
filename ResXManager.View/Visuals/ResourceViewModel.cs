@@ -13,7 +13,6 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
-    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
