@@ -208,10 +208,8 @@
                 {
                     var selectedEntities = _resourceManager.SelectedEntities;
 
-                    selectedEntities.RemoveRange(item => item != entity);
-
-                    if (!selectedEntities.Any())
-                        selectedEntities.Add(entity);
+                    selectedEntities.Clear();
+                    selectedEntities.Add(entity);
                 });
             }
         }
