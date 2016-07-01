@@ -312,13 +312,27 @@
             // - already checked out
             // - not under source control
             // - or does not need special SCM handling (e.g. TFS local workspace)
-            var lockedFiles = languages.Where(l => !l.ProjectFile.IsWritable)
-                .Select(l => l.FileName)
-                .ToArray();
+            var lockedFiles = GetLockedFiles(languages);
 
             if (!lockedFiles.Any())
                 return true;
 
+            if (!QueryEditFiles(lockedFiles))
+                return false;
+
+            // if file is not under source control, we get an OK from QueryEditFiles even if the file is read only, so we have to test again:
+            lockedFiles = GetLockedFiles(languages); ;
+
+            if (!lockedFiles.Any())
+                return true;
+
+            message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasReadOnlyFiles, FormatFileNames(lockedFiles));
+            MessageBox.Show(message, Resources.ToolWindowTitle);
+            return false;
+        }
+
+        private bool QueryEditFiles(string[] lockedFiles)
+        {
             var service = (IVsQueryEditQuerySave2)GetService(typeof(SVsQueryEditQuerySave));
             if (service != null)
             {
@@ -331,16 +345,14 @@
                     return false;
                 }
             }
+            return true;
+        }
 
-            // if file is not under source control, we get an OK from QueryEditFiles even if the file is read only, so we have to test again:
-            lockedFiles = languages.Where(l => !l.ProjectFile.IsWritable)
+        private static string[] GetLockedFiles(IEnumerable<ResourceLanguage> languages)
+        {
+            return languages.Where(l => !l.ProjectFile.IsWritable)
                 .Select(l => l.FileName)
                 .ToArray();
-
-
-            message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasReadOnlyFiles, FormatFileNames(lockedFiles));
-            MessageBox.Show(message, Resources.ToolWindowTitle);
-            return false;
         }
 
         private bool AddLanguage(ResourceManager resourceManager, ResourceEntity entity, CultureInfo culture)
