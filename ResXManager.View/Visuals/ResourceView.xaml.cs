@@ -12,6 +12,7 @@
 
     using Microsoft.Win32;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Tools;
 
@@ -33,14 +34,21 @@
         {
             Contract.Requires(exportProvider != null);
 
-            this.SetExportProvider(exportProvider);
+            try
+            {
+                this.SetExportProvider(exportProvider);
 
-            InitializeComponent();
+                _resourceManager = resourceManager;
+                _resourceManager.Loaded += ResourceManager_Loaded;
 
-            _resourceManager = resourceManager;
-            _resourceManager.Loaded += ResourceManager_Loaded;
+                InitializeComponent();
 
-            DataGrid.SetupColumns(_resourceManager);
+                DataGrid.SetupColumns(_resourceManager);
+            }
+            catch (Exception ex)
+            {
+                exportProvider.TraceError(ex.ToString());
+            }
         }
 
         private void ResourceManager_Loaded(object sender, EventArgs e)

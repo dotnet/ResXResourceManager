@@ -1,8 +1,13 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System;
     using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
+    using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Controls;
+
+    using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
@@ -14,9 +19,21 @@
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class TranslationsView
     {
-        public TranslationsView()
+        [ImportingConstructor]
+        public TranslationsView(ExportProvider exportProvider)
         {
-            InitializeComponent();
+            Contract.Requires(exportProvider != null);
+
+            try
+            {
+                this.SetExportProvider(exportProvider);
+
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                exportProvider.TraceError(ex.ToString());
+            }
         }
 
         private void ComboBox_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)

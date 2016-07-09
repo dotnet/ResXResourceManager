@@ -1,6 +1,11 @@
 ﻿namespace tomenglertde.ResXManager.VSIX.Visuals
 {
+    using System;
     using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
+    using System.Diagnostics.Contracts;
+
+    using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf.Composition;
 
@@ -11,9 +16,20 @@
     public partial class MoveToResourceConfigurationView
     {
         [ImportingConstructor]
-        public MoveToResourceConfigurationView()
+        public MoveToResourceConfigurationView(ExportProvider exportProvider)
         {
-            InitializeComponent();
+            Contract.Requires(exportProvider != null);
+
+            try
+            {
+                this.SetExportProvider(exportProvider);
+
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                exportProvider.TraceError(ex.ToString());
+            }
         }
     }
 }

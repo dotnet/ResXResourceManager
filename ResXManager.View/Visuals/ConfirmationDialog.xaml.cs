@@ -15,7 +15,7 @@
     /// </summary>
     public partial class ConfirmationDialog
     {
-        public ConfirmationDialog()
+        private ConfirmationDialog()
         {
             InitializeComponent();
         }

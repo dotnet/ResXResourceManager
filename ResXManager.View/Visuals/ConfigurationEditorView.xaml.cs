@@ -1,5 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.CodeAnalysis;
@@ -26,11 +27,19 @@
         {
             Contract.Requires(tracer != null);
 
-            this.SetExportProvider(exportProvider);
+            try
+            {
 
-            _tracer = tracer;
+                this.SetExportProvider(exportProvider);
 
-            InitializeComponent();
+                _tracer = tracer;
+
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                tracer.TraceError(ex.ToString());
+            }
         }
 
         private void CommandConverter_Error(object sender, ErrorEventArgs e)

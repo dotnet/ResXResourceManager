@@ -1,8 +1,11 @@
 ﻿namespace tomenglertde.ResXManager.Infrastructure
 {
     using System.ComponentModel;
+    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+
+    using TomsToolbox.Desktop.Composition;
 
     [ContractClass(typeof(TracerContract))]
     public interface ITracer
@@ -63,6 +66,40 @@
             Contract.Requires(args != null);
 
             tracer.WriteLine(string.Format(CultureInfo.CurrentCulture, format, args));
+        }
+
+        public static void TraceError(this ExportProvider exportProvider, [Localizable(false)] string format, params object[] args)
+        {
+            Contract.Requires(exportProvider != null);
+            Contract.Requires(format != null);
+            Contract.Requires(args != null);
+
+            exportProvider.GetExportedValue<ITracer>().TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
+        }
+
+        public static void TraceError(this ICompositionHost exportProvider, [Localizable(false)] string format, params object[] args)
+        {
+            Contract.Requires(exportProvider != null);
+            Contract.Requires(format != null);
+            Contract.Requires(args != null);
+
+            exportProvider.GetExportedValue<ITracer>().TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
+        }
+
+        public static void TraceError(this ExportProvider exportProvider, [Localizable(false)] string message)
+        {
+            Contract.Requires(exportProvider != null);
+            Contract.Requires(message != null);
+
+            exportProvider.GetExportedValue<ITracer>().TraceError(message);
+        }
+
+        public static void TraceError(this ICompositionHost exportProvider, [Localizable(false)] string message)
+        {
+            Contract.Requires(exportProvider != null);
+            Contract.Requires(message != null);
+
+            exportProvider.GetExportedValue<ITracer>().TraceError(message);
         }
     }
 }

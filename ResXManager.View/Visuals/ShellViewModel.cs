@@ -1,5 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System.Collections.Specialized;
     using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -40,7 +41,7 @@
             }
         }
 
-        private void SelectedEntities_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void SelectedEntities_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             _updateThrottle.Tick();
 

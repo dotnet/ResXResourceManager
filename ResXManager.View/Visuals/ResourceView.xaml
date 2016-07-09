@@ -81,6 +81,8 @@
       <Setter Property="Stretch" Value="None"/>
     </Style>
 
+    <themes:ResourceLocator x:Key="ResourceLocator" />
+
   </UserControl.Resources>
 
   <UserControl.InputBindings>
@@ -155,7 +157,7 @@
                   <ControlTemplate TargetType="{x:Type GroupItem}">
                     <StackPanel Background="Transparent" d:DataContext="{d:DesignInstance GroupItem}">
                       <i:Interaction.Behaviors>
-                        <behaviors:SelectGroupOnGroupHeaderClickBehavior />
+                        <toms:SelectGroupOnGroupHeaderClickBehavior />
                       </i:Interaction.Behaviors>
                       <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Margin="0,5,0,3"/>
                       <ItemsPresenter Margin="4,0,0,0"/>
@@ -333,7 +335,7 @@
              StaysOpen="False"
              Placement="Bottom" PlacementTarget="{Binding ElementName=ColumnChooserToggleButton}">
         <i:Interaction.Behaviors>
-          <behaviors:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=ColumnChooserToggleButton}" />
+          <toms:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=ColumnChooserToggleButton}" />
         </i:Interaction.Behaviors>
         <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
           <ListBox ItemsSource="{Binding Columns, ElementName=DataGrid, Converter={x:Static converters:LanguageColumnFilterConverter.Default}}"
@@ -432,7 +434,7 @@
           <DataGrid x:Name="DataGrid" FrozenColumnCount="1" BorderThickness="0"
                     AutoGenerateColumns="False" CanUserAddRows="False"
                     CanUserDeleteRows="False" CanUserResizeRows="False"
-                    dgx:DataGridFilter.ResourceLocator="{toms:Import dgx:IResourceLocator}"
+                    dgx:DataGridFilter.ResourceLocator="{StaticResource ResourceLocator}"
                     dgx:DataGridFilter.ContentFilterFactory="{StaticResource RegexContentFilterFactory}"
                     dgx:Tools.ForceCommitOnLostFocus="True"
                     VirtualizingPanel.IsVirtualizingWhenGrouping="True"
@@ -599,7 +601,7 @@
 
             <i:Interaction.Behaviors>
               <dgx:BeginEditOnCtrlEnterBehavior />
-              <dgx:ExtendedStarSizeBehavior ResourceLocator="{toms:Import dgx:IResourceLocator}" />
+              <dgx:ExtendedStarSizeBehavior ResourceLocator="{StaticResource ResourceLocator}" />
               <behaviors:ShowErrorsOnlyBehavior x:Name="ShowErrorsOnlyBehavior" ToggleButton="{Binding ElementName=ErrorsOnlyFilterButton}" />
               <behaviors:DataGridTryBeginEditBehavior />
             </i:Interaction.Behaviors>

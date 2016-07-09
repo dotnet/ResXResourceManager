@@ -5,8 +5,7 @@
 
     using DataGridExtensions;
 
-    [Export(typeof(IResourceLocator))]
-    internal class ResourceLocator : IResourceLocator
+    public class ResourceLocator : IResourceLocator
     {
         public object FindResource(FrameworkElement target, object resourceKey)
         {

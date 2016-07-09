@@ -1,7 +1,9 @@
 ﻿namespace tomenglertde.ResXManager.VSIX.Visuals
 {
+    using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
+    using System.Diagnostics.Contracts;
 
     using tomenglertde.ResXManager.Infrastructure;
 
@@ -12,14 +14,23 @@
     /// </summary>
     [VisualCompositionExport(RegionId.ProjectListItemDecorator)]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public partial class CodeGeneratorView 
+    public partial class CodeGeneratorView
     {
         [ImportingConstructor]
         public CodeGeneratorView(ExportProvider exportProvider)
         {
-            this.SetExportProvider(exportProvider);
+            Contract.Requires(exportProvider != null);
 
-            InitializeComponent();
+            try
+            {
+                this.SetExportProvider(exportProvider);
+
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                exportProvider.TraceError(ex.ToString());
+            }
         }
     }
 }

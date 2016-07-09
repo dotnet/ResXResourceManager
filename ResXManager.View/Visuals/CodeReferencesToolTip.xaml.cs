@@ -1,19 +1,32 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System;
     using System.ComponentModel.Composition.Hosting;
+    using System.Diagnostics.Contracts;
+
+    using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf.Composition;
 
     /// <summary>
     /// Interaction logic for CodeReferencesToolTip.xaml
     /// </summary>
-    public partial class CodeReferencesToolTip 
+    public partial class CodeReferencesToolTip
     {
         public CodeReferencesToolTip(ExportProvider exportProvider)
         {
-            this.SetExportProvider(exportProvider);
+            Contract.Requires(exportProvider != null);
 
-            InitializeComponent();
+            try
+            {
+                this.SetExportProvider(exportProvider);
+
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                exportProvider.TraceError(ex.ToString());
+            }
         }
     }
 }

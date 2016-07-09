@@ -1,7 +1,11 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
+    using System.Diagnostics.Contracts;
+
+    using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf.Composition;
 
@@ -15,9 +19,18 @@
         [ImportingConstructor]
         public LanguageSelectionBoxView(ExportProvider exportProvider)
         {
-            this.SetExportProvider(exportProvider);
+            Contract.Requires(exportProvider != null);
 
-            InitializeComponent();
+            try
+            {
+                this.SetExportProvider(exportProvider);
+
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                exportProvider.TraceError(ex.ToString());
+            }
         }
     }
 }

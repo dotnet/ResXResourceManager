@@ -333,6 +333,7 @@
 
         private bool QueryEditFiles(string[] lockedFiles)
         {
+            Contract.Requires(lockedFiles != null);
             var service = (IVsQueryEditQuerySave2)GetService(typeof(SVsQueryEditQuerySave));
             if (service != null)
             {
@@ -350,6 +351,8 @@
 
         private static string[] GetLockedFiles(IEnumerable<ResourceLanguage> languages)
         {
+            Contract.Requires(languages != null);
+
             return languages.Where(l => !l.ProjectFile.IsWritable)
                 .Select(l => l.FileName)
                 .ToArray();

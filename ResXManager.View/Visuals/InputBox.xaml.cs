@@ -24,6 +24,8 @@
         [ImportingConstructor]
         public InputBox(ExportProvider exportProvider)
         {
+            Contract.Requires(exportProvider != null);
+
             this.SetExportProvider(exportProvider);
 
             InitializeComponent();

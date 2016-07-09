@@ -1,7 +1,9 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System;
     using System.ComponentModel;
     using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -9,6 +11,7 @@
     using System.Windows;
     using System.Windows.Input;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Core;
@@ -22,9 +25,21 @@
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class LanguageConfigurationView
     {
-        public LanguageConfigurationView()
+        [ImportingConstructor]
+        public LanguageConfigurationView(ExportProvider exportProvider)
         {
-            InitializeComponent();
+            Contract.Requires(exportProvider != null);
+
+            try
+            {
+                this.SetExportProvider(exportProvider);
+
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                exportProvider.TraceError(ex.ToString());
+            }
         }
 
         private void Language_MouseDoubleClick(object sender, MouseButtonEventArgs e)

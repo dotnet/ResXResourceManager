@@ -1,7 +1,11 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System;
     using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.Contracts;
+
+    using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf.Composition;
@@ -12,16 +16,23 @@
     [Export]
     [DataTemplate(typeof(ShellViewModel))]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public partial class ShellView 
+    public partial class ShellView
     {
         [ImportingConstructor]
-        public ShellView(ICompositionHost compositionHost)
+        public ShellView(ExportProvider exportProvider)
         {
-            Contract.Requires(compositionHost != null);
+            Contract.Requires(exportProvider != null);
 
-            this.SetExportProvider(compositionHost.Container);
+            try
+            {
+                this.SetExportProvider(exportProvider);
 
-            InitializeComponent();
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                exportProvider.TraceError(ex.ToString());
+            }
         }
     }
 }

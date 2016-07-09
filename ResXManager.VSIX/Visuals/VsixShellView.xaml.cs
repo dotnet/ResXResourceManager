@@ -1,5 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.VSIX.Visuals
 {
+    using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.CodeAnalysis;
@@ -21,14 +22,22 @@
         private readonly ThemeManager _themeManager;
 
         [ImportingConstructor]
-        public VsixShellView(ExportProvider exportProvider)
+        public VsixShellView(ExportProvider exportProvider, ThemeManager themeManager)
         {
             Contract.Requires(exportProvider != null);
-            this.SetExportProvider(exportProvider);
+            Contract.Requires(themeManager != null);
 
-            _themeManager = exportProvider.GetExportedValue<ThemeManager>();
+            try
+            {
+                this.SetExportProvider(exportProvider);
+                _themeManager = themeManager;
 
-            InitializeComponent();
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                exportProvider.TraceError(ex.ToString());
+            }
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)

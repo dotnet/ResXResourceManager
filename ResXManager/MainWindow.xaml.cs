@@ -4,9 +4,12 @@
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
+
+    using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
@@ -21,11 +24,20 @@
         [ImportingConstructor]
         public MainWindow(ExportProvider exportProvider)
         {
-            this.SetExportProvider(exportProvider);
+            Contract.Requires(exportProvider != null);
 
-            InitializeComponent();
+            try
+            {
+                this.SetExportProvider(exportProvider);
 
-            AddHandler(ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
+                InitializeComponent();
+
+                AddHandler(ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
+            }
+            catch (Exception ex)
+            {
+                exportProvider.TraceError(ex.ToString());
+            }
         }
 
         private static void Navigate_Click(object sender, RoutedEventArgs e)

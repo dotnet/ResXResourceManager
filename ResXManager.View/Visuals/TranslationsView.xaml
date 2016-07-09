@@ -150,7 +150,7 @@
                              StaysOpen="False"
                              Placement="Bottom" PlacementTarget="{Binding ElementName=TargetCulturesButton}">
                         <i:Interaction.Behaviors>
-                          <behaviors:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=TargetCulturesButton}" />
+                          <toms:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=TargetCulturesButton}" />
                         </i:Interaction.Behaviors>
                         <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
                           <ListBox ItemsSource="{Binding Translations.AllTargetCultures}"
