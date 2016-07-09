@@ -2,6 +2,8 @@
 [url:Visual Studio Extension Download|https://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68]
 [url:Reviews|https://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68/view/Reviews]
 
+1.0.0.83:
+* WI4736: ToolWindow fails to load if other extensions using different versions of DataGridExtensions are installed.
 1.0.0.82:
 * Use .Net 4.5x to make use of "VirtualizingWhenGrouping" to speed up the grouped view whith large projects.
 * Bypass legacy SCM support when files are not read only.
