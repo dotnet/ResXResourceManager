@@ -11,6 +11,7 @@
 
     using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.XamlExtensions;
 
     /// <summary>
     /// Interaction logic for App.xaml
@@ -40,6 +41,8 @@
 
             var tracer = _compositionHost.GetExportedValue<ITracer>();
             tracer.WriteLine("Started");
+
+            VisualComposition.Error += (_, args) => tracer.TraceError(args.Text);
 
             MainWindow = _compositionHost.GetExportedValue<MainWindow>();
             MainWindow.Show();

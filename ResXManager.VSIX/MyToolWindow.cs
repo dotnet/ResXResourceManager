@@ -29,6 +29,7 @@
     using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.XamlExtensions;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
@@ -77,6 +78,8 @@
                 _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
                 _resourceManager.BeginEditing += ResourceManager_BeginEditing;
                 _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
+
+                VisualComposition.Error += VisualComposition_Error;
             }
             catch (Exception ex)
             {
@@ -573,6 +576,11 @@
                 .OrderBy(fileKey => fileKey);
 
             return string.Join(@"|", fileKeys);
+        }
+
+        private void VisualComposition_Error(object sender, TextEventArgs e)
+        {
+            _trace.TraceError(e.Text);
         }
 
         [ContractInvariantMethod]
