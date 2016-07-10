@@ -33,6 +33,7 @@
         public ResourceView(ExportProvider exportProvider, ResourceManager resourceManager)
         {
             Contract.Requires(exportProvider != null);
+            Contract.Requires(resourceManager != null);
 
             try
             {

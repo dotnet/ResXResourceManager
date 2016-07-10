@@ -9,11 +9,11 @@ namespace tomenglertde.ResXManager.Translators
 
     using TomsToolbox.Desktop;
 
-    [ContractClass(typeof (TranslatorBaseContract))]
+    [ContractClass(typeof(TranslatorBaseContract))]
     [DataContract]
     public abstract class TranslatorBase : ObservableObject, ITranslator
     {
-        protected static readonly IWebProxy WebProxy = WebRequest.DefaultWebProxy;
+        protected static readonly IWebProxy WebProxy;
 
         private readonly string _id;
         private readonly string _displayName;
@@ -25,7 +25,15 @@ namespace tomenglertde.ResXManager.Translators
 
         static TranslatorBase()
         {
-            WebProxy.Credentials = CredentialCache.DefaultNetworkCredentials;
+            try
+            {
+                WebProxy = WebRequest.DefaultWebProxy ?? new WebProxy();
+                WebProxy.Credentials = CredentialCache.DefaultNetworkCredentials;
+            }
+            catch
+            {
+                // ignored
+            }
         }
 
         protected TranslatorBase(string id, string displayName, Uri uri, IList<ICredentialItem> credentials)
@@ -39,29 +47,11 @@ namespace tomenglertde.ResXManager.Translators
             _credentials = credentials ?? new ICredentialItem[0];
         }
 
-        public string Id
-        {
-            get
-            {
-                return _id;
-            }
-        }
+        public string Id => _id;
 
-        public string DisplayName
-        {
-            get
-            {
-                return _displayName;
-            }
-        }
+        public string DisplayName => _displayName;
 
-        public Uri Uri
-        {
-            get
-            {
-                return _uri;
-            }
-        }
+        public Uri Uri => _uri;
 
         [DataMember]
         public bool IsEnabled
@@ -110,8 +100,8 @@ namespace tomenglertde.ResXManager.Translators
         }
     }
 
-    [ContractClassFor(typeof (TranslatorBase))]
-    abstract class TranslatorBaseContract : TranslatorBase
+    [ContractClassFor(typeof(TranslatorBase))]
+    internal abstract class TranslatorBaseContract : TranslatorBase
     {
         protected TranslatorBaseContract(string id, string displayName, Uri uri, IList<ICredentialItem> credentials)
             : base(id, displayName, uri, credentials)
