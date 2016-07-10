@@ -17,7 +17,7 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
-    [VisualCompositionExport("Content", Sequence = 99)]
+    [VisualCompositionExport(RegionId.Content, Sequence = 99)]
     [Export(typeof(ITracer))]
     public sealed class OutputViewModel : ObservableObject, ITracer
     {

@@ -10,6 +10,7 @@
 
     using DataGridExtensions;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
@@ -18,7 +19,7 @@
     using TomsToolbox.Wpf.Composition;
 
     [Export]
-    [VisualCompositionExport("Content", Sequence = 1)]
+    [VisualCompositionExport(RegionId.Content, Sequence = 1)]
     class ResourceViewModel : ObservableObject
     {
         private readonly ResourceManager _resourceManager;

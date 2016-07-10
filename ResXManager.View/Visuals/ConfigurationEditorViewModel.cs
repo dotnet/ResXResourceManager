@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Windows.Input;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
@@ -12,7 +13,7 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
-    [VisualCompositionExport("Content", Sequence = 3)]
+    [VisualCompositionExport(RegionId.Content, Sequence = 3)]
     class ConfigurationEditorViewModel : ObservableObject
     {
         private readonly ResourceManager _resourceManager;

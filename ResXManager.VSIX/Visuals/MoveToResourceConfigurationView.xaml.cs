@@ -13,6 +13,7 @@
     /// Interaction logic for MoveToResourceConfigurationView.xaml
     /// </summary>
     [DataTemplate(typeof(MoveToResourceConfigurationViewModel))]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class MoveToResourceConfigurationView
     {
         [ImportingConstructor]

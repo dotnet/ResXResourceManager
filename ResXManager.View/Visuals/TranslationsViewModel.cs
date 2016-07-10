@@ -4,6 +4,7 @@
     using System.ComponentModel.Composition;
     using System.Diagnostics.Contracts;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Translators;
     using tomenglertde.ResXManager.View.Properties;
@@ -11,7 +12,7 @@
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf.Composition;
 
-    [VisualCompositionExport("Content", Sequence = 2)]
+    [VisualCompositionExport(RegionId.Content, Sequence = 2)]
     class TranslationsViewModel : ObservableObject
     {
         private readonly TranslatorHost _translatorHost;
