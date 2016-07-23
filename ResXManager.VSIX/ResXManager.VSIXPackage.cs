@@ -39,21 +39,12 @@
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     public sealed class ResXManagerVsixPackage : Package
     {
-        private readonly DispatcherThrottle _deferedReloadThrottle;
-
         private EnvDTE.DocumentEvents _documentEvents;
-        private EnvDTE.SolutionEvents _solutionEvents;
-        private EnvDTE.ProjectItemsEvents _projectItemsEvents;
 
         private ICompositionHost _compositionHost;
         private ITracer _tracer;
         private IRefactorings _refactorings;
         private PerformanceTracer _performanceTracer;
-
-        public ResXManagerVsixPackage()
-        {
-            _deferedReloadThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, () => ToolWindow?.ReloadSolution(true));
-        }
 
         private EnvDTE80.DTE2 Dte
         {
@@ -106,23 +97,8 @@
             var events = (EnvDTE80.Events2)Dte.Events;
 
             _documentEvents = events.DocumentEvents;
+            _documentEvents.DocumentOpened += DocumentEvents_DocumentOpened;
             _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
-
-            _solutionEvents = events.SolutionEvents;
-            _solutionEvents.Opened += () => OnDteEvent("Solution openend");
-            _solutionEvents.ProjectAdded += _ => OnDteEvent("Project added");
-            _solutionEvents.ProjectRemoved += _ => OnDteEvent("Project removed");
-
-            _projectItemsEvents = events.ProjectItemsEvents;
-            _projectItemsEvents.ItemAdded += _ => OnDteEvent("Project item added");
-            _projectItemsEvents.ItemRemoved += _ => OnDteEvent("Project item removed");
-            _projectItemsEvents.ItemRenamed += (_, __) => OnDteEvent("Project item renamed");
-        }
-
-        private void OnDteEvent([Localizable(false)] string name)
-        {
-            _tracer?.WriteLine("DTE event: {0}", name);
-            _deferedReloadThrottle.Tick();
         }
 
         private static OleMenuCommand CreateMenuCommand(IMenuCommandService mcs, int cmdId, EventHandler invokeHandler)
@@ -302,6 +278,16 @@
             }
         }
 
+        private void DocumentEvents_DocumentOpened(EnvDTE.Document document)
+        {
+            _tracer?.WriteLine("DTE event: Document opened");
+
+            if (!AffectsResourceFile(document))
+                return;
+
+            ToolWindow?.ReloadSolution();
+        }
+
         private void DocumentEvents_DocumentSaved(EnvDTE.Document document)
         {
             _tracer?.WriteLine("DTE event: Document saved");
@@ -334,13 +320,6 @@
                 .Where(fileName => fileName != null)
                 .Select(Path.GetExtension)
                 .Any(extension => ProjectFileExtensions.SupportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase));
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_deferedReloadThrottle != null);
         }
     }
 }
