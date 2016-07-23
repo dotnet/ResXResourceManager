@@ -94,12 +94,21 @@
             Contract.Requires(languages != null);
             Contract.Requires(languages.Any());
 
+            var oldComment = Comment;
+
             _index = index;
             _languages = languages;
             _neutralLanguage = languages.First().Value;
             Contract.Assume(_neutralLanguage != null);
 
             ResetTableValues();
+
+            // Preserve comments in WinForms designer resources, the designer always removes them.
+            if (!string.IsNullOrEmpty(oldComment) && _container.IsWinFormsDesignerResource && string.IsNullOrEmpty(Comment))
+            {
+                Comment = oldComment;
+            }
+
             Refresh();
         }
 

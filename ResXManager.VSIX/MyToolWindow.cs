@@ -156,38 +156,6 @@
             _compositionHost.Dispose();
         }
 
-        /* Maybe use that later...
-        private void FindSymbol()
-        {
-            var findSymbol = (IVsFindSymbol)GetService(typeof(SVsObjectSearch));
-
-            var vsSymbolScopeAll = new Guid(0xa5a527ea, 0xcf0a, 0x4abf, 0xb5, 0x1, 0xea, 0xfe, 0x6b, 0x3b, 0xa5, 0xc6);
-            var vsSymbolScopeSolution = new Guid(0xb1ba9461, 0xfc54, 0x45b3, 0xa4, 0x84, 0xcb, 0x6d, 0xd0, 0xb9, 0x5c, 0x94);
-
-            var search = new[]
-                {
-                    new VSOBSEARCHCRITERIA2
-                        {
-                            dwCustom = 0,
-                            eSrchType = VSOBSEARCHTYPE.SO_ENTIREWORD,
-                            grfOptions = (int)(_VSOBSEARCHOPTIONS2.VSOBSO_CALLSTO | _VSOBSEARCHOPTIONS2.VSOBSO_CALLSFROM | _VSOBSEARCHOPTIONS2.VSOBSO_LISTREFERENCES),
-                            pIVsNavInfo = null,
-                            szName = "HistoryList"
-                        },
-                };
-
-            try
-            {
-                var result = findSymbol.DoSearch(vsSymbolScopeSolution, search);
-
-                MessageBox.Show(result.ToString(CultureInfo.InvariantCulture));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-        }*/
-
         private void view_Loaded(object sender, RoutedEventArgs e)
         {
             ReloadSolution();
@@ -517,47 +485,7 @@
                 return;
 
             _solutionFingerPrint = fingerPrint;
-
-            var oldItems = _resourceManager.ResourceEntities.ToArray();
-
             _resourceManager.Load(projectFiles);
-
-            PreserveCommentsInWinFormsDesignerResources(oldItems);
-        }
-
-        private void PreserveCommentsInWinFormsDesignerResources(ICollection<ResourceEntity> oldValues)
-        {
-            Contract.Requires(oldValues != null);
-
-            foreach (var newEntity in _resourceManager.ResourceEntities)
-            {
-                Contract.Assume(newEntity != null);
-
-                var oldEntity = oldValues.FirstOrDefault(entity => entity.Equals(newEntity));
-                if (oldEntity == null)
-                    continue;
-
-                var projectFile = (DteProjectFile)newEntity.NeutralProjectFile;
-                if (projectFile == null)
-                    continue;
-
-                if (!projectFile.IsWinFormsDesignerResource)
-                    continue;
-
-                foreach (var newEntry in newEntity.Entries)
-                {
-                    Contract.Assume(newEntry != null);
-
-                    var oldEntry = oldEntity.Entries.FirstOrDefault(entry => ResourceTableEntry.EqualityComparer.Equals(entry, newEntry));
-
-                    var oldComment = oldEntry?.Comment;
-                    if (string.IsNullOrEmpty(oldComment))
-                        continue;
-
-                    if (string.IsNullOrEmpty(newEntry.Comment))
-                        newEntry.Comment = oldComment;
-                }
-            }
         }
 
         private IEnumerable<DteProjectFile> GetProjectFiles()
