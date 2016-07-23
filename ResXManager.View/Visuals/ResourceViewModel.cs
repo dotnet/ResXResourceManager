@@ -322,8 +322,7 @@
             if (_resourceManager.SelectedEntities.Count != 1)
                 return false;
 
-            return (((dataGrid.SelectedCells == null) || !dataGrid.SelectedCells.Any())
-                || dataGrid.HasRectangularCellSelection());
+            return (dataGrid.SelectedCells?.Any() != true) || dataGrid.HasRectangularCellSelection();
         }
 
         private void Paste(DataGrid dataGrid)
