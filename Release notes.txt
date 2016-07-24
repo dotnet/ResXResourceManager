@@ -1,7 +1,12 @@
 ﻿Other places:
 [url:Visual Studio Extension Download|https://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68]
 [url:Reviews|https://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68/view/Reviews]
+[url:GitHub|https://github.com/tom-englert/ResXResourceManager/releases]
 
+1.0.0.85:
+* Speed up SelectGroupOnGroupHeaderClick.
+* Defer loading of resources until really needed to not interfere with solution load time.
+* Fix: Preserve comments in WinForms designer resources.
 1.0.0.84:
 * WI4736: Fix crash if WebRequest.DefaultWebProxy is null.
 1.0.0.83:

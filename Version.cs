@@ -5,5 +5,5 @@ using System.Reflection;
 
 internal static class Product
 {
-    public const string Version = "1.0.0.84";
+    public const string Version = "1.0.0.85";
 }
