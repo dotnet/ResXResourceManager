@@ -20,7 +20,7 @@
     /// </summary>
     public class ResourceEntity : ObservableObject, IComparable<ResourceEntity>, IComparable, IEquatable<ResourceEntity>
     {
-        private IDictionary<CultureKey, ResourceLanguage> _languages;
+        private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly ResourceManager _container;
         private readonly string _projectName;
         private readonly string _baseName;
@@ -359,6 +359,9 @@
 
         private static bool MergeItems(IDictionary<CultureKey, ResourceLanguage> targets, IDictionary<CultureKey, ResourceLanguage> sources)
         {
+            Contract.Requires(targets != null);
+            Contract.Requires(sources != null);
+
             var removedLanguages = targets.Keys
                 .Except(sources.Keys)
                 .ToArray();
@@ -367,7 +370,7 @@
                 .ForEach(key => targets.Remove(key));
 
             var changedLanguages = targets.Keys
-                .Where(key => !targets[key].HasChanges && !targets[key].IsContentEqual(sources[key]))
+                .Where(key => !targets[key].IsContentEqual(sources[key]))
                 .ToArray();
 
             changedLanguages

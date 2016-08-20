@@ -295,16 +295,9 @@
             if (!AffectsResourceFile(document))
                 return;
 
-            var toolWindow = ToolWindow;
-            if (toolWindow == null)
-                return;
-
-            if (toolWindow.ResourceManager.ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.ProjectFile.IsSaving))
-                return;
-
             document.ProjectItem.Descendants().ForEach(projectItem => projectItem.RunCustomTool());
 
-            toolWindow.ReloadSolution();
+            ToolWindow?.ReloadSolution();
         }
 
         private static bool AffectsResourceFile(EnvDTE.Document document)

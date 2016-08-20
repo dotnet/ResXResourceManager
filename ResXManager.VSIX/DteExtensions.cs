@@ -154,7 +154,6 @@
                 var text = value.Declaration + Environment.NewLine + value;
 
                 textDocument.CreateEditPoint().ReplaceText(textDocument.EndPoint, text, 0);
-                document.Save();
 
                 return true;
             }

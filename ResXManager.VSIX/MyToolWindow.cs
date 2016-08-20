@@ -76,7 +76,6 @@
 
                 _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
                 _resourceManager.BeginEditing += ResourceManager_BeginEditing;
-                _resourceManager.LanguageSaved += ResourceManager_LanguageSaved;
 
                 VisualComposition.Error += VisualComposition_Error;
             }
@@ -271,8 +270,10 @@
 
             if (alreadyOpenItems.Any())
             {
-                message = string.Format(CultureInfo.CurrentCulture, Resources.ErrorOpenFilesInEditor, FormatFileNames(alreadyOpenItems.Select(file => file.FileName)));
+                message = string.Format(CultureInfo.CurrentCulture, Resources.ErrorOpenFilesInEditor, FormatFileNames(alreadyOpenItems.Select(item => item.Item1)));
                 MessageBox.Show(message, Resources.ToolWindowTitle);
+
+                ActivateWindow(alreadyOpenItems.First()?.Item2);
 
                 return false;
             }
@@ -300,23 +301,36 @@
             return false;
         }
 
-        private ResourceLanguage[] GetLanguagesOpenedInAnotherEditor(IEnumerable<ResourceLanguage> languages)
+        private static void ActivateWindow(EnvDTE.Window window)
         {
             try
             {
-                var openProjectItems = _dte?.Windows
-                    ?.OfType<EnvDTE.Window>()
-                    .Select(win => win.ProjectItem)
-                    .Where(item => item != null)
-                    .ToArray() ?? new EnvDTE.ProjectItem[0];
+                window?.Activate();
+            }
+            catch { }
+        }
 
-                return languages
-                    .Where(lang => (lang.ProjectFile as DteProjectFile)?.ProjectItems.Any(item => openProjectItems.Contains(item)) ?? false)
-                    .ToArray();
+        private static Tuple<string, EnvDTE.Window>[] GetLanguagesOpenedInAnotherEditor(IEnumerable<ResourceLanguage> languages)
+        {
+            Contract.Requires(languages != null);
+            Contract.Ensures(Contract.Result<Tuple<string, EnvDTE.Window>[]>() != null);
+
+            try
+            {
+                var items = from l in languages
+                            let file = l.FileName
+                            let projectFile = l.ProjectFile as DteProjectFile
+                            where projectFile != null
+                            let documents = projectFile.ProjectItems.Select(item => item.Document).Where(doc => doc != null)
+                            let window = documents.SelectMany(doc => doc.Windows.OfType<EnvDTE.Window>()).FirstOrDefault()
+                            where window != null
+                            select Tuple.Create(file, window);
+
+                return items.ToArray();
             }
             catch
             {
-                return new ResourceLanguage[0];
+                return new Tuple<string, EnvDTE.Window>[0];
             }
         }
 
@@ -429,22 +443,6 @@
         {
             Contract.Requires(lockedFiles != null);
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
-        }
-
-        private void ResourceManager_LanguageSaved(object sender, LanguageEventArgs e)
-        {
-            var language = e.Language;
-            var entity = language.Container;
-
-            // Run custom tool (usually attached to neutral language) even if a localized language changes,
-            // e.g. if custom tool is a text template, we might want not only to generate the designer file but also 
-            // extract some localization information.
-            entity.Languages.Select(lang => lang.ProjectFile)
-                .OfType<DteProjectFile>()
-                .SelectMany(projectFile => projectFile.ProjectItems)
-                .Where(projectItem => projectItem != null)
-                .SelectMany(item => item.DescendantsAndSelf())
-                .ForEach(projectItem => projectItem.RunCustomTool());
         }
 
         public IList<ProjectFile> SourceFiles

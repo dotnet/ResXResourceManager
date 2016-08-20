@@ -43,7 +43,6 @@
 
         private string _snapshot;
 
-        public event EventHandler<LanguageEventArgs> LanguageSaved;
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
         public event EventHandler<EventArgs> Loaded;
 
@@ -261,11 +260,6 @@
             Loaded?.Invoke(this, EventArgs.Empty);
         }
 
-        private void OnLanguageSaved(LanguageEventArgs e)
-        {
-            LanguageSaved?.Invoke(this, e);
-        }
-
         private void InternalLoad(IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory)
         {
             Contract.Requires(resourceFilesByDirectory != null);
@@ -278,8 +272,8 @@
 
             var cultureKeys = _resourceEntities
                 .SelectMany(entity => entity.Languages)
-                .Distinct()
                 .Select(lang => lang.CultureKey)
+                .Distinct()
                 .ToArray();
 
             _cultureKeys.SynchronizeWith(cultureKeys);
@@ -368,8 +362,6 @@
                         return;
 
                     language.Save();
-
-                    OnLanguageSaved(new LanguageEventArgs(language));
                 }
                 catch (Exception ex)
                 {

@@ -614,7 +614,9 @@
                 Entries = entities.SelectMany(entity => entity.Entries)
                     .ToArray();
 
-                var languages = entities.SelectMany(entity => entity.Languages.Select(l => l.CultureKey))
+                var languages = entities
+                    .SelectMany(entity => entity.Languages)
+                    .Select(l => l.CultureKey)
                     .Distinct()
                     .ToArray();
 

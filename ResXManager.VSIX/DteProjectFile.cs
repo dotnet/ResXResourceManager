@@ -78,29 +78,40 @@
             return projectItem.TryGetContent() ?? new XDocument();
         }
 
+        protected override void InternalChanged(XDocument document)
+        {
+            var projectItem = DefaultProjectItem;
+
+            try
+            {
+                projectItem.Open();
+
+                if (projectItem.TrySetContent(document))
+                {
+                    HasChanges = !projectItem.Document?.Saved ?? false;
+                    return;
+                }
+            }
+            catch { }
+
+            base.InternalChanged(document);
+        }
+
         protected override void InternalSave(XDocument document)
         {
             var projectItem = DefaultProjectItem;
 
             try
             {
-                if (!projectItem.TrySetContent(document))
-                {
-                    base.InternalSave(document);
-                }
+                if (projectItem.Document?.Save() == EnvDTE.vsSaveStatus.vsSaveSucceeded)
+                    return;
             }
-            catch (IOException)
-            {
-                // The file does not exist locally, but VS may download it when we call projectItem.Open()
-            }
+            catch { }
 
-            projectItem.Open();
-            projectItem.TrySetContent(document);
+            base.InternalSave(document);
         }
 
         public override bool IsWritable => !DefaultProjectItem.TryGetDocument()?.ReadOnly ?? base.IsWritable;
-
-        public override bool HasExternalChanges => ProjectItems.Any(item => item.TryGetDocument()?.Saved == false);
 
         public CodeGenerator CodeGenerator
         {

@@ -134,12 +134,7 @@
             }
         }
 
-        public bool HasChanges
-        {
-            get;
-            private set;
-        }
-
+        public bool HasChanges => _file.HasChanges;
         public string FileName
         {
             get
@@ -228,7 +223,7 @@
 
         private void OnChanged()
         {
-            HasChanges = true;
+            _file.Changed();
 
             Container.Container.LanguageChanged(this);
         }
@@ -263,9 +258,7 @@
                 SortNodes(configuration.ResXSortingComparison);
             }
 
-            _file.Save(_document);
-
-            HasChanges = false;
+            _file.Save();
         }
 
         private void SortNodes(StringComparison stringComparison)
@@ -453,7 +446,9 @@
 
         internal bool IsContentEqual(ResourceLanguage other)
         {
-            return _document.ToString(SaveOptions.DisableFormatting) == other._document.ToString(SaveOptions.DisableFormatting);
+            Contract.Requires(other != null);
+
+            return _document?.ToString(SaveOptions.DisableFormatting) == other._document?.ToString(SaveOptions.DisableFormatting);
         }
 
         private static void MakeKeysUnique(ICollection<Node> elements)
@@ -672,7 +667,7 @@
         /// </returns>
         public override int GetHashCode()
         {
-            return CultureKey.GetHashCode();
+            return _container.GetHashCode() + _cultureKey.GetHashCode();
         }
 
         /// <summary>
@@ -697,6 +692,7 @@
             return InternalEquals(this, other);
         }
 
+        [ContractVerification(false)]
         private static bool InternalEquals(ResourceLanguage left, ResourceLanguage right)
         {
             if (ReferenceEquals(left, right))
@@ -706,7 +702,7 @@
             if (ReferenceEquals(right, null))
                 return false;
 
-            return Equals(left.CultureKey, right.CultureKey);
+            return Equals(left.Container, right.Container) && Equals(left.CultureKey, right.CultureKey);
         }
 
         /// <summary>

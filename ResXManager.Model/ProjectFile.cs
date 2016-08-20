@@ -17,6 +17,7 @@
         private readonly string _filePath;
         private readonly string _extension;
         private string _fingerPrint;
+        private XDocument _document;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectFile" /> class.
@@ -82,13 +83,18 @@
             private set;
         }
 
+        public bool HasChanges { get; protected set; }
+
         public XDocument Load()
         {
             Contract.Ensures(Contract.Result<XDocument>() != null);
 
             var document = InternalLoad();
 
+            _document = document;
             _fingerPrint = document.ToString(SaveOptions.DisableFormatting);
+
+            HasChanges = false;
 
             return document;
         }
@@ -100,19 +106,33 @@
             return XDocument.Load(FilePath);
         }
 
-        public void Save(XDocument document)
+        public void Changed()
+        {
+            if (_document == null)
+                return;
+
+            InternalChanged(_document);
+        }
+
+        protected virtual void InternalChanged(XDocument document)
         {
             Contract.Requires(document != null);
-            try
-            {
-                IsSaving = true;
 
-                InternalSave(document);
-            }
-            finally
-            {
-                IsSaving = false;
-            }
+            HasChanges = _fingerPrint != document.ToString(SaveOptions.DisableFormatting);
+        }
+
+        public void Save()
+        {
+            var document = _document;
+
+            if (document == null)
+                return;
+
+            InternalSave(document);
+
+            HasChanges = false;
+
+            _fingerPrint = document.ToString(SaveOptions.DisableFormatting);
         }
 
         protected virtual void InternalSave(XDocument document)
@@ -144,14 +164,6 @@
 
                 return false;
             }
-        }
-
-        public virtual bool HasExternalChanges => false;
-
-        public bool IsSaving
-        {
-            get;
-            protected set;
         }
 
         public virtual bool IsWinFormsDesignerResource => false;
