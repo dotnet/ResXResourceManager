@@ -197,7 +197,7 @@ Mehr Details finden sich im Ausgabefenster.</value>
     <value>Der Schlüssel enthält ungültige Zeichen.</value>
   </data>
   <data name="ErrorOpenFilesInEditor" xml:space="preserve">
-    <value>Es sind Dateien in anderen Editoren geöffnet. Bitte speichern sie die Dateien, um sie hier ändern zu können:
+    <value>Es sind Dateien in anderen Fenstern geöffnet. Bitte schließen sie die Dateien, um sie hier ändern zu können:
 
 {0}</value>
   </data>

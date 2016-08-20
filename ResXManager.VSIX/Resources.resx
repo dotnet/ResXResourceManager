@@ -228,7 +228,7 @@ See output window for details.</value>
     <value>Duplicate key</value>
   </data>
   <data name="ErrorOpenFilesInEditor" xml:space="preserve">
-    <value>Some files are open in another editor. Please save the files to make changes here:
+    <value>Some files are open in another window. Please close the files to make changes here:
 
 {0}</value>
   </data>

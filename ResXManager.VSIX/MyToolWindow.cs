@@ -45,7 +45,6 @@
         private readonly PerformanceTracer _performanceTracer;
 
         private EnvDTE.DTE _dte;
-        private string _solutionFingerPrint;
 
         /// <summary>
         /// Standard constructor for the tool window.
@@ -103,6 +102,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<ICompositionHost>() != null);
+
                 return _compositionHost;
             }
         }
@@ -265,15 +265,13 @@
                 }
             }
 
-            var filesWithExternalChanges = languages
-                .Where(lang => lang.ProjectFile.HasExternalChanges)
-                .ToArray();
+            var alreadyOpenItems = GetLanguagesOpenedInAnotherEditor(languages);
 
             string message;
 
-            if (filesWithExternalChanges.Any())
+            if (alreadyOpenItems.Any())
             {
-                message = string.Format(CultureInfo.CurrentCulture, Resources.ErrorOpenFilesInEditor, FormatFileNames(filesWithExternalChanges.Select(file => file.FileName)));
+                message = string.Format(CultureInfo.CurrentCulture, Resources.ErrorOpenFilesInEditor, FormatFileNames(alreadyOpenItems.Select(file => file.FileName)));
                 MessageBox.Show(message, Resources.ToolWindowTitle);
 
                 return false;
@@ -300,6 +298,26 @@
             message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasReadOnlyFiles, FormatFileNames(lockedFiles));
             MessageBox.Show(message, Resources.ToolWindowTitle);
             return false;
+        }
+
+        private ResourceLanguage[] GetLanguagesOpenedInAnotherEditor(IEnumerable<ResourceLanguage> languages)
+        {
+            try
+            {
+                var openProjectItems = _dte?.Windows
+                    ?.OfType<EnvDTE.Window>()
+                    .Select(win => win.ProjectItem)
+                    .Where(item => item != null)
+                    .ToArray() ?? new EnvDTE.ProjectItem[0];
+
+                return languages
+                    .Where(lang => (lang.ProjectFile as DteProjectFile)?.ProjectItems.Any(item => openProjectItems.Contains(item)) ?? false)
+                    .ToArray();
+            }
+            catch
+            {
+                return new ResourceLanguage[0];
+            }
         }
 
         private bool QueryEditFiles(string[] lockedFiles)
@@ -404,9 +422,6 @@
             {
                 entity.AddLanguage(projectFile);
             }
-
-            // WE have saved the files - update the finger print so we don't reload unnecessarily
-            _solutionFingerPrint = GetFingerprint(GetProjectFiles());
         }
 
         [Localizable(false)]
@@ -418,9 +433,6 @@
 
         private void ResourceManager_LanguageSaved(object sender, LanguageEventArgs e)
         {
-            // WE have saved the files - update the finger print so we don't reload unnecessarily
-            _solutionFingerPrint = GetFingerprint(GetProjectFiles());
-
             var language = e.Language;
             var entity = language.Container;
 
@@ -456,13 +468,13 @@
             }
         }
 
-        internal void ReloadSolution(bool force = false)
+        internal void ReloadSolution()
         {
             try
             {
                 using (_performanceTracer.Start("Reload solution"))
                 {
-                    InternalReloadSolution(force);
+                    _resourceManager.Reload(ResourceLoadOptions.None);
                 }
             }
             catch (Exception ex)
@@ -471,39 +483,9 @@
             }
         }
 
-        private void InternalReloadSolution(bool force)
-        {
-            var projectFiles = DteSourceFiles.ToArray();
-
-            // The solution events are not reliable, so we check the solution on every load/unload of our window.
-            // To avoid loosing the scope every time this method is called we only call load if we detect changes.
-            var fingerPrint = GetFingerprint(projectFiles);
-
-            if (!force
-                && !projectFiles.Where(p => p.IsResourceFile()).Any(p => p.HasExternalChanges) // ignore the finger print if any document is open in VS and has changes, the finger print is only looking at disk files...
-                && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
-                return;
-
-            _solutionFingerPrint = fingerPrint;
-            _resourceManager.Load(projectFiles);
-        }
-
         private IEnumerable<DteProjectFile> GetProjectFiles()
         {
             return _compositionHost.GetExportedValue<DteSolution>().GetProjectFiles();
-        }
-
-        private static string GetFingerprint(IEnumerable<DteProjectFile> allFiles)
-        {
-            Contract.Requires(allFiles != null);
-
-            var fileKeys = allFiles
-                .Where(file => file.IsResourceFile())
-                .Select(file => file.FilePath)
-                .Select(filePath => filePath + @":" + File.GetLastWriteTime(filePath).ToString(CultureInfo.InvariantCulture))
-                .OrderBy(fileKey => fileKey);
-
-            return string.Join(@"|", fileKeys);
         }
 
         private void VisualComposition_Error(object sender, TextEventArgs e)

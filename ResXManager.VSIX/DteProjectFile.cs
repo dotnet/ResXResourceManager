@@ -67,7 +67,7 @@
 
             try
             {
-                return projectItem.TryGetContent() ?? base.Load();
+                return projectItem.TryGetContent() ?? base.InternalLoad();
             }
             catch (IOException)
             {

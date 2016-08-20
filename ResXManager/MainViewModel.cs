@@ -128,7 +128,7 @@
         {
             try
             {
-                _resourceManager.ReloadAndBeginFindCoreReferences();
+                _resourceManager.Reload(ResourceLoadOptions.FindCodeReferences);
             }
             catch (Exception ex)
             {

@@ -221,7 +221,7 @@ namespace tomenglertde.ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Some files are open in another editor. Please save....
+        ///   Looks up a localized string similar to Some files are open in another window. Please clos....
         /// </summary>
         public static string ErrorOpenFilesInEditor {
             get {
@@ -482,7 +482,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// </summary>
         Error,
         /// <summary>
-        ///   Looks up a localized string similar to Some files are open in another editor. Please save....
+        ///   Looks up a localized string similar to Some files are open in another window. Please clos....
         /// </summary>
         ErrorOpenFilesInEditor,
         /// <summary>

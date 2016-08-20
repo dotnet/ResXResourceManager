@@ -224,6 +224,7 @@
     </Compile>
     <Compile Include="ResourceData.cs" />
     <Compile Include="ResourceEntityExtensions.cs" />
+    <Compile Include="ResourceLoadOptions.cs" />
     <Compile Include="ResourceManagerExtensions.cs" />
     <Compile Include="IResourceScope.cs" />
     <Compile Include="ResourceTableEntry.cs" />

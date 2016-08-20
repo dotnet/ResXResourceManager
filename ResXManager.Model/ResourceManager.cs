@@ -68,8 +68,7 @@
         /// Loads all resources from the specified project files.
         /// </summary>
         /// <param name="allSourceFiles">All resource x files.</param>
-        public void Load<T>(IList<T> allSourceFiles)
-            where T : ProjectFile
+        private void Load(IList<ProjectFile> allSourceFiles)
         {
             Contract.Requires(allSourceFiles != null);
 
@@ -206,20 +205,17 @@
             }
         }
 
-        public void Reload()
-        {
-            Load(_sourceFilesProvider.SourceFiles);
-        }
-
-        public void ReloadAndBeginFindCoreReferences()
+        public void Reload(ResourceLoadOptions loadOptions)
         {
             var allSourceFiles = _sourceFilesProvider.SourceFiles;
 
             Load(allSourceFiles);
-            BeginFindCodeReferences(allSourceFiles);
+
+            if (loadOptions.HasFlag(ResourceLoadOptions.FindCodeReferences))
+                BeginFindCodeReferences(allSourceFiles);
         }
 
-        public void BeginFindCoreReferences()
+        public void BeginFindCodeReferences()
         {
             if (_codeReferenceTracker.IsActive)
                 return;
@@ -245,8 +241,7 @@
             return !args.Cancel;
         }
 
-        private void BeginFindCodeReferences<T>(IList<T> allSourceFiles)
-            where T : ProjectFile
+        private void BeginFindCodeReferences(IList<ProjectFile> allSourceFiles)
         {
             Contract.Requires(allSourceFiles != null);
 
@@ -275,7 +270,8 @@
         {
             Contract.Requires(resourceFilesByDirectory != null);
 
-            GetResourceEntities(resourceFilesByDirectory);
+            if (!LoadEntities(resourceFilesByDirectory))
+                return; // nothing has changed, no need to continue
 
             if (!string.IsNullOrEmpty(_snapshot))
                 _resourceEntities.LoadSnapshot(_snapshot);
@@ -291,9 +287,11 @@
             OnLoaded();
         }
 
-        private void GetResourceEntities(IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory)
+        private bool LoadEntities(IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory)
         {
             Contract.Requires(fileNamesByDirectory != null);
+
+            var hasChanged = false;
 
             var unmatchedEntities = _resourceEntities.ToList();
 
@@ -330,18 +328,25 @@
 
                         if (existingEntity != null)
                         {
-                            existingEntity.Update(projectFiles);
+                            if (existingEntity.Update(projectFiles))
+                                hasChanged = true;
+
                             unmatchedEntities.Remove(existingEntity);
                         }
                         else
                         {
                             _resourceEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles));
+                            hasChanged = true;
                         }
                     }
                 }
             }
 
             _resourceEntities.RemoveRange(unmatchedEntities);
+
+            hasChanged |= unmatchedEntities.Any();
+
+            return hasChanged;
         }
 
         internal void LanguageAdded(CultureKey cultureKey)

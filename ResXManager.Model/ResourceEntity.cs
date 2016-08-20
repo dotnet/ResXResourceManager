@@ -63,12 +63,14 @@
             Contract.Assume(_languages.Any());
         }
 
-        internal void Update(ICollection<ProjectFile> files)
+        internal bool Update(ICollection<ProjectFile> files)
         {
             Contract.Requires(files != null);
             Contract.Requires(files.Any());
 
-            _languages = GetResourceLanguages(files);
+            if (!MergeItems(_languages, GetResourceLanguages(files)))
+                return false; // nothing has changed, no need to continue
+
             _neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
 
             var unmatchedTableEntries = _resourceTableEntries.ToList();
@@ -104,6 +106,8 @@
             _resourceTableEntries.RemoveRange(unmatchedTableEntries);
 
             OnPropertyChanged(nameof(NeutralProjectFile));
+
+            return true;
         }
 
         private static string GetRelativePath(ICollection<ProjectFile> files)
@@ -333,12 +337,12 @@
                    && string.Equals(directoryName, _directoryName, StringComparison.OrdinalIgnoreCase);
         }
 
-        private Dictionary<CultureKey, ResourceLanguage> GetResourceLanguages(IEnumerable<ProjectFile> files)
+        private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages(IEnumerable<ProjectFile> files)
         {
             Contract.Requires(files != null);
             Contract.Requires(files.Any());
-            Contract.Ensures(Contract.Result<Dictionary<CultureKey, ResourceLanguage>>() != null);
-            Contract.Ensures(Contract.Result<Dictionary<CultureKey, ResourceLanguage>>().Any());
+            Contract.Ensures(Contract.Result<IDictionary<CultureKey, ResourceLanguage>>() != null);
+            Contract.Ensures(Contract.Result<IDictionary<CultureKey, ResourceLanguage>>().Any());
 
             var languageQuery =
                 from file in files
@@ -352,6 +356,32 @@
 
             return languages;
         }
+
+        private static bool MergeItems(IDictionary<CultureKey, ResourceLanguage> targets, IDictionary<CultureKey, ResourceLanguage> sources)
+        {
+            var removedLanguages = targets.Keys
+                .Except(sources.Keys)
+                .ToArray();
+
+            removedLanguages
+                .ForEach(key => targets.Remove(key));
+
+            var changedLanguages = targets.Keys
+                .Where(key => !targets[key].HasChanges && !targets[key].IsContentEqual(sources[key]))
+                .ToArray();
+
+            changedLanguages
+                .ForEach(key => targets[key] = sources[key]);
+
+            var addedLanguages = sources.Keys.Except(targets.Keys)
+                .ToArray();
+
+            addedLanguages
+                .ForEach(key => targets.Add(key, sources[key]));
+
+            return removedLanguages.Any() || changedLanguages.Any() || addedLanguages.Any();
+        }
+
 
         #region IComparable/IEquatable implementation
 

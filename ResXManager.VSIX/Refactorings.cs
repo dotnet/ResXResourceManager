@@ -94,7 +94,7 @@
 
             var resourceManager = _exportProvider.GetExportedValue<ResourceManager>();
 
-            resourceManager.Reload();
+            resourceManager.Reload(ResourceLoadOptions.None);
 
             var entities = resourceManager.ResourceEntities
                 .Where(entity => !entity.IsWinFormsDesignerResource)

@@ -154,7 +154,7 @@
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(_resourceManager.ReloadAndBeginFindCoreReferences);
+                return new DelegateCommand(() => _resourceManager.Reload(ResourceLoadOptions.FindCodeReferences));
             }
         }
 
@@ -164,7 +164,7 @@
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(_resourceManager.BeginFindCoreReferences);
+                return new DelegateCommand(_resourceManager.BeginFindCodeReferences);
             }
         }
 

@@ -451,6 +451,11 @@
             OnChanged();
         }
 
+        internal bool IsContentEqual(ResourceLanguage other)
+        {
+            return _document.ToString(SaveOptions.DisableFormatting) == other._document.ToString(SaveOptions.DisableFormatting);
+        }
+
         private static void MakeKeysUnique(ICollection<Node> elements)
         {
             Contract.Requires(elements != null);
