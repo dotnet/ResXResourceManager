@@ -61,7 +61,7 @@
             ProjectName += @", " + projectName;
         }
 
-        public override XDocument Load()
+        protected override XDocument InternalLoad()
         {
             var projectItem = DefaultProjectItem;
 
@@ -100,7 +100,7 @@
 
         public override bool IsWritable => !DefaultProjectItem.TryGetDocument()?.ReadOnly ?? base.IsWritable;
 
-        public bool HasChanges => DefaultProjectItem.TryGetDocument()?.Saved == false;
+        public override bool HasExternalChanges => ProjectItems.Any(item => item.TryGetDocument()?.Saved == false);
 
         public CodeGenerator CodeGenerator
         {
@@ -113,7 +113,7 @@
                 if (GetCodeGenerator() != value)
                     SetCodeGenerator(value);
 
-                OnPropertyChanged(() => CodeGenerator);
+                OnPropertyChanged();
             }
         }
 

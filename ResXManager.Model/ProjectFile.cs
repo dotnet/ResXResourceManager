@@ -16,6 +16,7 @@
     {
         private readonly string _filePath;
         private readonly string _extension;
+        private string _fingerPrint;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectFile" /> class.
@@ -81,7 +82,18 @@
             private set;
         }
 
-        public virtual XDocument Load()
+        public XDocument Load()
+        {
+            Contract.Ensures(Contract.Result<XDocument>() != null);
+
+            var document = InternalLoad();
+
+            _fingerPrint = document.ToString(SaveOptions.DisableFormatting);
+
+            return document;
+        }
+
+        protected virtual XDocument InternalLoad()
         {
             Contract.Ensures(Contract.Result<XDocument>() != null);
 
@@ -133,6 +145,8 @@
                 return false;
             }
         }
+
+        public virtual bool HasExternalChanges => false;
 
         public bool IsSaving
         {

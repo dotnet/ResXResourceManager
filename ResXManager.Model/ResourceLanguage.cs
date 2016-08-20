@@ -53,11 +53,11 @@
         /// </exception>
         internal ResourceLanguage(ResourceEntity container, CultureKey cultureKey, ProjectFile file)
         {
-            _container = container;
             Contract.Requires(container != null);
             Contract.Requires(cultureKey != null);
             Contract.Requires(file != null);
 
+            _container = container;
             _resourceManager = container.Container;
             _cultureKey = cultureKey;
             _file = file;
@@ -119,15 +119,7 @@
         /// <summary>
         /// Gets the display name of this language.
         /// </summary>
-        public string DisplayName
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
-
-                return Culture.Maybe().Return(l => l.DisplayName) ?? Resources.Neutral;
-            }
-        }
+        public string DisplayName => ToString();
 
         /// <summary>
         /// Gets all the resource keys defined in this language.
@@ -163,6 +155,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<ProjectFile>() != null);
+
                 return _file;
             }
         }
@@ -211,20 +204,14 @@
 
             Node node;
 
-            if (!_nodes.TryGetValue(key, out node) || (node == null))
-                return null;
-
-            return node.Text;
+            return !_nodes.TryGetValue(key, out node) ? null : node?.Text;
         }
 
         internal bool SetValue(string key, string value)
         {
             Contract.Requires(key != null);
 
-            if (GetValue(key) == value)
-                return true;
-
-            return SetNodeData(key, node => node.Text = value);
+            return GetValue(key) == value || SetNodeData(key, node => node.Text = value);
         }
 
         public void ForceValue(string key, string value)
@@ -241,6 +228,8 @@
 
         private void OnChanged()
         {
+            HasChanges = true;
+
             Container.Container.LanguageChanged(this);
         }
 
@@ -347,9 +336,7 @@
                     }
                 }
 
-                HasChanges = true;
                 OnChanged();
-
                 return true;
             }
             catch (Exception ex)
@@ -396,7 +383,6 @@
             node.Key = newKey;
             _nodes.Add(newKey, node);
 
-            HasChanges = true;
             OnChanged();
             return true;
         }
@@ -420,7 +406,6 @@
                 node.Element.Remove();
                 _nodes.Remove(key);
 
-                HasChanges = true;
                 OnChanged();
                 return true;
             }
@@ -463,7 +448,6 @@
             element.Remove();
             prevousNode.Element.AddAfterSelf(element);
 
-            HasChanges = true;
             OnChanged();
         }
 
@@ -503,7 +487,7 @@
 
         public override string ToString()
         {
-            return DisplayName;
+            return Culture?.DisplayName ?? Resources.Neutral;
         }
 
         class Node

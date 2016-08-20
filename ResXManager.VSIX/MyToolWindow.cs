@@ -265,15 +265,15 @@
                 }
             }
 
-            var filesWithChanges = languages
-                .Where(lang => (lang.ProjectFile as DteProjectFile)?.HasChanges == true)
+            var filesWithExternalChanges = languages
+                .Where(lang => lang.ProjectFile.HasExternalChanges)
                 .ToArray();
 
             string message;
 
-            if (filesWithChanges.Any())
+            if (filesWithExternalChanges.Any())
             {
-                message = string.Format(CultureInfo.CurrentCulture, Resources.ErrorOpenFilesInEditor, FormatFileNames(filesWithChanges.Select(file => file.FileName)));
+                message = string.Format(CultureInfo.CurrentCulture, Resources.ErrorOpenFilesInEditor, FormatFileNames(filesWithExternalChanges.Select(file => file.FileName)));
                 MessageBox.Show(message, Resources.ToolWindowTitle);
 
                 return false;
@@ -480,7 +480,7 @@
             var fingerPrint = GetFingerprint(projectFiles);
 
             if (!force
-                && !projectFiles.Where(p => p.IsResourceFile()).Any(p => p.HasChanges) // ignore the finger print if any document is open in VS and has changes, the finger print is only looking at disk files...
+                && !projectFiles.Where(p => p.IsResourceFile()).Any(p => p.HasExternalChanges) // ignore the finger print if any document is open in VS and has changes, the finger print is only looking at disk files...
                 && fingerPrint.Equals(_solutionFingerPrint, StringComparison.OrdinalIgnoreCase))
                 return;
 
