@@ -171,6 +171,14 @@
             }
         }
 
+        public bool HasChanges
+        {
+            get
+            {
+                return _resourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.HasChanges);
+            }
+        }
+
         public void AddNewKey(ResourceEntity entity, string key)
         {
             Contract.Requires(entity != null);
@@ -353,6 +361,9 @@
 
         internal void LanguageChanged(ResourceLanguage language)
         {
+            if (!Configuration.SaveFilesImmediatelyUponChange)
+                return;
+
             // Defer save to avoid repeated file access
             Dispatcher.BeginInvoke(() =>
             {

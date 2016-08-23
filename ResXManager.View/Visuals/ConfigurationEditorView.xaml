@@ -55,7 +55,7 @@
     </Style>
 
     <themes:ResourceLocator x:Key="ResourceLocator" />
-    
+
   </UserControl.Resources>
 
   <ScrollViewer Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Width="800" HorizontalAlignment="Left" VerticalScrollBarVisibility="Auto">
@@ -83,7 +83,7 @@
       <GroupBox Header="{x:Static properties:Resources.Configuration_General}" Style="{StaticResource GroupStyle}">
         <StackPanel Margin="10">
           <StackPanel Orientation="Horizontal">
-            <TextBlock Text="{x:Static properties:Resources.NeutralResourceLanguageHeader}" />
+            <TextBlock Text="{x:Static properties:Resources.NeutralResourceLanguageHeader}" VerticalAlignment="Center" />
             <Decorator Width="5" />
             <ComboBox Width="175" ItemsSource="{Binding Source={x:Static Member=model:ResourceManager.SpecificCultures}}"
                       SelectedItem="{Binding Configuration.NeutralResourcesLanguage}" Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
@@ -92,7 +92,7 @@
                   <StackPanel Orientation="Horizontal">
                     <Image Stretch="None" Source="{Binding Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
                     <Decorator Width="5" />
-                    <TextBlock Text="{Binding Path=DisplayName}" />
+                    <TextBlock Text="{Binding Path=DisplayName}" VerticalAlignment="Center" />
                   </StackPanel>
                 </DataTemplate>
               </ComboBox.ItemTemplate>
@@ -106,13 +106,17 @@
       <GroupBox Header="{x:Static properties:Resources.Configuration_LoadSaveHeader}" Style="{StaticResource GroupStyle}">
         <Grid Margin="10" KeyboardNavigation.TabNavigation="Local">
           <StackPanel>
+            <CheckBox IsChecked="{Binding Configuration.SaveFilesImmediatelyUponChange}" TabIndex="0"
+                      Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
+                      Content="{x:Static properties:Resources.SaveFilesImmediatelyUponChange}" />
+            <Decorator Height="10" />
             <CheckBox IsChecked="{Binding Configuration.SortFileContentOnSave}" TabIndex="0"
                       Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
                       Content="{x:Static properties:Resources.SortNodesByKey}" />
             <Decorator Height="5" />
             <StackPanel Orientation="Horizontal">
               <Decorator Width="22" />
-              <TextBlock Text="{x:Static properties:Resources.SortBy}" />
+              <TextBlock Text="{x:Static properties:Resources.SortBy}" VerticalAlignment="Center" />
               <Decorator Width="8" />
               <ComboBox Width="175" ItemsSource="{Binding Source={x:Type system:StringComparison}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
                         SelectedItem="{Binding Configuration.ResXSortingComparison}" Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}" />

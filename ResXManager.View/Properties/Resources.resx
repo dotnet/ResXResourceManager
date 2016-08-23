@@ -400,4 +400,7 @@ Do you want to add a new entry anyway?</value>
   <data name="CodeReferencesTooManyDetailsToolTip" xml:space="preserve">
     <value>Too many references to show details!</value>
   </data>
+  <data name="SaveFilesImmediatelyUponChange" xml:space="preserve">
+    <value>Save files immediately upon change</value>
+  </data>
 </root>

@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System.ComponentModel.Composition;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
@@ -68,142 +69,38 @@
             }
         }
 
-        public ICommand ToggleCellSelectionCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
+        public ICommand ToggleCellSelectionCommand => new DelegateCommand(() => IsCellSelectionEnabled = !IsCellSelectionEnabled);
 
-                return new DelegateCommand(() => IsCellSelectionEnabled = !IsCellSelectionEnabled);
-            }
-        }
+        public ICommand CopyCommand => new DelegateCommand<DataGrid>(CanCopy, CopySelected);
 
-        public ICommand CopyCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
+        public ICommand CutCommand => new DelegateCommand(CanCut, CutSelected);
 
-                return new DelegateCommand<DataGrid>(CanCopy, CopySelected);
-            }
-        }
+        public ICommand DeleteCommand => new DelegateCommand(CanDelete, DeleteSelected);
 
-        public ICommand CutCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
+        public ICommand PasteCommand => new DelegateCommand<DataGrid>(CanPaste, Paste);
 
-                return new DelegateCommand(CanCut, CutSelected);
-            }
-        }
+        public ICommand ExportExcelCommand => new DelegateCommand<IExportParameters>(CanExportExcel, ExportExcel);
 
-        public ICommand DeleteCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
+        public ICommand ImportExcelCommand => new DelegateCommand<string>(ImportExcel);
 
-                return new DelegateCommand(CanDelete, DeleteSelected);
-            }
-        }
+        public ICommand ToggleInvariantCommand => new DelegateCommand(() => _resourceManager.SelectedTableEntries.Any(), ToggleInvariant);
 
-        public ICommand PasteCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
+        public ICommand ReloadCommand => new DelegateCommand(() => _resourceManager.Reload(ResourceLoadOptions.FindCodeReferences));
 
-                return new DelegateCommand<DataGrid>(CanPaste, Paste);
-            }
-        }
+        public ICommand SaveCommand => new DelegateCommand(() => _resourceManager.HasChanges, () => _resourceManager.Save());
 
-        public ICommand ExportExcelCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
+        public ICommand BeginFindCodeReferencesCommand => new DelegateCommand(_resourceManager.BeginFindCodeReferences);
 
-                return new DelegateCommand<IExportParameters>(CanExportExcel, ExportExcel);
-            }
-        }
+        public ICommand CreateSnapshotCommand => new DelegateCommand<string>(CreateSnapshot);
 
-        public ICommand ImportExcelCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
+        public ICommand LoadSnapshotCommand => new DelegateCommand<string>(LoadSnapshot);
 
-                return new DelegateCommand<string>(ImportExcel);
-            }
-        }
-
-        public ICommand ToggleInvariantCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => _resourceManager.SelectedTableEntries.Any(), ToggleInvariant);
-            }
-        }
-
-        public ICommand ReloadCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => _resourceManager.Reload(ResourceLoadOptions.FindCodeReferences));
-            }
-        }
-
-        public ICommand BeginFindCodeReferencesCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(_resourceManager.BeginFindCodeReferences);
-            }
-        }
-
-        public ICommand CreateSnapshotCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand<string>(CreateSnapshot);
-            }
-        }
-
-        public ICommand LoadSnapshotCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand<string>(LoadSnapshot);
-            }
-        }
-
-        public ICommand UnloadSnapshotCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => LoadSnapshot(null));
-            }
-        }
+        public ICommand UnloadSnapshotCommand => new DelegateCommand(() => LoadSnapshot(null));
 
         public ICommand SelectEntityCommand
         {
             get
             {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
                 return new DelegateCommand<ResourceEntity>(entity =>
                 {
                     var selectedEntities = _resourceManager.SelectedEntities;
@@ -412,7 +309,7 @@
         }
 
         [ContractInvariantMethod]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_resourceManager != null);

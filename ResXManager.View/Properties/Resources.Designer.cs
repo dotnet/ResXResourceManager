@@ -794,6 +794,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Save files immediately upon change.
+        /// </summary>
+        public static string SaveFilesImmediatelyUponChange {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("SaveFilesImmediatelyUponChange", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Selected/Total.
         /// </summary>
         public static string SelectedTotalToolTip {
@@ -1295,6 +1305,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to A regular expression to filter resource files.&amp....
         /// </summary>
         ResourceFilterToolTip,
+        /// <summary>
+        ///   Looks up a localized string similar to Save files immediately upon change.
+        /// </summary>
+        SaveFilesImmediatelyUponChange,
         /// <summary>
         ///   Looks up a localized string similar to Selected/Total.
         /// </summary>

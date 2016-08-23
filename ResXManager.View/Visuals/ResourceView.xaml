@@ -210,7 +210,14 @@
               </ControlTemplate.Triggers>
             </ControlTemplate>
           </ToolBar.Template>
-          <Button ToolTip="{x:Static properties:Resources.RefreshViewToolTip}" Command="{Binding ReloadCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
+          <Button ToolTip="Save all changes" 
+                  Style="{StaticResource ToolbarCommandButtonStyle}"
+                  Command="{Binding SaveCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
+            <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/save.png" />
+          </Button>
+          <Button ToolTip="{x:Static properties:Resources.RefreshViewToolTip}" 
+                  Style="{StaticResource ToolbarCommandButtonStyle}"
+                  Command="{Binding ReloadCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
             <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/refresh.png" />
           </Button>
           <Separator />

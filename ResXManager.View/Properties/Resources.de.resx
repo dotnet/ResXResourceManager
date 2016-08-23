@@ -388,4 +388,7 @@ Wollen Sie trotzdem einen neuen Eintrag hinzufügen?</value>
   <data name="CodeReferencesTooManyDetailsToolTip" xml:space="preserve">
     <value>Es sind zu viele Referenzen, um Einzelheiten anzuzeigen.</value>
   </data>
+  <data name="SaveFilesImmediatelyUponChange" xml:space="preserve">
+    <value>Dateien sofort nach Änderungen speichern</value>
+  </data>
 </root>

@@ -5,12 +5,11 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
-    using System.Linq.Expressions;
+    using System.Runtime.CompilerServices;
     using System.Windows;
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
     /// <summary>
@@ -42,9 +41,7 @@
                     return;
                 }
             }
-            catch
-            {
-            }
+            catch { }
 
             _configuration = new XmlConfiguration(tracer);
         }
@@ -59,45 +56,41 @@
             get;
         }
 
-        protected virtual T GetValue<T>(Expression<Func<T>> propertyExpression)
+        protected T GetValue<T>(T defaultValue, [CallerMemberName] string key = null)
         {
-            Contract.Requires(propertyExpression != null);
-
-            return GetValue(propertyExpression, default(T));
-        }
-
-        protected virtual T GetValue<T>(Expression<Func<T>> propertyExpression, T defaultValue)
-        {
-            Contract.Requires(propertyExpression != null);
-
-            var key = PropertySupport.ExtractPropertyName(propertyExpression);
+            Contract.Requires(!string.IsNullOrEmpty(key));
 
             try
             {
-                return ConvertFromString<T>(_configuration.GetValue(key, defaultValue as string));
+                return InternalGetValue(defaultValue, key);
             }
             catch (InvalidCastException)
             {
             }
+
             return defaultValue;
         }
 
-        protected void SetValue<T>(T value, Expression<Func<T>> propertyExpression)
+        protected virtual T InternalGetValue<T>(T defaultValue, string key)
         {
-            Contract.Requires(propertyExpression != null);
+            Contract.Requires(!string.IsNullOrEmpty(key));
 
-            if (Equals(GetValue(propertyExpression), value))
-                return;
-
-            InternalSetValue(value, propertyExpression);
+            return ConvertFromString<T>(_configuration.GetValue(key, ConvertToString<T>(defaultValue)));
         }
 
-        protected virtual void InternalSetValue<T>(T value, Expression<Func<T>> propertyExpression)
+        protected void SetValue<T>(T value, [CallerMemberName] string key = null)
         {
-            Contract.Requires(propertyExpression != null);
+            Contract.Requires(!string.IsNullOrEmpty(key));
 
-            var propertyName = PropertySupport.ExtractPropertyName(propertyExpression);
-            var key = propertyName;
+            if (Equals(GetValue(key), value))
+                return;
+
+            InternalSetValue(value, key);
+        }
+
+        protected virtual void InternalSetValue<T>(T value, string key)
+        {
+            Contract.Requires(!string.IsNullOrEmpty(key));
 
             try
             {
@@ -108,7 +101,7 @@
                     _configuration.Save(writer);
                 }
 
-                OnPropertyChanged(propertyName);
+                OnPropertyChanged(key);
             }
             catch (Exception ex)
             {
@@ -122,7 +115,7 @@
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    var typeConverter = GetTypeConverter(typeof (T));
+                    var typeConverter = GetTypeConverter(typeof(T));
                     var obj = typeConverter.ConvertFromInvariantString(value);
                     return obj == null ? default(T) : (T)obj;
                 }
@@ -134,8 +127,11 @@
             return default(T);
         }
 
-        protected static string ConvertToString<T>(object value)
+        protected static string ConvertToString<T>(T value)
         {
+            if (ReferenceEquals(value, null))
+                return null;
+
             var typeConverter = GetTypeConverter(typeof(T));
             return typeConverter.ConvertToInvariantString(value);
         }
@@ -153,8 +149,8 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_configuration != null);
-            Contract.Invariant(!String.IsNullOrEmpty(_filePath));
-            Contract.Invariant(!String.IsNullOrEmpty(_directory));
+            Contract.Invariant(!string.IsNullOrEmpty(_filePath));
+            Contract.Invariant(!string.IsNullOrEmpty(_directory));
         }
     }
 }

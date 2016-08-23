@@ -448,7 +448,7 @@
         {
             Contract.Requires(other != null);
 
-            return _document?.ToString(SaveOptions.DisableFormatting) == other._document?.ToString(SaveOptions.DisableFormatting);
+            return _document.ToString(SaveOptions.DisableFormatting) == other._document?.ToString(SaveOptions.DisableFormatting);
         }
 
         private static void MakeKeysUnique(ICollection<Node> elements)

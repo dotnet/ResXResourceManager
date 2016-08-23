@@ -655,6 +655,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\cellSelection.png" />
+    <Resource Include="Assets\save.png" />
     <Content Include="Properties\Resources.Designer.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

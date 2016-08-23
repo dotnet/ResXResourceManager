@@ -38,18 +38,18 @@
             {
                 Contract.Ensures(Contract.Result<MoveToResourceConfiguration>() != null);
 
-                return _moveToResources ?? CreateMoveToResourceConfiguration();
+                return _moveToResources ?? CreateMoveToResourceConfiguration(GetValue(default(MoveToResourceConfiguration)));
             }
         }
 
         private void PersistMoveToResources()
         {
-            SetValue(MoveToResources, () => MoveToResources);
+            SetValue(MoveToResources, nameof(MoveToResources));
         }
 
-        private MoveToResourceConfiguration CreateMoveToResourceConfiguration()
+        private MoveToResourceConfiguration CreateMoveToResourceConfiguration(MoveToResourceConfiguration current)
         {
-            _moveToResources = GetValue(() => MoveToResources) ?? MoveToResourceConfiguration.Default;
+            _moveToResources = current ?? MoveToResourceConfiguration.Default;
             _moveToResources.ItemPropertyChanged += (_, __) => _moveToResourcesChangeThrottle.Tick();
 
             return _moveToResources;
@@ -59,11 +59,11 @@
 
         public override ConfigurationScope Scope => (_solution.Globals != null) ? ConfigurationScope.Solution : ConfigurationScope.Global;
 
-        protected override T GetValue<T>(Expression<Func<T>> propertyExpression, T defaultValue)
+        protected override T InternalGetValue<T>(T defaultValue, string key)
         {
             T value;
 
-            return TryGetValue(GetKey(PropertySupport.ExtractPropertyName(propertyExpression)), out value) ? value : base.GetValue(propertyExpression, defaultValue);
+            return TryGetValue(GetKey(key), out value) ? value : base.InternalGetValue(defaultValue, key);
         }
 
         private bool TryGetValue<T>(string key, out T value)
@@ -77,7 +77,7 @@
         {
             try
             {
-                if ((globals != null) && (globals.VariableExists[key]))
+                if ((globals != null) && globals.VariableExists[key])
                 {
                     value = ConvertFromString<T>(globals[key] as string);
                     return true;
@@ -90,23 +90,20 @@
             return false;
         }
 
-        protected override void InternalSetValue<T>(T value, Expression<Func<T>> propertyExpression)
+        protected override void InternalSetValue<T>(T value, string key)
         {
             var globals = _solution.Globals;
 
             if (globals != null)
             {
-                var propertyName = PropertySupport.ExtractPropertyName(propertyExpression);
-                var key = GetKey(propertyName);
-
-                globals[key] = ConvertToString<T>(value);
+                globals[key] = ConvertToString(value);
                 globals.VariablePersists[key] = true;
 
-                OnPropertyChanged(propertyName);
+                OnPropertyChanged(key);
             }
             else
             {
-                base.InternalSetValue(value, propertyExpression);
+                base.InternalSetValue(value, key);
             }
         }
 

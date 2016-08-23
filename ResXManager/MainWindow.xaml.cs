@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager
 {
     using System;
+    using System.ComponentModel;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
@@ -10,6 +11,7 @@
     using System.Windows.Documents;
 
     using tomenglertde.ResXManager.Infrastructure;
+    using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
@@ -21,10 +23,14 @@
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class MainWindow
     {
+        private readonly ITracer _tracer;
+
         [ImportingConstructor]
-        public MainWindow(ExportProvider exportProvider)
+        public MainWindow(ExportProvider exportProvider, ITracer tracer)
         {
             Contract.Requires(exportProvider != null);
+
+            _tracer = tracer;
 
             try
             {
@@ -36,7 +42,40 @@
             }
             catch (Exception ex)
             {
-                exportProvider.TraceError(ex.ToString());
+                _tracer.TraceError(ex.ToString());
+            }
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            var resourceManager = this.GetExportProvider().GetExportedValue<ResourceManager>();
+
+            if (!resourceManager.HasChanges)
+                return;
+
+            switch (MessageBox.Show("Do you want to save the changes?", "ResourceManager", MessageBoxButton.YesNoCancel))
+            {
+                case MessageBoxResult.Cancel:
+                    e.Cancel = true;
+                    break;
+
+                case MessageBoxResult.No:
+                    break;
+
+                case MessageBoxResult.Yes:
+                    try
+                    {
+                        resourceManager.Save();
+                    }
+                    catch (Exception ex)
+                    {
+                        _tracer.TraceError(ex.ToString());
+                        MessageBox.Show(ex.Message);
+                        e.Cancel = true;
+                    }
+                    break;
             }
         }
 
@@ -67,6 +106,13 @@
             }
 
             Process.Start(url);
+        }
+
+        [ContractInvariantMethod]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_tracer != null);
         }
     }
 }

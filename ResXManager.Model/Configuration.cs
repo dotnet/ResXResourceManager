@@ -43,15 +43,27 @@
             }
         }
 
+        public bool SaveFilesImmediatelyUponChange
+        {
+            get
+            {
+                return GetValue(true);
+            }
+            set
+            {
+                SetValue(value);
+            }
+        }
+
         public bool SortFileContentOnSave
         {
             get
             {
-                return GetValue(() => SortFileContentOnSave);
+                return GetValue(false);
             }
             set
             {
-                SetValue(value, () => SortFileContentOnSave);
+                SetValue(value);
             }
         }
 
@@ -61,11 +73,11 @@
             {
                 Contract.Ensures(Contract.Result<CultureInfo>() != null);
 
-                return GetValue(() => NeutralResourcesLanguage) ?? new CultureInfo("en-US");
+                return GetValue(default(CultureInfo)) ?? new CultureInfo("en-US");
             }
             set
             {
-                SetValue(value, () => NeutralResourcesLanguage);
+                SetValue(value);
             }
         }
 
@@ -73,11 +85,11 @@
         {
             get
             {
-                return GetValue(() => ResXSortingComparison, StringComparison.OrdinalIgnoreCase);
+                return GetValue(StringComparison.OrdinalIgnoreCase);
             }
             set
             {
-                SetValue(value, () => ResXSortingComparison);
+                SetValue(value);
             }
         }
 
@@ -85,11 +97,11 @@
         {
             get
             {
-                return GetValue(() => ConfirmAddLanguageFile, true);
+                return GetValue(true);
             }
             set
             {
-                SetValue(value, () => ConfirmAddLanguageFile);
+                SetValue(value);
             }
         }
 
@@ -97,11 +109,11 @@
         {
             get
             {
-                return GetValue(() => AutoCreateNewLanguageFiles, false);
+                return GetValue(false);
             }
             set
             {
-                SetValue(value, () => AutoCreateNewLanguageFiles);
+                SetValue(value);
             }
         }
 
@@ -109,11 +121,11 @@
         {
             get
             {
-                return GetValue(() => PrefixTranslations, false);
+                return GetValue(false);
             }
             set
             {
-                SetValue(value, () => PrefixTranslations);
+                SetValue(value);
             }
         }
 
@@ -121,31 +133,25 @@
         {
             get
             {
-                return GetValue(() => TranslationPrefix, "#TODO#_");
+                return GetValue("#TODO#_");
             }
             set
             {
-                SetValue(value, () => TranslationPrefix);
+                SetValue(value);
             }
         }
 
-        public string EffectiveTranslationPrefix
-        {
-            get
-            {
-                return PrefixTranslations ? TranslationPrefix : string.Empty;
-            }
-        }
+        public string EffectiveTranslationPrefix => PrefixTranslations ? TranslationPrefix : string.Empty;
 
         public ExcelExportMode ExcelExportMode
         {
             get
             {
-                return GetValue(() => ExcelExportMode);
+                return GetValue(default(ExcelExportMode));
             }
             set
             {
-                SetValue(value, () => ExcelExportMode);
+                SetValue(value);
             }
         }
 
@@ -153,22 +159,22 @@
         {
             get
             {
-                return GetValue(() => DuplicateKeyHandling);
+                return GetValue(default(DuplicateKeyHandling));
             }
             set
             {
-                SetValue(value, () => DuplicateKeyHandling);
+                SetValue(value);
             }
         }
 
         private void PersistCodeReferences()
         {
-            SetValue(CodeReferences, () => CodeReferences);
+            SetValue(CodeReferences);
         }
 
         private CodeReferenceConfiguration CreateCodeReferenceConfiguration()
         {
-            _codeReferences = GetValue(() => CodeReferences) ?? CodeReferenceConfiguration.Default;
+            _codeReferences = GetValue(default(CodeReferenceConfiguration)) ?? CodeReferenceConfiguration.Default;
             _codeReferences.ItemPropertyChanged += (_, __) => _codeReferencesChangeThrottle.Tick();
 
             return _codeReferences;
