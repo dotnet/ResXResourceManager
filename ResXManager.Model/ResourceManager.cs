@@ -92,13 +92,10 @@
         {
             var changedResourceLanguages = _resourceEntities
                 .SelectMany(entity => entity.Languages)
-                .Where(lang => lang.HasChanges);
+                .Where(lang => lang.HasChanges)
+                .ToArray();
 
-            foreach (var resourceLanguage in changedResourceLanguages)
-            {
-                Contract.Assume(resourceLanguage != null);
-                resourceLanguage.Save();
-            }
+            changedResourceLanguages.ForEach(resourceLanguage => resourceLanguage.Save());
         }
 
         public ICollection<ResourceEntity> ResourceEntities

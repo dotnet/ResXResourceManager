@@ -236,9 +236,13 @@
         {
             Contract.Requires(projectItem != null);
 
-            var vsProjectItem = projectItem.Object as VSLangProj.VSProjectItem;
+            try
+            {
+                var vsProjectItem = projectItem.Object as VSLangProj.VSProjectItem;
 
-            vsProjectItem?.RunCustomTool();
+                vsProjectItem?.RunCustomTool();
+            }
+            catch { }
         }
 
         public static void SetCustomTool(this EnvDTE.ProjectItem projectItem, string value)

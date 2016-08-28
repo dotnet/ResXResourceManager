@@ -222,6 +222,7 @@
     </Compile>
     <Compile Include="CodeGenerator.cs" />
     <Compile Include="Commands.cs" />
+    <Compile Include="CustomToolRunner.cs" />
     <Compile Include="DteConfiguration.cs" />
     <Compile Include="DteExtensions.cs" />
     <Compile Include="DteProjectFile.cs" />

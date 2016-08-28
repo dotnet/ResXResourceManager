@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.Composition.Hosting;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -30,6 +29,9 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.XamlExtensions;
+
+    using Configuration = tomenglertde.ResXManager.Model.Configuration;
+    using Process = System.Diagnostics.Process;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
@@ -310,19 +312,21 @@
             catch { }
         }
 
-        private static Tuple<string, EnvDTE.Window>[] GetLanguagesOpenedInAnotherEditor(IEnumerable<ResourceLanguage> languages)
+        private Tuple<string, EnvDTE.Window>[] GetLanguagesOpenedInAnotherEditor(IEnumerable<ResourceLanguage> languages)
         {
             Contract.Requires(languages != null);
             Contract.Ensures(Contract.Result<Tuple<string, EnvDTE.Window>[]>() != null);
 
             try
             {
+                var openDocuments = _dte?.Windows?.OfType<EnvDTE.Window>().ToDictionary(window => window.Document);
+
                 var items = from l in languages
                             let file = l.FileName
                             let projectFile = l.ProjectFile as DteProjectFile
                             where projectFile != null
-                            let documents = projectFile.ProjectItems.Select(item => item.Document).Where(doc => doc != null)
-                            let window = documents.SelectMany(doc => doc.Windows.OfType<EnvDTE.Window>()).FirstOrDefault()
+                            let documents = projectFile.ProjectItems.Select(item => item.TryGetDocument()).Where(doc => doc != null)
+                            let window = documents.Select(doc => openDocuments?.GetValueOrDefault(doc)).FirstOrDefault(win => win != null)
                             where window != null
                             select Tuple.Create(file, window);
 

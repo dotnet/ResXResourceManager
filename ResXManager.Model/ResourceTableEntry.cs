@@ -23,6 +23,8 @@
         private const string InvariantKey = "@Invariant";
         private readonly Regex _duplicateKeyExpression = new Regex(@"_Duplicate\[\d+\]$");
         private readonly ResourceEntity _container;
+        private readonly DispatcherThrottle _deferredValuesChangedThrottle;
+        private readonly DispatcherThrottle _deferredCommentChangedThrottle;
 
         private string _key;
 
@@ -56,6 +58,9 @@
             _key = key;
             _index = index;
             _languages = languages;
+
+            _deferredValuesChangedThrottle = new DispatcherThrottle(() => OnPropertyChanged(nameof(Values)));
+            _deferredCommentChangedThrottle = new DispatcherThrottle(() => OnPropertyChanged(nameof(Comment)));
 
             _values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
             _values.ValueChanged += Values_ValueChanged;
@@ -193,7 +198,7 @@
         /// <summary>
         /// Gets the localized comments.
         /// </summary>
-        [PropertyDependency("Comment")]
+        [PropertyDependency(nameof(Comment))]
         public ResourceTableValues<string> Comments
         {
             get
@@ -203,7 +208,7 @@
             }
         }
 
-        [PropertyDependency("Values")]
+        [PropertyDependency(nameof(Values))]
         public ResourceTableValues<bool> FileExists
         {
             get
@@ -213,7 +218,7 @@
             }
         }
 
-        [PropertyDependency("Values", "Snapshot")]
+        [PropertyDependency(nameof(Values), nameof(Snapshot))]
         public ResourceTableValues<ICollection<string>> ValueAnnotations
         {
             get
@@ -224,7 +229,7 @@
             }
         }
 
-        [PropertyDependency("Comments", "Snapshot")]
+        [PropertyDependency(nameof(Comments), nameof(Snapshot))]
         public ResourceTableValues<ICollection<string>> CommentAnnotations
         {
             get
@@ -245,7 +250,7 @@
             }
         }
 
-        [PropertyDependency("Comment")]
+        [PropertyDependency(nameof(Comment))]
         public bool IsInvariant
         {
             get
@@ -277,7 +282,7 @@
             }
         }
 
-        [PropertyDependency("Key")]
+        [PropertyDependency(nameof(Key))]
         public bool IsDuplicateKey
         {
             get
@@ -378,12 +383,12 @@
 
         private void Values_ValueChanged(object sender, EventArgs e)
         {
-            OnPropertyChanged(() => Values);
+            _deferredValuesChangedThrottle.Tick();
         }
 
         private void Comments_ValueChanged(object sender, EventArgs e)
         {
-            OnPropertyChanged(() => Comment);
+            _deferredCommentChangedThrottle.Tick();
         }
 
         private ICollection<string> GetValueAnnotations(ResourceLanguage language)

@@ -39,6 +39,8 @@
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     public sealed class ResXManagerVsixPackage : Package
     {
+        private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
+
         private EnvDTE.DocumentEvents _documentEvents;
 
         private ICompositionHost _compositionHost;
@@ -89,6 +91,13 @@
             CreateMenuCommand(mcs, PkgCmdIdList.cmdidMySolutionExplorerContextMenu, ShowSelectedResourceFiles).BeforeQueryStatus += SolutionExplorerContextMenuCommand_BeforeQueryStatus;
             // Create the command for the text editor context menu
             CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTextEditorContextMenu, MoveToResource).BeforeQueryStatus += TextEditorContextMenuCommand_BeforeQueryStatus;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            _customToolRunner.Dispose();
         }
 
         [ContractVerification(false)]
@@ -295,7 +304,23 @@
             if (!AffectsResourceFile(document))
                 return;
 
-            document.ProjectItem.Descendants().ForEach(projectItem => projectItem.RunCustomTool());
+            // Run custom tool (usually attached to neutral language) even if a localized language changes,
+            // e.g. if custom tool is a text template, we might want not only to generate the designer file but also 
+            // extract some localization information.
+            // => find the resource entity that contains the document and run the custom tool on the neutral project file.
+            Func<ResourceEntity, bool> predicate = e => e.Languages
+                .Select(lang => lang.ProjectFile)
+                .OfType<DteProjectFile>()
+                .Any(projectFile => projectFile.ProjectItems.Any(p => p.Document == document));
+
+            var entity = ToolWindow?.ResourceManager.ResourceEntities.FirstOrDefault(predicate);
+
+            var neutralProjectFile = (DteProjectFile)entity?.NeutralProjectFile;
+
+            // VS will run the custom tool on the project item only. Run the custom tool on any of the descendants, too.
+            var projectItems = neutralProjectFile?.ProjectItems.SelectMany(projectItem => projectItem.Descendants());
+
+            _customToolRunner.Enqueue(projectItems);
 
             ToolWindow?.ReloadSolution();
         }
@@ -313,6 +338,13 @@
                 .Where(fileName => fileName != null)
                 .Select(Path.GetExtension)
                 .Any(extension => ProjectFileExtensions.SupportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase));
+        }
+
+        [ContractInvariantMethod]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_customToolRunner != null);
         }
     }
 }
