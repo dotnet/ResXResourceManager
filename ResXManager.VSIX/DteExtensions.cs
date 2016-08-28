@@ -328,9 +328,6 @@
         {
             Contract.Requires(projectItem != null);
 
-            var name = projectItem.Name;
-            Contract.Assume(name != null);
-
             try
             {
                 if (string.Equals(projectItem.Kind, ItemKind.PhysicalFile, StringComparison.OrdinalIgnoreCase))
