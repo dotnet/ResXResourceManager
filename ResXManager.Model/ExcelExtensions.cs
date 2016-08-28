@@ -328,14 +328,10 @@
                         if (int.TryParse(text, out index) && (index >= 0) && (index < sharedStrings.Count))
                         {
                             var stringItem = sharedStrings[index];
-                            if (stringItem != null)
+                            var descendants = stringItem?.Descendants<OpenXmlLeafTextElement>();
+                            if (descendants != null)
                             {
-                                var descendants = stringItem.Descendants<OpenXmlLeafTextElement>();
-                                if (descendants != null)
-                                {
-                                    var content = descendants.Select(element => element.Text);
-                                    text = string.Concat(content);
-                                }
+                                text = string.Concat(descendants.Select(element => element.Text));
                             }
                         }
                     }
@@ -439,9 +435,7 @@
             Contract.Requires(languages != null);
             Contract.Ensures(Contract.Result<IEnumerable<IEnumerable<string>>>() != null);
 
-            var entries = (scope != null)
-                ? scope.Entries.Where(entry => entry.Container == entity)
-                : entity.Entries;
+            var entries = scope?.Entries.Where(entry => entry.Container == entity) ?? entity.Entries;
 
             return entries.Select(entry => entry.GetDataRow(languages, scope));
         }
@@ -460,7 +454,7 @@
             Contract.Requires(entry != null);
             Contract.Requires(languages != null);
 
-            return (new[] { entry.Key }).Concat(entry.GetLanguageDataColumns(languages, scope));
+            return new[] { entry.Key }.Concat(entry.GetLanguageDataColumns(languages, scope));
         }
 
         private static IEnumerable<string> GetLanguageDataColumns(this ResourceTableEntry entry, IEnumerable<CultureKey> languages, IResourceScope scope)
@@ -476,6 +470,7 @@
             where TItem : OpenXmlElement
         {
             if ((container != null) && (item != null))
+                // ReSharper disable once PossiblyMistakenUseOfParamsMethod
                 container.Append(item);
 
             return container;
@@ -494,7 +489,7 @@
                 .Select((entity, index) => new MultipleSheetEntity(entity, index, uniqueNames));
         }
 
-        class MultipleSheetEntity
+        private class MultipleSheetEntity
         {
             private const int MaxSheetNameLength = 31;
             private readonly ResourceEntity _resourceEntity;
@@ -571,7 +566,6 @@
             public string Id
             {
                 get;
-                private set;
             }
 
             public Sheet CreateSheet()
@@ -605,7 +599,7 @@
             }
         }
 
-        class FullScope : IResourceScope
+        private class FullScope : IResourceScope
         {
             public FullScope(ICollection<ResourceEntity> entities)
             {
@@ -627,19 +621,16 @@
             public IEnumerable<ResourceTableEntry> Entries
             {
                 get;
-                private set;
             }
 
             public IEnumerable<CultureKey> Languages
             {
                 get;
-                private set;
             }
 
             public IEnumerable<CultureKey> Comments
             {
                 get;
-                private set;
             }
         }
     }

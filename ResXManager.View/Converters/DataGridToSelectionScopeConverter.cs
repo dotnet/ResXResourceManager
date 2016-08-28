@@ -26,7 +26,7 @@
             throw new NotImplementedException();
         }
 
-        class DataGridSelectionScope : IResourceScope, IExportParameters
+        private class DataGridSelectionScope : IResourceScope, IExportParameters
         {
             private readonly DataGrid _dataGrid;
 
@@ -76,21 +76,9 @@
                 }
             }
 
-            public IResourceScope Scope
-            {
-                get
-                {
-                    return this;
-                }
-            }
+            public IResourceScope Scope => this;
 
-            public string FileName
-            {
-                get
-                {
-                    return null;
-                }
-            }
+            public string FileName => null;
         }
     }
 }

@@ -12,7 +12,7 @@
     {
         public void LoadThemeResources(ResourceDictionary resource)
         {
-            resource.MergedDictionaries.Insert(0, new ResourceDictionary { Source = this.GetType().Assembly.GeneratePackUri("Resources/VSColorScheme.xaml") });
+            resource.MergedDictionaries.Insert(0, new ResourceDictionary { Source = GetType().Assembly.GeneratePackUri("Resources/VSColorScheme.xaml") });
         }
     }
 }

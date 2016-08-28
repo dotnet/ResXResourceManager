@@ -141,7 +141,7 @@
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(() => (_session == null), UpdateTargetList);
+                return new DelegateCommand(() => _session == null, UpdateTargetList);
             }
         }
 
@@ -151,7 +151,7 @@
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(() => (SourceCulture != null), UpdateTargetList);
+                return new DelegateCommand(() => SourceCulture != null, UpdateTargetList);
             }
         }
 

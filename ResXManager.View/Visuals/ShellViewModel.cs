@@ -14,7 +14,7 @@
     using TomsToolbox.Wpf.Composition;
 
     [VisualCompositionExport(RegionId.Shell)]
-    class ShellViewModel : ObservableObject
+    internal class ShellViewModel : ObservableObject
     {
         private readonly DispatcherThrottle _updateThrottle;
         private bool _isLoading;

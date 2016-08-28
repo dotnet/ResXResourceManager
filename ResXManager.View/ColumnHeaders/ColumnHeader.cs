@@ -14,7 +14,6 @@
         public ColumnType ColumnType
         {
             get;
-            private set;
         }
     }
 }

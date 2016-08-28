@@ -4,14 +4,16 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
                 xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
-                xmlns:styles="clr-namespace:tomenglertde.ResXManager.Styles;assembly=ResXManager.Styles" Focusable="False">
+                xmlns:styles="clr-namespace:tomenglertde.ResXManager.Styles;assembly=ResXManager.Styles"
+                xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
+                Focusable="False">
   <ContentControl.Template>
     <ControlTemplate TargetType="ContentControl">
       <DockPanel FocusManager.FocusedElement="{Binding ElementName=Content}">
         <Grid DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" KeyboardNavigation.TabIndex="1">
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.IsSharedSizeScope="True" Margin="10">
             <Button Padding="12,3" IsDefault="True"
-                    Command="{Binding CommitCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=ContentControl}}"
+                    Command="{Binding CommitCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=visuals:ConfirmationDialog}}"
                     Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
               <ContentControl Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" Content="OK" HorizontalContentAlignment="Center" />
             </Button>

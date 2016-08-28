@@ -23,21 +23,9 @@
             _cultureKey = cultureKey;
         }
 
-        public CultureKey CultureKey
-        {
-            get
-            {
-                return _cultureKey;
-            }
-        }
+        public CultureKey CultureKey => _cultureKey;
 
-        public CultureInfo EffectiveCulture
-        {
-            get
-            {
-                return _cultureKey.Culture ?? _resourceManager.Configuration.NeutralResourcesLanguage;
-            }
-        }
+        public CultureInfo EffectiveCulture => _cultureKey.Culture ?? _resourceManager.Configuration.NeutralResourcesLanguage;
 
         public abstract ColumnType ColumnType
         {

@@ -242,7 +242,10 @@
 
                 vsProjectItem?.RunCustomTool();
             }
-            catch { }
+            catch
+            {
+                // ignore
+            }
         }
 
         public static void SetCustomTool(this EnvDTE.ProjectItem projectItem, string value)
@@ -317,6 +320,7 @@
             }
             catch
             {
+                // ignored
             }
         }
 

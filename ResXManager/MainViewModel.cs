@@ -66,21 +66,9 @@
             }
         }
 
-        public ICommand BrowseCommand
-        {
-            get
-            {
-                return new DelegateCommand(Browse);
-            }
-        }
+        public ICommand BrowseCommand => new DelegateCommand(Browse);
 
-        public ResourceManager ResourceManager
-        {
-            get
-            {
-                return _resourceManager;
-            }
-        }
+        public ResourceManager ResourceManager => _resourceManager;
 
         public SourceFilesProvider SourceFilesProvider
         {
@@ -231,7 +219,7 @@
 
     [Export]
     [Export(typeof(ISourceFilesProvider))]
-    class SourceFilesProvider : ObservableObject, ISourceFilesProvider
+    internal class SourceFilesProvider : ObservableObject, ISourceFilesProvider
     {
         private readonly Configuration _configuration;
         private string _folder;

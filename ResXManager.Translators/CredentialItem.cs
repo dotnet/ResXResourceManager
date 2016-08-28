@@ -14,21 +14,9 @@ namespace tomenglertde.ResXManager.Translators
             _description = description;
         }
 
-        public string Key
-        {
-            get
-            {
-                return _key;
-            }
-        }
+        public string Key => _key;
 
-        public string Description
-        {
-            get
-            {
-                return _description;
-            }
-        }
+        public string Description => _description;
 
         public string Value
         {

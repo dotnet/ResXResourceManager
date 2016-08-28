@@ -26,7 +26,7 @@
     }
 
     [ContractClassFor(typeof (IResourceScope))]
-    abstract class ResourceScopeContract : IResourceScope
+    internal abstract class ResourceScopeContract : IResourceScope
     {
         IEnumerable<ResourceTableEntry> IResourceScope.Entries
         {

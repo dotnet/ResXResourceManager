@@ -1,6 +1,5 @@
 ﻿namespace tomenglertde.ResXManager.View.Themes
 {
-    using System.ComponentModel.Composition;
     using System.Windows;
 
     using DataGridExtensions;

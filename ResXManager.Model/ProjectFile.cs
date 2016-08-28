@@ -18,6 +18,7 @@
         private readonly string _extension;
         private string _fingerPrint;
         private XDocument _document;
+        private readonly string _relativeFilePath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectFile" /> class.
@@ -32,7 +33,7 @@
             Contract.Requires(rootFolder != null);
 
             _filePath = filePath;
-            RelativeFilePath = GetRelativePath(rootFolder, filePath);
+            _relativeFilePath = GetRelativePath(rootFolder, filePath);
             _extension = Path.GetExtension(_filePath);
 
             ProjectName = projectName;
@@ -79,8 +80,12 @@
 
         public string RelativeFilePath
         {
-            get;
-            private set;
+            get
+            {
+                Contract.Ensures(Contract.Result<string>() != null);
+
+                return _relativeFilePath;
+            }
         }
 
         public bool HasChanges { get; protected set; }
@@ -192,7 +197,7 @@
         {
             Contract.Invariant(!string.IsNullOrEmpty(_filePath));
             Contract.Invariant(_extension != null);
-            Contract.Invariant(RelativeFilePath != null);
+            Contract.Invariant(_relativeFilePath != null);
         }
     }
 }

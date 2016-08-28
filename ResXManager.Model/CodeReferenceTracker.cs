@@ -212,17 +212,9 @@
                 Success = true;
             }
 
-            public bool Success
-            {
-                get;
-                private set;
-            }
+            public bool Success { get; }
 
-            public IList<string> Segments
-            {
-                get;
-                private set;
-            }
+            public IList<string> Segments { get; }
 
             [ContractInvariantMethod]
             [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
@@ -370,6 +362,7 @@
             }
             catch
             {
+                // Ignore any file errors here
             }
 
             return new string[0];

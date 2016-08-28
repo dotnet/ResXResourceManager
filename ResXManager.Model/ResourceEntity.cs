@@ -133,7 +133,7 @@
 
             var relativeProjectDirectory = Path.GetDirectoryName(uniqueProjectName) + Path.DirectorySeparatorChar;
             if ((relativeFileDirectory.Length > relativeProjectDirectory.Length)
-                && (relativeFileDirectory.StartsWith(relativeProjectDirectory, StringComparison.OrdinalIgnoreCase)))
+                && relativeFileDirectory.StartsWith(relativeProjectDirectory, StringComparison.OrdinalIgnoreCase))
             {
                 return relativeFileDirectory.Substring(relativeProjectDirectory.Length);
             }

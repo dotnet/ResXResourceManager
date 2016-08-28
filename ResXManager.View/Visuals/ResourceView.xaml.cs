@@ -182,7 +182,7 @@
             if (ex == null)
                 return;
 
-            var text = (ex is ImportException) ? ex.Message : ex.ToString();
+            var text = ex is ImportException ? ex.Message : ex.ToString();
 
             MessageBox.Show(text, Properties.Resources.Title);
         }
@@ -198,13 +198,11 @@
             public IResourceScope Scope
             {
                 get;
-                private set;
             }
 
             public string FileName
             {
                 get;
-                private set;
             }
         }
 

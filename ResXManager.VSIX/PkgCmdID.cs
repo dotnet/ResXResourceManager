@@ -1,9 +1,10 @@
 ﻿// PkgCmdID.cs
 // MUST match PkgCmdID.h
 
+// ReSharper disable InconsistentNaming
 namespace tomenglertde.ResXManager.VSIX
 {
-    static class PkgCmdIdList
+    internal static class PkgCmdIdList
     {
         public const int cmdidMyCommand = 0x100;
         public const int cmdidMyTool = 0x101;

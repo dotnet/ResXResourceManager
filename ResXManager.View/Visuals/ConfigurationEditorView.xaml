@@ -19,14 +19,6 @@
 
     <toms:ConfirmedCommandConverter x:Key="SortNodesByKeyCommandConverter" Executing="SortNodesByKeyCommandConverter_Executing" Error="CommandConverter_Error" />
 
-    <Style TargetType="Control" x:Key="ControlWithErrorToolTipStyle">
-      <Style.Triggers>
-        <Trigger Property="Validation.HasError" Value="True">
-          <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
-        </Trigger>
-      </Style.Triggers>
-    </Style>
-
     <Style TargetType="GroupBox" x:Key="GroupStyle" BasedOn="{StaticResource {x:Static styles:ResourceKeys.GroupBoxStyle}}">
       <Setter Property="HeaderTemplate">
         <Setter.Value>

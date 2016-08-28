@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     using tomenglertde.ResXManager.Infrastructure;
@@ -13,7 +14,7 @@
     using TomsToolbox.Wpf.Composition;
 
     [VisualCompositionExport(RegionId.Content, Sequence = 2)]
-    class TranslationsViewModel : ObservableObject
+    internal class TranslationsViewModel : ObservableObject
     {
         private readonly TranslatorHost _translatorHost;
         private readonly Translations _translations;
@@ -34,45 +35,18 @@
             _configuration = configuration;
         }
 
-        public Translations Translations
-        {
-            get
-            {
-                return _translations;
-            }
-        }
+        public Translations Translations => _translations;
 
-        public ResourceManager ResourceManager
-        {
-            get
-            {
-                return _resourceManager;
-            }
-        }
+        public ResourceManager ResourceManager => _resourceManager;
 
-        public Configuration Configuration
-        {
-            get
-            {
-                return _configuration;
-            }
-        }
+        public Configuration Configuration => _configuration;
 
-        public IEnumerable<ITranslator> Translators
-        {
-            get
-            {
-                return _translatorHost.Translators;
-            }
-        }
+        public IEnumerable<ITranslator> Translators => _translatorHost.Translators;
 
-        public override string ToString()
-        {
-            return Resources.ShellTabHeader_Translate;
-        }
+        public override string ToString() => Resources.ShellTabHeader_Translate;
 
         [ContractInvariantMethod]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_translatorHost != null);

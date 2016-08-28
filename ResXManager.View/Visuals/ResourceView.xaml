@@ -78,7 +78,7 @@
     </Style>
 
     <Style TargetType="Image" BasedOn="{StaticResource ImageStyle}">
-      <Setter Property="Stretch" Value="None"/>
+      <Setter Property="Stretch" Value="None" />
     </Style>
 
     <themes:ResourceLocator x:Key="ResourceLocator" />
@@ -134,7 +134,7 @@
       <ListBox.ItemTemplate>
         <DataTemplate DataType="model:ResourceEntity">
           <StackPanel ToolTip="{Binding Path=DirectoryName, Mode=OneWay}" HorizontalAlignment="Left" Orientation="Horizontal">
-            <CheckBox IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Focusable="False" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center"/>
+            <CheckBox IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Focusable="False" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center" />
             <Decorator Width="5" />
             <TextBlock Background="Transparent" VerticalAlignment="Center">
               <Run Text="{Binding Path=RelativePath, Mode=OneWay}" /><Run Text="{Binding Path=BaseName, Mode=OneWay}" />
@@ -159,8 +159,8 @@
                       <i:Interaction.Behaviors>
                         <toms:SelectGroupOnGroupHeaderClickBehavior />
                       </i:Interaction.Behaviors>
-                      <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Margin="0,5,0,3"/>
-                      <ItemsPresenter Margin="4,0,0,0"/>
+                      <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Margin="0,5,0,3" />
+                      <ItemsPresenter Margin="4,0,0,0" />
                     </StackPanel>
                   </ControlTemplate>
                 </Setter.Value>
@@ -172,7 +172,7 @@
       <ListBox.ContextMenu>
         <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}">
           <i:Interaction.Behaviors>
-            <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListContextMenu}"/>
+            <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListContextMenu}" />
           </i:Interaction.Behaviors>
         </ContextMenu>
       </ListBox.ContextMenu>
@@ -210,12 +210,12 @@
               </ControlTemplate.Triggers>
             </ControlTemplate>
           </ToolBar.Template>
-          <Button ToolTip="Save all changes" 
+          <Button ToolTip="Save all changes"
                   Style="{StaticResource ToolbarCommandButtonStyle}"
                   Command="{Binding SaveCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
             <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/save.png" />
           </Button>
-          <Button ToolTip="{x:Static properties:Resources.RefreshViewToolTip}" 
+          <Button ToolTip="{x:Static properties:Resources.RefreshViewToolTip}"
                   Style="{StaticResource ToolbarCommandButtonStyle}"
                   Command="{Binding ReloadCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
             <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/refresh.png" />
@@ -479,7 +479,7 @@
                               <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseDoubleClick">
                                   <i:EventTrigger.Actions>
-                                    <i:InvokeCommandAction Command="{Binding ElementName=DataGrid, Path=DataContext.SelectEntityCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding Name}"/>
+                                    <i:InvokeCommandAction Command="{Binding ElementName=DataGrid, Path=DataContext.SelectEntityCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding Name}" />
                                   </i:EventTrigger.Actions>
                                 </i:EventTrigger>
                               </i:Interaction.Triggers>
@@ -513,7 +513,7 @@
                   <VirtualizingStackPanel.ContextMenu>
                     <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}">
                       <i:Interaction.Behaviors>
-                        <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ResourceTableContextMenu}"/>
+                        <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ResourceTableContextMenu}" />
                       </i:Interaction.Behaviors>
                     </ContextMenu>
                   </VirtualizingStackPanel.ContextMenu>

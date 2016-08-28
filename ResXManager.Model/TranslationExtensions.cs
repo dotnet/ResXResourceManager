@@ -8,7 +8,7 @@ namespace tomenglertde.ResXManager.Model
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Translators;
 
-    static class TranslationExtensions
+    internal static class TranslationExtensions
     {
         public static ICollection<TranslationItem> GetItemsToTranslate(this ResourceManager resourceManager, CultureKey sourceCulture, string translationPrefix, IEnumerable<CultureKey> targetCultures)
         {

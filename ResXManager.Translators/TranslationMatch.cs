@@ -13,28 +13,10 @@ namespace tomenglertde.ResXManager.Translators
             _rating = rating;
         }
 
-        public string TranslatedText
-        {
-            get
-            {
-                return _translatedTranslatedText;
-            }
-        }
+        public string TranslatedText => _translatedTranslatedText;
 
-        public ITranslator Translator
-        {
-            get
-            {
-                return _translator;
-            }
-        }
+        public ITranslator Translator => _translator;
 
-        public double Rating
-        {
-            get
-            {
-                return _rating;
-            }
-        }
+        public double Rating => _rating;
     }
 }

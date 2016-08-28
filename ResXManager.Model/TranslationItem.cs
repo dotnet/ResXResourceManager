@@ -20,6 +20,8 @@ namespace tomenglertde.ResXManager.Model
         private readonly ObservableCollection<ITranslationMatch> _results = new ObservableCollection<ITranslationMatch>();
 
         private string _translation;
+        private readonly ResourceTableEntry _entry;
+        private readonly string _source;
 
         public TranslationItem(ResourceTableEntry entry, string source, CultureKey targetCulture)
         {
@@ -27,8 +29,8 @@ namespace tomenglertde.ResXManager.Model
             Contract.Requires(source != null);
             Contract.Requires(targetCulture != null);
 
-            Entry = entry;
-            Source = source;
+            _entry = entry;
+            _source = source;
 
             _targetCulture = targetCulture;
             _results.CollectionChanged += (_, __) => OnPropertyChanged(() => Translation);
@@ -39,23 +41,25 @@ namespace tomenglertde.ResXManager.Model
 
         public ResourceTableEntry Entry
         {
-            get;
-            private set;
+            get
+            {
+                Contract.Ensures(Contract.Result<ResourceTableEntry>() != null);
+
+                return _entry;
+            }
         }
 
         public string Source
         {
-            get;
-            private set;
-        }
-
-        public CultureKey TargetCulture
-        {
             get
             {
-                return _targetCulture;
+                Contract.Ensures(Contract.Result<string>() != null);
+
+                return _source;
             }
         }
+
+        public CultureKey TargetCulture => _targetCulture;
 
         public IList<ITranslationMatch> Results
         {
@@ -96,8 +100,8 @@ namespace tomenglertde.ResXManager.Model
             Contract.Invariant(_targetCulture != null);
             Contract.Invariant(_orderedResults != null);
             Contract.Invariant(_results != null);
-            Contract.Invariant(Entry != null);
-            Contract.Invariant(Source != null);
+            Contract.Invariant(_entry != null);
+            Contract.Invariant(_source != null);
         }
     }
 }

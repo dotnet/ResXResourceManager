@@ -8,11 +8,14 @@ namespace tomenglertde.ResXManager.Model
     public class EntryChange : ObservableObject
     {
         private string _text;
+        private readonly ResourceTableEntry _entry;
 
         public EntryChange(ResourceTableEntry entry, string text, CultureInfo culture, ColumnKind columnKind, string originalText)
         {
             Contract.Requires(entry != null);
-            Entry = entry;
+
+            _entry = entry;
+
             Text = ProposedText = text;
             Culture = culture;
             ColumnKind = columnKind;
@@ -31,7 +34,14 @@ namespace tomenglertde.ResXManager.Model
             }
         }
 
-        public ResourceTableEntry Entry { get; private set; }
+        public ResourceTableEntry Entry
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ResourceTableEntry>() != null);
+                return _entry;
+            }
+        }
 
         public string ProposedText { get; private set; }
 
@@ -45,7 +55,7 @@ namespace tomenglertde.ResXManager.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(Entry != null);
+            Contract.Invariant(_entry != null);
         }
     }
 }

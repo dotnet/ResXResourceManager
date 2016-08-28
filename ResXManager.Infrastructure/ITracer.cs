@@ -18,7 +18,7 @@
     }
 
     [ContractClassFor(typeof(ITracer))]
-    abstract class TracerContract : ITracer
+    internal abstract class TracerContract : ITracer
     {
         void ITracer.TraceError(string value)
         {

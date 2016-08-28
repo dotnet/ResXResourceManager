@@ -7,7 +7,7 @@
     using TomsToolbox.Wpf.Composition;
 
     [VisualCompositionExport(RegionId.Content, Sequence = 4)]
-    class LanguageConfigurationViewModel : ObservableObject
+    internal class LanguageConfigurationViewModel : ObservableObject
     {
         public override string ToString()
         {

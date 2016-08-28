@@ -39,10 +39,7 @@
                 outputWindow.GetPane(ref outputPaneGuid, out pane);
             }
 
-            if (pane != null)
-            {
-                pane.OutputString(value);
-            }
+            pane?.OutputString(value);
         }
 
         public void TraceError(string value)

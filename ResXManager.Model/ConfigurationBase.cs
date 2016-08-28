@@ -56,6 +56,7 @@
             get;
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Required by [CallerMemberName]")]
         protected T GetValue<T>(T defaultValue, [CallerMemberName] string key = null)
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
@@ -78,6 +79,7 @@
             return ConvertFromString<T>(_configuration.GetValue(key, ConvertToString<T>(defaultValue)));
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Required by [CallerMemberName]")]
         protected void SetValue<T>(T value, [CallerMemberName] string key = null)
         {
             Contract.Requires(!string.IsNullOrEmpty(key));

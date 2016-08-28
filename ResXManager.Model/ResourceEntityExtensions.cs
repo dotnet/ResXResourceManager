@@ -90,15 +90,15 @@
             Contract.Requires(entry != null);
             Contract.Requires(languages != null);
 
-            return (new[] { entry.Key }).Concat(languages.SelectMany(l => entry.GetTableDataColumns(l.CultureKey)));
+            return new[] { entry.Key }.Concat(languages.SelectMany(l => entry.GetTableDataColumns(l.CultureKey)));
         }
 
         private static string GetLanguageName(string dataColumnHeader)
         {
             Contract.Requires(dataColumnHeader != null);
 
-            var languageName = (dataColumnHeader.StartsWith(CommentHeaderPrefix, StringComparison.OrdinalIgnoreCase)
-                ? dataColumnHeader.Substring(CommentHeaderPrefix.Length) : dataColumnHeader);
+            var languageName = dataColumnHeader.StartsWith(CommentHeaderPrefix, StringComparison.OrdinalIgnoreCase)
+                ? dataColumnHeader.Substring(CommentHeaderPrefix.Length) : dataColumnHeader;
             return languageName;
         }
 

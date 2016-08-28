@@ -16,35 +16,50 @@
         private bool _isCanceled;
         private int _progress;
         private bool _isComplete;
+        private readonly CultureInfo _sourceLanguage;
+        private readonly CultureInfo _neutralResourcesLanguage;
+        private readonly IList<ITranslationItem> _items;
 
         public Session(CultureInfo sourceLanguage, CultureInfo neutralResourcesLanguage, IList<ITranslationItem> items)
         {
             Contract.Requires(neutralResourcesLanguage != null);
             Contract.Requires(items != null);
 
-            SourceLanguage = sourceLanguage ?? neutralResourcesLanguage;
-            NeutralResourcesLanguage = neutralResourcesLanguage;
-            Items = items;
+            _sourceLanguage = sourceLanguage ?? neutralResourcesLanguage;
+            _neutralResourcesLanguage = neutralResourcesLanguage;
+            _items = items;
 
             _messages = new ReadOnlyObservableCollection<string>(_internalMessage);
         }
 
         public CultureInfo SourceLanguage
         {
-            get;
-            private set;
+            get
+            {
+                Contract.Ensures(Contract.Result<CultureInfo>() != null);
+
+                return _sourceLanguage;
+            }
         }
 
         public CultureInfo NeutralResourcesLanguage
         {
-            get;
-            private set;
+            get
+            {
+                Contract.Ensures(Contract.Result<CultureInfo>() != null);
+
+                return _neutralResourcesLanguage;
+            }
         }
 
         public IList<ITranslationItem> Items
         {
-            get;
-            private set;
+            get
+            {
+                Contract.Ensures(Contract.Result<IList<ITranslationItem>>() != null);
+
+                return _items;
+            }
         }
 
         public bool IsCanceled
@@ -55,7 +70,7 @@
             }
             private set
             {
-                SetProperty(ref _isCanceled,value, () => IsCanceled);
+                SetProperty(ref _isCanceled, value, () => IsCanceled);
             }
         }
 
@@ -67,7 +82,7 @@
             }
             set
             {
-                 SetProperty(ref _progress, value, () => Progress);
+                SetProperty(ref _progress, value, () => Progress);
             }
         }
 
@@ -84,13 +99,7 @@
         }
 
         [PropertyDependency("IsComplete")]
-        public bool IsActive
-        {
-            get
-            {
-                return !IsComplete;
-            }
-        }
+        public bool IsActive => !IsComplete;
 
         public IList<string> Messages
         {
@@ -117,9 +126,9 @@
         {
             Contract.Invariant(_internalMessage != null);
             Contract.Invariant(_messages != null);
-            Contract.Invariant(SourceLanguage != null);
-            Contract.Invariant(NeutralResourcesLanguage != null);
-            Contract.Invariant(Items != null);
+            Contract.Invariant(_sourceLanguage != null);
+            Contract.Invariant(_neutralResourcesLanguage != null);
+            Contract.Invariant(_items != null);
         }
     }
 }

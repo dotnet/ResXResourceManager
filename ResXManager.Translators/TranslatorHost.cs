@@ -54,13 +54,15 @@
                     {
                         JsonConvert.PopulateObject(setting, translator);
                     }
-                    catch // Newtonsoft.Jason has not documented any exceptions...
+                    catch
                     {
+                        // Newtonsoft.Jason has not documented any exceptions...
                     }
                 }
             }
-            catch // Newtonsoft.Jason has not documented any exceptions...
+            catch
             {
+                // Newtonsoft.Jason has not documented any exceptions...           
             }
         }
 
@@ -115,6 +117,7 @@
                     }
                     finally
                     {
+                        // ReSharper disable once AccessToModifiedClosure
                         if (Interlocked.Decrement(ref translatorCounter) == 0)
                         {
                             session.IsComplete = true;

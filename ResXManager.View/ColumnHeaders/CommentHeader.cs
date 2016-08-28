@@ -15,13 +15,7 @@
             Contract.Requires(cultureKey != null);
         }
 
-        public override ColumnType ColumnType
-        {
-            get
-            {
-                return ColumnType.Comment;
-            }
-        }
+        public override ColumnType ColumnType => ColumnType.Comment;
 
         public override string ToString()
         {

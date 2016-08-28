@@ -1,16 +1,13 @@
 ﻿namespace tomenglertde.ResXManager.VSIX
 {
-    using System;
     using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Linq.Expressions;
     using System.Windows.Threading;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
-    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
     [Export(typeof(Configuration))]
@@ -44,6 +41,7 @@
 
         private void PersistMoveToResources()
         {
+            // ReSharper disable once ExplicitCallerInfoArgument
             SetValue(MoveToResources, nameof(MoveToResources));
         }
 
@@ -57,7 +55,7 @@
 
         public override bool IsScopeSupported => true;
 
-        public override ConfigurationScope Scope => (_solution.Globals != null) ? ConfigurationScope.Solution : ConfigurationScope.Global;
+        public override ConfigurationScope Scope => _solution.Globals != null ? ConfigurationScope.Solution : ConfigurationScope.Global;
 
         protected override T InternalGetValue<T>(T defaultValue, string key)
         {
@@ -84,7 +82,8 @@
                 }
             }
             catch
-            {
+            {   
+                // Just return false in case of errors.
             }
 
             return false;

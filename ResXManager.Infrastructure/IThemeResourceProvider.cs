@@ -10,7 +10,7 @@
     }
 
     [ContractClassFor(typeof(IThemeResourceProvider))]
-    abstract class ThemeResourceProviderContract : IThemeResourceProvider
+    internal abstract class ThemeResourceProviderContract : IThemeResourceProvider
     {
         public void LoadThemeResources(ResourceDictionary resource)
         {

@@ -42,10 +42,8 @@
                 return;
 
             var element = sender as DependencyObject;
-            if (element == null)
-                return;
 
-            var row = element.TryFindAncestor<DataGridRow>();
+            var row = element?.TryFindAncestor<DataGridRow>();
             if (row != null)
             {
                 row.IsSelected = true;

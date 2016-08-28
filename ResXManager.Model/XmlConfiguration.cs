@@ -33,7 +33,6 @@
         /// </summary>
         public const string KeyAttributeName = "Key";
 
-        private readonly ITracer _tracer;
         private readonly XDocument _document;
         private readonly XElement _root;
         private readonly XNamespace _namespace;
@@ -42,8 +41,9 @@
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XmlConfiguration"/> class.
+        /// Initializes a new instance of the <see cref="XmlConfiguration" /> class.
         /// </summary>
+        /// <param name="tracer">The tracer.</param>
         public XmlConfiguration(ITracer tracer)
             : this(tracer, null)
         {
@@ -53,12 +53,11 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlConfiguration" /> class.
         /// </summary>
+        /// <param name="tracer">The tracer.</param>
         /// <param name="reader">The reader providing the XML stream.</param>
         public XmlConfiguration(ITracer tracer, TextReader reader)
         {
             Contract.Requires(tracer != null);
-
-            _tracer = tracer;
 
             if ((reader != null) && (reader.Peek() != -1))
             {
@@ -74,7 +73,7 @@
                 }
                 catch (Exception ex)
                 {
-                    _tracer.TraceError(ex.ToString());
+                    tracer.TraceError(ex.ToString());
                 }
             }
 
@@ -121,7 +120,10 @@
         /// Gets the value with the specified key from the XML stream.
         /// </summary>
         /// <param name="key">The key.</param>
-        /// <returns>The value stored in the XML file, or null if the value does not exist.</returns>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns>
+        /// The value stored in the XML file, or null if the value does not exist.
+        /// </returns>
         public string GetValue(string key, string defaultValue)
         {
             Contract.Requires(key != null);
@@ -149,10 +151,7 @@
 
             if (value == null)
             {
-                if (valueNode != null)
-                {
-                    valueNode.Remove();
-                }
+                valueNode?.Remove();
                 return;
             }
 

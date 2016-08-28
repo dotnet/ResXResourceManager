@@ -5,7 +5,7 @@
     using System.ComponentModel;
     using System.Diagnostics.Contracts;
 
-    [ContractClass(typeof (ITranslatorContract))]
+    [ContractClass(typeof (TranslatorContract))]
     public interface ITranslator : INotifyPropertyChanged
     {
         string Id
@@ -44,7 +44,7 @@
     }
 
     [ContractClassFor(typeof (ITranslator))]
-    abstract class ITranslatorContract : ITranslator
+    internal abstract class TranslatorContract : ITranslator
     {
         string ITranslator.Id
         {

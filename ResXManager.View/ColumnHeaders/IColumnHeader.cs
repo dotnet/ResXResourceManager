@@ -37,7 +37,7 @@
     }
 
     [ContractClassFor(typeof(ILanguageColumnHeader))]
-    abstract class LanguageColumnHeaderContract : ILanguageColumnHeader
+    internal abstract class LanguageColumnHeaderContract : ILanguageColumnHeader
     {
         ColumnType IColumnHeader.ColumnType
         {

@@ -1,11 +1,12 @@
 ﻿// Guids.cs
 // MUST match guids.h
 
+// ReSharper disable InconsistentNaming
 namespace tomenglertde.ResXManager.VSIX
 {
     using System;
 
-    static class GuidList
+    internal static class GuidList
     {
         public const string guidResXManager_VSIXPkgString = "43b35fe0-1f30-48de-887a-68256474202a";
         public const string guidResXManager_VSIXCmdSetString = "4beab5e4-da91-4600-bd36-53a67b206b19";

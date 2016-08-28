@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.Composition.Hosting;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -29,9 +30,6 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.XamlExtensions;
-
-    using Configuration = tomenglertde.ResXManager.Model.Configuration;
-    using Process = System.Diagnostics.Process;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
@@ -232,19 +230,14 @@
 
         private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
         {
-            Contract.Requires(sender != null);
-
-            var resourceManager = (ResourceManager)sender;
-
-            if (!CanEdit(resourceManager, e.Entity, e.CultureKey))
+            if (!CanEdit(e.Entity, e.CultureKey))
             {
                 e.Cancel = true;
             }
         }
 
-        private bool CanEdit(ResourceManager resourceManager, ResourceEntity entity, CultureKey cultureKey)
+        private bool CanEdit(ResourceEntity entity, CultureKey cultureKey)
         {
-            Contract.Requires(resourceManager != null);
             Contract.Requires(entity != null);
 
             var languages = entity.Languages.Where(lang => (cultureKey == null) || cultureKey.Equals(lang.CultureKey)).ToArray();
@@ -258,7 +251,7 @@
                     if (culture == null)
                         return false; // no neutral culture => this should never happen.
 
-                    return AddLanguage(resourceManager, entity, culture);
+                    return AddLanguage(entity, culture);
                 }
                 catch (Exception ex)
                 {
@@ -293,7 +286,7 @@
                 return false;
 
             // if file is not under source control, we get an OK from QueryEditFiles even if the file is read only, so we have to test again:
-            lockedFiles = GetLockedFiles(languages); ;
+            lockedFiles = GetLockedFiles(languages);
 
             if (!lockedFiles.Any())
                 return true;
@@ -312,6 +305,7 @@
             catch { }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private Tuple<string, EnvDTE.Window>[] GetLanguagesOpenedInAnotherEditor(IEnumerable<ResourceLanguage> languages)
         {
             Contract.Requires(languages != null);
@@ -324,9 +318,8 @@
                 var items = from l in languages
                             let file = l.FileName
                             let projectFile = l.ProjectFile as DteProjectFile
-                            where projectFile != null
-                            let documents = projectFile.ProjectItems.Select(item => item.TryGetDocument()).Where(doc => doc != null)
-                            let window = documents.Select(doc => openDocuments?.GetValueOrDefault(doc)).FirstOrDefault(win => win != null)
+                            let documents = projectFile?.ProjectItems.Select(item => item.TryGetDocument()).Where(doc => doc != null)
+                            let window = documents?.Select(doc => openDocuments?.GetValueOrDefault(doc)).FirstOrDefault(win => win != null)
                             where window != null
                             select Tuple.Create(file, window);
 
@@ -365,9 +358,8 @@
                 .ToArray();
         }
 
-        private bool AddLanguage(ResourceManager resourceManager, ResourceEntity entity, CultureInfo culture)
+        private bool AddLanguage(ResourceEntity entity, CultureInfo culture)
         {
-            Contract.Requires(resourceManager != null);
             Contract.Requires(entity != null);
             Contract.Requires(culture != null);
 

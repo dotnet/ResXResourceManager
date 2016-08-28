@@ -27,13 +27,7 @@
             }
         }
 
-        public override ColumnType ColumnType
-        {
-            get
-            {
-                return ColumnType.Language;
-            }
-        }
+        public override ColumnType ColumnType => ColumnType.Language;
 
         public override string ToString()
         {

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
              xmlns:toms="urn:TomsToolbox"
              xmlns:model="urn:ResXManager.Model"
+             xmlns:vsix="clr-namespace:tomenglertde.ResXManager.VSIX"
              d:DataContext="{d:DesignInstance model:ResourceEntity}">
   <UserControl.Resources>
     <toms:CompositeConverter x:Key="ObjectToIconConverter">
@@ -13,8 +14,8 @@
     </toms:CompositeConverter>
   </UserControl.Resources>
   <Grid>
-    <Image Source="{Binding NeutralProjectFile.CodeGenerator, Converter={StaticResource ObjectToIconConverter}}" 
-           ToolTip="{Binding NeutralProjectFile.CodeGenerator, Converter={x:Static toms:ObjectToDescriptionConverter.Default}}" 
+    <Image Source="{Binding NeutralProjectFile.(vsix:DteProjectFile.CodeGenerator), Converter={StaticResource ObjectToIconConverter}}" 
+           ToolTip="{Binding NeutralProjectFile.(vsix:DteProjectFile.CodeGenerator), Converter={x:Static toms:ObjectToDescriptionConverter.Default}}" 
            VerticalAlignment="Top" 
            HorizontalAlignment="Left"/>
   </Grid>

@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:toms="urn:TomsToolbox"
                     xmlns:styles="clr-namespace:tomenglertde.ResXManager.Styles">
 
   <Style x:Key="{x:Static styles:ResourceKeys.TextBoxStyle}" TargetType="{x:Type TextBox}">

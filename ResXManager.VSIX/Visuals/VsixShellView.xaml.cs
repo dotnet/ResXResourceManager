@@ -55,7 +55,7 @@
 
         private static double ToGray(Color? color)
         {
-            return (color?.R * 0.21 + color?.G * 0.72 + color?.B * 0.07) ?? 0.0;
+            return color?.R * 0.21 + color?.G * 0.72 + color?.B * 0.07 ?? 0.0;
         }
 
         [ContractInvariantMethod]

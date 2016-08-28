@@ -7,7 +7,6 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf.Composition;
 
     /// <summary>

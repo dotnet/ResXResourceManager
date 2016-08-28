@@ -70,10 +70,8 @@
         public override object GroupNameFromItem(object item, int level, CultureInfo culture)
         {
             var cultureItem = item as CultureInfo;
-            if (cultureItem == null)
-                return null;
 
-            return cultureItem.GetAncestors().LastOrDefault();
+            return cultureItem?.GetAncestors().LastOrDefault();
         }
     }
 }

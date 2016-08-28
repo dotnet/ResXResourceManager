@@ -328,7 +328,7 @@
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public IDictionary<CultureKey, ResourceData> Snapshot
         {
             get
@@ -472,7 +472,7 @@
                 .Aggregate(0L, (a, match) => a | (1L << int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture)));
         }
 
-        class Comparer : IEqualityComparer<ResourceTableEntry>
+        private class Comparer : IEqualityComparer<ResourceTableEntry>
         {
             public static readonly Comparer Default = new Comparer();
 
@@ -492,7 +492,7 @@
             public int GetHashCode(ResourceTableEntry obj)
             {
                 if (obj == null)
-                    throw new ArgumentNullException("obj");
+                    throw new ArgumentNullException(nameof(obj));
 
                 return obj.Container.GetHashCode() + obj.Key.GetHashCode();
             }
@@ -511,6 +511,8 @@
             Contract.Invariant(_commentAnnotations != null);
             Contract.Invariant(_neutralLanguage != null);
             Contract.Invariant(_container != null);
+            Contract.Invariant(_deferredValuesChangedThrottle != null);
+            Contract.Invariant(_deferredCommentChangedThrottle != null);
             Contract.Invariant(_languages != null);
         }
     }

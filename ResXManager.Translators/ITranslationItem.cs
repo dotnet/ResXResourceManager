@@ -26,7 +26,7 @@
     }
 
     [ContractClassFor(typeof (ITranslationItem))]
-    abstract class TranslationItemContract : ITranslationItem
+    internal abstract class TranslationItemContract : ITranslationItem
     {
         string ITranslationItem.Source
         {

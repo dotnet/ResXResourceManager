@@ -97,10 +97,7 @@
 
         private void OnValueChanged()
         {
-            if (ValueChanged != null)
-            {
-                ValueChanged(this, EventArgs.Empty);
-            }
+            ValueChanged?.Invoke(this, EventArgs.Empty);
         }
 
         [ContractInvariantMethod]

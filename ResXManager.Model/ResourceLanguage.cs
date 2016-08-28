@@ -273,7 +273,7 @@
 
             var comparer = new DelegateComparer<string>((left, right) => string.Compare(left, right, stringComparison));
 
-            foreach (var item in nodes.OrderBy(node => node.TryGetAttribute(_nameAttributeName).TrimStart('>'), comparer))
+            foreach (var item in nodes.OrderBy(node => node.Attribute(_nameAttributeName)?.Value.TrimStart('>') ?? string.Empty, comparer))
             {
                 _documentRoot.Add(item);
             }

@@ -32,10 +32,12 @@
 
             foreach (var directoryFiles in fileNamesByDirectory)
             {
-                if ((directoryFiles == null) || string.IsNullOrEmpty(directoryFiles.Key))
+                var directoryPath = directoryFiles?.Key;
+
+                if (string.IsNullOrEmpty(directoryPath))
                     continue;
 
-                var directory = new DirectoryInfo(directoryFiles.Key);
+                var directory = new DirectoryInfo(directoryPath);
                 var project = FindProject(directory, solutionFolder.FullName);
 
                 var projectName = "<no project>";

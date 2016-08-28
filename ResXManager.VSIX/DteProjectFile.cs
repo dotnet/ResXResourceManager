@@ -177,7 +177,7 @@
             }
         }
 
-        public CodeGenerator GetCodeGenerator()
+        private CodeGenerator GetCodeGenerator()
         {
             try
             {
@@ -207,16 +207,7 @@
             return CodeGenerator.Unknown;
         }
 
-        private static bool IsTextTemplate(EnvDTE.ProjectItem item)
-        {
-            Contract.Requires(item != null);
-
-            var name = item.Name;
-
-            return (name != null) && name.EndsWith(@".tt", StringComparison.OrdinalIgnoreCase);
-        }
-
-        public void SetCodeGenerator(CodeGenerator value)
+        private void SetCodeGenerator(CodeGenerator value)
         {
             try
             {
@@ -244,6 +235,15 @@
             catch (ExternalException)
             {
             }
+        }
+
+        private static bool IsTextTemplate(EnvDTE.ProjectItem item)
+        {
+            Contract.Requires(item != null);
+
+            var name = item.Name;
+
+            return (name != null) && name.EndsWith(@".tt", StringComparison.OrdinalIgnoreCase);
         }
 
         private void SetTextTemplateCodeGenerator(EnvDTE.ProjectItem projectItem)

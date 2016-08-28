@@ -9,17 +9,15 @@
     using System.IO;
     using System.Linq;
 
-    using EnvDTE;
-
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Visuals;
     using tomenglertde.ResXManager.VSIX.Visuals;
 
     public interface IRefactorings
     {
-        bool CanMoveToResource(Document document);
+        bool CanMoveToResource(EnvDTE.Document document);
 
-        ResourceTableEntry MoveToResource(Document document);
+        ResourceTableEntry MoveToResource(EnvDTE.Document document);
     }
 
     [Export(typeof(IRefactorings))]
@@ -36,7 +34,7 @@
             _exportProvider = exportProvider;
         }
 
-        public bool CanMoveToResource(Document document)
+        public bool CanMoveToResource(EnvDTE.Document document)
         {
             var extension = Path.GetExtension(document?.FullName);
             if (extension == null)
@@ -65,7 +63,7 @@
             return s != null;
         }
 
-        public ResourceTableEntry MoveToResource(Document document)
+        public ResourceTableEntry MoveToResource(EnvDTE.Document document)
         {
             var extension = Path.GetExtension(document?.FullName);
             if (extension == null)
@@ -131,7 +129,7 @@
             return null;
         }
 
-        private static ResourceEntity GetPreferredResourceEntity(Document document, IEnumerable<ResourceEntity> entities)
+        private static ResourceEntity GetPreferredResourceEntity(EnvDTE.Document document, IEnumerable<ResourceEntity> entities)
         {
             Contract.Requires(document != null);
             Contract.Requires(entities != null);
@@ -148,7 +146,7 @@
             }
         }
 
-        private static bool IsInProject(ResourceEntity entity, Project project)
+        private static bool IsInProject(ResourceEntity entity, EnvDTE.Project project)
         {
             Contract.Requires(entity != null);
 
@@ -159,11 +157,11 @@
                 .Contains(project) ?? false;
         }
 
-        private static Selection GetSelection(Document document)
+        private static Selection GetSelection(EnvDTE.Document document)
         {
             Contract.Requires(document != null);
 
-            var textDocument = (TextDocument)document.Object(@"TextDocument");
+            var textDocument = (EnvDTE.TextDocument)document.Object(@"TextDocument");
 
             var topPoint = textDocument?.Selection?.TopPoint;
             if (topPoint == null)
@@ -180,11 +178,11 @@
 
         private class Selection
         {
-            private readonly TextDocument _textDocument;
+            private readonly EnvDTE.TextDocument _textDocument;
             private readonly string _line;
-            private readonly FileCodeModel _codeModel;
+            private readonly EnvDTE.FileCodeModel _codeModel;
 
-            public Selection(TextDocument textDocument, string line, FileCodeModel codeModel)
+            public Selection(EnvDTE.TextDocument textDocument, string line, EnvDTE.FileCodeModel codeModel)
             {
                 Contract.Requires(textDocument != null);
                 Contract.Requires(line != null);
@@ -195,21 +193,21 @@
             }
 
             [ContractVerification(false)]
-            public VirtualPoint Begin
+            public EnvDTE.VirtualPoint Begin
             {
                 get
                 {
-                    Contract.Ensures(Contract.Result<VirtualPoint>() != null);
+                    Contract.Ensures(Contract.Result<EnvDTE.VirtualPoint>() != null);
                     return _textDocument.Selection.TopPoint;
                 }
             }
 
             [ContractVerification(false)]
-            public VirtualPoint End
+            public EnvDTE.VirtualPoint End
             {
                 get
                 {
-                    Contract.Ensures(Contract.Result<VirtualPoint>() != null);
+                    Contract.Ensures(Contract.Result<EnvDTE.VirtualPoint>() != null);
                     return _textDocument.Selection.BottomPoint;
                 }
             }
@@ -227,9 +225,9 @@
                 }
             }
 
-            public string FunctionName => GetCodeElement(vsCMElement.vsCMElementFunction)?.Name;
+            public string FunctionName => GetCodeElement(EnvDTE.vsCMElement.vsCMElementFunction)?.Name;
 
-            public string ClassName => GetCodeElement(vsCMElement.vsCMElementClass)?.Name;
+            public string ClassName => GetCodeElement(EnvDTE.vsCMElement.vsCMElementClass)?.Name;
 
             public void MoveTo(int startColumn, int endColumn)
             {
@@ -249,7 +247,7 @@
                 selection?.ReplaceText(selection.Text, replacement);
             }
 
-            private EnvDTE.CodeElement GetCodeElement(vsCMElement scope)
+            private EnvDTE.CodeElement GetCodeElement(EnvDTE.vsCMElement scope)
             {
                 try
                 {

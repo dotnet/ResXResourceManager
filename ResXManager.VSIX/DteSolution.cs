@@ -12,7 +12,7 @@
     using tomenglertde.ResXManager.Model;
 
     [Export]
-    class DteSolution
+    internal class DteSolution
     {
         private const string SolutionItemsFolderName = "Solution Items";
 

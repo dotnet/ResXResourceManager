@@ -77,7 +77,7 @@
                 {
                     var data = entrySnapshots.Where(s => string.Equals(entry.Key, s.Key)).Select(s => s.Data).FirstOrDefault() ?? new DataSnapshot[0];
 
-                    entry.Snapshot = data.ToDictionary(item => new CultureKey(item.Language), item => new ResourceData { Text = item.Text, Comment = item.Comment }); ;
+                    entry.Snapshot = data.ToDictionary(item => new CultureKey(item.Language), item => new ResourceData { Text = item.Text, Comment = item.Comment });
                 });
             });
         }
@@ -97,7 +97,7 @@
         }
 
         [DataContract]
-        class EntitySnapshot
+        private class EntitySnapshot
         {
             [DataMember]
             public string ProjectName
@@ -122,7 +122,7 @@
         }
 
         [DataContract]
-        class EntrySnapshot
+        private class EntrySnapshot
         {
             [DataMember]
             public string Key
@@ -140,7 +140,7 @@
         }
 
         [DataContract]
-        class DataSnapshot
+        private class DataSnapshot
         {
             [DataMember(Name = "L", EmitDefaultValue = false)]
             public string Language

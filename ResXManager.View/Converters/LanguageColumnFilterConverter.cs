@@ -21,12 +21,9 @@
             return collectionView;
         }
 
-        static bool Filter(object item)
+        private static bool Filter(object item)
         {
-            if (item == null)
-                return false;
-
-            return ((DataGridColumn)item).Header is ILanguageColumnHeader;
+            return ((DataGridColumn)item)?.Header is ILanguageColumnHeader;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -10,7 +10,7 @@
     }
 
     [ContractClassFor(typeof (ISourceFilesProvider))]
-    abstract class SourceFilesProviderContract : ISourceFilesProvider
+    internal abstract class SourceFilesProviderContract : ISourceFilesProvider
     {
         public IList<ProjectFile> SourceFiles
         {

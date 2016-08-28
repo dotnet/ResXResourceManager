@@ -134,28 +134,28 @@
         }
 
         /// <summary>
-        /// Implements the operator >.
+        /// Implements the operator &gt;.
         /// </summary>
         public static bool operator >(CultureKey left, CultureKey right)
         {
             return Compare(left, right) > 0;
         }
         /// <summary>
-        /// Implements the operator <.
+        /// Implements the operator &lt;.
         /// </summary>
         public static bool operator <(CultureKey left, CultureKey right)
         {
             return Compare(left, right) < 0;
         }
         /// <summary>
-        /// Implements the operator >=.
+        /// Implements the operator &gt;=.
         /// </summary>
         public static bool operator >=(CultureKey left, CultureKey right)
         {
             return Compare(left, right) >= 0;
         }
         /// <summary>
-        /// Implements the operator <=.
+        /// Implements the operator &lt;=.
         /// </summary>
         public static bool operator <=(CultureKey left, CultureKey right)
         {
