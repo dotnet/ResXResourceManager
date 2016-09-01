@@ -55,7 +55,7 @@
             private long _total;
             private long _visited;
 
-            public int Progress => (int)(_total > 0 ? Math.Max(1, (100 * _visited) / _total) : 0);
+            public int Progress => (int)(_total <= 0 ? 0 : Math.Max(1, (100 * _visited) / _total));
 
             public Engine(CodeReferenceConfiguration configuration, ICollection<ProjectFile> sourceFiles, ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
             {

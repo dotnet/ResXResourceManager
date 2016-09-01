@@ -72,9 +72,16 @@
           <Setter TargetName="Text" Property="Text" Value="{x:Static properties:Resources.NoCodeReferencesToolTip}" />
         </DataTrigger>
         <DataTrigger Binding="{Binding CodeReferences}" Value="{x:Null}">
-          <Setter TargetName="Text" Property="Text" Value="{Binding Path=Progress, StringFormat={x:Static properties:Resources.CodeReferenceTrackingInProgress}}" />
+          <Setter TargetName="Text" Property="Text" Value="{Binding Path=Progress, Source={toms:Import model:CodeReferenceTracker}, StringFormat={x:Static properties:Resources.CodeReferenceTrackingInProgress}}"/>
           <Setter TargetName="Progress" Property="Visibility" Value="Visible" />
         </DataTrigger>
+        <MultiDataTrigger>
+          <MultiDataTrigger.Conditions>
+            <Condition Binding="{Binding CodeReferences}" Value="{x:Null}" />
+            <Condition Binding="{Binding Container.IsWinFormsDesignerResource}" Value="True" />
+          </MultiDataTrigger.Conditions>
+          <Setter TargetName="Text" Property="Text" Value="Code references for WinForms are not evaluated." />
+        </MultiDataTrigger>
       </ControlTemplate.Triggers>
     </ControlTemplate>
   </ToolTip.Template>

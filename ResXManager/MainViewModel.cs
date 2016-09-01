@@ -116,7 +116,7 @@
         {
             try
             {
-                _resourceManager.Reload(ResourceLoadOptions.FindCodeReferences);
+                _resourceManager.Reload();
             }
             catch (Exception ex)
             {

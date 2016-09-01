@@ -28,6 +28,7 @@
         private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
         private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
 
+        private readonly DispatcherThrottle _restartFindCodeReferencesThrottle;
         private readonly Configuration _configuration;
         private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly ITracer _tracer;
@@ -36,7 +37,8 @@
 
         private readonly ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
         private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
-        private readonly ICollection<ResourceTableEntry> _resourceTableEntries;
+        private readonly IObservableCollection<ResourceTableEntry> _allEntries;
+        private readonly IObservableCollection<ResourceTableEntry> _resourceTableEntries;
         private readonly ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
 
         private readonly ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
@@ -61,6 +63,10 @@
             _sourceFilesProvider = sourceFilesProvider;
             _performanceTracer = performanceTracer;
             _resourceTableEntries = _selectedEntities.ObservableSelectMany(entity => entity.Entries);
+            _allEntries = _resourceEntities.ObservableSelectMany(entity => entity.Entries);
+
+            _restartFindCodeReferencesThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, () => BeginFindCodeReferences(_sourceFilesProvider.SourceFiles));
+            _allEntries.CollectionChanged += (_, __) => _restartFindCodeReferencesThrottle.Tick();
         }
 
         /// <summary>
@@ -209,7 +215,7 @@
             }
         }
 
-        public void Reload(ResourceLoadOptions loadOptions)
+        public void Reload(ResourceLoadOptions loadOptions = ResourceLoadOptions.None)
         {
             var allSourceFiles = _sourceFilesProvider.SourceFiles;
 
@@ -221,12 +227,7 @@
 
         public void BeginFindCodeReferences()
         {
-            if (_codeReferenceTracker.IsActive)
-                return;
-
-            var allSourceFiles = _sourceFilesProvider.SourceFiles;
-
-            BeginFindCodeReferences(allSourceFiles);
+            _restartFindCodeReferencesThrottle.Tick();
         }
 
         public bool CanEdit(ResourceEntity resourceEntity, CultureKey cultureKey)
@@ -436,6 +437,8 @@
             Contract.Invariant(_sourceFilesProvider != null);
             Contract.Invariant(_tracer != null);
             Contract.Invariant(_performanceTracer != null);
+            Contract.Invariant(_restartFindCodeReferencesThrottle != null);
+            Contract.Invariant(_allEntries != null);
         }
     }
 }
