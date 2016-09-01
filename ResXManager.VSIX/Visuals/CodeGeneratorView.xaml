@@ -13,10 +13,10 @@
       <toms:StringToObjectConverter />
     </toms:CompositeConverter>
   </UserControl.Resources>
-  <Grid>
-    <Image Source="{Binding NeutralProjectFile.(vsix:DteProjectFile.CodeGenerator), Converter={StaticResource ObjectToIconConverter}}" 
-           ToolTip="{Binding NeutralProjectFile.(vsix:DteProjectFile.CodeGenerator), Converter={x:Static toms:ObjectToDescriptionConverter.Default}}" 
-           VerticalAlignment="Top" 
+  <Grid DataContext="{Binding NeutralProjectFile}" d:DataContext="{d:DesignInstance vsix:DteProjectFile}">
+    <Image Source="{Binding CodeGenerator, Converter={StaticResource ObjectToIconConverter}}"
+           ToolTip="{Binding CodeGenerator, Converter={x:Static toms:ObjectToDescriptionConverter.Default}}"
+           VerticalAlignment="Top"
            HorizontalAlignment="Left"/>
   </Grid>
 </UserControl>
