@@ -286,7 +286,7 @@
             {
                 Header = new LanguageHeader(resourceManager, cultureKey),
                 Binding = new Binding(@"Values[" + key + @"]"),
-                MinWidth = 50,
+                MinWidth = 120,
                 CellStyle = textCellStyle,
                 Width = new DataGridLength(2, DataGridLengthUnitType.Star),
                 Visibility = HiddenLanguageColumns.Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Hidden : Visibility.Visible
