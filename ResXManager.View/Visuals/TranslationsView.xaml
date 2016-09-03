@@ -109,11 +109,13 @@
                   <DockPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridCellsPanel}}" d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}">
                     <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" Orientation="Horizontal">
                       <Decorator Width="20" />
-                      <CheckBox Content="{x:Static properties:Resources.TranslationsPrefixHeader}" IsChecked="{Binding Configuration.PrefixTranslations}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+                      <CheckBox Content="{x:Static properties:Resources.TranslationsPrefixHeader}" 
+                                IsChecked="{Binding Configuration.PrefixTranslations}" 
+                                Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
                       <StackPanel Orientation="Horizontal" MinWidth="40">
-                        <TextBlock Text="&quot;" />
-                        <TextBox Text="{Binding Configuration.TranslationPrefix}" BorderThickness="0" Padding="-1" Background="Transparent" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
-                        <TextBlock Text="&quot;" />
+                        <TextBlock Text="&quot;" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding Configuration.TranslationPrefix}" BorderThickness="0" Padding="-1" Background="Transparent" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" VerticalAlignment="Center"/>
+                        <TextBlock Text="&quot;" VerticalAlignment="Center"/>
                       </StackPanel>
                     </StackPanel>
                     <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
