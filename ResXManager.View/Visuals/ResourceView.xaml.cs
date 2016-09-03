@@ -24,7 +24,7 @@
     /// Interaction logic for ResourceView.xaml
     /// </summary>
     [DataTemplate(typeof(ResourceViewModel))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
+    [PartCreationPolicy(CreationPolicy.Shared)]
     public partial class ResourceView
     {
         private readonly ResourceManager _resourceManager;
