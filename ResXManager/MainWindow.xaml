@@ -6,7 +6,7 @@
         xmlns:toms="urn:TomsToolbox"
         xmlns:infrastructure="urn:ResXManager.Infrastructure"
         xmlns:styles="urn:ResXManager.Styles"
-        Title="ResX Resource Manager" Height="1024" Width="1200"
+        Title="ResX Resource Manager" Height="800" Width="1000"
         Style="{DynamicResource {x:Static styles:ResourceKeys.WindowStyle}}">
   <ContentControl>
     <i:Interaction.Behaviors>
