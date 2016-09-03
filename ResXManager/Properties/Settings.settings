@@ -5,5 +5,11 @@
     <Setting Name="StartupFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="StartupSize" Type="System.Windows.Size" Scope="User">
+      <Value Profile="(Default)">1000,800</Value>
+    </Setting>
+    <Setting Name="StartupLocation" Type="System.Windows.Vector" Scope="User">
+      <Value Profile="(Default)">50,50</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

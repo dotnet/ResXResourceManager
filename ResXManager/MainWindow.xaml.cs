@@ -12,6 +12,7 @@
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.Properties;
 
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
@@ -24,6 +25,8 @@
     public partial class MainWindow
     {
         private readonly ITracer _tracer;
+        private Size _lastKnownSize;
+        private Vector _laskKnownLocation;
 
         [ImportingConstructor]
         public MainWindow(ExportProvider exportProvider, ITracer tracer)
@@ -44,6 +47,27 @@
             {
                 _tracer.TraceError(ex.ToString());
             }
+        }
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+
+            var size = Settings.StartupSize;
+
+            Width = Math.Max(100, size.Width);
+            Height = Math.Max(100, size.Height);
+
+            var location = Settings.StartupLocation;
+
+            if ((location.X > SystemParameters.VirtualScreenWidth - 100)
+                || (location.Y > SystemParameters.VirtualScreenHeight - 100)
+                || (location.X < SystemParameters.VirtualScreenLeft)
+                || (location.Y < SystemParameters.VirtualScreenTop))
+                return;
+
+            Left = Math.Max(0, location.X);
+            Top = Math.Max(0, location.Y);
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -77,6 +101,32 @@
                     }
                     break;
             }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            Settings.StartupLocation = _laskKnownLocation;
+            Settings.StartupSize = _lastKnownSize;
+        }
+
+        private static Settings Settings => Properties.Settings.Default;
+
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+
+            if (WindowState == WindowState.Normal)
+                _lastKnownSize = sizeInfo.NewSize;
+        }
+
+        protected override void OnLocationChanged(EventArgs e)
+        {
+            base.OnLocationChanged(e);
+
+            if (WindowState == WindowState.Normal)
+                _laskKnownLocation = new Vector(Left, Top);
         }
 
         private static void Navigate_Click(object sender, RoutedEventArgs e)
