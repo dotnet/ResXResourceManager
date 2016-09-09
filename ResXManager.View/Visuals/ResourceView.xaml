@@ -87,7 +87,7 @@
   <Grid FocusManager.FocusedElement="{Binding ElementName=DataGrid}">
 
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto" MinWidth="120" />
+      <ColumnDefinition Width="240" MinWidth="120" />
       <ColumnDefinition Width="Auto" />
       <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>
