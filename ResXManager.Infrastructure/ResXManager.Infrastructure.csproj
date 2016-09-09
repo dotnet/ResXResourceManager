@@ -192,7 +192,6 @@
     <Compile Include="IThemeResourceProvider.cs" />
     <Compile Include="ThemeManager.cs" />
     <Compile Include="ITracer.cs" />
-    <Compile Include="PerformanceTracer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionId.cs" />
   </ItemGroup>

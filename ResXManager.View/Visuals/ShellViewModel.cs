@@ -16,14 +16,17 @@
     [VisualCompositionExport(RegionId.Shell)]
     internal class ShellViewModel : ObservableObject
     {
+        private readonly PerformanceTracer _performanceTracer;
         private readonly DispatcherThrottle _updateThrottle;
         private bool _isLoading;
 
         [ImportingConstructor]
-        public ShellViewModel(ResourceManager resourceManager)
+        public ShellViewModel(ResourceManager resourceManager, PerformanceTracer performanceTracer)
         {
             Contract.Requires(resourceManager != null);
+            Contract.Requires(performanceTracer != null);
 
+            _performanceTracer = performanceTracer;
             _updateThrottle = new DispatcherThrottle(DispatcherPriority.Background, () => IsLoading = false);
 
             resourceManager.SelectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
@@ -47,13 +50,17 @@
 
             IsLoading = true;
 
-            Dispatcher.ProcessMessages(DispatcherPriority.Render);
+            // using (_performanceTracer.Start("Dispatcher.ProcessMessages"))
+            {
+                Dispatcher.ProcessMessages(DispatcherPriority.Render);
+            }
         }
 
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
+            Contract.Invariant(_performanceTracer != null);
             Contract.Invariant(_updateThrottle != null);
         }
     }

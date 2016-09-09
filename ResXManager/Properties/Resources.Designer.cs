@@ -71,6 +71,26 @@ namespace tomenglertde.ResXManager.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Assembly location: {0}.
+        /// </summary>
+        public static string AssemblyLocation {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("AssemblyLocation", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to ResX Resource Manager loaded.&amp;#13;&amp;#10;Hom....
+        /// </summary>
+        public static string IntroMessage {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("IntroMessage", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to The project has no resource file for the language ....
         /// </summary>
         public static string ProjectHasNoResourceFile {
@@ -89,6 +109,16 @@ namespace tomenglertde.ResXManager.Properties {
                 return ResourceManager.GetString("ProjectHasReadOnlyFiles", resourceCulture) ?? string.Empty;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Version: {0}.
+        /// </summary>
+        public static string Version {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("Version", resourceCulture) ?? string.Empty;
+            }
+        }
     }
 
     /// <summary>
@@ -99,6 +129,14 @@ namespace tomenglertde.ResXManager.Properties {
     public enum StringResourceKey
     {
         /// <summary>
+        ///   Looks up a localized string similar to Assembly location: {0}.
+        /// </summary>
+        AssemblyLocation,
+        /// <summary>
+        ///   Looks up a localized string similar to ResX Resource Manager loaded.&amp;#13;&amp;#10;Hom....
+        /// </summary>
+        IntroMessage,
+        /// <summary>
         ///   Looks up a localized string similar to The project has no resource file for the language ....
         /// </summary>
         ProjectHasNoResourceFile,
@@ -106,6 +144,10 @@ namespace tomenglertde.ResXManager.Properties {
         ///   Looks up a localized string similar to Some files in your project are not writable. You m....
         /// </summary>
         ProjectHasReadOnlyFiles,
+        /// <summary>
+        ///   Looks up a localized string similar to Version: {0}.
+        /// </summary>
+        Version,
     }
 
     /// <summary>

@@ -117,149 +117,60 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddEntryToWinFormsResourceWarning" xml:space="preserve">
+    <value>Zusätzliche Einträge in WinForms-Designer Ressourcen gehen verloren, wenn Sie das Formular bearbeiten.
+Wollen Sie trotzdem einen neuen Eintrag hinzufügen?</value>
+  </data>
   <data name="AddKeyToolTip" xml:space="preserve">
     <value>Neuen Schlüssel hinzufügen (Umsch+Einfg)</value>
   </data>
   <data name="AddLanguageToolTip" xml:space="preserve">
     <value>Neue Sprache hinzufügen</value>
   </data>
+  <data name="Authentication" xml:space="preserve">
+    <value>Authentifizierung</value>
+  </data>
+  <data name="AutoCreateNewLanguageFiles" xml:space="preserve">
+    <value>Alle Ressourcendateien sofort erstellen, wenn eine neue Ressourcensprache hinzugefügt wird</value>
+  </data>
+  <data name="CellSelection" xml:space="preserve">
+    <value>Einzelne Zellen markieren</value>
+  </data>
+  <data name="CellSelectionToolTip" xml:space="preserve">
+    <value>Das markieren einzelner Zellen erlauben, um deren Inhalt zu kopieren oder einzufügen.</value>
+  </data>
   <data name="ChooseColumnsToolTip" xml:space="preserve">
     <value>Spalten auswählen</value>
-  </data>
-  <data name="Comment" xml:space="preserve">
-    <value>Kommentar</value>
-  </data>
-  <data name="ConfirmDeleteItems" xml:space="preserve">
-    <value>Möchten sie die ausgewählten Einträge löschen?</value>
-  </data>
-  <data name="CopyToolTip" xml:space="preserve">
-    <value>Markierte Zeilen oder Zellen kopieren (Strg+C)</value>
-  </data>
-  <data name="DonateButtonToolTip" xml:space="preserve">
-    <value>Unterstützen Sie die Open-Source Community</value>
-  </data>
-  <data name="FlatViewToolTip" xml:space="preserve">
-    <value>Flache Ansicht</value>
-  </data>
-  <data name="GroupedViewToolTip" xml:space="preserve">
-    <value>Gruppierte Ansicht</value>
-  </data>
-  <data name="Key" xml:space="preserve">
-    <value>Schlüssel</value>
-  </data>
-  <data name="LikeButtonToolTip" xml:space="preserve">
-    <value>Unterstützen sie das Projekt, indem sie ein kurzes Review schreiben!</value>
-  </data>
-  <data name="Neutral" xml:space="preserve">
-    <value>Neutral</value>
-  </data>
-  <data name="NewLanguageIdPrompt" xml:space="preserve">
-    <value>Wählen sie die neue Sprache aus:</value>
-  </data>
-  <data name="PasteToolTip" xml:space="preserve">
-    <value>Zwischenablage einfügen (Strg+V)</value>
-  </data>
-  <data name="RefreshViewToolTip" xml:space="preserve">
-    <value>Ansicht neu laden</value>
-  </data>
-  <data name="ResourceFilterToolTip" xml:space="preserve">
-    <value>Ein regulärer Ausdruck zum Filtern der Dateien.
-Die Suche wird auf den Text  "{Projekt} - {Ordner}\{Datei}" angewendet.
-Der Text entspricht der Gruppenüberschrift in der gruppierten Ansicht.
-Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
-  </data>
-  <data name="ShowOnlyMissingToolTip" xml:space="preserve">
-    <value>Nur Zeilen anzeigen, die Warnungen oder Änderungen enthalten</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Löschen (Entf)</value>
-  </data>
-  <data name="Invariant" xml:space="preserve">
-    <value>Nicht lokalisiert</value>
-  </data>
-  <data name="ErrorAddingNewResourceFile" xml:space="preserve">
-    <value>Fehler beim Hinzufügen der neuen Ressourcedatei '{0}'</value>
-  </data>
-  <data name="CutToolTip" xml:space="preserve">
-    <value>Markierte Zeilen ausschneiden (Strg+X)</value>
-  </data>
-  <data name="DeleteToolTip" xml:space="preserve">
-    <value>Markierte Zeilen löschen (Entf)</value>
-  </data>
-  <data name="Cut" xml:space="preserve">
-    <value>Ausschneiden (Strg+X)</value>
-  </data>
-  <data name="Copy" xml:space="preserve">
-    <value>Kopieren (Strg+C)</value>
-  </data>
-  <data name="Paste" xml:space="preserve">
-    <value>Einfügen (Strg+V)</value>
   </data>
   <data name="CodeReferencesToolTip" xml:space="preserve">
     <value>Die Anzahl der gefundenen Code-Referenzen. Dies ist nur ein Hinweis auf die mögliche Verwendung, bitte lesen sie die Dokumentation für weitere Einzelheiten.</value>
   </data>
-  <data name="FindCodeReferencesButtonToolTip" xml:space="preserve">
-    <value>Referenzen im Quellcode erkennen.</value>
+  <data name="CodeReferencesTooManyDetailsToolTip" xml:space="preserve">
+    <value>Es sind zu viele Referenzen, um Einzelheiten anzuzeigen.</value>
   </data>
-  <data name="ConfirmCutItems" xml:space="preserve">
-    <value>Möchten sie die ausgewählten Einträge ausschneiden?</value>
+  <data name="CodeReferenceTrackingInProgress" xml:space="preserve">
+    <value>Code-Referenzen werden ermittelt ({0} %)</value>
   </data>
-  <data name="NewKeyPrompt" xml:space="preserve">
-    <value>Geben sie einen neuen Schlüssel ein:</value>
-  </data>
-  <data name="NoCodeReferencesToolTip" xml:space="preserve">
-    <value>Dieser Algorithmus hat keine Referenzen im Code gefunden. Es könnten aber noch indirekte Referenzen für diesen Text geben.</value>
+  <data name="Comment" xml:space="preserve">
+    <value>Kommentar</value>
   </data>
   <data name="CommentColumnHeader" xml:space="preserve">
     <value>Kommentar</value>
   </data>
-  <data name="ExportExcelAll" xml:space="preserve">
-    <value>Alles exportieren</value>
+  <data name="CommentToken" xml:space="preserve">
+    <value>Kommentarzeichen</value>
   </data>
-  <data name="ExportExcelSelection" xml:space="preserve">
-    <value>Auswahl exportieren</value>
+  <data name="Configuration_DuplicateKeyHandling" xml:space="preserve">
+    <value>Behandlung doppelter Ressourcenschlüssel</value>
   </data>
-  <data name="HelpButtonToolTip" xml:space="preserve">
-    <value>Dokumentation</value>
+  <data name="Configuration_ExcelExportModeHeader" xml:space="preserve">
+    <value>Excel Export</value>
   </data>
-  <data name="ImportExcel" xml:space="preserve">
-    <value>Importieren</value>
-  </data>
-  <data name="LanguageConfiguration_Description" xml:space="preserve">
-    <value>Dies ist eine Übersicht über die Sprachen, die vom System unterstützt werden. Die spezifischen Sprachen (z.B. 'en-US') werden nach den neutralen Sprache (z.B. 'en') gruppiert dargestellt. Um die Flagge für eine neutrale Sprache zu ändern, doppelklicken sie auf die gewünschte spezifische Sprache.</value>
-  </data>
-  <data name="ShellTabHeader_Languages" xml:space="preserve">
-    <value>Sprachen</value>
-  </data>
-  <data name="ShellTabHeader_Main" xml:space="preserve">
-    <value>Hauptansicht</value>
-  </data>
-  <data name="NoSelection" xml:space="preserve">
-    <value>Keine Auswahl.</value>
-  </data>
-  <data name="MultipleSelection" xml:space="preserve">
-    <value>Mehrfachauswahl.</value>
-  </data>
-  <data name="SelectedTotalToolTip" xml:space="preserve">
-    <value>Ausgewählt/Gesamt</value>
-  </data>
-  <data name="SortNodesByKey" xml:space="preserve">
-    <value>Beim Speichern den Inhalt von RESX-Dateien nach Schlüssel sortieren</value>
-  </data>
-  <data name="SortAllFilesNow" xml:space="preserve">
-    <value>Alle Dateien jetzt sortieren</value>
+  <data name="Configuration_FileCreationHeader" xml:space="preserve">
+    <value>Dateierstellung</value>
   </data>
   <data name="Configuration_General" xml:space="preserve">
     <value>Allgemein</value>
-  </data>
-  <data name="DetectCodeReferences_Header" xml:space="preserve">
-    <value>Referenzen im Quellcode erkennen</value>
-  </data>
-  <data name="SortNodesByKey_Confirmation" xml:space="preserve">
-    <value>Möchten sie jetzt den Inhalt aller Ressourcen-Dateien nach Schlüssel sortieren?</value>
-  </data>
-  <data name="CommentToken" xml:space="preserve">
-    <value>Kommentarzeichen</value>
   </data>
   <data name="Configuration_LoadSaveHeader" xml:space="preserve">
     <value>Laden &amp; Speichern</value>
@@ -267,32 +178,197 @@ Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
   <data name="ConfigurationScopeHeader" xml:space="preserve">
     <value>Ziel</value>
   </data>
-  <data name="FileExtensions" xml:space="preserve">
-    <value>Dateierweiterung</value>
+  <data name="ConfirmAddLanguage" xml:space="preserve">
+    <value>Erstellen neuer Ressourcendateien bestätigen</value>
   </data>
-  <data name="NeutralResourceLanguageHeader" xml:space="preserve">
-    <value>Standardsprache:</value>
+  <data name="ConfirmCutItems" xml:space="preserve">
+    <value>Möchten sie die ausgewählten Einträge ausschneiden?</value>
   </data>
-  <data name="RegularExpression" xml:space="preserve">
-    <value>Regulärer Ausdruck</value>
+  <data name="ConfirmDeleteItems" xml:space="preserve">
+    <value>Möchten sie die ausgewählten Einträge löschen?</value>
   </data>
-  <data name="EditSolutionConfigurationNotification" xml:space="preserve">
-    <value>Sie bearbeiten die projektmappenspezifischen Einstellungen. Um die Standardeinstellungen zu bearbeiten schließen sie die Projektmappe.</value>
+  <data name="Copy" xml:space="preserve">
+    <value>Kopieren (Strg+C)</value>
+  </data>
+  <data name="CopyToolTip" xml:space="preserve">
+    <value>Markierte Zeilen oder Zellen kopieren (Strg+C)</value>
+  </data>
+  <data name="CreateSnapshot" xml:space="preserve">
+    <value>Snapshot erzeugen</value>
+  </data>
+  <data name="Cut" xml:space="preserve">
+    <value>Ausschneiden (Strg+X)</value>
+  </data>
+  <data name="CutToolTip" xml:space="preserve">
+    <value>Markierte Zeilen ausschneiden (Strg+X)</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Löschen (Entf)</value>
+  </data>
+  <data name="DeleteToolTip" xml:space="preserve">
+    <value>Markierte Zeilen löschen (Entf)</value>
+  </data>
+  <data name="DetectCodeReferences_Header" xml:space="preserve">
+    <value>Referenzen im Quellcode erkennen</value>
+  </data>
+  <data name="Diagnostics" xml:space="preserve">
+    <value>Diagnose</value>
+  </data>
+  <data name="DonateButtonToolTip" xml:space="preserve">
+    <value>Unterstützen Sie die Open-Source Community</value>
   </data>
   <data name="EditDefaultConfigurationNotification" xml:space="preserve">
     <value>Sie bearbeiten die Standardeinstellungen. Wenn sie projektmappenspezifischen Einstellungen bearbeiten möchten öffnen sie eine Projektmappe.</value>
   </data>
-  <data name="Authentication" xml:space="preserve">
-    <value>Authentifizierung</value>
+  <data name="EditSolutionConfigurationNotification" xml:space="preserve">
+    <value>Sie bearbeiten die projektmappenspezifischen Einstellungen. Um die Standardeinstellungen zu bearbeiten schließen sie die Projektmappe.</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Aktiv</value>
   </data>
+  <data name="ErrorAddingNewResourceFile" xml:space="preserve">
+    <value>Fehler beim Hinzufügen der neuen Ressourcedatei '{0}'</value>
+  </data>
+  <data name="ExportExcelAll" xml:space="preserve">
+    <value>Alles exportieren</value>
+  </data>
+  <data name="ExportExcelSelection" xml:space="preserve">
+    <value>Auswahl exportieren</value>
+  </data>
+  <data name="FileExtensions" xml:space="preserve">
+    <value>Dateierweiterung</value>
+  </data>
+  <data name="FindCodeReferencesButtonToolTip" xml:space="preserve">
+    <value>Referenzen im Quellcode erkennen.</value>
+  </data>
+  <data name="FlatViewToolTip" xml:space="preserve">
+    <value>Flache Ansicht</value>
+  </data>
+  <data name="GroupedViewToolTip" xml:space="preserve">
+    <value>Gruppierte Ansicht</value>
+  </data>
+  <data name="HelpButtonToolTip" xml:space="preserve">
+    <value>Dokumentation</value>
+  </data>
+  <data name="ImportExcel" xml:space="preserve">
+    <value>Importieren</value>
+  </data>
+  <data name="ImportNormalizedTableExpected" xml:space="preserve">
+    <value>Die Tabelle muß normalisiert sein.</value>
+  </data>
+  <data name="IndexColumnHeaderToolTip" xml:space="preserve">
+    <value>Index des Eintrags in der Ressourcendatei.</value>
+  </data>
+  <data name="IndexColumnToggleButtonToolTip" xml:space="preserve">
+    <value>Die Indexspalte anzeigen</value>
+  </data>
+  <data name="IndexColumnToolTip" xml:space="preserve">
+    <value>Index des Eintrags in der Ressourcendatei. Zum umsortieren können auch Dezimalzahlen eingegeben werden.</value>
+  </data>
+  <data name="Invariant" xml:space="preserve">
+    <value>Nicht lokalisiert</value>
+  </data>
+  <data name="Key" xml:space="preserve">
+    <value>Schlüssel</value>
+  </data>
+  <data name="LanguageConfiguration_Description" xml:space="preserve">
+    <value>Dies ist eine Übersicht über die Sprachen, die vom System unterstützt werden. Die spezifischen Sprachen (z.B. 'en-US') werden nach den neutralen Sprache (z.B. 'en') gruppiert dargestellt. Um die Flagge für eine neutrale Sprache zu ändern, doppelklicken sie auf die gewünschte spezifische Sprache.</value>
+  </data>
+  <data name="LikeButtonToolTip" xml:space="preserve">
+    <value>Unterstützen sie das Projekt, indem sie ein kurzes Review schreiben!</value>
+  </data>
+  <data name="LoadSnapshot" xml:space="preserve">
+    <value>Snapshot laden</value>
+  </data>
+  <data name="MultipleSelection" xml:space="preserve">
+    <value>Mehrfachauswahl.</value>
+  </data>
+  <data name="NeedSingleEntitySelection" xml:space="preserve">
+    <value>Sie müssen eine einzelne Ressource in der linken Liste auswählen um Einträge hinzuzufügen.</value>
+  </data>
+  <data name="Neutral" xml:space="preserve">
+    <value>Neutral</value>
+  </data>
+  <data name="NeutralResourceLanguageHeader" xml:space="preserve">
+    <value>Standardsprache:</value>
+  </data>
+  <data name="NewKeyPrompt" xml:space="preserve">
+    <value>Geben sie einen neuen Schlüssel ein:</value>
+  </data>
+  <data name="NewLanguageIdPrompt" xml:space="preserve">
+    <value>Wählen sie die neue Sprache aus:</value>
+  </data>
+  <data name="NoCodeReferencesToolTip" xml:space="preserve">
+    <value>Dieser Algorithmus hat keine Referenzen im Code gefunden. Es könnten aber noch indirekte Referenzen für diesen Text geben.</value>
+  </data>
+  <data name="NoResourceFileForResource" xml:space="preserve">
+    <value>Es gibt keine Ressourcendatei für diese Ressource.</value>
+  </data>
+  <data name="NoSelection" xml:space="preserve">
+    <value>Keine Auswahl.</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>Einfügen (Strg+V)</value>
+  </data>
+  <data name="PasteFailed" xml:space="preserve">
+    <value>Fehler beim interpretieren der Daten aus der Zwischenablage:</value>
+  </data>
+  <data name="PasteSelectionSizeMismatch" xml:space="preserve">
+    <value>Die Daten in der Zwischenablage haben nicht die gleiche Größe wie die Auswahl.</value>
+  </data>
+  <data name="PasteToolTip" xml:space="preserve">
+    <value>Zwischenablage einfügen (Strg+V)</value>
+  </data>
+  <data name="Patterns" xml:space="preserve">
+    <value>Muster</value>
+  </data>
+  <data name="RefreshViewToolTip" xml:space="preserve">
+    <value>Ansicht neu laden</value>
+  </data>
+  <data name="RegularExpression" xml:space="preserve">
+    <value>Regulärer Ausdruck</value>
+  </data>
+  <data name="ResourceFilterToolTip" xml:space="preserve">
+    <value>Ein regulärer Ausdruck zum Filtern der Dateien.
+Die Suche wird auf den Text  "{Projekt} - {Ordner}\{Datei}" angewendet.
+Der Text entspricht der Gruppenüberschrift in der gruppierten Ansicht.
+Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
+  </data>
+  <data name="SaveFilesImmediatelyUponChange" xml:space="preserve">
+    <value>Dateien sofort nach Änderungen speichern</value>
+  </data>
+  <data name="SelectedTotalToolTip" xml:space="preserve">
+    <value>Ausgewählt/Gesamt</value>
+  </data>
   <data name="ShellTabHeader_Configuration" xml:space="preserve">
     <value>Konfiguration</value>
   </data>
+  <data name="ShellTabHeader_Languages" xml:space="preserve">
+    <value>Sprachen</value>
+  </data>
+  <data name="ShellTabHeader_Main" xml:space="preserve">
+    <value>Hauptansicht</value>
+  </data>
   <data name="ShellTabHeader_Translate" xml:space="preserve">
     <value>Übersetzen</value>
+  </data>
+  <data name="ShowOnlyMissingToolTip" xml:space="preserve">
+    <value>Nur Zeilen anzeigen, die Warnungen oder Änderungen enthalten</value>
+  </data>
+  <data name="ShowPerformanceTraces" xml:space="preserve">
+    <value>Performance-Tracer Meldungen im Ausgabefenster anzeigen</value>
+  </data>
+  <data name="SortAllFilesNow" xml:space="preserve">
+    <value>Alle Dateien jetzt sortieren</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sortieren mit:</value>
+  </data>
+  <data name="SortNodesByKey" xml:space="preserve">
+    <value>Beim Speichern den Inhalt von RESX-Dateien nach Schlüssel sortieren</value>
+  </data>
+  <data name="SortNodesByKey_Confirmation" xml:space="preserve">
+    <value>Möchten sie jetzt den Inhalt aller Ressourcen-Dateien nach Schlüssel sortieren?</value>
   </data>
   <data name="Translations_ApplyAll" xml:space="preserve">
     <value>Alle anwenden</value>
@@ -303,92 +379,22 @@ Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
   <data name="Translations_Restart" xml:space="preserve">
     <value>Neu starten</value>
   </data>
-  <data name="Translations_Stop" xml:space="preserve">
-    <value>Stop</value>
-  </data>
-  <data name="TranslatorConfiguration_SaveCredentials" xml:space="preserve">
-    <value>Anmeldeinformationen speichern (Anmeldeinformationen werden als Klartext in Ihrem lokalen Profil gespeichert!)</value>
-  </data>
-  <data name="AutoCreateNewLanguageFiles" xml:space="preserve">
-    <value>Alle Ressourcendateien sofort erstellen, wenn eine neue Ressourcensprache hinzugefügt wird</value>
-  </data>
-  <data name="Configuration_FileCreationHeader" xml:space="preserve">
-    <value>Dateierstellung</value>
-  </data>
-  <data name="ConfirmAddLanguage" xml:space="preserve">
-    <value>Erstellen neuer Ressourcendateien bestätigen</value>
-  </data>
-  <data name="SortBy" xml:space="preserve">
-    <value>Sortieren mit:</value>
-  </data>
-  <data name="TranslationsPrefixHeader" xml:space="preserve">
-    <value>Präfix vor übersetztem Text: </value>
-  </data>
-  <data name="NoResourceFileForResource" xml:space="preserve">
-    <value>Es gibt keine Ressourcendatei für diese Ressource.</value>
-  </data>
-  <data name="Configuration_ExcelExportModeHeader" xml:space="preserve">
-    <value>Excel Export</value>
-  </data>
   <data name="Translations_Source" xml:space="preserve">
     <value>Quelle:</value>
+  </data>
+  <data name="Translations_Stop" xml:space="preserve">
+    <value>Stop</value>
   </data>
   <data name="Translations_Targets" xml:space="preserve">
     <value>Ziele:</value>
   </data>
-  <data name="CodeReferenceTrackingInProgress" xml:space="preserve">
-    <value>Code-Referenzen werden ermittelt ({0} %)</value>
+  <data name="TranslationsPrefixHeader" xml:space="preserve">
+    <value>Präfix vor übersetztem Text: </value>
   </data>
-  <data name="Configuration_DuplicateKeyHandling" xml:space="preserve">
-    <value>Behandlung doppelter Ressourcenschlüssel</value>
-  </data>
-  <data name="IndexColumnToggleButtonToolTip" xml:space="preserve">
-    <value>Die Indexspalte anzeigen</value>
-  </data>
-  <data name="IndexColumnToolTip" xml:space="preserve">
-    <value>Index des Eintrags in der Ressourcendatei. Zum umsortieren können auch Dezimalzahlen eingegeben werden.</value>
-  </data>
-  <data name="IndexColumnHeaderToolTip" xml:space="preserve">
-    <value>Index des Eintrags in der Ressourcendatei.</value>
-  </data>
-  <data name="PasteFailed" xml:space="preserve">
-    <value>Fehler beim interpretieren der Daten aus der Zwischenablage:</value>
-  </data>
-  <data name="CreateSnapshot" xml:space="preserve">
-    <value>Snapshot erzeugen</value>
-  </data>
-  <data name="LoadSnapshot" xml:space="preserve">
-    <value>Snapshot laden</value>
+  <data name="TranslatorConfiguration_SaveCredentials" xml:space="preserve">
+    <value>Anmeldeinformationen speichern (Anmeldeinformationen werden als Klartext in Ihrem lokalen Profil gespeichert!)</value>
   </data>
   <data name="UnloadSnapshot" xml:space="preserve">
     <value>Snapshot entladen</value>
-  </data>
-  <data name="ImportNormalizedTableExpected" xml:space="preserve">
-    <value>Die Tabelle muß normalisiert sein.</value>
-  </data>
-  <data name="PasteSelectionSizeMismatch" xml:space="preserve">
-    <value>Die Daten in der Zwischenablage haben nicht die gleiche Größe wie die Auswahl.</value>
-  </data>
-  <data name="CellSelection" xml:space="preserve">
-    <value>Einzelne Zellen markieren</value>
-  </data>
-  <data name="CellSelectionToolTip" xml:space="preserve">
-    <value>Das markieren einzelner Zellen erlauben, um deren Inhalt zu kopieren oder einzufügen.</value>
-  </data>
-  <data name="Patterns" xml:space="preserve">
-    <value>Muster</value>
-  </data>
-  <data name="NeedSingleEntitySelection" xml:space="preserve">
-    <value>Sie müssen eine einzelne Ressource in der linken Liste auswählen um Einträge hinzuzufügen.</value>
-  </data>
-  <data name="AddEntryToWinFormsResourceWarning" xml:space="preserve">
-    <value>Zusätzliche Einträge in WinForms-Designer Ressourcen gehen verloren, wenn Sie das Formular bearbeiten.
-Wollen Sie trotzdem einen neuen Eintrag hinzufügen?</value>
-  </data>
-  <data name="CodeReferencesTooManyDetailsToolTip" xml:space="preserve">
-    <value>Es sind zu viele Referenzen, um Einzelheiten anzuzeigen.</value>
-  </data>
-  <data name="SaveFilesImmediatelyUponChange" xml:space="preserve">
-    <value>Dateien sofort nach Änderungen speichern</value>
   </data>
 </root>

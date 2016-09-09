@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Infrastructure
+﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
     using System.ComponentModel;
@@ -8,27 +8,48 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Threading;
+    using System.Windows.Threading;
+
+    using tomenglertde.ResXManager.Infrastructure;
+
+    using TomsToolbox.Desktop;
 
     [Export]
     public class PerformanceTracer
     {
         private readonly ITracer _tracer;
+        private readonly Configuration _configuration;
         private int _index;
 
         [ImportingConstructor]
-        public PerformanceTracer(ITracer tracer)
+        public PerformanceTracer(ITracer tracer, Configuration configuration)
         {
             Contract.Requires(tracer != null);
+            Contract.Requires(configuration != null);
 
             _tracer = tracer;
+            _configuration = configuration;
         }
 
         public IDisposable Start([Localizable(false)] string message)
         {
             Contract.Requires(message != null);
-            Contract.Ensures(Contract.Result<IDisposable>() != null);
+
+            if (!_configuration.ShowPerformanceTraces)
+                return null;
 
             return new Tracer(_tracer, Interlocked.Increment(ref _index), message);
+        }
+
+        public void Start([Localizable(false)] string message, DispatcherPriority priority)
+        {
+            Contract.Requires(message != null);
+
+            var tracer = Start(message);
+            if (tracer == null)
+                return;
+
+            Dispatcher.CurrentDispatcher.BeginInvoke(priority, () => tracer.Dispose());
         }
 
         private sealed class Tracer : IDisposable
@@ -73,6 +94,7 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_tracer != null);
+            Contract.Invariant(_configuration != null);
         }
     }
 }

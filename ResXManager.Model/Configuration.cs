@@ -167,6 +167,18 @@
             }
         }
 
+        public bool ShowPerformanceTraces
+        {
+            get
+            {
+                return GetValue(false);
+            }
+            set
+            {
+                SetValue(value);
+            }
+        }
+
         private void PersistCodeReferences()
         {
             SetValue(CodeReferences);

@@ -215,7 +215,12 @@
             }
         }
 
-        public void Reload(ResourceLoadOptions loadOptions = ResourceLoadOptions.None)
+        public void Reload()
+        {
+            Reload(ResourceLoadOptions.None);
+        }
+
+        public void Reload(ResourceLoadOptions loadOptions)
         {
             var allSourceFiles = _sourceFilesProvider.SourceFiles;
 

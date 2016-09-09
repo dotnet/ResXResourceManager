@@ -208,6 +208,7 @@
     <Compile Include="ISourceFilesProvider.cs" />
     <Compile Include="JsonSerializerTypeConverter.cs" />
     <Compile Include="LanguageEventArgs.cs" />
+    <Compile Include="PerformanceTracer.cs" />
     <Compile Include="ProjectFileExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProjectFile.cs" />

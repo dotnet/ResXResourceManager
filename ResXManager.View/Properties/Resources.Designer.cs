@@ -394,6 +394,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Diagnostics.
+        /// </summary>
+        public static string Diagnostics {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("Diagnostics", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Support the Open Source Community..
         /// </summary>
         public static string DonateButtonToolTip {
@@ -864,6 +874,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Show performance tracer messages in output window.
+        /// </summary>
+        public static string ShowPerformanceTraces {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ShowPerformanceTraces", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Sort all files now.
         /// </summary>
         public static string SortAllFilesNow {
@@ -1146,6 +1166,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         DetectCodeReferences_Header,
         /// <summary>
+        ///   Looks up a localized string similar to Diagnostics.
+        /// </summary>
+        Diagnostics,
+        /// <summary>
         ///   Looks up a localized string similar to Support the Open Source Community..
         /// </summary>
         DonateButtonToolTip,
@@ -1333,6 +1357,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Show only lines with warnings or changes.
         /// </summary>
         ShowOnlyMissingToolTip,
+        /// <summary>
+        ///   Looks up a localized string similar to Show performance tracer messages in output window.
+        /// </summary>
+        ShowPerformanceTraces,
         /// <summary>
         ///   Looks up a localized string similar to Sort all files now.
         /// </summary>

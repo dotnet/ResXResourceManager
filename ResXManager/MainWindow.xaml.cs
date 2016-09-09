@@ -117,6 +117,8 @@
         {
             base.OnRenderSizeChanged(sizeInfo);
 
+            Contract.Assume(sizeInfo != null);
+
             if (WindowState == WindowState.Normal)
                 _lastKnownSize = sizeInfo.NewSize;
         }

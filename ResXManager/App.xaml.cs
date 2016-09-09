@@ -5,6 +5,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
+    using System.Reflection;
     using System.Windows;
 
     using tomenglertde.ResXManager.Infrastructure;
@@ -31,16 +32,21 @@
         {
             base.OnStartup(e);
 
-            var path = Path.GetDirectoryName(GetType().Assembly.Location);
-            Contract.Assume(!string.IsNullOrEmpty(path));
+            var assembly = GetType().Assembly;
+            var folder = Path.GetDirectoryName(assembly.Location);
+            Contract.Assume(!string.IsNullOrEmpty(folder));
 
-            _compositionHost.AddCatalog(GetType().Assembly);
-            _compositionHost.AddCatalog(new DirectoryCatalog(path, "*.dll"));
+            _compositionHost.AddCatalog(assembly);
+            _compositionHost.AddCatalog(new DirectoryCatalog(folder, "*.dll"));
 
             Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
 
             var tracer = _compositionHost.GetExportedValue<ITracer>();
             tracer.WriteLine("Started");
+
+            tracer.WriteLine(ResXManager.Properties.Resources.IntroMessage);
+            tracer.WriteLine(ResXManager.Properties.Resources.AssemblyLocation, folder);
+            tracer.WriteLine(ResXManager.Properties.Resources.Version, new AssemblyName(assembly.FullName).Version);
 
             VisualComposition.Error += (_, args) => tracer.TraceError(args.Text);
 

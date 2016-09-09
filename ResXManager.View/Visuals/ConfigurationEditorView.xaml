@@ -151,6 +151,12 @@
 
       <Decorator Height="5" />
 
+      <GroupBox Header="{x:Static properties:Resources.Diagnostics}" Style="{StaticResource GroupStyle}">
+        <CheckBox Margin="10" Content="{x:Static properties:Resources.ShowPerformanceTraces}" IsChecked="{Binding Configuration.ShowPerformanceTraces}"/>
+      </GroupBox>
+
+      <Decorator Height="5" />
+
       <GroupBox Header="{x:Static properties:Resources.DetectCodeReferences_Header}" Style="{StaticResource GroupStyle}">
         <DataGrid ItemsSource="{Binding Configuration.CodeReferences.Items}"
                   AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False"

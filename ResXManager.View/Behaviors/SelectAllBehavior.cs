@@ -5,13 +5,18 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Interactivity;
+    using System.Windows.Threading;
+
+    using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf.Composition;
 
     public class SelectAllBehavior : Behavior<ListBox>
     {
         private readonly DispatcherThrottle _collectionChangedThrottle;
         private bool _isListBoxUpdating;
+        private PerformanceTracer _performanceTracer;
 
         public SelectAllBehavior()
         {
@@ -41,6 +46,8 @@
 
             listBox.SelectionChanged += ListBox_SelectionChanged;
             ((INotifyCollectionChanged)listBox.Items).CollectionChanged += (_, __) => _collectionChangedThrottle.Tick();
+
+            _performanceTracer = listBox.GetExportProvider().GetExportedValue<PerformanceTracer>();
         }
 
         private void ListBox_SelectionChanged(object sender, EventArgs e)
@@ -78,7 +85,12 @@
 
             if (AreAllFilesSelected.GetValueOrDefault())
             {
-                listBox?.SelectAll();
+                _performanceTracer?.Start("ListBox.SelectAll (UI Thread)", DispatcherPriority.Input);
+
+                using (_performanceTracer?.Start("ListBox.SelectAll"))
+                {
+                    listBox?.SelectAll();
+                }
             }
         }
 
