@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel.Composition;
@@ -10,6 +11,7 @@
     using System.IO;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Data;
     using System.Windows.Threading;
 
     using tomenglertde.ResXManager.Infrastructure;
@@ -44,6 +46,7 @@
         private readonly ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
 
         private string _snapshot;
+        private CollectionView _groupedResourceTableEntries;
 
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
         public event EventHandler<EventArgs> Loaded;
@@ -114,15 +117,17 @@
             }
         }
 
-        public ICollection<ResourceTableEntry> ResourceTableEntries
+        public IObservableCollection<ResourceTableEntry> ResourceTableEntries
         {
             get
             {
-                Contract.Ensures(Contract.Result<ICollection<ResourceTableEntry>>() != null);
+                Contract.Ensures(Contract.Result<IObservableCollection<ResourceTableEntry>>() != null);
 
                 return _resourceTableEntries;
             }
         }
+
+        public CollectionView GroupedResourceTableEntries => _groupedResourceTableEntries ?? (_groupedResourceTableEntries = CreateGroupedListCollectionView());
 
         public ObservableCollection<CultureKey> CultureKeys
         {
@@ -426,6 +431,16 @@
             Contract.Ensures(Contract.Result<string>() != null);
 
             return _snapshot = ResourceEntities.CreateSnapshot();
+        }
+
+        private ListCollectionView CreateGroupedListCollectionView()
+        {
+            var collectionView = new ListCollectionView((IList)_resourceTableEntries);
+
+            // ReSharper disable once PossibleNullReferenceException 
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Container"));
+
+            return collectionView;
         }
 
         [ContractInvariantMethod]

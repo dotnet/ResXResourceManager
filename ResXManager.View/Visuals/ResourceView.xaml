@@ -59,12 +59,6 @@
       </CollectionViewSource.GroupDescriptions>
     </CollectionViewSource>
 
-    <CollectionViewSource x:Key="GroupedResourceTableEntriesSource" Source="{Binding ResourceManager.ResourceTableEntries}">
-      <CollectionViewSource.GroupDescriptions>
-        <PropertyGroupDescription PropertyName="Container" />
-      </CollectionViewSource.GroupDescriptions>
-    </CollectionViewSource>
-
     <dgx:RegexContentFilterFactory x:Key="RegexContentFilterFactory" />
 
     <effects:InvertGrayEffect x:Key="InvertGrayEffect" />
@@ -394,7 +388,7 @@
         <Border DockPanel.Dock="Bottom" BorderThickness="0,0.7,0,0" BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
           <DockPanel DockPanel.Dock="Bottom" Background="{Binding Background, ElementName=DataGrid}">
             <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" ToolTip="{x:Static properties:Resources.SelectedTotalToolTip}">
-              <Run Text="{Binding ResourceManager.SelectedTableEntries.Count, Mode=OneWay}" /><Run Text="/" /><Run Text="{Binding ResourceManager.ResourceTableEntries.Count, Mode=OneWay}" /><Run Text="  " />
+              <Run Text="{Binding ResourceManager.SelectedTableEntries.Count, Mode=OneWay}" /><Run Text="/" /><Run Text="{Binding ResourceTableEntryCount, Mode=OneWay}" /><Run Text="  " />
             </TextBlock>
             <Control Focusable="False">
               <Control.Resources>
@@ -596,7 +590,7 @@
                 <Setter Property="dgx:DataGridFilter.IsAutoFilterEnabled" Value="True" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding Path=IsChecked, ElementName=GroupedViewButton}" Value="True">
-                    <Setter Property="ItemsSource" Value="{Binding Source={StaticResource GroupedResourceTableEntriesSource}}" />
+                    <Setter Property="ItemsSource" Value="{Binding ResourceManager.GroupedResourceTableEntries}" />
                     <Setter Property="toms:StyleBindings.GroupStyle" Value="{StaticResource GroupStyle}" />
                   </DataTrigger>
                   <DataTrigger Binding="{Binding IsCellSelectionEnabled}" Value="True">

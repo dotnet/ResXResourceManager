@@ -23,6 +23,7 @@
     [VisualCompositionExport(RegionId.Content, Sequence = 1)]
     internal class ResourceViewModel : ObservableObject
     {
+        private readonly DispatcherThrottle _resourceTableEntiyCountUpdateThrottle;
         private readonly ResourceManager _resourceManager;
         private string _loadedSnapshot;
         private bool _isCellSelectionEnabled;
@@ -33,6 +34,9 @@
             Contract.Requires(resourceManager != null);
 
             _resourceManager = resourceManager;
+
+            _resourceTableEntiyCountUpdateThrottle = new DispatcherThrottle(() => OnPropertyChanged(nameof(ResourceTableEntryCount)));
+            _resourceManager.ResourceTableEntries.CollectionChanged += (_, __) => _resourceTableEntiyCountUpdateThrottle.Tick();
         }
 
         public ResourceManager ResourceManager
@@ -110,6 +114,8 @@
                 });
             }
         }
+
+        public int ResourceTableEntryCount => _resourceManager.ResourceTableEntries.Count;
 
         private void LoadSnapshot(string fileName)
         {
