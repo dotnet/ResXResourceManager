@@ -83,15 +83,12 @@
         {
             var listBox = AssociatedObject;
 
-            if (AreAllFilesSelected.GetValueOrDefault())
-            {
-                _performanceTracer?.Start("ListBox.SelectAll (UI Thread)", DispatcherPriority.Input);
+            if (!AreAllFilesSelected.GetValueOrDefault())
+                return;
 
-                using (_performanceTracer?.Start("ListBox.SelectAll"))
-                {
-                    listBox?.SelectAll();
-                }
-            }
+            _performanceTracer?.Start("ListBox.SelectAll", DispatcherPriority.Input);
+
+            listBox?.SelectAll();
         }
 
         private void AreAllFilesSelected_Changed(bool? newValue)
