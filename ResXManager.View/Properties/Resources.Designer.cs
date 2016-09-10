@@ -194,6 +194,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to +Ctrl =&amp;gt; Apply star sizes to right columns&....
+        /// </summary>
+        public static string ColumnHeaderGripperToolTip {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ColumnHeaderGripperToolTip", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Comment.
         /// </summary>
         public static string Comment {
@@ -1085,6 +1095,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Code reference detection is still in progress ({0}....
         /// </summary>
         CodeReferenceTrackingInProgress,
+        /// <summary>
+        ///   Looks up a localized string similar to +Ctrl =&amp;gt; Apply star sizes to right columns&....
+        /// </summary>
+        ColumnHeaderGripperToolTip,
         /// <summary>
         ///   Looks up a localized string similar to Comment.
         /// </summary>

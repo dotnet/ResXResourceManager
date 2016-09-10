@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="1000"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
              xmlns:model="urn:ResXManager.Model"
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
@@ -43,16 +42,16 @@
           <Style TargetType="Button" BasedOn="{StaticResource PushButtonStyle}" />
         </StackPanel.Resources>
         <Button Command="{Binding Translations.ApplyAllCommand}">
-          <ContentControl Content="{x:Static properties:Resources.Translations_ApplyAll}" Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_ApplyAll}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
         <Button Command="{Binding Translations.ApplySelectedCommand}">
-          <ContentControl Content="{x:Static properties:Resources.Translations_ApplySelected}" Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_ApplySelected}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
         <Button Command="{Binding Translations.RestartCommand}">
-          <ContentControl Content="{x:Static properties:Resources.Translations_Restart}" Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_Restart}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
         <Button Command="{Binding Translations.StopCommand}">
-          <ContentControl Content="{x:Static properties:Resources.Translations_Stop}" Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_Stop}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
       </StackPanel>
       <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="100" HorizontalScrollBarVisibility="Auto">
@@ -69,7 +68,7 @@
                   IsEnabled="{Binding Translations.Session.IsComplete}" toms:MultiSelectorExtensions.SelectionBinding="{Binding Translations.SelectedItems}">
           <DataGrid.RowHeaderTemplate>
             <DataTemplate DataType="DataGridRowHeader">
-              <CheckBox Style="{StaticResource {x:Static themes:ResourceKeys.DataGridRowCheckBoxStyle}}" />
+              <CheckBox Style="{StaticResource {x:Static toms:ResourceKeys.DataGridRowCheckBoxStyle}}" />
             </DataTemplate>
           </DataGrid.RowHeaderTemplate>
           <DataGrid.Columns>

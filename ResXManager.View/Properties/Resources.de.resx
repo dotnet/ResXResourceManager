@@ -151,6 +151,10 @@ Wollen Sie trotzdem einen neuen Eintrag hinzufügen?</value>
   <data name="CodeReferenceTrackingInProgress" xml:space="preserve">
     <value>Code-Referenzen werden ermittelt ({0} %)</value>
   </data>
+  <data name="ColumnHeaderGripperToolTip" xml:space="preserve">
+    <value>+ Strg =&gt; Rechten Spalten gleichmäßig vergrößern
++ Shift =&gt; Rechte Spalten nicht automatisch verkleinern</value>
+  </data>
   <data name="Comment" xml:space="preserve">
     <value>Kommentar</value>
   </data>

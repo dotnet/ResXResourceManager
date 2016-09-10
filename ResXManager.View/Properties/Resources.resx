@@ -156,6 +156,10 @@ Do you want to add a new entry anyway?</value>
   <data name="CodeReferenceTrackingInProgress" xml:space="preserve">
     <value>Code reference detection is still in progress ({0} %).</value>
   </data>
+  <data name="ColumnHeaderGripperToolTip" xml:space="preserve">
+    <value>+Ctrl =&gt; Apply star sizes to right columns
++Shift =&gt; Extend beyond available size</value>
+  </data>
   <data name="Comment" xml:space="preserve">
     <value>Comment</value>
   </data>

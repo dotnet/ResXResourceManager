@@ -3,9 +3,9 @@
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-                xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
                 xmlns:styles="clr-namespace:tomenglertde.ResXManager.Styles;assembly=ResXManager.Styles"
                 xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
+                xmlns:toms="urn:TomsToolbox"
                 Focusable="False">
   <ContentControl.Template>
     <ControlTemplate TargetType="ContentControl">
@@ -15,12 +15,12 @@
             <Button Padding="12,3" IsDefault="True"
                     Command="{Binding CommitCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=visuals:ConfirmationDialog}}"
                     Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
-              <ContentControl Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" Content="OK" HorizontalContentAlignment="Center" />
+              <ContentControl Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" Content="OK" HorizontalContentAlignment="Center" />
             </Button>
             <Decorator Width="10" />
             <Button Padding="12,3" IsCancel="True"
                     Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
-              <ContentControl Style="{StaticResource {x:Static themes:ResourceKeys.SharedWidthContainerStyle}}" Content="Cancel" HorizontalContentAlignment="Center" />
+              <ContentControl Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" Content="Cancel" HorizontalContentAlignment="Center" />
             </Button>
           </StackPanel>
         </Grid>
