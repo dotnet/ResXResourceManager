@@ -46,7 +46,6 @@
         private readonly ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
 
         private string _snapshot;
-        private CollectionView _groupedResourceTableEntries;
 
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
         public event EventHandler<EventArgs> Loaded;
@@ -127,7 +126,18 @@
             }
         }
 
-        public CollectionView GroupedResourceTableEntries => _groupedResourceTableEntries ?? (_groupedResourceTableEntries = CreateGroupedListCollectionView());
+        public CollectionView GroupedResourceTableEntries
+        {
+            get
+            {
+                CollectionView collectionView = new ListCollectionView((IList)_resourceTableEntries);
+
+                // ReSharper disable once PossibleNullReferenceException
+                collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Container"));
+
+                return collectionView;
+            }
+        }
 
         public ObservableCollection<CultureKey> CultureKeys
         {
@@ -431,16 +441,6 @@
             Contract.Ensures(Contract.Result<string>() != null);
 
             return _snapshot = ResourceEntities.CreateSnapshot();
-        }
-
-        private ListCollectionView CreateGroupedListCollectionView()
-        {
-            var collectionView = new ListCollectionView((IList)_resourceTableEntries);
-
-            // ReSharper disable once PossibleNullReferenceException 
-            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Container"));
-
-            return collectionView;
         }
 
         [ContractInvariantMethod]
