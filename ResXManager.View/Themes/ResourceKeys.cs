@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Themes
 {
     using System.Windows;
-    using System.Windows.Controls;
 
     public static class ResourceKeys
     {
