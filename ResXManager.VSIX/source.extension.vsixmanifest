@@ -3,7 +3,7 @@
   <Identifier Id="43b35fe0-1f30-48de-887a-68256474202a">
     <Name>ResXManager</Name>
     <Author>tom-englert.de</Author>
-    <Version>1.0.0.85</Version>
+    <Version>1.0.0.86</Version>
     <Description xml:space="preserve">Manage localization of all ResX-Based resources in one place. Shows all resources of a solution and let's you edit the strings and their localizations in a well-arranged data grid.</Description>
     <Locale>1033</Locale>
     <MoreInfoUrl>http://resxresourcemanager.codeplex.com/</MoreInfoUrl>

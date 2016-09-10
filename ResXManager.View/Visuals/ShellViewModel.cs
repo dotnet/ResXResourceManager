@@ -16,6 +16,7 @@
     [VisualCompositionExport(RegionId.Shell)]
     internal class ShellViewModel : ObservableObject
     {
+        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private readonly PerformanceTracer _performanceTracer;
         private readonly DispatcherThrottle _updateThrottle;
         private bool _isLoading;

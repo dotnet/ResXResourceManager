@@ -3,6 +3,13 @@
 [url:Reviews|https://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68/view/Reviews]
 [url:GitHub|https://github.com/tom-englert/ResXResourceManager/releases]
 
+1.0.0.86:
+* WI4723: Background saving / on-demand saving. (Configurable via options tab)
+* WI4740: Improved loading performance.
+* WI4741: Show less columns to improve scrolling performance.
+* WI4742: Remember size and position of window.
+* WI4743: Switching tabs loses sort and scroll info
+* WI4744: Show also language codes in the column headers.
 1.0.0.85:
 * Speed up SelectGroupOnGroupHeaderClick.
 * Defer loading of resources until really needed to not interfere with solution load time.
