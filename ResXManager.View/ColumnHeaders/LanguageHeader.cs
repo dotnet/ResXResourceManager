@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
     using System.Diagnostics.Contracts;
+    using System.Globalization;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
@@ -23,7 +24,12 @@
             {
                 Contract.Ensures(Contract.Result<string>() != null);
 
-                return CultureKey.Culture.Maybe().Return(c => c.DisplayName) ?? Resources.Neutral;
+                var cultureInfo = CultureKey.Culture;
+
+                if (cultureInfo == null)
+                    return Resources.Neutral;
+
+                return string.Format(CultureInfo.CurrentCulture, "{0} [{1}]", cultureInfo.DisplayName, cultureInfo);
             }
         }
 

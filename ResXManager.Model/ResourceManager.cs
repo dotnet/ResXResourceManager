@@ -300,6 +300,7 @@
                 .SelectMany(entity => entity.Languages)
                 .Select(lang => lang.CultureKey)
                 .Distinct()
+                .OrderBy(item => item.Culture?.DisplayName)
                 .ToArray();
 
             _cultureKeys.SynchronizeWith(cultureKeys);
