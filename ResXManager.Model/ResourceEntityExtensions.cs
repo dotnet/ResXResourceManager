@@ -26,18 +26,21 @@
             Contract.Requires(entries != null);
             Contract.Ensures(Contract.Result<IList<IList<string>>>() != null);
 
-            var languages = entries.SelectMany(e => e.Container.Languages).Distinct().ToArray();
+            var languages = entries.SelectMany(e => e.Container.Languages)
+                .Select(l => l.CultureKey)
+                .Distinct()
+                .ToArray();
 
             var table = languages.GetTableHeaderLines().Concat(entries.GetTableDataLines(languages)).ToArray();
 
             return table;
         }
 
-        private static IEnumerable<string> GetTableLanguageColumnHeaders(this ResourceLanguage language)
+        private static IEnumerable<string> GetTableLanguageColumnHeaders(this CultureKey cultureKey)
         {
-            Contract.Requires(language != null);
+            Contract.Requires(cultureKey != null);
 
-            var cultureName = language.CultureKey.ToString();
+            var cultureName = cultureKey.ToString();
 
             yield return CommentHeaderPrefix + cultureName;
             yield return cultureName;
@@ -54,7 +57,7 @@
         /// </summary>
         /// <param name="languages"></param>
         /// <returns>The header line.</returns>
-        private static IEnumerable<IList<string>> GetTableHeaderLines(this IEnumerable<ResourceLanguage> languages)
+        private static IEnumerable<IList<string>> GetTableHeaderLines(this IEnumerable<CultureKey> languages)
         {
             Contract.Requires(languages != null);
 
@@ -69,7 +72,7 @@
         /// <param name="entries"></param>
         /// <param name="languages"></param>
         /// <returns>The data table.</returns>
-        private static IEnumerable<IList<string>> GetTableDataLines(this IEnumerable<ResourceTableEntry> entries, IEnumerable<ResourceLanguage> languages)
+        private static IEnumerable<IList<string>> GetTableDataLines(this IEnumerable<ResourceTableEntry> entries, IEnumerable<CultureKey> languages)
         {
             Contract.Requires(entries != null);
             Contract.Requires(languages != null);
@@ -85,12 +88,12 @@
         /// <returns>
         /// The columns of this line.
         /// </returns>
-        private static IEnumerable<string> GetTableLine(this ResourceTableEntry entry, IEnumerable<ResourceLanguage> languages)
+        private static IEnumerable<string> GetTableLine(this ResourceTableEntry entry, IEnumerable<CultureKey> languages)
         {
             Contract.Requires(entry != null);
             Contract.Requires(languages != null);
 
-            return new[] { entry.Key }.Concat(languages.SelectMany(l => entry.GetTableDataColumns(l.CultureKey)));
+            return new[] { entry.Key }.Concat(languages.SelectMany(entry.GetTableDataColumns));
         }
 
         private static string GetLanguageName(string dataColumnHeader)

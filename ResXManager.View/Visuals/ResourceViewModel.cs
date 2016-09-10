@@ -154,14 +154,11 @@
 
         private bool CanCopy(DataGrid dataGrid)
         {
-            if (!dataGrid.HasRectangularCellSelection())
-                return false;
-
             var entries = _resourceManager.SelectedTableEntries;
 
             var totalNumberOfEntries = entries.Count;
             if (totalNumberOfEntries == 0)
-                return true; // cell selection
+                return dataGrid.HasRectangularCellSelection(); // cell selection
 
             // Only allow if all keys are different.
             var numberOfDistinctEntries = entries.Select(e => e.Key).Distinct().Count();
