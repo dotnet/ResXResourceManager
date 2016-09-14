@@ -8,10 +8,10 @@
 
     public class CommentHeader : LanguageColumnHeaderBase
     {
-        public CommentHeader(ResourceManager resourceManager, CultureKey cultureKey)
-            : base(resourceManager, cultureKey)
+        public CommentHeader(Configuration configuration, CultureKey cultureKey)
+            : base(configuration, cultureKey)
         {
-            Contract.Requires(resourceManager != null);
+            Contract.Requires(configuration != null);
             Contract.Requires(cultureKey != null);
         }
 

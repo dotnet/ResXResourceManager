@@ -170,5 +170,23 @@
 
             return new CultureKey(culture);
         }
+
+        public static CultureKey Parse(object item)
+        {
+            Contract.Ensures(Contract.Result<CultureKey>() != null);
+
+            if (item == null)
+                return new CultureKey(string.Empty);
+
+            var cultureKey = item.TryCast().Returning<CultureKey>()
+                .When<string>(value => new CultureKey(value))
+                .When<CultureInfo>(value => new CultureKey(value))
+                .When<CultureKey>(value => value)
+                .ElseThrow("Unable to cast object to culture key: " + item);
+
+            Contract.Assume(cultureKey != null);
+
+            return cultureKey;
+        }
     }
 }

@@ -10,18 +10,17 @@
     /// </summary>
     public static class ResourceManagerExtensions
     {
-        public static IList<ProjectFile> GetAllSourceFiles(this DirectoryInfo solutionFolder, Configuration configuration)
+        public static IList<ProjectFile> GetAllSourceFiles(this DirectoryInfo solutionFolder, ISourceFileFilter sourceFileFilter)
         {
+
             Contract.Requires(solutionFolder != null);
-            Contract.Requires(configuration != null);
+            Contract.Requires(sourceFileFilter != null);
             Contract.Ensures(Contract.Result<IList<ProjectFile>>() != null);
 
             var solutionFolderLength = solutionFolder.FullName.Length + 1;
 
             var fileInfos = solutionFolder.EnumerateFiles("*.*", SearchOption.AllDirectories);
             Contract.Assume(fileInfos != null);
-
-            var sourceFileFilter = new SourceFileFilter(configuration);
 
             var allProjectFiles = fileInfos
                 .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))

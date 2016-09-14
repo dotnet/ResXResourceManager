@@ -28,7 +28,7 @@
     {
         private static readonly string[] _singleSheetFixedColumnHeaders = { "Project", "File", "Key" };
 
-        public static void ExportExcelFile(this ResourceManager resourceManager, string filePath, IResourceScope scope)
+        public static void ExportExcelFile(this ResourceManager resourceManager, string filePath, IResourceScope scope, ExcelExportMode exportMode)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(filePath != null);
@@ -39,8 +39,6 @@
 
                 var workbookPart = package.AddWorkbookPart();
                 Contract.Assume(workbookPart != null);
-
-                var exportMode = resourceManager.Configuration.ExcelExportMode;
 
                 if (exportMode == ExcelExportMode.MultipleSheets)
                 {

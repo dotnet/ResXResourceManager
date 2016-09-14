@@ -28,23 +28,25 @@
     public partial class ResourceView
     {
         private readonly ResourceManager _resourceManager;
+        private readonly Configuration _configuration;
 
         [ImportingConstructor]
-        public ResourceView(ExportProvider exportProvider, ResourceManager resourceManager)
+        public ResourceView(ExportProvider exportProvider)
         {
             Contract.Requires(exportProvider != null);
-            Contract.Requires(resourceManager != null);
 
             try
             {
                 this.SetExportProvider(exportProvider);
 
-                _resourceManager = resourceManager;
+                _resourceManager = exportProvider.GetExportedValue<ResourceManager>();
                 _resourceManager.Loaded += ResourceManager_Loaded;
+
+                _configuration = exportProvider.GetExportedValue<Configuration>();
 
                 InitializeComponent();
 
-                DataGrid.SetupColumns(_resourceManager);
+                DataGrid.SetupColumns(_resourceManager, _configuration);
             }
             catch (Exception ex)
             {
@@ -54,12 +56,12 @@
 
         private void ResourceManager_Loaded(object sender, EventArgs e)
         {
-            DataGrid.SetupColumns(_resourceManager);
+            DataGrid.SetupColumns(_resourceManager, _configuration);
         }
 
         private void AddLanguage_Click(object sender, RoutedEventArgs e)
         {
-            var exisitingCultures = _resourceManager.CultureKeys
+            var exisitingCultures = _resourceManager.Cultures
                 .Select(c => c.Culture)
                 .Where(c => c != null);
 
@@ -72,9 +74,15 @@
 
             var culture = languageSelection.SelectedLanguage;
 
-            DataGrid.CreateNewLanguageColumn(_resourceManager, culture);
+            DataGrid.CreateNewLanguageColumn(_resourceManager, _configuration, culture);
 
-            _resourceManager.NewLanguageAdded(culture);
+            if (!_configuration.AutoCreateNewLanguageFiles)
+                return;
+
+            if (!_resourceManager.ResourceEntities.All(resourceEntity => _resourceManager.CanEdit(resourceEntity, culture)))
+            {
+                // nothing left to do, message already shown.
+            }
         }
 
         private void CreateSnapshotCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
@@ -211,6 +219,7 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(_configuration != null);
             Contract.Invariant(DataGrid != null);
         }
     }

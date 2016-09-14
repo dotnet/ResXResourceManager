@@ -15,18 +15,21 @@
     using TomsToolbox.Wpf;
 
     [Export]
-    public class AddNewKeyCommand : DelegateCommand
+    internal class AddNewKeyCommand : DelegateCommand
     {
         private readonly ResourceManager _resourceManager;
+        private readonly ResourceViewModel _resourceViewModel;
         private readonly ExportProvider _exportProvider;
 
         [ImportingConstructor]
-        public AddNewKeyCommand(ResourceManager resourceManager, ExportProvider exportProvider)
+        public AddNewKeyCommand(ResourceManager resourceManager, ResourceViewModel resourceViewModel, ExportProvider exportProvider)
         {
             Contract.Requires(resourceManager != null);
+            Contract.Requires(resourceViewModel != null);
             Contract.Requires(exportProvider != null);
 
             _resourceManager = resourceManager;
+            _resourceViewModel = resourceViewModel;
             _exportProvider = exportProvider;
 
             ExecuteCallback = Execute;
@@ -34,13 +37,13 @@
 
         private void Execute()
         {
-            if (_resourceManager.SelectedEntities.Count() != 1)
+            if (_resourceViewModel.SelectedEntities.Count() != 1)
             {
                 MessageBox.Show(Resources.NeedSingleEntitySelection, Resources.Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
 
-            var resourceFile = _resourceManager.SelectedEntities.Single();
+            var resourceFile = _resourceViewModel.SelectedEntities.Single();
             Contract.Assume(resourceFile != null);
 
             if (resourceFile.IsWinFormsDesignerResource)
@@ -76,7 +79,7 @@
 
             try
             {
-                _resourceManager.AddNewKey(resourceFile, key);
+                _resourceViewModel.AddNewKey(resourceFile, key);
             }
             catch (Exception ex)
             {
@@ -89,6 +92,7 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(_resourceViewModel != null);
             Contract.Invariant(_exportProvider != null);
         }
     }

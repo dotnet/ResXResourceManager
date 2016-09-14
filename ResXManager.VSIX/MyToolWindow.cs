@@ -22,6 +22,7 @@
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.Visuals;
     using tomenglertde.ResXManager.VSIX.Visuals;
 
     using TomsToolbox.Core;
@@ -41,6 +42,7 @@
 
         private readonly ITracer _trace;
         private readonly ResourceManager _resourceManager;
+        private readonly ResourceViewModel _resourceViewModel;
         private readonly Configuration _configuration;
         private readonly PerformanceTracer _performanceTracer;
 
@@ -77,6 +79,8 @@
                 _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
                 _resourceManager.BeginEditing += ResourceManager_BeginEditing;
 
+                _resourceViewModel = _compositionHost.GetExportedValue<ResourceViewModel>();
+
                 VisualComposition.Error += VisualComposition_Error;
             }
             catch (Exception ex)
@@ -93,6 +97,16 @@
                 Contract.Ensures(Contract.Result<ResourceManager>() != null);
 
                 return _resourceManager;
+            }
+        }
+
+        public ResourceViewModel ResourceViewModel
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ResourceViewModel>() != null);
+
+                return _resourceViewModel;
             }
         }
 
@@ -496,6 +510,7 @@
             Contract.Invariant(_configuration != null);
             Contract.Invariant(_trace != null);
             Contract.Invariant(_performanceTracer != null);
+            Contract.Invariant(_resourceViewModel != null);
         }
     }
 }

@@ -11,10 +11,10 @@
 
     public class LanguageHeader : LanguageColumnHeaderBase
     {
-        public LanguageHeader(ResourceManager resourceManager, CultureKey cultureKey)
-            : base(resourceManager, cultureKey)
+        public LanguageHeader(Configuration configuration, CultureKey cultureKey)
+            : base(configuration, cultureKey)
         {
-            Contract.Requires(resourceManager != null);
+            Contract.Requires(configuration != null);
             Contract.Requires(cultureKey != null);
         }
 

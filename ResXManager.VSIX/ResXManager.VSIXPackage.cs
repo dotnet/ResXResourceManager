@@ -168,8 +168,8 @@
             if (!ShowToolWindow())
                 return;
 
-            var resourceManager = ToolWindow?.ResourceManager;
-            if (resourceManager == null)
+            var resourceViewModel = ToolWindow?.ResourceViewModel;
+            if (resourceViewModel == null)
                 return;
 
             var selectedResourceEntites = GetSelectedResourceEntites()?.Distinct().ToArray();
@@ -178,8 +178,8 @@
 
             Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Input, () =>
             {
-                resourceManager.SelectedEntities.Clear();
-                resourceManager.SelectedEntities.AddRange(selectedResourceEntites);
+                resourceViewModel.SelectedEntities.Clear();
+                resourceViewModel.SelectedEntities.AddRange(selectedResourceEntites);
             });
         }
 
@@ -261,15 +261,15 @@
             {
                 ShowToolWindow();
 
-                var resourceManager = toolWindow.ResourceManager;
+                var resourceViewModel = toolWindow.ResourceViewModel;
 
                 dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
                 {
-                    if (!resourceManager.SelectedEntities.Contains(entry.Container))
-                        resourceManager.SelectedEntities.Add(entry.Container);
+                    if (!resourceViewModel.SelectedEntities.Contains(entry.Container))
+                        resourceViewModel.SelectedEntities.Add(entry.Container);
 
-                    resourceManager.SelectedTableEntries.Clear();
-                    resourceManager.SelectedTableEntries.Add(entry);
+                    resourceViewModel.SelectedTableEntries.Clear();
+                    resourceViewModel.SelectedTableEntries.Add(entry);
                 });
             });
         }

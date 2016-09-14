@@ -22,15 +22,15 @@
         private bool _isLoading;
 
         [ImportingConstructor]
-        public ShellViewModel(ResourceManager resourceManager, PerformanceTracer performanceTracer)
+        public ShellViewModel(ResourceViewModel resourceViewModel, PerformanceTracer performanceTracer)
         {
-            Contract.Requires(resourceManager != null);
+            Contract.Requires(resourceViewModel != null);
             Contract.Requires(performanceTracer != null);
 
             _performanceTracer = performanceTracer;
             _updateThrottle = new DispatcherThrottle(DispatcherPriority.Background, () => IsLoading = false);
 
-            resourceManager.SelectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
+            resourceViewModel.SelectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
         }
 
         public bool IsLoading

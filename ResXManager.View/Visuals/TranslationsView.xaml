@@ -41,31 +41,31 @@
         <StackPanel.Resources>
           <Style TargetType="Button" BasedOn="{StaticResource PushButtonStyle}" />
         </StackPanel.Resources>
-        <Button Command="{Binding Translations.ApplyAllCommand}">
+        <Button Command="{Binding ApplyAllCommand}">
           <ContentControl Content="{x:Static properties:Resources.Translations_ApplyAll}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
-        <Button Command="{Binding Translations.ApplySelectedCommand}">
+        <Button Command="{Binding ApplySelectedCommand}">
           <ContentControl Content="{x:Static properties:Resources.Translations_ApplySelected}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
-        <Button Command="{Binding Translations.RestartCommand}">
+        <Button Command="{Binding RestartCommand}">
           <ContentControl Content="{x:Static properties:Resources.Translations_Restart}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
-        <Button Command="{Binding Translations.StopCommand}">
+        <Button Command="{Binding StopCommand}">
           <ContentControl Content="{x:Static properties:Resources.Translations_Stop}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
       </StackPanel>
       <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="100" HorizontalScrollBarVisibility="Auto">
-        <ItemsControl ItemsSource="{Binding Translations.Session.Messages}" Margin="5" Focusable="False" />
+        <ItemsControl ItemsSource="{Binding Session.Messages}" Margin="5" Focusable="False" />
       </ScrollViewer>
     </DockPanel>
     <Decorator Height="10" DockPanel.Dock="Bottom" />
     <Grid>
       <DockPanel>
-        <visuals:TranslatorConfiguration DockPanel.Dock="Top" IsEnabled="{Binding Translations.Session.IsComplete}" Translators="{Binding Translators}" />
+        <visuals:TranslatorConfiguration DockPanel.Dock="Top" IsEnabled="{Binding Session.IsComplete}" Translators="{Binding Translators}" />
         <Decorator Height="10" DockPanel.Dock="Top" />
-        <DataGrid ItemsSource="{Binding Translations.Items}" Style="{DynamicResource {x:Static styles:ResourceKeys.DataGridStyle}}"
+        <DataGrid ItemsSource="{Binding Items}" Style="{DynamicResource {x:Static styles:ResourceKeys.DataGridStyle}}"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
-                  IsEnabled="{Binding Translations.Session.IsComplete}" toms:MultiSelectorExtensions.SelectionBinding="{Binding Translations.SelectedItems}">
+                  IsEnabled="{Binding Session.IsComplete}" toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedItems}">
           <DataGrid.RowHeaderTemplate>
             <DataTemplate DataType="DataGridRowHeader">
               <CheckBox Style="{StaticResource {x:Static toms:ResourceKeys.DataGridRowCheckBoxStyle}}" />
@@ -83,8 +83,8 @@
                   <StackPanel Orientation="Horizontal" DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridCellsPanel}}" d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}">
                     <TextBlock Text="{x:Static properties:Resources.Translations_Source}" VerticalAlignment="Center" />
                     <Decorator Width="5" />
-                    <ComboBox Width="150" ItemsSource="{Binding ResourceManager.CultureKeys}"
-                              SelectedItem="{Binding Translations.SourceCulture}" Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}" />
+                    <ComboBox Width="150" ItemsSource="{Binding ResourceManager.Cultures}"
+                              SelectedItem="{Binding SourceCulture}" Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}" />
                   </StackPanel>
                 </DataTemplate>
               </DataGridTextColumn.HeaderTemplate>
@@ -122,7 +122,7 @@
                       <Decorator Width="5" />
                       <ToggleButton x:Name="TargetCulturesButton" Style="{DynamicResource {x:Static styles:ResourceKeys.ToggleButtonStyle}}">
                         <ToggleButton.Resources>
-                          <CollectionViewSource x:Key="SelectedTargetCulturesSource" Source="{Binding  Translations.SelectedTargetCultures}">
+                          <CollectionViewSource x:Key="SelectedTargetCulturesSource" Source="{Binding  SelectedTargetCultures}">
                             <CollectionViewSource.SortDescriptions>
                               <componentModel:SortDescription PropertyName="." />
                             </CollectionViewSource.SortDescriptions>
@@ -153,9 +153,9 @@
                           <toms:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=TargetCulturesButton}" />
                         </i:Interaction.Behaviors>
                         <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-                          <ListBox ItemsSource="{Binding Translations.AllTargetCultures}"
+                          <ListBox ItemsSource="{Binding AllTargetCultures}"
                                    Style="{DynamicResource {x:Static styles:ResourceKeys.ListBoxStyle}}"
-                                   toms:MultiSelectorExtensions.SelectionBinding="{Binding Translations.SelectedTargetCultures}"
+                                   toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTargetCultures}"
                                    SelectionMode="Multiple" KeyboardNavigation.TabNavigation="Once">
                             <ListBox.ItemTemplate>
                               <DataTemplate DataType="infrastructure:CultureKey">
@@ -221,12 +221,12 @@
           </DataGrid.Columns>
         </DataGrid>
       </DockPanel>
-      <toms:LoadingIndicator IsActive="{Binding Translations.Session.IsActive}" Header="Translating..." d:IsHidden="True" />
+      <toms:LoadingIndicator IsActive="{Binding Session.IsActive}" Header="Translating..." d:IsHidden="True" />
     </Grid>
   </DockPanel>
   <i:Interaction.Triggers>
     <i:EventTrigger EventName="Loaded">
-      <i:InvokeCommandAction Command="{Binding Translations.StartCommand}" />
+      <i:InvokeCommandAction Command="{Binding StartCommand}" />
     </i:EventTrigger>
   </i:Interaction.Triggers>
 </UserControl>

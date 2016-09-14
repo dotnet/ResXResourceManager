@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
@@ -240,7 +241,7 @@
             }
         }
 
-        internal ICollection<CultureKey> Languages
+        public ICollection<CultureKey> Languages
         {
             get
             {
@@ -353,18 +354,18 @@
             OnPropertyChanged(nameof(Index));
         }
 
-        public bool HasStringFormatParameterMismatches(IEnumerable<CultureKey> cultures)
+        public bool HasStringFormatParameterMismatches(IEnumerable<object> cultures)
         {
             Contract.Requires(cultures != null);
 
-            return HasStringFormatParameterMismatches(cultures.Select(lang => _values.GetValue(lang)));
+            return HasStringFormatParameterMismatches(cultures.Select(CultureKey.Parse).Select(lang => _values.GetValue(lang)));
         }
 
-        public bool HasSnapshotDifferences(IEnumerable<CultureKey> cultures)
+        public bool HasSnapshotDifferences(IEnumerable<object> cultures)
         {
             Contract.Requires(cultures != null);
 
-            return _snapshot != null && cultures.Any(IsSnapshotDifferent);
+            return _snapshot != null && cultures.Select(CultureKey.Parse).Any(IsSnapshotDifferent);
         }
 
         private bool IsSnapshotDifferent(CultureKey culture)

@@ -9,6 +9,7 @@
     using System.Windows.Input;
 
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.Visuals;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
@@ -18,17 +19,21 @@
     public sealed class VsixShellViewModel : ObservableObject
     {
         private readonly ResourceManager _resourceManager;
+        private readonly ResourceViewModel _resourceViewModel;
         private readonly DispatcherThrottle _selectedCodeGeneratorsChangedThrottle;
 
         [ImportingConstructor]
-        public VsixShellViewModel(ResourceManager resourceManager)
+        public VsixShellViewModel(ResourceManager resourceManager, ResourceViewModel resourceViewModel)
         {
             Contract.Requires(resourceManager != null);
+            Contract.Requires(resourceViewModel != null);
 
             _selectedCodeGeneratorsChangedThrottle = new DispatcherThrottle(() => OnPropertyChanged(nameof(SelectedCodeGenerators)));
             _resourceManager = resourceManager;
-            _resourceManager.SelectedEntities.CollectionChanged += (_, __) => _selectedCodeGeneratorsChangedThrottle.Tick();
+            _resourceViewModel = resourceViewModel;
             _resourceManager.Loaded += (_, __) => _selectedCodeGeneratorsChangedThrottle.Tick();
+
+            resourceViewModel.SelectedEntities.CollectionChanged += (_, __) => _selectedCodeGeneratorsChangedThrottle.Tick();
         }
 
         public ICommand SetCodeProviderCommand
@@ -57,7 +62,7 @@
 
         private IEnumerable<CodeGenerator> SelectedItemsCodeGenerators()
         {
-            return _resourceManager.SelectedEntities
+            return _resourceViewModel.SelectedEntities
                 .Select(x => x.NeutralProjectFile)
                 .OfType<DteProjectFile>()
                 .Select(pf => pf.CodeGenerator)
@@ -71,7 +76,7 @@
 
         private void SetCodeProvider(CodeGenerator codeGenerator)
         {
-            _resourceManager.SelectedEntities
+            _resourceViewModel.SelectedEntities
                 .Select(x => x.NeutralProjectFile)
                 .OfType<DteProjectFile>()
                 .ForEach(pf => pf.CodeGenerator = codeGenerator);
@@ -84,6 +89,7 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(_resourceViewModel != null);
             Contract.Invariant(_selectedCodeGeneratorsChangedThrottle != null);
         }
     }

@@ -122,7 +122,7 @@
     <ListBox x:Name="ListBox" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Margin="5,3,0,5"
              ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
              Padding="5,0" BorderThickness="0" SelectionMode="Extended"
-             toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedEntities}"
+             toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}"
              VirtualizingPanel.IsVirtualizingWhenGrouping="True"
              Style="{DynamicResource {x:Static styles:ResourceKeys.ListBoxStyle}}">
       <ListBox.ItemTemplate>
@@ -388,7 +388,7 @@
         <Border DockPanel.Dock="Bottom" BorderThickness="0,0.7,0,0" BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
           <DockPanel DockPanel.Dock="Bottom" Background="{Binding Background, ElementName=DataGrid}">
             <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" ToolTip="{x:Static properties:Resources.SelectedTotalToolTip}">
-              <Run Text="{Binding ResourceManager.SelectedTableEntries.Count, Mode=OneWay}" /><Run Text="/" /><Run Text="{Binding ResourceTableEntryCount, Mode=OneWay}" /><Run Text="  " />
+              <Run Text="{Binding SelectedTableEntries.Count, Mode=OneWay}" /><Run Text="/" /><Run Text="{Binding ResourceTableEntryCount, Mode=OneWay}" /><Run Text="  " />
             </TextBlock>
             <Control Focusable="False">
               <Control.Resources>
@@ -439,7 +439,7 @@
                     dgx:DataGridFilter.ContentFilterFactory="{StaticResource RegexContentFilterFactory}"
                     dgx:Tools.ForceCommitOnLostFocus="True"
                     VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                    toms:MultiSelectorExtensions.SelectionBinding="{Binding ResourceManager.SelectedTableEntries}">
+                    toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
             <DataGrid.Resources>
 
               <DataTemplate DataType="{x:Type columnHeaders:LanguageHeader}">
@@ -586,11 +586,11 @@
 
             <DataGrid.Style>
               <Style TargetType="DataGrid" BasedOn="{StaticResource {x:Static styles:ResourceKeys.DataGridStyle}}">
-                <Setter Property="ItemsSource" Value="{Binding ResourceManager.ResourceTableEntries}" />
+                <Setter Property="ItemsSource" Value="{Binding ResourceTableEntries}" />
                 <Setter Property="dgx:DataGridFilter.IsAutoFilterEnabled" Value="True" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding Path=IsChecked, ElementName=GroupedViewButton}" Value="True">
-                    <Setter Property="ItemsSource" Value="{Binding ResourceManager.GroupedResourceTableEntries}" />
+                    <Setter Property="ItemsSource" Value="{Binding GroupedResourceTableEntries}" />
                     <Setter Property="toms:StyleBindings.GroupStyle" Value="{StaticResource GroupStyle}" />
                   </DataTrigger>
                   <DataTrigger Binding="{Binding IsCellSelectionEnabled}" Value="True">

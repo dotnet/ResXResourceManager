@@ -38,10 +38,7 @@
         private readonly PerformanceTracer _performanceTracer;
 
         private readonly ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
-        private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
-        private readonly IObservableCollection<ResourceTableEntry> _allEntries;
-        private readonly IObservableCollection<ResourceTableEntry> _resourceTableEntries;
-        private readonly ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
+        private readonly IObservableCollection<ResourceTableEntry> _tableEntries;
 
         private readonly ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
 
@@ -64,11 +61,10 @@
             _tracer = tracer;
             _sourceFilesProvider = sourceFilesProvider;
             _performanceTracer = performanceTracer;
-            _resourceTableEntries = _selectedEntities.ObservableSelectMany(entity => entity.Entries);
-            _allEntries = _resourceEntities.ObservableSelectMany(entity => entity.Entries);
+            _tableEntries = _resourceEntities.ObservableSelectMany(entity => entity.Entries);
 
             _restartFindCodeReferencesThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, () => BeginFindCodeReferences(_sourceFilesProvider.SourceFiles));
-            _allEntries.CollectionChanged += (_, __) => _restartFindCodeReferencesThrottle.Tick();
+            _tableEntries.CollectionChanged += (_, __) => _restartFindCodeReferencesThrottle.Tick();
         }
 
         /// <summary>
@@ -106,6 +102,9 @@
             changedResourceLanguages.ForEach(resourceLanguage => resourceLanguage.Save());
         }
 
+        /// <summary>
+        /// Gets the loaded resource entities.
+        /// </summary>
         public ICollection<ResourceEntity> ResourceEntities
         {
             get
@@ -116,30 +115,23 @@
             }
         }
 
-        public IObservableCollection<ResourceTableEntry> ResourceTableEntries
+        /// <summary>
+        /// Gets the table entries of all entities.
+        /// </summary>
+        public IObservableCollection<ResourceTableEntry> TableEntries
         {
             get
             {
                 Contract.Ensures(Contract.Result<IObservableCollection<ResourceTableEntry>>() != null);
 
-                return _resourceTableEntries;
+                return _tableEntries;
             }
         }
 
-        public CollectionView GroupedResourceTableEntries
-        {
-            get
-            {
-                CollectionView collectionView = new ListCollectionView((IList)_resourceTableEntries);
-
-                // ReSharper disable once PossibleNullReferenceException
-                collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Container"));
-
-                return collectionView;
-            }
-        }
-
-        public ObservableCollection<CultureKey> CultureKeys
+        /// <summary>
+        /// Gets the cultures of all entities.
+        /// </summary>
+        public ObservableCollection<CultureKey> Cultures
         {
             get
             {
@@ -149,26 +141,9 @@
             }
         }
 
-        public ObservableCollection<ResourceEntity> SelectedEntities
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ObservableCollection<ResourceEntity>>() != null);
-
-                return _selectedEntities;
-            }
-        }
-
-        public IList<ResourceTableEntry> SelectedTableEntries
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IList<ResourceTableEntry>>() != null);
-
-                return _selectedTableEntries;
-            }
-        }
-
+        /// <summary>
+        /// Gets all system specific cultures.
+        /// </summary>
         public static IEnumerable<CultureInfo> SpecificCultures
         {
             get
@@ -197,37 +172,10 @@
             }
         }
 
-        public void AddNewKey(ResourceEntity entity, string key)
+        public void ReloadSnapshot()
         {
-            Contract.Requires(entity != null);
-            Contract.Requires(!string.IsNullOrEmpty(key));
-
-            if (!entity.CanEdit(null))
-                return;
-
-            var entry = entity.Add(key);
-            if (entry == null)
-                return;
-
             if (!string.IsNullOrEmpty(_snapshot))
                 _resourceEntities.LoadSnapshot(_snapshot);
-
-            _selectedTableEntries.Clear();
-            _selectedTableEntries.Add(entry);
-        }
-
-        public void NewLanguageAdded(CultureInfo culture)
-        {
-            if (!_configuration.AutoCreateNewLanguageFiles)
-                return;
-
-            foreach (var resourceEntity in _resourceEntities)
-            {
-                Contract.Assume(resourceEntity != null);
-
-                if (!CanEdit(resourceEntity, culture))
-                    break;
-            }
         }
 
         public void Reload()
@@ -449,9 +397,6 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_resourceEntities != null);
-            Contract.Invariant(_selectedEntities != null);
-            Contract.Invariant(_selectedTableEntries != null);
-            Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(_configuration != null);
             Contract.Invariant(_cultureKeys != null);
             Contract.Invariant(_codeReferenceTracker != null);
@@ -459,7 +404,7 @@
             Contract.Invariant(_tracer != null);
             Contract.Invariant(_performanceTracer != null);
             Contract.Invariant(_restartFindCodeReferencesThrottle != null);
-            Contract.Invariant(_allEntries != null);
+            Contract.Invariant(_tableEntries != null);
         }
     }
 }

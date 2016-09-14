@@ -35,22 +35,17 @@
         {
             get
             {
-                return GetValue(cultureKey.ToCulture());
+                return GetValue(cultureKey);
             }
             set
             {
-                SetValue(cultureKey.ToCulture(), value);
+                SetValue(cultureKey, value);
             }
         }
 
-        public T GetValue(CultureInfo culture)
+        public T GetValue(object culture)
         {
-            return GetValue(new CultureKey(culture));
-        }
-
-        public T GetValue(CultureKey cultureKey)
-        {
-            Contract.Requires(cultureKey != null);
+            var cultureKey = CultureKey.Parse(culture);
 
             ResourceLanguage language;
 
@@ -62,14 +57,9 @@
             return _getter(language);
         }
 
-        public bool SetValue(CultureInfo culture, T value)
+        public bool SetValue(object culture, T value)
         {
-            return SetValue(new CultureKey(culture), value);
-        }
-
-        public bool SetValue(CultureKey cultureKey, T value)
-        {
-            Contract.Requires(cultureKey != null);
+            var cultureKey = CultureKey.Parse(culture);
 
             ResourceLanguage language;
             

@@ -25,8 +25,8 @@
         private readonly DispatcherThrottle _codeReferencesChangeThrottle;
         private CodeReferenceConfiguration _codeReferences;
 
-        protected Configuration(ITracer tracer)
-            : base(tracer)
+        protected Configuration(ITracer tracer, bool isVolatile = false)
+            : base(tracer, isVolatile)
         {
             Contract.Requires(tracer != null);
 

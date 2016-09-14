@@ -205,6 +205,7 @@
     <Compile Include="ConfigurationBase.cs" />
     <Compile Include="IExportParameters.cs" />
     <Compile Include="ImportException.cs" />
+    <Compile Include="ISourceFileFilter.cs" />
     <Compile Include="ISourceFilesProvider.cs" />
     <Compile Include="JsonSerializerTypeConverter.cs" />
     <Compile Include="LanguageEventArgs.cs" />
@@ -236,9 +237,7 @@
     <Compile Include="ResourceBeginEditingEventArgs.cs" />
     <Compile Include="Snapshot.cs" />
     <Compile Include="SourceFileFilter.cs" />
-    <Compile Include="TranslationExtensions.cs" />
     <Compile Include="TranslationItem.cs" />
-    <Compile Include="Translations.cs" />
     <Compile Include="XmlConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -253,7 +253,7 @@
                 if (string.IsNullOrEmpty(folder))
                     return new ProjectFile[0];
 
-                return new DirectoryInfo(folder).GetAllSourceFiles(_configuration);
+                return new DirectoryInfo(folder).GetAllSourceFiles(new SourceFileFilter(_configuration));
             }
         }
 

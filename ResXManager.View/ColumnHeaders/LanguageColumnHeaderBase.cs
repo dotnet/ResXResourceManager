@@ -12,20 +12,20 @@
     public abstract class LanguageColumnHeaderBase : ObservableObject, ILanguageColumnHeader
     {
         private readonly CultureKey _cultureKey;
-        private readonly ResourceManager _resourceManager;
+        private readonly Configuration _configuration;
 
-        protected LanguageColumnHeaderBase(ResourceManager resourceManager, CultureKey cultureKey)
+        protected LanguageColumnHeaderBase(Configuration configuration, CultureKey cultureKey)
         {
-            Contract.Requires(resourceManager != null);
+            Contract.Requires(configuration != null);
             Contract.Requires(cultureKey != null);
 
-            _resourceManager = resourceManager;
+            _configuration = configuration;
             _cultureKey = cultureKey;
         }
 
         public CultureKey CultureKey => _cultureKey;
 
-        public CultureInfo EffectiveCulture => _cultureKey.Culture ?? _resourceManager.Configuration.NeutralResourcesLanguage;
+        public CultureInfo EffectiveCulture => _cultureKey.Culture ?? _configuration.NeutralResourcesLanguage;
 
         public abstract ColumnType ColumnType
         {
@@ -36,7 +36,7 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(_configuration != null);
             Contract.Invariant(_cultureKey != null);
         }
     }

@@ -20,7 +20,7 @@
         {
             try
             {
-                cultureKeyName = cultureKeyName.Maybe().Return(c => c.TrimStart('.'));
+                cultureKeyName = cultureKeyName?.TrimStart('.');
 
                 return string.IsNullOrEmpty(cultureKeyName) ? null : CultureInfo.GetCultureInfo(cultureKeyName);
             }

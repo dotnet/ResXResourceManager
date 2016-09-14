@@ -41,10 +41,11 @@
         public static readonly DependencyProperty CellAnnotationsProperty =
             DependencyProperty.RegisterAttached("CellAnnotations", typeof(ICollection<string>), typeof(ColumnManager), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
-        public static void SetupColumns(this DataGrid dataGrid, ResourceManager resourceManager)
+        public static void SetupColumns(this DataGrid dataGrid, ResourceManager resourceManager, Configuration configuration)
         {
             Contract.Requires(dataGrid != null);
             Contract.Requires(resourceManager != null);
+            Contract.Requires(configuration != null);
 
             var dataGridEvents = dataGrid.GetAdditionalEvents();
 
@@ -62,7 +63,7 @@
 
             var languageColumns = columns.Skip(3).ToArray();
 
-            IEnumerable<CultureKey> cultureKeys = resourceManager.CultureKeys;
+            IEnumerable<CultureKey> cultureKeys = resourceManager.Cultures;
 
             var disconnectedColumns = languageColumns.Where(col => cultureKeys.All(cultureKey => !Equals(col.GetCultureKey(), cultureKey)));
 
@@ -76,18 +77,19 @@
             foreach (var cultureKey in addedcultureKeys)
             {
                 Contract.Assume(cultureKey != null);
-                dataGrid.AddLanguageColumn(resourceManager, cultureKey);
+                dataGrid.AddLanguageColumn(resourceManager, configuration, cultureKey);
             }
         }
 
-        public static void CreateNewLanguageColumn(this DataGrid dataGrid, ResourceManager resourceManager, CultureInfo culture)
+        public static void CreateNewLanguageColumn(this DataGrid dataGrid, ResourceManager resourceManager, Configuration configuration, CultureInfo culture)
         {
             Contract.Requires(dataGrid != null);
             Contract.Requires(resourceManager != null);
+            Contract.Requires(configuration != null);
 
             var cultureKey = new CultureKey(culture);
 
-            AddLanguageColumn(dataGrid, resourceManager, cultureKey);
+            dataGrid.AddLanguageColumn(resourceManager, configuration, cultureKey);
 
             var key = cultureKey.ToString(NeutralCultureKeyString);
 
@@ -236,10 +238,11 @@
             return column;
         }
 
-        private static void AddLanguageColumn(this DataGrid dataGrid, ResourceManager resourceManager, CultureKey cultureKey)
+        private static void AddLanguageColumn(this DataGrid dataGrid, ResourceManager resourceManager, Configuration configuration, CultureKey cultureKey)
         {
             Contract.Requires(dataGrid != null);
             Contract.Requires(resourceManager != null);
+            Contract.Requires(configuration != null);
             Contract.Requires(cultureKey != null);
 
             var columns = dataGrid.Columns;
@@ -269,7 +272,7 @@
 
             var commentColumn = new DataGridTextColumn
             {
-                Header = new CommentHeader(resourceManager, cultureKey),
+                Header = new CommentHeader(configuration, cultureKey),
                 Binding = new Binding(@"Comments[" + key + @"]"),
                 MinWidth = 50,
                 CellStyle = commentCellStyle,
@@ -284,7 +287,7 @@
 
             var column = new DataGridTextColumn
             {
-                Header = new LanguageHeader(resourceManager, cultureKey),
+                Header = new LanguageHeader(configuration, cultureKey),
                 Binding = new Binding(@"Values[" + key + @"]"),
                 MinWidth = 120,
                 CellStyle = textCellStyle,

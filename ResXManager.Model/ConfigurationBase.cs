@@ -17,31 +17,40 @@
     /// </summary>
     public abstract class ConfigurationBase : ObservableObject
     {
+        private readonly bool _isVolatile;
         private const string FileName = "Configuration.xml";
         private static readonly string _directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "tom-englert.de", "ResXManager");
 
         private readonly string _filePath;
         private readonly XmlConfiguration _configuration;
 
-        protected ConfigurationBase(ITracer tracer)
+        protected ConfigurationBase(ITracer tracer, bool isVolatile)
         {
             Contract.Requires(tracer != null);
+
+            _isVolatile = isVolatile;
 
             Contract.Assume(!string.IsNullOrEmpty(_directory));
 
             _filePath = Path.Combine(_directory, FileName);
 
-            try
+            if (!_isVolatile)
             {
-                Directory.CreateDirectory(_directory);
 
-                using (var reader = new StreamReader(File.OpenRead(_filePath)))
+                try
                 {
-                    _configuration = new XmlConfiguration(tracer, reader);
-                    return;
+                    Directory.CreateDirectory(_directory);
+
+                    using (var reader = new StreamReader(File.OpenRead(_filePath)))
+                    {
+                        _configuration = new XmlConfiguration(tracer, reader);
+                        return;
+                    }
+                }
+                catch
+                {
                 }
             }
-            catch { }
 
             _configuration = new XmlConfiguration(tracer);
         }
@@ -98,9 +107,12 @@
             {
                 _configuration.SetValue(key, ConvertToString<T>(value));
 
-                using (var writer = new StreamWriter(File.Create(_filePath)))
+                if (!_isVolatile)
                 {
-                    _configuration.Save(writer);
+                    using (var writer = new StreamWriter(File.Create(_filePath)))
+                    {
+                        _configuration.Save(writer);
+                    }
                 }
 
                 OnPropertyChanged(key);

@@ -5,7 +5,7 @@
     using System.Diagnostics.Contracts;
     using System.Linq;
 
-    public class SourceFileFilter
+    public class SourceFileFilter : ISourceFileFilter
     {
         private readonly string[] _extensions;
 
@@ -21,8 +21,6 @@
 
         public bool IsSourceFile(ProjectFile file)
         {
-            Contract.Requires(file != null);
-
             return _extensions.Contains(file.Extension, StringComparer.OrdinalIgnoreCase);
         }
 
