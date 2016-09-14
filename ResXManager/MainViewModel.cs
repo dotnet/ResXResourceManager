@@ -17,6 +17,7 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Properties;
+    using tomenglertde.ResXManager.View.Visuals;
 
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
@@ -29,17 +30,20 @@
         private readonly ITracer _tracer;
         private readonly SourceFilesProvider _sourceFilesProvider;
         private readonly Configuration _configuration;
+        private readonly ResourceViewModel _resourceViewModel;
 
         [ImportingConstructor]
-        public MainViewModel(ResourceManager resourceManager, Configuration configuration, ITracer tracer, SourceFilesProvider sourceFilesProvider)
+        public MainViewModel(ResourceManager resourceManager, Configuration configuration, ResourceViewModel resourceViewModel, ITracer tracer, SourceFilesProvider sourceFilesProvider)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(configuration != null);
+            Contract.Requires(resourceViewModel != null);
             Contract.Requires(tracer != null);
             Contract.Requires(sourceFilesProvider != null);
 
             _resourceManager = resourceManager;
             _configuration = configuration;
+            _resourceViewModel = resourceViewModel;
             _tracer = tracer;
             _sourceFilesProvider = sourceFilesProvider;
 
@@ -116,7 +120,7 @@
         {
             try
             {
-                _resourceManager.Reload();
+                _resourceViewModel.Reload();
             }
             catch (Exception ex)
             {
@@ -214,6 +218,7 @@
             Contract.Invariant(_tracer != null);
             Contract.Invariant(_sourceFilesProvider != null);
             Contract.Invariant(_configuration != null);
+            Contract.Invariant(_resourceViewModel != null);
         }
     }
 

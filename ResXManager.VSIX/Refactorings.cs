@@ -90,9 +90,11 @@
 
             var patterns = configuration.ParsePatterns().ToArray();
 
-            var resourceManager = _exportProvider.GetExportedValue<ResourceManager>();
+            var resourceViewModel = _exportProvider.GetExportedValue<ResourceViewModel>();
 
-            resourceManager.Reload();
+            resourceViewModel.Reload();
+
+            var resourceManager = _exportProvider.GetExportedValue<ResourceManager>();
 
             var entities = resourceManager.ResourceEntities
                 .Where(entity => !entity.IsWinFormsDesignerResource)

@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel.Composition;
@@ -11,8 +10,6 @@
     using System.IO;
     using System.Linq;
     using System.Windows;
-    using System.Windows.Data;
-    using System.Windows.Threading;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
@@ -30,9 +27,7 @@
         private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
         private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
 
-        private readonly DispatcherThrottle _restartFindCodeReferencesThrottle;
         private readonly Configuration _configuration;
-        private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly ITracer _tracer;
         private readonly ISourceFilesProvider _sourceFilesProvider;
         private readonly PerformanceTracer _performanceTracer;
@@ -48,23 +43,18 @@
         public event EventHandler<EventArgs> Loaded;
 
         [ImportingConstructor]
-        private ResourceManager(Configuration configuration, CodeReferenceTracker codeReferenceTracker, ITracer tracer, ISourceFilesProvider sourceFilesProvider, PerformanceTracer performanceTracer)
+        private ResourceManager(Configuration configuration, ITracer tracer, ISourceFilesProvider sourceFilesProvider, PerformanceTracer performanceTracer)
         {
             Contract.Requires(configuration != null);
-            Contract.Requires(codeReferenceTracker != null);
             Contract.Requires(tracer != null);
             Contract.Requires(sourceFilesProvider != null);
             Contract.Requires(performanceTracer != null);
 
             _configuration = configuration;
-            _codeReferenceTracker = codeReferenceTracker;
             _tracer = tracer;
             _sourceFilesProvider = sourceFilesProvider;
             _performanceTracer = performanceTracer;
             _tableEntries = _resourceEntities.ObservableSelectMany(entity => entity.Entries);
-
-            _restartFindCodeReferencesThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, () => BeginFindCodeReferences(_sourceFilesProvider.SourceFiles));
-            _tableEntries.CollectionChanged += (_, __) => _restartFindCodeReferencesThrottle.Tick();
         }
 
         /// <summary>
@@ -77,8 +67,6 @@
 
             using (_performanceTracer.Start("ResourceManager.Load"))
             {
-                _codeReferenceTracker.StopFind();
-
                 var resourceFilesByDirectory = allSourceFiles
                     .Where(file => file.IsResourceFile())
                     .GroupBy(file => file.GetBaseDirectory());
@@ -180,22 +168,12 @@
 
         public void Reload()
         {
-            Reload(ResourceLoadOptions.None);
+            Reload(_sourceFilesProvider.SourceFiles);
         }
 
-        public void Reload(ResourceLoadOptions loadOptions)
+        public void Reload(IList<ProjectFile> sourceFiles)
         {
-            var allSourceFiles = _sourceFilesProvider.SourceFiles;
-
-            Load(allSourceFiles);
-
-            if (loadOptions.HasFlag(ResourceLoadOptions.FindCodeReferences))
-                BeginFindCodeReferences(allSourceFiles);
-        }
-
-        public void BeginFindCodeReferences()
-        {
-            _restartFindCodeReferencesThrottle.Tick();
+            Load(sourceFiles);
         }
 
         public bool CanEdit(ResourceEntity resourceEntity, CultureKey cultureKey)
@@ -212,21 +190,6 @@
             eventHandler(this, args);
 
             return !args.Cancel;
-        }
-
-        private void BeginFindCodeReferences(IList<ProjectFile> allSourceFiles)
-        {
-            Contract.Requires(allSourceFiles != null);
-
-            _codeReferenceTracker.StopFind();
-
-            if (Settings.Default.IsFindCodeReferencesEnabled)
-            {
-                Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, () =>
-                {
-                    _codeReferenceTracker.BeginFind(this, _configuration.CodeReferences, allSourceFiles, _tracer);
-                });
-            }
         }
 
         private void OnLoaded()
@@ -399,11 +362,9 @@
             Contract.Invariant(_resourceEntities != null);
             Contract.Invariant(_configuration != null);
             Contract.Invariant(_cultureKeys != null);
-            Contract.Invariant(_codeReferenceTracker != null);
             Contract.Invariant(_sourceFilesProvider != null);
             Contract.Invariant(_tracer != null);
             Contract.Invariant(_performanceTracer != null);
-            Contract.Invariant(_restartFindCodeReferencesThrottle != null);
             Contract.Invariant(_tableEntries != null);
         }
     }

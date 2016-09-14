@@ -1,5 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -12,6 +13,7 @@
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Input;
+    using System.Windows.Threading;
 
     using DataGridExtensions;
 
@@ -31,26 +33,40 @@
         private readonly DispatcherThrottle _resourceTableEntiyCountUpdateThrottle;
         private readonly ResourceManager _resourceManager;
         private readonly Configuration _configuration;
-        private string _loadedSnapshot;
-        private bool _isCellSelectionEnabled;
-
+        private readonly ISourceFilesProvider _sourceFilesProvider;
+        private readonly ITracer _tracer;
+        private readonly CodeReferenceTracker _codeReferenceTracker;
+        private readonly DispatcherThrottle _restartFindCodeReferencesThrottle;
         private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
         private readonly IObservableCollection<ResourceTableEntry> _resourceTableEntries;
         private readonly ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
 
+        private string _loadedSnapshot;
+        private bool _isCellSelectionEnabled;
+
         [ImportingConstructor]
-        public ResourceViewModel(ResourceManager resourceManager, Configuration configuration)
+        public ResourceViewModel(ResourceManager resourceManager, Configuration configuration, ISourceFilesProvider sourceFilesProvider, CodeReferenceTracker codeReferenceTracker, ITracer tracer)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(configuration != null);
+            Contract.Requires(sourceFilesProvider != null);
+            Contract.Requires(codeReferenceTracker != null);
+            Contract.Requires(tracer != null);
 
             _resourceManager = resourceManager;
             _configuration = configuration;
+            _sourceFilesProvider = sourceFilesProvider;
+            _codeReferenceTracker = codeReferenceTracker;
+            _tracer = tracer;
 
             _resourceTableEntiyCountUpdateThrottle = new DispatcherThrottle(() => OnPropertyChanged(nameof(ResourceTableEntryCount)));
 
             _resourceTableEntries = _selectedEntities.ObservableSelectMany(entity => entity.Entries);
             _resourceTableEntries.CollectionChanged += (_, __) => _resourceTableEntiyCountUpdateThrottle.Tick();
+
+            _restartFindCodeReferencesThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, () => BeginFindCodeReferences(sourceFilesProvider.SourceFiles));
+
+            resourceManager.TableEntries.CollectionChanged += (_, __) => _restartFindCodeReferencesThrottle.Tick();
         }
 
         public ResourceManager ResourceManager
@@ -146,11 +162,11 @@
 
         public ICommand ToggleInvariantCommand => new DelegateCommand(() => _selectedTableEntries.Any(), ToggleInvariant);
 
-        public ICommand ReloadCommand => new DelegateCommand(() => _resourceManager.Reload(ResourceLoadOptions.FindCodeReferences));
+        public ICommand ReloadCommand => new DelegateCommand(Reload);
 
         public ICommand SaveCommand => new DelegateCommand(() => _resourceManager.HasChanges, () => _resourceManager.Save());
 
-        public ICommand BeginFindCodeReferencesCommand => new DelegateCommand(_resourceManager.BeginFindCodeReferences);
+        public ICommand BeginFindCodeReferencesCommand => new DelegateCommand(BeginFindCodeReferences);
 
         public ICommand CreateSnapshotCommand => new DelegateCommand<string>(CreateSnapshot);
 
@@ -381,6 +397,37 @@
             changes.Apply();
         }
 
+        public void Reload()
+        {
+            var sourceFiles = _sourceFilesProvider.SourceFiles;
+
+            _codeReferenceTracker.StopFind();
+
+            _resourceManager.Reload(sourceFiles);
+
+            BeginFindCodeReferences(sourceFiles);
+        }
+
+        private void BeginFindCodeReferences()
+        {
+            BeginFindCodeReferences(_sourceFilesProvider.SourceFiles);
+        }
+
+        private void BeginFindCodeReferences(IList<ProjectFile> allSourceFiles)
+        {
+            Contract.Requires(allSourceFiles != null);
+
+            _codeReferenceTracker.StopFind();
+
+            if (Model.Properties.Settings.Default.IsFindCodeReferencesEnabled)
+            {
+                Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, () =>
+                {
+                    _codeReferenceTracker.BeginFind(_resourceManager, _configuration.CodeReferences, allSourceFiles, _tracer);
+                });
+            }
+        }
+
         public override string ToString()
         {
             return Resources.ShellTabHeader_Main;
@@ -392,6 +439,8 @@
         {
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_configuration != null);
+            Contract.Invariant(_tracer != null);
+            Contract.Invariant(_codeReferenceTracker != null);
             Contract.Invariant(_selectedEntities != null);
             Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(_selectedTableEntries != null);

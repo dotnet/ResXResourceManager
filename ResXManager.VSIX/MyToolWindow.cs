@@ -482,7 +482,7 @@
             {
                 using (_performanceTracer.Start("Reload solution"))
                 {
-                    _resourceManager.Reload();
+                    _resourceViewModel.Reload();
                 }
             }
             catch (Exception ex)
