@@ -306,11 +306,9 @@
 
             try
             {
-                var fontSize = dte.Maybe()
-                    .Select(x => x.Properties[CATEGORY_FONTS_AND_COLORS, PAGE_TEXT_EDITOR])
-                    .Select(x => x.Item(PROPERTY_FONT_SIZE))
-                    .Select(x => x.Value)
-                    .Return(x => Convert.ToDouble(x, CultureInfo.InvariantCulture));
+                var fontSizeObject = dte.Properties[CATEGORY_FONTS_AND_COLORS, PAGE_TEXT_EDITOR]?.Item(PROPERTY_FONT_SIZE)?.Value ?? 0.0;
+
+                var fontSize = Convert.ToDouble(fontSizeObject, CultureInfo.InvariantCulture);
 
                 if (fontSize > 1)
                 {

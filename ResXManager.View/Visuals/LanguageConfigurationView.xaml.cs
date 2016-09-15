@@ -44,10 +44,7 @@
 
         private void Language_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var specificCulture = sender.Maybe()
-                .Select(x => x as FrameworkElement)
-                .Return(x => x.DataContext as CultureInfo);
-
+            var specificCulture = (sender as FrameworkElement)?.DataContext as CultureInfo;
             if (specificCulture == null)
                 return;
 

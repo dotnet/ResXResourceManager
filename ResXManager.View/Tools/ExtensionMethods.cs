@@ -20,14 +20,14 @@ namespace tomenglertde.ResXManager.View.Tools
         {
             Contract.Requires(column != null);
 
-            return (column.Header as ILanguageColumnHeader).Maybe().Return(l => l.CultureKey);
+            return (column.Header as ILanguageColumnHeader)?.CultureKey;
         }
 
         public static CultureInfo GetCulture(this DataGridColumn column)
         {
             Contract.Requires(column != null);
 
-            return column.GetCultureKey().Maybe().Return(c => c.Culture);
+            return column.GetCultureKey()?.Culture;
         }
 
         public static void SetEditingElementStyle(this DataGridBoundColumn column, Binding languageBinding, Binding flowDirectionBinding)

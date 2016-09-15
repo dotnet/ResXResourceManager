@@ -373,10 +373,10 @@
             Contract.Requires(culture != null);
             Contract.Requires(_snapshot != null);
 
-            var snapshotValue = _snapshot.GetValueOrDefault(culture).Maybe().Return(x => x.Text) ?? string.Empty;
+            var snapshotValue = _snapshot.GetValueOrDefault(culture)?.Text ?? string.Empty;
             var currentValue = _values.GetValue(culture) ?? string.Empty;
 
-            var snapshotComment = _snapshot.GetValueOrDefault(culture).Maybe().Return(x => x.Comment) ?? string.Empty;
+            var snapshotComment = _snapshot.GetValueOrDefault(culture)?.Comment ?? string.Empty;
             var currentComment = _comments.GetValue(culture) ?? string.Empty;
 
             return !string.Equals(snapshotValue, currentValue) || !string.Equals(snapshotComment, currentComment);

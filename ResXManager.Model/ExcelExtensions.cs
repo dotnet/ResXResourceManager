@@ -239,12 +239,7 @@
 
             var worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id);
 
-            return worksheetPart.Maybe()
-                .Select(x => x.Worksheet)
-                .Select(x => x.ChildElements)
-                .Select(x => x.OfType<SheetData>())
-                .Select(x => x.FirstOrDefault())
-                .Return(x => x.OfType<Row>()) ?? Enumerable.Empty<Row>();
+            return worksheetPart?.Worksheet?.ChildElements?.OfType<SheetData>()?.FirstOrDefault()?.OfType<Row>() ?? Enumerable.Empty<Row>();
         }
 
         private static ResourceEntity FindResourceEntity(this IEnumerable<MultipleSheetEntity> entities, Sheet sheet)
