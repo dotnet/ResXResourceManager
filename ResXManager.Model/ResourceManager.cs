@@ -27,7 +27,6 @@
 
         private readonly ITracer _tracer;
         private readonly ISourceFilesProvider _sourceFilesProvider;
-        private readonly PerformanceTracer _performanceTracer;
 
         private readonly ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
         private readonly IObservableCollection<ResourceTableEntry> _tableEntries;
@@ -41,15 +40,13 @@
         public event EventHandler<LanguageEventArgs> LanguageChanged;
 
         [ImportingConstructor]
-        private ResourceManager(ITracer tracer, ISourceFilesProvider sourceFilesProvider, PerformanceTracer performanceTracer)
+        private ResourceManager(ITracer tracer, ISourceFilesProvider sourceFilesProvider)
         {
             Contract.Requires(tracer != null);
             Contract.Requires(sourceFilesProvider != null);
-            Contract.Requires(performanceTracer != null);
 
             _tracer = tracer;
             _sourceFilesProvider = sourceFilesProvider;
-            _performanceTracer = performanceTracer;
             _tableEntries = _resourceEntities.ObservableSelectMany(entity => entity.Entries);
         }
 
@@ -62,14 +59,11 @@
         {
             Contract.Requires(allSourceFiles != null);
 
-            using (_performanceTracer.Start("ResourceManager.Load"))
-            {
-                var resourceFilesByDirectory = allSourceFiles
-                    .Where(file => file.IsResourceFile())
-                    .GroupBy(file => file.GetBaseDirectory());
+            var resourceFilesByDirectory = allSourceFiles
+                .Where(file => file.IsResourceFile())
+                .GroupBy(file => file.GetBaseDirectory());
 
-                InternalLoad(resourceFilesByDirectory, duplicateKeyHandling);
-            }
+            InternalLoad(resourceFilesByDirectory, duplicateKeyHandling);
         }
 
         /// <summary>
@@ -160,6 +154,8 @@
 
         public void Reload(IList<ProjectFile> sourceFiles, DuplicateKeyHandling duplicateKeyHandling)
         {
+            Contract.Requires(sourceFiles != null);
+
             Load(sourceFiles, duplicateKeyHandling);
         }
 
@@ -278,6 +274,8 @@
 
         internal void OnLanguageChanged(ResourceLanguage language)
         {
+            Contract.Requires(language != null);
+
             LanguageChanged?.Invoke(this, new LanguageEventArgs(language));
         }
 
@@ -332,7 +330,6 @@
             Contract.Invariant(_cultureKeys != null);
             Contract.Invariant(_sourceFilesProvider != null);
             Contract.Invariant(_tracer != null);
-            Contract.Invariant(_performanceTracer != null);
             Contract.Invariant(_tableEntries != null);
         }
     }

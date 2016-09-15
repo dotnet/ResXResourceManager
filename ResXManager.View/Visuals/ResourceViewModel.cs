@@ -40,12 +40,13 @@
         private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
         private readonly IObservableCollection<ResourceTableEntry> _resourceTableEntries;
         private readonly ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
+        private readonly PerformanceTracer _performanceTracer;
 
         private string _loadedSnapshot;
         private bool _isCellSelectionEnabled;
 
         [ImportingConstructor]
-        public ResourceViewModel(ResourceManager resourceManager, Configuration configuration, ISourceFilesProvider sourceFilesProvider, CodeReferenceTracker codeReferenceTracker, ITracer tracer)
+        public ResourceViewModel(ResourceManager resourceManager, Configuration configuration, ISourceFilesProvider sourceFilesProvider, CodeReferenceTracker codeReferenceTracker, ITracer tracer, PerformanceTracer performanceTracer)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(configuration != null);
@@ -58,6 +59,7 @@
             _sourceFilesProvider = sourceFilesProvider;
             _codeReferenceTracker = codeReferenceTracker;
             _tracer = tracer;
+            _performanceTracer = performanceTracer;
 
             _resourceTableEntiyCountUpdateThrottle = new DispatcherThrottle(() => OnPropertyChanged(nameof(ResourceTableEntryCount)));
 
@@ -405,7 +407,10 @@
 
             _codeReferenceTracker.StopFind();
 
-            _resourceManager.Reload(sourceFiles, _configuration.DuplicateKeyHandling);
+            using (_performanceTracer.Start("ResourceManager.Load"))
+            {
+                _resourceManager.Reload(sourceFiles, _configuration.DuplicateKeyHandling);
+            }
 
             BeginFindCodeReferences(sourceFiles);
         }
@@ -472,6 +477,7 @@
             Contract.Invariant(_selectedEntities != null);
             Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(_selectedTableEntries != null);
+            Contract.Invariant(_performanceTracer != null);
         }
     }
 }
