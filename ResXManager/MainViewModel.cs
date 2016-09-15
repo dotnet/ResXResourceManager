@@ -180,7 +180,7 @@
                         File.WriteAllText(languageFileName, View.Properties.Resources.EmptyResxTemplate);
                     }
 
-                    entity.AddLanguage(new ProjectFile(languageFileName, rootFolder, entity.ProjectName, null));
+                    entity.AddLanguage(new ProjectFile(languageFileName, rootFolder, entity.ProjectName, null), _configuration.DuplicateKeyHandling);
                     return true;
                 }
                 catch (Exception ex)

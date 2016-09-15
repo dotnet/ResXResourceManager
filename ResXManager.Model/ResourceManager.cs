@@ -87,7 +87,7 @@
                 .Where(lang => lang.HasChanges)
                 .ToArray();
 
-            changedResourceLanguages.ForEach(resourceLanguage => resourceLanguage.Save());
+            changedResourceLanguages.ForEach(resourceLanguage => resourceLanguage.Save(_configuration.SortFileContentOnSave, _configuration.ResXSortingComparison));
         }
 
         /// <summary>
@@ -139,16 +139,6 @@
                 Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
 
                 return _specificCultures;
-            }
-        }
-
-        public Configuration Configuration
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<Configuration>() != null);
-
-                return _configuration;
             }
         }
 
@@ -260,14 +250,14 @@
 
                         if (existingEntity != null)
                         {
-                            if (existingEntity.Update(projectFiles))
+                            if (existingEntity.Update(projectFiles, _configuration.DuplicateKeyHandling))
                                 hasChanged = true;
 
                             unmatchedEntities.Remove(existingEntity);
                         }
                         else
                         {
-                            _resourceEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles));
+                            _resourceEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles, _configuration.DuplicateKeyHandling));
                             hasChanged = true;
                         }
                     }
@@ -291,7 +281,7 @@
 
         internal void LanguageChanged(ResourceLanguage language)
         {
-            if (!Configuration.SaveFilesImmediatelyUponChange)
+            if (!_configuration.SaveFilesImmediatelyUponChange)
                 return;
 
             // Defer save to avoid repeated file access
@@ -302,7 +292,7 @@
                     if (!language.HasChanges)
                         return;
 
-                    language.Save();
+                    language.Save(_configuration.SortFileContentOnSave, _configuration.ResXSortingComparison);
                 }
                 catch (Exception ex)
                 {

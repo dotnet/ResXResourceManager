@@ -33,7 +33,7 @@
 
         private ProjectFile _neutralProjectFile;
 
-        internal ResourceEntity(ResourceManager container, string projectName, string baseName, string directoryName, ICollection<ProjectFile> files)
+        internal ResourceEntity(ResourceManager container, string projectName, string baseName, string directoryName, ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(container != null);
             Contract.Requires(!string.IsNullOrEmpty(projectName));
@@ -46,7 +46,7 @@
             _projectName = projectName;
             _baseName = baseName;
             _directoryName = directoryName;
-            _languages = GetResourceLanguages(files);
+            _languages = GetResourceLanguages(files, duplicateKeyHandling);
             _relativePath = GetRelativePath(files);
             _displayName = projectName + @" - " + _relativePath + baseName;
             _sortKey = string.Concat(@" - ", _displayName, _directoryName);
@@ -63,12 +63,12 @@
             Contract.Assume(_languages.Any());
         }
 
-        internal bool Update(ICollection<ProjectFile> files)
+        internal bool Update(ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(files != null);
             Contract.Requires(files.Any());
 
-            if (!MergeItems(_languages, GetResourceLanguages(files)))
+            if (!MergeItems(_languages, GetResourceLanguages(files, duplicateKeyHandling)))
                 return false; // nothing has changed, no need to continue
 
             _neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
@@ -284,12 +284,12 @@
         /// Adds the language represented by the specified file.
         /// </summary>
         /// <param name="file">The file.</param>
-        public void AddLanguage(ProjectFile file)
+        public void AddLanguage(ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(file != null);
 
             var cultureKey = file.GetCultureKey();
-            var resourceLanguage = new ResourceLanguage(this, cultureKey, file);
+            var resourceLanguage = new ResourceLanguage(this, cultureKey, file, duplicateKeyHandling);
 
             _languages.Add(cultureKey, resourceLanguage);
             _resourceTableEntries.ForEach(entry => entry.Refresh());
@@ -337,7 +337,7 @@
                    && string.Equals(directoryName, _directoryName, StringComparison.OrdinalIgnoreCase);
         }
 
-        private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages(IEnumerable<ProjectFile> files)
+        private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages(IEnumerable<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(files != null);
             Contract.Requires(files.Any());
@@ -348,7 +348,7 @@
                 from file in files
                 let cultureKey = file.GetCultureKey()
                 orderby cultureKey
-                select new ResourceLanguage(this, cultureKey, file);
+                select new ResourceLanguage(this, cultureKey, file, duplicateKeyHandling);
 
             var languages = languageQuery.ToDictionary(language => language.CultureKey);
 

@@ -62,7 +62,7 @@
             foreach (var language in _resourceManager.ResourceEntities.SelectMany(entity => entity.Languages).Distinct().ToArray())
             {
                 Contract.Assume(language != null);
-                language.SortNodesByKey();
+                language.SortNodesByKey(_configuration.ResXSortingComparison);
             }
         }
 

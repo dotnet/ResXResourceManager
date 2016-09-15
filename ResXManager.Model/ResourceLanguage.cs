@@ -49,9 +49,10 @@
         /// <param name="container">The containing resource entity.</param>
         /// <param name="cultureKey">The culture key.</param>
         /// <param name="file">The .resx file having all the localization.</param>
+        /// <param name="duplicateKeyHandling">How to handle duplicate keys.</param>
         /// <exception cref="System.InvalidOperationException">
         /// </exception>
-        internal ResourceLanguage(ResourceEntity container, CultureKey cultureKey, ProjectFile file)
+        internal ResourceLanguage(ResourceEntity container, CultureKey cultureKey, ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(container != null);
             Contract.Requires(cultureKey != null);
@@ -89,7 +90,7 @@
                 .Where(item => !item.Key.StartsWith(WinFormsMemberNamePrefix, StringComparison.OrdinalIgnoreCase))
                 .ToArray();
 
-            if (_resourceManager.Configuration.DuplicateKeyHandling == DuplicateKeyHandling.Rename)
+            if (duplicateKeyHandling == DuplicateKeyHandling.Rename)
             {
                 MakeKeysUnique(elements);
             }
@@ -216,9 +217,9 @@
             SetNodeData(key, node => node.Text = value);
         }
 
-        public void SortNodesByKey()
+        public void SortNodesByKey(StringComparison stringComparison)
         {
-            Save(true);
+            Save(true, stringComparison);
         }
 
         private void OnChanged()
@@ -236,26 +237,15 @@
         /// <summary>
         /// Saves this instance to the resource file.
         /// </summary>
+        /// <param name="sortFileContent">if set to <c>true</c> to force sorting the file content.</param>
+        /// <param name="stringComparison">The string comparison to be used for sorting.</param>
         /// <exception cref="IOException"></exception>
         /// <exception cref="UnauthorizedAccessException"></exception>
-        public void Save()
+        public void Save(bool sortFileContent, StringComparison stringComparison)
         {
-            Save(false);
-        }
-
-        /// <summary>
-        /// Saves this instance to the resource file.
-        /// </summary>
-        /// <param name="forceSortFileContent">if set to <c>true</c> to force sorting the file content.</param>
-        /// <exception cref="IOException"></exception>
-        /// <exception cref="UnauthorizedAccessException"></exception>
-        public void Save(bool forceSortFileContent)
-        {
-            var configuration = _resourceManager.Configuration;
-
-            if (forceSortFileContent || configuration.SortFileContentOnSave)
+            if (sortFileContent)
             {
-                SortNodes(configuration.ResXSortingComparison);
+                SortNodes(stringComparison);
             }
 
             _file.Save();
