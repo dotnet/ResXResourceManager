@@ -93,6 +93,8 @@
             }
         }
 
+        public StringComparison? EffectiveResXSortingComparison => SortFileContentOnSave ? ResXSortingComparison : (StringComparison?) null;
+
         public bool ConfirmAddLanguageFile
         {
             get

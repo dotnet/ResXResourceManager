@@ -9,6 +9,7 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
+    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
@@ -59,11 +60,10 @@
 
         private void SortNodesByKey()
         {
-            foreach (var language in _resourceManager.ResourceEntities.SelectMany(entity => entity.Languages).Distinct().ToArray())
-            {
-                Contract.Assume(language != null);
-                language.SortNodesByKey(_configuration.ResXSortingComparison);
-            }
+            _resourceManager.ResourceEntities
+                .SelectMany(entity => entity.Languages)
+                .ToArray()
+                .ForEach(language => language.Save(_configuration.ResXSortingComparison));
         }
 
         public override string ToString()

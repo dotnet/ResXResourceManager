@@ -24,15 +24,18 @@
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class MainWindow
     {
+        private readonly Configuration _configuration;
         private readonly ITracer _tracer;
         private Size _lastKnownSize;
         private Vector _laskKnownLocation;
 
         [ImportingConstructor]
-        public MainWindow(ExportProvider exportProvider, ITracer tracer)
+        public MainWindow(ExportProvider exportProvider, Configuration configuration, ITracer tracer)
         {
             Contract.Requires(exportProvider != null);
+            Contract.Requires(configuration != null);
 
+            _configuration = configuration;
             _tracer = tracer;
 
             try
@@ -91,7 +94,7 @@
                 case MessageBoxResult.Yes:
                     try
                     {
-                        resourceManager.Save();
+                        resourceManager.Save(_configuration.EffectiveResXSortingComparison);
                     }
                     catch (Exception ex)
                     {
@@ -164,6 +167,7 @@
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
+            Contract.Invariant(_configuration != null);
             Contract.Invariant(_tracer != null);
         }
     }

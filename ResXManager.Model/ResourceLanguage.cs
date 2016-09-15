@@ -217,16 +217,11 @@
             SetNodeData(key, node => node.Text = value);
         }
 
-        public void SortNodesByKey(StringComparison stringComparison)
-        {
-            Save(true, stringComparison);
-        }
-
         private void OnChanged()
         {
             _file.Changed();
 
-            Container.Container.LanguageChanged(this);
+            Container.Container.OnLanguageChanged(this);
         }
 
         internal bool CanEdit()
@@ -237,15 +232,14 @@
         /// <summary>
         /// Saves this instance to the resource file.
         /// </summary>
-        /// <param name="sortFileContent">if set to <c>true</c> to force sorting the file content.</param>
-        /// <param name="stringComparison">The string comparison to be used for sorting.</param>
+        /// <param name="fileContentSorting">If a string comparison is specified, the file content will be sorted by the key.</param>
         /// <exception cref="IOException"></exception>
         /// <exception cref="UnauthorizedAccessException"></exception>
-        public void Save(bool sortFileContent, StringComparison stringComparison)
+        public void Save(StringComparison? fileContentSorting)
         {
-            if (sortFileContent)
+            if (fileContentSorting.HasValue)
             {
-                SortNodes(stringComparison);
+                SortNodes(fileContentSorting.Value);
             }
 
             _file.Save();

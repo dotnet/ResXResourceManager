@@ -67,6 +67,8 @@
             _restartFindCodeReferencesThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, () => BeginFindCodeReferences(sourceFilesProvider.SourceFiles));
 
             resourceManager.TableEntries.CollectionChanged += (_, __) => _restartFindCodeReferencesThrottle.Tick();
+
+            resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
         }
 
         public ResourceManager ResourceManager
@@ -164,7 +166,7 @@
 
         public ICommand ReloadCommand => new DelegateCommand(Reload);
 
-        public ICommand SaveCommand => new DelegateCommand(() => _resourceManager.HasChanges, () => _resourceManager.Save());
+        public ICommand SaveCommand => new DelegateCommand(() => _resourceManager.HasChanges, () => _resourceManager.Save(_configuration.EffectiveResXSortingComparison));
 
         public ICommand BeginFindCodeReferencesCommand => new DelegateCommand(BeginFindCodeReferences);
 
@@ -403,7 +405,7 @@
 
             _codeReferenceTracker.StopFind();
 
-            _resourceManager.Reload(sourceFiles);
+            _resourceManager.Reload(sourceFiles, _configuration.DuplicateKeyHandling);
 
             BeginFindCodeReferences(sourceFiles);
         }
@@ -426,6 +428,31 @@
                     _codeReferenceTracker.BeginFind(_resourceManager, _configuration.CodeReferences, allSourceFiles, _tracer);
                 });
             }
+        }
+
+        private void ResourceManager_LanguageChanged(object sender, LanguageEventArgs e)
+        {
+            if (!_configuration.SaveFilesImmediatelyUponChange)
+                return;
+
+            var language = e.Language;
+
+            // Defer save to avoid repeated file access
+            Dispatcher.BeginInvoke(() =>
+            {
+                try
+                {
+                    if (!language.HasChanges)
+                        return;
+
+                    language.Save(_configuration.EffectiveResXSortingComparison);
+                }
+                catch (Exception ex)
+                {
+                    _tracer.TraceError(ex.ToString());
+                    MessageBox.Show(ex.Message, Resources.Title);
+                }
+            });
         }
 
         public override string ToString()

@@ -9,10 +9,8 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Windows;
 
     using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model.Properties;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
@@ -27,7 +25,6 @@
         private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
         private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
 
-        private readonly Configuration _configuration;
         private readonly ITracer _tracer;
         private readonly ISourceFilesProvider _sourceFilesProvider;
         private readonly PerformanceTracer _performanceTracer;
@@ -41,16 +38,15 @@
 
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
         public event EventHandler<EventArgs> Loaded;
+        public event EventHandler<LanguageEventArgs> LanguageChanged;
 
         [ImportingConstructor]
-        private ResourceManager(Configuration configuration, ITracer tracer, ISourceFilesProvider sourceFilesProvider, PerformanceTracer performanceTracer)
+        private ResourceManager(ITracer tracer, ISourceFilesProvider sourceFilesProvider, PerformanceTracer performanceTracer)
         {
-            Contract.Requires(configuration != null);
             Contract.Requires(tracer != null);
             Contract.Requires(sourceFilesProvider != null);
             Contract.Requires(performanceTracer != null);
 
-            _configuration = configuration;
             _tracer = tracer;
             _sourceFilesProvider = sourceFilesProvider;
             _performanceTracer = performanceTracer;
@@ -61,7 +57,8 @@
         /// Loads all resources from the specified project files.
         /// </summary>
         /// <param name="allSourceFiles">All resource x files.</param>
-        private void Load(IList<ProjectFile> allSourceFiles)
+        /// <param name="duplicateKeyHandling">The duplicate key handling mode.</param>
+        private void Load(IList<ProjectFile> allSourceFiles, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(allSourceFiles != null);
 
@@ -71,7 +68,7 @@
                     .Where(file => file.IsResourceFile())
                     .GroupBy(file => file.GetBaseDirectory());
 
-                InternalLoad(resourceFilesByDirectory);
+                InternalLoad(resourceFilesByDirectory, duplicateKeyHandling);
             }
         }
 
@@ -80,14 +77,14 @@
         /// </summary>
         /// <exception cref="IOException"></exception>
         /// <exception cref="UnauthorizedAccessException"></exception>
-        public void Save()
+        public void Save(StringComparison? fileContentSorting)
         {
             var changedResourceLanguages = _resourceEntities
                 .SelectMany(entity => entity.Languages)
                 .Where(lang => lang.HasChanges)
                 .ToArray();
 
-            changedResourceLanguages.ForEach(resourceLanguage => resourceLanguage.Save(_configuration.SortFileContentOnSave, _configuration.ResXSortingComparison));
+            changedResourceLanguages.ForEach(resourceLanguage => resourceLanguage.Save(fileContentSorting));
         }
 
         /// <summary>
@@ -156,14 +153,14 @@
                 _resourceEntities.LoadSnapshot(_snapshot);
         }
 
-        public void Reload()
+        public void Reload(DuplicateKeyHandling duplicateKeyHandling)
         {
-            Reload(_sourceFilesProvider.SourceFiles);
+            Reload(_sourceFilesProvider.SourceFiles, duplicateKeyHandling);
         }
 
-        public void Reload(IList<ProjectFile> sourceFiles)
+        public void Reload(IList<ProjectFile> sourceFiles, DuplicateKeyHandling duplicateKeyHandling)
         {
-            Load(sourceFiles);
+            Load(sourceFiles, duplicateKeyHandling);
         }
 
         public bool CanEdit(ResourceEntity resourceEntity, CultureKey cultureKey)
@@ -187,11 +184,11 @@
             Loaded?.Invoke(this, EventArgs.Empty);
         }
 
-        private void InternalLoad(IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory)
+        private void InternalLoad(IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(resourceFilesByDirectory != null);
 
-            if (!LoadEntities(resourceFilesByDirectory))
+            if (!LoadEntities(resourceFilesByDirectory, duplicateKeyHandling))
                 return; // nothing has changed, no need to continue
 
             if (!string.IsNullOrEmpty(_snapshot))
@@ -209,7 +206,7 @@
             OnLoaded();
         }
 
-        private bool LoadEntities(IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory)
+        private bool LoadEntities(IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(fileNamesByDirectory != null);
 
@@ -250,14 +247,14 @@
 
                         if (existingEntity != null)
                         {
-                            if (existingEntity.Update(projectFiles, _configuration.DuplicateKeyHandling))
+                            if (existingEntity.Update(projectFiles, duplicateKeyHandling))
                                 hasChanged = true;
 
                             unmatchedEntities.Remove(existingEntity);
                         }
                         else
                         {
-                            _resourceEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles, _configuration.DuplicateKeyHandling));
+                            _resourceEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles, duplicateKeyHandling));
                             hasChanged = true;
                         }
                     }
@@ -279,27 +276,9 @@
             }
         }
 
-        internal void LanguageChanged(ResourceLanguage language)
+        internal void OnLanguageChanged(ResourceLanguage language)
         {
-            if (!_configuration.SaveFilesImmediatelyUponChange)
-                return;
-
-            // Defer save to avoid repeated file access
-            Dispatcher.BeginInvoke(() =>
-            {
-                try
-                {
-                    if (!language.HasChanges)
-                        return;
-
-                    language.Save(_configuration.SortFileContentOnSave, _configuration.ResXSortingComparison);
-                }
-                catch (Exception ex)
-                {
-                    _tracer.TraceError(ex.ToString());
-                    MessageBox.Show(ex.Message, Resources.Title);
-                }
-            });
+            LanguageChanged?.Invoke(this, new LanguageEventArgs(language));
         }
 
         public static bool IsValidLanguageName(string languageName)
@@ -350,7 +329,6 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_resourceEntities != null);
-            Contract.Invariant(_configuration != null);
             Contract.Invariant(_cultureKeys != null);
             Contract.Invariant(_sourceFilesProvider != null);
             Contract.Invariant(_tracer != null);
