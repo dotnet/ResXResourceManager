@@ -17,6 +17,7 @@
     /// </summary>
     public abstract class ConfigurationBase : ObservableObject
     {
+        private readonly ITracer _tracer;
         private const string FileName = "Configuration.xml";
         private static readonly string _directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "tom-englert.de", "ResXManager");
 
@@ -29,6 +30,7 @@
 
             Contract.Assume(!string.IsNullOrEmpty(_directory));
 
+            _tracer = tracer;
             _filePath = Path.Combine(_directory, FileName);
 
             try
@@ -109,7 +111,7 @@
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Fatal error writing configuration file: " + _filePath + " - " + ex.Message);
+                _tracer.TraceError("Fatal error writing configuration file: " + _filePath + " - " + ex.Message));
             }
         }
 
@@ -152,6 +154,7 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
+            Contract.Invariant(_tracer != null);
             Contract.Invariant(_configuration != null);
             Contract.Invariant(!string.IsNullOrEmpty(_filePath));
             Contract.Invariant(!string.IsNullOrEmpty(_directory));

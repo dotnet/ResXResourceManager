@@ -319,7 +319,6 @@
             catch (Exception ex)
             {
                 var message = string.Format(CultureInfo.CurrentCulture, Resources.FileSaveError, _file.FilePath, ex.Message);
-                MessageBox.Show(message);
                 throw new IOException(message, ex);
             }
         }
@@ -389,7 +388,6 @@
             catch (Exception ex)
             {
                 var message = string.Format(CultureInfo.CurrentCulture, Resources.FileSaveError, _file.FilePath, ex.Message);
-                MessageBox.Show(message);
                 throw new IOException(message, ex);
             }
         }

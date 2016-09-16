@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Infrastructure
+﻿namespace tomenglertde.ResXManager.Styles
 {
     using System.Diagnostics.Contracts;
     using System.Windows;

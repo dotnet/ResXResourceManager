@@ -501,9 +501,8 @@
 
             <DataGrid.ItemsPanel>
               <ItemsPanelTemplate>
-                <VirtualizingStackPanel
-                  DataContext="{Binding ElementName=DataGrid}"
-                  TextElement.FontSize="{Binding Path=(infrastructure:Appearance.TextFontSize), RelativeSource={RelativeSource Self}}">
+                <VirtualizingStackPanel DataContext="{Binding ElementName=DataGrid}" 
+                                        TextElement.FontSize="{Binding Path=(view:Appearance.TextFontSize), RelativeSource={RelativeSource Self}}">
                   <VirtualizingStackPanel.ContextMenu>
                     <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}">
                       <i:Interaction.Behaviors>

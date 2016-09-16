@@ -14,6 +14,7 @@
     using Microsoft.VisualStudio.Shell.Interop;
 
     using tomenglertde.ResXManager.Infrastructure;
+    using tomenglertde.ResXManager.View;
 
     using TomsToolbox.Core;
 

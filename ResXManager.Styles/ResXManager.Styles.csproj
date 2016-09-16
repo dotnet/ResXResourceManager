@@ -197,6 +197,7 @@
       <Link>Version.cs</Link>
     </Compile>
     <Compile Include="Effects\InvertGrayEffect.cs" />
+    <Compile Include="IThemeResourceProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
