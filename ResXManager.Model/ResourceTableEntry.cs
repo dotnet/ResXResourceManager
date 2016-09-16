@@ -32,6 +32,8 @@
         private IDictionary<CultureKey, ResourceLanguage> _languages;
         private ResourceTableValues<string> _values;
         private ResourceTableValues<string> _comments;
+        private ResourceTableValues<string> _snapshotValues;
+        private ResourceTableValues<string> _snapshotComments;
         private ResourceTableValues<bool> _fileExists;
         private ResourceTableValues<ICollection<string>> _valueAnnotations;
         private ResourceTableValues<ICollection<string>> _commentAnnotations;
@@ -71,6 +73,9 @@
 
             _fileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
 
+            _snapshotValues = new ResourceTableValues<string>(_languages, lang => _snapshot?.GetValueOrDefault(lang.CultureKey)?.Text, (lang, value) => false);
+            _snapshotComments = new ResourceTableValues<string>(_languages, lang => _snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment, (lang, value) => false);
+
             _valueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
             _commentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
 
@@ -90,6 +95,9 @@
             _comments.ValueChanged += Comments_ValueChanged;
 
             _fileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
+
+            _snapshotValues = new ResourceTableValues<string>(_languages, lang => _snapshot?.GetValueOrDefault(lang.CultureKey)?.Text, (lang, value) => false);
+            _snapshotComments = new ResourceTableValues<string>(_languages, lang => _snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment, (lang, value) => false);
 
             _valueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
             _commentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
@@ -206,6 +214,26 @@
             {
                 Contract.Ensures(Contract.Result<ResourceTableValues<string>>() != null);
                 return _comments;
+            }
+        }
+
+        [PropertyDependency(nameof(Snapshot))]
+        public ResourceTableValues<string> SnapshotValues
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ResourceTableValues<string>>() != null);
+                return _snapshotValues;
+            }
+        }
+
+        [PropertyDependency(nameof(Snapshot))]
+        public ResourceTableValues<string> SnapshotComments
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ResourceTableValues<string>>() != null);
+                return _snapshotComments;
             }
         }
 
@@ -507,6 +535,8 @@
             Contract.Invariant(!string.IsNullOrEmpty(_key));
             Contract.Invariant(_values != null);
             Contract.Invariant(_comments != null);
+            Contract.Invariant(_snapshotValues != null);
+            Contract.Invariant(_snapshotComments != null);
             Contract.Invariant(_fileExists != null);
             Contract.Invariant(_valueAnnotations != null);
             Contract.Invariant(_commentAnnotations != null);

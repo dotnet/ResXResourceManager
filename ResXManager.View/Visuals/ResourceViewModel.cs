@@ -53,6 +53,7 @@
             Contract.Requires(sourceFilesProvider != null);
             Contract.Requires(codeReferenceTracker != null);
             Contract.Requires(tracer != null);
+            Contract.Requires(performanceTracer != null);
 
             _resourceManager = resourceManager;
             _configuration = configuration;
