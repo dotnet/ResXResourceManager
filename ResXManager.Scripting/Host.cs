@@ -14,7 +14,7 @@
     using TomsToolbox.Desktop;
     using TomsToolbox.Desktop.Composition;
 
-    public class Host
+    public sealed class Host : IDisposable
     {
         private readonly ICompositionHost _compositionHost = new CompositionHost();
         private readonly SourceFilesProvider _sourceFilesProvider;
@@ -41,7 +41,12 @@
             _resourceManager.Reload(DuplicateKeyHandling.Fail);
         }
 
-        public void Save(StringComparison? keySortingComparison = null)
+        public void Save()
+        {
+            Save(null);
+        }
+
+        public void Save(StringComparison? keySortingComparison)
         {
             _resourceManager.Save(keySortingComparison);
         }
@@ -101,6 +106,11 @@
         public void LoadSnapshot(string value)
         {
             _resourceManager.LoadSnapshot(value);
+        }
+
+        public void Dispose()
+        {
+            _compositionHost.Dispose();
         }
 
         [ContractInvariantMethod]

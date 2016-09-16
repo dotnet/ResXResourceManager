@@ -17,18 +17,15 @@
     [Export]
     internal class AddNewKeyCommand : DelegateCommand
     {
-        private readonly ResourceManager _resourceManager;
         private readonly ResourceViewModel _resourceViewModel;
         private readonly ExportProvider _exportProvider;
 
         [ImportingConstructor]
-        public AddNewKeyCommand(ResourceManager resourceManager, ResourceViewModel resourceViewModel, ExportProvider exportProvider)
+        public AddNewKeyCommand(ResourceViewModel resourceViewModel, ExportProvider exportProvider)
         {
-            Contract.Requires(resourceManager != null);
             Contract.Requires(resourceViewModel != null);
             Contract.Requires(exportProvider != null);
 
-            _resourceManager = resourceManager;
             _resourceViewModel = resourceViewModel;
             _exportProvider = exportProvider;
 
@@ -91,7 +88,6 @@
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_resourceViewModel != null);
             Contract.Invariant(_exportProvider != null);
         }

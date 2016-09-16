@@ -35,7 +35,6 @@
         private readonly XElement _documentRoot;
         private readonly ProjectFile _file;
         private readonly IDictionary<string, Node> _nodes;
-        private readonly ResourceManager _resourceManager;
         private readonly CultureKey _cultureKey;
 
         private readonly XName _dataNodeName;
@@ -59,7 +58,6 @@
             Contract.Requires(file != null);
 
             _container = container;
-            _resourceManager = container.Container;
             _cultureKey = cultureKey;
             _file = file;
 
@@ -712,7 +710,6 @@
             Contract.Invariant(_documentRoot != null);
             Contract.Invariant(_file != null);
             Contract.Invariant(_nodes != null);
-            Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_cultureKey != null);
             Contract.Invariant(_dataNodeName != null);
             Contract.Invariant(_valueNodeName != null);

@@ -74,3 +74,4 @@ if ("Y", "y" -contains $input)
 }
 
 Read-Host "Done" | Out-Null
+$myhost.Dispose()

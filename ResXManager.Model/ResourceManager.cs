@@ -25,7 +25,6 @@
         private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
         private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
 
-        private readonly ITracer _tracer;
         private readonly ISourceFilesProvider _sourceFilesProvider;
 
         private readonly ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
@@ -40,12 +39,10 @@
         public event EventHandler<LanguageEventArgs> LanguageChanged;
 
         [ImportingConstructor]
-        private ResourceManager(ITracer tracer, ISourceFilesProvider sourceFilesProvider)
+        private ResourceManager(ISourceFilesProvider sourceFilesProvider)
         {
-            Contract.Requires(tracer != null);
             Contract.Requires(sourceFilesProvider != null);
 
-            _tracer = tracer;
             _sourceFilesProvider = sourceFilesProvider;
             _tableEntries = _resourceEntities.ObservableSelectMany(entity => entity.Entries);
         }
@@ -329,7 +326,6 @@
             Contract.Invariant(_resourceEntities != null);
             Contract.Invariant(_cultureKeys != null);
             Contract.Invariant(_sourceFilesProvider != null);
-            Contract.Invariant(_tracer != null);
             Contract.Invariant(_tableEntries != null);
         }
     }
