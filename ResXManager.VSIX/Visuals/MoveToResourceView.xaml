@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="600"
              xmlns:toms="urn:TomsToolbox"
-             xmlns:view="clr-namespace:tomenglertde.ResXManager.View.Visuals;assembly=ResXManager.View"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
              xmlns:local="clr-namespace:tomenglertde.ResXManager.VSIX"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.VSIX.Properties"
@@ -21,7 +20,7 @@
   </UserControl.Resources>
   <StackPanel Margin="10" Width="600">
     <StackPanel Grid.IsSharedSizeScope="True">
-      <view:SharedWidthHeaderedContentControl>
+      <toms:SharedWidthHeaderedContentControl>
         <StackPanel Orientation="Horizontal">
           <RadioButton Content="New entry" 
                        Style="{DynamicResource {x:Static styles:ResourceKeys.RadioButtonStyle}}"
@@ -32,9 +31,9 @@
                        IsChecked="{Binding ReuseExisiting}"
                        IsEnabled="{Binding ExistingEntries.Count, Converter={x:Static toms:BinaryOperationConverter.GreaterThan}, ConverterParameter=0}"/>
         </StackPanel>
-      </view:SharedWidthHeaderedContentControl>
+      </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="15" />
-      <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.ResourceHeader}">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.ResourceHeader}">
         <Grid>
           <ComboBox ItemsSource="{Binding ResourceEntities}"
                     SelectedItem="{Binding SelectedResourceEntity, ValidatesOnDataErrors=True}"
@@ -46,20 +45,20 @@
                     Visibility="{Binding ReuseExisiting, Converter={x:Static toms:BooleanToVisibilityConverter.Default}}"
                     DisplayMemberPath="Container.DisplayName"/>
         </Grid>
-      </view:SharedWidthHeaderedContentControl>
+      </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
-      <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.KeyHeader}">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.KeyHeader}">
         <TextBox Text="{Binding Key, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                  Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}"
                  IsEnabled="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}"/>
-      </view:SharedWidthHeaderedContentControl>
+      </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
-      <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.CodeHeader}">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.CodeHeader}">
         <ComboBox ItemsSource="{Binding Replacements}" SelectedItem="{Binding Replacement}"
                   SelectedIndex="{Binding SelectedReplacementIndex}" Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}"/>
-      </view:SharedWidthHeaderedContentControl>
+      </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
-      <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.ValueHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.ValueHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
         <DockPanel>
           <ToggleButton x:Name="ValueShowWhiteSpaces" Style="{StaticResource ToggleWhiteSpaceButtonStyle}" IsChecked="{Binding MoveToResourceValueShowWhitespace, Source={x:Static properties:Settings.Default}}"/>
           <Decorator DockPanel.Dock="Right" Width="5"/>
@@ -79,9 +78,9 @@
             </toms:TextBoxVisibleWhiteSpaceDecorator.Style>
           </toms:TextBoxVisibleWhiteSpaceDecorator>
         </DockPanel>
-      </view:SharedWidthHeaderedContentControl>
+      </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
-      <view:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.CommentHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.CommentHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
         <DockPanel>
           <ToggleButton x:Name="CommentShowWhiteSpaces" Style="{StaticResource ToggleWhiteSpaceButtonStyle}" IsChecked="{Binding MoveToResourceCommentShowWhitespace, Source={x:Static properties:Settings.Default}}"/>
           <Decorator DockPanel.Dock="Right" Width="5"/>
@@ -101,13 +100,13 @@
             </toms:TextBoxVisibleWhiteSpaceDecorator.Style>
           </toms:TextBoxVisibleWhiteSpaceDecorator>
         </DockPanel>
-      </view:SharedWidthHeaderedContentControl>
+      </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
-      <view:SharedWidthHeaderedContentControl>
+      <toms:SharedWidthHeaderedContentControl>
         <CheckBox Content="{x:Static local:Resources.MoveToResourceEditNewEntry}" 
                   Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
                   IsChecked="{Binding MoveToResourceOpenInResXManager, Source={x:Static properties:Settings.Default}}"/>
-      </view:SharedWidthHeaderedContentControl>
+      </toms:SharedWidthHeaderedContentControl>
     </StackPanel>
   </StackPanel>
 </UserControl>

@@ -1,5 +1,7 @@
 namespace tomenglertde.ResXManager.Translators
 {
+    using tomenglertde.ResXManager.Infrastructure;
+
     using TomsToolbox.Desktop;
 
     public class CredentialItem : ObservableObject, ICredentialItem

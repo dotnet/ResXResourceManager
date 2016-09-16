@@ -8,6 +8,7 @@
 
     using Newtonsoft.Json;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Translators.Properties;
 
     using TomsToolbox.Core;
@@ -93,9 +94,9 @@
             settings.Configuration = JsonConvert.SerializeObject(values);
         }
 
-        public void Translate(Session session)
+        public void Translate(ITranslationSession translationSession)
         {
-            Contract.Requires(session != null);
+            Contract.Requires(translationSession != null);
 
             var translatorCounter = 0;
 
@@ -113,14 +114,14 @@
                 {
                     try
                     {
-                        local.Translate(session);
+                        local.Translate(translationSession);
                     }
                     finally
                     {
                         // ReSharper disable once AccessToModifiedClosure
                         if (Interlocked.Decrement(ref translatorCounter) == 0)
                         {
-                            session.IsComplete = true;
+                            translationSession.IsComplete = true;
                         }
                     }
                 });
@@ -128,7 +129,7 @@
 
             if (translatorCounter == 0)
             {
-                session.IsComplete = true;
+                translationSession.IsComplete = true;
             }
         }
 

@@ -10,6 +10,7 @@ namespace tomenglertde.ResXManager.Translators
     using System.ServiceModel;
     using System.ServiceModel.Channels;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Translators.BingServiceReference;
 
     using TomsToolbox.Core;
@@ -25,7 +26,7 @@ namespace tomenglertde.ResXManager.Translators
         {
         }
 
-        public override void Translate(Session session)
+        public override void Translate(ITranslationSession translationSession)
         {
             try
             {
@@ -34,7 +35,7 @@ namespace tomenglertde.ResXManager.Translators
 
                 if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
                 {
-                    session.AddMessage("Bing Translator requires client id and secret.");
+                    translationSession.AddMessage("Bing Translator requires client id and secret.");
                     return;
                 }
 
@@ -53,14 +54,14 @@ namespace tomenglertde.ResXManager.Translators
                         Contract.Assume(operationContext != null); // because we are inside OperationContextScope
                         operationContext.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
 
-                        foreach (var languageGroup in session.Items.GroupBy(item => item.TargetCulture))
+                        foreach (var languageGroup in translationSession.Items.GroupBy(item => item.TargetCulture))
                         {
                             Contract.Assume(languageGroup != null);
 
                             var cultureKey = languageGroup.Key;
                             Contract.Assume(cultureKey != null);
 
-                            var targetLanguage = cultureKey.Culture ?? session.NeutralResourcesLanguage;
+                            var targetLanguage = cultureKey.Culture ?? translationSession.NeutralResourcesLanguage;
 
                             using (var itemsEnumerator = languageGroup.GetEnumerator())
                             {
@@ -72,16 +73,16 @@ namespace tomenglertde.ResXManager.Translators
                                     if (!sourceStrings.Any())
                                         break;
 
-                                    var response = client.GetTranslationsArray("", sourceStrings, session.SourceLanguage.IetfLanguageTag, targetLanguage.IetfLanguageTag, 5,
+                                    var response = client.GetTranslationsArray("", sourceStrings, translationSession.SourceLanguage.IetfLanguageTag, targetLanguage.IetfLanguageTag, 5,
                                         new TranslateOptions()
                                         {
                                             ContentType = "text/plain",
                                             IncludeMultipleMTAlternatives = true
                                         });
 
-                                    session.Dispatcher.BeginInvoke(() => ReturnResults(sourceItems, response));
+                                    translationSession.Dispatcher.BeginInvoke(() => ReturnResults(sourceItems, response));
 
-                                    if (session.IsCanceled)
+                                    if (translationSession.IsCanceled)
                                         break;
                                 }
                             }
@@ -91,7 +92,7 @@ namespace tomenglertde.ResXManager.Translators
             }
             catch (Exception ex)
             {
-                session.AddMessage("Bing translator reported a problem: " + ex);
+                translationSession.AddMessage("Bing translator reported a problem: " + ex);
             }
         }
 

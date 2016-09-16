@@ -188,7 +188,12 @@
     <Compile Include="Appearance.cs" />
     <Compile Include="CultureKey.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="ICredentialItem.cs" />
+    <Compile Include="ITranslationSession.cs" />
     <Compile Include="IThemeResourceProvider.cs" />
+    <Compile Include="ITranslationItem.cs" />
+    <Compile Include="ITranslationMatch.cs" />
+    <Compile Include="ITranslator.cs" />
     <Compile Include="ThemeManager.cs" />
     <Compile Include="ITracer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

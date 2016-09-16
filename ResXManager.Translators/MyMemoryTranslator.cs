@@ -14,6 +14,8 @@
 
     using Newtonsoft.Json;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     using TomsToolbox.Desktop;
 
     [Export(typeof(ITranslator))]
@@ -47,11 +49,11 @@
             }
         }
 
-        public override void Translate(Session session)
+        public override void Translate(ITranslationSession translationSession)
         {
-            foreach (var item in session.Items)
+            foreach (var item in translationSession.Items)
             {
-                if (session.IsCanceled)
+                if (translationSession.IsCanceled)
                     break;
 
                 var translationItem = item;
@@ -59,10 +61,10 @@
 
                 try
                 {
-                    var targetCulture = translationItem.TargetCulture.Culture ?? session.NeutralResourcesLanguage;
-                    var result = TranslateText(translationItem.Source, Key, session.SourceLanguage, targetCulture);
+                    var targetCulture = translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage;
+                    var result = TranslateText(translationItem.Source, Key, translationSession.SourceLanguage, targetCulture);
 
-                    session.Dispatcher.BeginInvoke(() =>
+                    translationSession.Dispatcher.BeginInvoke(() =>
                     {
                         if (result.Matches != null)
                         {
@@ -85,7 +87,7 @@
                 }
                 catch (Exception ex)
                 {
-                    session.AddMessage(DisplayName + ": " + ex.Message);
+                    translationSession.AddMessage(DisplayName + ": " + ex.Message);
                     break;
                 }
             }

@@ -5,6 +5,7 @@
     using System.Windows;
     using System.Windows.Controls;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Translators;
 
     /// <summary>

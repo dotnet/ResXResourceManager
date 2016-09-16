@@ -1,4 +1,4 @@
-namespace tomenglertde.ResXManager.Model
+namespace tomenglertde.ResXManager.View.Visuals
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -9,7 +9,7 @@ namespace tomenglertde.ResXManager.Model
     using System.Windows.Data;
 
     using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Translators;
+    using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Desktop;
 

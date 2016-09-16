@@ -1,10 +1,8 @@
-﻿namespace tomenglertde.ResXManager.Translators
+﻿namespace tomenglertde.ResXManager.Infrastructure
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-
-    using tomenglertde.ResXManager.Infrastructure;
 
     [ContractClass(typeof (TranslationItemContract))]
     public interface ITranslationItem

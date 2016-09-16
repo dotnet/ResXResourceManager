@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Translators
+﻿namespace tomenglertde.ResXManager.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -35,7 +35,7 @@
             set;
         }
 
-        void Translate(Session session);
+        void Translate(ITranslationSession translationSession);
 
         IList<ICredentialItem> Credentials
         {
@@ -96,7 +96,7 @@
             }
         }
 
-        void ITranslator.Translate(Session session)
+        void ITranslator.Translate(ITranslationSession translationSession)
         {
             throw new NotImplementedException();
         }

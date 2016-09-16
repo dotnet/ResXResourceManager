@@ -55,17 +55,17 @@
         </Button>
       </StackPanel>
       <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="100" HorizontalScrollBarVisibility="Auto">
-        <ItemsControl ItemsSource="{Binding Session.Messages}" Margin="5" Focusable="False" />
+        <ItemsControl ItemsSource="{Binding TranslationSession.Messages}" Margin="5" Focusable="False" />
       </ScrollViewer>
     </DockPanel>
     <Decorator Height="10" DockPanel.Dock="Bottom" />
     <Grid>
       <DockPanel>
-        <visuals:TranslatorConfiguration DockPanel.Dock="Top" IsEnabled="{Binding Session.IsComplete}" Translators="{Binding Translators}" />
+        <visuals:TranslatorConfiguration DockPanel.Dock="Top" IsEnabled="{Binding TranslationSession.IsComplete}" Translators="{Binding Translators}" />
         <Decorator Height="10" DockPanel.Dock="Top" />
         <DataGrid ItemsSource="{Binding Items}" Style="{DynamicResource {x:Static styles:ResourceKeys.DataGridStyle}}"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
-                  IsEnabled="{Binding Session.IsComplete}" toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedItems}">
+                  IsEnabled="{Binding TranslationSession.IsComplete}" toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedItems}">
           <DataGrid.RowHeaderTemplate>
             <DataTemplate DataType="DataGridRowHeader">
               <CheckBox Style="{StaticResource {x:Static toms:ResourceKeys.DataGridRowCheckBoxStyle}}" />
@@ -91,7 +91,7 @@
             </DataGridTextColumn>
             <DataGridTemplateColumn Width="24" SortMemberPath="TargetCulture" IsReadOnly="True" CanUserResize="False">
               <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate DataType="{x:Type model:TranslationItem}">
+                <DataTemplate DataType="{x:Type visuals:TranslationItem}">
                   <Grid>
                     <Image Stretch="None" Source="{Binding Path=TargetCulture.Culture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" HorizontalAlignment="Center">
                       <Image.ToolTip>
@@ -221,7 +221,7 @@
           </DataGrid.Columns>
         </DataGrid>
       </DockPanel>
-      <toms:LoadingIndicator IsActive="{Binding Session.IsActive}" Header="Translating..." d:IsHidden="True" />
+      <toms:LoadingIndicator IsActive="{Binding TranslationSession.IsActive}" Header="Translating..." d:IsHidden="True" />
     </Grid>
   </DockPanel>
   <i:Interaction.Triggers>

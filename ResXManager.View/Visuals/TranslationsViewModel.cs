@@ -36,7 +36,7 @@
 
         private CultureKey _sourceCulture;
         private ICollection<TranslationItem> _items = new TranslationItem[0];
-        private Session _session;
+        private ITranslationSession _translationSession;
         private ICollection<CultureKey> _allTargetCultures = new CultureKey[0];
 
 
@@ -138,15 +138,15 @@
             }
         }
 
-        public Session Session
+        public ITranslationSession TranslationSession
         {
             get
             {
-                return _session;
+                return _translationSession;
             }
             set
             {
-                SetProperty(ref _session, value, () => Session);
+                SetProperty(ref _translationSession, value, () => TranslationSession);
             }
         }
 
@@ -156,7 +156,7 @@
             {
                 Contract.Ensures(Contract.Result<ICommand>() != null);
 
-                return new DelegateCommand(() => _session == null, UpdateTargetList);
+                return new DelegateCommand(() => _translationSession == null, UpdateTargetList);
             }
         }
 
@@ -210,7 +210,7 @@
 
         private void Stop()
         {
-            _session?.Cancel();
+            _translationSession?.Cancel();
         }
 
         private void Apply(IEnumerable<TranslationItem> items)
@@ -233,9 +233,9 @@
             }
         }
 
-        private bool IsSessionComplete => _session != null && _session.IsComplete;
+        private bool IsSessionComplete => _translationSession != null && _translationSession.IsComplete;
 
-        private bool IsSessionRunning => _session != null && !_session.IsComplete && !_session.IsCanceled;
+        private bool IsSessionRunning => _translationSession != null && !_translationSession.IsComplete && !_translationSession.IsCanceled;
 
         private static IEnumerable<CultureKey> UnselectedTargetCultures
         {
@@ -255,7 +255,7 @@
 
         private void UpdateTargetList()
         {
-            Session?.Cancel();
+            TranslationSession?.Cancel();
 
             SelectedItems.Clear();
 
@@ -269,9 +269,9 @@
 
             ApplyExistingTranslations(_resourceViewModel.ResourceTableEntries, Items, _sourceCulture);
 
-            Session = new Session(_sourceCulture.Culture, _configuration.NeutralResourcesLanguage, Items.Cast<ITranslationItem>().ToArray());
+            TranslationSession = new TranslationSession(_sourceCulture.Culture, _configuration.NeutralResourcesLanguage, Items.Cast<ITranslationItem>().ToArray());
 
-            _translatorHost.Translate(Session);
+            _translatorHost.Translate(TranslationSession);
         }
 
         private void SelectedTargetCultures_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

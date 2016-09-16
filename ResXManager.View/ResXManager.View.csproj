@@ -257,11 +257,11 @@
     </Compile>
     <Compile Include="Properties\Settings.cs" />
     <Compile Include="Visuals\ResourceViewModel.cs" />
-    <Compile Include="Visuals\SharedWidthHeaderedContentControl.cs" />
     <Compile Include="Visuals\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Visuals\ShellViewModel.cs" />
+    <Compile Include="Visuals\TranslationItem.cs" />
     <Compile Include="Visuals\TranslationsView.xaml.cs">
       <DependentUpon>TranslationsView.xaml</DependentUpon>
     </Compile>

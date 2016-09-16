@@ -7,6 +7,8 @@ namespace tomenglertde.ResXManager.Translators
     using System.Net;
     using System.Runtime.Serialization;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     using TomsToolbox.Desktop;
 
     [ContractClass(typeof(TranslatorBaseContract))]
@@ -88,7 +90,7 @@ namespace tomenglertde.ResXManager.Translators
             }
         }
 
-        public abstract void Translate(Session session);
+        public abstract void Translate(ITranslationSession translationSession);
 
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
@@ -108,9 +110,9 @@ namespace tomenglertde.ResXManager.Translators
         {
         }
 
-        public override void Translate(Session session)
+        public override void Translate(ITranslationSession translationSession)
         {
-            Contract.Requires(session != null);
+            Contract.Requires(translationSession != null);
             throw new NotImplementedException();
         }
     }

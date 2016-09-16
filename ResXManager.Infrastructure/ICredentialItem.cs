@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Translators
+﻿namespace tomenglertde.ResXManager.Infrastructure
 {
     public interface ICredentialItem
     {

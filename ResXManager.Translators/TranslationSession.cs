@@ -6,61 +6,35 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     using TomsToolbox.Desktop;
 
-    public class Session : ObservableObject
+    public class TranslationSession : ObservableObject, ITranslationSession
     {
         private readonly ObservableCollection<string> _internalMessage = new ObservableCollection<string>();
-        private readonly IList<string> _messages;
 
         private bool _isCanceled;
         private int _progress;
         private bool _isComplete;
-        private readonly CultureInfo _sourceLanguage;
-        private readonly CultureInfo _neutralResourcesLanguage;
-        private readonly IList<ITranslationItem> _items;
 
-        public Session(CultureInfo sourceLanguage, CultureInfo neutralResourcesLanguage, IList<ITranslationItem> items)
+        public TranslationSession(CultureInfo sourceLanguage, CultureInfo neutralResourcesLanguage, IList<ITranslationItem> items)
         {
             Contract.Requires(neutralResourcesLanguage != null);
             Contract.Requires(items != null);
 
-            _sourceLanguage = sourceLanguage ?? neutralResourcesLanguage;
-            _neutralResourcesLanguage = neutralResourcesLanguage;
-            _items = items;
+            SourceLanguage = sourceLanguage ?? neutralResourcesLanguage;
+            NeutralResourcesLanguage = neutralResourcesLanguage;
+            Items = items;
 
-            _messages = new ReadOnlyObservableCollection<string>(_internalMessage);
+            Messages = new ReadOnlyObservableCollection<string>(_internalMessage);
         }
 
-        public CultureInfo SourceLanguage
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<CultureInfo>() != null);
+        public CultureInfo SourceLanguage { get; }
 
-                return _sourceLanguage;
-            }
-        }
+        public CultureInfo NeutralResourcesLanguage { get; }
 
-        public CultureInfo NeutralResourcesLanguage
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<CultureInfo>() != null);
-
-                return _neutralResourcesLanguage;
-            }
-        }
-
-        public IList<ITranslationItem> Items
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IList<ITranslationItem>>() != null);
-
-                return _items;
-            }
-        }
+        public IList<ITranslationItem> Items { get; }
 
         public bool IsCanceled
         {
@@ -101,14 +75,7 @@
         [PropertyDependency("IsComplete")]
         public bool IsActive => !IsComplete;
 
-        public IList<string> Messages
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IList<string>>() != null);
-                return _messages;
-            }
-        }
+        public IList<string> Messages { get; }
 
         public void AddMessage(string text)
         {
@@ -125,10 +92,6 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_internalMessage != null);
-            Contract.Invariant(_messages != null);
-            Contract.Invariant(_sourceLanguage != null);
-            Contract.Invariant(_neutralResourcesLanguage != null);
-            Contract.Invariant(_items != null);
         }
     }
 }

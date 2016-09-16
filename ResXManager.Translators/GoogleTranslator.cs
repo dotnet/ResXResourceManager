@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
 
+    using tomenglertde.ResXManager.Infrastructure;
+
     public class GoogleTranslator : TranslatorBase
     {
         private static readonly Uri _uri = new Uri("Todo");
@@ -13,7 +15,7 @@
         {
         }
 
-        public override void Translate(Session session)
+        public override void Translate(ITranslationSession translationSession)
         {
         }
     }
