@@ -111,7 +111,7 @@
             }
             catch (Exception ex)
             {
-                _tracer.TraceError("Fatal error writing configuration file: " + _filePath + " - " + ex.Message));
+                _tracer.TraceError("Fatal error writing configuration file: " + _filePath + " - " + ex.Message);
             }
         }
 
