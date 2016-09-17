@@ -117,7 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="AddEntryToWinFormsResourceWarning" xml:space="preserve">
     <value>You are about to add new entries to a WinForms designer resource.
 Additional entries will be lost if you edit the form.
@@ -137,7 +136,8 @@ Do you want to add a new entry anyway?</value>
   </data>
   <data name="CaseSensitive" xml:space="preserve">
     <value>Case Sens.</value>
-  <comment>@Invariant</comment></data>
+    <comment>@Invariant</comment>
+  </data>
   <data name="CellSelection" xml:space="preserve">
     <value>Cell selection</value>
   </data>
@@ -231,9 +231,6 @@ Do you want to add a new entry anyway?</value>
   </data>
   <data name="EditSolutionConfigurationNotification" xml:space="preserve">
     <value>You are editing the configuration specific for the active solution. If you want to edit the default configuration, just close the solution.</value>
-  </data>
-  <data name="EmptyResxTemplate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>EmptyResxTemplate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Enabled</value>

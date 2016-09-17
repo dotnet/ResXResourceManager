@@ -177,7 +177,7 @@
                         if (!string.IsNullOrEmpty(directoryName))
                             Directory.CreateDirectory(directoryName);
 
-                        File.WriteAllText(languageFileName, View.Properties.Resources.EmptyResxTemplate);
+                        File.WriteAllText(languageFileName, Model.Properties.Resources.EmptyResxTemplate);
                     }
 
                     entity.AddLanguage(new ProjectFile(languageFileName, rootFolder, entity.ProjectName, null), _configuration.DuplicateKeyHandling);

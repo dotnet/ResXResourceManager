@@ -633,9 +633,6 @@
     <Resource Include="Assets\btn_donate_SM.gif" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\EmptyResxTemplate.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\excel.png" />
   </ItemGroup>
   <ItemGroup>

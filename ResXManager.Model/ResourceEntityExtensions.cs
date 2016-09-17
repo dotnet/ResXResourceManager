@@ -169,6 +169,9 @@
         {
             Contract.Requires(entry != null);
 
+            if (!entry.CanEdit(culture))
+                return false;
+
             switch (columnKind)
             {
                 case ColumnKind.Text:
@@ -263,7 +266,7 @@
             return changes;
         }
 
-        private static IList<string> GetHeaderColumns(IList<IList<string>> table, ICollection<string> fixedColumnHeaders)
+        private static IList<string> GetHeaderColumns(ICollection<IList<string>> table, ICollection<string> fixedColumnHeaders)
         {
             Contract.Requires(table != null);
             Contract.Requires(table.Count > 0);

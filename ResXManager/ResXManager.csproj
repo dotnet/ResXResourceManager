@@ -378,7 +378,7 @@
     <ItemGroup>
       <ZipFiles Include="$(PublishDir)*.*" />
     </ItemGroup>
-    <MakeDir Directories="$(SolutionDir)Deploy"/>
+    <MakeDir Directories="$(SolutionDir)Deploy" />
     <Exec Command="PowerShell -command Compress-Archive -Path '$(PublishDir)Application Files',@(ZipFiles, ',') -DestinationPath '$(SolutionDir)Deploy\Publish.zip' -Force" />
   </Target>
 </Project>

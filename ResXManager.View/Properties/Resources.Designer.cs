@@ -444,16 +444,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to &amp;lt;?xml version="1.0" encoding="utf-8"?&amp;g....
-        /// </summary>
-        public static string EmptyResxTemplate {
-            get {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("EmptyResxTemplate", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Enabled.
         /// </summary>
         public static string Enabled {
@@ -1195,10 +1185,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to You are editing the configuration specific for the....
         /// </summary>
         EditSolutionConfigurationNotification,
-        /// <summary>
-        ///   Looks up a localized string similar to &amp;lt;?xml version="1.0" encoding="utf-8"?&amp;g....
-        /// </summary>
-        EmptyResxTemplate,
         /// <summary>
         ///   Looks up a localized string similar to Enabled.
         /// </summary>

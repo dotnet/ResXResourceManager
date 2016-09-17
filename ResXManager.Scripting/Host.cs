@@ -1,17 +1,17 @@
 ﻿namespace ResXManager.Scripting
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
-    using System.Windows.Forms;
+    using System.Linq;
 
+    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.Model.Properties;
 
-    using TomsToolbox.Desktop;
     using TomsToolbox.Desktop.Composition;
 
     public sealed class Host : IDisposable
@@ -30,6 +30,7 @@
 
             _sourceFilesProvider = _compositionHost.GetExportedValue<SourceFilesProvider>();
             _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
+            _resourceManager.BeginEditing += ResourceManager_BeginEditing;
         }
 
         public ResourceManager ResourceManager => _resourceManager;
@@ -37,7 +38,7 @@
         public void Load(string folder)
         {
             _sourceFilesProvider.Folder = folder;
-            
+
             _resourceManager.Reload(DuplicateKeyHandling.Fail);
         }
 
@@ -84,9 +85,9 @@
             Contract.Requires(filePath != null);
 
             var resourceScope = new ResourceScope(
-                entries ?? _resourceManager.TableEntries, 
-                languages ?? _resourceManager.Cultures, 
-                comments ?? new object [0]);
+                entries ?? _resourceManager.TableEntries,
+                languages ?? _resourceManager.Cultures,
+                comments ?? new object[0]);
 
             _resourceManager.ExportExcelFile(filePath, resourceScope, exportMode);
         }
@@ -95,7 +96,9 @@
         {
             Contract.Requires(filePath != null);
 
-            _resourceManager.ImportExcelFile(filePath);
+            var changes = _resourceManager.ImportExcelFile(filePath);
+
+            changes.Apply();
         }
 
         public string CreateSnapshot()
@@ -111,6 +114,55 @@
         public void Dispose()
         {
             _compositionHost.Dispose();
+        }
+
+        private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
+        {
+            if (!CanEdit(e.Entity, e.CultureKey))
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private bool CanEdit(ResourceEntity entity, CultureKey cultureKey)
+        {
+            Contract.Requires(entity != null);
+
+            if (cultureKey == null)
+                return true;
+
+            var rootFolder = _sourceFilesProvider.Folder;
+            if (string.IsNullOrEmpty(rootFolder))
+                return false;
+
+            var language = entity.Languages.FirstOrDefault(lang => cultureKey.Equals(lang.CultureKey));
+
+            if (language != null)
+                return true;
+
+            var culture = cultureKey.Culture;
+
+            if (culture == null)
+                return false; // no neutral culture => this should never happen.
+
+            var neutralLanguage = entity.Languages.FirstOrDefault();
+            if (neutralLanguage == null)
+                return false;
+
+            var languageFileName = neutralLanguage.ProjectFile.GetLanguageFileName(culture);
+
+            if (!File.Exists(languageFileName))
+            {
+                var directoryName = Path.GetDirectoryName(languageFileName);
+                if (!string.IsNullOrEmpty(directoryName))
+                    Directory.CreateDirectory(directoryName);
+
+                File.WriteAllText(languageFileName, Resources.EmptyResxTemplate);
+            }
+
+            entity.AddLanguage(new ProjectFile(languageFileName, rootFolder, entity.ProjectName, null), DuplicateKeyHandling.Fail);
+
+            return true;
         }
 
         [ContractInvariantMethod]

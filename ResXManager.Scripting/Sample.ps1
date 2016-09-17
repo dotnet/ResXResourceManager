@@ -15,7 +15,7 @@ $allCultures = $myhost.ResourceManager.Cultures
 $allCultures
 
 # To define a culture use any valid culture name; use $null or "" for the projects neutral culture 
-# Optionally prefix the culture name with '.' to simplify building file names using the same string, e.g. $fileName = $baseName $cultureName ".resx"
+# Optionally prefix the culture name with '.' to simplify building file names using the same string, e.g. $fileName = $baseName + $cultureName + ".resx"
 $neutralCulture = ""
 $outputCulture = ".de"
 
@@ -23,10 +23,9 @@ $outputCulture = ".de"
 $allEntries = $myhost.ResourceManager.TableEntries
 
 # Print a list of all entries
-"All entires:"
-$allEntries.Count
+"All entires: " + $allEntries.Count
 $allEntries | Select-Object Key, 
-	@{ Name="Value"; Expression={$_.Values.GetValue($outputCulture)}}, 
+	@{ Name="Text"; Expression={$_.Values.GetValue($outputCulture)}}, 
 	@{ Name="Entity"; Expression={$_.Container}} | 
 	Format-Table -GroupBy Entity
 
@@ -39,11 +38,12 @@ $myhost.LoadSnapshot($snapshot)
 $changes = $allEntries | 
 	Where-Object { $_.Values.GetValue($neutralCulture) -ne $_.SnapshotValues.GetValue($neutralCulture)  }
 
-$changes.Count
+"Number of changes: " + $changes.Count
 $changes | Select-Object Key, 
-	@{ Name="Value"; Expression={$_.Values.GetValue($neutralCulture)}}, 
+	@{ Name="Text"; Expression={$_.Values.GetValue($neutralCulture)}}, 
 	@{ Name="Snapshot"; Expression={$_.SnapshotValues.GetValue($neutralCulture)}}, 
-	@{ Name="Entity"; Expression={$_.Container}}
+	@{ Name="Entity"; Expression={$_.Container}} |
+	Format-Table
 
 # if there were changes in the neutral culture compared to the last snapshot, export the changed entries in neutral and output culuture 
 if ($changes -ne $null)

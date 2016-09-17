@@ -101,6 +101,16 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to &amp;lt;?xml version="1.0" encoding="utf-8"?&amp;g....
+        /// </summary>
+        public static string EmptyResxTemplate {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("EmptyResxTemplate", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Multiple sheets.
         /// </summary>
         public static string ExcelExport_MultipleSheets {
@@ -303,6 +313,10 @@ namespace tomenglertde.ResXManager.Model.Properties {
         ///   Looks up a localized string similar to Postfix duplicate keys with "_Duplicate[#]".
         /// </summary>
         DuplicateKeyHandling_Rename,
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;lt;?xml version="1.0" encoding="utf-8"?&amp;g....
+        /// </summary>
+        EmptyResxTemplate,
         /// <summary>
         ///   Looks up a localized string similar to Multiple sheets.
         /// </summary>
