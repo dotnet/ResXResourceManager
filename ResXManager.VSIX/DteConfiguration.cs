@@ -1,5 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.VSIX
 {
+    using System;
     using System.ComponentModel.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -64,6 +65,20 @@
             return TryGetValue(GetKey(key), out value) ? value : base.InternalGetValue(defaultValue, key);
         }
 
+        protected override void InternalSetValue<T>(T value, string key)
+        {
+            var globals = _solution.Globals;
+
+            if (globals != null)
+            {
+                TrySetValue(globals, GetKey(key), value);
+            }
+            else
+            {
+                base.InternalSetValue(value, key);
+            }
+        }
+
         private bool TryGetValue<T>(string key, out T value)
         {
             value = default(T);
@@ -83,26 +98,22 @@
             }
             catch
             {   
-                // Just return false in case of errors.
+                // Just return false in case of errors. If there is some garbage in the solution, falback to the default.
             }
 
             return false;
         }
 
-        protected override void InternalSetValue<T>(T value, string key)
+        private void TrySetValue<T>(EnvDTE.Globals globals, string internalKey, T value)
         {
-            var globals = _solution.Globals;
-
-            if (globals != null)
+            try
             {
-                globals[key] = ConvertToString(value);
-                globals.VariablePersists[key] = true;
-
-                OnPropertyChanged(key);
+                globals[internalKey] = ConvertToString(value);
+                globals.VariablePersists[internalKey] = true;
             }
-            else
+            catch (Exception ex)
             {
-                base.InternalSetValue(value, key);
+                Tracer.TraceError("Error saving configuration value to solution: {0}", ex.Message);
             }
         }
 

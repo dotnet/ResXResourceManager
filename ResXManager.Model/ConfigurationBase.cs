@@ -6,7 +6,6 @@
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Runtime.CompilerServices;
-    using System.Windows;
 
     using tomenglertde.ResXManager.Infrastructure;
 
@@ -60,6 +59,16 @@
             get;
         }
 
+        protected ITracer Tracer
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ITracer>() != null);
+
+                return _tracer;
+            }
+        }
+
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Required by [CallerMemberName]")]
         protected T GetValue<T>(T defaultValue, [CallerMemberName] string key = null)
         {
@@ -92,6 +101,8 @@
                 return;
 
             InternalSetValue(value, key);
+
+            OnPropertyChanged(key);
         }
 
         protected virtual void InternalSetValue<T>(T value, string key)
@@ -106,8 +117,6 @@
                 {
                     _configuration.Save(writer);
                 }
-
-                OnPropertyChanged(key);
             }
             catch (Exception ex)
             {
