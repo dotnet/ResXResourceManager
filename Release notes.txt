@@ -3,6 +3,8 @@
 [url:Reviews|https://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68/view/Reviews]
 [url:GitHub|https://github.com/tom-englert/ResXResourceManager/releases]
 
+1.0.0.88:
+* WI4756: Change solution neutral language doesn't work.
 1.0.0.87:
 * WI4746: Move To Resource dialog is empty.
 * WI6471, WI4722, WI4747: Add scripting module for automating resource tasks with PowerShell scripts.
