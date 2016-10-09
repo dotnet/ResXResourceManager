@@ -28,6 +28,7 @@
 
             _resourceManager = resourceManager;
             _configuration = configuration;
+            _resourceManager.Loaded += (_, __) => OnPropertyChanged(nameof(Configuration));
         }
 
         public ResourceManager ResourceManager
@@ -35,6 +36,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<ResourceManager>() != null);
+
                 return _resourceManager;
             }
         }
@@ -44,6 +46,7 @@
             get
             {
                 Contract.Ensures(Contract.Result<Configuration>() != null);
+
                 return _configuration;
             }
         }
