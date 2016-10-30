@@ -106,6 +106,8 @@
 
         private void TrySetValue<T>(EnvDTE.Globals globals, string internalKey, T value)
         {
+            Contract.Requires(globals != null);
+
             try
             {
                 globals[internalKey] = ConvertToString(value);
