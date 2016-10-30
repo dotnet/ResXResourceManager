@@ -1,4 +1,4 @@
-# ResX Resource Manager
+# ResX Resource Manager ![Badge](https://tom-englert.visualstudio.com/_apis/public/build/definitions/75bf84d2-d359-404a-a712-07c9f693f635/7/badge)
 Manage localization of all ResX-Based resources in one central place.
 
 This is a clone of https://resxresourcemanager.codeplex.com. 
