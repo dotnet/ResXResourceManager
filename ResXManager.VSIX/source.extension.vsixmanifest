@@ -1,51 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
-  <Identifier Id="43b35fe0-1f30-48de-887a-68256474202a">
-    <Name>ResXManager</Name>
-    <Author>tom-englert.de</Author>
-    <Version>1.0.0.88</Version>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="43b35fe0-1f30-48de-887a-68256474202a" Version="1.0.0.88" Language="en-US" Publisher="tom-englert.de" />
+    <DisplayName>ResXManager</DisplayName>
     <Description xml:space="preserve">Manage localization of all ResX-Based resources in one place. Shows all resources of a solution and let's you edit the strings and their localizations in a well-arranged data grid.</Description>
-    <Locale>1033</Locale>
-    <MoreInfoUrl>http://resxresourcemanager.codeplex.com/</MoreInfoUrl>
+    <MoreInfo>http://resxresourcemanager.codeplex.com/</MoreInfo>
     <License>License</License>
     <GettingStartedGuide>http://resxresourcemanager.codeplex.com/documentation</GettingStartedGuide>
     <Icon>32x32.png</Icon>
     <PreviewImage>200x200.png</PreviewImage>
-    <InstalledByMsi>false</InstalledByMsi>
-    <SupportedProducts>
-      <VisualStudio Version="10.0">
-        <Edition>Ultimate</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Pro</Edition>
-      </VisualStudio>
-      <VisualStudio Version="11.0">
-        <Edition>Ultimate</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Pro</Edition>
-      </VisualStudio>
-      <VisualStudio Version="12.0">
-        <Edition>Ultimate</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Pro</Edition>
-      </VisualStudio>
-      <VisualStudio Version="14.0">
-        <Edition>Ultimate</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Pro</Edition>
-      </VisualStudio>
-      <VisualStudio Version="15.0">
-        <Edition>Pro</Edition>
-        <Edition>Community</Edition>
-      </VisualStudio>
-    </SupportedProducts>
-    <SupportedFrameworkRuntimeEdition MinVersion="4.5.2" MaxVersion="4.6" />
-  </Identifier>
-  <References>
-    <Reference Id="Microsoft.VisualStudio.MPF" MinVersion="10.0">
-      <Name>Visual Studio MPF</Name>
-    </Reference>
-  </References>
-  <Content>
-    <VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
-  </Content>
-</Vsix>
+    <Tags>WPF, WinForms, resx, resources, Editor, localization, Productivity, Visual Studio, internationalization, string, resource</Tags>
+  </Metadata>
+  <Installation InstalledByMsi="false">
+    <InstallationTarget Version="[11.0,16.0)" Id="Microsoft.VisualStudio.Pro" />
+    <InstallationTarget Version="[11.0,16.0)" Id="Microsoft.VisualStudio.Community" />
+    <InstallationTarget Version="[11.0,16.0)" Id="Microsoft.VisualStudio.Enterprise" />
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.5" />
+    <Dependency Id="Microsoft.VisualStudio.MPF.11.0" DisplayName="Visual Studio MPF 11.0" d:Source="Installed" Version="[11.0,12.0)" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+  </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0.25824.0,16.0)" DisplayName="Visual Studio core editor" />
+  </Prerequisites>
+</PackageManifest>
