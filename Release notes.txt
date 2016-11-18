@@ -5,7 +5,8 @@
 
 1.0.0.89:
 * TT generated code does not require TomsToolbox.Desktop NuGet package by default.
-* Support VS15 RC
+* Drop Support of VS2010 to be able to support VS2017. For VS2010 projects you can use V1.0.0.88 or the standalone version.
+* Support VS2017 RC
 1.0.0.88:
 * WI4756: Change solution neutral language doesn't work.
 1.0.0.87:
