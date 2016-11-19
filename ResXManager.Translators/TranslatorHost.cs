@@ -3,8 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Threading;
+
+    using JetBrains.Annotations;
 
     using Newtonsoft.Json;
 
@@ -17,11 +20,13 @@
     [Export]
     public class TranslatorHost
     {
+        [NotNull]
         private readonly Throttle _changeThrottle;
+        [NotNull]
         private readonly ITranslator[] _translators;
 
         [ImportingConstructor]
-        public TranslatorHost([ImportMany] ITranslator[] translators)
+        public TranslatorHost([ImportMany][NotNull] ITranslator[] translators)
         {
             Contract.Requires(translators != null);
 
@@ -67,6 +72,7 @@
             }
         }
 
+        [NotNull]
         public IEnumerable<ITranslator> Translators
         {
             get
@@ -94,7 +100,7 @@
             settings.Configuration = JsonConvert.SerializeObject(values);
         }
 
-        public void Translate(ITranslationSession translationSession)
+        public void Translate([NotNull] ITranslationSession translationSession)
         {
             Contract.Requires(translationSession != null);
 
@@ -135,6 +141,7 @@
 
         [ContractInvariantMethod]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_changeThrottle != null);

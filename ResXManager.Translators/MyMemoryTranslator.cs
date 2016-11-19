@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -11,6 +12,8 @@
     using System.Runtime.Serialization;
     using System.Text;
     using System.Web;
+
+    using JetBrains.Annotations;
 
     using Newtonsoft.Json;
 
@@ -28,6 +31,7 @@
         {
         }
 
+        [NotNull]
         private static IList<ICredentialItem> GetCredentials()
         {
             Contract.Ensures(Contract.Result<IList<ICredentialItem>>() != null);
@@ -62,7 +66,7 @@
                 try
                 {
                     var targetCulture = translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage;
-                    var result = TranslateText(translationItem.Source, Key, translationSession.SourceLanguage, targetCulture);
+                    var result = TranslateText(translationItem.Source, Credentials[0].Value, translationSession.SourceLanguage, targetCulture);
 
                     translationSession.Dispatcher.BeginInvoke(() =>
                     {
@@ -93,7 +97,7 @@
             }
         }
 
-        private static Response TranslateText(string input, string key, CultureInfo sourceLanguage, CultureInfo targetLanguage)
+        private static Response TranslateText([NotNull] string input, string key, [NotNull] CultureInfo sourceLanguage, [NotNull] CultureInfo targetLanguage)
         {
             Contract.Requires(input != null);
             Contract.Requires(sourceLanguage != null);
@@ -192,6 +196,7 @@
 
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
         }

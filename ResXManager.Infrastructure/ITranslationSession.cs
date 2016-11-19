@@ -5,20 +5,28 @@
     using System.Globalization;
     using System.Windows.Threading;
 
+    using JetBrains.Annotations;
+
     [ContractClass(typeof (TranslationSessionContract))]
     public interface ITranslationSession
     {
         bool IsActive { get; }
         bool IsCanceled { get; }
         bool IsComplete { get; set; }
+
+        [NotNull][ItemNotNull]
         IList<ITranslationItem> Items { get; }
+        [NotNull]
         IList<string> Messages { get; }
+        [NotNull]
         CultureInfo NeutralResourcesLanguage { get; }
         int Progress { get; set; }
+        [NotNull]
         CultureInfo SourceLanguage { get; }
+        [NotNull]
         Dispatcher Dispatcher { get; }
 
-        void AddMessage(string text);
+        void AddMessage([NotNull] string text);
         void Cancel();
     }
 

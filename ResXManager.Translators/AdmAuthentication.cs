@@ -9,6 +9,8 @@
     using System.Text;
     using System.Web;
 
+    using JetBrains.Annotations;
+
     internal static class AdmAuthentication
     {
         private const string DatamarketAccessUri = "https://datamarket.accesscontrol.windows.net/v2/OAuth2-13";
@@ -16,7 +18,8 @@
 
         private static readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof(AdmAccessToken));
 
-        public static string GetAuthToken(IWebProxy webProxy, string clientId, string clientSecret)
+        [NotNull]
+        public static string GetAuthToken(IWebProxy webProxy, [NotNull] string clientId, [NotNull] string clientSecret)
         {
             Contract.Requires(!string.IsNullOrEmpty(clientId));
             Contract.Requires(!string.IsNullOrEmpty(clientSecret));
@@ -39,7 +42,8 @@
             }
         }
 
-        private static AdmAccessToken GetAccessToken(IWebProxy webProxy, string requestDetails)
+        [NotNull]
+        private static AdmAccessToken GetAccessToken(IWebProxy webProxy, [NotNull] string requestDetails)
         {
             Contract.Requires(requestDetails != null);
             Contract.Ensures(Contract.Result<AdmAccessToken>() != null);
@@ -54,18 +58,24 @@
 
             using (var webResponse = webRequest.GetResponse())
             {
-                var token = (AdmAccessToken)_serializer.ReadObject(webResponse.GetResponseStream());
-                Contract.Assume(token != null);
-                return token;
+                var responseStream = webResponse.GetResponseStream();
+                if (responseStream != null)
+                {
+                    return (AdmAccessToken)_serializer.ReadObject(responseStream) ?? new AdmAccessToken();
+                }
             }
+
+            return new AdmAccessToken();
         }
 
+        [NotNull]
         private static string CreateRequestDetails(string clientId, string clientSecret)
         {
             var request = string.Format(CultureInfo.InvariantCulture, "grant_type=client_credentials&client_id={0}&client_secret={1}&scope=http://api.microsofttranslator.com", HttpUtility.UrlEncode(clientId), HttpUtility.UrlEncode(clientSecret));
             return request;
         }
 
+        [NotNull]
         private static HttpWebRequest CreateWebRequest(IWebProxy webProxy)
         {
             var webRequest = (HttpWebRequest)WebRequest.Create(DatamarketAccessUri);

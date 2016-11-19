@@ -2,9 +2,12 @@
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+
+    using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
 
@@ -12,13 +15,14 @@
 
     public class TranslationSession : ObservableObject, ITranslationSession
     {
+        [NotNull]
         private readonly ObservableCollection<string> _internalMessage = new ObservableCollection<string>();
 
         private bool _isCanceled;
         private int _progress;
         private bool _isComplete;
 
-        public TranslationSession(CultureInfo sourceLanguage, CultureInfo neutralResourcesLanguage, IList<ITranslationItem> items)
+        public TranslationSession(CultureInfo sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull] IList<ITranslationItem> items)
         {
             Contract.Requires(neutralResourcesLanguage != null);
             Contract.Requires(items != null);
@@ -89,6 +93,7 @@
 
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_internalMessage != null);

@@ -2,10 +2,13 @@ namespace tomenglertde.ResXManager.Translators
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Net;
     using System.Runtime.Serialization;
+
+    using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
 
@@ -17,8 +20,11 @@ namespace tomenglertde.ResXManager.Translators
     {
         protected static readonly IWebProxy WebProxy;
 
+        [NotNull]
         private readonly string _id;
+        [NotNull]
         private readonly string _displayName;
+        [NotNull]
         private readonly IList<ICredentialItem> _credentials;
         private readonly Uri _uri;
 
@@ -38,7 +44,7 @@ namespace tomenglertde.ResXManager.Translators
             }
         }
 
-        protected TranslatorBase(string id, string displayName, Uri uri, IList<ICredentialItem> credentials)
+        protected TranslatorBase([NotNull] string id, [NotNull] string displayName, Uri uri, IList<ICredentialItem> credentials)
         {
             Contract.Requires(id != null);
             Contract.Requires(displayName != null);
@@ -49,8 +55,10 @@ namespace tomenglertde.ResXManager.Translators
             _credentials = credentials ?? new ICredentialItem[0];
         }
 
+        [NotNull]
         public string Id => _id;
 
+        [NotNull]
         public string DisplayName => _displayName;
 
         public Uri Uri => _uri;
@@ -81,6 +89,7 @@ namespace tomenglertde.ResXManager.Translators
             }
         }
 
+        [NotNull]
         public virtual IList<ICredentialItem> Credentials
         {
             get
@@ -90,10 +99,11 @@ namespace tomenglertde.ResXManager.Translators
             }
         }
 
-        public abstract void Translate(ITranslationSession translationSession);
+        public abstract void Translate([NotNull] ITranslationSession translationSession);
 
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_id != null);
@@ -105,7 +115,7 @@ namespace tomenglertde.ResXManager.Translators
     [ContractClassFor(typeof(TranslatorBase))]
     internal abstract class TranslatorBaseContract : TranslatorBase
     {
-        protected TranslatorBaseContract(string id, string displayName, Uri uri, IList<ICredentialItem> credentials)
+        protected TranslatorBaseContract([NotNull] string id, [NotNull] string displayName, Uri uri, IList<ICredentialItem> credentials)
             : base(id, displayName, uri, credentials)
         {
         }
