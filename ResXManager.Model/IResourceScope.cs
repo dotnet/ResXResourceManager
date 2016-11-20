@@ -4,21 +4,26 @@
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     [ContractClass(typeof (ResourceScopeContract))]
     public interface IResourceScope
     {
+        [NotNull]
         IEnumerable<ResourceTableEntry> Entries
         {
             get;
         }
 
+        [NotNull]
         IEnumerable<CultureKey> Languages
         {
             get;
         }
 
+        [NotNull]
         IEnumerable<CultureKey> Comments
         {
             get;

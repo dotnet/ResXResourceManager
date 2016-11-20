@@ -10,6 +10,8 @@
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Properties;
@@ -24,13 +26,15 @@
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class MainWindow
     {
+        [NotNull]
         private readonly Configuration _configuration;
+        [NotNull]
         private readonly ITracer _tracer;
         private Size _lastKnownSize;
         private Vector _laskKnownLocation;
 
         [ImportingConstructor]
-        public MainWindow(ExportProvider exportProvider, Configuration configuration, ITracer tracer)
+        public MainWindow([NotNull] ExportProvider exportProvider, [NotNull] Configuration configuration, ITracer tracer)
         {
             Contract.Requires(exportProvider != null);
             Contract.Requires(configuration != null);

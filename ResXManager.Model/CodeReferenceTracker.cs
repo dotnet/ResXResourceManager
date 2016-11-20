@@ -11,6 +11,8 @@
     using System.Text.RegularExpressions;
     using System.Threading;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Core;
@@ -35,7 +37,7 @@
             Interlocked.Exchange(ref _engine, null)?.Dispose();
         }
 
-        public void BeginFind(ResourceManager resourceManager, CodeReferenceConfiguration configuration, IEnumerable<ProjectFile> allSourceFiles, ITracer tracer)
+        public void BeginFind([NotNull] ResourceManager resourceManager, CodeReferenceConfiguration configuration, [NotNull] IEnumerable<ProjectFile> allSourceFiles, ITracer tracer)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(allSourceFiles != null);
@@ -51,6 +53,7 @@
 
         private sealed class Engine : IDisposable
         {
+            [NotNull]
             private readonly Thread _backgroundThread;
             private long _total;
             private long _visited;
@@ -68,7 +71,7 @@
                 _backgroundThread.Start();
             }
 
-            private void FindCodeReferences(CodeReferenceConfiguration configuration, ICollection<ProjectFile> projectFiles, ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
+            private void FindCodeReferences([NotNull] CodeReferenceConfiguration configuration, [NotNull] ICollection<ProjectFile> projectFiles, [NotNull] ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
             {
                 Contract.Requires(configuration != null);
                 Contract.Requires(projectFiles != null);
@@ -149,7 +152,7 @@
         private class CodeMatch
         {
             [ContractVerification(false)] // too many assumptions would be needed...
-            public CodeMatch(string line, string key, Regex regex, StringComparison stringComparison, string singleLineComment)
+            public CodeMatch([NotNull] string line, [NotNull] string key, Regex regex, StringComparison stringComparison, string singleLineComment)
             {
                 Contract.Requires(line != null);
                 Contract.Requires(key != null);
@@ -227,12 +230,15 @@
         private class FileInfo
         {
             private static readonly Regex _regex = new Regex(@"\W+", RegexOptions.Compiled);
+            [NotNull]
             private readonly ProjectFile _projectFile;
             private readonly string[] _lines;
+            [NotNull]
             private readonly Dictionary<string, HashSet<int>> _keyLinesLookup = new Dictionary<string, HashSet<int>>();
+            [NotNull]
             private readonly CodeReferenceConfigurationItem[] _configurations;
 
-            public FileInfo(ProjectFile projectFile, IEnumerable<CodeReferenceConfigurationItem> configurations, ICollection<string> keys, ref long visited)
+            public FileInfo([NotNull] ProjectFile projectFile, [NotNull] IEnumerable<CodeReferenceConfigurationItem> configurations, [NotNull] ICollection<string> keys, ref long visited)
             {
                 Contract.Requires(projectFile != null);
                 Contract.Requires(configurations != null);
@@ -261,7 +267,7 @@
 
             public IEnumerable<string> Keys => _keyLinesLookup.Keys;
 
-            public void FindCodeReferences(ResourceTableEntry entry, ICollection<CodeReference> references, ITracer tracer)
+            public void FindCodeReferences([NotNull] ResourceTableEntry entry, [NotNull] ICollection<CodeReference> references, [NotNull] ITracer tracer)
             {
                 Contract.Requires(entry != null);
                 Contract.Requires(references != null);
@@ -333,7 +339,7 @@
 
     public class CodeReference
     {
-        internal CodeReference(ProjectFile projectFile, int lineNumber, IList<string> lineSegemnts)
+        internal CodeReference([NotNull] ProjectFile projectFile, int lineNumber, [NotNull] IList<string> lineSegemnts)
         {
             Contract.Requires(projectFile != null);
             Contract.Requires(lineSegemnts != null);
@@ -352,7 +358,7 @@
 
     internal static class CodeReferenceExtensionMethods
     {
-        public static string[] ReadAllLines(this ProjectFile file)
+        public static string[] ReadAllLines([NotNull] this ProjectFile file)
         {
             Contract.Requires(file != null);
 

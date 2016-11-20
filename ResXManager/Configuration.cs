@@ -3,6 +3,8 @@
     using System.ComponentModel.Composition;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
@@ -10,7 +12,7 @@
     public class StandaloneConfiguration : Configuration
     {
         [ImportingConstructor]
-        public StandaloneConfiguration(ITracer tracer)
+        public StandaloneConfiguration([NotNull] ITracer tracer)
             : base(tracer)
         {
             Contract.Requires(tracer != null);

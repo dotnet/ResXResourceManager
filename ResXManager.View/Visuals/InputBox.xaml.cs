@@ -7,6 +7,8 @@
     using System.Windows;
     using System.Windows.Input;
 
+    using JetBrains.Annotations;
+
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
@@ -22,7 +24,7 @@
         /// Initializes a new instance of the <see cref="InputBox"/> class.
         /// </summary>
         [ImportingConstructor]
-        public InputBox(ExportProvider exportProvider)
+        public InputBox([NotNull] ExportProvider exportProvider)
         {
             Contract.Requires(exportProvider != null);
 
@@ -84,6 +86,7 @@
             DependencyProperty.Register("IsInputValid", typeof(bool), typeof(InputBox), new FrameworkPropertyMetadata(false));
 
 
+        [NotNull]
         public ICommand CommitCommand
         {
             get

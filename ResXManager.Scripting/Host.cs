@@ -8,6 +8,8 @@
     using System.IO;
     using System.Linq;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Model.Properties;
@@ -16,8 +18,11 @@
 
     public sealed class Host : IDisposable
     {
+        [NotNull]
         private readonly ICompositionHost _compositionHost = new CompositionHost();
+        [NotNull]
         private readonly SourceFilesProvider _sourceFilesProvider;
+        [NotNull]
         private readonly ResourceManager _resourceManager;
 
         public Host()
@@ -52,35 +57,35 @@
             _resourceManager.Save(keySortingComparison);
         }
 
-        public void ExportExcel(string filePath)
+        public void ExportExcel([NotNull] string filePath)
         {
             Contract.Requires(filePath != null);
 
             ExportExcel(filePath, null);
         }
 
-        public void ExportExcel(string filePath, object entries)
+        public void ExportExcel([NotNull] string filePath, object entries)
         {
             Contract.Requires(filePath != null);
 
             ExportExcel(filePath, entries as IEnumerable<object>, null);
         }
 
-        public void ExportExcel(string filePath, object entries, object languages)
+        public void ExportExcel([NotNull] string filePath, object entries, object languages)
         {
             Contract.Requires(filePath != null);
 
             ExportExcel(filePath, entries, languages, null);
         }
 
-        public void ExportExcel(string filePath, object entries, object languages, object comments)
+        public void ExportExcel([NotNull] string filePath, object entries, object languages, object comments)
         {
             Contract.Requires(filePath != null);
 
             ExportExcel(filePath, entries, languages, comments, ExcelExportMode.SingleSheet);
         }
 
-        public void ExportExcel(string filePath, object entries, object languages, object comments, ExcelExportMode exportMode)
+        public void ExportExcel([NotNull] string filePath, object entries, object languages, object comments, ExcelExportMode exportMode)
         {
             Contract.Requires(filePath != null);
 
@@ -92,7 +97,7 @@
             _resourceManager.ExportExcelFile(filePath, resourceScope, exportMode);
         }
 
-        public void ImportExcel(string filePath)
+        public void ImportExcel([NotNull] string filePath)
         {
             Contract.Requires(filePath != null);
 
@@ -124,7 +129,7 @@
             }
         }
 
-        private bool CanEdit(ResourceEntity entity, CultureKey cultureKey)
+        private bool CanEdit([NotNull] ResourceEntity entity, CultureKey cultureKey)
         {
             Contract.Requires(entity != null);
 

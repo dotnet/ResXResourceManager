@@ -5,6 +5,8 @@
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf.Composition;
@@ -17,7 +19,7 @@
     public partial class CodeGeneratorView
     {
         [ImportingConstructor]
-        public CodeGeneratorView(ExportProvider exportProvider)
+        public CodeGeneratorView([NotNull] ExportProvider exportProvider)
         {
             Contract.Requires(exportProvider != null);
 

@@ -6,6 +6,8 @@
     using System.Linq;
     using System.Runtime.Serialization;
 
+    using JetBrains.Annotations;
+
     using Newtonsoft.Json;
 
     using tomenglertde.ResXManager.Infrastructure;
@@ -14,7 +16,8 @@
 
     public static class Snapshot
     {
-        public static string CreateSnapshot(this ICollection<ResourceEntity> resourceEntities)
+        [NotNull]
+        public static string CreateSnapshot([NotNull] this ICollection<ResourceEntity> resourceEntities)
         {
             Contract.Requires(resourceEntities != null);
             Contract.Ensures(Contract.Result<string>() != null);
@@ -41,7 +44,7 @@
             return JsonConvert.SerializeObject(entitySnapshots) ?? string.Empty;
         }
 
-        public static void LoadSnapshot(this ICollection<ResourceEntity> resourceEntities, string snapshot)
+        public static void LoadSnapshot([NotNull] this ICollection<ResourceEntity> resourceEntities, string snapshot)
         {
             Contract.Requires(resourceEntities != null);
 
@@ -56,7 +59,7 @@
             }
         }
 
-        private static void UnloadSnapshot(IEnumerable<ResourceEntity> resourceEntities)
+        private static void UnloadSnapshot([NotNull] IEnumerable<ResourceEntity> resourceEntities)
         {
             Contract.Requires(resourceEntities != null);
 
@@ -64,7 +67,7 @@
                 .ForEach(entry => entry.Snapshot = null);
         }
 
-        private static void Load(this IEnumerable<ResourceEntity> resourceEntities, IEnumerable<EntitySnapshot> entitySnapshots)
+        private static void Load([NotNull] this IEnumerable<ResourceEntity> resourceEntities, [NotNull] IEnumerable<EntitySnapshot> entitySnapshots)
         {
             Contract.Requires(resourceEntities != null);
             Contract.Requires(entitySnapshots != null);
@@ -82,7 +85,7 @@
             });
         }
 
-        private static bool Equals(ResourceEntity entity, EntitySnapshot snapshot)
+        private static bool Equals([NotNull] ResourceEntity entity, [NotNull] EntitySnapshot snapshot)
         {
             Contract.Requires(entity != null);
             Contract.Requires(snapshot != null);

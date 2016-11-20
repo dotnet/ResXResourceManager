@@ -2,13 +2,15 @@
 {
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
     public class CommentHeader : LanguageColumnHeaderBase
     {
-        public CommentHeader(Configuration configuration, CultureKey cultureKey)
+        public CommentHeader([NotNull] Configuration configuration, [NotNull] CultureKey cultureKey)
             : base(configuration, cultureKey)
         {
             Contract.Requires(configuration != null);

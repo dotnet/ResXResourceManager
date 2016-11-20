@@ -5,12 +5,15 @@
     using System.IO;
     using System.Linq;
 
+    using JetBrains.Annotations;
+
     /// <summary>
     /// Resource manager specific extension methods.
     /// </summary>
     public static class ResourceManagerExtensions
     {
-        public static IList<ProjectFile> GetAllSourceFiles(this DirectoryInfo solutionFolder, ISourceFileFilter sourceFileFilter)
+        [NotNull]
+        public static IList<ProjectFile> GetAllSourceFiles([NotNull] this DirectoryInfo solutionFolder, [NotNull] ISourceFileFilter sourceFileFilter)
         {
 
             Contract.Requires(solutionFolder != null);
@@ -64,7 +67,7 @@
             return allProjectFiles;
         }
 
-        private static FileInfo FindProject(DirectoryInfo directory, string solutionFolder)
+        private static FileInfo FindProject([NotNull] DirectoryInfo directory, [NotNull] string solutionFolder)
         {
             Contract.Requires(directory != null);
             Contract.Requires(solutionFolder != null);

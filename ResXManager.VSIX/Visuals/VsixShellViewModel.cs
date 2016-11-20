@@ -8,6 +8,8 @@
     using System.Linq;
     using System.Windows.Input;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Visuals;
 
@@ -18,12 +20,15 @@
     [Export]
     public sealed class VsixShellViewModel : ObservableObject
     {
+        [NotNull]
         private readonly ResourceManager _resourceManager;
+        [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
+        [NotNull]
         private readonly DispatcherThrottle _selectedCodeGeneratorsChangedThrottle;
 
         [ImportingConstructor]
-        public VsixShellViewModel(ResourceManager resourceManager, ResourceViewModel resourceViewModel)
+        public VsixShellViewModel([NotNull] ResourceManager resourceManager, [NotNull] ResourceViewModel resourceViewModel)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(resourceViewModel != null);
@@ -36,6 +41,7 @@
             resourceViewModel.SelectedEntities.CollectionChanged += (_, __) => _selectedCodeGeneratorsChangedThrottle.Tick();
         }
 
+        [NotNull]
         public ICommand SetCodeProviderCommand
         {
             get

@@ -6,6 +6,8 @@
     using System.Diagnostics.Contracts;
     using System.Windows.Threading;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
@@ -17,12 +19,14 @@
     internal class ShellViewModel : ObservableObject
     {
         [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+        [NotNull]
         private readonly PerformanceTracer _performanceTracer;
+        [NotNull]
         private readonly DispatcherThrottle _updateThrottle;
         private bool _isLoading;
 
         [ImportingConstructor]
-        public ShellViewModel(ResourceViewModel resourceViewModel, PerformanceTracer performanceTracer)
+        public ShellViewModel([NotNull] ResourceViewModel resourceViewModel, [NotNull] PerformanceTracer performanceTracer)
         {
             Contract.Requires(resourceViewModel != null);
             Contract.Requires(performanceTracer != null);

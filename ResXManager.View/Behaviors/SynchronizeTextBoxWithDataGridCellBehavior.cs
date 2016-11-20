@@ -8,6 +8,8 @@
     using System.Windows.Interactivity;
     using System.Windows.Markup;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
     public class SynchronizeTextBoxWithDataGridCellBehavior : Behavior<TextBox>
@@ -47,7 +49,7 @@
             }
         }
 
-        private void DataGrid_CurrentCellChanged(object sender, EventArgs e)
+        private void DataGrid_CurrentCellChanged([NotNull] object sender, EventArgs e)
         {
             Contract.Requires(sender != null);
 

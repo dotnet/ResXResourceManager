@@ -17,6 +17,8 @@
 
     using DataGridExtensions;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
@@ -31,22 +33,31 @@
     public class ResourceViewModel : ObservableObject
     {
         private readonly DispatcherThrottle _resourceTableEntiyCountUpdateThrottle;
+        [NotNull]
         private readonly ResourceManager _resourceManager;
+        [NotNull]
         private readonly Configuration _configuration;
+        [NotNull]
         private readonly ISourceFilesProvider _sourceFilesProvider;
+        [NotNull]
         private readonly ITracer _tracer;
+        [NotNull]
         private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly DispatcherThrottle _restartFindCodeReferencesThrottle;
+        [NotNull]
         private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
+        [NotNull]
         private readonly IObservableCollection<ResourceTableEntry> _resourceTableEntries;
+        [NotNull]
         private readonly ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
+        [NotNull]
         private readonly PerformanceTracer _performanceTracer;
 
         private string _loadedSnapshot;
         private bool _isCellSelectionEnabled;
 
         [ImportingConstructor]
-        public ResourceViewModel(ResourceManager resourceManager, Configuration configuration, ISourceFilesProvider sourceFilesProvider, CodeReferenceTracker codeReferenceTracker, ITracer tracer, PerformanceTracer performanceTracer)
+        public ResourceViewModel([NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, [NotNull] ISourceFilesProvider sourceFilesProvider, [NotNull] CodeReferenceTracker codeReferenceTracker, [NotNull] ITracer tracer, [NotNull] PerformanceTracer performanceTracer)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(configuration != null);
@@ -74,6 +85,7 @@
             resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
         }
 
+        [NotNull]
         public ResourceManager ResourceManager
         {
             get
@@ -84,6 +96,7 @@
             }
         }
 
+        [NotNull]
         public IObservableCollection<ResourceTableEntry> ResourceTableEntries
         {
             get
@@ -94,6 +107,7 @@
             }
         }
 
+        [NotNull]
         public ObservableCollection<ResourceEntity> SelectedEntities
         {
             get
@@ -104,6 +118,7 @@
             }
         }
 
+        [NotNull]
         public IList<ResourceTableEntry> SelectedTableEntries
         {
             get
@@ -195,7 +210,7 @@
 
         public int ResourceTableEntryCount => _resourceTableEntries.Count;
 
-        public void AddNewKey(ResourceEntity entity, string key)
+        public void AddNewKey([NotNull] ResourceEntity entity, [NotNull] string key)
         {
             Contract.Requires(entity != null);
             Contract.Requires(!string.IsNullOrEmpty(key));
@@ -276,7 +291,7 @@
             selectedItems.ForEach(item => item.Container.Remove(item));
         }
 
-        private void CopySelected(DataGrid dataGrid)
+        private void CopySelected([NotNull] DataGrid dataGrid)
         {
             Contract.Requires(dataGrid != null);
 
@@ -321,7 +336,7 @@
             return (dataGrid.SelectedCells?.Any() != true) || dataGrid.HasRectangularCellSelection();
         }
 
-        private void Paste(DataGrid dataGrid)
+        private void Paste([NotNull] DataGrid dataGrid)
         {
             Contract.Requires(dataGrid != null);
 
@@ -385,7 +400,7 @@
             return (scope == null) || (scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()));
         }
 
-        private void ExportExcel(IExportParameters param)
+        private void ExportExcel([NotNull] IExportParameters param)
         {
             Contract.Requires(param != null);
             Contract.Requires(param.FileName != null);
@@ -393,7 +408,7 @@
             _resourceManager.ExportExcelFile(param.FileName, param.Scope, _configuration.ExcelExportMode);
         }
 
-        private void ImportExcel(string fileName)
+        private void ImportExcel([NotNull] string fileName)
         {
             Contract.Requires(fileName != null);
 
@@ -421,7 +436,7 @@
             BeginFindCodeReferences(_sourceFilesProvider.SourceFiles);
         }
 
-        private void BeginFindCodeReferences(IList<ProjectFile> allSourceFiles)
+        private void BeginFindCodeReferences([NotNull] IList<ProjectFile> allSourceFiles)
         {
             Contract.Requires(allSourceFiles != null);
 

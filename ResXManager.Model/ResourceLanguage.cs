@@ -8,9 +8,10 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Windows;
     using System.Xml;
     using System.Xml.Linq;
+
+    using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
@@ -31,15 +32,24 @@
         private static readonly XName _mimetypeAttributeName = XNamespace.None.GetName(@"mimetype");
         private static readonly XName _nameAttributeName = XNamespace.None.GetName(@"name");
 
+        [NotNull]
         private readonly XDocument _document;
+        [NotNull]
         private readonly XElement _documentRoot;
+        [NotNull]
         private readonly ProjectFile _file;
+        [NotNull]
         private readonly IDictionary<string, Node> _nodes;
+        [NotNull]
         private readonly CultureKey _cultureKey;
 
+        [NotNull]
         private readonly XName _dataNodeName;
+        [NotNull]
         private readonly XName _valueNodeName;
+        [NotNull]
         private readonly XName _commentNodeName;
+        [NotNull]
         private readonly ResourceEntity _container;
 
         /// <summary>
@@ -51,7 +61,7 @@
         /// <param name="duplicateKeyHandling">How to handle duplicate keys.</param>
         /// <exception cref="System.InvalidOperationException">
         /// </exception>
-        internal ResourceLanguage(ResourceEntity container, CultureKey cultureKey, ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
+        internal ResourceLanguage([NotNull] ResourceEntity container, [NotNull] CultureKey cultureKey, [NotNull] ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(container != null);
             Contract.Requires(cultureKey != null);
@@ -123,6 +133,7 @@
         /// <summary>
         /// Gets all the resource keys defined in this language.
         /// </summary>
+        [NotNull]
         public IEnumerable<string> ResourceKeys
         {
             get
@@ -134,6 +145,8 @@
         }
 
         public bool HasChanges => _file.HasChanges;
+
+        [NotNull]
         public string FileName
         {
             get
@@ -144,6 +157,7 @@
             }
         }
 
+        [NotNull]
         public ProjectFile ProjectFile
         {
             get
@@ -156,6 +170,7 @@
 
         public bool IsNeutralLanguage => Container.Languages.FirstOrDefault() == this;
 
+        [NotNull]
         public CultureKey CultureKey
         {
             get
@@ -166,6 +181,7 @@
             }
         }
 
+        [NotNull]
         public ResourceEntity Container
         {
             get
@@ -176,7 +192,7 @@
             }
         }
 
-        private static bool IsStringType(XElement entry)
+        private static bool IsStringType([NotNull] XElement entry)
         {
             Contract.Requires(entry != null);
 
@@ -192,7 +208,7 @@
             return mimeTypeAttribute == null;
         }
 
-        internal string GetValue(string key)
+        internal string GetValue([NotNull] string key)
         {
             Contract.Requires(key != null);
 
@@ -201,14 +217,14 @@
             return !_nodes.TryGetValue(key, out node) ? null : node?.Text;
         }
 
-        internal bool SetValue(string key, string value)
+        internal bool SetValue([NotNull] string key, string value)
         {
             Contract.Requires(key != null);
 
             return GetValue(key) == value || SetNodeData(key, node => node.Text = value);
         }
 
-        public void ForceValue(string key, string value)
+        public void ForceValue([NotNull] string key, string value)
         {
             Contract.Requires(key != null);
 
@@ -261,7 +277,7 @@
             }
         }
 
-        internal string GetComment(string key)
+        internal string GetComment([NotNull] string key)
         {
             Contract.Requires(key != null);
 
@@ -273,7 +289,7 @@
             return node.Comment;
         }
 
-        internal bool SetComment(string key, string value)
+        internal bool SetComment([NotNull] string key, string value)
         {
             Contract.Requires(key != null);
 
@@ -283,7 +299,7 @@
             return SetNodeData(key, node => node.Comment = value);
         }
 
-        private bool SetNodeData(string key, Action<Node> updateCallback)
+        private bool SetNodeData([NotNull] string key, [NotNull] Action<Node> updateCallback)
         {
             Contract.Requires(key != null);
             Contract.Requires(updateCallback != null);
@@ -321,7 +337,7 @@
             }
         }
 
-        private Node CreateNode(string key)
+        private Node CreateNode([NotNull] string key)
         {
             Contract.Requires(key != null);
 
@@ -337,7 +353,7 @@
             return node;
         }
 
-        internal bool RenameKey(string oldKey, string newKey)
+        internal bool RenameKey([NotNull] string oldKey, [NotNull] string newKey)
         {
             Contract.Requires(oldKey != null);
             Contract.Requires(!string.IsNullOrEmpty(newKey));
@@ -361,7 +377,7 @@
             return true;
         }
 
-        internal bool RemoveKey(string key)
+        internal bool RemoveKey([NotNull] string key)
         {
             Contract.Requires(key != null);
 
@@ -390,14 +406,14 @@
             }
         }
 
-        internal bool KeyExists(string key)
+        internal bool KeyExists([NotNull] string key)
         {
             Contract.Requires(key != null);
 
             return _nodes.ContainsKey(key);
         }
 
-        internal void MoveNode(ResourceTableEntry resourceTableEntry, IEnumerable<ResourceTableEntry> previousEntries)
+        internal void MoveNode([NotNull] ResourceTableEntry resourceTableEntry, [NotNull] IEnumerable<ResourceTableEntry> previousEntries)
         {
             Contract.Requires(resourceTableEntry != null);
             Contract.Requires(previousEntries != null);
@@ -424,14 +440,14 @@
             OnChanged();
         }
 
-        internal bool IsContentEqual(ResourceLanguage other)
+        internal bool IsContentEqual([NotNull] ResourceLanguage other)
         {
             Contract.Requires(other != null);
 
             return _document.ToString(SaveOptions.DisableFormatting) == other._document?.ToString(SaveOptions.DisableFormatting);
         }
 
-        private static void MakeKeysUnique(ICollection<Node> elements)
+        private static void MakeKeysUnique([NotNull] ICollection<Node> elements)
         {
             Contract.Requires(elements != null);
 
@@ -447,7 +463,7 @@
             }
         }
 
-        private static string GenerateUniqueKey(ICollection<Node> elements, Node item, ref int index)
+        private static string GenerateUniqueKey([NotNull] ICollection<Node> elements, [NotNull] Node item, ref int index)
         {
             Contract.Requires(elements != null);
             Contract.Requires(item != null);
@@ -472,12 +488,14 @@
 
         class Node
         {
+            [NotNull]
             private readonly ResourceLanguage _owner;
+            [NotNull]
             private readonly XElement _element;
             private string _text;
             private string _comment;
 
-            public Node(ResourceLanguage owner, XElement element)
+            public Node([NotNull] ResourceLanguage owner, [NotNull] XElement element)
             {
                 Contract.Requires(owner != null);
                 Contract.Requires(element != null);
@@ -487,6 +505,7 @@
                 _owner = owner;
             }
 
+            [NotNull]
             public XElement Element
             {
                 get
@@ -497,6 +516,7 @@
                 }
             }
 
+            [NotNull]
             public string Key
             {
                 get
@@ -611,7 +631,8 @@
                 return textNode == null ? string.Empty : textNode.Value;
             }
 
-            private XAttribute GetNameAttribute(XElement entry)
+            [NotNull]
+            private XAttribute GetNameAttribute([NotNull] XElement entry)
             {
                 Contract.Requires(entry != null);
                 Contract.Ensures(Contract.Result<XAttribute>() != null);

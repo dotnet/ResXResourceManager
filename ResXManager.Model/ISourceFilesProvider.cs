@@ -3,9 +3,12 @@
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     [ContractClass(typeof (SourceFilesProviderContract))]
     public interface ISourceFilesProvider
     {
+        [NotNull]
         IList<ProjectFile> SourceFiles { get; }
     }
 

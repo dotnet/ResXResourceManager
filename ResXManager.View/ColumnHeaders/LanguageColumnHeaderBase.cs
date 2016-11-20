@@ -4,6 +4,8 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
@@ -11,10 +13,12 @@
 
     public abstract class LanguageColumnHeaderBase : ObservableObject, ILanguageColumnHeader
     {
+        [NotNull]
         private readonly CultureKey _cultureKey;
+        [NotNull]
         private readonly Configuration _configuration;
 
-        protected LanguageColumnHeaderBase(Configuration configuration, CultureKey cultureKey)
+        protected LanguageColumnHeaderBase([NotNull] Configuration configuration, [NotNull] CultureKey cultureKey)
         {
             Contract.Requires(configuration != null);
             Contract.Requires(cultureKey != null);

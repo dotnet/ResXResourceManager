@@ -3,21 +3,22 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
-    using TomsToolbox.Core;
-
     public class LanguageHeader : LanguageColumnHeaderBase
     {
-        public LanguageHeader(Configuration configuration, CultureKey cultureKey)
+        public LanguageHeader([NotNull] Configuration configuration, [NotNull] CultureKey cultureKey)
             : base(configuration, cultureKey)
         {
             Contract.Requires(configuration != null);
             Contract.Requires(cultureKey != null);
         }
 
+        [NotNull]
         public string DisplayName
         {
             get

@@ -6,6 +6,8 @@
     using System.Globalization;
     using System.Windows.Threading;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
 
@@ -22,10 +24,11 @@
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces", Justification = "Works fine with this")]
     public abstract class Configuration : ConfigurationBase
     {
+        [NotNull]
         private readonly DispatcherThrottle _codeReferencesChangeThrottle;
         private CodeReferenceConfiguration _codeReferences;
 
-        protected Configuration(ITracer tracer)
+        protected Configuration([NotNull] ITracer tracer)
             : base(tracer)
         {
             Contract.Requires(tracer != null);
@@ -33,6 +36,7 @@
             _codeReferencesChangeThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, PersistCodeReferences);
         }
 
+        [NotNull]
         public CodeReferenceConfiguration CodeReferences
         {
             get
@@ -67,6 +71,7 @@
             }
         }
 
+        [NotNull]
         public CultureInfo NeutralResourcesLanguage
         {
             get

@@ -5,6 +5,8 @@
     using System.Windows.Controls;
     using System.Windows.Interactivity;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
@@ -26,7 +28,7 @@
             AssociatedObject.BeginningEdit -= DataGrid_BeginningEdit;
         }
 
-        private static void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        private static void DataGrid_BeginningEdit([NotNull] object sender, DataGridBeginningEditEventArgs e)
         {
             Contract.Requires(sender != null);
             Contract.Requires(e.Row != null);

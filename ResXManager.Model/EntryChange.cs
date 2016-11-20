@@ -3,14 +3,17 @@ namespace tomenglertde.ResXManager.Model
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    using JetBrains.Annotations;
+
     using TomsToolbox.Desktop;
 
     public class EntryChange : ObservableObject
     {
         private string _text;
+        [NotNull]
         private readonly ResourceTableEntry _entry;
 
-        public EntryChange(ResourceTableEntry entry, string text, CultureInfo culture, ColumnKind columnKind, string originalText)
+        public EntryChange([NotNull] ResourceTableEntry entry, string text, CultureInfo culture, ColumnKind columnKind, string originalText)
         {
             Contract.Requires(entry != null);
 
@@ -34,6 +37,7 @@ namespace tomenglertde.ResXManager.Model
             }
         }
 
+        [NotNull]
         public ResourceTableEntry Entry
         {
             get

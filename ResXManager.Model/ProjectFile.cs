@@ -7,6 +7,8 @@
     using System.Linq;
     using System.Xml.Linq;
 
+    using JetBrains.Annotations;
+
     using TomsToolbox.Desktop;
 
     /// <summary>
@@ -14,10 +16,13 @@
     /// </summary>
     public class ProjectFile : ObservableObject
     {
+        [NotNull]
         private readonly string _filePath;
+        [NotNull]
         private readonly string _extension;
         private string _fingerPrint;
         private XDocument _document;
+        [NotNull]
         private readonly string _relativeFilePath;
 
         /// <summary>
@@ -27,7 +32,7 @@
         /// <param name="rootFolder">The root folder to calculate the relative path from.</param>
         /// <param name="projectName">Name of the project.</param>
         /// <param name="uniqueProjectName">Unique name of the project file.</param>
-        public ProjectFile(string filePath, string rootFolder, string projectName, string uniqueProjectName)
+        public ProjectFile([NotNull] string filePath, [NotNull] string rootFolder, string projectName, string uniqueProjectName)
         {
             Contract.Requires(!string.IsNullOrEmpty(filePath));
             Contract.Requires(rootFolder != null);
@@ -43,6 +48,7 @@
         /// <summary>
         /// Gets the file name of the file.
         /// </summary>
+        [NotNull]
         public string FilePath
         {
             get
@@ -53,6 +59,7 @@
             }
         }
 
+        [NotNull]
         public string Extension
         {
             get
@@ -78,6 +85,7 @@
             set;
         }
 
+        [NotNull]
         public string RelativeFilePath
         {
             get
@@ -90,6 +98,7 @@
 
         public bool HasChanges { get; protected set; }
 
+        [NotNull]
         public XDocument Load()
         {
             Contract.Ensures(Contract.Result<XDocument>() != null);
@@ -104,6 +113,7 @@
             return document;
         }
 
+        [NotNull]
         protected virtual XDocument InternalLoad()
         {
             Contract.Ensures(Contract.Result<XDocument>() != null);
@@ -119,7 +129,7 @@
             InternalChanged(_document);
         }
 
-        protected virtual void InternalChanged(XDocument document)
+        protected virtual void InternalChanged([NotNull] XDocument document)
         {
             Contract.Requires(document != null);
 
@@ -140,7 +150,7 @@
             _fingerPrint = document.ToString(SaveOptions.DisableFormatting);
         }
 
-        protected virtual void InternalSave(XDocument document)
+        protected virtual void InternalSave([NotNull] XDocument document)
         {
             Contract.Requires(document != null);
 
@@ -173,7 +183,8 @@
 
         public virtual bool IsWinFormsDesignerResource => false;
 
-        private static string GetRelativePath(string solutionFolder, string filePath)
+        [NotNull]
+        private static string GetRelativePath([NotNull] string solutionFolder, [NotNull] string filePath)
         {
             Contract.Requires(solutionFolder != null);
             Contract.Requires(filePath != null);

@@ -5,12 +5,16 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    using JetBrains.Annotations;
+
     public class CultureOverrideEventArgs : EventArgs
     {
+        [NotNull]
         private readonly CultureInfo _neutralCulture;
+        [NotNull]
         private readonly CultureInfo _specificCulture;
 
-        public CultureOverrideEventArgs(CultureInfo neutralCulture, CultureInfo specificCulture)
+        public CultureOverrideEventArgs([NotNull] CultureInfo neutralCulture, [NotNull] CultureInfo specificCulture)
         {
             Contract.Requires(neutralCulture != null);
             Contract.Requires(specificCulture != null);
@@ -19,6 +23,7 @@
             _neutralCulture = neutralCulture;
         }
 
+        [NotNull]
         public CultureInfo NeutralCulture
         {
             get
@@ -29,6 +34,7 @@
             }
         }
 
+        [NotNull]
         public CultureInfo SpecificCulture
         {
             get

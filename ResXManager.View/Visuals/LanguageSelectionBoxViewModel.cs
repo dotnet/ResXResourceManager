@@ -6,13 +6,15 @@
     using System.Globalization;
     using System.Linq;
 
+    using JetBrains.Annotations;
+
     using TomsToolbox.Desktop;
 
     public class LanguageSelectionBoxViewModel : ObservableObject
     {
         private CultureInfo _selectedLanguage;
 
-        public LanguageSelectionBoxViewModel(IEnumerable<CultureInfo> existingLanguages)
+        public LanguageSelectionBoxViewModel([NotNull] IEnumerable<CultureInfo> existingLanguages)
         {
             Contract.Requires(existingLanguages != null);
 

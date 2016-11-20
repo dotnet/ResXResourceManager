@@ -6,6 +6,8 @@
     using System.IO;
     using System.Linq;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     public static class ProjectFileExtensions
@@ -14,7 +16,8 @@
         private const string Resw = ".resw";
         public static readonly string[] SupportedFileExtensions = { Resx, Resw };
 
-        public static string GetBaseDirectory(this ProjectFile projectFile)
+        [NotNull]
+        public static string GetBaseDirectory([NotNull] this ProjectFile projectFile)
         {
             Contract.Requires(projectFile != null);
             Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
@@ -28,7 +31,7 @@
             return directoryName;
         }
 
-        public static bool IsResourceFile(this ProjectFile projectFile)
+        public static bool IsResourceFile([NotNull] this ProjectFile projectFile)
         {
             Contract.Requires(projectFile != null);
 
@@ -46,7 +49,8 @@
             return ResourceManager.IsValidLanguageName(languageName);
         }
 
-        public static CultureKey GetCultureKey(this ProjectFile projectFile)
+        [NotNull]
+        public static CultureKey GetCultureKey([NotNull] this ProjectFile projectFile)
         {
             Contract.Requires(projectFile != null);
             Contract.Ensures(Contract.Result<CultureKey>() != null);
@@ -81,7 +85,8 @@
             throw new InvalidOperationException("Unsupported file format: " + extension);
         }
 
-        public static string GetBaseName(this ProjectFile projectFile)
+        [NotNull]
+        public static string GetBaseName([NotNull] this ProjectFile projectFile)
         {
             Contract.Requires(projectFile != null);
             Contract.Ensures(Contract.Result<string>() != null);
@@ -99,7 +104,8 @@
             return ResourceManager.IsValidLanguageName(languageName) ? Path.GetFileNameWithoutExtension(name) : name;
         }
 
-        public static string GetLanguageFileName(this ProjectFile projectFile, CultureInfo culture)
+        [NotNull]
+        public static string GetLanguageFileName([NotNull] this ProjectFile projectFile, [NotNull] CultureInfo culture)
         {
             Contract.Requires(projectFile != null);
             Contract.Requires(culture != null);
@@ -123,21 +129,21 @@
             throw new InvalidOperationException("Extension not supported: " + extension);
         }
 
-        public static bool IsDesignerFile(this ProjectFile projectFile)
+        public static bool IsDesignerFile([NotNull] this ProjectFile projectFile)
         {
             Contract.Requires(projectFile != null);
 
             return projectFile.GetBaseName().EndsWith(".Designer", StringComparison.OrdinalIgnoreCase);
         }
 
-        public static bool IsVisualBasicFile(this ProjectFile projectFile)
+        public static bool IsVisualBasicFile([NotNull] this ProjectFile projectFile)
         {
             Contract.Requires(projectFile != null);
 
             return Path.GetExtension(projectFile.FilePath).Equals(".vb", StringComparison.OrdinalIgnoreCase);
         }
 
-        public static bool IsCSharpFile(this ProjectFile projectFile)
+        public static bool IsCSharpFile([NotNull] this ProjectFile projectFile)
         {
             Contract.Requires(projectFile != null);
 

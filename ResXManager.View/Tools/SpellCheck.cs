@@ -6,6 +6,8 @@
     using System.Windows.Controls.Primitives;
     using System.Windows.Threading;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Core;
@@ -18,12 +20,12 @@
         private static bool _exceptionTraced;
 
         [AttachedPropertyBrowsableForType(typeof(TextBoxBase))]
-        public static bool GetIsEnabled(TextBoxBase obj)
+        public static bool GetIsEnabled([NotNull] TextBoxBase obj)
         {
             Contract.Requires(obj != null);
             return obj.GetValue<bool>(IsEnabledProperty);
         }
-        public static void SetIsEnabled(TextBoxBase obj, bool value)
+        public static void SetIsEnabled([NotNull] TextBoxBase obj, bool value)
         {
             Contract.Requires(obj != null);
             obj.SetValue(IsEnabledProperty, value);

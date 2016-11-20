@@ -12,6 +12,8 @@
 
     using DataGridExtensions;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
@@ -41,7 +43,7 @@
         public static readonly DependencyProperty CellAnnotationsProperty =
             DependencyProperty.RegisterAttached("CellAnnotations", typeof(ICollection<string>), typeof(ColumnManager), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
-        public static void SetupColumns(this DataGrid dataGrid, ResourceManager resourceManager, Configuration configuration)
+        public static void SetupColumns([NotNull] this DataGrid dataGrid, [NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration)
         {
             Contract.Requires(dataGrid != null);
             Contract.Requires(resourceManager != null);
@@ -81,7 +83,7 @@
             }
         }
 
-        public static void CreateNewLanguageColumn(this DataGrid dataGrid, ResourceManager resourceManager, Configuration configuration, CultureInfo culture)
+        public static void CreateNewLanguageColumn([NotNull] this DataGrid dataGrid, [NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, CultureInfo culture)
         {
             Contract.Requires(dataGrid != null);
             Contract.Requires(resourceManager != null);
@@ -168,7 +170,7 @@
             };
         }
 
-        private static DataGridColumn CreateCodeReferencesColumn(FrameworkElement dataGrid)
+        private static DataGridColumn CreateCodeReferencesColumn([NotNull] FrameworkElement dataGrid)
         {
             Contract.Requires(dataGrid != null);
 
@@ -238,7 +240,7 @@
             return column;
         }
 
-        private static void AddLanguageColumn(this DataGrid dataGrid, ResourceManager resourceManager, Configuration configuration, CultureKey cultureKey)
+        private static void AddLanguageColumn([NotNull] this DataGrid dataGrid, [NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, [NotNull] CultureKey cultureKey)
         {
             Contract.Requires(dataGrid != null);
             Contract.Requires(resourceManager != null);
@@ -298,7 +300,7 @@
             columns.AddLanguageColumn(column, languageBinding, flowDirectionBinding);
         }
 
-        private static void AddLanguageColumn(this ICollection<DataGridColumn> columns, DataGridBoundColumn column, Binding languageBinding, Binding flowDirectionBinding)
+        private static void AddLanguageColumn([NotNull] this ICollection<DataGridColumn> columns, [NotNull] DataGridBoundColumn column, [NotNull] Binding languageBinding, Binding flowDirectionBinding)
         {
             Contract.Requires(columns != null);
             Contract.Requires(languageBinding != null);
@@ -309,7 +311,7 @@
             columns.Add(column);
         }
 
-        private static void DataGrid_ColumnVisibilityChanged(object sender, EventArgs e)
+        private static void DataGrid_ColumnVisibilityChanged([NotNull] object sender, EventArgs e)
         {
             Contract.Requires(sender != null);
 
@@ -319,7 +321,8 @@
             HiddenLanguageColumns = UpdateColumnSettings<LanguageHeader>(HiddenLanguageColumns, dataGrid, col => col.Visibility != Visibility.Visible);
         }
 
-        private static IEnumerable<string> UpdateColumnSettings<T>(IEnumerable<string> current, DataGrid dataGrid, Func<DataGridColumn, bool> includePredicate)
+        [NotNull]
+        private static IEnumerable<string> UpdateColumnSettings<T>([NotNull] IEnumerable<string> current, [NotNull] DataGrid dataGrid, [NotNull] Func<DataGridColumn, bool> includePredicate)
             where T : LanguageColumnHeaderBase
         {
             Contract.Requires(current != null);
@@ -334,7 +337,7 @@
                 .Distinct();
         }
 
-        private static IEnumerable<string> GetColumnKeys<T>(DataGrid dataGrid, Func<DataGridColumn, bool> predicate)
+        private static IEnumerable<string> GetColumnKeys<T>([NotNull] DataGrid dataGrid, [NotNull] Func<DataGridColumn, bool> predicate)
             where T : LanguageColumnHeaderBase
         {
             Contract.Requires(dataGrid != null);
@@ -347,6 +350,7 @@
                 .Select(hdr => hdr.CultureKey.ToString(NeutralCultureKeyString));
         }
 
+        [NotNull]
         private static IEnumerable<string> VisibleCommentColumns
         {
             get
@@ -363,6 +367,7 @@
             }
         }
 
+        [NotNull]
         private static IEnumerable<string> HiddenLanguageColumns
         {
             get

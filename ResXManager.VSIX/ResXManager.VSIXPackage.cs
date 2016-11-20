@@ -12,6 +12,8 @@
     using System.Windows;
     using System.Windows.Threading;
 
+    using JetBrains.Annotations;
+
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -39,6 +41,7 @@
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     public sealed class ResXManagerVsixPackage : Package
     {
+        [NotNull]
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
 
         private EnvDTE.DocumentEvents _documentEvents;
@@ -48,6 +51,7 @@
         private IRefactorings _refactorings;
         private PerformanceTracer _performanceTracer;
 
+        [NotNull]
         private EnvDTE80.DTE2 Dte
         {
             get
@@ -110,7 +114,7 @@
             _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
         }
 
-        private static OleMenuCommand CreateMenuCommand(IMenuCommandService mcs, int cmdId, EventHandler invokeHandler)
+        private static OleMenuCommand CreateMenuCommand([NotNull] IMenuCommandService mcs, int cmdId, EventHandler invokeHandler)
         {
             Contract.Requires(mcs != null);
 
@@ -226,7 +230,7 @@
                 .ToArray();
         }
 
-        private static bool ContainsChildOfWinFormsDesignerItem(ResourceEntity entity, string fileName)
+        private static bool ContainsChildOfWinFormsDesignerItem([NotNull] ResourceEntity entity, string fileName)
         {
             Contract.Requires(entity != null);
 
@@ -235,7 +239,7 @@
                 .Any(projectFile => string.Equals(projectFile.ParentItem?.TryGetFileName(), fileName) && projectFile.IsWinFormsDesignerResource);
         }
 
-        private static bool ContainsFile(ResourceEntity entity, string fileName)
+        private static bool ContainsFile([NotNull] ResourceEntity entity, string fileName)
         {
             Contract.Requires(entity != null);
 

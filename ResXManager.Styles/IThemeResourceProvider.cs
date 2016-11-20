@@ -3,10 +3,12 @@
     using System.Diagnostics.Contracts;
     using System.Windows;
 
+    using JetBrains.Annotations;
+
     [ContractClass(typeof(ThemeResourceProviderContract))]
     public interface IThemeResourceProvider
     {
-        void LoadThemeResources(ResourceDictionary resource);
+        void LoadThemeResources([NotNull] ResourceDictionary resource);
     }
 
     [ContractClassFor(typeof(IThemeResourceProvider))]

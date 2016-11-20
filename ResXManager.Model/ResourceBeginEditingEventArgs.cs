@@ -4,6 +4,8 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     /// <summary>
@@ -11,10 +13,11 @@
     /// </summary>
     public class ResourceBeginEditingEventArgs : CancelEventArgs
     {
+        [NotNull]
         private readonly ResourceEntity _entity;
         private readonly CultureKey _cultureKey;
 
-        public ResourceBeginEditingEventArgs(ResourceEntity entity, CultureKey cultureKey)
+        public ResourceBeginEditingEventArgs([NotNull] ResourceEntity entity, CultureKey cultureKey)
         {
             Contract.Requires(entity != null);
 
@@ -24,6 +27,7 @@
 
         public CultureKey CultureKey => _cultureKey;
 
+        [NotNull]
         public ResourceEntity Entity
         {
             get

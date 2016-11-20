@@ -5,14 +5,18 @@
     using System.ComponentModel;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     [ContractClass(typeof (TranslatorContract))]
     public interface ITranslator : INotifyPropertyChanged
     {
+        [NotNull]
         string Id
         {
             get;
         }
 
+        [NotNull]
         string DisplayName
         {
             get;
@@ -37,6 +41,7 @@
 
         void Translate(ITranslationSession translationSession);
 
+        [NotNull]
         IList<ICredentialItem> Credentials
         {
             get;

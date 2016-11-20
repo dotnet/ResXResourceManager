@@ -9,28 +9,28 @@ namespace tomenglertde.ResXManager.View.Tools
     using System.Windows.Data;
     using System.Windows.Input;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
-    using TomsToolbox.Core;
-
     public static class ExtensionMethods
     {
-        public static CultureKey GetCultureKey(this DataGridColumn column)
+        public static CultureKey GetCultureKey([NotNull] this DataGridColumn column)
         {
             Contract.Requires(column != null);
 
             return (column.Header as ILanguageColumnHeader)?.CultureKey;
         }
 
-        public static CultureInfo GetCulture(this DataGridColumn column)
+        public static CultureInfo GetCulture([NotNull] this DataGridColumn column)
         {
             Contract.Requires(column != null);
 
             return column.GetCultureKey()?.Culture;
         }
 
-        public static void SetEditingElementStyle(this DataGridBoundColumn column, Binding languageBinding, Binding flowDirectionBinding)
+        public static void SetEditingElementStyle([NotNull] this DataGridBoundColumn column, Binding languageBinding, Binding flowDirectionBinding)
         {
             Contract.Requires(column != null);
 
@@ -50,7 +50,7 @@ namespace tomenglertde.ResXManager.View.Tools
             column.EditingElementStyle = textBoxStyle;
         }
 
-        public static void SetElementStyle(this DataGridBoundColumn column, Binding languageBinding, Binding flowDirectionBinding)
+        public static void SetElementStyle([NotNull] this DataGridBoundColumn column, Binding languageBinding, Binding flowDirectionBinding)
         {
             Contract.Requires(column != null);
 
@@ -64,7 +64,7 @@ namespace tomenglertde.ResXManager.View.Tools
             column.ElementStyle = elementStyle;
         }
 
-        private static void EditingElement_PreviewKeyDown(object sender, KeyEventArgs e)
+        private static void EditingElement_PreviewKeyDown([NotNull] object sender, KeyEventArgs e)
         {
             Contract.Requires(sender != null);
 

@@ -4,6 +4,8 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     using Newtonsoft.Json;
 
     using TomsToolbox.Core;
@@ -11,6 +13,7 @@
 
     public sealed partial class Settings
     {
+        [NotNull]
         private readonly ObservableIndexer<string, int> _moveToResourcePreferedReplacementPatternIndex = new ObservableIndexer<string, int>(_ => 0);
 
         static Settings()
@@ -33,6 +36,7 @@
             _moveToResourcePreferedReplacementPatternIndex.PropertyChanged += (_, __) => MoveToResource_PreferedReplacementPatternIndex_Changed();
         }
 
+        [NotNull]
         public ObservableIndexer<string, int> MoveToResourcePreferedReplacementPatternIndex
         {
             get

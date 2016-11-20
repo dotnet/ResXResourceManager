@@ -8,6 +8,8 @@
     using System.IO;
     using System.Linq;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
@@ -16,11 +18,13 @@
     {
         private const string SolutionItemsFolderName = "Solution Items";
 
+        [NotNull]
         private readonly IVsServiceProvider _vsServiceProvider;
+        [NotNull]
         private readonly ITracer _tracer;
 
         [ImportingConstructor]
-        public DteSolution(IVsServiceProvider vsServiceProvider, ITracer tracer)
+        public DteSolution([NotNull] IVsServiceProvider vsServiceProvider, [NotNull] ITracer tracer)
         {
             Contract.Requires(vsServiceProvider != null);
             Contract.Requires(tracer != null);
@@ -33,6 +37,7 @@
         /// Gets all files of all project in the solution.
         /// </summary>
         /// <returns>The files.</returns>
+        [NotNull]
         public IEnumerable<DteProjectFile> GetProjectFiles()
         {
             Contract.Ensures(Contract.Result<IEnumerable<ProjectFile>>() != null);
@@ -85,6 +90,7 @@
             }
         }
 
+        [NotNull]
         public string SolutionFolder
         {
             get
@@ -105,7 +111,7 @@
 
         public string FullName => Solution?.FullName;
 
-        public EnvDTE.ProjectItem AddFile(string fullName)
+        public EnvDTE.ProjectItem AddFile([NotNull] string fullName)
         {
             Contract.Requires(fullName != null);
 
@@ -123,6 +129,7 @@
                 && string.Equals(project.Name, SolutionItemsFolderName, StringComparison.CurrentCultureIgnoreCase);
         }
 
+        [NotNull]
         private IEnumerable<EnvDTE.Project> GetProjects()
         {
             Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.Project>>() != null);
@@ -150,7 +157,7 @@
             }
         }
 
-        private void GetProjectFiles(string projectName, EnvDTE.ProjectItems projectItems, IDictionary<string, DteProjectFile> items)
+        private void GetProjectFiles(string projectName, EnvDTE.ProjectItems projectItems, [NotNull] IDictionary<string, DteProjectFile> items)
         {
             Contract.Requires(items != null);
 
@@ -182,7 +189,7 @@
             }
         }
 
-        private void GetProjectFiles(string projectName, EnvDTE.ProjectItem projectItem, IDictionary<string, DteProjectFile> items)
+        private void GetProjectFiles(string projectName, [NotNull] EnvDTE.ProjectItem projectItem, [NotNull] IDictionary<string, DteProjectFile> items)
         {
             Contract.Requires(projectItem != null);
             Contract.Requires(items != null);
@@ -222,7 +229,7 @@
             }
         }
 
-        private string TryGetFileName(EnvDTE.ProjectItem projectItem)
+        private string TryGetFileName([NotNull] EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
 

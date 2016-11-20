@@ -4,19 +4,24 @@
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     [ContractClass(typeof (TranslationItemContract))]
     public interface ITranslationItem
     {
+        [NotNull]
         string Source
         {
             get;
         }
 
+        [NotNull]
         IList<ITranslationMatch> Results
         {
             get;
         }
 
+        [NotNull]
         CultureKey TargetCulture
         {
             get;

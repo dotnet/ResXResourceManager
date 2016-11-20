@@ -5,6 +5,8 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
@@ -13,7 +15,9 @@
     /// </summary>
     internal sealed class CustomToolRunner : IDisposable
     {
+        [NotNull]
         private HashSet<EnvDTE.ProjectItem> _projectItems = new HashSet<EnvDTE.ProjectItem>();
+        [NotNull]
         private readonly DispatcherThrottle _throttle;
 
         public CustomToolRunner()

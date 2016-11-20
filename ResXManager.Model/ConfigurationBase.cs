@@ -7,6 +7,8 @@
     using System.IO;
     using System.Runtime.CompilerServices;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Desktop;
@@ -16,14 +18,18 @@
     /// </summary>
     public abstract class ConfigurationBase : ObservableObject
     {
+        [NotNull]
         private readonly ITracer _tracer;
         private const string FileName = "Configuration.xml";
+        [NotNull]
         private static readonly string _directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "tom-englert.de", "ResXManager");
 
+        [NotNull]
         private readonly string _filePath;
+        [NotNull]
         private readonly XmlConfiguration _configuration;
 
-        protected ConfigurationBase(ITracer tracer)
+        protected ConfigurationBase([NotNull] ITracer tracer)
         {
             Contract.Requires(tracer != null);
 
@@ -59,6 +65,7 @@
             get;
         }
 
+        [NotNull]
         protected ITracer Tracer
         {
             get
@@ -70,7 +77,7 @@
         }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Required by [CallerMemberName]")]
-        protected T GetValue<T>(T defaultValue, [CallerMemberName] string key = null)
+        protected T GetValue<T>(T defaultValue, [CallerMemberName][NotNull] string key = null)
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
 
@@ -85,7 +92,7 @@
             return defaultValue;
         }
 
-        protected virtual T InternalGetValue<T>(T defaultValue, string key)
+        protected virtual T InternalGetValue<T>(T defaultValue, [NotNull] string key)
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
 
@@ -93,7 +100,7 @@
         }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Required by [CallerMemberName]")]
-        protected void SetValue<T>(T value, [CallerMemberName] string key = null)
+        protected void SetValue<T>(T value, [CallerMemberName][NotNull] string key = null)
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
 
@@ -105,7 +112,7 @@
             OnPropertyChanged(key);
         }
 
-        protected virtual void InternalSetValue<T>(T value, string key)
+        protected virtual void InternalSetValue<T>(T value, [NotNull] string key)
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
 
@@ -151,7 +158,8 @@
             return typeConverter.ConvertToInvariantString(value);
         }
 
-        private static TypeConverter GetTypeConverter(Type type)
+        [NotNull]
+        private static TypeConverter GetTypeConverter([NotNull] Type type)
         {
             Contract.Requires(type != null);
             Contract.Ensures(Contract.Result<TypeConverter>() != null);

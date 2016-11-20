@@ -4,6 +4,8 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    using JetBrains.Annotations;
+
     using TomsToolbox.Core;
 
     /// <summary>
@@ -32,7 +34,8 @@
             return ToString(string.Empty);
         }
 
-        public string ToString(string neutralCultureKey)
+        [NotNull]
+        public string ToString([NotNull] string neutralCultureKey)
         {
             Contract.Requires(neutralCultureKey != null);
             Contract.Ensures(Contract.Result<string>() != null);
@@ -171,6 +174,7 @@
             return new CultureKey(culture);
         }
 
+        [NotNull]
         public static CultureKey Parse(object item)
         {
             Contract.Ensures(Contract.Result<CultureKey>() != null);

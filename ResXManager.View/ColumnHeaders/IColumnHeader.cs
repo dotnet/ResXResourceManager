@@ -4,6 +4,8 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     public enum ColumnType
@@ -25,11 +27,13 @@
     [ContractClass(typeof(LanguageColumnHeaderContract))]
     public interface ILanguageColumnHeader : IColumnHeader
     {
+        [NotNull]
         CultureKey CultureKey
         {
             get;
         }
 
+        [NotNull]
         CultureInfo EffectiveCulture
         {
             get;

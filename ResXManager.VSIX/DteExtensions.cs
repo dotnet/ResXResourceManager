@@ -10,13 +10,12 @@
     using System.Windows;
     using System.Xml.Linq;
 
+    using JetBrains.Annotations;
+
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
 
-    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.View;
-
-    using TomsToolbox.Core;
 
     internal static class DteExtensions
     {
@@ -32,7 +31,7 @@
             }
         }
 
-        public static XDocument TryGetContent(this EnvDTE.ProjectItem projectItem)
+        public static XDocument TryGetContent([NotNull] this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
 
@@ -46,7 +45,8 @@
             }
         }
 
-        public static ICollection<VSITEMSELECTION> GetSelectedProjectItems(this IVsMonitorSelection monitorSelection)
+        [NotNull]
+        public static ICollection<VSITEMSELECTION> GetSelectedProjectItems([NotNull] this IVsMonitorSelection monitorSelection)
         {
             Contract.Requires(monitorSelection != null);
             Contract.Ensures(Contract.Result<ICollection<VSITEMSELECTION>>() != null);
@@ -135,7 +135,7 @@
             }
         }
 
-        public static bool TrySetContent(this EnvDTE.ProjectItem projectItem, XDocument value)
+        public static bool TrySetContent([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] XDocument value)
         {
             Contract.Requires(projectItem != null);
             Contract.Requires(value != null);
@@ -164,6 +164,7 @@
             }
         }
 
+        [NotNull]
         public static IEnumerable<EnvDTE.ProjectItem> Children(this EnvDTE.ProjectItem projectItem)
         {
             Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.ProjectItem>>() != null);
@@ -178,6 +179,7 @@
             return projectItems.OfType<EnvDTE.ProjectItem>();
         }
 
+        [NotNull]
         public static IEnumerable<EnvDTE.ProjectItem> Descendants(this EnvDTE.ProjectItem projectItem)
         {
             Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.ProjectItem>>() != null);
@@ -192,6 +194,7 @@
             return projectItem.ProjectItems.OfType<EnvDTE.ProjectItem>().SelectMany(p => p.DescendantsAndSelf());
         }
 
+        [NotNull]
         public static IEnumerable<EnvDTE.ProjectItem> DescendantsAndSelf(this EnvDTE.ProjectItem projectItem)
         {
             Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.ProjectItem>>() != null);
@@ -207,7 +210,7 @@
             }
         }
 
-        public static void SetProperty(this EnvDTE.ProjectItem projectItem, string propertyName, object value)
+        public static void SetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName, object value)
         {
             Contract.Requires(projectItem != null);
             Contract.Requires(propertyName != null);
@@ -217,7 +220,7 @@
                 item.Value = value;
         }
 
-        public static object GetProperty(this EnvDTE.ProjectItem projectItem, string propertyName)
+        public static object GetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName)
         {
             Contract.Requires(projectItem != null);
             Contract.Requires(propertyName != null);
@@ -233,7 +236,7 @@
         }
 
 
-        public static void RunCustomTool(this EnvDTE.ProjectItem projectItem)
+        public static void RunCustomTool([NotNull] this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
 
@@ -249,21 +252,21 @@
             }
         }
 
-        public static void SetCustomTool(this EnvDTE.ProjectItem projectItem, string value)
+        public static void SetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem, string value)
         {
             Contract.Requires(projectItem != null);
 
             SetProperty(projectItem, @"CustomTool", value);
         }
 
-        public static string GetCustomTool(this EnvDTE.ProjectItem projectItem)
+        public static string GetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
 
             return GetProperty(projectItem, @"CustomTool") as string;
         }
 
-        public static EnvDTE.ProjectItem AddFromFile(this EnvDTE.ProjectItem projectItem, string fileName)
+        public static EnvDTE.ProjectItem AddFromFile([NotNull] this EnvDTE.ProjectItem projectItem, string fileName)
         {
             Contract.Requires(projectItem != null);
 
@@ -279,7 +282,7 @@
             }
         }
 
-        public static EnvDTE.ProjectItem AddFromFile(this EnvDTE.Project project, string fileName)
+        public static EnvDTE.ProjectItem AddFromFile([NotNull] this EnvDTE.Project project, string fileName)
         {
             Contract.Requires(project != null);
 
@@ -296,7 +299,7 @@
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public static void SetFontSize(this EnvDTE.DTE dte, DependencyObject view)
+        public static void SetFontSize([NotNull] this EnvDTE.DTE dte, [NotNull] DependencyObject view)
         {
             Contract.Requires(dte != null);
             Contract.Requires(view != null);
@@ -323,7 +326,7 @@
             }
         }
 
-        public static string TryGetFileName(this EnvDTE.ProjectItem projectItem)
+        public static string TryGetFileName([NotNull] this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
 

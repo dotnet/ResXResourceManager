@@ -7,6 +7,8 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
 
@@ -16,11 +18,14 @@
     /// </summary>
     public sealed class ResourceTableValues<T> : IEnumerable<ResourceLanguage>
     {
+        [NotNull]
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
+        [NotNull]
         private readonly Func<ResourceLanguage, T> _getter;
+        [NotNull]
         private readonly Func<ResourceLanguage, T, bool> _setter;
 
-        public ResourceTableValues(IDictionary<CultureKey, ResourceLanguage> languages, Func<ResourceLanguage, T> getter, Func<ResourceLanguage, T, bool> setter)
+        public ResourceTableValues([NotNull] IDictionary<CultureKey, ResourceLanguage> languages, [NotNull] Func<ResourceLanguage, T> getter, [NotNull] Func<ResourceLanguage, T, bool> setter)
         {
             Contract.Requires(languages != null);
             Contract.Requires(getter != null);

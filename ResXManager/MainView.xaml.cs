@@ -5,6 +5,8 @@
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf.Composition;
@@ -17,7 +19,7 @@
     public partial class MainView
     {
         [ImportingConstructor]
-        public MainView(ExportProvider exportProvider)
+        public MainView([NotNull] ExportProvider exportProvider)
         {
             Contract.Requires(exportProvider != null);
 

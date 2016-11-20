@@ -6,6 +6,8 @@
     using System.Diagnostics.Contracts;
     using System.Windows.Threading;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
@@ -15,12 +17,13 @@
     [Export(typeof(DteConfiguration))]
     internal class DteConfiguration : Configuration
     {
+        [NotNull]
         private readonly DteSolution _solution;
         private readonly DispatcherThrottle _moveToResourcesChangeThrottle;
         private MoveToResourceConfiguration _moveToResources;
 
         [ImportingConstructor]
-        public DteConfiguration(DteSolution solution, ITracer tracer)
+        public DteConfiguration([NotNull] DteSolution solution, [NotNull] ITracer tracer)
             : base(tracer)
         {
             Contract.Requires(solution != null);
@@ -30,6 +33,7 @@
             _moveToResourcesChangeThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, PersistMoveToResources);
         }
 
+        [NotNull]
         public MoveToResourceConfiguration MoveToResources
         {
             get
@@ -104,7 +108,7 @@
             return false;
         }
 
-        private void TrySetValue<T>(EnvDTE.Globals globals, string internalKey, T value)
+        private void TrySetValue<T>([NotNull] EnvDTE.Globals globals, string internalKey, T value)
         {
             Contract.Requires(globals != null);
 

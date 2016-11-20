@@ -10,6 +10,8 @@
     using System.Runtime.Serialization.Json;
     using System.Text;
 
+    using JetBrains.Annotations;
+
     /// <summary>
     /// A type converter that converts an integer string to a boolean value.
     /// </summary>
@@ -20,6 +22,7 @@
     public class JsonSerializerTypeConverter<T> : TypeConverter
         where T : class
     {
+        [NotNull]
         private readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof(T));
 
         /// <summary>

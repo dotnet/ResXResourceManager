@@ -7,6 +7,8 @@
     using System.Windows;
     using System.Windows.Controls;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf;
@@ -20,7 +22,7 @@
     public partial class TranslationsView
     {
         [ImportingConstructor]
-        public TranslationsView(ExportProvider exportProvider)
+        public TranslationsView([NotNull] ExportProvider exportProvider)
         {
             Contract.Requires(exportProvider != null);
 

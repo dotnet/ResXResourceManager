@@ -4,6 +4,8 @@
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf.Composition;
@@ -13,7 +15,7 @@
     /// </summary>
     public partial class CodeReferencesToolTip
     {
-        public CodeReferencesToolTip(ExportProvider exportProvider)
+        public CodeReferencesToolTip([NotNull] ExportProvider exportProvider)
         {
             Contract.Requires(exportProvider != null);
 

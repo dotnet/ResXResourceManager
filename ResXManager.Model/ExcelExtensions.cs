@@ -11,10 +11,10 @@
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Spreadsheet;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
-
-    using TomsToolbox.Core;
 
     public enum ExcelExportMode
     {
@@ -28,7 +28,7 @@
     {
         private static readonly string[] _singleSheetFixedColumnHeaders = { "Project", "File", "Key" };
 
-        public static void ExportExcelFile(this ResourceManager resourceManager, string filePath, IResourceScope scope, ExcelExportMode exportMode)
+        public static void ExportExcelFile([NotNull] this ResourceManager resourceManager, [NotNull] string filePath, IResourceScope scope, ExcelExportMode exportMode)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(filePath != null);
@@ -51,7 +51,7 @@
             }
         }
 
-        private static void ExportToMultipleSheets(ResourceManager resourceManager, WorkbookPart workbookPart, IResourceScope scope)
+        private static void ExportToMultipleSheets([NotNull] ResourceManager resourceManager, [NotNull] WorkbookPart workbookPart, IResourceScope scope)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(workbookPart != null);
@@ -78,7 +78,7 @@
             }
         }
 
-        private static void ExportToSingleSheet(WorkbookPart workbookPart, IResourceScope scope)
+        private static void ExportToSingleSheet([NotNull] WorkbookPart workbookPart, [NotNull] IResourceScope scope)
         {
             Contract.Requires(workbookPart != null);
             Contract.Requires(scope != null);
@@ -102,7 +102,8 @@
             worksheet.AppendItem(rows.Aggregate(new SheetData(), AppendRow));
         }
 
-        public static IList<EntryChange> ImportExcelFile(this ResourceManager resourceManager, string filePath)
+        [NotNull]
+        public static IList<EntryChange> ImportExcelFile([NotNull] this ResourceManager resourceManager, [NotNull] string filePath)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(filePath != null);
@@ -136,7 +137,7 @@
             }
         }
 
-        private static IEnumerable<EntryChange> ImportSingleSheet(ResourceManager resourceManager, Sheet firstSheet, WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
+        private static IEnumerable<EntryChange> ImportSingleSheet([NotNull] ResourceManager resourceManager, [NotNull] Sheet firstSheet, [NotNull] WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(firstSheet != null);
@@ -192,7 +193,8 @@
             }
         }
 
-        private static IEnumerable<EntryChange> ImportMultipleSheets(ResourceManager resourceManager, Sheets sheets, WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
+        [NotNull]
+        private static IEnumerable<EntryChange> ImportMultipleSheets([NotNull] ResourceManager resourceManager, [NotNull] Sheets sheets, [NotNull] WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(sheets != null);
@@ -207,7 +209,7 @@
             return changes;
         }
 
-        private static IList<string>[] GetTable(this Sheet sheet, WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
+        private static IList<string>[] GetTable([NotNull] this Sheet sheet, [NotNull] WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(sheet != null);
             Contract.Requires(workbookPart != null);
@@ -224,14 +226,15 @@
                 .SequenceEqual(_singleSheetFixedColumnHeaders);
         }
 
-        private static IList<string> GetCellValues(this Row row, IList<SharedStringItem> sharedStrings)
+        private static IList<string> GetCellValues([NotNull] this Row row, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(row != null);
 
             return row.OfType<Cell>().GetCellValues(sharedStrings).ToArray();
         }
 
-        private static IEnumerable<Row> GetRows(this Sheet sheet, WorkbookPart workbookPart)
+        [NotNull]
+        private static IEnumerable<Row> GetRows([NotNull] this Sheet sheet, [NotNull] WorkbookPart workbookPart)
         {
             Contract.Requires(sheet != null);
             Contract.Requires(workbookPart != null);
@@ -242,7 +245,8 @@
             return worksheetPart?.Worksheet?.ChildElements?.OfType<SheetData>()?.FirstOrDefault()?.OfType<Row>() ?? Enumerable.Empty<Row>();
         }
 
-        private static ResourceEntity FindResourceEntity(this IEnumerable<MultipleSheetEntity> entities, Sheet sheet)
+        [NotNull]
+        private static ResourceEntity FindResourceEntity([NotNull] this IEnumerable<MultipleSheetEntity> entities, [NotNull] Sheet sheet)
         {
             Contract.Requires(entities != null);
             Contract.Requires(sheet != null);
@@ -261,13 +265,14 @@
         }
 
         [ContractVerification(false)]
+        [NotNull]
         private static string GetName(this Sheet sheet)
         {
             Contract.Ensures(Contract.Result<string>() != null);
             return sheet.Name.Value;
         }
 
-        private static SheetData AppendRow(SheetData sheetData, IEnumerable<string> rowData)
+        private static SheetData AppendRow([NotNull] SheetData sheetData, [NotNull] IEnumerable<string> rowData)
         {
             Contract.Requires(sheetData != null);
             Contract.Requires(rowData != null);
@@ -290,7 +295,7 @@
             };
         }
 
-        private static IList<SharedStringItem> GetSharedStrings(this WorkbookPart workbookPart)
+        private static IList<SharedStringItem> GetSharedStrings([NotNull] this WorkbookPart workbookPart)
         {
             Contract.Requires(workbookPart != null);
 
@@ -301,7 +306,7 @@
             return stringTable?.OfType<SharedStringItem>().ToArray();
         }
 
-        private static string GetText(this CellType cell, IList<SharedStringItem> sharedStrings)
+        private static string GetText([NotNull] this CellType cell, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(cell != null);
 
@@ -342,7 +347,8 @@
             }
         }
 
-        private static IEnumerable<string> GetCellValues(this IEnumerable<Cell> cells, IList<SharedStringItem> sharedStrings)
+        [NotNull]
+        private static IEnumerable<string> GetCellValues([NotNull] this IEnumerable<Cell> cells, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(cells != null);
             Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
@@ -365,7 +371,7 @@
             }
         }
 
-        private static IEnumerable<string> GetLanguageColumnHeaders(this CultureKey language, IResourceScope scope)
+        private static IEnumerable<string> GetLanguageColumnHeaders([NotNull] this CultureKey language, IResourceScope scope)
         {
             Contract.Requires(language != null);
 
@@ -378,7 +384,7 @@
                 yield return cultureKeyName;
         }
 
-        private static IEnumerable<string> GetLanguageDataColumns(this ResourceTableEntry entry, CultureKey language, IResourceScope scope)
+        private static IEnumerable<string> GetLanguageDataColumns([NotNull] this ResourceTableEntry entry, [NotNull] CultureKey language, IResourceScope scope)
         {
             Contract.Requires(entry != null);
             Contract.Requires(language != null);
@@ -398,7 +404,7 @@
         /// <returns>
         /// The header line.
         /// </returns>
-        private static IEnumerable<IEnumerable<string>> GetHeaderRows(this IEnumerable<CultureKey> languages, IResourceScope scope)
+        private static IEnumerable<IEnumerable<string>> GetHeaderRows([NotNull] this IEnumerable<CultureKey> languages, IResourceScope scope)
         {
             Contract.Requires(languages != null);
 
@@ -407,7 +413,7 @@
             yield return _fixedColumnHeaders.Concat(languageColumnHeaders);
         }
 
-        private static IEnumerable<string> GetLanguageColumnHeaders(this IEnumerable<CultureKey> languages, IResourceScope scope)
+        private static IEnumerable<string> GetLanguageColumnHeaders([NotNull] this IEnumerable<CultureKey> languages, IResourceScope scope)
         {
             Contract.Requires(languages != null);
             return languages.SelectMany(lang => lang.GetLanguageColumnHeaders(scope));
@@ -422,7 +428,8 @@
         /// <returns>
         /// The data lines.
         /// </returns>
-        private static IEnumerable<IEnumerable<string>> GetDataRows(this ResourceEntity entity, IEnumerable<CultureKey> languages, IResourceScope scope)
+        [NotNull]
+        private static IEnumerable<IEnumerable<string>> GetDataRows([NotNull] this ResourceEntity entity, [NotNull] IEnumerable<CultureKey> languages, IResourceScope scope)
         {
             Contract.Requires(entity != null);
             Contract.Requires(languages != null);
@@ -442,7 +449,7 @@
         /// <returns>
         /// The columns of this line.
         /// </returns>
-        private static IEnumerable<string> GetDataRow(this ResourceTableEntry entry, IEnumerable<CultureKey> languages, IResourceScope scope)
+        private static IEnumerable<string> GetDataRow([NotNull] this ResourceTableEntry entry, [NotNull] IEnumerable<CultureKey> languages, IResourceScope scope)
         {
             Contract.Requires(entry != null);
             Contract.Requires(languages != null);
@@ -450,7 +457,7 @@
             return new[] { entry.Key }.Concat(entry.GetLanguageDataColumns(languages, scope));
         }
 
-        private static IEnumerable<string> GetLanguageDataColumns(this ResourceTableEntry entry, IEnumerable<CultureKey> languages, IResourceScope scope)
+        private static IEnumerable<string> GetLanguageDataColumns([NotNull] this ResourceTableEntry entry, [NotNull] IEnumerable<CultureKey> languages, IResourceScope scope)
         {
             Contract.Requires(entry != null);
             Contract.Requires(languages != null);
@@ -469,7 +476,8 @@
             return container;
         }
 
-        private static IEnumerable<MultipleSheetEntity> GetMultipleSheetEntities(ResourceManager resourceManager)
+        [NotNull]
+        private static IEnumerable<MultipleSheetEntity> GetMultipleSheetEntities([NotNull] ResourceManager resourceManager)
         {
             Contract.Requires(resourceManager != null);
             Contract.Ensures(Contract.Result<IEnumerable<MultipleSheetEntity>>() != null);
@@ -485,11 +493,13 @@
         private class MultipleSheetEntity
         {
             private const int MaxSheetNameLength = 31;
+            [NotNull]
             private readonly ResourceEntity _resourceEntity;
             private readonly UInt32Value _sheetId;
+            [NotNull]
             private readonly string _sheetName;
 
-            public MultipleSheetEntity(ResourceEntity resourceEntity, int index, ISet<string> uniqueNames)
+            public MultipleSheetEntity([NotNull] ResourceEntity resourceEntity, int index, [NotNull] ISet<string> uniqueNames)
             {
                 Contract.Requires(resourceEntity != null);
                 Contract.Requires(uniqueNames != null);
@@ -503,7 +513,8 @@
                 _sheetId = UInt32Value.FromUInt32((uint)index + 1);
             }
 
-            private static string GetSheetName(ResourceEntity resourceEntity, ISet<string> uniqueNames)
+            [NotNull]
+            private static string GetSheetName([NotNull] ResourceEntity resourceEntity, [NotNull] ISet<string> uniqueNames)
             {
                 Contract.Requires(resourceEntity != null);
                 Contract.Requires(uniqueNames != null);
@@ -526,7 +537,8 @@
                 return name;
             }
 
-            private static string GenrateShortName(int i, string name)
+            [NotNull]
+            private static string GenrateShortName(int i, [NotNull] string name)
             {
                 Contract.Requires(name != null);
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -538,6 +550,7 @@
                 return name.Substring(0, prefixLenght) + suffix;
             }
 
+            [NotNull]
             public string SheetName
             {
                 get
@@ -547,6 +560,7 @@
                 }
             }
 
+            [NotNull]
             public ResourceEntity ResourceEntity
             {
                 get
@@ -571,6 +585,7 @@
                 };
             }
 
+            [NotNull]
             public IEnumerable<IEnumerable<string>> GetDataRows(IResourceScope scope)
             {
                 Contract.Ensures(Contract.Result<IEnumerable<IEnumerable<string>>>() != null);
@@ -594,7 +609,7 @@
 
         private class FullScope : IResourceScope
         {
-            public FullScope(ICollection<ResourceEntity> entities)
+            public FullScope([NotNull] ICollection<ResourceEntity> entities)
             {
                 Contract.Requires(entities != null);
 

@@ -10,6 +10,8 @@
     using System.Windows;
     using System.Windows.Input;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Core;
@@ -21,8 +23,10 @@
     [Export(typeof(ITracer))]
     public sealed class OutputViewModel : ObservableObject, ITracer
     {
+        [NotNull]
         private readonly ObservableCollection<string> _lines = new ObservableCollection<string>();
 
+        [NotNull]
         public ICollection<string> Lines
         {
             get
@@ -33,6 +37,7 @@
             }
         }
 
+        [NotNull]
         public ICommand CopyCommand
         {
             get
@@ -48,7 +53,7 @@
             Clipboard.SetText(string.Join(Environment.NewLine, _lines));
         }
 
-        private void Append(string prefix, string value)
+        private void Append([NotNull] string prefix, [NotNull] string value)
         {
             Contract.Requires(prefix != null);
             Contract.Requires(value != null);

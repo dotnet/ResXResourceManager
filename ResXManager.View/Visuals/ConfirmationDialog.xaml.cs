@@ -7,6 +7,8 @@
     using System.Windows.Controls;
     using System.Windows.Input;
 
+    using JetBrains.Annotations;
+
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
@@ -40,6 +42,7 @@
             return window.ShowDialog();
         }
 
+        [NotNull]
         public ICommand CommitCommand
         {
             get

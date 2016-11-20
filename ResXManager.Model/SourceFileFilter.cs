@@ -5,11 +5,14 @@
     using System.Diagnostics.Contracts;
     using System.Linq;
 
+    using JetBrains.Annotations;
+
     public class SourceFileFilter : ISourceFileFilter
     {
+        [NotNull]
         private readonly string[] _extensions;
 
-        public SourceFileFilter(Configuration configuration)
+        public SourceFileFilter([NotNull] Configuration configuration)
         {
             Contract.Requires(configuration != null);
 

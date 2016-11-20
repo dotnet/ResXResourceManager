@@ -26,12 +26,13 @@
         private readonly ITranslator[] _translators;
 
         [ImportingConstructor]
-        public TranslatorHost([ImportMany][NotNull] ITranslator[] translators)
+        public TranslatorHost([ImportMany][NotNull][ItemNotNull] ITranslator[] translators)
         {
             Contract.Requires(translators != null);
 
             _changeThrottle = new Throttle(TimeSpan.FromSeconds(1), SaveConfiguration);
             _translators = translators;
+            // ReSharper disable once PossibleNullReferenceException
             _translators.ForEach(translator => translator.PropertyChanged += (_, __) => _changeThrottle.Tick());
 
             var settings = Settings.Default;

@@ -5,8 +5,9 @@
     using System.Windows;
     using System.Windows.Controls;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Translators;
 
     /// <summary>
     ///     Interaction logic for TranslatorConfiguration.xaml
@@ -29,7 +30,7 @@
         public static readonly DependencyProperty TranslatorsProperty =
             DependencyProperty.Register("Translators", typeof (IEnumerable<ITranslator>), typeof (TranslatorConfiguration));
 
-        private void TabControl_Loaded(object sender, RoutedEventArgs e)
+        private void TabControl_Loaded([NotNull] object sender, RoutedEventArgs e)
         {
             Contract.Requires(sender != null);
 

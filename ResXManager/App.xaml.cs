@@ -8,6 +8,8 @@
     using System.Reflection;
     using System.Windows;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Desktop.Composition;
@@ -19,6 +21,7 @@
     /// </summary>
     public sealed partial class App : IDisposable
     {
+        [NotNull]
         private readonly ICompositionHost _compositionHost = new CompositionHost();
 
 #if DEBUG

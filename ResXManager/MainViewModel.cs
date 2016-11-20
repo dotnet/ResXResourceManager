@@ -12,6 +12,8 @@
     using System.Windows;
     using System.Windows.Input;
 
+    using JetBrains.Annotations;
+
     using Microsoft.WindowsAPICodePack.Dialogs;
 
     using tomenglertde.ResXManager.Infrastructure;
@@ -26,14 +28,19 @@
     [VisualCompositionExport(RegionId.Main)]
     internal class MainViewModel : ObservableObject
     {
+        [NotNull]
         private readonly ResourceManager _resourceManager;
+        [NotNull]
         private readonly ITracer _tracer;
+        [NotNull]
         private readonly SourceFilesProvider _sourceFilesProvider;
+        [NotNull]
         private readonly Configuration _configuration;
+        [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
 
         [ImportingConstructor]
-        public MainViewModel(ResourceManager resourceManager, Configuration configuration, ResourceViewModel resourceViewModel, ITracer tracer, SourceFilesProvider sourceFilesProvider)
+        public MainViewModel([NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, [NotNull] ResourceViewModel resourceViewModel, [NotNull] ITracer tracer, [NotNull] SourceFilesProvider sourceFilesProvider)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(configuration != null);
@@ -74,6 +81,7 @@
 
         public ResourceManager ResourceManager => _resourceManager;
 
+        [NotNull]
         public SourceFilesProvider SourceFilesProvider
         {
             get
@@ -137,7 +145,7 @@
             }
         }
 
-        private bool CanEdit(ResourceEntity entity, CultureKey cultureKey)
+        private bool CanEdit([NotNull] ResourceEntity entity, CultureKey cultureKey)
         {
             Contract.Requires(entity != null);
 
@@ -203,7 +211,7 @@
         }
 
         [Localizable(false)]
-        private static string FormatFileNames(IEnumerable<string> lockedFiles)
+        private static string FormatFileNames([NotNull] IEnumerable<string> lockedFiles)
         {
             Contract.Requires(lockedFiles != null);
 
@@ -226,11 +234,12 @@
     [Export(typeof(ISourceFilesProvider))]
     internal class SourceFilesProvider : ObservableObject, ISourceFilesProvider
     {
+        [NotNull]
         private readonly Configuration _configuration;
         private string _folder;
 
         [ImportingConstructor]
-        public SourceFilesProvider(Configuration configuration)
+        public SourceFilesProvider([NotNull] Configuration configuration)
         {
             Contract.Requires(configuration != null);
 

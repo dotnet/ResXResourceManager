@@ -5,6 +5,8 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
 
@@ -13,10 +15,11 @@
     [Export(typeof(ITracer))]
     public class OutputWindowTracer : ITracer
     {
+        [NotNull]
         private readonly IServiceProvider _serviceProvider;
 
         [ImportingConstructor]
-        public OutputWindowTracer(IVsServiceProvider serviceProvider)
+        public OutputWindowTracer([NotNull] IVsServiceProvider serviceProvider)
         {
             Contract.Requires(serviceProvider != null);
             _serviceProvider = serviceProvider;

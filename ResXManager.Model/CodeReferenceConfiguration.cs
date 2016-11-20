@@ -73,6 +73,7 @@
             }
         }
 
+        [NotNull]
         public IEnumerable<string> ParseExtensions()
         {
             Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
@@ -90,7 +91,7 @@
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        private void SetProperty<T>(ref T backingField, T value, string propertyName)
+        private void SetProperty<T>(ref T backingField, T value, [NotNull] string propertyName)
         {
             Contract.Requires(!string.IsNullOrEmpty(propertyName));
 
@@ -114,6 +115,7 @@
         private ObservablePropertyChangeTracker<CodeReferenceConfigurationItem> _changeTracker;
 
         [DataMember(Name = "Items")]
+        [NotNull]
         public ObservableCollection<CodeReferenceConfigurationItem> Items
         {
             get
@@ -138,6 +140,7 @@
             }
         }
 
+        [NotNull]
         public static CodeReferenceConfiguration Default
         {
             get

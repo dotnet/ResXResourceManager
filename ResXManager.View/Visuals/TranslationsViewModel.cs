@@ -10,6 +10,8 @@
     using System.Linq;
     using System.Windows.Input;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Translators;
@@ -26,22 +28,30 @@
     [VisualCompositionExport(RegionId.Content, Sequence = 2)]
     internal class TranslationsViewModel : ObservableObject
     {
+        [NotNull]
         private readonly TranslatorHost _translatorHost;
+        [NotNull]
         private readonly ResourceManager _resourceManager;
+        [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
+        [NotNull]
         private readonly Configuration _configuration;
 
+        [NotNull]
         private readonly ObservableCollection<TranslationItem> _selectedItems = new ObservableCollection<TranslationItem>();
+        [NotNull]
         private readonly ObservableCollection<CultureKey> _selectedTargetCultures = new ObservableCollection<CultureKey>();
 
         private CultureKey _sourceCulture;
+        [NotNull]
         private ICollection<TranslationItem> _items = new TranslationItem[0];
         private ITranslationSession _translationSession;
+        [NotNull]
         private ICollection<CultureKey> _allTargetCultures = new CultureKey[0];
 
 
         [ImportingConstructor]
-        public TranslationsViewModel(TranslatorHost translatorHost, ResourceManager resourceManager, ResourceViewModel resourceViewModel, Configuration configuration)
+        public TranslationsViewModel([NotNull] TranslatorHost translatorHost, [NotNull] ResourceManager resourceManager, [NotNull] ResourceViewModel resourceViewModel, [NotNull] Configuration configuration)
         {
             Contract.Requires(translatorHost != null);
             Contract.Requires(resourceManager != null);
@@ -83,6 +93,7 @@
             }
         }
 
+        [NotNull]
         public ICollection<CultureKey> AllTargetCultures
         {
             get
@@ -102,6 +113,7 @@
             }
         }
 
+        [NotNull]
         public ICollection<CultureKey> SelectedTargetCultures
         {
             get
@@ -112,6 +124,7 @@
             }
         }
 
+        [NotNull]
         public ICollection<TranslationItem> Items
         {
             get
@@ -128,6 +141,7 @@
             }
         }
 
+        [NotNull]
         public ICollection<TranslationItem> SelectedItems
         {
             get
@@ -150,6 +164,7 @@
             }
         }
 
+        [NotNull]
         public ICommand StartCommand
         {
             get
@@ -160,6 +175,7 @@
             }
         }
 
+        [NotNull]
         public ICommand RestartCommand
         {
             get
@@ -170,6 +186,7 @@
             }
         }
 
+        [NotNull]
         public ICommand ApplyAllCommand
         {
             get
@@ -180,6 +197,7 @@
             }
         }
 
+        [NotNull]
         public ICommand ApplySelectedCommand
         {
             get
@@ -190,6 +208,7 @@
             }
         }
 
+        [NotNull]
         public ICommand StopCommand
         {
             get
@@ -213,7 +232,7 @@
             _translationSession?.Cancel();
         }
 
-        private void Apply(IEnumerable<TranslationItem> items)
+        private void Apply([NotNull] IEnumerable<TranslationItem> items)
         {
             Contract.Requires(items != null);
 
@@ -237,6 +256,7 @@
 
         private bool IsSessionRunning => _translationSession != null && !_translationSession.IsComplete && !_translationSession.IsCanceled;
 
+        [NotNull]
         private static IEnumerable<CultureKey> UnselectedTargetCultures
         {
             get
@@ -279,7 +299,8 @@
             UnselectedTargetCultures = _allTargetCultures.Concat(UnselectedTargetCultures).Distinct().Except(_selectedTargetCultures);
         }
 
-        private static ICollection<TranslationItem> GetItemsToTranslate(IEnumerable<ResourceTableEntry> resourceTableEntries, CultureKey sourceCulture, string translationPrefix, IEnumerable<CultureKey> targetCultures)
+        [NotNull]
+        private static ICollection<TranslationItem> GetItemsToTranslate([NotNull] IEnumerable<ResourceTableEntry> resourceTableEntries, [NotNull] CultureKey sourceCulture, string translationPrefix, [NotNull] IEnumerable<CultureKey> targetCultures)
         {
             Contract.Requires(resourceTableEntries != null);
             Contract.Requires(sourceCulture != null);
@@ -296,7 +317,7 @@
                         .Select(item => new TranslationItem(item.Entry, item.Source, targetCulture))));
         }
 
-        private static void ApplyExistingTranslations(ICollection<ResourceTableEntry> resourceTableEntries, IEnumerable<TranslationItem> items, CultureKey sourceCulture)
+        private static void ApplyExistingTranslations([NotNull] ICollection<ResourceTableEntry> resourceTableEntries, [NotNull] IEnumerable<TranslationItem> items, [NotNull] CultureKey sourceCulture)
         {
             Contract.Requires(resourceTableEntries != null);
             Contract.Requires(items != null);

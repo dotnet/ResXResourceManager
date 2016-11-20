@@ -8,6 +8,8 @@
     using System.Windows;
     using System.Windows.Media;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf.Composition;
@@ -19,10 +21,11 @@
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class VsixShellView
     {
+        [NotNull]
         private readonly ThemeManager _themeManager;
 
         [ImportingConstructor]
-        public VsixShellView(ExportProvider exportProvider, ThemeManager themeManager)
+        public VsixShellView([NotNull] ExportProvider exportProvider, [NotNull] ThemeManager themeManager)
         {
             Contract.Requires(exportProvider != null);
             Contract.Requires(themeManager != null);

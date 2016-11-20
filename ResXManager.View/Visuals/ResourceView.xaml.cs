@@ -10,6 +10,8 @@
     using System.Linq;
     using System.Windows;
 
+    using JetBrains.Annotations;
+
     using Microsoft.Win32;
 
     using tomenglertde.ResXManager.Infrastructure;
@@ -27,11 +29,13 @@
     [PartCreationPolicy(CreationPolicy.Shared)]
     public partial class ResourceView
     {
+        [NotNull]
         private readonly ResourceManager _resourceManager;
+        [NotNull]
         private readonly Configuration _configuration;
 
         [ImportingConstructor]
-        public ResourceView(ExportProvider exportProvider)
+        public ResourceView([NotNull] ExportProvider exportProvider)
         {
             Contract.Requires(exportProvider != null);
 

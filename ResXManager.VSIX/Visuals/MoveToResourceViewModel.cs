@@ -14,6 +14,8 @@
 
     using EnvDTE;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.VSIX.Properties;
 
@@ -22,10 +24,14 @@
 
     internal class MoveToResourceViewModel : ObservableObject
     {
+        [NotNull]
         private readonly ICollection<string> _patterns;
         private readonly ICollection<ResourceTableEntry> _existingEntries;
+        [NotNull]
         private readonly ICollection<ResourceEntity> _resourceEntities;
+        [NotNull]
         private readonly ObservableCollection<string> _replacements = new ObservableCollection<string>();
+        [NotNull]
         private readonly string _extension;
 
         private ResourceEntity _selectedResourceEntity;
@@ -38,7 +44,7 @@
         private int _selectedReplacementIndex;
         private bool _isUpdating;
 
-        public MoveToResourceViewModel(ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text, string extension, string className, string functionName)
+        public MoveToResourceViewModel([NotNull] ICollection<string> patterns, [NotNull] ICollection<ResourceEntity> resourceEntities, [NotNull] string text, [NotNull] string extension, string className, string functionName)
         {
             Contract.Requires(patterns != null);
             Contract.Requires(resourceEntities != null);
@@ -277,7 +283,7 @@
             _isUpdating = false;
         }
 
-        private string EvaluatePattern(string pattern)
+        private string EvaluatePattern([NotNull] string pattern)
         {
             Contract.Requires(pattern != null);
 
@@ -290,7 +296,7 @@
                 .Replace(@"$Namespace", localNamespace);
         }
 
-        private static string CreateKey(string text, string className, string functionName)
+        private static string CreateKey([NotNull] string text, string className, string functionName)
         {
             Contract.Requires(text != null);
 

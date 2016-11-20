@@ -5,16 +5,18 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    using JetBrains.Annotations;
+
     using TomsToolbox.Desktop.Composition;
 
     [ContractClass(typeof(TracerContract))]
     public interface ITracer
     {
-        void TraceError([Localizable(false)] string value);
+        void TraceError([Localizable(false)][NotNull] string value);
 
-        void TraceWarning([Localizable(false)] string value);
+        void TraceWarning([Localizable(false)][NotNull] string value);
 
-        void WriteLine([Localizable(false)] string value);
+        void WriteLine([Localizable(false)][NotNull] string value);
     }
 
     [ContractClassFor(typeof(ITracer))]
@@ -41,7 +43,7 @@
 
     public static class TracerExtensions
     {
-        public static void TraceError(this ITracer tracer, [Localizable(false)] string format, params object[] args)
+        public static void TraceError([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull] params object[] args)
         {
             Contract.Requires(tracer != null);
             Contract.Requires(format != null);
@@ -50,7 +52,7 @@
             tracer.TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
-        public static void TraceWarning(this ITracer tracer, [Localizable(false)] string format, params object[] args)
+        public static void TraceWarning([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull] params object[] args)
         {
             Contract.Requires(tracer != null);
             Contract.Requires(format != null);
@@ -59,7 +61,7 @@
             tracer.TraceWarning(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
-        public static void WriteLine(this ITracer tracer, [Localizable(false)] string format, params object[] args)
+        public static void WriteLine([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull] params object[] args)
         {
             Contract.Requires(tracer != null);
             Contract.Requires(format != null);
@@ -68,7 +70,7 @@
             tracer.WriteLine(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
-        public static void TraceError(this ExportProvider exportProvider, [Localizable(false)] string format, params object[] args)
+        public static void TraceError([NotNull] this ExportProvider exportProvider, [Localizable(false)][NotNull] string format, [NotNull] params object[] args)
         {
             Contract.Requires(exportProvider != null);
             Contract.Requires(format != null);
@@ -77,7 +79,7 @@
             exportProvider.GetExportedValue<ITracer>().TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
-        public static void TraceError(this ICompositionHost exportProvider, [Localizable(false)] string format, params object[] args)
+        public static void TraceError([NotNull] this ICompositionHost exportProvider, [Localizable(false)][NotNull] string format, [NotNull] params object[] args)
         {
             Contract.Requires(exportProvider != null);
             Contract.Requires(format != null);
@@ -86,7 +88,7 @@
             exportProvider.GetExportedValue<ITracer>().TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
-        public static void TraceError(this ExportProvider exportProvider, [Localizable(false)] string message)
+        public static void TraceError([NotNull] this ExportProvider exportProvider, [Localizable(false)][NotNull] string message)
         {
             Contract.Requires(exportProvider != null);
             Contract.Requires(message != null);
@@ -94,7 +96,7 @@
             exportProvider.GetExportedValue<ITracer>().TraceError(message);
         }
 
-        public static void TraceError(this ICompositionHost exportProvider, [Localizable(false)] string message)
+        public static void TraceError([NotNull] this ICompositionHost exportProvider, [Localizable(false)][NotNull] string message)
         {
             Contract.Requires(exportProvider != null);
             Contract.Requires(message != null);

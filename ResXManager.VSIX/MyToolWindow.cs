@@ -16,6 +16,8 @@
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
 
+    using JetBrains.Annotations;
+
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -38,12 +40,18 @@
     [Guid("79664857-03bf-4bca-aa54-ec998b3328f8")]
     public sealed class MyToolWindow : ToolWindowPane, IVsServiceProvider, ISourceFilesProvider
     {
+        [NotNull]
         private readonly ICompositionHost _compositionHost = new CompositionHost();
 
+        [NotNull]
         private readonly ITracer _trace;
+        [NotNull]
         private readonly ResourceManager _resourceManager;
+        [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
+        [NotNull]
         private readonly Configuration _configuration;
+        [NotNull]
         private readonly PerformanceTracer _performanceTracer;
 
         private EnvDTE.DTE _dte;
@@ -90,6 +98,7 @@
             }
         }
 
+        [NotNull]
         public ResourceManager ResourceManager
         {
             get
@@ -100,6 +109,7 @@
             }
         }
 
+        [NotNull]
         public ResourceViewModel ResourceViewModel
         {
             get
@@ -110,6 +120,7 @@
             }
         }
 
+        [NotNull]
         public ICompositionHost CompositionHost
         {
             get
@@ -222,7 +233,7 @@
         }
 
         [Localizable(false)]
-        private void CreateWebBrowser(string url)
+        private void CreateWebBrowser([NotNull] string url)
         {
             Contract.Requires(url != null);
 
@@ -250,7 +261,7 @@
             }
         }
 
-        private bool CanEdit(ResourceEntity entity, CultureKey cultureKey)
+        private bool CanEdit([NotNull] ResourceEntity entity, CultureKey cultureKey)
         {
             Contract.Requires(entity != null);
 
@@ -320,7 +331,8 @@
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private Tuple<string, EnvDTE.Window>[] GetLanguagesOpenedInAnotherEditor(IEnumerable<ResourceLanguage> languages)
+        [NotNull]
+        private Tuple<string, EnvDTE.Window>[] GetLanguagesOpenedInAnotherEditor([NotNull] IEnumerable<ResourceLanguage> languages)
         {
             Contract.Requires(languages != null);
             Contract.Ensures(Contract.Result<Tuple<string, EnvDTE.Window>[]>() != null);
@@ -345,7 +357,7 @@
             }
         }
 
-        private bool QueryEditFiles(string[] lockedFiles)
+        private bool QueryEditFiles([NotNull] string[] lockedFiles)
         {
             Contract.Requires(lockedFiles != null);
             var service = (IVsQueryEditQuerySave2)GetService(typeof(SVsQueryEditQuerySave));
@@ -363,7 +375,7 @@
             return true;
         }
 
-        private static string[] GetLockedFiles(IEnumerable<ResourceLanguage> languages)
+        private static string[] GetLockedFiles([NotNull] IEnumerable<ResourceLanguage> languages)
         {
             Contract.Requires(languages != null);
 
@@ -372,7 +384,7 @@
                 .ToArray();
         }
 
-        private bool AddLanguage(ResourceEntity entity, CultureInfo culture)
+        private bool AddLanguage([NotNull] ResourceEntity entity, [NotNull] CultureInfo culture)
         {
             Contract.Requires(entity != null);
             Contract.Requires(culture != null);
@@ -408,7 +420,7 @@
             return true;
         }
 
-        private void AddProjectItems(ResourceEntity entity, ResourceLanguage neutralLanguage, string languageFileName)
+        private void AddProjectItems([NotNull] ResourceEntity entity, [NotNull] ResourceLanguage neutralLanguage, [NotNull] string languageFileName)
         {
             Contract.Requires(entity != null);
             Contract.Requires(neutralLanguage != null);
@@ -449,7 +461,7 @@
         }
 
         [Localizable(false)]
-        private static string FormatFileNames(IEnumerable<string> lockedFiles)
+        private static string FormatFileNames([NotNull] IEnumerable<string> lockedFiles)
         {
             Contract.Requires(lockedFiles != null);
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));

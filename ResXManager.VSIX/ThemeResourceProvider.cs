@@ -3,7 +3,6 @@
     using System.ComponentModel.Composition;
     using System.Windows;
 
-    using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Styles;
 
     using TomsToolbox.Core;

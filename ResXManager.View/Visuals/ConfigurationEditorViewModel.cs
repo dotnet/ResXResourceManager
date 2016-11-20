@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Windows.Input;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
@@ -17,11 +19,13 @@
     [VisualCompositionExport(RegionId.Content, Sequence = 3)]
     internal class ConfigurationEditorViewModel : ObservableObject
     {
+        [NotNull]
         private readonly ResourceManager _resourceManager;
+        [NotNull]
         private readonly Configuration _configuration;
 
         [ImportingConstructor]
-        public ConfigurationEditorViewModel(ResourceManager resourceManager, Configuration configuration)
+        public ConfigurationEditorViewModel([NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(configuration != null);
@@ -31,6 +35,7 @@
             _resourceManager.Loaded += (_, __) => OnPropertyChanged(nameof(Configuration));
         }
 
+        [NotNull]
         public ResourceManager ResourceManager
         {
             get
@@ -41,6 +46,7 @@
             }
         }
 
+        [NotNull]
         public Configuration Configuration
         {
             get
@@ -51,6 +57,7 @@
             }
         }
 
+        [NotNull]
         public ICommand SortNodesByKeyCommand
         {
             get

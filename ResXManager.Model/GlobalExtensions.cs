@@ -3,6 +3,8 @@
     using System.Diagnostics.Contracts;
     using System.IO;
 
+    using JetBrains.Annotations;
+
     using TomsToolbox.Core;
 
     /// <summary>
@@ -10,7 +12,8 @@
     /// </summary>
     public static class GlobalExtensions
     {
-        public static string ReplaceInvalidFileNameChars(this string value, char replacement)
+        [NotNull]
+        public static string ReplaceInvalidFileNameChars([NotNull] this string value, char replacement)
         {
             Contract.Requires(value != null);
             Contract.Ensures(Contract.Result<string>() != null);

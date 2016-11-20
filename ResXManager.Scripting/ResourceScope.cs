@@ -6,6 +6,8 @@
     using System.Diagnostics.Contracts;
     using System.Linq;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
@@ -13,7 +15,7 @@
 
     internal class ResourceScope : IResourceScope
     {
-        public ResourceScope(object entries, object languages, object comments)
+        public ResourceScope([NotNull] object entries, [NotNull] object languages, [NotNull] object comments)
         {
             Contract.Requires(entries != null);
             Contract.Requires(languages != null);
@@ -55,14 +57,14 @@
 
     internal static class ExtensionMethods
     {
-        public static IEnumerable<T> PsCast<T>(this IEnumerable items)
+        public static IEnumerable<T> PsCast<T>([NotNull] this IEnumerable items)
         {
             Contract.Requires(items != null);
 
             return items.OfType<object>().Select(PsObjectCast<T>);
         }
 
-        public static T PsObjectCast<T>(this object item)
+        public static T PsObjectCast<T>([NotNull] this object item)
         {
             Contract.Requires(item != null);
 

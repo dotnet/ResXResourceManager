@@ -4,8 +4,6 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
-    using TomsToolbox.Core;
-
     public static class ExtensionMethods
     {
         /// <summary>

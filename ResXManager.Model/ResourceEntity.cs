@@ -8,6 +8,8 @@
     using System.IO;
     using System.Linq;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Core;
@@ -20,20 +22,30 @@
     /// </summary>
     public class ResourceEntity : ObservableObject, IComparable<ResourceEntity>, IComparable, IEquatable<ResourceEntity>
     {
+        [NotNull]
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
+        [NotNull]
         private readonly ResourceManager _container;
+        [NotNull]
         private readonly string _projectName;
+        [NotNull]
         private readonly string _baseName;
+        [NotNull]
         private readonly string _directoryName;
+        [NotNull]
         private readonly ObservableCollection<ResourceTableEntry> _resourceTableEntries;
+        [NotNull]
         private readonly ReadOnlyObservableCollection<ResourceTableEntry> _readOnlyResourceTableEntries;
+        [NotNull]
         private readonly string _displayName;
+        [NotNull]
         private readonly string _relativePath;
+        [NotNull]
         private readonly string _sortKey;
 
         private ProjectFile _neutralProjectFile;
 
-        internal ResourceEntity(ResourceManager container, string projectName, string baseName, string directoryName, ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
+        internal ResourceEntity([NotNull] ResourceManager container, [NotNull] string projectName, [NotNull] string baseName, [NotNull] string directoryName, [NotNull] ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(container != null);
             Contract.Requires(!string.IsNullOrEmpty(projectName));
@@ -63,7 +75,7 @@
             Contract.Assume(_languages.Any());
         }
 
-        internal bool Update(ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
+        internal bool Update([NotNull] ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(files != null);
             Contract.Requires(files.Any());
@@ -110,7 +122,8 @@
             return true;
         }
 
-        private static string GetRelativePath(ICollection<ProjectFile> files)
+        [NotNull]
+        private static string GetRelativePath([NotNull] ICollection<ProjectFile> files)
         {
             Contract.Requires(files != null);
             Contract.Ensures(Contract.Result<string>() != null);
@@ -141,6 +154,7 @@
             return string.Empty;
         }
 
+        [NotNull]
         public ResourceManager Container
         {
             get
@@ -153,6 +167,7 @@
         /// <summary>
         /// Gets the containing project name of the resource entity.
         /// </summary>
+        [NotNull]
         public string ProjectName
         {
             get
@@ -165,6 +180,7 @@
         /// <summary>
         /// Gets the base name of the resource entity.
         /// </summary>
+        [NotNull]
         public string BaseName
         {
             get
@@ -174,6 +190,7 @@
             }
         }
 
+        [NotNull]
         public string RelativePath
         {
             get
@@ -183,6 +200,7 @@
             }
         }
 
+        [NotNull]
         public string UniqueName
         {
             get
@@ -192,6 +210,7 @@
             }
         }
 
+        [NotNull]
         public string DisplayName
         {
             get
@@ -204,6 +223,7 @@
         /// <summary>
         /// Gets the directory where the physical files are located.
         /// </summary>
+        [NotNull]
         public string DirectoryName
         {
             get
@@ -220,6 +240,7 @@
         /// <summary>
         /// Gets the available languages of this resource entity.
         /// </summary>
+        [NotNull]
         public ICollection<ResourceLanguage> Languages
         {
             get
@@ -232,6 +253,7 @@
         /// <summary>
         /// Gets all the entries of this resource entity.
         /// </summary>
+        [NotNull]
         public ReadOnlyObservableCollection<ResourceTableEntry> Entries
         {
             get
@@ -245,7 +267,7 @@
         /// Removes the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
-        public void Remove(ResourceTableEntry item)
+        public void Remove([NotNull] ResourceTableEntry item)
         {
             Contract.Requires(item != null);
 
@@ -262,7 +284,7 @@
         /// Adds an item with the specified key.
         /// </summary>
         /// <param name="key">The key.</param>
-        public ResourceTableEntry Add(string key)
+        public ResourceTableEntry Add([NotNull] string key)
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
 
@@ -284,7 +306,7 @@
         /// Adds the language represented by the specified file.
         /// </summary>
         /// <param name="file">The file.</param>
-        public void AddLanguage(ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
+        public void AddLanguage([NotNull] ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(file != null);
 
@@ -307,7 +329,7 @@
             return Container.CanEdit(this, cultureKey);
         }
 
-        internal void OnIndexChanged(ResourceTableEntry resourceTableEntry)
+        internal void OnIndexChanged([NotNull] ResourceTableEntry resourceTableEntry)
         {
             Contract.Requires(resourceTableEntry != null);
 
@@ -337,7 +359,8 @@
                    && string.Equals(directoryName, _directoryName, StringComparison.OrdinalIgnoreCase);
         }
 
-        private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages(IEnumerable<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
+        [NotNull]
+        private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages([NotNull] IEnumerable<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(files != null);
             Contract.Requires(files.Any());
@@ -357,7 +380,7 @@
             return languages;
         }
 
-        private static bool MergeItems(IDictionary<CultureKey, ResourceLanguage> targets, IDictionary<CultureKey, ResourceLanguage> sources)
+        private static bool MergeItems([NotNull] IDictionary<CultureKey, ResourceLanguage> targets, [NotNull] IDictionary<CultureKey, ResourceLanguage> sources)
         {
             Contract.Requires(targets != null);
             Contract.Requires(sources != null);
@@ -388,6 +411,7 @@
 
         #region IComparable/IEquatable implementation
 
+        [NotNull]
         private string SortKey
         {
             get

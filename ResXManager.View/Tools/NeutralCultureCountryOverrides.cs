@@ -7,6 +7,8 @@
     using System.Globalization;
     using System.Linq;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.View.Properties;
 
     using TomsToolbox.Core;
@@ -17,6 +19,7 @@
         private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,";
         private static readonly IEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>> _comparer = new DelegateEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>>(item => item.Key);
 
+        [NotNull]
         private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
@@ -28,7 +31,7 @@
 
         public event EventHandler<CultureOverrideEventArgs> OverrideChanged;
 
-        public CultureInfo this[CultureInfo neutralCulture]
+        public CultureInfo this[[NotNull] CultureInfo neutralCulture]
         {
             get
             {
@@ -69,7 +72,7 @@
                 handler(this, e);
         }
 
-        private static CultureInfo GetDefaultSpecificCulture(CultureInfo neutralCulture)
+        private static CultureInfo GetDefaultSpecificCulture([NotNull] CultureInfo neutralCulture)
         {
             Contract.Requires(neutralCulture != null);
 
@@ -89,6 +92,7 @@
             return specificCulture;
         }
 
+        [NotNull]
         private static IEnumerable<KeyValuePair<CultureInfo, CultureInfo>> ReadSettings()
         {
             Contract.Ensures(Contract.Result<IEnumerable<KeyValuePair<CultureInfo, CultureInfo>>>() != null);

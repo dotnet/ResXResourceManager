@@ -2,10 +2,12 @@
 {
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     [ContractClass(typeof (SourceFileFilterContract))]
     public interface ISourceFileFilter
     {
-        bool IsSourceFile(ProjectFile file);
+        bool IsSourceFile([NotNull] ProjectFile file);
     }
 
     [ContractClassFor(typeof (ISourceFileFilter))]

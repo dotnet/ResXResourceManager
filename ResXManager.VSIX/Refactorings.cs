@@ -9,6 +9,8 @@
     using System.IO;
     using System.Linq;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Visuals;
     using tomenglertde.ResXManager.VSIX.Visuals;
@@ -23,11 +25,12 @@
     [Export(typeof(IRefactorings))]
     internal class Refactorings : IRefactorings
     {
+        [NotNull]
         private readonly ExportProvider _exportProvider;
         private ResourceEntity _lastUsedEntity;
 
         [ImportingConstructor]
-        public Refactorings(ExportProvider exportProvider)
+        public Refactorings([NotNull] ExportProvider exportProvider)
         {
             Contract.Requires(exportProvider != null);
 
@@ -131,7 +134,7 @@
             return null;
         }
 
-        private static ResourceEntity GetPreferredResourceEntity(EnvDTE.Document document, IEnumerable<ResourceEntity> entities)
+        private static ResourceEntity GetPreferredResourceEntity([NotNull] EnvDTE.Document document, [NotNull] IEnumerable<ResourceEntity> entities)
         {
             Contract.Requires(document != null);
             Contract.Requires(entities != null);
@@ -148,7 +151,7 @@
             }
         }
 
-        private static bool IsInProject(ResourceEntity entity, EnvDTE.Project project)
+        private static bool IsInProject([NotNull] ResourceEntity entity, EnvDTE.Project project)
         {
             Contract.Requires(entity != null);
 
@@ -159,7 +162,7 @@
                 .Contains(project) ?? false;
         }
 
-        private static Selection GetSelection(EnvDTE.Document document)
+        private static Selection GetSelection([NotNull] EnvDTE.Document document)
         {
             Contract.Requires(document != null);
 
@@ -180,11 +183,13 @@
 
         private class Selection
         {
+            [NotNull]
             private readonly EnvDTE.TextDocument _textDocument;
+            [NotNull]
             private readonly string _line;
             private readonly EnvDTE.FileCodeModel _codeModel;
 
-            public Selection(EnvDTE.TextDocument textDocument, string line, EnvDTE.FileCodeModel codeModel)
+            public Selection([NotNull] EnvDTE.TextDocument textDocument, [NotNull] string line, EnvDTE.FileCodeModel codeModel)
             {
                 Contract.Requires(textDocument != null);
                 Contract.Requires(line != null);
@@ -195,6 +200,7 @@
             }
 
             [ContractVerification(false)]
+            [NotNull]
             public EnvDTE.VirtualPoint Begin
             {
                 get
@@ -205,6 +211,7 @@
             }
 
             [ContractVerification(false)]
+            [NotNull]
             public EnvDTE.VirtualPoint End
             {
                 get
@@ -218,6 +225,7 @@
 
             public string Text => _textDocument.Selection?.Text;
 
+            [NotNull]
             public string Line
             {
                 get

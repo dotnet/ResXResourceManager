@@ -10,6 +10,8 @@
     using System.IO;
     using System.Linq;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Core;
@@ -25,11 +27,15 @@
         private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
         private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
 
+        [NotNull]
         private readonly ISourceFilesProvider _sourceFilesProvider;
 
+        [NotNull]
         private readonly ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
+        [NotNull]
         private readonly IObservableCollection<ResourceTableEntry> _tableEntries;
 
+        [NotNull]
         private readonly ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
 
         private string _snapshot;
@@ -39,7 +45,7 @@
         public event EventHandler<LanguageEventArgs> LanguageChanged;
 
         [ImportingConstructor]
-        private ResourceManager(ISourceFilesProvider sourceFilesProvider)
+        private ResourceManager([NotNull] ISourceFilesProvider sourceFilesProvider)
         {
             Contract.Requires(sourceFilesProvider != null);
 
@@ -52,7 +58,7 @@
         /// </summary>
         /// <param name="allSourceFiles">All resource x files.</param>
         /// <param name="duplicateKeyHandling">The duplicate key handling mode.</param>
-        private void Load(IList<ProjectFile> allSourceFiles, DuplicateKeyHandling duplicateKeyHandling)
+        private void Load([NotNull] IList<ProjectFile> allSourceFiles, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(allSourceFiles != null);
 
@@ -81,6 +87,7 @@
         /// <summary>
         /// Gets the loaded resource entities.
         /// </summary>
+        [NotNull]
         public ICollection<ResourceEntity> ResourceEntities
         {
             get
@@ -94,6 +101,7 @@
         /// <summary>
         /// Gets the table entries of all entities.
         /// </summary>
+        [NotNull]
         public IObservableCollection<ResourceTableEntry> TableEntries
         {
             get
@@ -107,6 +115,7 @@
         /// <summary>
         /// Gets the cultures of all entities.
         /// </summary>
+        [NotNull]
         public ObservableCollection<CultureKey> Cultures
         {
             get
@@ -120,6 +129,7 @@
         /// <summary>
         /// Gets all system specific cultures.
         /// </summary>
+        [NotNull]
         public static IEnumerable<CultureInfo> SpecificCultures
         {
             get
@@ -149,14 +159,14 @@
             Reload(_sourceFilesProvider.SourceFiles, duplicateKeyHandling);
         }
 
-        public void Reload(IList<ProjectFile> sourceFiles, DuplicateKeyHandling duplicateKeyHandling)
+        public void Reload([NotNull] IList<ProjectFile> sourceFiles, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(sourceFiles != null);
 
             Load(sourceFiles, duplicateKeyHandling);
         }
 
-        public bool CanEdit(ResourceEntity resourceEntity, CultureKey cultureKey)
+        public bool CanEdit([NotNull] ResourceEntity resourceEntity, CultureKey cultureKey)
         {
             Contract.Requires(resourceEntity != null);
 
@@ -177,7 +187,7 @@
             Loaded?.Invoke(this, EventArgs.Empty);
         }
 
-        private void InternalLoad(IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory, DuplicateKeyHandling duplicateKeyHandling)
+        private void InternalLoad([NotNull] IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(resourceFilesByDirectory != null);
 
@@ -199,7 +209,7 @@
             OnLoaded();
         }
 
-        private bool LoadEntities(IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory, DuplicateKeyHandling duplicateKeyHandling)
+        private bool LoadEntities([NotNull] IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(fileNamesByDirectory != null);
 
@@ -269,7 +279,7 @@
             }
         }
 
-        internal void OnLanguageChanged(ResourceLanguage language)
+        internal void OnLanguageChanged([NotNull] ResourceLanguage language)
         {
             Contract.Requires(language != null);
 
@@ -312,6 +322,7 @@
             _snapshot = value;
         }
 
+        [NotNull]
         public string CreateSnapshot()
         {
             Contract.Ensures(Contract.Result<string>() != null);

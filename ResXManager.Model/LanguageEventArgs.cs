@@ -6,17 +6,21 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    using JetBrains.Annotations;
+
     public class LanguageEventArgs : EventArgs
     {
+        [NotNull]
         private readonly ResourceLanguage _language;
 
-        public LanguageEventArgs(ResourceLanguage language)
+        public LanguageEventArgs([NotNull] ResourceLanguage language)
         {
             Contract.Requires(language != null);
 
             _language = language;
         }
 
+        [NotNull]
         public ResourceLanguage Language
         {
             get
@@ -36,10 +40,11 @@
 
     public class LanguageChangingEventArgs : CancelEventArgs
     {
+        [NotNull]
         private readonly ResourceEntity _entity;
         private readonly CultureInfo _culture;
 
-        public LanguageChangingEventArgs(ResourceEntity entity, CultureInfo culture)
+        public LanguageChangingEventArgs([NotNull] ResourceEntity entity, CultureInfo culture)
         {
             Contract.Requires(entity != null);
 
@@ -47,6 +52,7 @@
             _culture = culture;
         }
 
+        [NotNull]
         public ResourceEntity Entity
         {
             get

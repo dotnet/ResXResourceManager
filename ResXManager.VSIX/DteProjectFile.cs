@@ -9,6 +9,8 @@
     using System.Runtime.InteropServices;
     using System.Xml.Linq;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Core;
@@ -16,7 +18,9 @@
 
     internal class DteProjectFile : ProjectFile
     {
+        [NotNull]
         private readonly DteSolution _solution;
+        [NotNull]
         private readonly List<EnvDTE.ProjectItem> _projectItems = new List<EnvDTE.ProjectItem>();
 
         /// <summary>
@@ -27,7 +31,7 @@
         /// <param name="projectName">Name of the project.</param>
         /// <param name="uniqueProjectName">Unique name of the project file.</param>
         /// <param name="projectItem">The project item, or null if the projectItem is not known.</param>
-        public DteProjectFile(DteSolution solution, string filePath, string projectName, string uniqueProjectName, EnvDTE.ProjectItem projectItem)
+        public DteProjectFile([NotNull] DteSolution solution, [NotNull] string filePath, string projectName, string uniqueProjectName, [NotNull] EnvDTE.ProjectItem projectItem)
             : base(filePath, solution.SolutionFolder, projectName, uniqueProjectName)
         {
             Contract.Requires(solution != null);
@@ -41,6 +45,7 @@
         /// <summary>
         /// Gets the project items.
         /// </summary>
+        [NotNull]
         public IList<EnvDTE.ProjectItem> ProjectItems
         {
             get
@@ -52,7 +57,7 @@
             }
         }
 
-        public void AddProject(string projectName, EnvDTE.ProjectItem projectItem)
+        public void AddProject([NotNull] string projectName, [NotNull] EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectName != null);
             Contract.Requires(projectItem != null);
@@ -128,6 +133,7 @@
             }
         }
 
+        [NotNull]
         public EnvDTE.ProjectItem DefaultProjectItem
         {
             get
@@ -237,7 +243,7 @@
             }
         }
 
-        private static bool IsTextTemplate(EnvDTE.ProjectItem item)
+        private static bool IsTextTemplate([NotNull] EnvDTE.ProjectItem item)
         {
             Contract.Requires(item != null);
 
@@ -246,7 +252,7 @@
             return (name != null) && name.EndsWith(@".tt", StringComparison.OrdinalIgnoreCase);
         }
 
-        private void SetTextTemplateCodeGenerator(EnvDTE.ProjectItem projectItem)
+        private void SetTextTemplateCodeGenerator([NotNull] EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
 
@@ -280,7 +286,7 @@
             Dispatcher.BeginInvoke(() => item.RunCustomTool());
         }
 
-        private static void SetCustomToolCodeGenerator(EnvDTE.ProjectItem projectItem, CodeGenerator value)
+        private static void SetCustomToolCodeGenerator([NotNull] EnvDTE.ProjectItem projectItem, CodeGenerator value)
         {
             Contract.Requires(projectItem != null);
 

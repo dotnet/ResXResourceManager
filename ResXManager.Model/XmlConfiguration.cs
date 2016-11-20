@@ -7,6 +7,8 @@
     using System.Linq;
     using System.Xml.Linq;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     /// <summary>
@@ -33,10 +35,15 @@
         /// </summary>
         public const string KeyAttributeName = "Key";
 
+        [NotNull]
         private readonly XDocument _document;
+        [NotNull]
         private readonly XElement _root;
+        [NotNull]
         private readonly XNamespace _namespace;
+        [NotNull]
         private readonly XName _valueName;
+        [NotNull]
         private readonly XName _keyName;
 
 
@@ -44,7 +51,7 @@
         /// Initializes a new instance of the <see cref="XmlConfiguration" /> class.
         /// </summary>
         /// <param name="tracer">The tracer.</param>
-        public XmlConfiguration(ITracer tracer)
+        public XmlConfiguration([NotNull] ITracer tracer)
             : this(tracer, null)
         {
             Contract.Requires(tracer != null);
@@ -55,7 +62,7 @@
         /// </summary>
         /// <param name="tracer">The tracer.</param>
         /// <param name="reader">The reader providing the XML stream.</param>
-        public XmlConfiguration(ITracer tracer, TextReader reader)
+        public XmlConfiguration([NotNull] ITracer tracer, TextReader reader)
         {
             Contract.Requires(tracer != null);
 
@@ -124,7 +131,7 @@
         /// <returns>
         /// The value stored in the XML file, or null if the value does not exist.
         /// </returns>
-        public string GetValue(string key, string defaultValue)
+        public string GetValue([NotNull] string key, string defaultValue)
         {
             Contract.Requires(key != null);
 
@@ -142,7 +149,7 @@
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value. If value is null, the node will be deleted from the xml stream.</param>
-        public void SetValue(string key, string value)
+        public void SetValue([NotNull] string key, string value)
         {
             Contract.Requires(key != null);
 
@@ -178,7 +185,7 @@
         /// Saves the XML stream to the specified writer.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        public void Save(TextWriter writer)
+        public void Save([NotNull] TextWriter writer)
         {
             Contract.Requires(writer != null);
 
@@ -189,7 +196,7 @@
         /// Saves the XML stream to the file with the specified file name.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
-        public void Save(string fileName)
+        public void Save([NotNull] string fileName)
         {
             Contract.Requires(!string.IsNullOrEmpty(fileName));
 

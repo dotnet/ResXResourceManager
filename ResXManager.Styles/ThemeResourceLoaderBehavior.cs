@@ -3,8 +3,6 @@
     using System.Windows;
     using System.Windows.Interactivity;
 
-    using tomenglertde.ResXManager.Infrastructure;
-
     using TomsToolbox.Wpf.Composition;
 
     public class ThemeResourceLoaderBehavior : Behavior<Window>

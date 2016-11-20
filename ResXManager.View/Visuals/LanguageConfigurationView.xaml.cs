@@ -11,10 +11,11 @@
     using System.Windows;
     using System.Windows.Input;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.View.Tools;
 
-    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf.Composition;
 
@@ -26,7 +27,7 @@
     public partial class LanguageConfigurationView
     {
         [ImportingConstructor]
-        public LanguageConfigurationView(ExportProvider exportProvider)
+        public LanguageConfigurationView([NotNull] ExportProvider exportProvider)
         {
             Contract.Requires(exportProvider != null);
 

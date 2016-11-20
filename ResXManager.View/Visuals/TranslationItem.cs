@@ -8,6 +8,8 @@ namespace tomenglertde.ResXManager.View.Visuals
     using System.Linq;
     using System.Windows.Data;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
@@ -15,15 +17,20 @@ namespace tomenglertde.ResXManager.View.Visuals
 
     public class TranslationItem : ObservableObject, ITranslationItem
     {
+        [NotNull]
         private readonly CultureKey _targetCulture;
+        [NotNull]
         private readonly ListCollectionView _orderedResults;
+        [NotNull]
         private readonly ObservableCollection<ITranslationMatch> _results = new ObservableCollection<ITranslationMatch>();
 
         private string _translation;
+        [NotNull]
         private readonly ResourceTableEntry _entry;
+        [NotNull]
         private readonly string _source;
 
-        public TranslationItem(ResourceTableEntry entry, string source, CultureKey targetCulture)
+        public TranslationItem([NotNull] ResourceTableEntry entry, [NotNull] string source, [NotNull] CultureKey targetCulture)
         {
             Contract.Requires(entry != null);
             Contract.Requires(source != null);
@@ -39,6 +46,7 @@ namespace tomenglertde.ResXManager.View.Visuals
             _orderedResults.SortDescriptions.Add(new SortDescription("Translator.DisplayName", ListSortDirection.Ascending));
         }
 
+        [NotNull]
         public ResourceTableEntry Entry
         {
             get
@@ -49,6 +57,7 @@ namespace tomenglertde.ResXManager.View.Visuals
             }
         }
 
+        [NotNull]
         public string Source
         {
             get
@@ -61,6 +70,7 @@ namespace tomenglertde.ResXManager.View.Visuals
 
         public CultureKey TargetCulture => _targetCulture;
 
+        [NotNull]
         public IList<ITranslationMatch> Results
         {
             get
@@ -71,6 +81,7 @@ namespace tomenglertde.ResXManager.View.Visuals
             }
         }
 
+        [NotNull]
         public ICollectionView OrderedResults
         {
             get

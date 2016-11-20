@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
@@ -9,6 +8,8 @@
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
+
+    using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
@@ -22,21 +23,35 @@
     public class ResourceTableEntry : ObservableObject
     {
         private const string InvariantKey = "@Invariant";
+        [NotNull]
         private readonly Regex _duplicateKeyExpression = new Regex(@"_Duplicate\[\d+\]$");
+        [NotNull]
         private readonly ResourceEntity _container;
+        [NotNull]
         private readonly DispatcherThrottle _deferredValuesChangedThrottle;
+        [NotNull]
         private readonly DispatcherThrottle _deferredCommentChangedThrottle;
 
+        [NotNull]
         private string _key;
 
+        [NotNull]
         private IDictionary<CultureKey, ResourceLanguage> _languages;
+        [NotNull]
         private ResourceTableValues<string> _values;
+        [NotNull]
         private ResourceTableValues<string> _comments;
+        [NotNull]
         private ResourceTableValues<string> _snapshotValues;
+        [NotNull]
         private ResourceTableValues<string> _snapshotComments;
+        [NotNull]
         private ResourceTableValues<bool> _fileExists;
+        [NotNull]
         private ResourceTableValues<ICollection<string>> _valueAnnotations;
+        [NotNull]
         private ResourceTableValues<ICollection<string>> _commentAnnotations;
+        [NotNull]
         private ResourceLanguage _neutralLanguage;
 
         private ReadOnlyCollection<CodeReference> _codeReferences;
@@ -50,7 +65,7 @@
         /// <param name="key">The resource key.</param>
         /// <param name="index">The original index of the resource in the file.</param>
         /// <param name="languages">The localized values.</param>
-        internal ResourceTableEntry(ResourceEntity container, string key, double index, IDictionary<CultureKey, ResourceLanguage> languages)
+        internal ResourceTableEntry([NotNull] ResourceEntity container, [NotNull] string key, double index, [NotNull] IDictionary<CultureKey, ResourceLanguage> languages)
         {
             Contract.Requires(container != null);
             Contract.Requires(!string.IsNullOrEmpty(key));
@@ -103,7 +118,7 @@
             _commentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
         }
 
-        internal void Update(int index, IDictionary<CultureKey, ResourceLanguage> languages)
+        internal void Update(int index, [NotNull] IDictionary<CultureKey, ResourceLanguage> languages)
         {
             Contract.Requires(languages != null);
             Contract.Requires(languages.Any());
@@ -127,6 +142,7 @@
         }
 
 
+        [NotNull]
         public ResourceEntity Container
         {
             get
@@ -139,6 +155,7 @@
         /// <summary>
         /// Gets the key of the resource.
         /// </summary>
+        [NotNull]
         public string Key
         {
             get
@@ -178,6 +195,7 @@
         /// <summary>
         /// Gets or sets the comment of the neutral language.
         /// </summary>
+        [NotNull]
         public string Comment
         {
             get
@@ -195,6 +213,7 @@
         /// <summary>
         /// Gets the localized values.
         /// </summary>
+        [NotNull]
         public ResourceTableValues<string> Values
         {
             get
@@ -208,6 +227,7 @@
         /// Gets the localized comments.
         /// </summary>
         [PropertyDependency(nameof(Comment))]
+        [NotNull]
         public ResourceTableValues<string> Comments
         {
             get
@@ -218,6 +238,7 @@
         }
 
         [PropertyDependency(nameof(Snapshot))]
+        [NotNull]
         public ResourceTableValues<string> SnapshotValues
         {
             get
@@ -228,6 +249,7 @@
         }
 
         [PropertyDependency(nameof(Snapshot))]
+        [NotNull]
         public ResourceTableValues<string> SnapshotComments
         {
             get
@@ -238,6 +260,7 @@
         }
 
         [PropertyDependency(nameof(Values))]
+        [NotNull]
         public ResourceTableValues<bool> FileExists
         {
             get
@@ -248,6 +271,7 @@
         }
 
         [PropertyDependency(nameof(Values), nameof(Snapshot))]
+        [NotNull]
         public ResourceTableValues<ICollection<string>> ValueAnnotations
         {
             get
@@ -259,6 +283,7 @@
         }
 
         [PropertyDependency(nameof(Comments), nameof(Snapshot))]
+        [NotNull]
         public ResourceTableValues<ICollection<string>> CommentAnnotations
         {
             get
@@ -269,6 +294,7 @@
             }
         }
 
+        [NotNull]
         public ICollection<CultureKey> Languages
         {
             get
@@ -347,6 +373,7 @@
             }
         }
 
+        [NotNull]
         public static IEqualityComparer<ResourceTableEntry> EqualityComparer
         {
             get
@@ -382,21 +409,21 @@
             OnPropertyChanged(nameof(Index));
         }
 
-        public bool HasStringFormatParameterMismatches(IEnumerable<object> cultures)
+        public bool HasStringFormatParameterMismatches([NotNull] IEnumerable<object> cultures)
         {
             Contract.Requires(cultures != null);
 
             return HasStringFormatParameterMismatches(cultures.Select(CultureKey.Parse).Select(lang => _values.GetValue(lang)));
         }
 
-        public bool HasSnapshotDifferences(IEnumerable<object> cultures)
+        public bool HasSnapshotDifferences([NotNull] IEnumerable<object> cultures)
         {
             Contract.Requires(cultures != null);
 
             return _snapshot != null && cultures.Select(CultureKey.Parse).Any(IsSnapshotDifferent);
         }
 
-        private bool IsSnapshotDifferent(CultureKey culture)
+        private bool IsSnapshotDifferent([NotNull] CultureKey culture)
         {
             Contract.Requires(culture != null);
             Contract.Requires(_snapshot != null);
@@ -420,7 +447,7 @@
             _deferredCommentChangedThrottle.Tick();
         }
 
-        private ICollection<string> GetValueAnnotations(ResourceLanguage language)
+        private ICollection<string> GetValueAnnotations([NotNull] ResourceLanguage language)
         {
             Contract.Requires(language != null);
 
@@ -429,7 +456,7 @@
                 .ToArray();
         }
 
-        private ICollection<string> GetCommentAnnotations(ResourceLanguage language)
+        private ICollection<string> GetCommentAnnotations([NotNull] ResourceLanguage language)
         {
             Contract.Requires(language != null);
 
@@ -467,14 +494,14 @@
                 yield return Resources.StringFormatParameterMismatchError;
         }
 
-        private static bool HasStringFormatParameterMismatches(params string[] values)
+        private static bool HasStringFormatParameterMismatches([NotNull] params string[] values)
         {
             Contract.Requires(values != null);
 
             return HasStringFormatParameterMismatches((IEnumerable<string>)values);
         }
 
-        private static bool HasStringFormatParameterMismatches(IEnumerable<string> values)
+        private static bool HasStringFormatParameterMismatches([NotNull] IEnumerable<string> values)
         {
             Contract.Requires(values != null);
 

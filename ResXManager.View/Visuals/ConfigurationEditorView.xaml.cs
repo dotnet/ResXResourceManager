@@ -8,6 +8,8 @@
     using System.IO;
     using System.Windows;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf.Composition;
@@ -20,10 +22,11 @@
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class ConfigurationEditorView
     {
+        [NotNull]
         private readonly ITracer _tracer;
 
         [ImportingConstructor]
-        public ConfigurationEditorView(ExportProvider exportProvider, ITracer tracer)
+        public ConfigurationEditorView(ExportProvider exportProvider, [NotNull] ITracer tracer)
         {
             Contract.Requires(tracer != null);
 

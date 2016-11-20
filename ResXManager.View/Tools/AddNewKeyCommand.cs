@@ -8,7 +8,8 @@
     using System.Linq;
     using System.Windows;
 
-    using tomenglertde.ResXManager.Model;
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Visuals;
 
@@ -17,11 +18,13 @@
     [Export]
     internal class AddNewKeyCommand : DelegateCommand
     {
+        [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
+        [NotNull]
         private readonly ExportProvider _exportProvider;
 
         [ImportingConstructor]
-        public AddNewKeyCommand(ResourceViewModel resourceViewModel, ExportProvider exportProvider)
+        public AddNewKeyCommand([NotNull] ResourceViewModel resourceViewModel, [NotNull] ExportProvider exportProvider)
         {
             Contract.Requires(resourceViewModel != null);
             Contract.Requires(exportProvider != null);
