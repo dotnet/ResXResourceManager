@@ -57,6 +57,7 @@
 
     internal static class ExtensionMethods
     {
+        [NotNull]
         public static IEnumerable<T> PsCast<T>([NotNull] this IEnumerable items)
         {
             Contract.Requires(items != null);
@@ -64,6 +65,7 @@
             return items.OfType<object>().Select(PsObjectCast<T>);
         }
 
+        [NotNull]
         public static T PsObjectCast<T>([NotNull] this object item)
         {
             Contract.Requires(item != null);

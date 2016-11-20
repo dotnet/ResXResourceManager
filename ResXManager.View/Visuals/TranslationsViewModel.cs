@@ -70,10 +70,13 @@
             _selectedTargetCultures.CollectionChanged += SelectedTargetCultures_CollectionChanged;
         }
 
+        [NotNull]
         public ResourceManager ResourceManager => _resourceManager;
 
+        [NotNull]
         public Configuration Configuration => _configuration;
 
+        [NotNull]
         public IEnumerable<ITranslator> Translators => _translatorHost.Translators;
 
         public CultureKey SourceCulture

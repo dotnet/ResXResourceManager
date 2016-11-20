@@ -5,10 +5,13 @@
     using System.Windows.Controls;
     using System.Windows.Data;
 
+    using JetBrains.Annotations;
+
     public class CultureToImageConverter : IValueConverter
     {
         public static readonly IValueConverter Default = new CultureToImageConverter();
 
+        [NotNull]
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var imageSource = CultureToImageSourceConverter.Convert(value as CultureInfo);

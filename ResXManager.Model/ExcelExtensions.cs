@@ -209,6 +209,7 @@
             return changes;
         }
 
+        [NotNull]
         private static IList<string>[] GetTable([NotNull] this Sheet sheet, [NotNull] WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(sheet != null);
@@ -226,6 +227,7 @@
                 .SequenceEqual(_singleSheetFixedColumnHeaders);
         }
 
+        [NotNull]
         private static IList<string> GetCellValues([NotNull] this Row row, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(row != null);
@@ -266,7 +268,7 @@
 
         [ContractVerification(false)]
         [NotNull]
-        private static string GetName(this Sheet sheet)
+        private static string GetName([NotNull] this Sheet sheet)
         {
             Contract.Ensures(Contract.Result<string>() != null);
             return sheet.Name.Value;
@@ -280,6 +282,7 @@
             return sheetData.AppendItem(rowData.Aggregate(new Row(), (seed, item) => seed.AppendItem(CreateCell(item))));
         }
 
+        [NotNull]
         private static Cell CreateCell(string text)
         {
             return new Cell
@@ -306,6 +309,7 @@
             return stringTable?.OfType<SharedStringItem>().ToArray();
         }
 
+        [NotNull]
         private static string GetText([NotNull] this CellType cell, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(cell != null);
@@ -371,6 +375,7 @@
             }
         }
 
+        [ItemNotNull]
         private static IEnumerable<string> GetLanguageColumnHeaders([NotNull] this CultureKey language, IResourceScope scope)
         {
             Contract.Requires(language != null);
@@ -404,6 +409,7 @@
         /// <returns>
         /// The header line.
         /// </returns>
+        [ItemNotNull]
         private static IEnumerable<IEnumerable<string>> GetHeaderRows([NotNull] this IEnumerable<CultureKey> languages, IResourceScope scope)
         {
             Contract.Requires(languages != null);
@@ -413,6 +419,7 @@
             yield return _fixedColumnHeaders.Concat(languageColumnHeaders);
         }
 
+        [NotNull]
         private static IEnumerable<string> GetLanguageColumnHeaders([NotNull] this IEnumerable<CultureKey> languages, IResourceScope scope)
         {
             Contract.Requires(languages != null);
@@ -449,6 +456,7 @@
         /// <returns>
         /// The columns of this line.
         /// </returns>
+        [NotNull]
         private static IEnumerable<string> GetDataRow([NotNull] this ResourceTableEntry entry, [NotNull] IEnumerable<CultureKey> languages, IResourceScope scope)
         {
             Contract.Requires(entry != null);
@@ -457,6 +465,7 @@
             return new[] { entry.Key }.Concat(entry.GetLanguageDataColumns(languages, scope));
         }
 
+        [NotNull]
         private static IEnumerable<string> GetLanguageDataColumns([NotNull] this ResourceTableEntry entry, [NotNull] IEnumerable<CultureKey> languages, IResourceScope scope)
         {
             Contract.Requires(entry != null);
@@ -575,6 +584,7 @@
                 get;
             }
 
+            [NotNull]
             public Sheet CreateSheet()
             {
                 return new Sheet

@@ -66,6 +66,7 @@
             }
         }
 
+        [NotNull]
         private IEnumerable<CodeGenerator> SelectedItemsCodeGenerators()
         {
             return _resourceViewModel.SelectedEntities

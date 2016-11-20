@@ -38,6 +38,7 @@
             _resourceManager.BeginEditing += ResourceManager_BeginEditing;
         }
 
+        [NotNull]
         public ResourceManager ResourceManager => _resourceManager;
 
         public void Load(string folder)
@@ -106,6 +107,7 @@
             changes.Apply();
         }
 
+        [NotNull]
         public string CreateSnapshot()
         {
             return _resourceManager.CreateSnapshot();
@@ -121,7 +123,7 @@
             _compositionHost.Dispose();
         }
 
-        private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
+        private void ResourceManager_BeginEditing(object sender, [NotNull] ResourceBeginEditingEventArgs e)
         {
             if (!CanEdit(e.Entity, e.CultureKey))
             {

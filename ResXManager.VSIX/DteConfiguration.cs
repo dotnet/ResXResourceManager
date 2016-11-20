@@ -123,6 +123,7 @@
             }
         }
 
+        [NotNull]
         private static string GetKey(string propertyName)
         {
             return @"RESX_" + propertyName;

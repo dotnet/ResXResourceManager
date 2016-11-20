@@ -98,6 +98,7 @@
             HiddenLanguageColumns = HiddenLanguageColumns.Where(col => !string.Equals(col, key, StringComparison.OrdinalIgnoreCase));
         }
 
+        [NotNull]
         private static DataGridTextColumn CreateKeyColumn()
         {
             return new DataGridTextColumn
@@ -109,6 +110,7 @@
             };
         }
 
+        [NotNull]
         private static DataGridTextColumn CreateIndexColumn(ResourceManager resourceManager)
         {
             var elementStyle = new Style(typeof(TextBlock))
@@ -161,6 +163,7 @@
             return column;
         }
 
+        [NotNull]
         private static Image CreateCodeReferencesImage()
         {
             return new Image
@@ -170,6 +173,7 @@
             };
         }
 
+        [NotNull]
         private static DataGridColumn CreateCodeReferencesColumn([NotNull] FrameworkElement dataGrid)
         {
             Contract.Requires(dataGrid != null);
@@ -337,6 +341,7 @@
                 .Distinct();
         }
 
+        [NotNull]
         private static IEnumerable<string> GetColumnKeys<T>([NotNull] DataGrid dataGrid, [NotNull] Func<DataGridColumn, bool> predicate)
             where T : LanguageColumnHeaderBase
         {
@@ -388,6 +393,7 @@
         {
             public static readonly IValueConverter Default = new IsRightToLeftToFlowDirectionConverter();
 
+            [NotNull]
             public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
             {
                 return true.Equals(value) ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;

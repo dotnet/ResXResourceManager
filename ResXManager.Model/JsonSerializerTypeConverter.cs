@@ -101,7 +101,8 @@
         /// </returns>
         /// <exception cref="T:System.ArgumentNullException">The <paramref name="destinationType"/> parameter is null. </exception>
         /// <exception cref="T:System.NotSupportedException">The conversion cannot be performed. </exception>
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        [NotNull]
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, [NotNull] object value, Type destinationType)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));

@@ -271,7 +271,7 @@
             return hasChanged;
         }
 
-        internal void LanguageAdded(CultureKey cultureKey)
+        internal void LanguageAdded([NotNull] CultureKey cultureKey)
         {
             if (!_cultureKeys.Contains(cultureKey))
             {
@@ -286,11 +286,12 @@
             LanguageChanged?.Invoke(this, new LanguageEventArgs(language));
         }
 
-        public static bool IsValidLanguageName(string languageName)
+        public static bool IsValidLanguageName([NotNull] string languageName)
         {
             return Array.BinarySearch(_sortedCultureNames, languageName, StringComparer.OrdinalIgnoreCase) >= 0;
         }
 
+        [NotNull]
         private static string[] GetSortedCultureNames()
         {
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
@@ -305,6 +306,7 @@
             return cultureNames;
         }
 
+        [NotNull]
         private static CultureInfo[] GetSpecificCultures()
         {
             var specificCultures = CultureInfo.GetCultures(CultureTypes.AllCultures)

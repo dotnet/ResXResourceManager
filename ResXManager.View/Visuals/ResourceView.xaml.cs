@@ -89,7 +89,7 @@
             }
         }
 
-        private void CreateSnapshotCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        private void CreateSnapshotCommandConverter_Executing(object sender, [NotNull] ConfirmedCommandEventArgs e)
         {
             var dlg = new SaveFileDialog
             {
@@ -109,7 +109,7 @@
             WaitCursor.Start(this);
         }
 
-        private void LoadSnapshotCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        private void LoadSnapshotCommandConverter_Executing(object sender, [NotNull] ConfirmedCommandEventArgs e)
         {
             var dlg = new OpenFileDialog
             {
@@ -130,7 +130,7 @@
             WaitCursor.Start(this);
         }
 
-        private void ExportExcelCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        private void ExportExcelCommandConverter_Executing(object sender, [NotNull] ConfirmedCommandEventArgs e)
         {
             var dlg = new SaveFileDialog
             {
@@ -150,7 +150,7 @@
             WaitCursor.Start(this);
         }
 
-        private void ImportExcelCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        private void ImportExcelCommandConverter_Executing(object sender, [NotNull] ConfirmedCommandEventArgs e)
         {
             var dlg = new OpenFileDialog
             {
@@ -187,7 +187,7 @@
             }
         }
 
-        private void CommandConverter_Error(object sender, ErrorEventArgs e)
+        private void CommandConverter_Error(object sender, [NotNull] ErrorEventArgs e)
         {
             var ex = e.GetException();
 

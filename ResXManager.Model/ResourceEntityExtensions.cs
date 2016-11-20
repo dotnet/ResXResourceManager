@@ -39,6 +39,7 @@
             return table;
         }
 
+        [ItemNotNull]
         private static IEnumerable<string> GetTableLanguageColumnHeaders([NotNull] this CultureKey cultureKey)
         {
             Contract.Requires(cultureKey != null);
@@ -49,7 +50,7 @@
             yield return cultureName;
         }
 
-        private static IEnumerable<string> GetTableDataColumns(this ResourceTableEntry entry, CultureKey cultureKey)
+        private static IEnumerable<string> GetTableDataColumns([NotNull] this ResourceTableEntry entry, CultureKey cultureKey)
         {
             yield return entry.Comments.GetValue(cultureKey);
             yield return entry.Values.GetValue(cultureKey);
@@ -60,6 +61,7 @@
         /// </summary>
         /// <param name="languages"></param>
         /// <returns>The header line.</returns>
+        [ItemNotNull]
         private static IEnumerable<IList<string>> GetTableHeaderLines([NotNull] this IEnumerable<CultureKey> languages)
         {
             Contract.Requires(languages != null);
@@ -75,6 +77,7 @@
         /// <param name="entries"></param>
         /// <param name="languages"></param>
         /// <returns>The data table.</returns>
+        [NotNull]
         private static IEnumerable<IList<string>> GetTableDataLines([NotNull] this IEnumerable<ResourceTableEntry> entries, [NotNull] IEnumerable<CultureKey> languages)
         {
             Contract.Requires(entries != null);
@@ -91,6 +94,7 @@
         /// <returns>
         /// The columns of this line.
         /// </returns>
+        [NotNull]
         private static IEnumerable<string> GetTableLine([NotNull] this ResourceTableEntry entry, [NotNull] IEnumerable<CultureKey> languages)
         {
             Contract.Requires(entry != null);
@@ -99,6 +103,7 @@
             return new[] { entry.Key }.Concat(languages.SelectMany(entry.GetTableDataColumns));
         }
 
+        [NotNull]
         private static string GetLanguageName([NotNull] string dataColumnHeader)
         {
             Contract.Requires(dataColumnHeader != null);

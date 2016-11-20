@@ -28,7 +28,7 @@
             AssociatedObject.BeginningEdit -= DataGrid_BeginningEdit;
         }
 
-        private static void DataGrid_BeginningEdit([NotNull] object sender, DataGridBeginningEditEventArgs e)
+        private static void DataGrid_BeginningEdit([NotNull] object sender, [NotNull] DataGridBeginningEditEventArgs e)
         {
             Contract.Requires(sender != null);
             Contract.Requires(e.Row != null);

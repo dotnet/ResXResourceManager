@@ -34,7 +34,7 @@
         private Vector _laskKnownLocation;
 
         [ImportingConstructor]
-        public MainWindow([NotNull] ExportProvider exportProvider, [NotNull] Configuration configuration, ITracer tracer)
+        public MainWindow([NotNull] ExportProvider exportProvider, [NotNull] Configuration configuration, [NotNull] ITracer tracer)
         {
             Contract.Requires(exportProvider != null);
             Contract.Requires(configuration != null);
@@ -138,7 +138,7 @@
                 _laskKnownLocation = new Vector(Left, Top);
         }
 
-        private static void Navigate_Click(object sender, RoutedEventArgs e)
+        private static void Navigate_Click(object sender, [NotNull] RoutedEventArgs e)
         {
             string url;
 

@@ -22,7 +22,7 @@
             InitializeComponent();
         }
 
-        public static bool? Show(ExportProvider exportProvider, object content, string title)
+        public static bool? Show([NotNull] ExportProvider exportProvider, object content, string title)
         {
             var window = new Window
             {

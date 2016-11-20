@@ -45,7 +45,7 @@
             }
         }
 
-        private void CommandConverter_Error(object sender, ErrorEventArgs e)
+        private void CommandConverter_Error(object sender, [NotNull] ErrorEventArgs e)
         {
             var ex = e.GetException();
             if (ex == null)

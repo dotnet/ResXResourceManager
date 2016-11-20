@@ -64,7 +64,7 @@ namespace tomenglertde.ResXManager.View.Tools
             column.ElementStyle = elementStyle;
         }
 
-        private static void EditingElement_PreviewKeyDown([NotNull] object sender, KeyEventArgs e)
+        private static void EditingElement_PreviewKeyDown([NotNull] object sender, [NotNull] KeyEventArgs e)
         {
             Contract.Requires(sender != null);
 

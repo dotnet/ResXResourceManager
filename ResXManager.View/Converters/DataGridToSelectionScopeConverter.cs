@@ -8,6 +8,8 @@
     using System.Windows.Controls;
     using System.Windows.Data;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
@@ -16,6 +18,7 @@
     {
         public static readonly IValueConverter Default = new DataGridToSelectionScopeConverter();
 
+        [NotNull]
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return new DataGridSelectionScope(value as DataGrid);
@@ -76,6 +79,7 @@
                 }
             }
 
+            [NotNull]
             public IResourceScope Scope => this;
 
             public string FileName => null;

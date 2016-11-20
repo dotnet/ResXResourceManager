@@ -77,8 +77,10 @@
             }
         }
 
+        [NotNull]
         public ICommand BrowseCommand => new DelegateCommand(Browse);
 
+        [NotNull]
         public ResourceManager ResourceManager => _resourceManager;
 
         [NotNull]
@@ -137,7 +139,7 @@
             }
         }
 
-        private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
+        private void ResourceManager_BeginEditing(object sender, [NotNull] ResourceBeginEditingEventArgs e)
         {
             if (!CanEdit(e.Entity, e.CultureKey))
             {
@@ -210,6 +212,7 @@
             return false;
         }
 
+        [NotNull]
         [Localizable(false)]
         private static string FormatFileNames([NotNull] IEnumerable<string> lockedFiles)
         {

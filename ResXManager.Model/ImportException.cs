@@ -3,6 +3,8 @@ namespace tomenglertde.ResXManager.Model
     using System;
     using System.Runtime.Serialization;
 
+    using JetBrains.Annotations;
+
     [Serializable]
     public class ImportException : Exception
     {
@@ -18,7 +20,7 @@ namespace tomenglertde.ResXManager.Model
         {
         }
 
-        protected ImportException(SerializationInfo info, StreamingContext context) 
+        protected ImportException([NotNull] SerializationInfo info, StreamingContext context) 
             : base(info, context)
         {
         }

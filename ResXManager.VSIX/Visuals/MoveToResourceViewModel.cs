@@ -69,6 +69,7 @@
             Dispatcher.BeginInvoke(DispatcherPriority.Background, () => OnPropertyChanged(nameof(Key)));
         }
 
+        [NotNull]
         public ICollection<ResourceEntity> ResourceEntities => _resourceEntities;
 
         [Required]
@@ -119,6 +120,7 @@
             }
         }
 
+        [NotNull]
         public ICollection<string> Replacements => _replacements;
 
         [Required(AllowEmptyStrings = false)]
@@ -283,6 +285,7 @@
             _isUpdating = false;
         }
 
+        [NotNull]
         private string EvaluatePattern([NotNull] string pattern)
         {
             Contract.Requires(pattern != null);
@@ -296,6 +299,7 @@
                 .Replace(@"$Namespace", localNamespace);
         }
 
+        [NotNull]
         private static string CreateKey([NotNull] string text, string className, string functionName)
         {
             Contract.Requires(text != null);

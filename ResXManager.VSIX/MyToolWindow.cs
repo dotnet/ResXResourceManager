@@ -185,7 +185,7 @@
             ReloadSolution();
         }
 
-        private void Navigate_Click(object sender, RoutedEventArgs e)
+        private void Navigate_Click(object sender, [NotNull] RoutedEventArgs e)
         {
             string url;
 
@@ -253,7 +253,7 @@
             Process.Start(url);
         }
 
-        private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
+        private void ResourceManager_BeginEditing(object sender, [NotNull] ResourceBeginEditingEventArgs e)
         {
             if (!CanEdit(e.Entity, e.CultureKey))
             {
@@ -375,6 +375,7 @@
             return true;
         }
 
+        [NotNull]
         private static string[] GetLockedFiles([NotNull] IEnumerable<ResourceLanguage> languages)
         {
             Contract.Requires(languages != null);
@@ -460,6 +461,7 @@
             }
         }
 
+        [NotNull]
         [Localizable(false)]
         private static string FormatFileNames([NotNull] IEnumerable<string> lockedFiles)
         {
@@ -478,6 +480,7 @@
             }
         }
 
+        [NotNull]
         private IEnumerable<DteProjectFile> DteSourceFiles
         {
             get
@@ -503,12 +506,13 @@
             }
         }
 
+        [NotNull]
         private IEnumerable<DteProjectFile> GetProjectFiles()
         {
             return _compositionHost.GetExportedValue<DteSolution>().GetProjectFiles();
         }
 
-        private void VisualComposition_Error(object sender, TextEventArgs e)
+        private void VisualComposition_Error(object sender, [NotNull] TextEventArgs e)
         {
             _trace.TraceError(e.Text);
         }

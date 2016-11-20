@@ -265,6 +265,7 @@
 
             public bool HasConfigurations => _configurations.Any();
 
+            [NotNull]
             public IEnumerable<string> Keys => _keyLinesLookup.Keys;
 
             public void FindCodeReferences([NotNull] ResourceTableEntry entry, [NotNull] ICollection<CodeReference> references, [NotNull] ITracer tracer)
@@ -358,6 +359,7 @@
 
     internal static class CodeReferenceExtensionMethods
     {
+        [NotNull]
         public static string[] ReadAllLines([NotNull] this ProjectFile file)
         {
             Contract.Requires(file != null);

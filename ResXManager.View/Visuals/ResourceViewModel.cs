@@ -129,6 +129,7 @@
             }
         }
 
+        [NotNull]
         public CollectionView GroupedResourceTableEntries
         {
             get
@@ -166,34 +167,49 @@
             }
         }
 
+        [NotNull]
         public ICommand ToggleCellSelectionCommand => new DelegateCommand(() => IsCellSelectionEnabled = !IsCellSelectionEnabled);
 
+        [NotNull]
         public ICommand CopyCommand => new DelegateCommand<DataGrid>(CanCopy, CopySelected);
 
+        [NotNull]
         public ICommand CutCommand => new DelegateCommand(CanCut, CutSelected);
 
+        [NotNull]
         public ICommand DeleteCommand => new DelegateCommand(CanDelete, DeleteSelected);
 
+        [NotNull]
         public ICommand PasteCommand => new DelegateCommand<DataGrid>(CanPaste, Paste);
 
+        [NotNull]
         public ICommand ExportExcelCommand => new DelegateCommand<IExportParameters>(CanExportExcel, ExportExcel);
 
+        [NotNull]
         public ICommand ImportExcelCommand => new DelegateCommand<string>(ImportExcel);
 
+        [NotNull]
         public ICommand ToggleInvariantCommand => new DelegateCommand(() => _selectedTableEntries.Any(), ToggleInvariant);
 
+        [NotNull]
         public ICommand ReloadCommand => new DelegateCommand(Reload);
 
+        [NotNull]
         public ICommand SaveCommand => new DelegateCommand(() => _resourceManager.HasChanges, () => _resourceManager.Save(_configuration.EffectiveResXSortingComparison));
 
+        [NotNull]
         public ICommand BeginFindCodeReferencesCommand => new DelegateCommand(BeginFindCodeReferences);
 
+        [NotNull]
         public ICommand CreateSnapshotCommand => new DelegateCommand<string>(CreateSnapshot);
 
+        [NotNull]
         public ICommand LoadSnapshotCommand => new DelegateCommand<string>(LoadSnapshot);
 
+        [NotNull]
         public ICommand UnloadSnapshotCommand => new DelegateCommand(() => LoadSnapshot(null));
 
+        [NotNull]
         public ICommand SelectEntityCommand
         {
             get
@@ -235,7 +251,7 @@
             LoadedSnapshot = fileName;
         }
 
-        private void CreateSnapshot(string fileName)
+        private void CreateSnapshot([NotNull] string fileName)
         {
             var snapshot = _resourceManager.CreateSnapshot();
 

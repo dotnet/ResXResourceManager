@@ -40,7 +40,7 @@
             Contract.Requires(neutralCultureKey != null);
             Contract.Ensures(Contract.Result<string>() != null);
 
-            return _culture.Maybe().Return(c => "." + c.Name) ?? neutralCultureKey;
+            return _culture != null ? "." + _culture.Name : neutralCultureKey;
         }
 
         #region IComparable/IEquatable implementation
@@ -167,6 +167,7 @@
 
         #endregion
 
+        [NotNull]
         public static implicit operator CultureKey(CultureInfo culture)
         {
             Contract.Ensures(Contract.Result<CultureKey>() != null);

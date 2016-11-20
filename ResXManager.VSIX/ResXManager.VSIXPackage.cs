@@ -114,6 +114,7 @@
             _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
         }
 
+        [NotNull]
         private static OleMenuCommand CreateMenuCommand([NotNull] IMenuCommandService mcs, int cmdId, EventHandler invokeHandler)
         {
             Contract.Requires(mcs != null);
@@ -214,6 +215,7 @@
             return (entities.Length > 0) && (entities.Length == selection.Count) ? entities : null;
         }
 
+        [NotNull]
         private IEnumerable<ResourceEntity> GetSelectedResourceEntites(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))

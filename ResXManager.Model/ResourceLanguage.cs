@@ -128,6 +128,7 @@
         /// <summary>
         /// Gets the display name of this language.
         /// </summary>
+        [NotNull]
         public string DisplayName => ToString();
 
         /// <summary>
@@ -337,6 +338,7 @@
             }
         }
 
+        [NotNull]
         private Node CreateNode([NotNull] string key)
         {
             Contract.Requires(key != null);
@@ -463,6 +465,7 @@
             }
         }
 
+        [NotNull]
         private static string GenerateUniqueKey([NotNull] ICollection<Node> elements, [NotNull] Node item, ref int index)
         {
             Contract.Requires(elements != null);
