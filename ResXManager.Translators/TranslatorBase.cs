@@ -14,19 +14,13 @@ namespace tomenglertde.ResXManager.Translators
 
     using TomsToolbox.Desktop;
 
-    [ContractClass(typeof(TranslatorBaseContract))]
     [DataContract]
     public abstract class TranslatorBase : ObservableObject, ITranslator
     {
         protected static readonly IWebProxy WebProxy;
 
         [NotNull]
-        private readonly string _id;
-        [NotNull]
-        private readonly string _displayName;
-        [NotNull]
         private readonly IList<ICredentialItem> _credentials;
-        private readonly Uri _uri;
 
         private bool _isEnabled = true;
         private bool _saveCredentials;
@@ -49,19 +43,17 @@ namespace tomenglertde.ResXManager.Translators
             Contract.Requires(id != null);
             Contract.Requires(displayName != null);
 
-            _id = id;
-            _displayName = displayName;
-            _uri = uri;
+            Id = id;
+            DisplayName = displayName;
+            Uri = uri;
             _credentials = credentials ?? new ICredentialItem[0];
         }
 
-        [NotNull]
-        public string Id => _id;
+        public string Id { get; }
 
-        [NotNull]
-        public string DisplayName => _displayName;
+        public string DisplayName { get; }
 
-        public Uri Uri => _uri;
+        public Uri Uri { get; }
 
         [DataMember]
         public bool IsEnabled
@@ -89,41 +81,16 @@ namespace tomenglertde.ResXManager.Translators
             }
         }
 
-        [NotNull]
-        public virtual IList<ICredentialItem> Credentials
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IList<ICredentialItem>>() != null);
-                return _credentials;
-            }
-        }
+        public virtual IList<ICredentialItem> Credentials => _credentials;
 
-        public abstract void Translate([NotNull] ITranslationSession translationSession);
+        public abstract void Translate(ITranslationSession translationSession);
 
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_id != null);
-            Contract.Invariant(_displayName != null);
             Contract.Invariant(_credentials != null);
-        }
-    }
-
-    [ContractClassFor(typeof(TranslatorBase))]
-    internal abstract class TranslatorBaseContract : TranslatorBase
-    {
-        protected TranslatorBaseContract([NotNull] string id, [NotNull] string displayName, Uri uri, IList<ICredentialItem> credentials)
-            : base(id, displayName, uri, credentials)
-        {
-        }
-
-        public override void Translate(ITranslationSession translationSession)
-        {
-            Contract.Requires(translationSession != null);
-            throw new NotImplementedException();
         }
     }
 }

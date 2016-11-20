@@ -1,4 +1,5 @@
-﻿namespace tomenglertde.ResXManager.Infrastructure
+﻿using System.Diagnostics.Contracts;
+namespace tomenglertde.ResXManager.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -39,7 +40,7 @@
             set;
         }
 
-        void Translate(ITranslationSession translationSession);
+        void Translate([NotNull] ITranslationSession translationSession);
 
         [NotNull]
         IList<ICredentialItem> Credentials
@@ -103,6 +104,7 @@
 
         void ITranslator.Translate(ITranslationSession translationSession)
         {
+            Contract.Requires(translationSession != null);
             throw new NotImplementedException();
         }
 

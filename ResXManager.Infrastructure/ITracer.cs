@@ -76,6 +76,7 @@
             Contract.Requires(format != null);
             Contract.Requires(args != null);
 
+            // ReSharper disable once PossibleNullReferenceException
             exportProvider.GetExportedValue<ITracer>().TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
@@ -93,6 +94,7 @@
             Contract.Requires(exportProvider != null);
             Contract.Requires(message != null);
 
+            // ReSharper disable once PossibleNullReferenceException
             exportProvider.GetExportedValue<ITracer>().TraceError(message);
         }
 

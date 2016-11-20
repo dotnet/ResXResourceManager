@@ -12,7 +12,6 @@
             base.OnAttached();
 
             var window = AssociatedObject;
-
             if (window == null)
                 return;
 

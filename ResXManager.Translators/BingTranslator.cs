@@ -1,3 +1,4 @@
+using System.Diagnostics.Contracts;
 namespace tomenglertde.ResXManager.Translators
 {
     using System;
@@ -33,8 +34,9 @@ namespace tomenglertde.ResXManager.Translators
         {
             try
             {
-                var clientId = Credentials[0].Value;
-                var clientSecret = Credentials[1].Value;
+                Contract.Assume(Credentials.Count == 2);
+                var clientId = Credentials[0]?.Value;
+                var clientSecret = Credentials[1]?.Value;
 
                 if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
                 {

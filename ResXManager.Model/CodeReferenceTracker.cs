@@ -37,10 +37,12 @@
             Interlocked.Exchange(ref _engine, null)?.Dispose();
         }
 
-        public void BeginFind([NotNull] ResourceManager resourceManager, CodeReferenceConfiguration configuration, [NotNull] IEnumerable<ProjectFile> allSourceFiles, ITracer tracer)
+        public void BeginFind([NotNull] ResourceManager resourceManager, [NotNull] CodeReferenceConfiguration configuration, [ItemNotNull][NotNull] IEnumerable<ProjectFile> allSourceFiles, [NotNull] ITracer tracer)
         {
             Contract.Requires(resourceManager != null);
+            Contract.Requires(configuration != null);
             Contract.Requires(allSourceFiles != null);
+            Contract.Requires(tracer != null);
 
             var sourceFiles = allSourceFiles.Where(item => !item.IsResourceFile() && !item.IsDesignerFile()).ToArray();
 
@@ -60,8 +62,13 @@
 
             public int Progress => (int)(_total <= 0 ? 0 : Math.Max(1, (100 * _visited) / _total));
 
-            public Engine(CodeReferenceConfiguration configuration, ICollection<ProjectFile> sourceFiles, ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
+            public Engine([NotNull] CodeReferenceConfiguration configuration, [NotNull] ICollection<ProjectFile> sourceFiles, [NotNull] ICollection<ResourceTableEntry> resourceTableEntries, [NotNull] ITracer tracer)
             {
+                Contract.Requires(configuration != null);
+                Contract.Requires(sourceFiles != null);
+                Contract.Requires(resourceTableEntries != null);
+                Contract.Requires(tracer != null);
+
                 _backgroundThread = new Thread(() => FindCodeReferences(configuration, sourceFiles, resourceTableEntries, tracer))
                 {
                     IsBackground = true,
@@ -71,11 +78,12 @@
                 _backgroundThread.Start();
             }
 
-            private void FindCodeReferences([NotNull] CodeReferenceConfiguration configuration, [NotNull] ICollection<ProjectFile> projectFiles, [NotNull] ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
+            private void FindCodeReferences([NotNull] CodeReferenceConfiguration configuration, [NotNull, ItemNotNull] ICollection<ProjectFile> projectFiles, [NotNull, ItemNotNull] ICollection<ResourceTableEntry> resourceTableEntries, [NotNull] ITracer tracer)
             {
                 Contract.Requires(configuration != null);
                 Contract.Requires(projectFiles != null);
                 Contract.Requires(resourceTableEntries != null);
+                Contract.Requires(tracer != null);
 
                 var stopwatch = Stopwatch.StartNew();
 
@@ -83,12 +91,15 @@
                 {
                     _total = resourceTableEntries.Count + projectFiles.Count;
 
+                    // ReSharper disable once PossibleNullReferenceException
                     resourceTableEntries.ForEach(entry => entry.CodeReferences = null);
 
                     var keys = new HashSet<string>(resourceTableEntries.Select(entry => entry.Key));
 
                     var sourceFiles = projectFiles.AsParallel()
+                        // ReSharper disable once AssignNullToNotNullAttribute
                         .Select(file => new FileInfo(file, configuration.Items, keys, ref _visited))
+                        // ReSharper disable once PossibleNullReferenceException
                         .Where(file => file.HasConfigurations)
                         .ToArray();
 
@@ -99,7 +110,9 @@
                     var keyFilesLookup = sourceFiles.Aggregate(new Dictionary<string, HashSet<FileInfo>>(),
                         (accumulator, file) =>
                         {
+                            // ReSharper disable PossibleNullReferenceException
                             file.Keys.ForEach(key => accumulator.ForceValue(key, _ => new HashSet<FileInfo>()).Add(file));
+                            // ReSharper restore PossibleNullReferenceException
                             return accumulator;
                         });
 
@@ -107,12 +120,14 @@
 
                     resourceTableEntries.AsParallel().ForAll(entry =>
                     {
+                        // ReSharper disable once PossibleNullReferenceException
                         var key = entry.Key;
 
                         var files = keyFilesLookup.GetValueOrDefault(key);
 
                         var references = new List<CodeReference>();
 
+                        // ReSharper disable once PossibleNullReferenceException
                         files?.ForEach(file => file.FindCodeReferences(entry, references, tracer));
 
                         entry.CodeReferences = references.AsReadOnly();
@@ -143,6 +158,7 @@
 
             [ContractInvariantMethod]
             [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+            [Conditional("CONTRACTS_FULL")]
             private void ObjectInvariant()
             {
                 Contract.Invariant(_backgroundThread != null);
@@ -192,7 +208,7 @@
                     {
                         Segments = new List<string>();
                         var keyIndex = 0;
-                        foreach (var group in match.Groups.Cast<Group>().Skip(1).Where(group => group.Success))
+                        foreach (var group in match.Groups.Cast<Group>().Skip(1).Where(group => group?.Success == true))
                         {
                             Segments.Add(line.Substring(keyIndex, group.Index - keyIndex));
                             keyIndex = group.Index;
@@ -221,6 +237,7 @@
 
             [ContractInvariantMethod]
             [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+            [Conditional("CONTRACTS_FULL")]
             private void ObjectInvariant()
             {
                 Contract.Invariant(!Success || (Segments != null));
@@ -235,10 +252,10 @@
             private readonly string[] _lines;
             [NotNull]
             private readonly Dictionary<string, HashSet<int>> _keyLinesLookup = new Dictionary<string, HashSet<int>>();
-            [NotNull]
+            [NotNull, ItemNotNull]
             private readonly CodeReferenceConfigurationItem[] _configurations;
 
-            public FileInfo([NotNull] ProjectFile projectFile, [NotNull] IEnumerable<CodeReferenceConfigurationItem> configurations, [NotNull] ICollection<string> keys, ref long visited)
+            public FileInfo([NotNull] ProjectFile projectFile, [NotNull, ItemNotNull] IEnumerable<CodeReferenceConfigurationItem> configurations, [NotNull] ICollection<string> keys, ref long visited)
             {
                 Contract.Requires(projectFile != null);
                 Contract.Requires(configurations != null);
@@ -254,9 +271,11 @@
                 {
                     _lines = _projectFile.ReadAllLines();
 
-                    _lines?.ForEach((line, index) =>
+                    _lines.ForEach((line, index) =>
+                        // ReSharper disable once AssignNullToNotNullAttribute
                         _regex.Split(line)
                             .Where(keys.Contains)
+                            // ReSharper disable once PossibleNullReferenceException
                             .ForEach(key => _keyLinesLookup.ForceValue(key, _ => new HashSet<int>()).Add(index)));
                 }
 
@@ -329,6 +348,7 @@
 
             [ContractInvariantMethod]
             [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+            [Conditional("CONTRACTS_FULL")]
             private void ObjectInvariant()
             {
                 Contract.Invariant(_projectFile != null);
@@ -363,6 +383,7 @@
         public static string[] ReadAllLines([NotNull] this ProjectFile file)
         {
             Contract.Requires(file != null);
+            Contract.Ensures(Contract.Result<string[]>() != null);
 
             try
             {

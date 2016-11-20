@@ -1,4 +1,5 @@
-﻿namespace tomenglertde.ResXManager.Translators
+﻿using System.Diagnostics.Contracts;
+namespace tomenglertde.ResXManager.Translators
 {
     using System;
     using System.Collections.Generic;
@@ -45,7 +46,7 @@
         {
             get
             {
-                return SaveCredentials ? Credentials[0].Value : null;
+                return SaveCredentials ? Credentials[0]?.Value : null;
             }
             set
             {
@@ -65,8 +66,9 @@
 
                 try
                 {
+                    Contract.Assume(Credentials.Count == 1);
                     var targetCulture = translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage;
-                    var result = TranslateText(translationItem.Source, Credentials[0].Value, translationSession.SourceLanguage, targetCulture);
+                    var result = TranslateText(translationItem.Source, Credentials[0]?.Value, translationSession.SourceLanguage, targetCulture);
 
                     translationSession.Dispatcher.BeginInvoke(() =>
                     {

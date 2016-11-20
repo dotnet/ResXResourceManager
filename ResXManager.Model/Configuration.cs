@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -191,8 +192,11 @@
             SetValue(CodeReferences);
         }
 
+        [NotNull]
         private CodeReferenceConfiguration CreateCodeReferenceConfiguration()
         {
+            Contract.Ensures(Contract.Result<CodeReferenceConfiguration>() != null);
+
             _codeReferences = GetValue(default(CodeReferenceConfiguration)) ?? CodeReferenceConfiguration.Default;
             _codeReferences.ItemPropertyChanged += (_, __) => _codeReferencesChangeThrottle.Tick();
 
@@ -201,6 +205,7 @@
 
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_codeReferencesChangeThrottle != null);

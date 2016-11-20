@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -82,6 +83,7 @@
                 return Enumerable.Empty<string>();
 
             return Extensions.Split(',')
+                // ReSharper disable once PossibleNullReferenceException
                 .Select(ext => ext.Trim())
                 .Where(ext => !string.IsNullOrEmpty(ext));
         }
@@ -122,6 +124,7 @@
             {
                 Contract.Ensures(Contract.Result<ObservableCollection<CodeReferenceConfigurationItem>>() != null);
                 CreateCollection();
+                // ReSharper disable once AssignNullToNotNullAttribute
                 return _items;
             }
         }
@@ -131,11 +134,13 @@
             add
             {
                 CreateCollection();
+                // ReSharper disable once PossibleNullReferenceException
                 _changeTracker.ItemPropertyChanged += value;
             }
             remove
             {
                 CreateCollection();
+                // ReSharper disable once PossibleNullReferenceException
                 _changeTracker.ItemPropertyChanged -= value;
             }
         }
@@ -187,6 +192,7 @@
 
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
             Contract.Invariant((_items == null) || (_changeTracker != null));
