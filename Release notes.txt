@@ -3,6 +3,8 @@
 [url:Reviews|https://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68/view/Reviews]
 [url:GitHub|https://github.com/tom-englert/ResXResourceManager/releases]
 
+1.0.0.90:
+* Support the new Azure translator.
 1.0.0.89:
 * TT generated code does not require TomsToolbox.Desktop NuGet package by default.
 * Drop Support of VS2010 to be able to support VS2017. For VS2010 projects you can use V1.0.0.88 or the standalone version.
