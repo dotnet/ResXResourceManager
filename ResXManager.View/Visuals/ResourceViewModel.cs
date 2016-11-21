@@ -33,6 +33,7 @@
     [VisualCompositionExport(RegionId.Content, Sequence = 1)]
     public class ResourceViewModel : ObservableObject
     {
+        [NotNull]
         private readonly DispatcherThrottle _resourceTableEntiyCountUpdateThrottle;
         [NotNull]
         private readonly ResourceManager _resourceManager;
@@ -44,12 +45,13 @@
         private readonly ITracer _tracer;
         [NotNull]
         private readonly CodeReferenceTracker _codeReferenceTracker;
+        [NotNull]
         private readonly DispatcherThrottle _restartFindCodeReferencesThrottle;
-        [NotNull]
+        [NotNull, ItemNotNull]
         private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
-        [NotNull]
+        [NotNull, ItemNotNull]
         private readonly IObservableCollection<ResourceTableEntry> _resourceTableEntries;
-        [NotNull]
+        [NotNull, ItemNotNull]
         private readonly ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
         [NotNull]
         private readonly PerformanceTracer _performanceTracer;
@@ -513,6 +515,8 @@
             Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(_selectedTableEntries != null);
             Contract.Invariant(_performanceTracer != null);
+            Contract.Invariant(_restartFindCodeReferencesThrottle != null);
+            Contract.Invariant(_resourceTableEntiyCountUpdateThrottle != null);
         }
     }
 }
