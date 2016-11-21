@@ -152,7 +152,10 @@
       <Decorator Height="5" />
 
       <GroupBox Header="{x:Static properties:Resources.Diagnostics}" Style="{StaticResource GroupStyle}">
-        <CheckBox Margin="10" Content="{x:Static properties:Resources.ShowPerformanceTraces}" IsChecked="{Binding Configuration.ShowPerformanceTraces}"/>
+        <CheckBox Margin="10" 
+                  Style="{StaticResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
+                  Content="{x:Static properties:Resources.ShowPerformanceTraces}" 
+                  IsChecked="{Binding Configuration.ShowPerformanceTraces}"/>
       </GroupBox>
 
       <Decorator Height="5" />
