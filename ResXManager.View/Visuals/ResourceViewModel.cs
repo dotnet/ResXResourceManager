@@ -193,7 +193,7 @@
         public ICommand ToggleInvariantCommand => new DelegateCommand(() => _selectedTableEntries.Any(), ToggleInvariant);
 
         [NotNull]
-        public ICommand ReloadCommand => new DelegateCommand(Reload);
+        public ICommand ReloadCommand => new DelegateCommand(() => Reload(true));
 
         [NotNull]
         public ICommand SaveCommand => new DelegateCommand(() => _resourceManager.HasChanges, () => _resourceManager.Save(_configuration.EffectiveResXSortingComparison));
@@ -434,7 +434,7 @@
             changes.Apply();
         }
 
-        public void Reload()
+        public void Reload(bool forceFindCodeReferences = false)
         {
             var sourceFiles = _sourceFilesProvider.SourceFiles;
 
@@ -442,10 +442,11 @@
 
             using (_performanceTracer.Start("ResourceManager.Load"))
             {
-                _resourceManager.Reload(sourceFiles, _configuration.DuplicateKeyHandling);
+                if (_resourceManager.Reload(sourceFiles, _configuration.DuplicateKeyHandling) || forceFindCodeReferences)
+                {
+                    _restartFindCodeReferencesThrottle.Tick();
+                }
             }
-
-            BeginFindCodeReferences(sourceFiles);
         }
 
         private void BeginFindCodeReferences()

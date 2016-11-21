@@ -59,7 +59,7 @@
         /// </summary>
         /// <param name="allSourceFiles">All resource x files.</param>
         /// <param name="duplicateKeyHandling">The duplicate key handling mode.</param>
-        private void Load([NotNull] IList<ProjectFile> allSourceFiles, DuplicateKeyHandling duplicateKeyHandling)
+        private bool Load([NotNull] IList<ProjectFile> allSourceFiles, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(allSourceFiles != null);
 
@@ -67,7 +67,7 @@
                 .Where(file => file.IsResourceFile())
                 .GroupBy(file => file.GetBaseDirectory());
 
-            InternalLoad(resourceFilesByDirectory, duplicateKeyHandling);
+            return InternalLoad(resourceFilesByDirectory, duplicateKeyHandling);
         }
 
         /// <summary>
@@ -156,16 +156,16 @@
                 _resourceEntities.LoadSnapshot(_snapshot);
         }
 
-        public void Reload(DuplicateKeyHandling duplicateKeyHandling)
+        public bool Reload(DuplicateKeyHandling duplicateKeyHandling)
         {
-            Reload(_sourceFilesProvider.SourceFiles, duplicateKeyHandling);
+            return Reload(_sourceFilesProvider.SourceFiles, duplicateKeyHandling);
         }
 
-        public void Reload([NotNull] IList<ProjectFile> sourceFiles, DuplicateKeyHandling duplicateKeyHandling)
+        public bool Reload([NotNull] IList<ProjectFile> sourceFiles, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(sourceFiles != null);
 
-            Load(sourceFiles, duplicateKeyHandling);
+            return Load(sourceFiles, duplicateKeyHandling);
         }
 
         public bool CanEdit([NotNull] ResourceEntity resourceEntity, CultureKey cultureKey)
@@ -189,12 +189,12 @@
             Loaded?.Invoke(this, EventArgs.Empty);
         }
 
-        private void InternalLoad([NotNull] IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory, DuplicateKeyHandling duplicateKeyHandling)
+        private bool InternalLoad([NotNull] IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(resourceFilesByDirectory != null);
 
             if (!LoadEntities(resourceFilesByDirectory, duplicateKeyHandling))
-                return; // nothing has changed, no need to continue
+                return false; // nothing has changed, no need to continue
 
             if (!string.IsNullOrEmpty(_snapshot))
                 _resourceEntities.LoadSnapshot(_snapshot);
@@ -209,6 +209,8 @@
             _cultureKeys.SynchronizeWith(cultureKeys);
 
             OnLoaded();
+
+            return true;
         }
 
         private bool LoadEntities([NotNull] IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory, DuplicateKeyHandling duplicateKeyHandling)
