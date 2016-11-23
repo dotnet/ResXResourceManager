@@ -15,12 +15,12 @@
             <Button Padding="12,3" IsDefault="True"
                     Command="{Binding CommitCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=visuals:ConfirmationDialog}}"
                     Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
-              <ContentControl Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" Content="OK" HorizontalContentAlignment="Center" />
+              <ContentControl Style="{StaticResource {ComponentResourceKey TypeInTargetAssembly=toms:ResourceKeys, ResourceId={x:Static toms:ResourceKeys.SharedWidthContainerStyleKeyName}}}" Content="OK" HorizontalContentAlignment="Center" />
             </Button>
             <Decorator Width="10" />
             <Button Padding="12,3" IsCancel="True"
                     Style="{DynamicResource {x:Static styles:ResourceKeys.ButtonStyle}}">
-              <ContentControl Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" Content="Cancel" HorizontalContentAlignment="Center" />
+              <ContentControl Style="{StaticResource {ComponentResourceKey TypeInTargetAssembly=toms:ResourceKeys, ResourceId={x:Static toms:ResourceKeys.SharedWidthContainerStyleKeyName}}}" Content="Cancel" HorizontalContentAlignment="Center" />
             </Button>
           </StackPanel>
         </Grid>

@@ -42,16 +42,16 @@
           <Style TargetType="Button" BasedOn="{StaticResource PushButtonStyle}" />
         </StackPanel.Resources>
         <Button Command="{Binding ApplyAllCommand}">
-          <ContentControl Content="{x:Static properties:Resources.Translations_ApplyAll}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_ApplyAll}" Style="{StaticResource {ComponentResourceKey TypeInTargetAssembly=toms:ResourceKeys, ResourceId={x:Static toms:ResourceKeys.SharedWidthContainerStyleKeyName}}}" HorizontalContentAlignment="Center" />
         </Button>
         <Button Command="{Binding ApplySelectedCommand}">
-          <ContentControl Content="{x:Static properties:Resources.Translations_ApplySelected}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_ApplySelected}" Style="{StaticResource {ComponentResourceKey TypeInTargetAssembly=toms:ResourceKeys, ResourceId={x:Static toms:ResourceKeys.SharedWidthContainerStyleKeyName}}}" HorizontalContentAlignment="Center" />
         </Button>
         <Button Command="{Binding RestartCommand}">
-          <ContentControl Content="{x:Static properties:Resources.Translations_Restart}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_Restart}" Style="{StaticResource {ComponentResourceKey TypeInTargetAssembly=toms:ResourceKeys, ResourceId={x:Static toms:ResourceKeys.SharedWidthContainerStyleKeyName}}}" HorizontalContentAlignment="Center" />
         </Button>
         <Button Command="{Binding StopCommand}">
-          <ContentControl Content="{x:Static properties:Resources.Translations_Stop}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          <ContentControl Content="{x:Static properties:Resources.Translations_Stop}" Style="{StaticResource {ComponentResourceKey TypeInTargetAssembly=toms:ResourceKeys, ResourceId={x:Static toms:ResourceKeys.SharedWidthContainerStyleKeyName}}}" HorizontalContentAlignment="Center" />
         </Button>
       </StackPanel>
       <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="100" HorizontalScrollBarVisibility="Auto">
@@ -68,7 +68,7 @@
                   IsEnabled="{Binding TranslationSession.IsComplete}" toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedItems}">
           <DataGrid.RowHeaderTemplate>
             <DataTemplate DataType="DataGridRowHeader">
-              <CheckBox Style="{StaticResource {x:Static toms:ResourceKeys.DataGridRowCheckBoxStyle}}" />
+              <CheckBox Style="{StaticResource {ComponentResourceKey TypeInTargetAssembly=toms:ResourceKeys, ResourceId={x:Static toms:ResourceKeys.DataGridRowCheckBoxStyleKeyName}}}" />
             </DataTemplate>
           </DataGrid.RowHeaderTemplate>
           <DataGrid.Columns>
@@ -108,8 +108,8 @@
                   <DockPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridCellsPanel}}" d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}">
                     <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" Orientation="Horizontal">
                       <Decorator Width="20" />
-                      <CheckBox Content="{x:Static properties:Resources.TranslationsPrefixHeader}" 
-                                IsChecked="{Binding Configuration.PrefixTranslations}" 
+                      <CheckBox Content="{x:Static properties:Resources.TranslationsPrefixHeader}"
+                                IsChecked="{Binding Configuration.PrefixTranslations}"
                                 Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
                       <StackPanel Orientation="Horizontal" MinWidth="40">
                         <TextBlock Text="&quot;" VerticalAlignment="Center"/>

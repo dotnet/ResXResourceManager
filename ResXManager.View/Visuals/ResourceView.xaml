@@ -449,7 +449,7 @@
                            Source="{Binding Path=EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
                   </Grid>
                   <Decorator x:Name="padding" DockPanel.Dock="Left" Width="4" />
-                  <TextBlock Text="{Binding Path=DisplayName}" TextTrimming="CharacterEllipsis" Style="{StaticResource {x:Static toms:ResourceKeys.AutoToolTipTextBoxStyle}}" />
+                  <TextBlock Text="{Binding Path=DisplayName}" TextTrimming="CharacterEllipsis" Style="{StaticResource {ComponentResourceKey TypeInTargetAssembly=toms:ResourceKeys, ResourceId={x:Static toms:ResourceKeys.AutoToolTipTextBoxStyleKeyName}}}" />
                 </DockPanel>
               </DataTemplate>
 
