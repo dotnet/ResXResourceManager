@@ -21,6 +21,7 @@
             Contract.Requires(languages != null);
             Contract.Requires(comments != null);
 
+            // ReSharper disable AssignNullToNotNullAttribute
             Entries = entries.PsObjectCast<object>().TryCast().Returning<IEnumerable<ResourceTableEntry>>()
                 .When<IEnumerable>(item => item.PsCast<ResourceTableEntry>().ToArray())
                 .When<object>(item => new[] { item.PsObjectCast<ResourceTableEntry>() })
@@ -43,6 +44,7 @@
                 .When<IEnumerable>(item => item.PsCast<object>().Select(CultureKey.Parse).ToArray())
                 .When<object>(item => new[] { CultureKey.Parse(item.PsObjectCast<object>()) })
                 .Result;
+            // ReSharper restore AssignNullToNotNullAttribute
 
             if (Comments == null)
                 throw new ArgumentException("Invalid input", nameof(comments));

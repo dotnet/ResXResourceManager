@@ -23,6 +23,7 @@
         private readonly ITracer _tracer;
         private const string FileName = "Configuration.xml";
         [NotNull]
+        // ReSharper disable once AssignNullToNotNullAttribute
         private static readonly string _directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "tom-englert.de", "ResXManager");
 
         [NotNull]
@@ -78,10 +79,8 @@
         }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Required by [CallerMemberName]")]
-        protected T GetValue<T>(T defaultValue, [CallerMemberName][NotNull] string key = null)
+        protected T GetValue<T>(T defaultValue, [CallerMemberName] string key = null)
         {
-            Contract.Requires(!string.IsNullOrEmpty(key));
-
             try
             {
                 return InternalGetValue(defaultValue, key);
@@ -93,17 +92,19 @@
             return defaultValue;
         }
 
-        protected virtual T InternalGetValue<T>(T defaultValue, [NotNull] string key)
+        protected virtual T InternalGetValue<T>(T defaultValue, string key)
         {
-            Contract.Requires(!string.IsNullOrEmpty(key));
+            if (key == null)
+                return defaultValue;
 
-            return ConvertFromString<T>(_configuration.GetValue(key, ConvertToString<T>(defaultValue)));
+            return ConvertFromString<T>(_configuration.GetValue(key, ConvertToString(defaultValue)));
         }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Required by [CallerMemberName]")]
-        protected void SetValue<T>(T value, [CallerMemberName][NotNull] string key = null)
+        protected void SetValue<T>(T value, [CallerMemberName] string key = null)
         {
-            Contract.Requires(!string.IsNullOrEmpty(key));
+            if (key == null)
+                return;
 
             if (Equals(GetValue(key), value))
                 return;
@@ -115,11 +116,10 @@
 
         protected virtual void InternalSetValue<T>(T value, [NotNull] string key)
         {
-            Contract.Requires(!string.IsNullOrEmpty(key));
-
+            Contract.Requires(key != null);
             try
             {
-                _configuration.SetValue(key, ConvertToString<T>(value));
+                _configuration.SetValue(key, ConvertToString(value));
 
                 using (var writer = new StreamWriter(File.Create(_filePath)))
                 {

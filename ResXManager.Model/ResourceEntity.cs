@@ -241,7 +241,7 @@
         /// <summary>
         /// Gets the available languages of this resource entity.
         /// </summary>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public ICollection<ResourceLanguage> Languages
         {
             get
@@ -254,7 +254,7 @@
         /// <summary>
         /// Gets all the entries of this resource entity.
         /// </summary>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public ReadOnlyObservableCollection<ResourceTableEntry> Entries
         {
             get

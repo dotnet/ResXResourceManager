@@ -21,6 +21,7 @@
 
             foreach (var resourceProvider in resourceProviders)
             {
+                // ReSharper disable once AssignNullToNotNullAttribute
                 resourceProvider?.LoadThemeResources(window.Resources);
             }
         }

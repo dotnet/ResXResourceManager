@@ -197,11 +197,13 @@
         {
             _codeReferences = null;
 
+            // ReSharper disable once PossibleNullReferenceException
             GetType().GetProperties().ForEach(p => OnPropertyChanged(p.Name));
         }
 
         private void PersistCodeReferences()
         {
+            // ReSharper disable once ExplicitCallerInfoArgument
             SetValue(CodeReferences, nameof(CodeReferences));
         }
 
@@ -210,6 +212,7 @@
         {
             Contract.Ensures(Contract.Result<CodeReferenceConfiguration>() != null);
 
+            // ReSharper disable once ExplicitCallerInfoArgument
             _codeReferences = GetValue(default(CodeReferenceConfiguration), nameof(CodeReferences)) ?? CodeReferenceConfiguration.Default;
             _codeReferences.ItemPropertyChanged += (_, __) => _codeReferencesChangeThrottle.Tick();
 

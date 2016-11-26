@@ -44,7 +44,7 @@
             }
         }
 
-        [NotNull]
+        [NotNull, ItemNotNull]
         private IEnumerable<DteProjectFile> DteSourceFiles
         {
             get
@@ -55,7 +55,7 @@
             }
         }
 
-        [NotNull]
+        [NotNull, ItemNotNull]
         private IEnumerable<DteProjectFile> GetProjectFiles()
         {
             return _compositionHost.GetExportedValue<DteSolution>().GetProjectFiles();

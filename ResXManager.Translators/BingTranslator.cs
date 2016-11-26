@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 namespace tomenglertde.ResXManager.Translators
 {
     using System;

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-namespace tomenglertde.ResXManager.Translators
+﻿namespace tomenglertde.ResXManager.Translators
 {
     using System;
     using System.Collections.Generic;
