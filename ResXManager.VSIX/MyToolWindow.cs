@@ -143,10 +143,8 @@
                 var view = _compositionHost.GetExportedValue<VsixShellView>();
 
                 view.DataContext = _compositionHost.GetExportedValue<VsixShellViewModel>();
+                // ReSharper disable once PossibleNullReferenceException
                 view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
-                view.Loaded += view_Loaded;
-                view.IsKeyboardFocusWithinChanged += view_IsKeyboardFocusWithinChanged;
-                view.Track(UIElement.IsMouseOverProperty).Changed += view_IsMouseOverChanged;
 
                 _dte = (EnvDTE.DTE)GetService(typeof(EnvDTE.DTE));
                 Contract.Assume(_dte != null);
@@ -180,11 +178,6 @@
             _compositionHost.Dispose();
         }
 
-        private void view_Loaded(object sender, RoutedEventArgs e)
-        {
-            ReloadSolution();
-        }
-
         private void Navigate_Click(object sender, [NotNull] RoutedEventArgs e)
         {
             string url;
@@ -212,24 +205,6 @@
             }
 
             CreateWebBrowser(url);
-        }
-
-        private void view_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (!true.Equals(e.NewValue))
-                return;
-
-            ReloadSolution();
-        }
-
-        private void view_IsMouseOverChanged(object sender, EventArgs e)
-        {
-            var view = sender as UIElement;
-
-            if ((view == null) || !view.IsMouseOver)
-                return;
-
-            ReloadSolution();
         }
 
         [Localizable(false)]

@@ -33,7 +33,6 @@
 
             _resourceManager = resourceManager;
             _configuration = configuration;
-            _resourceManager.Loaded += (_, __) => OnPropertyChanged(nameof(Configuration));
         }
 
         [NotNull]

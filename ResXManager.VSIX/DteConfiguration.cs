@@ -41,8 +41,15 @@
             {
                 Contract.Ensures(Contract.Result<MoveToResourceConfiguration>() != null);
 
-                return _moveToResources ?? CreateMoveToResourceConfiguration(GetValue(default(MoveToResourceConfiguration)));
+                return _moveToResources ?? LoadMoveToResourceConfiguration(GetValue(default(MoveToResourceConfiguration)));
             }
+        }
+
+        protected override void OnRelaod()
+        {
+            _moveToResources = null;
+
+            base.OnRelaod();
         }
 
         private void PersistMoveToResources()
@@ -51,8 +58,11 @@
             SetValue(MoveToResources, nameof(MoveToResources));
         }
 
-        private MoveToResourceConfiguration CreateMoveToResourceConfiguration(MoveToResourceConfiguration current)
+        [NotNull]
+        private MoveToResourceConfiguration LoadMoveToResourceConfiguration(MoveToResourceConfiguration current)
         {
+            Contract.Ensures(Contract.Result<MoveToResourceConfiguration>() != null);
+
             _moveToResources = current ?? MoveToResourceConfiguration.Default;
             _moveToResources.ItemPropertyChanged += (_, __) => _moveToResourcesChangeThrottle.Tick();
 

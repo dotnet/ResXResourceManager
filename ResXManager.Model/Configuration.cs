@@ -12,6 +12,7 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
 
+    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
     public enum DuplicateKeyHandling
@@ -44,7 +45,7 @@
             {
                 Contract.Ensures(Contract.Result<CodeReferenceConfiguration>() != null);
 
-                return _codeReferences ?? CreateCodeReferenceConfiguration();
+                return _codeReferences ?? LoadCodeReferenceConfiguration();
             }
         }
 
@@ -187,17 +188,29 @@
             }
         }
 
+        public void Reload()
+        {
+            OnRelaod();
+        }
+
+        protected virtual void OnRelaod()
+        {
+            _codeReferences = null;
+
+            GetType().GetProperties().ForEach(p => OnPropertyChanged(p.Name));
+        }
+
         private void PersistCodeReferences()
         {
-            SetValue(CodeReferences);
+            SetValue(CodeReferences, nameof(CodeReferences));
         }
 
         [NotNull]
-        private CodeReferenceConfiguration CreateCodeReferenceConfiguration()
+        private CodeReferenceConfiguration LoadCodeReferenceConfiguration()
         {
             Contract.Ensures(Contract.Result<CodeReferenceConfiguration>() != null);
 
-            _codeReferences = GetValue(default(CodeReferenceConfiguration)) ?? CodeReferenceConfiguration.Default;
+            _codeReferences = GetValue(default(CodeReferenceConfiguration), nameof(CodeReferences)) ?? CodeReferenceConfiguration.Default;
             _codeReferences.ItemPropertyChanged += (_, __) => _codeReferencesChangeThrottle.Tick();
 
             return _codeReferences;

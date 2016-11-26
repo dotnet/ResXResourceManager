@@ -13,6 +13,8 @@
     using System.Windows;
     using System.Windows.Threading;
 
+    using EnvDTE;
+
     using JetBrains.Annotations;
 
     using Microsoft.VisualStudio;
@@ -51,6 +53,8 @@
         private ITracer _tracer;
         private IRefactorings _refactorings;
         private PerformanceTracer _performanceTracer;
+        private SolutionEvents _solutionEvents;
+        private bool _isSolutionOpen;
 
         [NotNull]
         private EnvDTE80.DTE2 Dte
@@ -106,9 +110,14 @@
         }
 
         [ContractVerification(false)]
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private void ConnectEvents()
         {
             var events = (EnvDTE80.Events2)Dte.Events;
+
+            _solutionEvents = events.SolutionEvents;
+            _solutionEvents.Opened += SolutionEvents_Opened;
+            _solutionEvents.AfterClosing += SolutionEvents_AfterClosing;
 
             _documentEvents = events.DocumentEvents;
             _documentEvents.DocumentOpened += DocumentEvents_DocumentOpened;
@@ -294,9 +303,32 @@
             }
         }
 
+        private void SolutionEvents_Opened()
+        {
+            _tracer?.WriteLine("DTE event: Solution opened");
+
+            _isSolutionOpen = true;
+
+            _compositionHost?.GetExportedValue<DteConfiguration>().Reload();
+
+            ToolWindow?.ReloadSolution();
+        }
+
+        private void SolutionEvents_AfterClosing()
+        {
+            _tracer?.WriteLine("DTE event: Solution closed");
+
+            _isSolutionOpen = false;
+
+            _compositionHost?.GetExportedValue<DteConfiguration>().Reload();
+        }
+
         private void DocumentEvents_DocumentOpened(EnvDTE.Document document)
         {
             _tracer?.WriteLine("DTE event: Document opened");
+
+            if (!_isSolutionOpen)
+                return;
 
             if (!AffectsResourceFile(document))
                 return;
