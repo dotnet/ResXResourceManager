@@ -190,10 +190,10 @@
 
         public void Reload()
         {
-            OnRelaod();
+            OnReload();
         }
 
-        protected virtual void OnRelaod()
+        protected virtual void OnReload()
         {
             _codeReferences = null;
 

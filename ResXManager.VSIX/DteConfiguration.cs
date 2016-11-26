@@ -45,11 +45,11 @@
             }
         }
 
-        protected override void OnRelaod()
+        protected override void OnReload()
         {
             _moveToResources = null;
 
-            base.OnRelaod();
+            base.OnReload();
         }
 
         private void PersistMoveToResources()
