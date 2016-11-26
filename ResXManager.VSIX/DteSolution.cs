@@ -20,17 +20,17 @@
         private const string SolutionItemsFolderName = "Solution Items";
 
         [NotNull]
-        private readonly IVsServiceProvider _vsServiceProvider;
+        private readonly IServiceProvider _serviceProvider;
         [NotNull]
         private readonly ITracer _tracer;
 
         [ImportingConstructor]
-        public DteSolution([NotNull] IVsServiceProvider vsServiceProvider, [NotNull] ITracer tracer)
+        public DteSolution([NotNull][Import(nameof(VSPackage))] IServiceProvider serviceProvider, [NotNull] ITracer tracer)
         {
-            Contract.Requires(vsServiceProvider != null);
+            Contract.Requires(serviceProvider != null);
             Contract.Requires(tracer != null);
 
-            _vsServiceProvider = vsServiceProvider;
+            _serviceProvider = serviceProvider;
             _tracer = tracer;
         }
 
@@ -79,7 +79,7 @@
         // ReSharper disable once SuspiciousTypeConversion.Global
         public EnvDTE80.Solution2 Solution => Dte?.Solution as EnvDTE80.Solution2;
 
-        public EnvDTE80.DTE2 Dte => _vsServiceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
+        public EnvDTE80.DTE2 Dte => _serviceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
 
         public EnvDTE.Globals Globals
         {
@@ -265,7 +265,7 @@
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_vsServiceProvider != null);
+            Contract.Invariant(_serviceProvider != null);
             Contract.Invariant(_tracer != null);
         }
     }

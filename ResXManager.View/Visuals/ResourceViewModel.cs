@@ -438,16 +438,25 @@
 
         public void Reload(bool forceFindCodeReferences = false)
         {
-            var sourceFiles = _sourceFilesProvider.SourceFiles;
-
-            _codeReferenceTracker.StopFind();
-
-            using (_performanceTracer.Start("ResourceManager.Load"))
+            try
             {
-                if (_resourceManager.Reload(sourceFiles, _configuration.DuplicateKeyHandling) || forceFindCodeReferences)
+                using (_performanceTracer.Start("ResourceManager.Load"))
                 {
-                    _restartFindCodeReferencesThrottle.Tick();
+                    var sourceFiles = _sourceFilesProvider.SourceFiles;
+
+                    _codeReferenceTracker.StopFind();
+
+                    if (_resourceManager.Reload(sourceFiles, _configuration.DuplicateKeyHandling) || forceFindCodeReferences)
+                    {
+                        _restartFindCodeReferencesThrottle.Tick();
+                    }
+
+                    _configuration.Reload();
                 }
+            }
+            catch (Exception ex)
+            {
+                _tracer.TraceError(ex.ToString());
             }
         }
 

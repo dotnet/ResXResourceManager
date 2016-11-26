@@ -295,8 +295,8 @@
     <Compile Include="DteExtensions.cs" />
     <Compile Include="DteProjectFile.cs" />
     <Compile Include="DteSolution.cs" />
+    <Compile Include="DteSourceFilesProvider.cs" />
     <Compile Include="ItemKind.cs" />
-    <Compile Include="IVsServiceProvider.cs" />
     <Compile Include="MoveToResourceConfiguration.cs" />
     <Compile Include="MyToolWindow.cs" />
     <Compile Include="Guids.cs" />
@@ -313,7 +313,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.Designer.tt</DependentUpon>
     </Compile>
-    <Compile Include="ResXManager.VSIXPackage.cs" />
+    <Compile Include="VSPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
     <Compile Include="ThemeResourceProvider.cs" />
@@ -368,7 +368,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="ResXManager.VSIX.vsct">
+    <VSCTCompile Include="VSPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
     </VSCTCompile>

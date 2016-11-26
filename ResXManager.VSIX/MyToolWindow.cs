@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -28,7 +27,6 @@
     using tomenglertde.ResXManager.VSIX.Visuals;
 
     using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
     using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
@@ -38,23 +36,14 @@
     /// This class implements the tool window exposed by this package and hosts a user control.
     /// </summary>
     [Guid("79664857-03bf-4bca-aa54-ec998b3328f8")]
-    public sealed class MyToolWindow : ToolWindowPane, IVsServiceProvider, ISourceFilesProvider
+    public sealed class MyToolWindow : ToolWindowPane
     {
         [NotNull]
-        private readonly ICompositionHost _compositionHost = new CompositionHost();
-
-        [NotNull]
-        private readonly ITracer _trace;
-        [NotNull]
-        private readonly ResourceManager _resourceManager;
-        [NotNull]
-        private readonly ResourceViewModel _resourceViewModel;
+        private readonly ITracer _tracer;
         [NotNull]
         private readonly Configuration _configuration;
         [NotNull]
-        private readonly PerformanceTracer _performanceTracer;
-
-        private EnvDTE.DTE _dte;
+        private readonly ICompositionHost _compositionHost = VSPackage.Instance.CompositionHost;
 
         /// <summary>
         /// Standard constructor for the tool window.
@@ -62,73 +51,21 @@
         public MyToolWindow()
             : base(null)
         {
-            try
-            {
-                // Set the window title reading it from the resources.
-                Caption = Resources.ToolWindowTitle;
+            // Set the window title reading it from the resources.
+            Caption = Resources.ToolWindowTitle;
 
-                // Set the image that will appear on the tab of the window frame when docked with an other window.
-                // The resource ID correspond to the one defined in the resx file while the Index is the offset in the bitmap strip.
-                // Each image in the strip being 16x16.
-                BitmapResourceID = 301;
-                BitmapIndex = 1;
+            // Set the image that will appear on the tab of the window frame when docked with an other window.
+            // The resource ID correspond to the one defined in the resx file while the Index is the offset in the bitmap strip.
+            // Each image in the strip being 16x16.
+            BitmapResourceID = 301;
+            BitmapIndex = 1;
 
-                var path = Path.GetDirectoryName(GetType().Assembly.Location);
-                Contract.Assume(path != null);
+            _tracer = _compositionHost.GetExportedValue<ITracer>();
+            _configuration = _compositionHost.GetExportedValue<Configuration>();
 
-                _compositionHost.AddCatalog(new DirectoryCatalog(path, @"*.dll"));
-                _compositionHost.ComposeExportedValue((IVsServiceProvider)this);
-                _compositionHost.ComposeExportedValue((ISourceFilesProvider)this);
+            _compositionHost.GetExportedValue<ResourceManager>().BeginEditing += ResourceManager_BeginEditing;
 
-                _trace = _compositionHost.GetExportedValue<ITracer>();
-                _performanceTracer = _compositionHost.GetExportedValue<PerformanceTracer>();
-                _configuration = _compositionHost.GetExportedValue<Configuration>();
-
-                _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
-                _resourceManager.BeginEditing += ResourceManager_BeginEditing;
-
-                _resourceViewModel = _compositionHost.GetExportedValue<ResourceViewModel>();
-
-                VisualComposition.Error += VisualComposition_Error;
-            }
-            catch (Exception ex)
-            {
-                _trace.TraceError("MyToolWindow .ctor failed: " + ex);
-                MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
-            }
-        }
-
-        [NotNull]
-        public ResourceManager ResourceManager
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceManager>() != null);
-
-                return _resourceManager;
-            }
-        }
-
-        [NotNull]
-        public ResourceViewModel ResourceViewModel
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceViewModel>() != null);
-
-                return _resourceViewModel;
-            }
-        }
-
-        [NotNull]
-        public ICompositionHost CompositionHost
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICompositionHost>() != null);
-
-                return _compositionHost;
-            }
+            VisualComposition.Error += VisualComposition_Error;
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -138,22 +75,19 @@
 
             try
             {
-                _trace.WriteLine(Resources.IntroMessage);
+                _tracer.WriteLine(Resources.IntroMessage);
 
                 var view = _compositionHost.GetExportedValue<VsixShellView>();
-
+                view.Loaded += View_Loaded;
                 view.DataContext = _compositionHost.GetExportedValue<VsixShellViewModel>();
                 // ReSharper disable once PossibleNullReferenceException
                 view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
 
-                _dte = (EnvDTE.DTE)GetService(typeof(EnvDTE.DTE));
-                Contract.Assume(_dte != null);
-
                 var executingAssembly = Assembly.GetExecutingAssembly();
                 var folder = Path.GetDirectoryName(executingAssembly.Location);
 
-                _trace.WriteLine(Resources.AssemblyLocation, folder);
-                _trace.WriteLine(Resources.Version, new AssemblyName(executingAssembly.FullName).Version);
+                _tracer.WriteLine(Resources.AssemblyLocation, folder);
+                _tracer.WriteLine(Resources.Version, new AssemblyName(executingAssembly.FullName).Version);
 
                 EventManager.RegisterClassHandler(typeof(VsixShellView), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
 
@@ -162,20 +96,26 @@
                 // the object returned by the Content property.
                 Content = view;
 
-                _dte.SetFontSize(view);
+                Dte.SetFontSize(view);
             }
             catch (Exception ex)
             {
-                _trace.TraceError("MyToolWindow OnCreate failed: " + ex);
+                _tracer.TraceError("MyToolWindow OnCreate failed: " + ex);
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
             }
         }
 
-        protected override void OnClose()
+        [NotNull]
+        private EnvDTE.DTE Dte
         {
-            base.OnClose();
+            get
+            {
+                Contract.Ensures(Contract.Result<EnvDTE.DTE>() != null);
 
-            _compositionHost.Dispose();
+                var dte = (EnvDTE.DTE)GetService(typeof(EnvDTE.DTE));
+                Contract.Assume(dte != null);
+                return dte;
+            }
         }
 
         private void Navigate_Click(object sender, [NotNull] RoutedEventArgs e)
@@ -268,7 +208,7 @@
                 message = string.Format(CultureInfo.CurrentCulture, Resources.ErrorOpenFilesInEditor, FormatFileNames(alreadyOpenItems.Select(item => item.Item1)));
                 MessageBox.Show(message, Resources.ToolWindowTitle);
 
-                ActivateWindow(alreadyOpenItems.First()?.Item2);
+                ActivateWindow(alreadyOpenItems.Select(item => item.Item2).First());
 
                 return false;
             }
@@ -302,11 +242,14 @@
             {
                 window?.Activate();
             }
-            catch { }
+            catch
+            {
+                // Something is wrong with the window, we can't do anything about this...
+            }
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        [NotNull]
+        [NotNull, ItemNotNull]
         private Tuple<string, EnvDTE.Window>[] GetLanguagesOpenedInAnotherEditor([NotNull] IEnumerable<ResourceLanguage> languages)
         {
             Contract.Requires(languages != null);
@@ -314,7 +257,7 @@
 
             try
             {
-                var openDocuments = _dte?.Windows?.OfType<EnvDTE.Window>().ToDictionary(window => window.Document);
+                var openDocuments = Dte.Windows?.OfType<EnvDTE.Window>().ToDictionary(window => window.Document);
 
                 var items = from l in languages
                             let file = l.FileName
@@ -444,52 +387,14 @@
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
 
-        public IList<ProjectFile> SourceFiles
+        private void View_Loaded(object sender, RoutedEventArgs e)
         {
-            get
-            {
-                using (_performanceTracer.Start("Enumerate source files"))
-                {
-                    return DteSourceFiles.Cast<ProjectFile>().ToArray();
-                }
-            }
-        }
-
-        [NotNull]
-        private IEnumerable<DteProjectFile> DteSourceFiles
-        {
-            get
-            {
-                var sourceFileFilter = new SourceFileFilter(_configuration);
-
-                return GetProjectFiles().Where(p => p.IsResourceFile() || sourceFileFilter.IsSourceFile(p));
-            }
-        }
-
-        internal void ReloadSolution()
-        {
-            try
-            {
-                using (_performanceTracer.Start("Reload solution"))
-                {
-                    _resourceViewModel.Reload();
-                }
-            }
-            catch (Exception ex)
-            {
-                _trace.TraceError(ex.ToString());
-            }
-        }
-
-        [NotNull]
-        private IEnumerable<DteProjectFile> GetProjectFiles()
-        {
-            return _compositionHost.GetExportedValue<DteSolution>().GetProjectFiles();
+            _compositionHost.GetExportedValue<ResourceViewModel>().Reload();
         }
 
         private void VisualComposition_Error(object sender, [NotNull] TextEventArgs e)
         {
-            _trace.TraceError(e.Text);
+            _tracer.TraceError(e.Text);
         }
 
         [ContractInvariantMethod]
@@ -497,12 +402,8 @@
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_compositionHost != null);
-            Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_configuration != null);
-            Contract.Invariant(_trace != null);
-            Contract.Invariant(_performanceTracer != null);
-            Contract.Invariant(_resourceViewModel != null);
+            Contract.Invariant(_tracer != null);
         }
     }
 }

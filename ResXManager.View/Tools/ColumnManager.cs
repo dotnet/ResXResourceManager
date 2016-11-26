@@ -258,7 +258,7 @@
             var culture = cultureKey.Culture;
             var languageBinding = culture != null
                 ? new Binding { Source = culture }
-                : new Binding("Configuration.NeutralResourcesLanguage") { Source = resourceManager };
+                : new Binding("NeutralResourcesLanguage") { Source = configuration };
 
             languageBinding.Converter = CultureToXmlLanguageConverter.Default;
             // It's important to explicitly set the converter culture here, else we will get a binding error, because here the source for the converter culture is the target of the binding.
@@ -266,7 +266,7 @@
 
             var flowDirectionBinding = culture != null
                 ? new Binding("TextInfo.IsRightToLeft") { Source = culture }
-                : new Binding("Configuration.NeutralResourcesLanguage.TextInfo.IsRightToLeft") { Source = resourceManager };
+                : new Binding("NeutralResourcesLanguage.TextInfo.IsRightToLeft") { Source = configuration };
 
             flowDirectionBinding.Converter = IsRightToLeftToFlowDirectionConverter.Default;
 

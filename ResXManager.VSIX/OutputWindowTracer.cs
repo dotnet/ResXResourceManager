@@ -20,7 +20,7 @@
         private readonly IServiceProvider _serviceProvider;
 
         [ImportingConstructor]
-        public OutputWindowTracer([NotNull] IVsServiceProvider serviceProvider)
+        public OutputWindowTracer([NotNull][Import(nameof(VSPackage))] IServiceProvider serviceProvider)
         {
             Contract.Requires(serviceProvider != null);
             _serviceProvider = serviceProvider;

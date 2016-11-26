@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.ComponentModel.Design;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -13,8 +15,6 @@
     using System.Windows;
     using System.Windows.Threading;
 
-    using EnvDTE;
-
     using JetBrains.Annotations;
 
     using Microsoft.VisualStudio;
@@ -23,6 +23,7 @@
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.Visuals;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
@@ -42,32 +43,27 @@
     [ProvideToolWindow(typeof(MyToolWindow))]
     [Guid(GuidList.guidResXManager_VSIXPkgString)]
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
-    public sealed class ResXManagerVsixPackage : Package
+    public sealed class VSPackage : Package
     {
         [NotNull]
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
 
+        private EnvDTE.SolutionEvents _solutionEvents;
         private EnvDTE.DocumentEvents _documentEvents;
 
-        private ICompositionHost _compositionHost;
-        private ITracer _tracer;
-        private IRefactorings _refactorings;
-        private PerformanceTracer _performanceTracer;
-        private SolutionEvents _solutionEvents;
-        private bool _isSolutionOpen;
+        public VSPackage()
+        {
+            Instance = this;
+        }
 
         [NotNull]
-        private EnvDTE80.DTE2 Dte
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<EnvDTE80.DTE2>() != null);
+        public static VSPackage Instance { get; private set; }
 
-                var dte = (EnvDTE80.DTE2)GetService(typeof(SDTE));
-                Contract.Assume(dte != null);
-                return dte;
-            }
-        }
+        [NotNull]
+        public ICompositionHost CompositionHost { get; } = new CompositionHost();
+
+        [NotNull]
+        private ITracer Tracer => CompositionHost.GetExportedValue<ITracer>();
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -77,15 +73,13 @@
         {
             base.Initialize();
 
+            var path = Path.GetDirectoryName(GetType().Assembly.Location);
+            Contract.Assume(path != null);
+
+            CompositionHost.AddCatalog(new DirectoryCatalog(path, @"*.dll"));
+            CompositionHost.Container.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
+
             ConnectEvents();
-
-            _compositionHost = ToolWindow?.CompositionHost;
-            if (_compositionHost == null)
-                return;
-
-            _tracer = _compositionHost.GetExportedValue<ITracer>();
-            _refactorings = _compositionHost.GetExportedValue<IRefactorings>();
-            _performanceTracer = _compositionHost.GetExportedValue<PerformanceTracer>();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             var mcs = GetService(typeof(IMenuCommandService)) as IMenuCommandService;
@@ -107,8 +101,22 @@
             base.Dispose(disposing);
 
             _customToolRunner.Dispose();
+            CompositionHost.Dispose();
         }
 
+        [NotNull]
+        private EnvDTE80.DTE2 Dte
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<EnvDTE80.DTE2>() != null);
+
+                var dte = (EnvDTE80.DTE2)GetService(typeof(SDTE));
+                Contract.Assume(dte != null);
+                return dte;
+            }
+        }
+       
         [ContractVerification(false)]
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private void ConnectEvents()
@@ -140,10 +148,6 @@
             ShowToolWindow();
         }
 
-        // Get the instance number 0 of this tool window. This window is single instance so this instance is actually the only one.
-        // The last flag is set to true so that if the tool window does not exists it will be created.
-        private MyToolWindow ToolWindow => FindToolWindow();
-
         private MyToolWindow FindToolWindow()
         {
             try
@@ -152,7 +156,7 @@
             }
             catch (Exception ex)
             {
-                _tracer.TraceError("FindToolWindow failed: " + ex);
+                Tracer.TraceError("FindToolWindow failed: " + ex);
                 return null;
             }
         }
@@ -161,7 +165,7 @@
         {
             try
             {
-                var window = ToolWindow;
+                var window = FindToolWindow();
 
                 var windowFrame = (IVsWindowFrame)window?.Frame;
                 if (windowFrame == null)
@@ -172,7 +176,7 @@
             }
             catch (Exception ex)
             {
-                _tracer.TraceError("ShowToolWindow failed: " + ex);
+                Tracer.TraceError("ShowToolWindow failed: " + ex);
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
                 return false;
             }
@@ -183,9 +187,7 @@
             if (!ShowToolWindow())
                 return;
 
-            var resourceViewModel = ToolWindow?.ResourceViewModel;
-            if (resourceViewModel == null)
-                return;
+            var resourceViewModel = CompositionHost.GetExportedValue<ResourceViewModel>();
 
             var selectedResourceEntites = GetSelectedResourceEntites()?.Distinct().ToArray();
             if (selectedResourceEntites == null)
@@ -231,11 +233,7 @@
             if (string.IsNullOrEmpty(fileName))
                 return Enumerable.Empty<ResourceEntity>();
 
-            var toolWindow = ToolWindow;
-            if (toolWindow == null)
-                return Enumerable.Empty<ResourceEntity>();
-
-            var resourceEntities = toolWindow.ResourceManager.ResourceEntities;
+            var resourceEntities = CompositionHost.GetExportedValue<ResourceManager>().ResourceEntities;
 
             return resourceEntities
                 .Where(entity => ContainsFile(entity, fileName) || ContainsChildOfWinFormsDesignerItem(entity, fileName))
@@ -260,11 +258,7 @@
 
         private void MoveToResource(object sender, EventArgs e)
         {
-            var toolWindow = ToolWindow;
-            if (toolWindow == null)
-                return;
-
-            var entry = _refactorings?.MoveToResource(Dte.ActiveDocument);
+            var entry = CompositionHost.GetExportedValue<IRefactorings>().MoveToResource(Dte.ActiveDocument);
             if (entry == null)
                 return;
 
@@ -277,7 +271,7 @@
             {
                 ShowToolWindow();
 
-                var resourceViewModel = toolWindow.ResourceViewModel;
+                var resourceViewModel = CompositionHost.GetExportedValue<ResourceViewModel>();
 
                 dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
                 {
@@ -296,49 +290,40 @@
             if (menuCommand == null)
                 return;
 
-            using (_performanceTracer?.Start("Can move to resource"))
+            using (CompositionHost.GetExportedValue<PerformanceTracer>().Start("Can move to resource"))
             {
                 menuCommand.Text = Resources.MoveToResource;
-                menuCommand.Visible = _refactorings?.CanMoveToResource(Dte.ActiveDocument) ?? false;
+                menuCommand.Visible = CompositionHost.GetExportedValue<IRefactorings>().CanMoveToResource(Dte.ActiveDocument);
             }
         }
 
         private void SolutionEvents_Opened()
         {
-            _tracer?.WriteLine("DTE event: Solution opened");
+            Tracer.WriteLine("DTE event: Solution opened");
 
-            _isSolutionOpen = true;
-
-            _compositionHost?.GetExportedValue<DteConfiguration>().Reload();
-
-            ToolWindow?.ReloadSolution();
+            ReloadSolution();
         }
 
         private void SolutionEvents_AfterClosing()
         {
-            _tracer?.WriteLine("DTE event: Solution closed");
+            Tracer.WriteLine("DTE event: Solution closed");
 
-            _isSolutionOpen = false;
-
-            _compositionHost?.GetExportedValue<DteConfiguration>().Reload();
+            ReloadSolution();
         }
 
         private void DocumentEvents_DocumentOpened(EnvDTE.Document document)
         {
-            _tracer?.WriteLine("DTE event: Document opened");
-
-            if (!_isSolutionOpen)
-                return;
+            Tracer.WriteLine("DTE event: Document opened");
 
             if (!AffectsResourceFile(document))
                 return;
 
-            ToolWindow?.ReloadSolution();
+            ReloadSolution();
         }
 
         private void DocumentEvents_DocumentSaved(EnvDTE.Document document)
         {
-            _tracer?.WriteLine("DTE event: Document saved");
+            Tracer.WriteLine("DTE event: Document saved");
 
             if (!AffectsResourceFile(document))
                 return;
@@ -352,7 +337,7 @@
                 .OfType<DteProjectFile>()
                 .Any(projectFile => projectFile.ProjectItems.Any(p => p.Document == document));
 
-            var entity = ToolWindow?.ResourceManager.ResourceEntities.FirstOrDefault(predicate);
+            var entity = CompositionHost.GetExportedValue<ResourceManager>().ResourceEntities.FirstOrDefault(predicate);
 
             var neutralProjectFile = (DteProjectFile)entity?.NeutralProjectFile;
 
@@ -361,7 +346,7 @@
 
             _customToolRunner.Enqueue(projectItems);
 
-            ToolWindow?.ReloadSolution();
+            ReloadSolution();
         }
 
         private static bool AffectsResourceFile(EnvDTE.Document document)
@@ -377,6 +362,11 @@
                 .Where(fileName => fileName != null)
                 .Select(Path.GetExtension)
                 .Any(extension => ProjectFileExtensions.SupportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase));
+        }
+
+        private void ReloadSolution()
+        {
+            CompositionHost.GetExportedValue<ResourceViewModel>().Reload();
         }
 
         [ContractInvariantMethod]
