@@ -79,7 +79,7 @@
 
             var culture = languageSelection.SelectedLanguage;
 
-            DataGrid.CreateNewLanguageColumn(_resourceManager, _configuration, culture);
+            DataGrid.CreateNewLanguageColumn(_configuration, culture);
 
             if (!_configuration.AutoCreateNewLanguageFiles)
                 return;

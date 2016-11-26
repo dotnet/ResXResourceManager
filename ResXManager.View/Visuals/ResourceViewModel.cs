@@ -436,7 +436,12 @@
             changes.Apply();
         }
 
-        public void Reload(bool forceFindCodeReferences = false)
+        public void Reload()
+        {
+            Reload(false);
+        }
+
+        public void Reload(bool forceFindCodeReferences)
         {
             try
             {

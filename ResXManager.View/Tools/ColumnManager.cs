@@ -79,19 +79,18 @@
             foreach (var cultureKey in addedcultureKeys)
             {
                 Contract.Assume(cultureKey != null);
-                dataGrid.AddLanguageColumn(resourceManager, configuration, cultureKey);
+                dataGrid.AddLanguageColumn(configuration, cultureKey);
             }
         }
 
-        public static void CreateNewLanguageColumn([NotNull] this DataGrid dataGrid, [NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, CultureInfo culture)
+        public static void CreateNewLanguageColumn([NotNull] this DataGrid dataGrid, [NotNull] Configuration configuration, CultureInfo culture)
         {
             Contract.Requires(dataGrid != null);
-            Contract.Requires(resourceManager != null);
             Contract.Requires(configuration != null);
 
             var cultureKey = new CultureKey(culture);
 
-            dataGrid.AddLanguageColumn(resourceManager, configuration, cultureKey);
+            dataGrid.AddLanguageColumn(configuration, cultureKey);
 
             var key = cultureKey.ToString(NeutralCultureKeyString);
 
@@ -244,10 +243,9 @@
             return column;
         }
 
-        private static void AddLanguageColumn([NotNull] this DataGrid dataGrid, [NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, [NotNull] CultureKey cultureKey)
+        private static void AddLanguageColumn([NotNull] this DataGrid dataGrid, [NotNull] Configuration configuration, [NotNull] CultureKey cultureKey)
         {
             Contract.Requires(dataGrid != null);
-            Contract.Requires(resourceManager != null);
             Contract.Requires(configuration != null);
             Contract.Requires(cultureKey != null);
 
