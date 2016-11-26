@@ -137,7 +137,4 @@ Die Datei wird nicht automatisch dem Visual Studio-Projekt hinzugefügt.</value>
 
 {0}</value>
   </data>
-  <data name="Version" xml:space="preserve">
-    <value>Version: {0}</value>
-  </data>
 </root>

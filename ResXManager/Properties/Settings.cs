@@ -4,6 +4,7 @@
     {
         static Settings()
         {
+            // ReSharper disable once PossibleNullReferenceException
             Default.PropertyChanged += (sender, _) => ((Settings)sender).Save();
         }
     }

@@ -77,12 +77,13 @@
             Top = Math.Max(0, location.Y);
         }
 
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnClosing([NotNull] CancelEventArgs e)
         {
             base.OnClosing(e);
 
             var resourceManager = this.GetExportProvider().GetExportedValue<ResourceManager>();
 
+            // ReSharper disable once PossibleNullReferenceException
             if (!resourceManager.HasChanges)
                 return;
 
@@ -118,7 +119,7 @@
             Settings.StartupSize = _lastKnownSize;
         }
 
-        private static Settings Settings => Properties.Settings.Default;
+        private static Settings Settings => Settings.Default;
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {

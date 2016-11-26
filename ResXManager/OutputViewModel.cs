@@ -61,7 +61,9 @@
 
             var lines = value.Split('\n');
 
+            // ReSharper disable once PossibleNullReferenceException
             _lines.Add(DateTime.Now.ToShortTimeString() + "\t" + prefix + lines[0].Trim('\r'));
+            // ReSharper disable once PossibleNullReferenceException
             _lines.AddRange(lines.Skip(1).Select(l => l.Trim('\r')));
         }
 
