@@ -250,7 +250,8 @@
 
             dataColumnCount = dataColumnHeaders.Length;
 
-            VerifyCultures(entity, dataColumnHeaders);
+            if (dataColumnHeaders.Distinct().Count() != dataColumnHeaders.Count())
+                throw new ImportException(Resources.ImportDuplicateLanguageError);
 
             var mappings = table.Skip(1)
                 .Select(columns => new { Key = columns[0], TextColumns = columns.Skip(fixedColumnHeadersCount).Take(dataColumnCount).ToArray() })
@@ -271,6 +272,8 @@
             var changes = mappings
                 .Where(mapping => (mapping.OriginalText != mapping.Text) && !string.IsNullOrEmpty(mapping.Text))
                 .ToArray();
+
+            VerifyCultures(entity, changes.Select(c => c.Culture).Distinct());
 
             return changes;
         }
@@ -321,15 +324,10 @@
             return headerCultures.All(c => c != null);
         }
 
-        private static void VerifyCultures([NotNull] ResourceEntity entity, [NotNull] ICollection<string> dataColumns)
+        private static void VerifyCultures([NotNull] ResourceEntity entity, [NotNull] IEnumerable<CultureInfo> languages)
         {
             Contract.Requires(entity != null);
-            Contract.Requires(dataColumns != null);
-
-            if (dataColumns.Distinct().Count() != dataColumns.Count)
-                throw new ImportException(Resources.ImportDuplicateLanguageError);
-
-            var languages = dataColumns.Select(data => data.ExtractCulture()).Distinct().ToArray();
+            Contract.Requires(languages != null);
 
             var undefinedLanguages = languages.Where(outer => entity.Languages.All(inner => !Equals(outer, inner.Culture))).ToArray();
 
