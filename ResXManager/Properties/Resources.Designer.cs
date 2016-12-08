@@ -113,6 +113,9 @@ namespace tomenglertde.ResXManager.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Version: {0}.
         /// </summary>
+        /// <remarks>
+        /// @Invariant
+        /// </remarks>
         public static string Version {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -147,6 +150,9 @@ namespace tomenglertde.ResXManager.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Version: {0}.
         /// </summary>
+        /// <remarks>
+        /// @Invariant
+        /// </remarks>
         Version,
     }
 

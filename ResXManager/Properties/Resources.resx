@@ -139,5 +139,5 @@ In the standalone version the file is not automatically added to the Visual Stud
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version: {0}</value>
-  </data>
+  <comment>@Invariant</comment></data>
 </root>
