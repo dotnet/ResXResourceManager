@@ -12,7 +12,7 @@ All available languages are displayed side by side in columns, to make it easy t
 
 Suitable for any .Net application; WPF is supported if you use the x:Static markup extension to access the ResX - resources.
 
-Available as VS2012-2015 extension and as standalone executable to support VS2010 and older or users without Visual Studio at all.
+Available as VS2012-2017 extension and as standalone executable to support VS2010 and older or users without Visual Studio at all.
 
 The Visual Studio Extension is available from the downloads page, from the [Visual Studio Gallery](http://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68), or by searching for RESX in the Visual Studio extension manager.
 
