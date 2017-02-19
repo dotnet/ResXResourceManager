@@ -3,6 +3,8 @@
 [url:Reviews|https://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68/view/Reviews]
 [url:GitHub|https://github.com/tom-englert/ResXResourceManager/releases]
 
+1.0.0.93:
+* Update copyright and VS gallery link.
 1.0.0.92:
 * GH#1: Skip the creation of empty resx files when importing from excel.
 1.0.0.91:
