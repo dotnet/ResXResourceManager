@@ -1,6 +1,6 @@
 ﻿Other places:
-[url:Visual Studio Extension Download|https://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68]
-[url:Reviews|https://visualstudiogallery.msdn.microsoft.com/3b64e04c-e8de-4b97-8358-06c73a97cc68/view/Reviews]
+[url:Visual Studio Extension Download|https://marketplace.visualstudio.com/vsgallery/3b64e04c-e8de-4b97-8358-06c73a97cc68]
+[url:Reviews|https://marketplace.visualstudio.com/vsgallery/3b64e04c-e8de-4b97-8358-06c73a97cc68/#review-details]
 [url:GitHub|https://github.com/tom-englert/ResXResourceManager/releases]
 
 1.0.0.93:
