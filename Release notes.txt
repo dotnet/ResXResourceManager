@@ -3,6 +3,8 @@
 [url:Reviews|https://marketplace.visualstudio.com/vsgallery/3b64e04c-e8de-4b97-8358-06c73a97cc68/#review-details]
 [url:GitHub|https://github.com/tom-englert/ResXResourceManager/releases]
 
+1.0.0.94:
+* Update packages to align with other extensions (to avoid https://connect.microsoft.com/VisualStudio/feedback/details/2993889/)
 1.0.0.93:
 * Update copyright and VS gallery link.
 1.0.0.92:
