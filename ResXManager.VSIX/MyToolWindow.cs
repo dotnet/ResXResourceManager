@@ -250,14 +250,17 @@
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [NotNull, ItemNotNull]
-        private Tuple<string, EnvDTE.Window>[] GetLanguagesOpenedInAnotherEditor([NotNull] IEnumerable<ResourceLanguage> languages)
+        private Tuple<string, EnvDTE.Window>[] GetLanguagesOpenedInAnotherEditor([NotNull, ItemNotNull] IEnumerable<ResourceLanguage> languages)
         {
             Contract.Requires(languages != null);
             Contract.Ensures(Contract.Result<Tuple<string, EnvDTE.Window>[]>() != null);
 
             try
             {
-                var openDocuments = Dte.Windows?.OfType<EnvDTE.Window>().ToDictionary(window => window.Document);
+                var openDocuments = Dte.Windows?
+                    .OfType<EnvDTE.Window>()
+                    .Where(window => window.Document != null)
+                    .ToDictionary(window => window.Document);
 
                 var items = from l in languages
                             let file = l.FileName

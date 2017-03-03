@@ -70,6 +70,7 @@
             tracer.WriteLine(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
+        [StringFormatMethod("format")]
         public static void TraceError([NotNull] this ExportProvider exportProvider, [Localizable(false)][NotNull] string format, [NotNull] params object[] args)
         {
             Contract.Requires(exportProvider != null);
@@ -80,6 +81,7 @@
             exportProvider.GetExportedValue<ITracer>().TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
+        [StringFormatMethod("format")]
         public static void TraceError([NotNull] this ICompositionHost exportProvider, [Localizable(false)][NotNull] string format, [NotNull] params object[] args)
         {
             Contract.Requires(exportProvider != null);

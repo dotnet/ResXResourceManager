@@ -255,15 +255,29 @@
         {
             if (fileContentSorting.HasValue)
             {
-                SortNodes(fileContentSorting.Value);
+                if (SortNodes(fileContentSorting.Value))
+                {
+                    _file.Changed();
+                }
             }
 
             _file.Save();
         }
 
-        private void SortNodes(StringComparison stringComparison)
+        private bool SortNodes(StringComparison stringComparison)
         {
-            var nodes = _documentRoot.Elements(_dataNodeName).ToArray();
+            var comparer = new DelegateComparer<string>((left, right) => string.Compare(left, right, stringComparison));
+
+            var nodes = _documentRoot
+                .Elements(_dataNodeName)
+                .ToArray();
+
+            var sortedNodes = nodes
+                .OrderBy(node => node.Attribute(_nameAttributeName)?.Value.TrimStart('>') ?? string.Empty, comparer)
+                .ToArray();
+
+            if (nodes.SequenceEqual(sortedNodes))
+                return false;
 
             foreach (var item in nodes)
             {
@@ -271,12 +285,12 @@
                 item.Remove();
             }
 
-            var comparer = new DelegateComparer<string>((left, right) => string.Compare(left, right, stringComparison));
-
-            foreach (var item in nodes.OrderBy(node => node.Attribute(_nameAttributeName)?.Value.TrimStart('>') ?? string.Empty, comparer))
+            foreach (var item in sortedNodes)
             {
                 _documentRoot.Add(item);
             }
+
+            return true;
         }
 
         internal string GetComment([NotNull] string key)

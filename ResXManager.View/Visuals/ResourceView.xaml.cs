@@ -19,6 +19,7 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Tools;
 
+    using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Converters;
@@ -38,20 +39,20 @@
         private readonly ResourceViewModel _resourceViewModel;
 
         [ImportingConstructor]
-        public ResourceView([NotNull] ExportProvider exportProvider)
+        public ResourceView([NotNull] ICompositionHost compositionHost)
         {
-            Contract.Requires(exportProvider != null);
+            Contract.Requires(compositionHost != null);
 
             try
             {
-                this.SetExportProvider(exportProvider);
+                this.SetExportProvider(compositionHost.Container);
 
-                _resourceManager = exportProvider.GetExportedValue<ResourceManager>();
+                _resourceManager = compositionHost.GetExportedValue<ResourceManager>();
                 _resourceManager.Loaded += ResourceManager_Loaded;
 
-                _configuration = exportProvider.GetExportedValue<Configuration>();
+                _configuration = compositionHost.GetExportedValue<Configuration>();
 
-                _resourceViewModel = exportProvider.GetExportedValue<ResourceViewModel>();
+                _resourceViewModel = compositionHost.GetExportedValue<ResourceViewModel>();
 
                 InitializeComponent();
 
@@ -59,7 +60,7 @@
             }
             catch (Exception ex)
             {
-                exportProvider.TraceError(ex.ToString());
+                compositionHost.TraceError(ex.ToString());
             }
         }
 

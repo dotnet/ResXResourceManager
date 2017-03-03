@@ -10,6 +10,8 @@
     using System.Windows;
     using System.Xml.Linq;
 
+    using EnvDTE;
+
     using JetBrains.Annotations;
 
     using Microsoft.VisualStudio;
@@ -227,9 +229,12 @@
 
             try
             {
-                return projectItem.Properties?.Item(propertyName)?.Value;
+                return projectItem.Properties?.OfType<Property>()
+                    .Where(p => p.Name == propertyName)
+                    .Select(p => p.Value)
+                    .FirstOrDefault();
             }
-            catch (ArgumentException)
+            catch
             {
                 return null;
             }
