@@ -40,7 +40,7 @@
         [NotNull]
         private readonly ProjectFile _file;
         [NotNull]
-        private readonly IDictionary<string, Node> _nodes;
+        private IDictionary<string, Node> _nodes;
         [NotNull]
         private readonly CultureKey _cultureKey;
 
@@ -91,6 +91,11 @@
             _valueNodeName = defaultNamespace.GetName(@"value");
             _commentNodeName = defaultNamespace.GetName(@"comment");
 
+            UpdateNodes(file, duplicateKeyHandling);
+        }
+
+        private void UpdateNodes(ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
+        {
             var data = _documentRoot.Elements(_dataNodeName);
 
             var elements = data
@@ -135,7 +140,7 @@
         /// <summary>
         /// Gets all the resource keys defined in this language.
         /// </summary>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IEnumerable<string> ResourceKeys
         {
             get
@@ -258,6 +263,10 @@
                 if (SortNodes(fileContentSorting.Value))
                 {
                     _file.Changed();
+
+                    UpdateNodes(_file, DuplicateKeyHandling.Rename);
+
+                    Container.OnItemOrderChanged(this);
                 }
             }
 
@@ -461,7 +470,7 @@
         {
             Contract.Requires(other != null);
 
-            return _document.ToString(SaveOptions.DisableFormatting) == other._document?.ToString(SaveOptions.DisableFormatting);
+            return _document.ToString(SaveOptions.DisableFormatting) == other._document.ToString(SaveOptions.DisableFormatting);
         }
 
         private static void MakeKeysUnique([NotNull] ICollection<Node> elements)
@@ -504,7 +513,7 @@
             return Culture?.DisplayName ?? Resources.Neutral;
         }
 
-        class Node
+        private class Node
         {
             [NotNull]
             private readonly ResourceLanguage _owner;

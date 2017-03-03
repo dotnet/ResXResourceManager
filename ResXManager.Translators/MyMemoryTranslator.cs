@@ -131,7 +131,7 @@
 
         [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
         [DataContract]
-        class ResponseData
+        private class ResponseData
         {
             [DataMember(Name = "translatedText")]
             public string TranslatedText
@@ -150,7 +150,7 @@
 
         [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
         [DataContract]
-        class MatchData
+        private class MatchData
         {
             [DataMember(Name = "translation")]
             public string Translation
@@ -176,7 +176,7 @@
 
         [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
         [DataContract]
-        class Response
+        private class Response
         {
             [DataMember(Name = "responseData")]
             public ResponseData ResponseData

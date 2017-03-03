@@ -23,6 +23,8 @@ namespace tomenglertde.ResXManager.VSIX {
     using System;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -73,6 +75,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Assembly location: {0}.
         /// </summary>
+        [NotNull]
         public static string AssemblyLocation {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -83,6 +86,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Can not create tool window..
         /// </summary>
+        [NotNull]
         public static string CanNotCreateWindow {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -93,6 +97,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Code generator.
         /// </summary>
+        [NotNull]
         public static string CodeGenerator_CommandGroup {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -103,6 +108,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Custom tool (internal access).
         /// </summary>
+        [NotNull]
         public static string CodeGenerator_CommandInternal {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -113,6 +119,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Custom tool (public access).
         /// </summary>
+        [NotNull]
         public static string CodeGenerator_CommandPublic {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -123,6 +130,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Text template.
         /// </summary>
+        [NotNull]
         public static string CodeGenerator_CommandTextTemplate {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -133,6 +141,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Custom tool code generator, internal access..
         /// </summary>
+        [NotNull]
         public static string CodeGenerator_Internal {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -143,6 +152,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Custom tool code generator, public access..
         /// </summary>
+        [NotNull]
         public static string CodeGenerator_Public {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -153,6 +163,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to TextTemplate code generator..
         /// </summary>
+        [NotNull]
         public static string CodeGenerator_TextTemplate {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -163,6 +174,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Unknown code generator..
         /// </summary>
+        [NotNull]
         public static string CodeGenerator_Unkown {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -173,6 +185,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to WinForms Designer.
         /// </summary>
+        [NotNull]
         public static string CodeGenerator_WinForms {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -183,6 +196,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Code:.
         /// </summary>
+        [NotNull]
         public static string CodeHeader {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -193,6 +207,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Comment:.
         /// </summary>
+        [NotNull]
         public static string CommentHeader {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -203,6 +218,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Duplicate key.
         /// </summary>
+        [NotNull]
         public static string DuplicateKey {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -213,6 +229,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Error:.
         /// </summary>
+        [NotNull]
         public static string Error {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -223,6 +240,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Some files are open in another window. Please clos....
         /// </summary>
+        [NotNull]
         public static string ErrorOpenFilesInEditor {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -233,6 +251,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Error loading the ResX Manager extension: {0}.&amp....
         /// </summary>
+        [NotNull]
         public static string ExtensionLoadingError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -243,6 +262,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to ResX Resource Manager loaded.&amp;#13;&amp;#10;Hom....
         /// </summary>
+        [NotNull]
         public static string IntroMessage {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -253,6 +273,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to The key contains invalid characters..
         /// </summary>
+        [NotNull]
         public static string KeyContainsInvalidCharacters {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -263,6 +284,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Key:.
         /// </summary>
+        [NotNull]
         public static string KeyHeader {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -273,6 +295,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Move to Resource.
         /// </summary>
+        [NotNull]
         public static string MoveToResource {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -283,6 +306,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Edit new entry in ResX Resource Manager.
         /// </summary>
+        [NotNull]
         public static string MoveToResourceEditNewEntry {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -293,6 +317,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Open in ResX Manager.
         /// </summary>
+        [NotNull]
         public static string OpenInResXManager {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -303,6 +328,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to The project has no resource file for the language ....
         /// </summary>
+        [NotNull]
         public static string ProjectHasNoResourceFile {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -313,6 +339,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Some files in your project are not writable. Make ....
         /// </summary>
+        [NotNull]
         public static string ProjectHasReadOnlyFiles {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -323,6 +350,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Resource:.
         /// </summary>
+        [NotNull]
         public static string ResourceHeader {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -333,6 +361,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Error loading resource files: {0}. &amp;#13;&amp;#....
         /// </summary>
+        [NotNull]
         public static string ResourceLoadingError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -363,6 +392,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Show white space and formatting symbols.
         /// </summary>
+        [NotNull]
         public static string ShowWhitespaceToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -376,6 +406,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <remarks>
         /// @Invariant
         /// </remarks>
+        [NotNull]
         public static string ToolWindowTitle {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -386,6 +417,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Value:.
         /// </summary>
+        [NotNull]
         public static string ValueHeader {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -396,6 +428,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Version: {0}.
         /// </summary>
+        [NotNull]
         public static string Version {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -406,6 +439,7 @@ namespace tomenglertde.ResXManager.VSIX {
         /// <summary>
         ///   Looks up a localized string similar to Warning:.
         /// </summary>
+        [NotNull]
         public static string Warning {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);

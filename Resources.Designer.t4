@@ -43,6 +43,8 @@ namespace <#= localNamespace #> {
     using System;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -100,6 +102,7 @@ namespace <#= localNamespace #> {
         ///   Looks up a localized string similar to <#= XmlEscape(node.Value, 50) #>.
         /// </summary>
 <# InsertRemarks(node.Comment); #>
+        [NotNull]
         public static string <#= node.Key #> {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);

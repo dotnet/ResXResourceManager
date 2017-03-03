@@ -23,6 +23,8 @@ namespace tomenglertde.ResXManager.Model.Properties {
     using System;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -73,6 +75,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Duplicate keys in '{0}':&amp;#13;&amp;#10;{1}&amp;....
         /// </summary>
+        [NotNull]
         public static string DuplicateKeyError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -83,6 +86,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Show an error message and don't load the resource.
         /// </summary>
+        [NotNull]
         public static string DuplicateKeyHandling_Fail {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -93,6 +97,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Postfix duplicate keys with "_Duplicate[#]".
         /// </summary>
+        [NotNull]
         public static string DuplicateKeyHandling_Rename {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -103,6 +108,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &amp;lt;?xml version="1.0" encoding="utf-8"?&amp;g....
         /// </summary>
+        [NotNull]
         public static string EmptyResxTemplate {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -113,6 +119,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Multiple sheets.
         /// </summary>
+        [NotNull]
         public static string ExcelExport_MultipleSheets {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -123,6 +130,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Single sheet.
         /// </summary>
+        [NotNull]
         public static string ExcelExport_SingleSheet {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -133,6 +141,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Error saving file '{0}':&amp;#13;&amp;#10;{1}&amp;....
         /// </summary>
+        [NotNull]
         public static string FileSaveError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -143,6 +152,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to At least three columns expected..
         /// </summary>
+        [NotNull]
         public static string ImportColumnMismatchError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -153,6 +163,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Duplicate language in header..
         /// </summary>
+        [NotNull]
         public static string ImportDuplicateLanguageError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -163,6 +174,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Import failed. Nothing has been imported!.
         /// </summary>
+        [NotNull]
         public static string ImportFailedError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -173,6 +185,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Import failed partially. Some columns have been al....
         /// </summary>
+        [NotNull]
         public static string ImportFailedPartiallyError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -183,6 +196,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Standard header expected..
         /// </summary>
+        [NotNull]
         public static string ImportHeaderMismatchError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -193,6 +207,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The language "{0}" can't be edited. The operation ....
         /// </summary>
+        [NotNull]
         public static string ImportLanguageNotEditable {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -203,6 +218,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The sheet "{0}" can't be imported; there is no mat....
         /// </summary>
+        [NotNull]
         public static string ImportMapSheetError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -213,6 +229,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {0} is not a valid RESX resource file: No xml root....
         /// </summary>
+        [NotNull]
         public static string InvalidResourceFileError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -223,6 +240,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {0} is not a valid RESX resource file: Not all ent....
         /// </summary>
+        [NotNull]
         public static string InvalidResourceFileNameAttributeMissingError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -233,6 +251,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {0} is not a valid RESX resource file: Not all ent....
         /// </summary>
+        [NotNull]
         public static string InvalidResourceFileValueAttributeMissingError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -243,6 +262,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Language is not defined: {0}.
         /// </summary>
+        [NotNull]
         public static string LanguageNotDefinedError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -253,6 +273,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Neutral.
         /// </summary>
+        [NotNull]
         public static string Neutral {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -263,6 +284,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Snapshot: "{0}".
         /// </summary>
+        [NotNull]
         public static string SnapshotAnnotation {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -273,6 +295,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Warning: This item contains string format paramete....
         /// </summary>
+        [NotNull]
         public static string StringFormatParameterMismatchError {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -286,6 +309,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// <remarks>
         /// @Invariant
         /// </remarks>
+        [NotNull]
         public static string Title {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);

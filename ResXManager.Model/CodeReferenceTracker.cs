@@ -246,14 +246,16 @@
 
         private class FileInfo
         {
+            [NotNull]
             private static readonly Regex _regex = new Regex(@"\W+", RegexOptions.Compiled);
             [NotNull]
             private readonly ProjectFile _projectFile;
-            private readonly string[] _lines;
             [NotNull]
             private readonly Dictionary<string, HashSet<int>> _keyLinesLookup = new Dictionary<string, HashSet<int>>();
             [NotNull, ItemNotNull]
             private readonly CodeReferenceConfigurationItem[] _configurations;
+
+            private readonly string[] _lines;
 
             public FileInfo([NotNull] ProjectFile projectFile, [NotNull, ItemNotNull] IEnumerable<CodeReferenceConfigurationItem> configurations, [NotNull] ICollection<string> keys, ref long visited)
             {
@@ -354,6 +356,7 @@
                 Contract.Invariant(_projectFile != null);
                 Contract.Invariant(_keyLinesLookup != null);
                 Contract.Invariant(_configurations != null);
+                Contract.Invariant(_regex != null);
             }
         }
     }

@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignWidth="800"
              xmlns:wpf="urn:TomsToolbox"
-             xmlns:translators="clr-namespace:tomenglertde.ResXManager.Translators;assembly=ResXManager.Translators"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
-             xmlns:styles="urn:ResXManager.Styles">
+             xmlns:styles="urn:ResXManager.Styles"
+             xmlns:infrastructure="urn:ResXManager.Infrastructure">
   <TabControl TabStripPlacement="Left" Loaded="TabControl_Loaded" Style="{DynamicResource {x:Static styles:ResourceKeys.TabControlStyle}}"
               ItemsSource="{Binding Translators, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" >
     <TabControl.ItemTemplate>
@@ -15,7 +15,7 @@
       </DataTemplate>
     </TabControl.ItemTemplate>
     <TabControl.ContentTemplate>
-      <DataTemplate DataType="translators:ITranslator">
+      <DataTemplate DataType="infrastructure:ITranslator">
         <StackPanel Margin="5">
           <DockPanel Margin="10,0">
             <CheckBox DockPanel.Dock="Left" Content="{x:Static properties:Resources.Enabled}" IsChecked="{Binding IsEnabled}" VerticalAlignment="Bottom"  Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
@@ -34,7 +34,7 @@
             <StackPanel>
               <ItemsControl ItemsSource="{Binding Credentials}" Margin="2" Focusable="False">
                 <ItemsControl.ItemTemplate>
-                  <DataTemplate DataType="translators:ICredentialItem">
+                  <DataTemplate DataType="infrastructure:ICredentialItem">
                     <wpf:SharedWidthHeaderedContentControl Margin="2">
                       <wpf:SharedWidthHeaderedContentControl.Header>
                         <TextBlock DockPanel.Dock="Left"><Run Text="{Binding Description, Mode=OneWay}"/><Run Text=": "/></TextBlock>

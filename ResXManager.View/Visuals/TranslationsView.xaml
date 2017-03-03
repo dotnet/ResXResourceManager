@@ -4,11 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="1000"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:model="urn:ResXManager.Model"
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
-             xmlns:translators="clr-namespace:tomenglertde.ResXManager.Translators;assembly=ResXManager.Translators"
              xmlns:toms="urn:TomsToolbox"
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
@@ -112,9 +110,9 @@
                                 IsChecked="{Binding Configuration.PrefixTranslations}"
                                 Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
                       <StackPanel Orientation="Horizontal" MinWidth="40">
-                        <TextBlock Text="&quot;" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding Configuration.TranslationPrefix}" BorderThickness="0" Padding="-1" Background="Transparent" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" VerticalAlignment="Center"/>
-                        <TextBlock Text="&quot;" VerticalAlignment="Center"/>
+                        <TextBlock Text="&quot;" VerticalAlignment="Center" />
+                        <TextBox Text="{Binding Configuration.TranslationPrefix}" BorderThickness="0" Padding="-1" Background="Transparent" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" VerticalAlignment="Center" />
+                        <TextBlock Text="&quot;" VerticalAlignment="Center" />
                       </StackPanel>
                     </StackPanel>
                     <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
@@ -197,14 +195,14 @@
                 </DataTemplate>
               </DataGridTemplateColumn.HeaderTemplate>
               <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate DataType="model:TranslationItem">
+                <DataTemplate DataType="visuals:TranslationItem">
                   <ComboBox Margin="0" Padding="0" BorderThickness="0" DisplayMemberPath="TranslatedText"
                             ItemsSource="{Binding OrderedResults}" IsEditable="True"
                             Text="{Binding Translation, UpdateSourceTrigger=PropertyChanged}"
                             IsKeyboardFocusWithinChanged="ComboBox_IsKeyboardFocusWithinChanged"
                             Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
                     <ComboBox.ItemTemplate>
-                      <DataTemplate DataType="translators:ITranslationMatch">
+                      <DataTemplate DataType="infrastructure:ITranslationMatch">
                         <TextBlock>
                           <Span Foreground="Gray">
                             <Run Text="{Binding Rating, StringFormat=F2, Mode=OneWay}" />

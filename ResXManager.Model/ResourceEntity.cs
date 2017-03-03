@@ -33,9 +33,9 @@
         private readonly string _baseName;
         [NotNull]
         private readonly string _directoryName;
-        [NotNull]
+        [NotNull, ItemNotNull]
         private readonly ObservableCollection<ResourceTableEntry> _resourceTableEntries;
-        [NotNull]
+        [NotNull, ItemNotNull]
         private readonly ReadOnlyObservableCollection<ResourceTableEntry> _readOnlyResourceTableEntries;
         [NotNull]
         private readonly string _displayName;
@@ -350,6 +350,23 @@
                 Contract.Assume(language != null);
 
                 language.MoveNode(resourceTableEntry, previousEntries);
+            }
+        }
+
+        public void OnItemOrderChanged([NotNull] ResourceLanguage resourceLanguage)
+        {
+            Contract.Requires(resourceLanguage != null);
+
+            if (resourceLanguage.CultureKey != CultureKey.Neutral)
+                return;
+
+            var index = 0;
+
+            var entries = _resourceTableEntries.ToDictionary(entry => entry.Key);
+
+            foreach (var key in resourceLanguage.ResourceKeys)
+            {
+                entries.GetValueOrDefault(key)?.UpdateIndex(index++);
             }
         }
 

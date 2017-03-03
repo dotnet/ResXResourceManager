@@ -23,6 +23,8 @@ namespace tomenglertde.ResXManager.View.Properties {
     using System;
     using System.Diagnostics.Contracts;
 
+    using JetBrains.Annotations;
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -73,6 +75,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to You are about to add new entries to a WinForms des....
         /// </summary>
+        [NotNull]
         public static string AddEntryToWinFormsResourceWarning {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -83,6 +86,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Add new key (Shift+Insert).
         /// </summary>
+        [NotNull]
         public static string AddKeyToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -93,6 +97,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Add new language.
         /// </summary>
+        [NotNull]
         public static string AddLanguageToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -103,6 +108,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Authentication.
         /// </summary>
+        [NotNull]
         public static string Authentication {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -113,6 +119,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Create all resource files when adding a new resour....
         /// </summary>
+        [NotNull]
         public static string AutoCreateNewLanguageFiles {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -126,6 +133,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <remarks>
         /// @Invariant
         /// </remarks>
+        [NotNull]
         public static string CaseSensitive {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -136,6 +144,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cell selection.
         /// </summary>
+        [NotNull]
         public static string CellSelection {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -146,6 +155,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Allow selection of individual cells to copy/paste ....
         /// </summary>
+        [NotNull]
         public static string CellSelectionToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -156,6 +166,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Choose columns.
         /// </summary>
+        [NotNull]
         public static string ChooseColumnsToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -166,6 +177,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The number of references found in code files. This....
         /// </summary>
+        [NotNull]
         public static string CodeReferencesToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -176,6 +188,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Too many references to show details!.
         /// </summary>
+        [NotNull]
         public static string CodeReferencesTooManyDetailsToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -186,6 +199,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Code reference detection is still in progress ({0}....
         /// </summary>
+        [NotNull]
         public static string CodeReferenceTrackingInProgress {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -196,6 +210,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to +Ctrl =&amp;gt; Apply star sizes to right columns&....
         /// </summary>
+        [NotNull]
         public static string ColumnHeaderGripperToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -206,6 +221,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Comment.
         /// </summary>
+        [NotNull]
         public static string Comment {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -216,6 +232,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Comment.
         /// </summary>
+        [NotNull]
         public static string CommentColumnHeader {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -226,6 +243,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Comment Token.
         /// </summary>
+        [NotNull]
         public static string CommentToken {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -236,6 +254,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Duplicate resource key handling.
         /// </summary>
+        [NotNull]
         public static string Configuration_DuplicateKeyHandling {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -246,6 +265,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Excel export mode.
         /// </summary>
+        [NotNull]
         public static string Configuration_ExcelExportModeHeader {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -256,6 +276,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to File creation.
         /// </summary>
+        [NotNull]
         public static string Configuration_FileCreationHeader {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -266,6 +287,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
+        [NotNull]
         public static string Configuration_General {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -276,6 +298,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Load &amp; Save.
         /// </summary>
+        [NotNull]
         public static string Configuration_LoadSaveHeader {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -286,6 +309,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Scope.
         /// </summary>
+        [NotNull]
         public static string ConfigurationScopeHeader {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -296,6 +320,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Confirm adding new resource files.
         /// </summary>
+        [NotNull]
         public static string ConfirmAddLanguage {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -306,6 +331,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cut the selected rows?.
         /// </summary>
+        [NotNull]
         public static string ConfirmCutItems {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -316,6 +342,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Delete the selected rows?.
         /// </summary>
+        [NotNull]
         public static string ConfirmDeleteItems {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -326,6 +353,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Copy (Ctrl+C).
         /// </summary>
+        [NotNull]
         public static string Copy {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -336,6 +364,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Copy the selected rows or cells (Ctrl+C).
         /// </summary>
+        [NotNull]
         public static string CopyToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -346,6 +375,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Create Snapshot.
         /// </summary>
+        [NotNull]
         public static string CreateSnapshot {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -356,6 +386,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cut (Ctrl+X).
         /// </summary>
+        [NotNull]
         public static string Cut {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -366,6 +397,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cut selected rows (Ctrl+X).
         /// </summary>
+        [NotNull]
         public static string CutToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -376,6 +408,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Delete (Del).
         /// </summary>
+        [NotNull]
         public static string Delete {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -386,6 +419,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Delete selected rows (Del).
         /// </summary>
+        [NotNull]
         public static string DeleteToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -396,6 +430,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Detect Code References.
         /// </summary>
+        [NotNull]
         public static string DetectCodeReferences_Header {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -406,6 +441,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Diagnostics.
         /// </summary>
+        [NotNull]
         public static string Diagnostics {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -416,6 +452,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Support the Open Source Community..
         /// </summary>
+        [NotNull]
         public static string DonateButtonToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -426,6 +463,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Your are editing the default configuration. If you....
         /// </summary>
+        [NotNull]
         public static string EditDefaultConfigurationNotification {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -436,6 +474,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to You are editing the configuration specific for the....
         /// </summary>
+        [NotNull]
         public static string EditSolutionConfigurationNotification {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -446,6 +485,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Enabled.
         /// </summary>
+        [NotNull]
         public static string Enabled {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -456,6 +496,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Error adding the new resource file '{0}'..
         /// </summary>
+        [NotNull]
         public static string ErrorAddingNewResourceFile {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -466,6 +507,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Export all.
         /// </summary>
+        [NotNull]
         public static string ExportExcelAll {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -476,6 +518,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Export selection.
         /// </summary>
+        [NotNull]
         public static string ExportExcelSelection {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -486,6 +529,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to File Extensions.
         /// </summary>
+        [NotNull]
         public static string FileExtensions {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -496,6 +540,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Detect code references..
         /// </summary>
+        [NotNull]
         public static string FindCodeReferencesButtonToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -506,6 +551,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Flat view.
         /// </summary>
+        [NotNull]
         public static string FlatViewToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -516,6 +562,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Grouped view.
         /// </summary>
+        [NotNull]
         public static string GroupedViewToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -526,6 +573,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Documentation.
         /// </summary>
+        [NotNull]
         public static string HelpButtonToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -536,6 +584,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Import.
         /// </summary>
+        [NotNull]
         public static string ImportExcel {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -546,6 +595,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A normalized table is expected..
         /// </summary>
+        [NotNull]
         public static string ImportNormalizedTableExpected {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -556,6 +606,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Index of the entry in the resource file..
         /// </summary>
+        [NotNull]
         public static string IndexColumnHeaderToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -566,6 +617,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Show the index column.
         /// </summary>
+        [NotNull]
         public static string IndexColumnToggleButtonToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -576,6 +628,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Index of the entry in the resource file. Use fract....
         /// </summary>
+        [NotNull]
         public static string IndexColumnToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -586,6 +639,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Invariant.
         /// </summary>
+        [NotNull]
         public static string Invariant {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -596,6 +650,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Key.
         /// </summary>
+        [NotNull]
         public static string Key {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -606,6 +661,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to This is an overview of the languages supported by ....
         /// </summary>
+        [NotNull]
         public static string LanguageConfiguration_Description {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -616,6 +672,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Like it? Support the project by writing a short re....
         /// </summary>
+        [NotNull]
         public static string LikeButtonToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -626,6 +683,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Load Snapshot.
         /// </summary>
+        [NotNull]
         public static string LoadSnapshot {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -636,6 +694,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Multiple selection..
         /// </summary>
+        [NotNull]
         public static string MultipleSelection {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -646,6 +705,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to You must select a single resource in the left side....
         /// </summary>
+        [NotNull]
         public static string NeedSingleEntitySelection {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -656,6 +716,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Neutral.
         /// </summary>
+        [NotNull]
         public static string Neutral {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -666,6 +727,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Neutral Resources Language:.
         /// </summary>
+        [NotNull]
         public static string NeutralResourceLanguageHeader {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -676,6 +738,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Enter new resource key:.
         /// </summary>
+        [NotNull]
         public static string NewKeyPrompt {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -686,6 +749,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Select the new language:.
         /// </summary>
+        [NotNull]
         public static string NewLanguageIdPrompt {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -696,6 +760,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to No code references have been found by this algorit....
         /// </summary>
+        [NotNull]
         public static string NoCodeReferencesToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -706,6 +771,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to There is no resource file for this resource..
         /// </summary>
+        [NotNull]
         public static string NoResourceFileForResource {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -716,6 +782,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to No selection..
         /// </summary>
+        [NotNull]
         public static string NoSelection {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -726,6 +793,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Paste (Ctrl+V).
         /// </summary>
+        [NotNull]
         public static string Paste {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -736,6 +804,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Error parsing the data from clipboard:.
         /// </summary>
+        [NotNull]
         public static string PasteFailed {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -746,6 +815,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The data you're pasting isn't the same size as you....
         /// </summary>
+        [NotNull]
         public static string PasteSelectionSizeMismatch {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -756,6 +826,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Paste the clipboard content (Ctrl+V).
         /// </summary>
+        [NotNull]
         public static string PasteToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -766,6 +837,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Patterns.
         /// </summary>
+        [NotNull]
         public static string Patterns {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -776,6 +848,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Refresh view.
         /// </summary>
+        [NotNull]
         public static string RefreshViewToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -786,6 +859,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Regular Expression.
         /// </summary>
+        [NotNull]
         public static string RegularExpression {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -796,6 +870,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A regular expression to filter resource files.&amp....
         /// </summary>
+        [NotNull]
         public static string ResourceFilterToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -806,6 +881,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Save files immediately upon change.
         /// </summary>
+        [NotNull]
         public static string SaveFilesImmediatelyUponChange {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -816,6 +892,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Selected/Total.
         /// </summary>
+        [NotNull]
         public static string SelectedTotalToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -826,6 +903,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Configuration.
         /// </summary>
+        [NotNull]
         public static string ShellTabHeader_Configuration {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -836,6 +914,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Languages.
         /// </summary>
+        [NotNull]
         public static string ShellTabHeader_Languages {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -846,6 +925,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Main.
         /// </summary>
+        [NotNull]
         public static string ShellTabHeader_Main {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -856,6 +936,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Translate.
         /// </summary>
+        [NotNull]
         public static string ShellTabHeader_Translate {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -866,6 +947,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Show only lines with warnings or changes.
         /// </summary>
+        [NotNull]
         public static string ShowOnlyMissingToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -876,6 +958,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Show performance tracer messages in output window.
         /// </summary>
+        [NotNull]
         public static string ShowPerformanceTraces {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -886,6 +969,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Sort all files now.
         /// </summary>
+        [NotNull]
         public static string SortAllFilesNow {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -896,6 +980,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Sort using:.
         /// </summary>
+        [NotNull]
         public static string SortBy {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -906,6 +991,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to When saving a RESX file, sort the XML data nodes b....
         /// </summary>
+        [NotNull]
         public static string SortNodesByKey {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -916,6 +1002,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Do you want to sort all nodes of all resource file....
         /// </summary>
+        [NotNull]
         public static string SortNodesByKey_Confirmation {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -929,6 +1016,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <remarks>
         /// @Invariant
         /// </remarks>
+        [NotNull]
         public static string Title {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -939,6 +1027,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Apply All.
         /// </summary>
+        [NotNull]
         public static string Translations_ApplyAll {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -949,6 +1038,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Apply Selected.
         /// </summary>
+        [NotNull]
         public static string Translations_ApplySelected {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -959,6 +1049,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Restart.
         /// </summary>
+        [NotNull]
         public static string Translations_Restart {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -969,6 +1060,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Source:.
         /// </summary>
+        [NotNull]
         public static string Translations_Source {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -979,6 +1071,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Stop.
         /// </summary>
+        [NotNull]
         public static string Translations_Stop {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -989,6 +1082,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Targets:.
         /// </summary>
+        [NotNull]
         public static string Translations_Targets {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -999,6 +1093,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Prefix translations with .
         /// </summary>
+        [NotNull]
         public static string TranslationsPrefixHeader {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -1009,6 +1104,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Save credentials (Credentials will be stored as cl....
         /// </summary>
+        [NotNull]
         public static string TranslatorConfiguration_SaveCredentials {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
@@ -1019,6 +1115,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Unload Snapshot.
         /// </summary>
+        [NotNull]
         public static string UnloadSnapshot {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);

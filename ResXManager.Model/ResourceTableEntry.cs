@@ -142,6 +142,11 @@
             Refresh();
         }
 
+        internal void UpdateIndex(int index)
+        {
+            _index = index;
+            OnPropertyChanged(nameof(Index));
+        }
 
         [NotNull]
         public ResourceEntity Container
