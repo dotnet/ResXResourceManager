@@ -34,6 +34,8 @@
         private readonly ResourceManager _resourceManager;
         [NotNull]
         private readonly Configuration _configuration;
+        [NotNull]
+        private readonly ResourceViewModel _resourceViewModel;
 
         [ImportingConstructor]
         public ResourceView([NotNull] ExportProvider exportProvider)
@@ -49,9 +51,11 @@
 
                 _configuration = exportProvider.GetExportedValue<Configuration>();
 
+                _resourceViewModel = exportProvider.GetExportedValue<ResourceViewModel>();
+
                 InitializeComponent();
 
-                DataGrid.SetupColumns(_resourceManager, _configuration);
+                DataGrid.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
             }
             catch (Exception ex)
             {
@@ -61,7 +65,7 @@
 
         private void ResourceManager_Loaded(object sender, EventArgs e)
         {
-            DataGrid.SetupColumns(_resourceManager, _configuration);
+            DataGrid.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
         }
 
         private void AddLanguage_Click(object sender, RoutedEventArgs e)
@@ -227,6 +231,7 @@
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_configuration != null);
             Contract.Invariant(DataGrid != null);
+            Contract.Invariant(_resourceViewModel != null);
         }
     }
 }

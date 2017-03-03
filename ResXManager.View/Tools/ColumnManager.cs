@@ -43,10 +43,11 @@
         public static readonly DependencyProperty CellAnnotationsProperty =
             DependencyProperty.RegisterAttached("CellAnnotations", typeof(ICollection<string>), typeof(ColumnManager), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
-        public static void SetupColumns([NotNull] this DataGrid dataGrid, [NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration)
+        public static void SetupColumns([NotNull] this DataGrid dataGrid, [NotNull] ResourceManager resourceManager, [NotNull] ResourceViewModel resourceViewModel, [NotNull] Configuration configuration)
         {
             Contract.Requires(dataGrid != null);
             Contract.Requires(resourceManager != null);
+            Contract.Requires(resourceViewModel != null);
             Contract.Requires(configuration != null);
 
             var dataGridEvents = dataGrid.GetAdditionalEvents();
@@ -59,7 +60,7 @@
             if (columns.Count == 0)
             {
                 columns.Add(CreateKeyColumn());
-                columns.Add(CreateIndexColumn(resourceManager));
+                columns.Add(CreateIndexColumn(resourceViewModel));
                 columns.Add(CreateCodeReferencesColumn(dataGrid));
             }
 
@@ -110,7 +111,7 @@
         }
 
         [NotNull]
-        private static DataGridTextColumn CreateIndexColumn(ResourceManager resourceManager)
+        private static DataGridTextColumn CreateIndexColumn(ResourceViewModel resourceViewModel)
         {
             var elementStyle = new Style(typeof(TextBlock))
             {
@@ -150,8 +151,8 @@
             {
                 Bindings =
                 {
-                    new Binding("SelectedEntities.Count") { Source = resourceManager, Converter = BinaryOperationConverter.Equality, ConverterParameter = 1 },
-                    new Binding("IsIndexColumnVisible") { Source = Settings.Default }
+                    new Binding(nameof(ResourceViewModel.SelectedEntities) + ".Count") { Source = resourceViewModel, Converter = BinaryOperationConverter.Equality, ConverterParameter = 1 },
+                    new Binding(nameof(Settings.IsIndexColumnVisible)) { Source = Settings.Default }
                 },
                 Converter = andValuesToVisibilityConverter
             };
