@@ -101,6 +101,8 @@
         [NotNull]
         private static DataGridTextColumn CreateKeyColumn()
         {
+            Contract.Ensures(Contract.Result<DataGridTextColumn>() != null);
+
             return new DataGridTextColumn
             {
                 Header = new ColumnHeader(Resources.Key, ColumnType.Key),
@@ -113,6 +115,8 @@
         [NotNull]
         private static DataGridTextColumn CreateIndexColumn(ResourceViewModel resourceViewModel)
         {
+            Contract.Ensures(Contract.Result<DataGridTextColumn>() != null);
+
             var elementStyle = new Style(typeof(TextBlock))
             {
                 Setters =
@@ -138,27 +142,10 @@
                 CanUserReorder = false,
             };
 
-            var andValuesToVisibilityConverter = new CompositeMultiValueConverter()
-            {
-                MultiValueConverter = LogicalMultiValueConverter.And,
-                Converters =
-                {
-                    BooleanToVisibilityConverter.Default
-                }
-            };
-
-            var visibilityBinding = new MultiBinding
-            {
-                Bindings =
-                {
-                    new Binding(nameof(ResourceViewModel.SelectedEntities) + ".Count") { Source = resourceViewModel, Converter = BinaryOperationConverter.Equality, ConverterParameter = 1 },
-                    new Binding(nameof(Settings.IsIndexColumnVisible)) { Source = Settings.Default }
-                },
-                Converter = andValuesToVisibilityConverter
-            };
-
             column.SetIsFilterVisible(false);
-            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, visibilityBinding);
+
+            BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, new Binding(nameof(Settings.IsIndexColumnVisible)) { Source = Settings.Default, Converter = BooleanToVisibilityConverter.Default });
+            BindingOperations.SetBinding(column, DataGridColumn.IsReadOnlyProperty, new Binding(nameof(ResourceViewModel.SelectedEntities) + ".Count") { Source = resourceViewModel, Converter = BinaryOperationConverter.Inequality, ConverterParameter = 1 });
 
             return column;
         }
@@ -166,6 +153,8 @@
         [NotNull]
         private static Image CreateCodeReferencesImage()
         {
+            Contract.Ensures(Contract.Result<Image>() != null);
+
             return new Image
             {
                 Source = _codeReferencesImage,
@@ -177,6 +166,7 @@
         private static DataGridColumn CreateCodeReferencesColumn([NotNull] FrameworkElement dataGrid)
         {
             Contract.Requires(dataGrid != null);
+            Contract.Ensures(Contract.Result<DataGridColumn>() != null);
 
             var elementStyle = new Style(typeof(TextBlock))
             {
@@ -346,6 +336,7 @@
         {
             Contract.Requires(dataGrid != null);
             Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
 
             return dataGrid.Columns
                 .Where(predicate)
@@ -395,6 +386,8 @@
             [NotNull]
             public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
             {
+                Contract.Ensures(Contract.Result<object>() != null);
+
                 return true.Equals(value) ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
             }
 

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.ResourceView"
+﻿g<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.ResourceView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="700"
@@ -243,8 +243,7 @@
             <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/references.png" />
           </ToggleButton>
           <ToggleButton ToolTip="{x:Static properties:Resources.IndexColumnToggleButtonToolTip}"
-                        IsChecked="{Binding IsIndexColumnVisible, Source={x:Static properties:Settings.Default}, Mode=TwoWay}"
-                        IsEnabled="{Binding SelectedItems.Count, ElementName=ListBox, Converter={x:Static toms:BinaryOperationConverter.Equality}, ConverterParameter=1}">
+                        IsChecked="{Binding IsIndexColumnVisible, Source={x:Static properties:Settings.Default}, Mode=TwoWay}">
             <TextBlock Width="16" Height="16" Text="#" TextAlignment="Center" />
           </ToggleButton>
           <ToggleButton ToolTip="{x:Static properties:Resources.CellSelectionToolTip}"
