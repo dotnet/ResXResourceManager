@@ -457,6 +457,7 @@
         private ICollection<string> GetValueAnnotations([NotNull] ResourceLanguage language)
         {
             Contract.Requires(language != null);
+            Contract.Ensures(Contract.Result<ICollection<string>>() != null);
 
             return GetStringFormatParameterMismatchAnnotations(language)
                 .Concat(GetSnapshotDifferences(language, Values.GetValue(language.CultureKey), d => d.Text))
@@ -467,6 +468,7 @@
         private ICollection<string> GetCommentAnnotations([NotNull] ResourceLanguage language)
         {
             Contract.Requires(language != null);
+            Contract.Ensures(Contract.Result<ICollection<string>>() != null);
 
             return GetSnapshotDifferences(language, Comments.GetValue(language.CultureKey), d => d.Comment)
                 .ToArray();
@@ -488,6 +490,8 @@
 
         private IEnumerable<string> GetStringFormatParameterMismatchAnnotations([NotNull] ResourceLanguage language)
         {
+            Contract.Requires(language != null);
+
             if (language.IsNeutralLanguage)
                 yield break;
 
@@ -554,12 +558,9 @@
                 return x.Container.Equals(y.Container) && x.Key.Equals(y.Key);
             }
 
-            public int GetHashCode([NotNull] ResourceTableEntry obj)
+            public int GetHashCode(ResourceTableEntry obj)
             {
-                if (obj == null)
-                    throw new ArgumentNullException(nameof(obj));
-
-                return obj.Container.GetHashCode() + obj.Key.GetHashCode();
+                return HashCode.Aggregate(obj?.Container.GetHashCode() ?? 0, obj?.Key.GetHashCode() ?? 0);
             }
         }
 

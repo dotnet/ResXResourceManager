@@ -111,6 +111,8 @@
         [NotNull]
         public string CreateSnapshot()
         {
+            Contract.Ensures(Contract.Result<string>() != null);
+
             return _resourceManager.CreateSnapshot();
         }
 

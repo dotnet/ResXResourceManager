@@ -58,6 +58,8 @@
         [NotNull, ItemNotNull]
         private IEnumerable<DteProjectFile> GetProjectFiles()
         {
+            Contract.Ensures(Contract.Result<IEnumerable<DteProjectFile>>() != null);
+
             return _compositionHost.GetExportedValue<DteSolution>().GetProjectFiles();
         }
 

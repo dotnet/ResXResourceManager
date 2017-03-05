@@ -43,7 +43,7 @@
         [NotNull]
         private readonly Configuration _configuration;
         [NotNull]
-        private readonly ICompositionHost _compositionHost = VSPackage.Instance.CompositionHost;
+        private readonly ICompositionHost _compositionHost;
 
         /// <summary>
         /// Standard constructor for the tool window.
@@ -60,10 +60,13 @@
             BitmapResourceID = 301;
             BitmapIndex = 1;
 
-            _tracer = _compositionHost.GetExportedValue<ITracer>();
-            _configuration = _compositionHost.GetExportedValue<Configuration>();
+            var compositionHost = VSPackage.Instance.CompositionHost;
+            _tracer = compositionHost.GetExportedValue<ITracer>();
+            _configuration = compositionHost.GetExportedValue<Configuration>();
 
-            _compositionHost.GetExportedValue<ResourceManager>().BeginEditing += ResourceManager_BeginEditing;
+            compositionHost.GetExportedValue<ResourceManager>().BeginEditing += ResourceManager_BeginEditing;
+
+            _compositionHost = compositionHost;
 
             VisualComposition.Error += VisualComposition_Error;
         }
@@ -208,7 +211,7 @@
                 message = string.Format(CultureInfo.CurrentCulture, Resources.ErrorOpenFilesInEditor, FormatFileNames(alreadyOpenItems.Select(item => item.Item1)));
                 MessageBox.Show(message, Resources.ToolWindowTitle);
 
-                ActivateWindow(alreadyOpenItems.Select(item => item.Item2).First());
+                ActivateWindow(alreadyOpenItems.Select(item => item.Item2).FirstOrDefault());
 
                 return false;
             }
@@ -300,6 +303,7 @@
         private static string[] GetLockedFiles([NotNull] IEnumerable<ResourceLanguage> languages)
         {
             Contract.Requires(languages != null);
+            Contract.Ensures(Contract.Result<string[]>() != null);
 
             return languages.Where(l => !l.ProjectFile.IsWritable)
                 .Select(l => l.FileName)
@@ -387,6 +391,8 @@
         private static string FormatFileNames([NotNull] IEnumerable<string> lockedFiles)
         {
             Contract.Requires(lockedFiles != null);
+            Contract.Ensures(Contract.Result<string>() != null);
+
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
 
@@ -407,6 +413,7 @@
         {
             Contract.Invariant(_configuration != null);
             Contract.Invariant(_tracer != null);
+            Contract.Invariant(_compositionHost != null);
         }
     }
 }

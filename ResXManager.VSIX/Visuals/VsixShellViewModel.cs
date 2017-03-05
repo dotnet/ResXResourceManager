@@ -70,6 +70,8 @@
         [NotNull]
         private IEnumerable<CodeGenerator> SelectedItemsCodeGenerators()
         {
+            Contract.Ensures(Contract.Result<IEnumerable<CodeGenerator>>() != null);
+
             return _resourceViewModel.SelectedEntities
                 .Select(x => x.NeutralProjectFile)
                 .OfType<DteProjectFile>()

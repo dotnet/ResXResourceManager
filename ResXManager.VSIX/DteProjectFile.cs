@@ -46,7 +46,7 @@
         /// <summary>
         /// Gets the project items.
         /// </summary>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IList<EnvDTE.ProjectItem> ProjectItems
         {
             get
@@ -98,7 +98,10 @@
                     return;
                 }
             }
-            catch { }
+            catch
+            {
+                // in case of errors write directly to the file...
+            }
 
             base.InternalChanged(document);
         }
@@ -112,7 +115,10 @@
                 if (projectItem.Document?.Save() == EnvDTE.vsSaveStatus.vsSaveSucceeded)
                     return;
             }
-            catch { }
+            catch
+            {
+                // in case of errors write directly to the file...
+            }
 
             base.InternalSave(document);
         }

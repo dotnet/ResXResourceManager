@@ -140,12 +140,13 @@
         /// <summary>
         /// Gets all the resource keys defined in this language.
         /// </summary>
-        [NotNull, ItemNotNull]
+        [NotNull, ItemNotNull, ContractVerification(false)]
         public IEnumerable<string> ResourceKeys
         {
             get
             {
                 Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
+                Contract.Ensures(Contract.ForAll(Contract.Result<IEnumerable<string>>(), item => item != null));
 
                 return _nodes.Keys;
             }
@@ -366,6 +367,7 @@
         private Node CreateNode([NotNull] string key)
         {
             Contract.Requires(key != null);
+            Contract.Ensures(Contract.Result<Node>() != null);
 
             Node node;
             var content = new XElement(_valueNodeName);
@@ -466,6 +468,7 @@
             OnChanged();
         }
 
+        [ContractVerification(false)]
         internal bool IsContentEqual([NotNull] ResourceLanguage other)
         {
             Contract.Requires(other != null);
@@ -494,6 +497,7 @@
         {
             Contract.Requires(elements != null);
             Contract.Requires(item != null);
+            Contract.Ensures(Contract.Result<string>() != null);
 
             var key = item.Key;
             string newKey;

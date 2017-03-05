@@ -290,6 +290,7 @@
         private string EvaluatePattern([NotNull] string pattern)
         {
             Contract.Requires(pattern != null);
+            Contract.Ensures(Contract.Result<string>() != null);
 
             var entity = ReuseExisiting ? _selectedResourceEntry?.Container : _selectedResourceEntity;
 
@@ -304,6 +305,7 @@
         private static string CreateKey([NotNull] string text, string className, string functionName)
         {
             Contract.Requires(text != null);
+            Contract.Ensures(Contract.Result<string>() != null);
 
             var keyBuilder = new StringBuilder();
 

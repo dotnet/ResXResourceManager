@@ -38,6 +38,7 @@
         {
             Contract.Requires(exportProvider != null);
             Contract.Requires(configuration != null);
+            Contract.Requires(tracer != null);
 
             _configuration = configuration;
             _tracer = tracer;

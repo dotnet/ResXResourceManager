@@ -63,6 +63,7 @@
         public static IEnumerable<T> PsCast<T>([NotNull] this IEnumerable items)
         {
             Contract.Requires(items != null);
+            Contract.Ensures(Contract.Result<IEnumerable<T>>() != null);
 
             return items.OfType<object>().Select(PsObjectCast<T>);
         }
@@ -71,6 +72,7 @@
         public static T PsObjectCast<T>([NotNull] this object item)
         {
             Contract.Requires(item != null);
+            Contract.Ensures(Contract.Result<T>() != null);
 
             var type = item.GetType();
 

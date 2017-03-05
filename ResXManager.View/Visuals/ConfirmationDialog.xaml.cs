@@ -24,6 +24,8 @@
 
         public static bool? Show([NotNull] ExportProvider exportProvider, object content, string title)
         {
+            Contract.Requires(exportProvider != null);
+
             var window = new Window
             {
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,

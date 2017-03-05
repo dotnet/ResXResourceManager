@@ -1,6 +1,7 @@
 namespace tomenglertde.ResXManager.Model
 {
     using System;
+    using System.Diagnostics.Contracts;
     using System.Runtime.Serialization;
 
     using JetBrains.Annotations;
@@ -23,6 +24,7 @@ namespace tomenglertde.ResXManager.Model
         protected ImportException([NotNull] SerializationInfo info, StreamingContext context) 
             : base(info, context)
         {
+            Contract.Requires(info != null);
         }
     }
 }

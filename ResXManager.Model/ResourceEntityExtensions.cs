@@ -52,6 +52,8 @@
 
         private static IEnumerable<string> GetTableDataColumns([NotNull] this ResourceTableEntry entry, CultureKey cultureKey)
         {
+            Contract.Requires(entry != null);
+
             yield return entry.Comments.GetValue(cultureKey);
             yield return entry.Values.GetValue(cultureKey);
         }
@@ -82,6 +84,7 @@
         {
             Contract.Requires(entries != null);
             Contract.Requires(languages != null);
+            Contract.Ensures(Contract.Result<IEnumerable<IList<string>>>() != null);
 
             return entries.Select(entry => entry.GetTableLine(languages).ToArray());
         }
@@ -99,6 +102,7 @@
         {
             Contract.Requires(entry != null);
             Contract.Requires(languages != null);
+            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
 
             return new[] { entry.Key }.Concat(languages.SelectMany(entry.GetTableDataColumns));
         }
@@ -107,6 +111,7 @@
         private static string GetLanguageName([NotNull] string dataColumnHeader)
         {
             Contract.Requires(dataColumnHeader != null);
+            Contract.Ensures(Contract.Result<string>() != null);
 
             var languageName = dataColumnHeader.StartsWith(CommentHeaderPrefix, StringComparison.OrdinalIgnoreCase)
                 ? dataColumnHeader.Substring(CommentHeaderPrefix.Length) : dataColumnHeader;

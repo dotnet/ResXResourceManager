@@ -215,6 +215,7 @@
         {
             Contract.Requires(sheet != null);
             Contract.Requires(workbookPart != null);
+            Contract.Ensures(Contract.Result<IList<string>[]>() != null);
 
             return sheet.GetRows(workbookPart)
                 .Select(row => row.GetCellValues(sharedStrings))
@@ -232,6 +233,7 @@
         private static IList<string> GetCellValues([NotNull] this Row row, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(row != null);
+            Contract.Ensures(Contract.Result<IList<string>>() != null);
 
             return row.OfType<Cell>().GetCellValues(sharedStrings).ToArray();
         }
@@ -271,7 +273,9 @@
         [NotNull]
         private static string GetName([NotNull] this Sheet sheet)
         {
+            Contract.Requires(sheet != null);
             Contract.Ensures(Contract.Result<string>() != null);
+
             return sheet.Name.Value;
         }
 
@@ -286,6 +290,8 @@
         [NotNull]
         private static Cell CreateCell(string text)
         {
+            Contract.Ensures(Contract.Result<Cell>() != null);
+
             return new Cell
             {
                 DataType = CellValues.InlineString,
@@ -314,6 +320,7 @@
         private static string GetText([NotNull] this CellType cell, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(cell != null);
+            Contract.Ensures(Contract.Result<string>() != null);
 
             var cellValue = cell.CellValue;
 
@@ -424,6 +431,8 @@
         private static IEnumerable<string> GetLanguageColumnHeaders([NotNull] this IEnumerable<CultureKey> languages, IResourceScope scope)
         {
             Contract.Requires(languages != null);
+            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
+
             return languages.SelectMany(lang => lang.GetLanguageColumnHeaders(scope));
         }
 
@@ -462,6 +471,7 @@
         {
             Contract.Requires(entry != null);
             Contract.Requires(languages != null);
+            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
 
             return new[] { entry.Key }.Concat(entry.GetLanguageDataColumns(languages, scope));
         }
@@ -471,6 +481,7 @@
         {
             Contract.Requires(entry != null);
             Contract.Requires(languages != null);
+            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
 
             return languages.SelectMany(l => entry.GetLanguageDataColumns(l, scope));
         }
@@ -588,6 +599,8 @@
             [NotNull]
             public Sheet CreateSheet()
             {
+                Contract.Ensures(Contract.Result<Sheet>() != null);
+
                 return new Sheet
                 {
                     Name = _sheetName,

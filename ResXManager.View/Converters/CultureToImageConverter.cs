@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -14,6 +15,7 @@
         [NotNull]
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            Contract.Ensures(Contract.Result<object>() != null);
             var imageSource = CultureToImageSourceConverter.Convert(value as CultureInfo);
 
             return new Image { Source = imageSource };

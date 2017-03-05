@@ -1,4 +1,5 @@
-﻿namespace tomenglertde.ResXManager.VSIX
+﻿using System.Diagnostics.Contracts;
+namespace tomenglertde.ResXManager.VSIX
 {
     using System;
     using System.Collections.Generic;
@@ -47,20 +48,41 @@
     {
         [NotNull]
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
+        [NotNull]
+        private readonly ICompositionHost _compositionHost = new CompositionHost();
 
         private EnvDTE.SolutionEvents _solutionEvents;
         private EnvDTE.DocumentEvents _documentEvents;
+        private static VSPackage _instance;
 
         public VSPackage()
         {
-            Instance = this;
+            _instance = this;
         }
 
         [NotNull]
-        public static VSPackage Instance { get; private set; }
+        public static VSPackage Instance
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<VSPackage>() != null);
+
+                if (_instance == null)
+                    throw new InvalidOperationException("Package is the entry point and is the first class to be created.");
+
+                return _instance;
+            }
+        }
 
         [NotNull]
-        public ICompositionHost CompositionHost { get; } = new CompositionHost();
+        public ICompositionHost CompositionHost
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<ICompositionHost>() != null);
+                return _compositionHost;
+            }
+        }
 
         [NotNull]
         private ITracer Tracer => CompositionHost.GetExportedValue<ITracer>();
@@ -74,7 +96,7 @@
             base.Initialize();
 
             var path = Path.GetDirectoryName(GetType().Assembly.Location);
-            Contract.Assume(path != null);
+            Contract.Assume(!string.IsNullOrEmpty(path));
 
             CompositionHost.AddCatalog(new DirectoryCatalog(path, @"*.dll"));
             CompositionHost.Container.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
@@ -136,6 +158,7 @@
         private static OleMenuCommand CreateMenuCommand([NotNull] IMenuCommandService mcs, int cmdId, EventHandler invokeHandler)
         {
             Contract.Requires(mcs != null);
+            Contract.Ensures(Contract.Result<OleMenuCommand>() != null);
 
             var menuCommandId = new CommandID(GuidList.guidResXManager_VSIXCmdSet, cmdId);
             var menuCommand = new OleMenuCommand(invokeHandler, menuCommandId);
@@ -230,6 +253,7 @@
         [NotNull]
         private IEnumerable<ResourceEntity> GetSelectedResourceEntites(string fileName)
         {
+            Contract.Ensures(Contract.Result<IEnumerable<ResourceEntity>>() != null);
             if (string.IsNullOrEmpty(fileName))
                 return Enumerable.Empty<ResourceEntity>();
 
@@ -262,6 +286,7 @@
             if (entry == null)
                 return;
 
+            // ReSharper disable once PossibleNullReferenceException
             if (!Properties.Settings.Default.MoveToResourceOpenInResXManager)
                 return;
 
@@ -332,6 +357,8 @@
             // e.g. if custom tool is a text template, we might want not only to generate the designer file but also 
             // extract some localization information.
             // => find the resource entity that contains the document and run the custom tool on the neutral project file.
+            
+            // ReSharper disable once PossibleNullReferenceException
             Func<ResourceEntity, bool> predicate = e => e.Languages
                 .Select(lang => lang.ProjectFile)
                 .OfType<DteProjectFile>()
@@ -375,6 +402,7 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_customToolRunner != null);
+            Contract.Invariant(_compositionHost != null);
         }
     }
 }

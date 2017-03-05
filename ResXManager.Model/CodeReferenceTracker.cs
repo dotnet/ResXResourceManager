@@ -1,4 +1,5 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿using System.Diagnostics.Contracts;
+namespace tomenglertde.ResXManager.Model
 {
     using System;
     using System.Collections.Generic;
@@ -167,6 +168,8 @@
 
         private class CodeMatch
         {
+            private readonly IList<string> _segments;
+
             [ContractVerification(false)] // too many assumptions would be needed...
             public CodeMatch([NotNull] string line, [NotNull] string key, Regex regex, StringComparison stringComparison, string singleLineComment)
             {
@@ -185,7 +188,7 @@
 
                     var length = key.Length;
 
-                    Segments = new[] { line.Substring(0, keyIndex), line.Substring(keyIndex, length), line.Substring(keyIndex + length) };
+                    _segments = new[] { line.Substring(0, keyIndex), line.Substring(keyIndex, length), line.Substring(keyIndex + length) };
                 }
                 else
                 {
@@ -202,22 +205,22 @@
 
                         keyIndexes.Add(keyIndex);
 
-                        Segments = new[] { line.Substring(0, keyIndex), line.Substring(keyIndex, length), line.Substring(keyIndex + length) };
+                        _segments = new[] { line.Substring(0, keyIndex), line.Substring(keyIndex, length), line.Substring(keyIndex + length) };
                     }
                     else
                     {
-                        Segments = new List<string>();
+                        _segments = new List<string>();
                         var keyIndex = 0;
                         foreach (var group in match.Groups.Cast<Group>().Skip(1).Where(group => group?.Success == true))
                         {
-                            Segments.Add(line.Substring(keyIndex, group.Index - keyIndex));
+                            _segments.Add(line.Substring(keyIndex, group.Index - keyIndex));
                             keyIndex = group.Index;
                             keyIndexes.Add(keyIndex);
-                            Segments.Add(line.Substring(keyIndex, group.Length));
+                            _segments.Add(line.Substring(keyIndex, group.Length));
                             keyIndex += group.Length;
                         }
 
-                        Segments.Add(line.Substring(keyIndex));
+                        _segments.Add(line.Substring(keyIndex));
                     }
                 }
 
@@ -233,14 +236,22 @@
 
             public bool Success { get; }
 
-            public IList<string> Segments { get; }
+            public IList<string> Segments
+            {
+                get
+                {
+                    Contract.Ensures(!Success || (Contract.Result<IList<string>>() != null));
+
+                    return _segments;
+                }
+            }
 
             [ContractInvariantMethod]
             [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
             [Conditional("CONTRACTS_FULL")]
             private void ObjectInvariant()
             {
-                Contract.Invariant(!Success || (Segments != null));
+                Contract.Invariant(!Success || (_segments != null));
             }
         }
 
@@ -316,8 +327,10 @@
                     }).ToArray();
 
 
-                    lineIndices.ForEach(index =>
+                    foreach (var index in lineIndices)
                     {
+                        Contract.Assume((index >= 0) && (index < _lines.Length));
+
                         var line = _lines[index];
                         var lineNumber = index + 1;
 
@@ -327,11 +340,15 @@
 
                             try
                             {
+                                Contract.Assume(line != null);
+
                                 var match = new CodeMatch(line, key, parameter.Regex, parameter.StringComparison, parameter.SingleLineComment);
                                 if (!match.Success)
                                     continue;
 
-                                references.Add(new CodeReference(_projectFile, lineNumber, match.Segments));
+                                var segemnts = match.Segments;
+
+                                references.Add(new CodeReference(_projectFile, lineNumber, segemnts));
                                 break;
                             }
                             catch (Exception ex) // Should not happen, but was reported by someone.
@@ -339,7 +356,7 @@
                                 tracer.TraceError("Error detecting code reference in file {0}, line {1} for {2}.{3}\n{4}", _projectFile.FilePath, lineNumber, baseName, key, ex);
                             }
                         }
-                    });
+                    }
 
                 }
                 catch (Exception ex) // Should not happen, but was reported by someone.

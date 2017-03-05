@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Windows;
@@ -21,6 +22,7 @@
         [NotNull]
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            Contract.Ensures(Contract.Result<object>() != null);
             return new DataGridSelectionScope(value as DataGrid);
         }
 

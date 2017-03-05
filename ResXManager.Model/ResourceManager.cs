@@ -277,6 +277,8 @@
 
         internal void LanguageAdded([NotNull] CultureKey cultureKey)
         {
+            Contract.Requires(cultureKey != null);
+
             if (!_cultureKeys.Contains(cultureKey))
             {
                 _cultureKeys.Add(cultureKey);
@@ -292,12 +294,16 @@
 
         public static bool IsValidLanguageName([NotNull] string languageName)
         {
+            Contract.Requires(languageName != null);
+
             return Array.BinarySearch(_sortedCultureNames, languageName, StringComparer.OrdinalIgnoreCase) >= 0;
         }
 
         [NotNull]
         private static string[] GetSortedCultureNames()
         {
+            Contract.Ensures(Contract.Result<string[]>() != null);
+
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
 
             var cultureNames = allCultures
@@ -313,6 +319,8 @@
         [NotNull]
         private static CultureInfo[] GetSpecificCultures()
         {
+            Contract.Ensures(Contract.Result<CultureInfo[]>() != null);
+
             var specificCultures = CultureInfo.GetCultures(CultureTypes.AllCultures)
                 .Where(c => c.GetAncestors().Any())
                 .OrderBy(c => c.DisplayName)

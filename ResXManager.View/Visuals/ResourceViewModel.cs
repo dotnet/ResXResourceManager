@@ -256,6 +256,8 @@
 
         private void CreateSnapshot([NotNull] string fileName)
         {
+            Contract.Requires(fileName != null);
+
             var snapshot = _resourceManager.CreateSnapshot();
 
             File.WriteAllText(fileName, snapshot);

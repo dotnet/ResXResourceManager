@@ -137,6 +137,8 @@
         [NotNull]
         private static string GetKey(string propertyName)
         {
+            Contract.Ensures(Contract.Result<string>() != null);
+
             return @"RESX_" + propertyName;
         }
 

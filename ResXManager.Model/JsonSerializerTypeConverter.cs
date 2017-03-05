@@ -105,6 +105,8 @@
         [NotNull]
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, [NotNull] object value, Type destinationType)
         {
+            Contract.Ensures(Contract.Result<object>() != null);
+
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 

@@ -71,6 +71,8 @@
         [NotNull]
         private static string CreateRequestDetails(string clientId, string clientSecret)
         {
+            Contract.Ensures(Contract.Result<string>() != null);
+
             var request = string.Format(CultureInfo.InvariantCulture, "grant_type=client_credentials&client_id={0}&client_secret={1}&scope=http://api.microsofttranslator.com", HttpUtility.UrlEncode(clientId), HttpUtility.UrlEncode(clientSecret));
             return request;
         }
@@ -78,6 +80,8 @@
         [NotNull]
         private static HttpWebRequest CreateWebRequest(IWebProxy webProxy)
         {
+            Contract.Ensures(Contract.Result<HttpWebRequest>() != null);
+
             var webRequest = (HttpWebRequest)WebRequest.Create(DatamarketAccessUri);
             webRequest.Proxy = webProxy;
             webRequest.ContentType = "application/x-www-form-urlencoded";

@@ -218,6 +218,7 @@
         private static string FormatFileNames([NotNull] IEnumerable<string> lockedFiles)
         {
             Contract.Requires(lockedFiles != null);
+            Contract.Ensures(Contract.Result<string>() != null);
 
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }

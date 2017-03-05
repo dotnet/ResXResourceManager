@@ -103,7 +103,7 @@
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Required by [CallerMemberName]")]
         protected void SetValue<T>(T value, [CallerMemberName] string key = null)
         {
-            if (key == null)
+            if (string.IsNullOrEmpty(key))
                 return;
 
             if (Equals(GetValue(key), value))
