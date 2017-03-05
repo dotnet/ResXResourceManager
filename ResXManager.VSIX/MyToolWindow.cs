@@ -262,7 +262,7 @@
             {
                 var openDocuments = Dte.Windows?
                     .OfType<EnvDTE.Window>()
-                    .Where(window => window.Document != null)
+                    .Where(window => window.Visible && (window.Document != null))
                     .ToDictionary(window => window.Document);
 
                 var items = from l in languages
