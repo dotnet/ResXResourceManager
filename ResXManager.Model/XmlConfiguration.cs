@@ -67,16 +67,20 @@
         {
             Contract.Requires(tracer != null);
 
+            XElement root = null;
+            XNamespace @namespace = null;
+            XDocument document = null;
+
             if ((reader != null) && (reader.Peek() != -1))
             {
                 try
                 {
-                    _document = XDocument.Load(reader, LoadOptions.PreserveWhitespace);
-                    _root = _document.Root;
+                    document = XDocument.Load(reader, LoadOptions.PreserveWhitespace);
+                    root = document.Root;
 
-                    if (_root != null)
+                    if (root != null)
                     {
-                        _namespace = _root.GetDefaultNamespace();
+                        @namespace = root.GetDefaultNamespace();
                     }
                 }
                 catch (Exception ex)
@@ -85,15 +89,18 @@
                 }
             }
 
-            if ((_namespace == null) || !DefaultNamespace.Equals(_namespace.NamespaceName))
+            if ((@namespace == null) || !DefaultNamespace.Equals(@namespace.NamespaceName))
             {
-                _namespace = XNamespace.Get(DefaultNamespace);
-                _root = new XElement(XName.Get("Values", _namespace.NamespaceName));
-                _document = new XDocument(_root);
+                @namespace = XNamespace.Get(DefaultNamespace);
+                root = new XElement(XName.Get("Values", @namespace.NamespaceName));
+                document = new XDocument(root);
             }
 
+            _document = document;
+            _root = root;
+            _namespace = @namespace;
             _keyName = XName.Get("Key");
-            _valueName = XName.Get("Value", _namespace.NamespaceName);
+            _valueName = XName.Get("Value", @namespace.NamespaceName);
         }
 
         ///// <summary>

@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -43,16 +42,15 @@
         {
             Contract.Requires(compositionHost != null);
 
+            _resourceManager = compositionHost.GetExportedValue<ResourceManager>();
+            _resourceViewModel = compositionHost.GetExportedValue<ResourceViewModel>();
+            _configuration = compositionHost.GetExportedValue<Configuration>();
+
             try
             {
                 this.SetExportProvider(compositionHost.Container);
 
-                _resourceManager = compositionHost.GetExportedValue<ResourceManager>();
                 _resourceManager.Loaded += ResourceManager_Loaded;
-
-                _configuration = compositionHost.GetExportedValue<Configuration>();
-
-                _resourceViewModel = compositionHost.GetExportedValue<ResourceViewModel>();
 
                 InitializeComponent();
 

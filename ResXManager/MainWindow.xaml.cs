@@ -78,7 +78,7 @@
             Top = Math.Max(0, location.Y);
         }
 
-        protected override void OnClosing([NotNull] CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
 

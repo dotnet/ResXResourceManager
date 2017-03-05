@@ -49,6 +49,7 @@
         /// <summary>
         /// Identifies the Prompt dependency property
         /// </summary>
+        [NotNull]
         public static readonly DependencyProperty PromptProperty =
             DependencyProperty.Register("Prompt", typeof(string), typeof(InputBox));
 
@@ -63,6 +64,7 @@
         /// <summary>
         /// Identifies the Text dependency property
         /// </summary>
+        [NotNull]
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register("Text", typeof(string), typeof(InputBox), new FrameworkPropertyMetadata(null, (sender, e) => ((InputBox)sender).Text_Changed((string)e.NewValue)));
 

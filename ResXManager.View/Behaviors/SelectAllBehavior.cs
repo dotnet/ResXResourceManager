@@ -7,6 +7,8 @@
     using System.Windows.Interactivity;
     using System.Windows.Threading;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Model;
 
     using TomsToolbox.Desktop;
@@ -31,6 +33,7 @@
         /// <summary>
         /// Identifies the <see cref="AreAllFilesSelected"/> dependency property
         /// </summary>
+        [NotNull]
         public static readonly DependencyProperty AreAllFilesSelectedProperty =
             DependencyProperty.Register("AreAllFilesSelected", typeof(bool?), typeof(SelectAllBehavior), new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (sender, e) => ((SelectAllBehavior)sender).AreAllFilesSelected_Changed((bool?)e.NewValue)));
 

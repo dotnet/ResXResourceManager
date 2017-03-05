@@ -432,7 +432,9 @@
         private bool IsSnapshotDifferent([NotNull] CultureKey culture)
         {
             Contract.Requires(culture != null);
-            Contract.Requires(_snapshot != null);
+
+            if (_snapshot == null)
+                return false;
 
             var snapshotValue = _snapshot.GetValueOrDefault(culture)?.Text ?? string.Empty;
             var currentValue = _values.GetValue(culture) ?? string.Empty;
@@ -474,9 +476,13 @@
                 .ToArray();
         }
 
-        [ItemNotNull]
-        private IEnumerable<string> GetSnapshotDifferences(ResourceLanguage language, string current, Func<ResourceData, string> selector)
+        [NotNull, ItemNotNull]
+        private IEnumerable<string> GetSnapshotDifferences([NotNull] ResourceLanguage language, string current, [NotNull] Func<ResourceData, string> selector)
         {
+            Contract.Requires(language != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
+
             var snapshot = _snapshot;
             if (snapshot == null)
                 yield break;
@@ -488,9 +494,11 @@
             yield return string.Format(CultureInfo.CurrentCulture, Resources.SnapshotAnnotation, snapshotValue);
         }
 
+        [NotNull, ItemNotNull]
         private IEnumerable<string> GetStringFormatParameterMismatchAnnotations([NotNull] ResourceLanguage language)
         {
             Contract.Requires(language != null);
+            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
 
             if (language.IsNeutralLanguage)
                 yield break;
@@ -528,6 +536,7 @@
                 .Count() > 1;
         }
 
+        [NotNull]
         private static readonly Regex _stringFormatParameterPattern = new Regex(@"\{(\d+)(,\d+)?(:\S+)?\}");
 
         private static long GetStringFormatFlags(string value)
@@ -543,6 +552,7 @@
 
         private class Comparer : IEqualityComparer<ResourceTableEntry>
         {
+            [NotNull]
             public static readonly Comparer Default = new Comparer();
 
             [ContractVerification(false)]
@@ -583,6 +593,7 @@
             Contract.Invariant(_deferredValuesChangedThrottle != null);
             Contract.Invariant(_deferredCommentChangedThrottle != null);
             Contract.Invariant(_languages != null);
+            Contract.Invariant(_stringFormatParameterPattern != null);
         }
     }
 }

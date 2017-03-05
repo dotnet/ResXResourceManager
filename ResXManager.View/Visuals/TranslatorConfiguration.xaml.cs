@@ -27,6 +27,7 @@
         /// <summary>
         /// Identifies the <see cref="Translators"/> dependency property
         /// </summary>
+        [NotNull]
         public static readonly DependencyProperty TranslatorsProperty =
             DependencyProperty.Register("Translators", typeof (IEnumerable<ITranslator>), typeof (TranslatorConfiguration));
 

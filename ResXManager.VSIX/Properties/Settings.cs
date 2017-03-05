@@ -27,10 +27,11 @@
             try
             {
                 var values = JsonConvert.DeserializeObject<KeyValuePair<string, int>[]>(MoveToResourcePreferedReplacementPatterns);
-                values.ForEach(value => _moveToResourcePreferedReplacementPatternIndex[value.Key] = value.Value);
+                values?.ForEach(value => _moveToResourcePreferedReplacementPatternIndex[value.Key] = value.Value);
             }
             catch
             {
+                // invalid source, go with default...
             }
 
             _moveToResourcePreferedReplacementPatternIndex.CollectionChanged += (_, __) => MoveToResource_PreferedReplacementPatternIndex_Changed();

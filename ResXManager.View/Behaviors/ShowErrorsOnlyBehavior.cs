@@ -10,6 +10,8 @@
 
     using DataGridExtensions;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
@@ -25,6 +27,7 @@
         /// <summary>
         /// Identifies the ToggleButton dependency property
         /// </summary>
+        [NotNull]
         public static readonly DependencyProperty ToggleButtonProperty =
             DependencyProperty.Register("ToggleButton", typeof(ToggleButton), typeof(ShowErrorsOnlyBehavior), new FrameworkPropertyMetadata(null, (sender, e) => ((ShowErrorsOnlyBehavior)sender).ToggleButton_Changed((ToggleButton)e.OldValue, (ToggleButton)e.NewValue)));
 

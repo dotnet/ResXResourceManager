@@ -14,6 +14,7 @@
     {
         private const string Resx = ".resx";
         private const string Resw = ".resw";
+        [NotNull]
         public static readonly string[] SupportedFileExtensions = { Resx, Resw };
 
         [NotNull]

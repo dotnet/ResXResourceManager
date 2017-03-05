@@ -417,7 +417,7 @@
         /// <returns>
         /// The header line.
         /// </returns>
-        [ItemNotNull]
+        [NotNull, ItemNotNull]
         private static IEnumerable<IEnumerable<string>> GetHeaderRows([NotNull] this IEnumerable<CultureKey> languages, IResourceScope scope)
         {
             Contract.Requires(languages != null);

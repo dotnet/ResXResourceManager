@@ -130,7 +130,7 @@
                 selection.ReplaceWith(viewModel.Replacement);
 
                 return entry;
-            };
+            }
 
             return null;
         }

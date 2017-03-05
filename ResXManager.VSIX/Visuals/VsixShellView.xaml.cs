@@ -31,10 +31,11 @@
             Contract.Requires(exportProvider != null);
             Contract.Requires(themeManager != null);
 
+            _themeManager = themeManager;
+
             try
             {
                 this.SetExportProvider(exportProvider);
-                _themeManager = themeManager;
 
                 InitializeComponent();
             }

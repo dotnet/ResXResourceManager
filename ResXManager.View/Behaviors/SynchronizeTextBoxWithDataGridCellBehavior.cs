@@ -22,6 +22,7 @@
         /// <summary>
         /// Identifies the DataGrid dependency property
         /// </summary>
+        [NotNull]
         public static readonly DependencyProperty DataGridProperty =
             DependencyProperty.Register("DataGrid", typeof(DataGrid), typeof(SynchronizeTextBoxWithDataGridCellBehavior), new FrameworkPropertyMetadata(null, (sender, e) => ((SynchronizeTextBoxWithDataGridCellBehavior)sender).DataGrid_Changed((DataGrid)e.OldValue, (DataGrid)e.NewValue)));
 

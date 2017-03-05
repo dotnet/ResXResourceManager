@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-namespace tomenglertde.ResXManager.VSIX
+﻿namespace tomenglertde.ResXManager.VSIX
 {
     using System;
     using System.Collections.Generic;

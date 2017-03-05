@@ -16,6 +16,7 @@
         private const string KeyColumnHeader = @"Key";
         private const string CommentHeaderPrefix = "Comment";
 
+        [NotNull]
         private static readonly string[] _fixedColumnHeaders = { KeyColumnHeader };
 
         /// <summary>
@@ -63,7 +64,7 @@
         /// </summary>
         /// <param name="languages"></param>
         /// <returns>The header line.</returns>
-        [ItemNotNull]
+        [NotNull, ItemNotNull]
         private static IEnumerable<IList<string>> GetTableHeaderLines([NotNull] this IEnumerable<CultureKey> languages)
         {
             Contract.Requires(languages != null);

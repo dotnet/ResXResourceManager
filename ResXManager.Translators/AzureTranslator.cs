@@ -47,7 +47,9 @@ namespace tomenglertde.ResXManager.Translators
                 using (var client = new LanguageServiceClient(binding, endpointAddress))
                 {
                     var innerChannel = client.InnerChannel;
+                    // ReSharper disable once ConditionIsAlwaysTrueOrFalse
                     if (innerChannel == null)
+                        // ReSharper disable once HeuristicUnreachableCode
                         return;
 
                     using (new OperationContextScope(innerChannel))

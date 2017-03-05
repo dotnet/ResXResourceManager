@@ -39,6 +39,7 @@
         /// A exception safe wrapper around <see cref="System.Windows.Controls.SpellCheck"/>
         /// </summary>
         /// </AttachedPropertyComments>
+        [NotNull]
         public static readonly DependencyProperty IsEnabledProperty =
             DependencyProperty.RegisterAttached("IsEnabled", typeof(bool), typeof(Spellcheck), new FrameworkPropertyMetadata(false, IsEnabled_Changed));
 

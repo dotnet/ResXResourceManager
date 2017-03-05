@@ -40,7 +40,7 @@
         [NotNull]
         private readonly ProjectFile _file;
         [NotNull]
-        private IDictionary<string, Node> _nodes;
+        private IDictionary<string, Node> _nodes = new Dictionary<string, Node>();
         [NotNull]
         private readonly CultureKey _cultureKey;
 

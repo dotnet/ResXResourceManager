@@ -58,7 +58,6 @@ namespace tomenglertde.ResXManager.View.Visuals
             }
         }
 
-        [NotNull]
         public string Source
         {
             get
@@ -71,7 +70,6 @@ namespace tomenglertde.ResXManager.View.Visuals
 
         public CultureKey TargetCulture => _targetCulture;
 
-        [NotNull]
         public IList<ITranslationMatch> Results
         {
             get

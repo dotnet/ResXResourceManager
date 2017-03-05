@@ -10,8 +10,11 @@
         {
             var crk = resourceKey as ComponentResourceKey;
 
+            var resourceId = crk?.ResourceId;
+
             // replace some of the resources with our own styled versions.
-            return crk != null ? target?.TryFindResource(new ComponentResourceKey(typeof(ResourceKeys), crk.ResourceId)) : null;
+
+            return resourceId != null ? target?.TryFindResource(new ComponentResourceKey(typeof(ResourceKeys), resourceId)) : null;
         }
     }
 }

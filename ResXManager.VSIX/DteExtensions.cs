@@ -10,8 +10,6 @@
     using System.Windows;
     using System.Xml.Linq;
 
-    using EnvDTE;
-
     using JetBrains.Annotations;
 
     using Microsoft.VisualStudio;
@@ -229,7 +227,7 @@
 
             try
             {
-                return projectItem.Properties?.OfType<Property>()
+                return projectItem.Properties?.OfType<EnvDTE.Property>()
                     .Where(p => p.Name == propertyName)
                     .Select(p => p.Value)
                     .FirstOrDefault();

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-namespace tomenglertde.ResXManager.Model
+﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
     using System.Collections.Generic;

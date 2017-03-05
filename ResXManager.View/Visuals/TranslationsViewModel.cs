@@ -316,7 +316,7 @@
                     resourceTableEntries
                         .Where(entry => !entry.IsInvariant)
                         .Select(entry => new { Entry = entry, Source = entry.Values.GetValue(sourceCulture), Target = entry.Values.GetValue(targetCulture) })
-                        .Where(item => string.IsNullOrWhiteSpace(item.Target) || string.Equals(item.Target, translationPrefix, System.StringComparison.Ordinal))
+                        .Where(item => string.IsNullOrWhiteSpace(item.Target) || string.Equals(item.Target, translationPrefix, StringComparison.Ordinal))
                         .Where(item => !string.IsNullOrWhiteSpace(item.Source))
                         .Select(item => new TranslationItem(item.Entry, item.Source, targetCulture))));
         }

@@ -307,6 +307,7 @@
         /// Adds the language represented by the specified file.
         /// </summary>
         /// <param name="file">The file.</param>
+        /// <param name="duplicateKeyHandling">How to handle duplicate keys.</param>
         public void AddLanguage([NotNull] ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(file != null);

@@ -31,12 +31,12 @@
         {
             Contract.Requires(tracer != null);
 
+            _tracer = tracer;
+
             try
             {
 
                 this.SetExportProvider(exportProvider);
-
-                _tracer = tracer;
 
                 InitializeComponent();
             }
