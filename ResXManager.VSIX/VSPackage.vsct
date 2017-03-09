@@ -86,6 +86,14 @@
     </CommandPlacement>
 
     <CommandPlacement guid="guidResXManager_VSIXCmdSet" id="cmdidMyCodeContextMenuGroup" priority="0x100">
+      <Parent guid="guidHtmlEditor" id="cmdidAspx"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="guidResXManager_VSIXCmdSet" id="cmdidMyCodeContextMenuGroup" priority="0x100">
+      <Parent guid="guidRazorEditor" id="cmdidRazor"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="guidResXManager_VSIXCmdSet" id="cmdidMyCodeContextMenuGroup" priority="0x100">
       <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
     </CommandPlacement>
   </CommandPlacements>
@@ -119,6 +127,12 @@
     <GuidSymbol name="guidHtmlEditor" value="{D7E8C5E1-BDB8-11D0-9C88-0000F8040A53}">
       <IDSymbol name="cmdidHtml" value="51"/>
       <IDSymbol name="cmdidJs" value="52"/>
+      <IDSymbol name="cmdidAspx" value="53"/>
+    </GuidSymbol>
+
+    <!-- ASP.NET Razor Web Page (.cshtml, .vbhtml, ...) -->
+    <GuidSymbol name="guidRazorEditor" value="{78F03954-2FB8-4087-8CE7-59D71710B3BB}">
+      <IDSymbol name="cmdidRazor" value="1"/>
     </GuidSymbol>
 
   </Symbols>
