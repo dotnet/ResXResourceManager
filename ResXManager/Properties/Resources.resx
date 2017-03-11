@@ -124,7 +124,7 @@
     <value>ResX Resource Manager loaded.
 Home: http://resxresourcemanager.codeplex.com/
 Report issues: http://resxresourcemanager.codeplex.com/workitem/list/basic
-Support the project by adding a short review: http://marketplace.visualstudio.com/vsgallery/3b64e04c-e8de-4b97-8358-06c73a97cc68/#review-details</value>
+Support the project by adding a short review: https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details</value>
   </data>
   <data name="ProjectHasNoResourceFile" xml:space="preserve">
     <value>The project has no resource file for the language {0}.

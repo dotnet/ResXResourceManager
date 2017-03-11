@@ -320,7 +320,7 @@
           </Menu>
           <Separator />
           <Button x:Name="LikeButton" ToolTip="{x:Static properties:Resources.LikeButtonToolTip}"
-                  Tag="http://marketplace.visualstudio.com/vsgallery/3b64e04c-e8de-4b97-8358-06c73a97cc68/#review-details">
+                  Tag="https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details">
             <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/like.png" />
           </Button>
           <Button x:Name="HelpButton" ToolTip="{x:Static properties:Resources.HelpButtonToolTip}"

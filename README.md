@@ -4,7 +4,7 @@ Manage localization of all ResX-Based resources in one central place.
 This is a clone of https://resxresourcemanager.codeplex.com. 
 
 Releases are published here:
-- [Visual Studio Extension](http://marketplace.visualstudio.com/vsgallery/3b64e04c-e8de-4b97-8358-06c73a97cc68)
+- [Visual Studio Extension](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager)
 - [Standalone Application](http://resxresourcemanager.codeplex.com/downloads/get/clickOnce/ResXManager.application)
 
 This tool provides central access to all ResX-based string resources in your solution. You can quickly navigate through all resource files and view the content in a well-arranged data grid.
@@ -14,7 +14,7 @@ Suitable for any .Net application; WPF is supported if you use the x:Static mark
 
 Available as VS2012-2017 extension and as standalone executable to support VS2010 and older or users without Visual Studio at all.
 
-The Visual Studio Extension is available from the downloads page, from the [Visual Studio Gallery](http://marketplace.visualstudio.com/vsgallery/3b64e04c-e8de-4b97-8358-06c73a97cc68), or by searching for RESX in the Visual Studio extension manager.
+The Visual Studio Extension is available from the downloads page, from the [Visual Studio Gallery](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager), or by searching for RESX in the Visual Studio extension manager.
 
 ![Visual Studio Extension](https://raw.githubusercontent.com/tom-englert/ResXResourceManager/master/Assets/VisualStudioMainScreen.png)
 ![Standalone Application](https://raw.githubusercontent.com/tom-englert/ResXResourceManager/master/Assets/StandaloneMainScreen.png)

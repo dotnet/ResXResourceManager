@@ -107,7 +107,7 @@
     <value>ResX Resource Manager wurde geladen.
 Webseite: http://resxresourcemanager.codeplex.com/
 Fehler melden:  http://resxresourcemanager.codeplex.com/workitem/list/basic
-Projekt unterstützen: Schreiben sie ein kurzes Review auf http://marketplace.visualstudio.com/vsgallery/3b64e04c-e8de-4b97-8358-06c73a97cc68/#review-details</value>
+Projekt unterstützen: Schreiben sie ein kurzes Review auf https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details</value>
   </data>
   <data name="ProjectHasNoResourceFile">
     <value>Das Projekt hat keine Ressourcedatei für die Sprache {0}.
