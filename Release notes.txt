@@ -1,8 +1,13 @@
 ﻿Other places:
-[url:Visual Studio Extension Download|https://marketplace.visualstudio.com/vsgallery/3b64e04c-e8de-4b97-8358-06c73a97cc68]
-[url:Reviews|https://marketplace.visualstudio.com/vsgallery/3b64e04c-e8de-4b97-8358-06c73a97cc68/#review-details]
+[url:Visual Studio Extension Download|https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager]
+[url:Reviews|https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details]
 [url:GitHub|https://github.com/tom-englert/ResXResourceManager/releases]
 
+1.0.0.95:
+* WI4778: Support for csthml / Move to ressource.
+* WI4779: Sort resx on save only works in standalone, but not in VS Extension.
+* Index column does not show up.
+* Index column does not refresh when sort resx on save changes index.
 1.0.0.94:
 * Update packages to align with other extensions (to avoid https://connect.microsoft.com/VisualStudio/feedback/details/2993889/)
 1.0.0.93:
