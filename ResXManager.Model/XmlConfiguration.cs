@@ -41,8 +41,6 @@
         [NotNull]
         private readonly XElement _root;
         [NotNull]
-        private readonly XNamespace _namespace;
-        [NotNull]
         private readonly XName _valueName;
         [NotNull]
         private readonly XName _keyName;
@@ -98,38 +96,9 @@
 
             _document = document;
             _root = root;
-            _namespace = @namespace;
             _keyName = XName.Get("Key");
             _valueName = XName.Get("Value", @namespace.NamespaceName);
         }
-
-        ///// <summary>
-        ///// Loads the configuration from the specified file name.
-        ///// </summary>
-        ///// <param name="fileName">Name of the file.</param>
-        ///// <returns>The configuration loaded from the file; an empty configuration if the file does not exist or is not accessible.</returns>
-        //public static XmlConfiguration Load(string fileName)
-        //{
-        //    Contract.Requires(fileName != null);
-        //    Contract.Ensures(Contract.Result<XmlConfiguration>() != null);
-
-        //    if (File.Exists(fileName))
-        //    {
-        //        try
-        //        {
-        //            using (var reader = new StreamReader(fileName))
-        //            {
-        //                return new XmlConfiguration(reader);
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            _tracer.TraceError(ex.ToString());
-        //        }
-        //    }
-
-        //    return new XmlConfiguration(null);
-        //}
 
         /// <summary>
         /// Gets the value with the specified key from the XML stream.
@@ -228,7 +197,6 @@
             Contract.Invariant(_root != null);
             Contract.Invariant(_keyName != null);
             Contract.Invariant(_valueName != null);
-            Contract.Invariant(_namespace != null);
         }
     }
 }
