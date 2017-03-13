@@ -106,6 +106,17 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Empty keys in '{0}'.
+        /// </summary>
+        [NotNull]
+        public static string EmptyKeysError {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("EmptyKeysError", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to &amp;lt;?xml version="1.0" encoding="utf-8"?&amp;g....
         /// </summary>
         [NotNull]
@@ -337,6 +348,10 @@ namespace tomenglertde.ResXManager.Model.Properties {
         ///   Looks up a localized string similar to Postfix duplicate keys with "_Duplicate[#]".
         /// </summary>
         DuplicateKeyHandling_Rename,
+        /// <summary>
+        ///   Looks up a localized string similar to Empty keys in '{0}'.
+        /// </summary>
+        EmptyKeysError,
         /// <summary>
         ///   Looks up a localized string similar to &amp;lt;?xml version="1.0" encoding="utf-8"?&amp;g....
         /// </summary>

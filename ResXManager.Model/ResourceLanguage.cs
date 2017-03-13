@@ -94,8 +94,10 @@
             UpdateNodes(file, duplicateKeyHandling);
         }
 
-        private void UpdateNodes(ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
+        private void UpdateNodes([NotNull] ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
         {
+            Contract.Requires(file != null);
+
             var data = _documentRoot.Elements(_dataNodeName);
 
             var elements = data
@@ -106,7 +108,12 @@
 
             if (duplicateKeyHandling == DuplicateKeyHandling.Rename)
             {
-                MakeKeysUnique(elements);
+                MakeKeysValid(elements);
+            }
+            else
+            {
+                if (elements.Any(item => string.IsNullOrEmpty(item.Key)))
+                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.EmptyKeysError , file.FilePath));
             }
 
             try
@@ -476,7 +483,16 @@
             return _document.ToString(SaveOptions.DisableFormatting) == other._document.ToString(SaveOptions.DisableFormatting);
         }
 
-        private static void MakeKeysUnique([NotNull] ICollection<Node> elements)
+        private static void MakeKeysValid([NotNull] ICollection<Node> elements)
+        {
+            Contract.Requires(elements != null);
+
+            RenameDuplicates(elements);
+
+            RenameEmptyKeys(elements);
+        }
+
+        private static void RenameDuplicates([NotNull, ItemNotNull] ICollection<Node> elements)
         {
             Contract.Requires(elements != null);
 
@@ -490,6 +506,17 @@
 
                 duplicates.Skip(1).ForEach(item => item.Key = GenerateUniqueKey(elements, item, ref index));
             }
+        }
+
+        private static void RenameEmptyKeys([NotNull, ItemNotNull] ICollection<Node> elements)
+        {
+            Contract.Requires(elements != null);
+
+            var itemsWithEmptyKeys = elements.Where(item => string.IsNullOrEmpty(item.Key));
+
+            var index = 1;
+
+            itemsWithEmptyKeys.ForEach(item => item.Key = GenerateUniqueKey(elements, item, ref index));
         }
 
         [NotNull]

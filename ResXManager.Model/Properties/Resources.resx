@@ -117,64 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ImportFailedError" xml:space="preserve">
-    <value>Import failed. Nothing has been imported!</value>
-  </data>
-  <data name="ImportFailedPartiallyError" xml:space="preserve">
-    <value>Import failed partially. Some columns have been already imported, but not all!</value>
-  </data>
-  <data name="Title" xml:space="preserve">
-    <value>ResX Resource Manager</value>
-    <comment>@Invariant</comment>
-  </data>
-  <data name="ImportColumnMismatchError" xml:space="preserve">
-    <value>At least three columns expected.</value>
-  </data>
-  <data name="ImportHeaderMismatchError" xml:space="preserve">
-    <value>Standard header expected.</value>
-  </data>
-  <data name="ImportDuplicateLanguageError" xml:space="preserve">
-    <value>Duplicate language in header.</value>
-  </data>
-  <data name="InvalidResourceFileError" xml:space="preserve">
-    <value>{0} is not a valid RESX resource file: No xml root.</value>
-  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="DuplicateKeyError" xml:space="preserve">
     <value>Duplicate keys in '{0}':
 {1}
 </value>
-  </data>
-  <data name="Neutral" xml:space="preserve">
-    <value>Neutral</value>
-  </data>
-  <data name="InvalidResourceFileNameAttributeMissingError" xml:space="preserve">
-    <value>{0} is not a valid RESX resource file: Not all entries have a name attribute.</value>
-  </data>
-  <data name="FileSaveError" xml:space="preserve">
-    <value>Error saving file '{0}':
-{1}
-</value>
-  </data>
-  <data name="InvalidResourceFileValueAttributeMissingError" xml:space="preserve">
-    <value>{0} is not a valid RESX resource file: Not all entries have a value attribute.</value>
-  </data>
-  <data name="LanguageNotDefinedError" xml:space="preserve">
-    <value>Language is not defined: {0}</value>
-  </data>
-  <data name="ImportLanguageNotEditable" xml:space="preserve">
-    <value>The language "{0}" can't be edited. The operation was aborted.</value>
-  </data>
-  <data name="ImportMapSheetError" xml:space="preserve">
-    <value>The sheet "{0}" can't be imported; there is no matching resource file in the solution.</value>
-  </data>
-  <data name="ExcelExport_SingleSheet" xml:space="preserve">
-    <value>Single sheet</value>
-  </data>
-  <data name="ExcelExport_MultipleSheets" xml:space="preserve">
-    <value>Multiple sheets</value>
-  </data>
-  <data name="StringFormatParameterMismatchError" xml:space="preserve">
-    <value>Warning: This item contains string format parameter mismatches!</value>
   </data>
   <data name="DuplicateKeyHandling_Fail" xml:space="preserve">
     <value>Show an error message and don't load the resource</value>
@@ -182,11 +129,67 @@
   <data name="DuplicateKeyHandling_Rename" xml:space="preserve">
     <value>Postfix duplicate keys with "_Duplicate[#]"</value>
   </data>
+  <data name="EmptyKeysError" xml:space="preserve">
+    <value>Empty keys in '{0}'</value>
+  </data>
+  <data name="EmptyResxTemplate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>EmptyResxTemplate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="ExcelExport_MultipleSheets" xml:space="preserve">
+    <value>Multiple sheets</value>
+  </data>
+  <data name="ExcelExport_SingleSheet" xml:space="preserve">
+    <value>Single sheet</value>
+  </data>
+  <data name="FileSaveError" xml:space="preserve">
+    <value>Error saving file '{0}':
+{1}
+</value>
+  </data>
+  <data name="ImportColumnMismatchError" xml:space="preserve">
+    <value>At least three columns expected.</value>
+  </data>
+  <data name="ImportDuplicateLanguageError" xml:space="preserve">
+    <value>Duplicate language in header.</value>
+  </data>
+  <data name="ImportFailedError" xml:space="preserve">
+    <value>Import failed. Nothing has been imported!</value>
+  </data>
+  <data name="ImportFailedPartiallyError" xml:space="preserve">
+    <value>Import failed partially. Some columns have been already imported, but not all!</value>
+  </data>
+  <data name="ImportHeaderMismatchError" xml:space="preserve">
+    <value>Standard header expected.</value>
+  </data>
+  <data name="ImportLanguageNotEditable" xml:space="preserve">
+    <value>The language "{0}" can't be edited. The operation was aborted.</value>
+  </data>
+  <data name="ImportMapSheetError" xml:space="preserve">
+    <value>The sheet "{0}" can't be imported; there is no matching resource file in the solution.</value>
+  </data>
+  <data name="InvalidResourceFileError" xml:space="preserve">
+    <value>{0} is not a valid RESX resource file: No xml root.</value>
+  </data>
+  <data name="InvalidResourceFileNameAttributeMissingError" xml:space="preserve">
+    <value>{0} is not a valid RESX resource file: Not all entries have a name attribute.</value>
+  </data>
+  <data name="InvalidResourceFileValueAttributeMissingError" xml:space="preserve">
+    <value>{0} is not a valid RESX resource file: Not all entries have a value attribute.</value>
+  </data>
+  <data name="LanguageNotDefinedError" xml:space="preserve">
+    <value>Language is not defined: {0}</value>
+  </data>
+  <data name="Neutral" xml:space="preserve">
+    <value>Neutral</value>
+  </data>
   <data name="SnapshotAnnotation" xml:space="preserve">
     <value>Snapshot: "{0}"</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="EmptyResxTemplate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>EmptyResxTemplate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="StringFormatParameterMismatchError" xml:space="preserve">
+    <value>Warning: This item contains string format parameter mismatches!</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>ResX Resource Manager</value>
+    <comment>@Invariant</comment>
   </data>
 </root>

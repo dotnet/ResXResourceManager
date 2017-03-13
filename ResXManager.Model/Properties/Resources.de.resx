@@ -117,16 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ImportFailedError">
-    <value>Import fehlgeschlagen. Es wurde nichts importiert.</value>
-  </data>
-  <data name="ImportFailedPartiallyError">
-    <value>Import teilweise fehlgeschlagen. Einige Spalten wurden überschrieben, aber nicht alle.</value>
-  </data>
   <data name="DuplicateKeyError">
     <value>Doppelte Schlüssel in '{0}':
 {1}
 </value>
+  </data>
+  <data name="DuplicateKeyHandling_Fail" xml:space="preserve">
+    <value>Eine Fehlermeldung anzeigen und die Datei nicht laden.</value>
+  </data>
+  <data name="DuplicateKeyHandling_Rename" xml:space="preserve">
+    <value>Doppelte Schlüssel umbenennen ("_Duplicate[#]" anhängen)</value>
+  </data>
+  <data name="EmptyKeysError" xml:space="preserve">
+    <value>Leere Schlüssel in '{0}'</value>
+  </data>
+  <data name="ExcelExport_MultipleSheets" xml:space="preserve">
+    <value>In mehrere Arbeitsblätter</value>
+  </data>
+  <data name="ExcelExport_SingleSheet" xml:space="preserve">
+    <value>In ein einziges Arbeitsblatt</value>
   </data>
   <data name="FileSaveError">
     <value>Fehler beim Speichern der Datei '{0}':
@@ -139,8 +148,20 @@
   <data name="ImportDuplicateLanguageError">
     <value>Doppelte Sprache gefunden.</value>
   </data>
+  <data name="ImportFailedError">
+    <value>Import fehlgeschlagen. Es wurde nichts importiert.</value>
+  </data>
+  <data name="ImportFailedPartiallyError">
+    <value>Import teilweise fehlgeschlagen. Einige Spalten wurden überschrieben, aber nicht alle.</value>
+  </data>
   <data name="ImportHeaderMismatchError">
     <value>Kopfzeile entspricht nicht dem Standard.</value>
+  </data>
+  <data name="ImportLanguageNotEditable" xml:space="preserve">
+    <value>Die Sprache "{0}" kann nicht bearbeitet werden. Der Vorgang wurde abgebrochen.</value>
+  </data>
+  <data name="ImportMapSheetError" xml:space="preserve">
+    <value>Das Arbeitsblatt "{0}" kann nicht importiert werden; es gibt keine passende Ressource in der Umgebung.</value>
   </data>
   <data name="InvalidResourceFileError">
     <value>{0} ist keine gültige Ressourcedatei: Kein xml root.</value>
@@ -157,28 +178,10 @@
   <data name="Neutral">
     <value>Neutral</value>
   </data>
-  <data name="ImportLanguageNotEditable" xml:space="preserve">
-    <value>Die Sprache "{0}" kann nicht bearbeitet werden. Der Vorgang wurde abgebrochen.</value>
-  </data>
-  <data name="ImportMapSheetError" xml:space="preserve">
-    <value>Das Arbeitsblatt "{0}" kann nicht importiert werden; es gibt keine passende Ressource in der Umgebung.</value>
-  </data>
-  <data name="ExcelExport_MultipleSheets" xml:space="preserve">
-    <value>In mehrere Arbeitsblätter</value>
-  </data>
-  <data name="ExcelExport_SingleSheet" xml:space="preserve">
-    <value>In ein einziges Arbeitsblatt</value>
+  <data name="SnapshotAnnotation" xml:space="preserve">
+    <value>Snapshot: "{0}"</value>
   </data>
   <data name="StringFormatParameterMismatchError" xml:space="preserve">
     <value>Warnung: Dieser Text enthält String-Format Parameterinkonsistenzen!</value>
-  </data>
-  <data name="DuplicateKeyHandling_Fail" xml:space="preserve">
-    <value>Eine Fehlermeldung anzeigen und die Datei nicht laden.</value>
-  </data>
-  <data name="DuplicateKeyHandling_Rename" xml:space="preserve">
-    <value>Doppelte Schlüssel umbenennen ("_Duplicate[#]" anhängen)</value>
-  </data>
-  <data name="SnapshotAnnotation" xml:space="preserve">
-    <value>Snapshot: "{0}"</value>
   </data>
 </root>
