@@ -54,11 +54,12 @@
 
             _patterns = patterns;
             _resourceEntities = resourceEntities;
+            _selectedResourceEntity = resourceEntities.FirstOrDefault();
+
             _existingEntries = resourceEntities
                 .SelectMany(entity => entity.Entries)
                 .Where(entry => entry.Values[null] == text)
                 .ToArray();
-
             _reuseExisiting = _existingEntries.Any();
             _selectedResourceEntry = _existingEntries.FirstOrDefault();
             _value = text;

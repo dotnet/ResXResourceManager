@@ -3,18 +3,21 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
 
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Visuals;
     using tomenglertde.ResXManager.VSIX.Visuals;
+
+    using TomsToolbox.Desktop.Composition;
 
     public interface IRefactorings
     {
@@ -27,15 +30,15 @@
     internal class Refactorings : IRefactorings
     {
         [NotNull]
-        private readonly ExportProvider _exportProvider;
+        private readonly ICompositionHost _compositionHost;
         private ResourceEntity _lastUsedEntity;
 
         [ImportingConstructor]
-        public Refactorings([NotNull] ExportProvider exportProvider)
+        public Refactorings([NotNull] ICompositionHost compositionHost)
         {
-            Contract.Requires(exportProvider != null);
+            Contract.Requires(compositionHost != null);
 
-            _exportProvider = exportProvider;
+            _compositionHost = compositionHost;
         }
 
         public bool CanMoveToResource(EnvDTE.Document document)
@@ -44,7 +47,7 @@
             if (extension == null)
                 return false;
 
-            var configuration = _exportProvider.GetExportedValue<DteConfiguration>();
+            var configuration = _compositionHost.GetExportedValue<DteConfiguration>();
 
             var configurations = configuration.MoveToResources.Items
                 .Where(item => item.ParseExtensions().Contains(extension, StringComparer.OrdinalIgnoreCase));
@@ -73,7 +76,7 @@
             if (extension == null)
                 return null;
 
-            var configurationItems = _exportProvider.GetExportedValue<DteConfiguration>().MoveToResources.Items;
+            var configurationItems = _compositionHost.GetExportedValue<DteConfiguration>().MoveToResources.Items;
 
             var configuration = configurationItems
                 .FirstOrDefault(item => item.ParseExtensions().Contains(extension, StringComparer.OrdinalIgnoreCase));
@@ -94,22 +97,38 @@
 
             var patterns = configuration.ParsePatterns().ToArray();
 
-            var resourceViewModel = _exportProvider.GetExportedValue<ResourceViewModel>();
+            var resourceViewModel = _compositionHost.GetExportedValue<ResourceViewModel>();
 
             resourceViewModel.Reload();
 
-            var resourceManager = _exportProvider.GetExportedValue<ResourceManager>();
+            var resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
 
             var entities = resourceManager.ResourceEntities
                 .Where(entity => !entity.IsWinFormsDesignerResource)
                 .ToArray();
 
-            var viewModel = new MoveToResourceViewModel(patterns, entities, text, extension, selection.ClassName, selection.FunctionName)
-            {
-                SelectedResourceEntity = GetPreferredResourceEntity(document, entities) ?? _lastUsedEntity
-            };
+            var filter = Settings.Default?.ResourceFilter?.Trim();
 
-            var confirmed = ConfirmationDialog.Show(_exportProvider, viewModel, Resources.MoveToResource).GetValueOrDefault();
+            if (!string.IsNullOrEmpty(filter))
+            {
+                var regex = new Regex(filter, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+                entities = entities
+                    .Where(item => regex.Match(item.ToString()).Success)
+                    .ToArray();
+            }
+
+            var favorites = new[] { GetPreferredResourceEntity(document, entities), _lastUsedEntity }
+                .Where(item => item != null)
+                .ToArray();
+
+            entities = favorites
+                .Concat(entities.Except(favorites))
+                .ToArray();
+
+            var viewModel = new MoveToResourceViewModel(patterns, entities, text, extension, selection.ClassName, selection.FunctionName);
+
+            var confirmed = ConfirmationDialog.Show(_compositionHost.Container, viewModel, Resources.MoveToResource).GetValueOrDefault();
 
             if (confirmed && !string.IsNullOrEmpty(viewModel.Key))
             {
@@ -341,7 +360,7 @@
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_exportProvider != null);
+            Contract.Invariant(_compositionHost != null);
         }
     }
 }
