@@ -126,7 +126,7 @@
     <value>Eine Fehlermeldung anzeigen und die Datei nicht laden.</value>
   </data>
   <data name="DuplicateKeyHandling_Rename" xml:space="preserve">
-    <value>Doppelte Schlüssel umbenennen ("_Duplicate[#]" anhängen)</value>
+    <value>Doppelte/leere Schlüssel umbenennen ("_Duplicate[#]"/"_Empty[#]" anhängen)</value>
   </data>
   <data name="EmptyKeysError" xml:space="preserve">
     <value>Leere Schlüssel in '{0}'</value>

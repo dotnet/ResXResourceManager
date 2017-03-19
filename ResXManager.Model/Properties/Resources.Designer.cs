@@ -95,7 +95,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Postfix duplicate keys with "_Duplicate[#]".
+        ///   Looks up a localized string similar to Postfix duplicate/empty keys with "_Duplicate[#]"/....
         /// </summary>
         [NotNull]
         public static string DuplicateKeyHandling_Rename {
@@ -345,7 +345,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         DuplicateKeyHandling_Fail,
         /// <summary>
-        ///   Looks up a localized string similar to Postfix duplicate keys with "_Duplicate[#]".
+        ///   Looks up a localized string similar to Postfix duplicate/empty keys with "_Duplicate[#]"/....
         /// </summary>
         DuplicateKeyHandling_Rename,
         /// <summary>

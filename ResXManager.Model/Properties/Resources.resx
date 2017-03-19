@@ -127,7 +127,7 @@
     <value>Show an error message and don't load the resource</value>
   </data>
   <data name="DuplicateKeyHandling_Rename" xml:space="preserve">
-    <value>Postfix duplicate keys with "_Duplicate[#]"</value>
+    <value>Postfix duplicate/empty keys with "_Duplicate[#]"/"_Empty[#]"</value>
   </data>
   <data name="EmptyKeysError" xml:space="preserve">
     <value>Empty keys in '{0}'</value>

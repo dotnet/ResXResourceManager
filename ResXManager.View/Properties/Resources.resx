@@ -170,7 +170,7 @@ Do you want to add a new entry anyway?</value>
     <value>Comment Token</value>
   </data>
   <data name="Configuration_DuplicateKeyHandling" xml:space="preserve">
-    <value>Duplicate resource key handling</value>
+    <value>Duplicate/empty resource key handling</value>
   </data>
   <data name="Configuration_ExcelExportModeHeader" xml:space="preserve">
     <value>Excel export mode</value>

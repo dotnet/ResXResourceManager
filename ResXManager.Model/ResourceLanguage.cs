@@ -487,9 +487,9 @@
         {
             Contract.Requires(elements != null);
 
-            RenameDuplicates(elements);
-
             RenameEmptyKeys(elements);
+
+            RenameDuplicates(elements);
         }
 
         private static void RenameDuplicates([NotNull, ItemNotNull] ICollection<Node> elements)
@@ -504,7 +504,7 @@
                 Contract.Assume(duplicates != null);
                 var index = 1;
 
-                duplicates.Skip(1).ForEach(item => item.Key = GenerateUniqueKey(elements, item, ref index));
+                duplicates.Skip(1).ForEach(item => item.Key = GenerateUniqueKey(elements, item, "Duplicate", ref index));
             }
         }
 
@@ -516,11 +516,11 @@
 
             var index = 1;
 
-            itemsWithEmptyKeys.ForEach(item => item.Key = GenerateUniqueKey(elements, item, ref index));
+            itemsWithEmptyKeys.ForEach(item => item.Key = GenerateUniqueKey(elements, item, "Empty", ref index));
         }
 
         [NotNull]
-        private static string GenerateUniqueKey([NotNull] ICollection<Node> elements, [NotNull] Node item, ref int index)
+        private static string GenerateUniqueKey([NotNull] ICollection<Node> elements, [NotNull] Node item, string text, ref int index)
         {
             Contract.Requires(elements != null);
             Contract.Requires(item != null);
@@ -531,7 +531,7 @@
 
             do
             {
-                newKey = string.Format(CultureInfo.InvariantCulture, "{0}_Duplicate[{1}]", key, index);
+                newKey = string.Format(CultureInfo.InvariantCulture, "{0}_{1}[{2}]", key, text, index);
                 index += 1;
             }
             while (elements.Any(element => element.Key.Equals(newKey, StringComparison.OrdinalIgnoreCase)));

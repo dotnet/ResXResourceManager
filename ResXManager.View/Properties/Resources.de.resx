@@ -165,7 +165,7 @@ Wollen Sie trotzdem einen neuen Eintrag hinzufügen?</value>
     <value>Kommentarzeichen</value>
   </data>
   <data name="Configuration_DuplicateKeyHandling" xml:space="preserve">
-    <value>Behandlung doppelter Ressourcenschlüssel</value>
+    <value>Behandlung doppelter/leerer Ressourcenschlüssel</value>
   </data>
   <data name="Configuration_ExcelExportModeHeader" xml:space="preserve">
     <value>Excel Export</value>

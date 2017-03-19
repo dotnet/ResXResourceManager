@@ -252,7 +252,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate resource key handling.
+        ///   Looks up a localized string similar to Duplicate/empty resource key handling.
         /// </summary>
         [NotNull]
         public static string Configuration_DuplicateKeyHandling {
@@ -1199,7 +1199,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         CommentToken,
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate resource key handling.
+        ///   Looks up a localized string similar to Duplicate/empty resource key handling.
         /// </summary>
         Configuration_DuplicateKeyHandling,
         /// <summary>
