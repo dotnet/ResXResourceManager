@@ -3,6 +3,9 @@
 [url:Reviews|https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details]
 [url:GitHub|https://github.com/tom-englert/ResXResourceManager/releases]
 
+1.0.0.96:
+* Improve usability of MoveToResource (apply the resource filter to exclude e.g. EF Migrations / put preferred and last used entity on top of the list)
+* Improve handling of resources with empty keys.
 1.0.0.95:
 * WI4778: Support for csthml / Move to ressource.
 * WI4779: Sort resx on save only works in standalone, but not in VS Extension.
