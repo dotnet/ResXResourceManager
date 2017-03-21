@@ -11,6 +11,7 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Threading;
@@ -94,27 +95,38 @@
         {
             base.Initialize();
 
-            var path = Path.GetDirectoryName(GetType().Assembly.Location);
-            Contract.Assume(!string.IsNullOrEmpty(path));
+            try
+            {
+                var path = Path.GetDirectoryName(GetType().Assembly.Location);
+                Contract.Assume(!string.IsNullOrEmpty(path));
 
-            CompositionHost.AddCatalog(new DirectoryCatalog(path, @"*.dll"));
-            CompositionHost.Container.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
+                CompositionHost.AddCatalog(new DirectoryCatalog(path, @"*.dll"));
+                CompositionHost.Container.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
 
-            ConnectEvents();
+                ConnectEvents();
 
-            // Add our command handlers for menu (commands must exist in the .vsct file)
-            var mcs = GetService(typeof(IMenuCommandService)) as IMenuCommandService;
-            if (null == mcs)
-                return;
+                // Add our command handlers for menu (commands must exist in the .vsct file)
+                var mcs = GetService(typeof(IMenuCommandService)) as IMenuCommandService;
+                if (null == mcs)
+                    return;
 
-            // Create the command for the menu item.
-            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyCommand, ShowToolWindow);
-            // Create the command for the tool window
-            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTool, ShowToolWindow);
-            // Create the command for the solution explorer context menu
-            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMySolutionExplorerContextMenu, ShowSelectedResourceFiles).BeforeQueryStatus += SolutionExplorerContextMenuCommand_BeforeQueryStatus;
-            // Create the command for the text editor context menu
-            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTextEditorContextMenu, MoveToResource).BeforeQueryStatus += TextEditorContextMenuCommand_BeforeQueryStatus;
+                // Create the command for the menu item.
+                CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyCommand, ShowToolWindow);
+                // Create the command for the tool window
+                CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTool, ShowToolWindow);
+                // Create the command for the solution explorer context menu
+                CreateMenuCommand(mcs, PkgCmdIdList.cmdidMySolutionExplorerContextMenu, ShowSelectedResourceFiles).BeforeQueryStatus += SolutionExplorerContextMenuCommand_BeforeQueryStatus;
+                // Create the command for the text editor context menu
+                CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTextEditorContextMenu, MoveToResource).BeforeQueryStatus += TextEditorContextMenuCommand_BeforeQueryStatus;
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                // ReSharper disable once AssignNullToNotNullAttribute
+                // ReSharper disable once PossibleNullReferenceException
+                var text = "Error loading assemblies:\n\n" + string.Join("\n", ex.LoaderExceptions.Select(l => l.Message + ": " + (l.InnerException?.Message ?? string.Empty)));
+
+                MessageBox.Show(text, "ResX Resource Manager", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -137,7 +149,7 @@
                 return dte;
             }
         }
-       
+
         [ContractVerification(false)]
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private void ConnectEvents()
@@ -356,7 +368,7 @@
             // e.g. if custom tool is a text template, we might want not only to generate the designer file but also 
             // extract some localization information.
             // => find the resource entity that contains the document and run the custom tool on the neutral project file.
-            
+
             // ReSharper disable once PossibleNullReferenceException
             Func<ResourceEntity, bool> predicate = e => e.Languages
                 .Select(lang => lang.ProjectFile)
