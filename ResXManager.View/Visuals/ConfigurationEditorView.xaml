@@ -152,9 +152,9 @@
       <Decorator Height="5" />
 
       <GroupBox Header="{x:Static properties:Resources.Diagnostics}" Style="{StaticResource GroupStyle}">
-        <CheckBox Margin="10" 
+        <CheckBox Margin="10"
                   Style="{StaticResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
-                  Content="{x:Static properties:Resources.ShowPerformanceTraces}" 
+                  Content="{x:Static properties:Resources.ShowPerformanceTraces}"
                   IsChecked="{Binding Configuration.ShowPerformanceTraces}"/>
       </GroupBox>
 
@@ -175,6 +175,22 @@
             <dgx:ExtendedStarSizeBehavior ResourceLocator="{StaticResource ResourceLocator}" />
           </i:Interaction.Behaviors>
         </DataGrid>
+      </GroupBox>
+
+      <Decorator Height="5" />
+
+      <GroupBox Header="{x:Static properties:Resources.SourceFileExclusionFilters_Header}" Style="{StaticResource GroupStyle}">
+          <DataGrid ItemsSource="{Binding Configuration.SourceFileExclusionFilters.Items}"
+              AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False"
+              Style="{DynamicResource {x:Static styles:ResourceKeys.DataGridStyle}}"
+              Margin="10" MinHeight="50" MaxHeight="250" MinWidth="700">
+              <DataGrid.Columns>
+                  <DataGridTextColumn Header="{x:Static properties:Resources.RegularExpression}" Binding="{Binding Expression}" Width="5*" />
+              </DataGrid.Columns>
+              <i:Interaction.Behaviors>
+                  <dgx:ExtendedStarSizeBehavior ResourceLocator="{StaticResource ResourceLocator}" />
+              </i:Interaction.Behaviors>
+          </DataGrid>
       </GroupBox>
 
       <ItemsControl toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Configuration}">

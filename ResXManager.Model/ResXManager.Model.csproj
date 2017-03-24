@@ -184,6 +184,7 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
+    <Compile Include="SourceFileExclusionFilterConfiguration.cs" />
     <Compile Include="CodeReferenceConfiguration.cs" />
     <Compile Include="ColumnKind.cs" />
     <Compile Include="Configuration.cs" />

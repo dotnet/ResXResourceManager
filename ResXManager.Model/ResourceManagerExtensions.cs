@@ -4,6 +4,7 @@
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
 
     using JetBrains.Annotations;
 
@@ -13,12 +14,17 @@
     public static class ResourceManagerExtensions
     {
         [NotNull]
-        public static IList<ProjectFile> GetAllSourceFiles([NotNull] this DirectoryInfo solutionFolder, [NotNull] ISourceFileFilter sourceFileFilter)
+        public static IList<ProjectFile> GetAllSourceFiles([NotNull] this DirectoryInfo solutionFolder, [NotNull] Configuration configuration, [NotNull] ISourceFileFilter sourceFileFilter)
         {
-
             Contract.Requires(solutionFolder != null);
+            Contract.Requires(configuration != null);
             Contract.Requires(sourceFileFilter != null);
             Contract.Ensures(Contract.Result<IList<ProjectFile>>() != null);
+
+            var sourceFileExclusionFilters = configuration.SourceFileExclusionFilters.Items
+                    .Where(sourceFileExclusionFilter => !string.IsNullOrEmpty(sourceFileExclusionFilter.Expression))
+                    .Select(sourceFileExclusionFilter => new Regex(sourceFileExclusionFilter.Expression, RegexOptions.IgnoreCase | RegexOptions.Singleline))
+                    .ToArray();
 
             var solutionFolderLength = solutionFolder.FullName.Length + 1;
 
@@ -26,6 +32,7 @@
             Contract.Assume(fileInfos != null);
 
             var allProjectFiles = fileInfos
+                .Where(fileInfo => !sourceFileExclusionFilters.Any(sourceFileExclusionFilter => sourceFileExclusionFilter.IsMatch(fileInfo.FullName)))
                 .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
                 .Where(file => file.IsResourceFile() || sourceFileFilter.IsSourceFile(file))
                 .ToArray();

@@ -1011,6 +1011,17 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Source file exclusion filters.
+        /// </summary>
+        [NotNull]
+        public static string SourceFileExclusionFilters_Header {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("SourceFileExclusionFilters_Header", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to ResX Resource Manager.
         /// </summary>
         /// <remarks>
@@ -1474,6 +1485,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Do you want to sort all nodes of all resource file....
         /// </summary>
         SortNodesByKey_Confirmation,
+        /// <summary>
+        ///   Looks up a localized string similar to Source file exclusion filters.
+        /// </summary>
+        SourceFileExclusionFilters_Header,
         /// <summary>
         ///   Looks up a localized string similar to ResX Resource Manager.
         /// </summary>

@@ -28,7 +28,11 @@
     {
         [NotNull]
         private readonly DispatcherThrottle _codeReferencesChangeThrottle;
+        [NotNull]
+        private readonly DispatcherThrottle _sourceFileExclusionFiltersChangeThrottle;
+
         private CodeReferenceConfiguration _codeReferences;
+        private SourceFileExclusionFilterConfiguration _sourceFileExclusionFilters;
 
         protected Configuration([NotNull] ITracer tracer)
             : base(tracer)
@@ -36,6 +40,7 @@
             Contract.Requires(tracer != null);
 
             _codeReferencesChangeThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, PersistCodeReferences);
+            _sourceFileExclusionFiltersChangeThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, PersistSourceFileExclusionFilters);
         }
 
         [NotNull]
@@ -46,6 +51,17 @@
                 Contract.Ensures(Contract.Result<CodeReferenceConfiguration>() != null);
 
                 return _codeReferences ?? LoadCodeReferenceConfiguration();
+            }
+        }
+
+        [NotNull]
+        public SourceFileExclusionFilterConfiguration SourceFileExclusionFilters
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<SourceFileExclusionFilterConfiguration>() != null);
+
+                return _sourceFileExclusionFilters ?? LoadSourceFileExclusionFilterConfiguration();
             }
         }
 
@@ -196,6 +212,7 @@
         protected virtual void OnReload()
         {
             _codeReferences = null;
+            _sourceFileExclusionFilters = null;
 
             // ReSharper disable once PossibleNullReferenceException
             GetType().GetProperties().ForEach(p => OnPropertyChanged(p.Name));
@@ -219,12 +236,31 @@
             return _codeReferences;
         }
 
+        private void PersistSourceFileExclusionFilters()
+        {
+            // ReSharper disable once ExplicitCallerInfoArgument
+            SetValue(SourceFileExclusionFilters, nameof(SourceFileExclusionFilters));
+        }
+
+        [NotNull]
+        private SourceFileExclusionFilterConfiguration LoadSourceFileExclusionFilterConfiguration()
+        {
+            Contract.Ensures(Contract.Result<SourceFileExclusionFilterConfiguration>() != null);
+
+            // ReSharper disable once ExplicitCallerInfoArgument
+            _sourceFileExclusionFilters = GetValue(default(SourceFileExclusionFilterConfiguration), nameof(SourceFileExclusionFilters)) ?? SourceFileExclusionFilterConfiguration.Default;
+            _sourceFileExclusionFilters.ItemPropertyChanged += (_, __) => _sourceFileExclusionFiltersChangeThrottle.Tick();
+
+            return _sourceFileExclusionFilters;
+        }
+
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_codeReferencesChangeThrottle != null);
+            Contract.Invariant(_sourceFileExclusionFiltersChangeThrottle != null);
         }
     }
 }
