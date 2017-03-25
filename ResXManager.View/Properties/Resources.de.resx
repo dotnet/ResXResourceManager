@@ -401,4 +401,7 @@ Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
   <data name="UnloadSnapshot" xml:space="preserve">
     <value>Snapshot entladen</value>
   </data>
+  <data name="SourceFileExclusionFilters_Header" xml:space="preserve">
+    <value>*Source file exclusion filters</value>
+  </data>
 </root>

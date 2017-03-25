@@ -410,4 +410,7 @@ Use e.g. ".* - (?!Migrations)" to hide EF migrations.</value>
   <data name="UnloadSnapshot" xml:space="preserve">
     <value>Unload Snapshot</value>
   </data>
+  <data name="SourceFileExclusionFilters_Header" xml:space="preserve">
+    <value>Source file exclusion filters</value>
+  </data>
 </root>
