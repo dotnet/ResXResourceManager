@@ -84,6 +84,8 @@
             public void Dispose()
             {
                 _tracer.WriteLine("<<< {0}: {1} {2}", _index, _message, _stopwatch.Elapsed);
+
+                _stopwatch.Stop();
             }
 
             [ContractInvariantMethod]

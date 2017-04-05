@@ -1,5 +1,6 @@
 ﻿Other places:
 [url:Visual Studio Extension Download|https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager]
+[url:Standalone Application (ClickOnce)|http://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/ResXManager.application]
 [url:Reviews|https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details]
 [url:GitHub|https://github.com/tom-englert/ResXResourceManager/releases]
 

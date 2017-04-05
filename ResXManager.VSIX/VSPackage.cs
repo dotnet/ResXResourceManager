@@ -13,6 +13,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Runtime.InteropServices;
+    using System.Threading;
     using System.Windows;
     using System.Windows.Threading;
 
@@ -50,6 +51,8 @@
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
         [NotNull]
         private readonly ICompositionHost _compositionHost = new CompositionHost();
+        [NotNull]
+        private readonly ManualResetEvent _compositionHostLoaded = new ManualResetEvent(false);
 
         private EnvDTE.SolutionEvents _solutionEvents;
         private EnvDTE.DocumentEvents _documentEvents;
@@ -80,6 +83,9 @@
             get
             {
                 Contract.Ensures(Contract.Result<ICompositionHost>() != null);
+
+                _compositionHostLoaded.WaitOne();
+
                 return _compositionHost;
             }
         }
@@ -95,38 +101,25 @@
         {
             base.Initialize();
 
-            try
-            {
-                var path = Path.GetDirectoryName(GetType().Assembly.Location);
-                Contract.Assume(!string.IsNullOrEmpty(path));
+            var dispatcher = Dispatcher.CurrentDispatcher;
 
-                CompositionHost.AddCatalog(new DirectoryCatalog(path, @"*.dll"));
-                CompositionHost.Container.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
+            ThreadPool.QueueUserWorkItem(_ => FillCatalog(dispatcher));
 
-                ConnectEvents();
+            ConnectEvents();
 
-                // Add our command handlers for menu (commands must exist in the .vsct file)
-                var mcs = GetService(typeof(IMenuCommandService)) as IMenuCommandService;
-                if (null == mcs)
-                    return;
+            // Add our command handlers for menu (commands must exist in the .vsct file)
+            var mcs = GetService(typeof(IMenuCommandService)) as IMenuCommandService;
+            if (null == mcs)
+                return;
 
-                // Create the command for the menu item.
-                CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyCommand, ShowToolWindow);
-                // Create the command for the tool window
-                CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTool, ShowToolWindow);
-                // Create the command for the solution explorer context menu
-                CreateMenuCommand(mcs, PkgCmdIdList.cmdidMySolutionExplorerContextMenu, ShowSelectedResourceFiles).BeforeQueryStatus += SolutionExplorerContextMenuCommand_BeforeQueryStatus;
-                // Create the command for the text editor context menu
-                CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTextEditorContextMenu, MoveToResource).BeforeQueryStatus += TextEditorContextMenuCommand_BeforeQueryStatus;
-            }
-            catch (ReflectionTypeLoadException ex)
-            {
-                // ReSharper disable once AssignNullToNotNullAttribute
-                // ReSharper disable once PossibleNullReferenceException
-                var text = "Error loading assemblies:\n\n" + string.Join("\n", ex.LoaderExceptions.Select(l => l.Message + ": " + (l.InnerException?.Message ?? string.Empty)));
-
-                MessageBox.Show(text, "ResX Resource Manager", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            // Create the command for the menu item.
+            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyCommand, ShowToolWindow);
+            // Create the command for the tool window
+            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTool, ShowToolWindow);
+            // Create the command for the solution explorer context menu
+            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMySolutionExplorerContextMenu, ShowSelectedResourceFiles).BeforeQueryStatus += SolutionExplorerContextMenuCommand_BeforeQueryStatus;
+            // Create the command for the text editor context menu
+            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTextEditorContextMenu, MoveToResource).BeforeQueryStatus += TextEditorContextMenuCommand_BeforeQueryStatus;
         }
 
         protected override void Dispose(bool disposing)
@@ -135,6 +128,73 @@
 
             _customToolRunner.Dispose();
             CompositionHost.Dispose();
+        }
+
+        private static void ShowLoaderErrors([NotNull] ICompositionHost compositionHost, [NotNull] IList<string> loaderErrors)
+        {
+            Contract.Requires(compositionHost != null);
+            Contract.Requires(loaderErrors != null);
+
+            if (!loaderErrors.Any())
+                return;
+
+            var message = "Loader errors at start:\n" + string.Join("\n", loaderErrors);
+
+            try
+            {
+                compositionHost.GetExportedValue<ITracer>().TraceError(message);
+            }
+            catch
+            {
+                MessageBox.Show(message);
+            }
+        }
+
+        private void FillCatalog([NotNull] Dispatcher dispatcher)
+        {
+            Contract.Requires(dispatcher != null);
+
+            var path = Path.GetDirectoryName(GetType().Assembly.Location);
+            Contract.Assume(!string.IsNullOrEmpty(path));
+
+            var errors = new List<string>();
+
+            // var stopwatch = new Stopwatch();
+
+            _compositionHost.Container.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
+
+            foreach (var file in Directory.GetFiles(path, @"*.dll"))
+            {
+                Contract.Assume(!string.IsNullOrEmpty(file));
+
+                if ("DocumentFormat.OpenXml.dll".Equals(Path.GetFileName(file), StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                try
+                {
+                    // stopwatch.Restart();
+                    _compositionHost.AddCatalog(new AssemblyCatalog(file));
+                    // errors.Add("Assembly: " + Path.GetFileName(file) + " => " + stopwatch.ElapsedMilliseconds);
+                    // stopwatch.Stop();
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    // ReSharper disable once PossibleNullReferenceException
+                    errors.Add("Assembly: " + Path.GetFileName(file) + " => " + string.Join("\n", ex.LoaderExceptions.Select(l => l.Message + ": " + (l.InnerException?.Message ?? string.Empty))));
+                }
+                catch (Exception ex)
+                {
+                    errors.Add("Assembly: " + Path.GetFileName(file) + " => " + ex.Message);
+                }
+            }
+
+            _compositionHostLoaded.Set();
+
+            if (errors.Any())
+            {
+                dispatcher.BeginInvoke(() => ShowLoaderErrors(_compositionHost, errors));
+            }
         }
 
         [NotNull]
@@ -414,6 +474,7 @@
         {
             Contract.Invariant(_customToolRunner != null);
             Contract.Invariant(_compositionHost != null);
+            Contract.Invariant(_compositionHostLoaded != null);
         }
     }
 }
