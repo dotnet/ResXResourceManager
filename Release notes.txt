@@ -115,7 +115,7 @@
 * WI4668: VS Crashes when showing lines with warnings
 * WI4660: Select & Copy in column mode
 1.0.0.66:
-* WI4604, WI4638, WI4642: New snapshot feature allows to filter for changes (https://resxresourcemanager.codeplex.com/wikipage?title=Snapshots)
+* WI4604, WI4638, WI4642: New snapshot feature allows to filter for changes (https://github.com/tom-englert/ResXResourceManager/wiki/Snapshots)
 * WI4657: Allow to enter tab characters in the top-right edit field.
 1.0.0.65:
 * WI4646: Cannot add new key time to time - exception triggered.
