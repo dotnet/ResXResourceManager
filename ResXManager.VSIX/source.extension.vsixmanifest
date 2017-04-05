@@ -4,9 +4,9 @@
     <Identity Id="43b35fe0-1f30-48de-887a-68256474202a" Version="1.0.0.96" Language="en-US" Publisher="tom-englert.de" />
     <DisplayName>ResXManager</DisplayName>
     <Description xml:space="preserve">Manage localization of all ResX-Based resources in one place. Shows all resources of a solution and let's you edit the strings and their localizations in a well-arranged data grid.</Description>
-    <MoreInfo>http://resxresourcemanager.codeplex.com/</MoreInfo>
+    <MoreInfo>https://github.com/tom-englert/ResXResourceManager</MoreInfo>
     <License>License</License>
-    <GettingStartedGuide>http://resxresourcemanager.codeplex.com/documentation</GettingStartedGuide>
+    <GettingStartedGuide>https://github.com/tom-englert/ResXResourceManager/wiki</GettingStartedGuide>
     <ReleaseNotes>Release notes.txt</ReleaseNotes>
     <Icon>32x32.png</Icon>
     <PreviewImage>200x200.png</PreviewImage>

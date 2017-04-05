@@ -122,8 +122,8 @@
   </data>
   <data name="IntroMessage" xml:space="preserve">
     <value>ResX Resource Manager wurde geladen.
-Webseite: http://resxresourcemanager.codeplex.com/
-Fehler melden:  http://resxresourcemanager.codeplex.com/workitem/list/basic
+Webseite: https://github.com/tom-englert/ResXResourceManager
+Fehler melden:  https://github.com/tom-englert/ResXResourceManager/issues
 Projekt unterstützen: Schreiben sie ein kurzes Review auf https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details</value>
   </data>
   <data name="ProjectHasNoResourceFile">

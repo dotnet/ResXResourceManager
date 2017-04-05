@@ -324,7 +324,7 @@
             <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/like.png" />
           </Button>
           <Button x:Name="HelpButton" ToolTip="{x:Static properties:Resources.HelpButtonToolTip}"
-                  Tag="https://resxresourcemanager.codeplex.com/documentation">
+                  Tag="https://github.com/tom-englert/ResXResourceManager/wiki">
             <Grid Width="16" Height="16">
               <TextBlock Text="?" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </Grid>
