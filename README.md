@@ -9,7 +9,7 @@ Suitable for any .Net application; WPF is supported if you use the x:Static mark
 Available as VS2012-2017 extension and as standalone executable to support VS2010 and older or users without Visual Studio at all.
 A scipting module is available as well, so you can easily automate resource tasks, e.g. export untranslated string during build.
 
-All versions can be downladed from the [releases](releases) page.
+All versions can be downladed from the [releases](../../releases) page.
 The Visual Studio Extension is also available at the [Visual Studio Gallery](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager), or by searching for RESX in the Visual Studio extension manager.
 
 ![Visual Studio Extension](https://raw.githubusercontent.com/tom-englert/ResXResourceManager/master/Assets/VisualStudioMainScreen.png)
