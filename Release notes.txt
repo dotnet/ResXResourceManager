@@ -1,9 +1,13 @@
-﻿Other places:
+﻿Links:
 [url:Visual Studio Extension Download|https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager]
 [url:Standalone Application (ClickOnce)|http://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/ResXManager.application]
 [url:Reviews|https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details]
 [url:GitHub|https://github.com/tom-englert/ResXResourceManager/releases]
 
+1.0.0.97:
+* Add configurable option to exclude sourcefiles from being processed as soon as possible (by Christophe Gijbels <git@gijbels-it.be)
+* Migrate all links from codeplex to github, move click-once install/update location.
+* Optimize load sequence, startup time, and startup error logging.
 1.0.0.96:
 * Improve usability of MoveToResource (apply the resource filter to exclude e.g. EF Migrations / put preferred and last used entity on top of the list)
 * Improve handling of resources with empty keys.
