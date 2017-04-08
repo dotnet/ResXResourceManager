@@ -374,6 +374,9 @@ Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
   <data name="SortNodesByKey_Confirmation" xml:space="preserve">
     <value>Möchten sie jetzt den Inhalt aller Ressourcen-Dateien nach Schlüssel sortieren?</value>
   </data>
+  <data name="SourceFileExclusionFilters_Header" xml:space="preserve">
+    <value>Dateiausschlussfilter</value>
+  </data>
   <data name="Translations_ApplyAll" xml:space="preserve">
     <value>Alle anwenden</value>
   </data>
@@ -400,8 +403,5 @@ Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
   </data>
   <data name="UnloadSnapshot" xml:space="preserve">
     <value>Snapshot entladen</value>
-  </data>
-  <data name="SourceFileExclusionFilters_Header" xml:space="preserve">
-    <value>*Source file exclusion filters</value>
   </data>
 </root>
