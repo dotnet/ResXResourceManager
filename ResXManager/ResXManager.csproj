@@ -30,8 +30,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/ResXManager.application/</InstallUrl>
-    <SupportUrl>https://resxresourcemanager.codeplex.com</SupportUrl>
+    <InstallUrl>https://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/</InstallUrl>
+    <SupportUrl>https://github.com/tom-englert/ResXResourceManager</SupportUrl>
     <ProductName>ResX Resource Manager</ProductName>
     <PublisherName>tom-englert.de</PublisherName>
     <ApplicationRevision>97</ApplicationRevision>
