@@ -31,7 +31,7 @@ namespace tomenglertde.ResXManager.Translators
         {
             try
             {
-                var authenticationKey = Credentials[0].Value;
+                var authenticationKey = AuthenticationKey;
 
                 if (string.IsNullOrEmpty(authenticationKey))
                 {
@@ -106,9 +106,9 @@ namespace tomenglertde.ResXManager.Translators
             }
         }
 
-        [DataMember]
+        [DataMember(Name = "AuthenticationKey")]
         [ContractVerification(false)]
-        public string AuthenticationKey
+        public string SerializedAuthenticationKey
         {
             get
             {
@@ -119,6 +119,9 @@ namespace tomenglertde.ResXManager.Translators
                 Credentials[0].Value = value;
             }
         }
+
+        [ContractVerification(false)]
+        private string AuthenticationKey => Credentials[0].Value;
 
         private void ReturnResults([NotNull] IEnumerable<ITranslationItem> items, [NotNull] IEnumerable<GetTranslationsResponse> responses)
         {

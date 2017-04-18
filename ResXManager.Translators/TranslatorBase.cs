@@ -81,7 +81,7 @@ namespace tomenglertde.ResXManager.Translators
             }
         }
 
-        public virtual IList<ICredentialItem> Credentials => _credentials;
+        public IList<ICredentialItem> Credentials => _credentials;
 
         public abstract void Translate(ITranslationSession translationSession);
 

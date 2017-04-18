@@ -14,7 +14,6 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Translators.Properties;
 
-    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
     [Export]
@@ -32,45 +31,14 @@
 
             _changeThrottle = new Throttle(TimeSpan.FromSeconds(1), SaveConfiguration);
             _translators = translators;
-            // ReSharper disable once PossibleNullReferenceException
-            _translators.ForEach(translator => translator.PropertyChanged += (_, __) => _changeThrottle.Tick());
 
             var settings = Settings.Default;
+            // ReSharper disable once PossibleNullReferenceException
             var configuration = settings.Configuration;
 
-            if (string.IsNullOrEmpty(configuration))
-                return;
+            LoadConfiguration(translators, configuration);
 
-            try
-            {
-                var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(configuration);
-                Contract.Assume(values != null);
-
-                foreach (var translator in _translators)
-                {
-                    Contract.Assume(translator != null);
-
-                    string setting;
-
-                    if (!values.TryGetValue(translator.Id, out setting))
-                        continue;
-                    if (string.IsNullOrEmpty(setting))
-                        continue;
-
-                    try
-                    {
-                        JsonConvert.PopulateObject(setting, translator);
-                    }
-                    catch
-                    {
-                        // Newtonsoft.Jason has not documented any exceptions...
-                    }
-                }
-            }
-            catch
-            {
-                // Newtonsoft.Jason has not documented any exceptions...           
-            }
+            RegisterChangeEvents(translators, _changeThrottle);
         }
 
         [NotNull]
@@ -82,23 +50,6 @@
 
                 return _translators;
             }
-        }
-
-        public void SaveConfiguration()
-        {
-            var settings = Settings.Default;
-
-            var values = new Dictionary<string, string>();
-
-            foreach (var translator in Translators)
-            {
-                Contract.Assume(translator != null);
-
-                var json = JsonConvert.SerializeObject(translator);
-                values[translator.Id] = json;
-            }
-
-            settings.Configuration = JsonConvert.SerializeObject(values);
         }
 
         public void Translate([NotNull] ITranslationSession translationSession)
@@ -137,6 +88,81 @@
             if (translatorCounter == 0)
             {
                 translationSession.IsComplete = true;
+            }
+        }
+
+        private void SaveConfiguration()
+        {
+            var settings = Settings.Default;
+
+            var values = new Dictionary<string, string>();
+
+            foreach (var translator in _translators)
+            {
+                Contract.Assume(translator != null);
+
+                var json = JsonConvert.SerializeObject(translator);
+                values[translator.Id] = json;
+            }
+
+            settings.Configuration = JsonConvert.SerializeObject(values);
+        }
+
+        private static void LoadConfiguration([NotNull] ITranslator[] translators, [CanBeNull] string configuration)
+        {
+            Contract.Requires(translators != null);
+
+            if (string.IsNullOrEmpty(configuration))
+                return;
+
+            try
+            {
+                var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(configuration);
+                Contract.Assume(values != null);
+
+                foreach (var translator in translators)
+                {
+                    Contract.Assume(translator != null);
+
+                    string setting;
+
+                    if (!values.TryGetValue(translator.Id, out setting))
+                        continue;
+                    if (string.IsNullOrEmpty(setting))
+                        continue;
+
+                    try
+                    {
+                        JsonConvert.PopulateObject(setting, translator);
+                    }
+                    catch
+                    {
+                        // Newtonsoft.Jason has not documented any exceptions...
+                    }
+                }
+            }
+            catch
+            {
+                // Newtonsoft.Jason has not documented any exceptions...           
+            }
+        }
+
+        private static void RegisterChangeEvents([NotNull] ITranslator[] translators, [NotNull] Throttle changeThrottle)
+        {
+            Contract.Requires(translators != null);
+            Contract.Requires(changeThrottle != null);
+
+            foreach (var translator in translators)
+            {
+                Contract.Assume(translator != null);
+
+                translator.PropertyChanged += (_, __) => changeThrottle.Tick();
+                foreach (var credential in translator.Credentials)
+                {
+                    Contract.Assume(credential != null);
+
+                    credential.PropertyChanged += (_, __) => changeThrottle.Tick();
+                }
             }
         }
 

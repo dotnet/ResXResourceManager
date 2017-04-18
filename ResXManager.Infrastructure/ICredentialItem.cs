@@ -1,6 +1,8 @@
 ﻿namespace tomenglertde.ResXManager.Infrastructure
 {
-    public interface ICredentialItem
+    using System.ComponentModel;
+
+    public interface ICredentialItem : INotifyPropertyChanged
     {
         string Key
         {

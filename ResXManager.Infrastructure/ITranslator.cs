@@ -41,7 +41,7 @@
 
         void Translate([NotNull] ITranslationSession translationSession);
 
-        [NotNull]
+        [NotNull, ItemNotNull]
         IList<ICredentialItem> Credentials
         {
             get;

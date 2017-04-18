@@ -39,9 +39,9 @@
             return new ICredentialItem[] { new CredentialItem("Key", "Key") };
         }
 
-        [DataMember]
+        [DataMember(Name = "Key")]
         [ContractVerification(false)]
-        public string Key
+        public string SerializedKey
         {
             get
             {
@@ -52,6 +52,9 @@
                 Credentials[0].Value = value;
             }
         }
+
+        [ContractVerification(false)]
+        private string Key => Credentials[0]?.Value;
 
         public override void Translate(ITranslationSession translationSession)
         {
@@ -65,9 +68,8 @@
 
                 try
                 {
-                    Contract.Assume(Credentials.Count == 1);
                     var targetCulture = translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage;
-                    var result = TranslateText(translationItem.Source, Credentials[0]?.Value, translationSession.SourceLanguage, targetCulture);
+                    var result = TranslateText(translationItem.Source, Key, translationSession.SourceLanguage, targetCulture);
 
                     translationSession.Dispatcher.BeginInvoke(() =>
                     {

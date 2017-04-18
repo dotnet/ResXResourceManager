@@ -107,7 +107,8 @@
                 .Where(entity => !entity.IsWinFormsDesignerResource)
                 .ToArray();
 
-            var filter = Settings.Default?.ResourceFilter?.Trim();
+            // ReSharper disable once PossibleNullReferenceException
+            var filter = Settings.Default.ResourceFilter?.Trim();
 
             if (!string.IsNullOrEmpty(filter))
             {

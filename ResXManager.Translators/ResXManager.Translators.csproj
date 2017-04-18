@@ -197,7 +197,6 @@
     <Compile Include="AdmAuthentication.cs" />
     <Compile Include="AzureAuthentication.cs" />
     <Compile Include="AzureTranslator.cs" />
-    <Compile Include="BingTranslator.cs" />
     <Compile Include="CredentialItem.cs" />
     <Compile Include="MyMemoryTranslator.cs" />
     <Compile Include="GoogleTranslator.cs" />
