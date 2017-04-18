@@ -69,6 +69,8 @@
                 _key = CreateKey(text, className, functionName);
 
             Dispatcher.BeginInvoke(DispatcherPriority.Background, () => OnPropertyChanged(nameof(Key)));
+
+            Update();
         }
 
         [NotNull]
