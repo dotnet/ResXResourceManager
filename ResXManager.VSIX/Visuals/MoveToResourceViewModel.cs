@@ -299,7 +299,7 @@
 
             var localNamespace = GetLocalNamespace(((DteProjectFile)entity?.NeutralProjectFile)?.DefaultProjectItem);
 
-            return pattern.Replace(@"$File", SelectedResourceEntity?.BaseName)
+            return pattern.Replace(@"$File", entity?.BaseName)
                 .Replace(@"$Key", Key)
                 .Replace(@"$Namespace", localNamespace);
         }
