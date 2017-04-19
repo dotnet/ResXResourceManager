@@ -4,6 +4,8 @@
 [url:Reviews|https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details]
 [url:GitHub|https://github.com/tom-englert/ResXResourceManager/releases]
 
+1.0.0.99:
+* #8: type mismatch in generated code patterns
 1.0.0.98:
 * #8: Move to resource dialog fields are not properly updated on load.
 * #9: AuthenticationKey not saved when changing only the key
