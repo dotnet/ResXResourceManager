@@ -1,12 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8FE641FD-9430-4433-88D3-ABDD487E4397}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		.tfignore = .tfignore
+		README.md = README.md
 		Release notes.txt = Release notes.txt
 		Resources.Designer.t4 = Resources.Designer.t4
 		ResXResourceManager.sln.DotSettings = ResXResourceManager.sln.DotSettings
@@ -84,35 +85,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 9
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs36
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = ResXManager.Model\\ResXManager.Model.csproj
-		SccProjectName1 = ResXManager.Model
-		SccLocalPath1 = ResXManager.Model
-		SccProjectUniqueName2 = ResXManager.View\\ResXManager.View.csproj
-		SccProjectName2 = ResXManager.View
-		SccLocalPath2 = ResXManager.View
-		SccProjectUniqueName3 = ResXManager.VSIX\\ResXManager.VSIX.csproj
-		SccProjectName3 = ResXManager.VSIX
-		SccLocalPath3 = ResXManager.VSIX
-		SccProjectUniqueName4 = ResXManager\\ResXManager.csproj
-		SccProjectName4 = ResXManager
-		SccLocalPath4 = ResXManager
-		SccProjectUniqueName5 = ResXManager.Translators\\ResXManager.Translators.csproj
-		SccProjectName5 = ResXManager.Translators
-		SccLocalPath5 = ResXManager.Translators
-		SccProjectUniqueName6 = ResXManager.Infrastructure\\ResXManager.Infrastructure.csproj
-		SccProjectName6 = ResXManager.Infrastructure
-		SccLocalPath6 = ResXManager.Infrastructure
-		SccProjectUniqueName7 = ResXManager.Styles\\ResXManager.Styles.csproj
-		SccProjectName7 = ResXManager.Styles
-		SccLocalPath7 = ResXManager.Styles
-		SccProjectUniqueName8 = ResXManager.Scripting\\ResXManager.Scripting.csproj
-		SccProjectName8 = ResXManager.Scripting
-		SccLocalPath8 = ResXManager.Scripting
 	EndGlobalSection
 EndGlobal

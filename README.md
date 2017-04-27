@@ -11,6 +11,7 @@ A scipting module is available as well, so you can easily automate resource task
 
 All versions can be downladed from the [releases](../../releases) page.
 The Visual Studio Extension is also available at the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager), or by searching for RESX in the Visual Studio extension manager.
+The latest build of the Visual Studio Extension is also available at the [Open VsixGallery](http://vsixgallery.com/extension/43b35fe0-1f30-48de-887a-68256474202a)
 
 ![Visual Studio Extension](https://raw.githubusercontent.com/tom-englert/ResXResourceManager/master/Assets/VisualStudioMainScreen.png)
 ![Standalone Application](https://raw.githubusercontent.com/tom-englert/ResXResourceManager/master/Assets/StandaloneMainScreen.png)
