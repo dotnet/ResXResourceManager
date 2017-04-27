@@ -110,6 +110,7 @@
             {
                 Contract.Ensures(Contract.Result<ObservableCollection<MoveToResourceConfigurationItem>>() != null);
                 CreateCollection();
+                // ReSharper disable once AssignNullToNotNullAttribute => CreateCollection ensures _items != null
                 return _items;
             }
         }
@@ -119,11 +120,13 @@
             add
             {
                 CreateCollection();
+                // ReSharper disable once PossibleNullReferenceException => CreateCollection ensures _changeTracker != null
                 _changeTracker.ItemPropertyChanged += value;
             }
             remove
             {
                 CreateCollection();
+                // ReSharper disable once PossibleNullReferenceException => CreateCollection ensures _changeTracker != null
                 _changeTracker.ItemPropertyChanged -= value;
             }
         }

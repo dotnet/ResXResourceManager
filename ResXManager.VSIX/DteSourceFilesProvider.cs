@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.IO;
     using System.Linq;
 
     using JetBrains.Annotations;
@@ -51,7 +52,7 @@
             {
                 var fileFilter = new FileFilter(_configuration);
 
-                return GetProjectFiles().Where(p => p.IsResourceFile() || fileFilter.IsSourceFile(p));
+                return GetProjectFiles().Where(p => fileFilter.IncludeFile(new FileInfo(p.FilePath)) && (p.IsResourceFile() || fileFilter.IsSourceFile(p)));
             }
         }
 
