@@ -1,9 +1,12 @@
 ﻿Links:
-[url:Visual Studio Extension Download|https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager]
+[url:Visual Studio Extension Download (Marketplace)|https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager]
+[url:Visual Studio Extension Download (Open VsixGallery)|http://vsixgallery.com/extension/43b35fe0-1f30-48de-887a-68256474202a]
 [url:Standalone Application (ClickOnce)|http://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/ResXManager.application]
 [url:Reviews|https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details]
 [url:GitHub|https://github.com/tom-englert/ResXResourceManager/releases]
 
+* Provide latest build via Open VsixGallery (http://vsixgallery.com/extension/43b35fe0-1f30-48de-887a-68256474202a)
+* #11: Fix scripting engine and support file exclusion filter in scripting and VS extension.
 1.0.0.99:
 * #8: type mismatch in generated code patterns
 1.0.0.98:
