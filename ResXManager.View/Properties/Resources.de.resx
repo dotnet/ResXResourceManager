@@ -374,7 +374,7 @@ Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
   <data name="SortNodesByKey_Confirmation" xml:space="preserve">
     <value>Möchten sie jetzt den Inhalt aller Ressourcen-Dateien nach Schlüssel sortieren?</value>
   </data>
-  <data name="SourceFileExclusionFilters_Header" xml:space="preserve">
+  <data name="FileExclusionFilters_Header" xml:space="preserve">
     <value>Dateiausschlussfilter</value>
   </data>
   <data name="Translations_ApplyAll" xml:space="preserve">

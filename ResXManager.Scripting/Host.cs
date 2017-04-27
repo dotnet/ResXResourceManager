@@ -8,6 +8,7 @@
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
 
     using JetBrains.Annotations;
 
@@ -42,9 +43,10 @@
         [NotNull]
         public ResourceManager ResourceManager => _resourceManager;
 
-        public void Load(string folder)
+        public void Load(string folder, string exclusionFilter = @"Migrations\\\d{15}")
         {
             _sourceFilesProvider.Folder = folder;
+            _sourceFilesProvider.ExclusionFilter = exclusionFilter;
 
             _resourceManager.Reload(DuplicateKeyHandling.Fail);
         }

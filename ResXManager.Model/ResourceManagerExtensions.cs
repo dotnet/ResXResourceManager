@@ -1,5 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.IO;
@@ -14,17 +15,11 @@
     public static class ResourceManagerExtensions
     {
         [NotNull]
-        public static IList<ProjectFile> GetAllSourceFiles([NotNull] this DirectoryInfo solutionFolder, [NotNull] Configuration configuration, [NotNull] ISourceFileFilter sourceFileFilter)
+        public static IList<ProjectFile> GetAllSourceFiles([NotNull] this DirectoryInfo solutionFolder, [NotNull] IFileFilter fileFilter)
         {
             Contract.Requires(solutionFolder != null);
-            Contract.Requires(configuration != null);
-            Contract.Requires(sourceFileFilter != null);
+            Contract.Requires(fileFilter != null);
             Contract.Ensures(Contract.Result<IList<ProjectFile>>() != null);
-
-            var sourceFileExclusionFilters = configuration.SourceFileExclusionFilters.Items
-                    .Where(sourceFileExclusionFilter => !string.IsNullOrEmpty(sourceFileExclusionFilter.Expression))
-                    .Select(sourceFileExclusionFilter => new Regex(sourceFileExclusionFilter.Expression, RegexOptions.IgnoreCase | RegexOptions.Singleline))
-                    .ToArray();
 
             var solutionFolderLength = solutionFolder.FullName.Length + 1;
 
@@ -32,9 +27,9 @@
             Contract.Assume(fileInfos != null);
 
             var allProjectFiles = fileInfos
-                .Where(fileInfo => !sourceFileExclusionFilters.Any(sourceFileExclusionFilter => sourceFileExclusionFilter.IsMatch(fileInfo.FullName)))
+                .Where(fileFilter.IncludeFile)
                 .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
-                .Where(file => file.IsResourceFile() || sourceFileFilter.IsSourceFile(file))
+                .Where(file => file.IsResourceFile() || fileFilter.IsSourceFile(file))
                 .ToArray();
 
             var fileNamesByDirectory = allProjectFiles.GroupBy(file => file.GetBaseDirectory()).ToArray();

@@ -1,7 +1,7 @@
 ﻿# Define file locations
 $snapshotFileName = 'D:\Temp\1.snapshot'
 $excelFileName = 'd:\Temp\Test.xlsx'
-$solutionFolder = 'D:\Develop\My Open Source\TFS\ResXResourceManager\Main'
+$solutionFolder = 'D:\Develop\MyOpenSource\ResXResourceManager\Source'
 
 # Create the scripting host of ResXManager:
 Add-Type -Path 'ResXManager.Scripting.dll'

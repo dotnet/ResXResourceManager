@@ -49,9 +49,9 @@
         {
             get
             {
-                var sourceFileFilter = new SourceFileFilter(_configuration);
+                var fileFilter = new FileFilter(_configuration);
 
-                return GetProjectFiles().Where(p => p.IsResourceFile() || sourceFileFilter.IsSourceFile(p));
+                return GetProjectFiles().Where(p => p.IsResourceFile() || fileFilter.IsSourceFile(p));
             }
         }
 

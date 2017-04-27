@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.Text.RegularExpressions;
 
     public static class ExtensionMethods
     {
@@ -51,5 +52,22 @@
 
             return null;
         }
+
+        public static Regex TryCreateRegex(this string expression)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(expression))
+                    return new Regex(expression, RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
+            }
+            catch
+            {
+                // invalid expression, ignore...
+            }
+
+            return null;
+        }
+
+
     }
 }

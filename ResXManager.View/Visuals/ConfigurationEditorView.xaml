@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.ConfigurationEditorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="600"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" 
              xmlns:model="urn:ResXManager.Model"
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
@@ -179,18 +179,13 @@
 
       <Decorator Height="5" />
 
-      <GroupBox Header="{x:Static properties:Resources.SourceFileExclusionFilters_Header}" Style="{StaticResource GroupStyle}">
-          <DataGrid ItemsSource="{Binding Configuration.SourceFileExclusionFilters.Items}"
-              AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False"
-              Style="{DynamicResource {x:Static styles:ResourceKeys.DataGridStyle}}"
-              Margin="10" MinHeight="50" MaxHeight="250" MinWidth="700">
-              <DataGrid.Columns>
-                  <DataGridTextColumn Header="{x:Static properties:Resources.RegularExpression}" Binding="{Binding Expression}" Width="5*" />
-              </DataGrid.Columns>
-              <i:Interaction.Behaviors>
-                  <dgx:ExtendedStarSizeBehavior ResourceLocator="{StaticResource ResourceLocator}" />
-              </i:Interaction.Behaviors>
-          </DataGrid>
+      <GroupBox Header="{x:Static properties:Resources.FileExclusionFilters_Header}" Style="{StaticResource GroupStyle}">
+        <DockPanel>
+          <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left">
+            <Run Text="{x:Static properties:Resources.RegularExpression}"/><Run Text=": "/> 
+          </TextBlock>
+          <TextBox Text="{Binding Configuration.FileExclusionFilter, UpdateSourceTrigger=PropertyChanged}"/>
+        </DockPanel>
       </GroupBox>
 
       <ItemsControl toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Configuration}">

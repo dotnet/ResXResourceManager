@@ -184,7 +184,6 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
-    <Compile Include="SourceFileExclusionFilterConfiguration.cs" />
     <Compile Include="CodeReferenceConfiguration.cs" />
     <Compile Include="ColumnKind.cs" />
     <Compile Include="Configuration.cs" />
@@ -197,7 +196,7 @@
     <Compile Include="ConfigurationBase.cs" />
     <Compile Include="IExportParameters.cs" />
     <Compile Include="ImportException.cs" />
-    <Compile Include="ISourceFileFilter.cs" />
+    <Compile Include="IFileFilter.cs" />
     <Compile Include="ISourceFilesProvider.cs" />
     <Compile Include="JsonSerializerTypeConverter.cs" />
     <Compile Include="LanguageEventArgs.cs" />
@@ -227,7 +226,7 @@
     <Compile Include="ResourceTableValues.cs" />
     <Compile Include="ResourceBeginEditingEventArgs.cs" />
     <Compile Include="Snapshot.cs" />
-    <Compile Include="SourceFileFilter.cs" />
+    <Compile Include="FileFilter.cs" />
     <Compile Include="XmlConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>

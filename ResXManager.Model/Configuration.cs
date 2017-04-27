@@ -5,6 +5,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.Text.RegularExpressions;
     using System.Windows.Threading;
 
     using JetBrains.Annotations;
@@ -28,11 +29,8 @@
     {
         [NotNull]
         private readonly DispatcherThrottle _codeReferencesChangeThrottle;
-        [NotNull]
-        private readonly DispatcherThrottle _sourceFileExclusionFiltersChangeThrottle;
 
         private CodeReferenceConfiguration _codeReferences;
-        private SourceFileExclusionFilterConfiguration _sourceFileExclusionFilters;
 
         protected Configuration([NotNull] ITracer tracer)
             : base(tracer)
@@ -40,7 +38,6 @@
             Contract.Requires(tracer != null);
 
             _codeReferencesChangeThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, PersistCodeReferences);
-            _sourceFileExclusionFiltersChangeThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, PersistSourceFileExclusionFilters);
         }
 
         [NotNull]
@@ -54,14 +51,15 @@
             }
         }
 
-        [NotNull]
-        public SourceFileExclusionFilterConfiguration SourceFileExclusionFilters
+        public string FileExclusionFilter
         {
             get
             {
-                Contract.Ensures(Contract.Result<SourceFileExclusionFilterConfiguration>() != null);
-
-                return _sourceFileExclusionFilters ?? LoadSourceFileExclusionFilterConfiguration();
+                return GetValue(@"Migrations\\\d{15}");
+            }
+            set
+            {
+                SetValue(value);
             }
         }
 
@@ -116,7 +114,7 @@
             }
         }
 
-        public StringComparison? EffectiveResXSortingComparison => SortFileContentOnSave ? ResXSortingComparison : (StringComparison?) null;
+        public StringComparison? EffectiveResXSortingComparison => SortFileContentOnSave ? ResXSortingComparison : (StringComparison?)null;
 
         public bool ConfirmAddLanguageFile
         {
@@ -212,7 +210,6 @@
         protected virtual void OnReload()
         {
             _codeReferences = null;
-            _sourceFileExclusionFilters = null;
 
             // ReSharper disable once PossibleNullReferenceException
             GetType().GetProperties().ForEach(p => OnPropertyChanged(p.Name));
@@ -236,31 +233,12 @@
             return _codeReferences;
         }
 
-        private void PersistSourceFileExclusionFilters()
-        {
-            // ReSharper disable once ExplicitCallerInfoArgument
-            SetValue(SourceFileExclusionFilters, nameof(SourceFileExclusionFilters));
-        }
-
-        [NotNull]
-        private SourceFileExclusionFilterConfiguration LoadSourceFileExclusionFilterConfiguration()
-        {
-            Contract.Ensures(Contract.Result<SourceFileExclusionFilterConfiguration>() != null);
-
-            // ReSharper disable once ExplicitCallerInfoArgument
-            _sourceFileExclusionFilters = GetValue(default(SourceFileExclusionFilterConfiguration), nameof(SourceFileExclusionFilters)) ?? SourceFileExclusionFilterConfiguration.Default;
-            _sourceFileExclusionFilters.ItemPropertyChanged += (_, __) => _sourceFileExclusionFiltersChangeThrottle.Tick();
-
-            return _sourceFileExclusionFilters;
-        }
-
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_codeReferencesChangeThrottle != null);
-            Contract.Invariant(_sourceFileExclusionFiltersChangeThrottle != null);
         }
     }
 }
