@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="tomenglertde.ResXManager.View.Visuals.ConfigurationEditorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
              xmlns:model="urn:ResXManager.Model"
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
@@ -155,7 +155,7 @@
         <CheckBox Margin="10"
                   Style="{StaticResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
                   Content="{x:Static properties:Resources.ShowPerformanceTraces}"
-                  IsChecked="{Binding Configuration.ShowPerformanceTraces}"/>
+                  IsChecked="{Binding Configuration.ShowPerformanceTraces}" />
       </GroupBox>
 
       <Decorator Height="5" />
@@ -180,11 +180,11 @@
       <Decorator Height="5" />
 
       <GroupBox Header="{x:Static properties:Resources.FileExclusionFilters_Header}" Style="{StaticResource GroupStyle}">
-        <DockPanel>
+        <DockPanel Margin="10">
           <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left">
-            <Run Text="{x:Static properties:Resources.RegularExpression}"/><Run Text=": "/> 
+            <Run Text="{x:Static properties:Resources.RegularExpression}" /><Run Text=": " />
           </TextBlock>
-          <TextBox Text="{Binding Configuration.FileExclusionFilter, UpdateSourceTrigger=PropertyChanged}"/>
+          <TextBox Text="{Binding Configuration.FileExclusionFilter, UpdateSourceTrigger=PropertyChanged}" />
         </DockPanel>
       </GroupBox>
 
