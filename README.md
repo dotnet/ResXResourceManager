@@ -1,5 +1,7 @@
 # ResX Resource Manager ![Badge](https://tom-englert.visualstudio.com/_apis/public/build/definitions/75bf84d2-d359-404a-a712-07c9f693f635/7/badge)
-Manage localization of all ResX-Based resources in one central place.
+The most popular tool to localize and manage applications with resx-based resources, 
+with more than 300K downloads from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager) 
+and hundreds of [5 star reviews](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details)
 
 This tool provides central access to all ResX-based string resources in your solution. You can quickly navigate through all resource files and view the content in a well-arranged data grid.
 All available languages are displayed side by side in columns, to make it easy to find untranslated strings or clean up orphaned entries. All strings can be quickly edited in place, untranslated entries will be created on the fly while typing.
