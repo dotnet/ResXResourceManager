@@ -1,5 +1,5 @@
 # ResX Resource Manager ![Badge](https://tom-englert.visualstudio.com/_apis/public/build/definitions/75bf84d2-d359-404a-a712-07c9f693f635/7/badge)
-The most popular tool to localize and manage applications with resx-based resources, 
+The most popular tool to localize and manage all kind of applications with resx-based resources, 
 with more than 300K downloads from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager) 
 and hundreds of [5 star reviews](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details)
 
