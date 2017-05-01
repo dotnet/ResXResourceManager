@@ -380,8 +380,8 @@
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
-    <Content Include="..\Release notes.txt">
-      <Link>Release notes.txt</Link>
+    <Content Include="..\Release notes.md">
+      <Link>Release notes.md</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
