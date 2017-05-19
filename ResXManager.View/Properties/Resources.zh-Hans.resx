@@ -119,7 +119,7 @@
   </resheader>
   <data name="AddEntryToWinFormsResourceWarning" xml:space="preserve">
     <value>您即将向 WinForms 设计器资源添加新条目。
-如果编辑表单，其他条目将会丢失。
+如果编辑窗体，其他条目将会丢失。
 你想添加一个新的条目吗？</value>
   </data>
   <data name="AddKeyToolTip" xml:space="preserve">
@@ -147,7 +147,7 @@
     <value>选择列 </value>
   </data>
   <data name="CodeReferencesToolTip" xml:space="preserve">
-    <value>在代码文件中找到的引用的数量。这只是提示为可能的用法，有关更多详细信息请参阅文档!!</value>
+    <value>在代码文件中找到的引用的数量。此数字仅做参考</value>
   </data>
   <data name="CodeReferencesTooManyDetailsToolTip" xml:space="preserve">
     <value>要显示详细信息的引用太多!</value>
@@ -183,7 +183,7 @@
     <value>删除选定的行 (Del)</value>
   </data>
   <data name="DetectCodeReferences_Header" xml:space="preserve">
-    <value>检测到代码引用</value>
+    <value>检测代码引用</value>
   </data>
   <data name="Diagnostics" xml:space="preserve">
     <value>诊断</value>
@@ -276,7 +276,7 @@
     <value>配置</value>
   </data>
   <data name="SelectedTotalToolTip" xml:space="preserve">
-    <value>选择/全部</value>
+    <value>已选择/全部</value>
   </data>
   <data name="SaveFilesImmediatelyUponChange" xml:space="preserve">
     <value>更改后立即保存文件</value>
@@ -393,7 +393,7 @@
     <value>Comment Token</value>
   </data>
   <data name="Configuration_DuplicateKeyHandling" xml:space="preserve">
-    <value>重复/空资源密钥处理</value>
+    <value>重复/空资源名称处理</value>
   </data>
   <data name="Configuration_ExcelExportModeHeader" xml:space="preserve">
     <value>Excel 导出模式</value>
