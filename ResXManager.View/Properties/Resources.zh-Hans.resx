@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddEntryToWinFormsResourceWarning" xml:space="preserve">
-    <value>您即将向WinForms设计器资源添加新条目。
+    <value>您即将向 WinForms 设计器资源添加新条目。
 如果编辑表单，其他条目将会丢失。
 你想添加一个新的条目吗？</value>
   </data>
   <data name="AddKeyToolTip" xml:space="preserve">
-    <value>添加新的键（Shift + Insert）</value>
+    <value>添加新的键 (Shift+Insert)</value>
   </data>
   <data name="Authentication" xml:space="preserve">
     <value>认证</value>
@@ -252,7 +252,7 @@
     <value>保存RESX文件时，将按名称对XML数据节点进行排序</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>排序方法:</value>
+    <value>排序方法：</value>
   </data>
   <data name="SortAllFilesNow" xml:space="preserve">
     <value>现在排序所有文件</value>
@@ -283,7 +283,7 @@
   </data>
   <data name="ResourceFilterToolTip" xml:space="preserve">
     <value>用于过滤资源文件的正则表达式。
-该模式将与字符串“{project} - {folder} \ {file}”进行比较，
+该模式将与字符串“{project} - {folder}\{file}”进行比较，
 这与分组视图中的组标题相同
 使用例如 ".* - (?!Migrations)"来隐藏EF迁移。</value>
   </data>
@@ -333,7 +333,7 @@
     <value>剪切选中行 (Ctrl+X)</value>
   </data>
   <data name="CopyToolTip" xml:space="preserve">
-    <value>复制选定的行或单元格 (Ctrl + C)</value>
+    <value>复制选定的行或单元格 (Ctrl+C)</value>
   </data>
   <data name="GroupedViewToolTip" xml:space="preserve">
     <value>分组视图</value>
@@ -366,7 +366,7 @@
     <value>这是系统支持的语言的概述。 它显示按其中性语言（例如“en”）分组的特定语言（例如“en-US”）。 要更改显示为中立语言的标志，请双击具有所需标志的特定语言。</value>
   </data>
   <data name="LikeButtonToolTip" xml:space="preserve">
-    <value>喜欢它？ 通过撰写简短的评论支持项目！</value>
+    <value>喜欢它？ 通过撰写简短的评论支持该项目！</value>
   </data>
   <data name="LoadSnapshot" xml:space="preserve">
     <value>加载快照</value>

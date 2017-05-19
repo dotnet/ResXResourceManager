@@ -134,7 +134,7 @@
   <data name="ProjectHasNoResourceFile" xml:space="preserve">
     <value>该项目没有该语言的资源文件 {0}。
 
-要将资源文件添加到项目中吗?</value>
+要将资源文件添加到项目中吗？</value>
   </data>
   <data name="ProjectHasReadOnlyFiles" xml:space="preserve">
     <value>项目中的某些文件不可写。 确保您具有对这些文件的写入权限：
@@ -149,17 +149,17 @@
 详情参见输出窗口。</value>
   </data>
   <data name="ResourceLoadingError" xml:space="preserve">
-    <value>加载资源文件失败: {0}. 
+    <value>加载资源文件失败：{0}. 
 详情参见输出窗口.</value>
   </data>
   <data name="AssemblyLocation" xml:space="preserve">
-    <value>程序集位置: {0}</value>
+    <value>程序集位置：{0}</value>
   </data>
   <data name="Version" xml:space="preserve">
-    <value>版本: {0}</value>
+    <value>版本：{0}</value>
   </data>
   <data name="Warning" xml:space="preserve">
-    <value>警告:</value>
+    <value>警告：</value>
   </data>
   <data name="OpenInResXManager" xml:space="preserve">
     <value>在 ResX Manager 中打开</value>
@@ -199,19 +199,19 @@
     <value>移动到资源</value>
   </data>
   <data name="ResourceHeader" xml:space="preserve">
-    <value>资源:</value>
+    <value>资源：</value>
   </data>
   <data name="KeyHeader" xml:space="preserve">
-    <value>名称:</value>
+    <value>名称：</value>
   </data>
   <data name="CodeHeader" xml:space="preserve">
-    <value>代码:</value>
+    <value>代码：</value>
   </data>
   <data name="ValueHeader" xml:space="preserve">
-    <value>值:</value>
+    <value>值：</value>
   </data>
   <data name="CommentHeader" xml:space="preserve">
-    <value>注释:</value>
+    <value>注释：</value>
   </data>
   <data name="CodeGenerator_WinForms" xml:space="preserve">
     <value>WinForms 设计器</value>
@@ -229,7 +229,7 @@
     <value>重复名称</value>
   </data>
   <data name="ErrorOpenFilesInEditor" xml:space="preserve">
-    <value>某些文件已经在其它窗口打开. 请关闭下列文件以进行更改:
+    <value>某些文件已经在其它窗口打开。请关闭下列文件以进行更改：
 
 {0}</value>
   </data>
