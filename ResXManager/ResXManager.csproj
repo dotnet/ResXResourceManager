@@ -292,6 +292,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.zh-Hans.resx" />
     <None Include="..\Key.snk">
       <Link>Key.snk</Link>
     </None>
