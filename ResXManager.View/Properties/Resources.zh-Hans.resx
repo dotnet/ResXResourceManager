@@ -315,7 +315,7 @@
     <value>没有匹配的资源文件</value>
   </data>
   <data name="NoCodeReferencesToolTip" xml:space="preserve">
-    <value>该算法没有找到代码引用。 然而，可能会间接引用此字符串。</value>
+    <value>该算法没有找到代码引用。 然而，仍可能会存在对此字符串的间接引用。</value>
   </data>
   <data name="NewLanguageIdPrompt" xml:space="preserve">
     <value>选择新语言</value>
@@ -363,7 +363,7 @@
     <value>名称</value>
   </data>
   <data name="LanguageConfiguration_Description" xml:space="preserve">
-    <value>这是系统支持的语言的概述。 它显示按其中性语言（例如“en”）分组的特定语言（例如“en-US”）。 要更改显示为中立语言的标志，请双击具有所需标志的特定语言。</value>
+    <value>这是系统支持的语言的概览。 它显示按其中性语言（例如“en”）分组的特定语言（例如“en-US”）。 要更改显示为中立语言的标志，请双击具有所需标志的特定语言。</value>
   </data>
   <data name="LikeButtonToolTip" xml:space="preserve">
     <value>喜欢它？ 通过撰写简短的评论支持该项目！</value>
