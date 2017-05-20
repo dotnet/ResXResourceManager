@@ -175,10 +175,10 @@
     <value>无效的代码生成器</value>
   </data>
   <data name="CodeGenerator_Internal" xml:space="preserve">
-    <value>自定义工具代码生成器, 内部访问。</value>
+    <value>自定义工具代码生成器，内部访问。</value>
   </data>
   <data name="CodeGenerator_Public" xml:space="preserve">
-    <value>自定义工具代码生成器, 公共访问。</value>
+    <value>自定义工具代码生成器，公共访问。</value>
   </data>
   <data name="CodeGenerator_TextTemplate" xml:space="preserve">
     <value>文本模板代码生成器。</value>

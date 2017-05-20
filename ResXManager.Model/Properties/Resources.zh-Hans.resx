@@ -131,10 +131,10 @@
     <value>“{0}”中的空键</value>
   </data>
   <data name="ExcelExport_MultipleSheets" xml:space="preserve">
-    <value>Multiple sheets</value>
+    <value>多工作表</value>
   </data>
   <data name="ExcelExport_SingleSheet" xml:space="preserve">
-    <value>Single sheet</value>
+    <value>单工作表</value>
   </data>
   <data name="FileSaveError" xml:space="preserve">
     <value>保存文件“{0}”时出错：
