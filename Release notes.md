@@ -1,7 +1,9 @@
-﻿1.1
+﻿1.2
+* #4: Add support for Simplified Chinese
+
+1.1
 * Provide latest build via Open VsixGallery (http://vsixgallery.com/extension/43b35fe0-1f30-48de-887a-68256474202a)
 * #11: Fix scripting engine and support file exclusion filter in scripting and VS extension.
-
 
 1.0.0.99:
 * #8: type mismatch in generated code patterns

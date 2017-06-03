@@ -117,71 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CanNotCreateWindow" xml:space="preserve">
-    <value>无法创建工具窗口</value>
-  </data>
-  <data name="ToolWindowTitle" xml:space="preserve">
-    <value>ResX Resource Manager</value>
-    <comment>@Invariant</comment>
-  </data>
-  <data name="IntroMessage" xml:space="preserve">
-    <value>ResX Resource Manager 已加载
-首页: https://github.com/tom-englert/ResXResourceManager
-报告问题: https://github.com/tom-englert/ResXResourceManager/issues
-简短评论一下来支持我们吧: https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details
-翻译自https://github.com/yinyue200</value>
-  </data>
-  <data name="ProjectHasNoResourceFile" xml:space="preserve">
-    <value>该项目没有该语言的资源文件 {0}。
-
-要将资源文件添加到项目中吗？</value>
-  </data>
-  <data name="ProjectHasReadOnlyFiles" xml:space="preserve">
-    <value>项目中的某些文件不可写。 确保您具有对这些文件的写入权限：
-
-{0}</value>
-  </data>
-  <data name="Error" xml:space="preserve">
-    <value>错误:</value>
-  </data>
-  <data name="ExtensionLoadingError" xml:space="preserve">
-    <value>无法加载 ResX Manager 扩展: {0}。
-详情参见输出窗口。</value>
-  </data>
-  <data name="ResourceLoadingError" xml:space="preserve">
-    <value>加载资源文件失败：{0}. 
-详情参见输出窗口.</value>
-  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="AssemblyLocation" xml:space="preserve">
     <value>程序集位置：{0}</value>
   </data>
-  <data name="Version" xml:space="preserve">
-    <value>版本：{0}</value>
-  </data>
-  <data name="Warning" xml:space="preserve">
-    <value>警告：</value>
-  </data>
-  <data name="OpenInResXManager" xml:space="preserve">
-    <value>在 ResX Manager 中打开</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Resources_Designer_t4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Resources.Designer.t4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Resources_Designer_tt" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Resources.Designer.tt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="CodeGenerator_Unkown" xml:space="preserve">
-    <value>无效的代码生成器</value>
-  </data>
-  <data name="CodeGenerator_Internal" xml:space="preserve">
-    <value>自定义工具代码生成器，内部访问。</value>
-  </data>
-  <data name="CodeGenerator_Public" xml:space="preserve">
-    <value>自定义工具代码生成器，公共访问。</value>
-  </data>
-  <data name="CodeGenerator_TextTemplate" xml:space="preserve">
-    <value>文本模板代码生成器。</value>
+  <data name="CanNotCreateWindow" xml:space="preserve">
+    <value>无法创建工具窗口</value>
   </data>
   <data name="CodeGenerator_CommandGroup" xml:space="preserve">
     <value>代码生成器</value>
@@ -195,42 +136,101 @@
   <data name="CodeGenerator_CommandTextTemplate" xml:space="preserve">
     <value>文本模板</value>
   </data>
-  <data name="MoveToResource" xml:space="preserve">
-    <value>移动到资源</value>
+  <data name="CodeGenerator_Internal" xml:space="preserve">
+    <value>自定义工具代码生成器，内部访问。</value>
   </data>
-  <data name="ResourceHeader" xml:space="preserve">
-    <value>资源：</value>
+  <data name="CodeGenerator_Public" xml:space="preserve">
+    <value>自定义工具代码生成器，公共访问。</value>
   </data>
-  <data name="KeyHeader" xml:space="preserve">
-    <value>名称：</value>
+  <data name="CodeGenerator_TextTemplate" xml:space="preserve">
+    <value>文本模板代码生成器。</value>
   </data>
-  <data name="CodeHeader" xml:space="preserve">
-    <value>代码：</value>
-  </data>
-  <data name="ValueHeader" xml:space="preserve">
-    <value>值：</value>
-  </data>
-  <data name="CommentHeader" xml:space="preserve">
-    <value>注释：</value>
+  <data name="CodeGenerator_Unkown" xml:space="preserve">
+    <value>无效的代码生成器</value>
   </data>
   <data name="CodeGenerator_WinForms" xml:space="preserve">
     <value>WinForms 设计器</value>
   </data>
-  <data name="ShowWhitespaceToolTip" xml:space="preserve">
-    <value>显示空格和格式符号</value>
+  <data name="CodeHeader" xml:space="preserve">
+    <value>代码：</value>
   </data>
-  <data name="MoveToResourceEditNewEntry" xml:space="preserve">
-    <value>在 ResX Resource Manager 中编辑新项目</value>
-  </data>
-  <data name="KeyContainsInvalidCharacters" xml:space="preserve">
-    <value>名称中包含无效字符。</value>
+  <data name="CommentHeader" xml:space="preserve">
+    <value>注释：</value>
   </data>
   <data name="DuplicateKey" xml:space="preserve">
     <value>重复名称</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>错误:</value>
   </data>
   <data name="ErrorOpenFilesInEditor" xml:space="preserve">
     <value>某些文件已经在其它窗口打开。请关闭下列文件以进行更改：
 
 {0}</value>
+  </data>
+  <data name="ExtensionLoadingError" xml:space="preserve">
+    <value>无法加载 ResX Manager 扩展: {0}。
+详情参见输出窗口。</value>
+  </data>
+  <data name="IntroMessage" xml:space="preserve">
+    <value>ResX Resource Manager 已加载
+首页: https://github.com/tom-englert/ResXResourceManager
+报告问题: https://github.com/tom-englert/ResXResourceManager/issues
+简短评论一下来支持我们吧: https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details
+翻译自https://github.com/yinyue200</value>
+  </data>
+  <data name="KeyContainsInvalidCharacters" xml:space="preserve">
+    <value>名称中包含无效字符。</value>
+  </data>
+  <data name="KeyHeader" xml:space="preserve">
+    <value>名称：</value>
+  </data>
+  <data name="MoveToResource" xml:space="preserve">
+    <value>移动到资源</value>
+  </data>
+  <data name="MoveToResourceEditNewEntry" xml:space="preserve">
+    <value>在 ResX Resource Manager 中编辑新项目</value>
+  </data>
+  <data name="OpenInResXManager" xml:space="preserve">
+    <value>在 ResX Manager 中打开</value>
+  </data>
+  <data name="ProjectHasNoResourceFile" xml:space="preserve">
+    <value>该项目没有该语言的资源文件 {0}。
+
+要将资源文件添加到项目中吗？</value>
+  </data>
+  <data name="ProjectHasReadOnlyFiles" xml:space="preserve">
+    <value>项目中的某些文件不可写。 确保您具有对这些文件的写入权限：
+
+{0}</value>
+  </data>
+  <data name="ResourceHeader" xml:space="preserve">
+    <value>资源：</value>
+  </data>
+  <data name="ResourceLoadingError" xml:space="preserve">
+    <value>加载资源文件失败：{0}. 
+详情参见输出窗口.</value>
+  </data>
+  <data name="Resources_Designer_t4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Resources.Designer.t4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Resources_Designer_tt" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Resources.Designer.tt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ShowWhitespaceToolTip" xml:space="preserve">
+    <value>显示空格和格式符号</value>
+  </data>
+  <data name="ToolWindowTitle" xml:space="preserve">
+    <value></value>
+    <comment>@Invariant</comment>
+  </data>
+  <data name="ValueHeader" xml:space="preserve">
+    <value>值：</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>版本：{0}</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>警告：</value>
   </data>
 </root>
