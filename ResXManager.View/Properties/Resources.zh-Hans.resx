@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddEntryToWinFormsResourceWarning" xml:space="preserve">
+    <value>您即将向 WinForms 设计器资源添加新条目。
+如果编辑窗体，您新添加的条目将会丢失。
+你仍想添加一个新的条目吗？</value>
+  </data>
+  <data name="AddKeyToolTip" xml:space="preserve">
+    <value>添加新的键 (Shift+Insert)</value>
+  </data>
+  <data name="Authentication" xml:space="preserve">
+    <value>认证</value>
+  </data>
+  <data name="AutoCreateNewLanguageFiles" xml:space="preserve">
+    <value>添加新的资源语言时创建所有资源文件</value>
+  </data>
+  <data name="AddLanguageToolTip" xml:space="preserve">
+    <value>添加新语言</value>
+  </data>
+  <data name="ConfirmDeleteItems" xml:space="preserve">
+    <value>删除选定的行？</value>
+  </data>
+  <data name="CellSelection" xml:space="preserve">
+    <value>单元格选择 </value>
+  </data>
+  <data name="CellSelectionToolTip" xml:space="preserve">
+    <value>允许选择单个单元格来复制/粘贴内容。</value>
+  </data>
+  <data name="ChooseColumnsToolTip" xml:space="preserve">
+    <value>选择列 </value>
+  </data>
+  <data name="CodeReferencesToolTip" xml:space="preserve">
+    <value>在代码文件中找到的引用的数量。此数字仅做参考</value>
+  </data>
+  <data name="CodeReferencesTooManyDetailsToolTip" xml:space="preserve">
+    <value>要显示详细信息的引用太多！</value>
+  </data>
+  <data name="CodeReferenceTrackingInProgress" xml:space="preserve">
+    <value>代码引用检测正在进行 （{0} %）。 </value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>注释</value>
+  </data>
+  <data name="CommentColumnHeader" xml:space="preserve">
+    <value>注释</value>
+  </data>
+  <data name="ConfigurationScopeHeader" xml:space="preserve">
+    <value>范围</value>
+  </data>
+  <data name="Configuration_LoadSaveHeader" xml:space="preserve">
+    <value>加载/保存</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>复制 (Ctrl+C)</value>
+  </data>
+  <data name="CreateSnapshot" xml:space="preserve">
+    <value>创建一个快照</value>
+  </data>
+  <data name="Cut" xml:space="preserve">
+    <value>剪切 (Ctrl+X)</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除 (Del)</value>
+  </data>
+  <data name="DeleteToolTip" xml:space="preserve">
+    <value>删除选定的行 (Del)</value>
+  </data>
+  <data name="DetectCodeReferences_Header" xml:space="preserve">
+    <value>检测代码引用</value>
+  </data>
+  <data name="Diagnostics" xml:space="preserve">
+    <value>诊断</value>
+  </data>
+  <data name="DonateButtonToolTip" xml:space="preserve">
+    <value>支持开源社区。 </value>
+  </data>
+  <data name="EditSolutionConfigurationNotification" xml:space="preserve">
+    <value>您正在编辑配置特定于活动解决方案。如果您想要编辑的默认配置，只需关闭解决方案。 </value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>已启用</value>
+  </data>
+  <data name="ErrorAddingNewResourceFile" xml:space="preserve">
+    <value>添加新的资源时出现错误文件"{0}"。 </value>
+  </data>
+  <data name="ExportExcelAll" xml:space="preserve">
+    <value>导出全部</value>
+  </data>
+  <data name="ExportExcelSelection" xml:space="preserve">
+    <value>导出所选</value>
+  </data>
+  <data name="FileExtensions" xml:space="preserve">
+    <value>文件扩展名</value>
+  </data>
+  <data name="FindCodeReferencesButtonToolTip" xml:space="preserve">
+    <value>检测代码引用。 </value>
+  </data>
+  <data name="FlatViewToolTip" xml:space="preserve">
+    <value>扁平视图</value>
+  </data>
+  <data name="FileExclusionFilters_Header" xml:space="preserve">
+    <value>文件过滤器</value>
+  </data>
+  <data name="UnloadSnapshot" xml:space="preserve">
+    <value>卸载快照</value>
+  </data>
+  <data name="TranslatorConfiguration_SaveCredentials" xml:space="preserve">
+    <value>保存凭据（凭据将以本地配置文件中的明文保存）</value>
+  </data>
+  <data name="TranslationsPrefixHeader" xml:space="preserve">
+    <value>Prefix translations with </value>
+  </data>
+  <data name="Translations_Targets" xml:space="preserve">
+    <value>目标：</value>
+  </data>
+  <data name="Translations_Stop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="Translations_Source" xml:space="preserve">
+    <value>源：</value>
+  </data>
+  <data name="Translations_Restart" xml:space="preserve">
+    <value>重启</value>
+  </data>
+  <data name="Translations_ApplySelected" xml:space="preserve">
+    <value>应用选择</value>
+  </data>
+  <data name="Translations_ApplyAll" xml:space="preserve">
+    <value>应用所有</value>
+  </data>
+  <data name="SortNodesByKey_Confirmation" xml:space="preserve">
+    <value>您是否要按键对所有资源文件的所有节点进行排序？</value>
+  </data>
+  <data name="SortNodesByKey" xml:space="preserve">
+    <value>保存RESX文件时，将按名称对XML数据节点进行排序</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>排序方法：</value>
+  </data>
+  <data name="SortAllFilesNow" xml:space="preserve">
+    <value>现在排序所有文件</value>
+  </data>
+  <data name="ShowPerformanceTraces" xml:space="preserve">
+    <value>在输出窗口中显示性能跟踪消息</value>
+  </data>
+  <data name="ShowOnlyMissingToolTip" xml:space="preserve">
+    <value>仅显示带有警告或更改的行</value>
+  </data>
+  <data name="ShellTabHeader_Translate" xml:space="preserve">
+    <value>翻译</value>
+  </data>
+  <data name="ShellTabHeader_Main" xml:space="preserve">
+    <value>主要</value>
+  </data>
+  <data name="ShellTabHeader_Languages" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="ShellTabHeader_Configuration" xml:space="preserve">
+    <value>配置</value>
+  </data>
+  <data name="SelectedTotalToolTip" xml:space="preserve">
+    <value>已选择/全部</value>
+  </data>
+  <data name="SaveFilesImmediatelyUponChange" xml:space="preserve">
+    <value>更改后立即保存文件</value>
+  </data>
+  <data name="ResourceFilterToolTip" xml:space="preserve">
+    <value>用于过滤资源文件的正则表达式。
+该模式将与字符串“{project} - {folder}\{file}”进行比较，
+这与分组视图中的组标题相同
+使用例如 ".* - (?!Migrations)"来隐藏EF迁移。</value>
+  </data>
+  <data name="RegularExpression" xml:space="preserve">
+    <value>正则表达式</value>
+  </data>
+  <data name="RefreshViewToolTip" xml:space="preserve">
+    <value>刷新视图</value>
+  </data>
+  <data name="Patterns" xml:space="preserve">
+    <value>模式</value>
+  </data>
+  <data name="PasteToolTip" xml:space="preserve">
+    <value>粘贴剪贴板内容 (Ctrl+V)</value>
+  </data>
+  <data name="PasteSelectionSizeMismatch" xml:space="preserve">
+    <value>您粘贴的数据与您的选择大小不同。</value>
+  </data>
+  <data name="PasteFailed" xml:space="preserve">
+    <value>从剪贴板解析数据时出错：</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>粘贴 (Ctrl+V)</value>
+  </data>
+  <data name="NoSelection" xml:space="preserve">
+    <value>没有选择</value>
+  </data>
+  <data name="NoResourceFileForResource" xml:space="preserve">
+    <value>没有匹配的资源文件</value>
+  </data>
+  <data name="NoCodeReferencesToolTip" xml:space="preserve">
+    <value>该算法没有找到代码引用。 然而，仍可能会存在对此字符串的间接引用。</value>
+  </data>
+  <data name="NewLanguageIdPrompt" xml:space="preserve">
+    <value>选择新语言：</value>
+  </data>
+  <data name="NewKeyPrompt" xml:space="preserve">
+    <value>输入新资源名称：</value>
+  </data>
+  <data name="NeutralResourceLanguageHeader" xml:space="preserve">
+    <value>中立资源语言：</value>
+  </data>
+  <data name="Neutral" xml:space="preserve">
+    <value>中立</value>
+  </data>
+  <data name="CutToolTip" xml:space="preserve">
+    <value>剪切选中行 (Ctrl+X)</value>
+  </data>
+  <data name="CopyToolTip" xml:space="preserve">
+    <value>复制选定的行或单元格 (Ctrl+C)</value>
+  </data>
+  <data name="GroupedViewToolTip" xml:space="preserve">
+    <value>分组视图</value>
+  </data>
+  <data name="HelpButtonToolTip" xml:space="preserve">
+    <value>文档</value>
+  </data>
+  <data name="ImportExcel" xml:space="preserve">
+    <value>导入</value>
+  </data>
+  <data name="ImportNormalizedTableExpected" xml:space="preserve">
+    <value>我期待一个标准化的表</value>
+  </data>
+  <data name="IndexColumnHeaderToolTip" xml:space="preserve">
+    <value>资源文件中条目的索引。</value>
+  </data>
+  <data name="IndexColumnToggleButtonToolTip" xml:space="preserve">
+    <value>显示索引列</value>
+  </data>
+  <data name="IndexColumnToolTip" xml:space="preserve">
+    <value>资源文件中条目的索引。  Use fractional values to reorder the entries</value>
+  </data>
+  <data name="Invariant" xml:space="preserve">
+    <value>不变</value>
+  </data>
+  <data name="Key" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="LanguageConfiguration_Description" xml:space="preserve">
+    <value>这是系统支持的语言的概览。 它显示按其中性语言（例如“en”）分组的特定语言（例如“en-US”）。 要更改显示为中立语言的标志，请双击具有所需标志的特定语言。</value>
+  </data>
+  <data name="LikeButtonToolTip" xml:space="preserve">
+    <value>喜欢它？ 通过撰写简短的评论支持该项目！</value>
+  </data>
+  <data name="LoadSnapshot" xml:space="preserve">
+    <value>加载快照</value>
+  </data>
+  <data name="MultipleSelection" xml:space="preserve">
+    <value>多选。</value>
+  </data>
+  <data name="NeedSingleEntitySelection" xml:space="preserve">
+    <value>您必须在左侧列表中选择一个资源才能添加条目。</value>
+  </data>
+  <data name="EditDefaultConfigurationNotification" xml:space="preserve">
+    <value>您正在编辑默认配置。 如果要更改仅适用于特定解决方案的设置，只需打开解决方案。</value>
+  </data>
+  <data name="Configuration_General" xml:space="preserve">
+    <value>基本</value>
+  </data>
+  <data name="ConfirmAddLanguage" xml:space="preserve">
+    <value>确认添加新的资源文件</value>
+  </data>
+  <data name="ConfirmCutItems" xml:space="preserve">
+    <value>剪切选中的行？</value>
+  </data>
+  <data name="CommentToken" xml:space="preserve">
+    <value>Comment Token</value>
+  </data>
+  <data name="Configuration_DuplicateKeyHandling" xml:space="preserve">
+    <value>重复/空资源名称处理</value>
+  </data>
+  <data name="Configuration_ExcelExportModeHeader" xml:space="preserve">
+    <value>Excel 导出模式</value>
+  </data>
+  <data name="Configuration_FileCreationHeader" xml:space="preserve">
+    <value>文件创建</value>
+  </data>
+  <data name="ColumnHeaderGripperToolTip" xml:space="preserve">
+    <value>+Ctrl =&gt; Apply star sizes to right columns
++Shift =&gt; Extend beyond available size</value>
+  </data>
+</root>

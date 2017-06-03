@@ -334,6 +334,9 @@
     <Compile Include="Visuals\VsixShellViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources.zh-Hans.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources.de.resx" />
     <EmbeddedResource Include="Resources.resx">
       <SubType>Designer</SubType>
