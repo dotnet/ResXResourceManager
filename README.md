@@ -12,8 +12,11 @@ Available as VS2012-2017 extension and as standalone executable to support VS201
 A scipting module is available as well, so you can easily automate resource tasks, e.g. export untranslated string during build.
 
 All versions can be downladed from the [releases](../../releases) page.
+
 The Visual Studio Extension is also available at the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager), or by searching for RESX in the Visual Studio extension manager.
-The latest build of the Visual Studio Extension is also available at the [Open VsixGallery](http://vsixgallery.com/extension/43b35fe0-1f30-48de-887a-68256474202a)
+The latest build of the Visual Studio Extension is available at the [Open VsixGallery](http://vsixgallery.com/extension/43b35fe0-1f30-48de-887a-68256474202a)
+
+The standalone version can be installed as click-once application [here](https://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/ResXManager.application)
 
 ![Visual Studio Extension](https://raw.githubusercontent.com/tom-englert/ResXResourceManager/master/Assets/VisualStudioMainScreen.png)
 ![Standalone Application](https://raw.githubusercontent.com/tom-englert/ResXResourceManager/master/Assets/StandaloneMainScreen.png)
