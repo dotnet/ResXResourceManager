@@ -283,25 +283,29 @@
 
             SelectedItems.Clear();
 
-            if (_sourceCulture == null)
+            var sourceCulture = _sourceCulture;
+
+            if (sourceCulture == null)
             {
                 Items = new TranslationItem[0];
                 return;
             }
 
-            var itemsToTranslate = GetItemsToTranslate(_resourceViewModel.ResourceTableEntries, _sourceCulture, _selectedTargetCultures, _configuration.EffectiveTranslationPrefix);
+            var itemsToTranslate = GetItemsToTranslate(_resourceViewModel.ResourceTableEntries, sourceCulture, _selectedTargetCultures, _configuration.EffectiveTranslationPrefix);
 
             Items = new ObservableCollection<TranslationItem>(itemsToTranslate);
 
-            TranslationSession = new TranslationSession(_sourceCulture.Culture, _configuration.NeutralResourcesLanguage, Items.Cast<ITranslationItem>().ToArray());
+            TranslationSession = new TranslationSession(sourceCulture.Culture, _configuration.NeutralResourcesLanguage, Items.Cast<ITranslationItem>().ToArray());
 
             _translatorHost.Translate(TranslationSession);
         }
 
+        [NotNull, ItemNotNull]
         private static IEnumerable<TranslationItem> GetItemsToTranslate([NotNull, ItemNotNull] IEnumerable<ResourceTableEntry> resourceTableEntries, CultureKey sourceCulture, [NotNull, ItemNotNull] ObservableCollection<CultureKey> targetCultures, string translationPrefix)
         {
             Contract.Requires(resourceTableEntries != null);
             Contract.Requires(targetCultures != null);
+            Contract.Ensures(Contract.Result<IEnumerable<TranslationItem>>() != null);
 
             // #1: all entries that are not invariant and have a valid value in the source culture
             var allEntriesWithSourceValue = resourceTableEntries
@@ -333,6 +337,8 @@
                 .Where(item => !HasTranslation(item.Target))
                 .Select(item => new TranslationItem(item.Entry, item.Source, item.TargetCulture))
                 .ToArray();
+
+            Contract.Assume(itemsToTranslate != null);
 
             // #4: apply existing translations
             foreach (var targetCulture in targetCultures)
