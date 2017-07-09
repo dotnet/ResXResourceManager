@@ -289,9 +289,19 @@
                 return;
             }
 
-            var resourceTableEntries = _resourceViewModel.ResourceTableEntries;
-            var targetCultures = _selectedTargetCultures;
-            var sourceCulture = _sourceCulture;
+            var itemsToTranslate = GetItemsToTranslate(_resourceViewModel.ResourceTableEntries, _sourceCulture, _selectedTargetCultures, _configuration.EffectiveTranslationPrefix);
+
+            Items = new ObservableCollection<TranslationItem>(itemsToTranslate);
+
+            TranslationSession = new TranslationSession(_sourceCulture.Culture, _configuration.NeutralResourcesLanguage, Items.Cast<ITranslationItem>().ToArray());
+
+            _translatorHost.Translate(TranslationSession);
+        }
+
+        private static IEnumerable<TranslationItem> GetItemsToTranslate([NotNull, ItemNotNull] IEnumerable<ResourceTableEntry> resourceTableEntries, CultureKey sourceCulture, [NotNull, ItemNotNull] ObservableCollection<CultureKey> targetCultures, string translationPrefix)
+        {
+            Contract.Requires(resourceTableEntries != null);
+            Contract.Requires(targetCultures != null);
 
             // #1: all entries that are not invariant and have a valid value in the source culture
             var allEntriesWithSourceValue = resourceTableEntries
@@ -306,17 +316,15 @@
 
             // #2: all entries with target culture and target text
             var allEntries = targetCultures.SelectMany(targetCulture =>
-                allEntriesWithSourceValue
-                    .Select(entry => new
-                    {
-                        entry.Entry,
-                        entry.Source,
-                        Target = entry.Entry.Values.GetValue(targetCulture),
-                        TargetCulture = targetCulture
-                    }))
-                    .ToArray();
-
-            var translationPrefix = _configuration.EffectiveTranslationPrefix;
+                    allEntriesWithSourceValue
+                        .Select(entry => new
+                        {
+                            entry.Entry,
+                            entry.Source,
+                            Target = entry.Entry.Values.GetValue(targetCulture),
+                            TargetCulture = targetCulture
+                        }))
+                .ToArray();
 
             bool HasTranslation(string value) => !string.IsNullOrWhiteSpace(value) && !string.Equals(value, translationPrefix, StringComparison.Ordinal);
 
@@ -326,9 +334,7 @@
                 .Select(item => new TranslationItem(item.Entry, item.Source, item.TargetCulture))
                 .ToArray();
 
-            Items = new ObservableCollection<TranslationItem>(itemsToTranslate);
-
-            // #4: apply exisiting translations
+            // #4: apply existing translations
             foreach (var targetCulture in targetCultures)
             {
                 var itemsWithTranslations = allEntries.AsParallel()
@@ -351,9 +357,7 @@
                     });
             }
 
-            TranslationSession = new TranslationSession(_sourceCulture.Culture, _configuration.NeutralResourcesLanguage, Items.Cast<ITranslationItem>().ToArray());
-
-            _translatorHost.Translate(TranslationSession);
+            return itemsToTranslate;
         }
 
         private void SelectedTargetCultures_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
