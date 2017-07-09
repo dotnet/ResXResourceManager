@@ -289,9 +289,67 @@
                 return;
             }
 
-            Items = GetItemsToTranslate(_resourceViewModel.ResourceTableEntries, _sourceCulture, _configuration.EffectiveTranslationPrefix, _selectedTargetCultures);
+            var resourceTableEntries = _resourceViewModel.ResourceTableEntries;
+            var targetCultures = _selectedTargetCultures;
+            var sourceCulture = _sourceCulture;
 
-            ApplyExistingTranslations(_resourceViewModel.ResourceTableEntries, Items, _sourceCulture);
+            // #1: all entries that are not invariant and have a valid value in the source culture
+            var allEntriesWithSourceValue = resourceTableEntries
+                .Where(entry => !entry.IsInvariant)
+                .Select(entry => new
+                {
+                    Entry = entry,
+                    Source = entry.Values.GetValue(sourceCulture),
+                })
+                .Where(item => !string.IsNullOrWhiteSpace(item.Source))
+                .ToArray();
+
+            // #2: all entries with target culture and target text
+            var allEntries = targetCultures.SelectMany(targetCulture =>
+                allEntriesWithSourceValue
+                    .Select(entry => new
+                    {
+                        entry.Entry,
+                        entry.Source,
+                        Target = entry.Entry.Values.GetValue(targetCulture),
+                        TargetCulture = targetCulture
+                    }))
+                    .ToArray();
+
+            var translationPrefix = _configuration.EffectiveTranslationPrefix;
+
+            bool HasTranslation(string value) => !string.IsNullOrWhiteSpace(value) && !string.Equals(value, translationPrefix, StringComparison.Ordinal);
+
+            // #3: all entries with no target
+            var itemsToTranslate = allEntries.AsParallel()
+                .Where(item => !HasTranslation(item.Target))
+                .Select(item => new TranslationItem(item.Entry, item.Source, item.TargetCulture))
+                .ToArray();
+
+            Items = new ObservableCollection<TranslationItem>(itemsToTranslate);
+
+            // #4: apply exisiting translations
+            foreach (var targetCulture in targetCultures)
+            {
+                var itemsWithTranslations = allEntries.AsParallel()
+                    .Where(item => item.TargetCulture == targetCulture)
+                    .Where(item => HasTranslation(item.Target))
+                    .GroupBy(item => item.Source)
+                    .ToDictionary(item => item.Key);
+
+                itemsToTranslate.AsParallel()
+                    .Where(item => item.TargetCulture == targetCulture)
+                    .ForAll(item =>
+                    {
+                        if (itemsWithTranslations.TryGetValue(item.Source, out var translations))
+                        {
+                            foreach (var translation in translations.GroupBy(t => t.Target))
+                            {
+                                item.Results.Add(new TranslationMatch(null, translation.Key, translation.Count()));
+                            }
+                        }
+                    });
+            }
 
             TranslationSession = new TranslationSession(_sourceCulture.Culture, _configuration.NeutralResourcesLanguage, Items.Cast<ITranslationItem>().ToArray());
 
@@ -301,52 +359,6 @@
         private void SelectedTargetCultures_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             UnselectedTargetCultures = _allTargetCultures.Concat(UnselectedTargetCultures).Distinct().Except(_selectedTargetCultures);
-        }
-
-        [NotNull]
-        private static ICollection<TranslationItem> GetItemsToTranslate([NotNull] IEnumerable<ResourceTableEntry> resourceTableEntries, [NotNull] CultureKey sourceCulture, string translationPrefix, [NotNull] IEnumerable<CultureKey> targetCultures)
-        {
-            Contract.Requires(resourceTableEntries != null);
-            Contract.Requires(sourceCulture != null);
-            Contract.Requires(targetCultures != null);
-            Contract.Ensures(Contract.Result<ICollection<TranslationItem>>() != null);
-
-            return new ObservableCollection<TranslationItem>(
-                targetCultures.SelectMany(targetCulture =>
-                    resourceTableEntries
-                        .Where(entry => !entry.IsInvariant)
-                        .Select(entry => new { Entry = entry, Source = entry.Values.GetValue(sourceCulture), Target = entry.Values.GetValue(targetCulture) })
-                        .Where(item => string.IsNullOrWhiteSpace(item.Target) || string.Equals(item.Target, translationPrefix, StringComparison.Ordinal))
-                        .Where(item => !string.IsNullOrWhiteSpace(item.Source))
-                        .Select(item => new TranslationItem(item.Entry, item.Source, targetCulture))));
-        }
-
-        private static void ApplyExistingTranslations([NotNull] ICollection<ResourceTableEntry> resourceTableEntries, [NotNull] IEnumerable<TranslationItem> items, [NotNull] CultureKey sourceCulture)
-        {
-            Contract.Requires(resourceTableEntries != null);
-            Contract.Requires(items != null);
-            Contract.Requires(sourceCulture != null);
-
-            foreach (var item in items)
-            {
-                var targetItem = item;
-                Contract.Assume(targetItem != null);
-                var targetCulture = targetItem.TargetCulture;
-
-                var existingTranslations = resourceTableEntries
-                    .Where(entry => entry != targetItem.Entry)
-                    .Where(entry => !entry.IsInvariant)
-                    .Where(entry => entry.Values.GetValue(sourceCulture) == targetItem.Source)
-                    .Select(entry => entry.Values.GetValue(targetCulture))
-                    .Where(translation => !string.IsNullOrWhiteSpace(translation))
-                    .GroupBy(translation => translation);
-
-                foreach (var translation in existingTranslations)
-                {
-                    Contract.Assume(translation != null);
-                    item.Results.Add(new TranslationMatch(null, translation.Key, translation.Count()));
-                }
-            }
         }
 
         public override string ToString() => Resources.ShellTabHeader_Translate;

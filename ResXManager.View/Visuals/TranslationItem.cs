@@ -1,5 +1,6 @@
 namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
@@ -21,15 +22,14 @@ namespace tomenglertde.ResXManager.View.Visuals
         [NotNull]
         private readonly CultureKey _targetCulture;
         [NotNull]
-        private readonly ListCollectionView _orderedResults;
-        [NotNull]
         private readonly ObservableCollection<ITranslationMatch> _results = new ObservableCollection<ITranslationMatch>();
-
-        private string _translation;
         [NotNull]
         private readonly ResourceTableEntry _entry;
         [NotNull]
         private readonly string _source;
+
+        private ICollectionView _orderedResults;
+        private string _translation;
 
         public TranslationItem([NotNull] ResourceTableEntry entry, [NotNull] string source, [NotNull] CultureKey targetCulture)
         {
@@ -42,9 +42,6 @@ namespace tomenglertde.ResXManager.View.Visuals
 
             _targetCulture = targetCulture;
             _results.CollectionChanged += (_, __) => OnPropertyChanged(() => Translation);
-            _orderedResults = new ListCollectionView(_results);
-            _orderedResults.SortDescriptions.Add(new SortDescription("Rating", ListSortDirection.Descending));
-            _orderedResults.SortDescriptions.Add(new SortDescription("Translator.DisplayName", ListSortDirection.Ascending));
         }
 
         [NotNull]
@@ -58,27 +55,11 @@ namespace tomenglertde.ResXManager.View.Visuals
             }
         }
 
-        public string Source
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
-
-                return _source;
-            }
-        }
+        public string Source => _source;
 
         public CultureKey TargetCulture => _targetCulture;
 
-        public IList<ITranslationMatch> Results
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IList<ITranslationMatch>>() != null);
-
-                return _results;
-            }
-        }
+        public IList<ITranslationMatch> Results => _results;
 
         [NotNull]
         public ICollectionView OrderedResults
@@ -87,7 +68,7 @@ namespace tomenglertde.ResXManager.View.Visuals
             {
                 Contract.Ensures(Contract.Result<ICollectionView>() != null);
 
-                return _orderedResults;
+                return _orderedResults ?? (_orderedResults = CreateOrderedResults(_results));
             }
         }
 
@@ -103,13 +84,26 @@ namespace tomenglertde.ResXManager.View.Visuals
             }
         }
 
+        [NotNull]
+        private static ICollectionView CreateOrderedResults([NotNull] IList results)
+        {
+            Contract.Requires(results != null);
+            Contract.Ensures(Contract.Result<ICollectionView>() != null);
+
+            var orderedResults = new ListCollectionView(results);
+
+            orderedResults.SortDescriptions.Add(new SortDescription("Rating", ListSortDirection.Descending));
+            orderedResults.SortDescriptions.Add(new SortDescription("Translator.DisplayName", ListSortDirection.Ascending));
+
+            return orderedResults;
+        }
+
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_targetCulture != null);
-            Contract.Invariant(_orderedResults != null);
             Contract.Invariant(_results != null);
             Contract.Invariant(_entry != null);
             Contract.Invariant(_source != null);

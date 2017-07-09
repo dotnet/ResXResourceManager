@@ -99,7 +99,7 @@
             }
         }
 
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IObservableCollection<ResourceTableEntry> ResourceTableEntries
         {
             get
@@ -110,7 +110,7 @@
             }
         }
 
-        [NotNull]
+        [NotNull, ItemNotNull]
         public ObservableCollection<ResourceEntity> SelectedEntities
         {
             get
@@ -121,7 +121,7 @@
             }
         }
 
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IList<ResourceTableEntry> SelectedTableEntries
         {
             get

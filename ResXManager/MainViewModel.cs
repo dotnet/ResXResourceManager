@@ -242,14 +242,18 @@
     {
         [NotNull]
         private readonly Configuration _configuration;
+        [NotNull]
+        private readonly PerformanceTracer _performanceTracer;
         private string _folder;
 
         [ImportingConstructor]
-        public SourceFilesProvider([NotNull] Configuration configuration)
+        public SourceFilesProvider([NotNull] Configuration configuration, [NotNull] PerformanceTracer performanceTracer)
         {
             Contract.Requires(configuration != null);
+            Contract.Requires(performanceTracer != null);
 
             _configuration = configuration;
+            _performanceTracer = performanceTracer;
         }
 
         public string Folder
@@ -273,7 +277,10 @@
                 if (string.IsNullOrEmpty(folder))
                     return new ProjectFile[0];
 
-                return new DirectoryInfo(folder).GetAllSourceFiles(new FileFilter(_configuration));
+                using (_performanceTracer.Start("Enumerate source files"))
+                {
+                    return new DirectoryInfo(folder).GetAllSourceFiles(new FileFilter(_configuration));
+                }
             }
         }
 
@@ -283,6 +290,7 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_configuration != null);
+            Contract.Invariant(_performanceTracer != null);
         }
     }
 }
