@@ -62,7 +62,7 @@
             }
         }
 
-        private void ResourceManager_Loaded(object sender, EventArgs e)
+        private void ResourceManager_Loaded([NotNull] object sender, [NotNull] EventArgs e)
         {
             DataGrid.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
         }

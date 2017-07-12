@@ -22,6 +22,7 @@
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.ColumnHeaders;
     using tomenglertde.ResXManager.View.Properties;
 
     using TomsToolbox.Desktop;
@@ -158,20 +159,8 @@
             }
         }
 
-        public bool IsCellSelectionEnabled
-        {
-            get
-            {
-                return _isCellSelectionEnabled;
-            }
-            set
-            {
-                SetProperty(ref _isCellSelectionEnabled, value, () => IsCellSelectionEnabled);
-            }
-        }
-
         [NotNull]
-        public ICommand ToggleCellSelectionCommand => new DelegateCommand(() => IsCellSelectionEnabled = !IsCellSelectionEnabled);
+        public ICommand ToggleCellSelectionCommand => new DelegateCommand(() => Settings.IsCellSelectionEnabled = !Settings.IsCellSelectionEnabled);
 
         [NotNull]
         public ICommand CopyCommand => new DelegateCommand<DataGrid>(CanCopy, CopySelected);
@@ -246,6 +235,9 @@
             _selectedTableEntries.Clear();
             _selectedTableEntries.Add(entry);
         }
+
+        [NotNull]
+        private static Settings Settings => Settings.Default;
 
         private void LoadSnapshot(string fileName)
         {
@@ -351,31 +343,45 @@
             if (!Clipboard.ContainsText())
                 return false;
 
-            if (_selectedEntities.Count != 1)
-                return false;
+            if (dataGrid.SelectionUnit != DataGridSelectionUnit.FullRow)
+                return dataGrid.HasRectangularCellSelection();
 
-            return (dataGrid.SelectedCells?.Any() != true) || dataGrid.HasRectangularCellSelection();
+            return _selectedEntities.Count == 1;
         }
 
         private void Paste([NotNull] DataGrid dataGrid)
         {
             Contract.Requires(dataGrid != null);
 
-            var selectedItems = _selectedEntities.ToList();
+            var table = ClipboardHelper.GetClipboardDataAsTable();
+            if (table == null)
+                throw new ImportException(Resources.ImportNormalizedTableExpected);
 
-            if (selectedItems.Count != 1)
+            if (dataGrid.SelectionUnit != DataGridSelectionUnit.FullRow)
+            {
+                PasteCells(dataGrid);
+            }
+            else
+            {
+                PasteRows(table);
+            }
+        }
+
+        private void PasteRows([NotNull, ItemNotNull] IList<IList<string>> table)
+        {
+            Contract.Requires(table != null);
+
+            var selectedEntities = _selectedEntities.ToList();
+
+            if (selectedEntities.Count != 1)
                 return;
 
-            var entity = selectedItems[0];
+            var entity = selectedEntities[0];
 
             Contract.Assume(entity != null);
 
             if (!_resourceManager.CanEdit(entity, null))
                 return;
-
-            var table = ClipboardHelper.GetClipboardDataAsTable();
-            if (table == null)
-                throw new ImportException(Resources.ImportNormalizedTableExpected);
 
             try
             {
@@ -385,8 +391,7 @@
                 }
                 else
                 {
-                    if (!dataGrid.PasteCells(table))
-                        throw new ImportException(Resources.PasteSelectionSizeMismatch);
+                    throw new ImportException(Resources.PasteSelectionSizeMismatch);
                 }
             }
             catch (ImportException ex)
@@ -394,6 +399,22 @@
                 throw new ImportException(Resources.PasteFailed + " " + ex.Message);
             }
         }
+
+        private void PasteCells([NotNull] DataGrid dataGrid)
+        {
+            Contract.Requires(dataGrid != null);
+
+            if (dataGrid.SelectedCells.Any(cell => (cell.Item as ResourceTableEntry)?.Container.CanEdit((cell.Column.Header as ILanguageColumnHeader)?.CultureKey) != true))
+                return;
+
+            var table = ClipboardHelper.GetClipboardDataAsTable();
+            if (table == null)
+                throw new ImportException(Resources.ImportNormalizedTableExpected);
+
+            if (!dataGrid.PasteCells(table))
+                throw new ImportException(Resources.PasteSelectionSizeMismatch);
+        }
+
 
         private void ToggleInvariant()
         {

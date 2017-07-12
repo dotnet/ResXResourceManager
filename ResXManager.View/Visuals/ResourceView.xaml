@@ -247,7 +247,7 @@
             <TextBlock Width="16" Height="16" Text="#" TextAlignment="Center" />
           </ToggleButton>
           <ToggleButton ToolTip="{x:Static properties:Resources.CellSelectionToolTip}"
-                        IsChecked="{Binding IsCellSelectionEnabled, Mode=TwoWay}">
+                        IsChecked="{Binding IsCellSelectionEnabled, Mode=TwoWay, Source={x:Static properties:Settings.Default}}">
             <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/cellSelection.png" />
           </ToggleButton>
           <Separator />
@@ -591,7 +591,7 @@
                     <Setter Property="ItemsSource" Value="{Binding GroupedResourceTableEntries}" />
                     <Setter Property="toms:StyleBindings.GroupStyle" Value="{StaticResource GroupStyle}" />
                   </DataTrigger>
-                  <DataTrigger Binding="{Binding IsCellSelectionEnabled}" Value="True">
+                  <DataTrigger Binding="{Binding IsCellSelectionEnabled, Source={x:Static properties:Settings.Default}}" Value="True">
                     <Setter Property="SelectionUnit" Value="CellOrRowHeader" />
                   </DataTrigger>
                 </Style.Triggers>
@@ -624,7 +624,7 @@
     <toms:CommandRoutingBehavior CommandSource="view:CopyCommand" CommandTarget="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
     <toms:CommandRoutingBehavior CommandSource="view:PasteCommand" CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
     <toms:CommandRoutingBehavior CommandSource="view:IsInvariantCommand" CommandTarget="{Binding ToggleInvariantCommand}" IsChecked="{Binding Path=SelectedItem.IsInvariant, Mode=OneWay, ElementName=DataGrid}" />
-    <toms:CommandRoutingBehavior CommandSource="view:ToggleCellSelectionCommand" CommandTarget="{Binding ToggleCellSelectionCommand}" IsChecked="{Binding IsCellSelectionEnabled, Mode=OneWay}" />
+    <toms:CommandRoutingBehavior CommandSource="view:ToggleCellSelectionCommand" CommandTarget="{Binding ToggleCellSelectionCommand}" IsChecked="{Binding IsCellSelectionEnabled, Mode=OneWay, Source={x:Static properties:Settings.Default}}" />
   </i:Interaction.Behaviors>
 
   <i:Interaction.Triggers>
