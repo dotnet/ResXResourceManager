@@ -140,7 +140,7 @@
   </ControlTemplate>
 
   <ControlTemplate x:Key="MenuItemSubmenuItemTemplate" TargetType="{x:Type MenuItem}">
-    <Border x:Name="Border" BorderThickness="1">
+    <Border x:Name="Border" BorderThickness="1" Background="Transparent">
       <Grid>
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
@@ -185,7 +185,7 @@
   </ControlTemplate>
 
   <ControlTemplate x:Key="MenuItemSubmenuHeaderTemplate" TargetType="{x:Type MenuItem}">
-    <Border x:Name="Border" BorderThickness="1">
+    <Border x:Name="Border" BorderThickness="1" Background="Transparent">
       <Grid>
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
