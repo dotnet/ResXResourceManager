@@ -44,7 +44,7 @@
             {
                 get
                 {
-                    if (_dataGrid == null) 
+                    if (_dataGrid == null)
                       return Enumerable.Empty<ResourceTableEntry>() ;
 
                     return _dataGrid.SelectedItems.Cast<ResourceTableEntry>();

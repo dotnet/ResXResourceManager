@@ -359,7 +359,7 @@
 
             if (dataGrid.SelectionUnit != DataGridSelectionUnit.FullRow)
             {
-                PasteCells(dataGrid);
+                PasteCells(dataGrid, table);
             }
             else
             {
@@ -400,16 +400,13 @@
             }
         }
 
-        private void PasteCells([NotNull] DataGrid dataGrid)
+        private void PasteCells([NotNull] DataGrid dataGrid, [NotNull, ItemNotNull] IList<IList<string>> table)
         {
             Contract.Requires(dataGrid != null);
+            Contract.Requires(table != null);
 
-            if (dataGrid.SelectedCells.Any(cell => (cell.Item as ResourceTableEntry)?.Container.CanEdit((cell.Column.Header as ILanguageColumnHeader)?.CultureKey) != true))
+            if (dataGrid.SelectedCells.Any(cell => (cell.Item as ResourceTableEntry)?.Container.CanEdit((cell.Column?.Header as ILanguageColumnHeader)?.CultureKey) == false))
                 return;
-
-            var table = ClipboardHelper.GetClipboardDataAsTable();
-            if (table == null)
-                throw new ImportException(Resources.ImportNormalizedTableExpected);
 
             if (!dataGrid.PasteCells(table))
                 throw new ImportException(Resources.PasteSelectionSizeMismatch);
@@ -445,9 +442,12 @@
         private void ExportExcel([NotNull] IExportParameters param)
         {
             Contract.Requires(param != null);
-            Contract.Requires(param.FileName != null);
 
-            _resourceManager.ExportExcelFile(param.FileName, param.Scope, _configuration.ExcelExportMode);
+            var fileName = param.FileName;
+            if (fileName != null)
+            {
+                _resourceManager.ExportExcelFile(fileName, param.Scope, _configuration.ExcelExportMode);
+            }
         }
 
         private void ImportExcel([NotNull] string fileName)
@@ -493,7 +493,7 @@
             BeginFindCodeReferences(_sourceFilesProvider.SourceFiles);
         }
 
-        private void BeginFindCodeReferences([NotNull] IList<ProjectFile> allSourceFiles)
+        private void BeginFindCodeReferences([NotNull, ItemNotNull] IList<ProjectFile> allSourceFiles)
         {
             Contract.Requires(allSourceFiles != null);
 

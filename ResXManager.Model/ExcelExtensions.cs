@@ -27,9 +27,10 @@
 
     public static partial class ResourceEntityExtensions
     {
+        [NotNull, ItemNotNull]
         private static readonly string[] _singleSheetFixedColumnHeaders = { "Project", "File", "Key" };
 
-        public static void ExportExcelFile([NotNull] this ResourceManager resourceManager, [NotNull] string filePath, IResourceScope scope, ExcelExportMode exportMode)
+        public static void ExportExcelFile([NotNull] this ResourceManager resourceManager, [NotNull] string filePath, [CanBeNull] IResourceScope scope, ExcelExportMode exportMode)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(filePath != null);
@@ -52,7 +53,7 @@
             }
         }
 
-        private static void ExportToMultipleSheets([NotNull] ResourceManager resourceManager, [NotNull] WorkbookPart workbookPart, IResourceScope scope)
+        private static void ExportToMultipleSheets([NotNull] ResourceManager resourceManager, [NotNull] WorkbookPart workbookPart, [CanBeNull] IResourceScope scope)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(workbookPart != null);
@@ -103,7 +104,7 @@
             worksheet.AppendItem(rows.Aggregate(new SheetData(), AppendRow));
         }
 
-        [NotNull]
+        [NotNull, ItemNotNull]
         public static IList<EntryChange> ImportExcelFile([NotNull] this ResourceManager resourceManager, [NotNull] string filePath)
         {
             Contract.Requires(resourceManager != null);
@@ -138,11 +139,13 @@
             }
         }
 
-        private static IEnumerable<EntryChange> ImportSingleSheet([NotNull] ResourceManager resourceManager, [NotNull] Sheet firstSheet, [NotNull] WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
+        [NotNull, ItemNotNull]
+        private static IEnumerable<EntryChange> ImportSingleSheet([NotNull] ResourceManager resourceManager, [NotNull, ItemNotNull] Sheet firstSheet, [NotNull] WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(firstSheet != null);
             Contract.Requires(workbookPart != null);
+            Contract.Ensures(Contract.Result<IEnumerable<EntryChange>>() != null);
 
             var data = firstSheet.GetRows(workbookPart).Select(row => row.GetCellValues(sharedStrings)).ToArray();
 
@@ -194,7 +197,7 @@
             }
         }
 
-        [NotNull]
+        [NotNull, ItemNotNull]
         private static IEnumerable<EntryChange> ImportMultipleSheets([NotNull] ResourceManager resourceManager, [NotNull] Sheets sheets, [NotNull] WorkbookPart workbookPart, IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(resourceManager != null);
