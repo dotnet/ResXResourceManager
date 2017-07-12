@@ -57,8 +57,8 @@
         [NotNull]
         private readonly PerformanceTracer _performanceTracer;
 
+        [CanBeNull]
         private string _loadedSnapshot;
-        private bool _isCellSelectionEnabled;
 
         [ImportingConstructor]
         public ResourceViewModel([NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, [NotNull] ISourceFilesProvider sourceFilesProvider, [NotNull] CodeReferenceTracker codeReferenceTracker, [NotNull] ITracer tracer, [NotNull] PerformanceTracer performanceTracer)
@@ -160,7 +160,7 @@
         }
 
         [NotNull]
-        public ICommand ToggleCellSelectionCommand => new DelegateCommand(() => Settings.IsCellSelectionEnabled = !Settings.IsCellSelectionEnabled);
+        public static ICommand ToggleCellSelectionCommand => new DelegateCommand(() => Settings.IsCellSelectionEnabled = !Settings.IsCellSelectionEnabled);
 
         [NotNull]
         public ICommand CopyCommand => new DelegateCommand<DataGrid>(CanCopy, CopySelected);
@@ -400,7 +400,7 @@
             }
         }
 
-        private void PasteCells([NotNull] DataGrid dataGrid, [NotNull, ItemNotNull] IList<IList<string>> table)
+        private static void PasteCells([NotNull] DataGrid dataGrid, [NotNull, ItemNotNull] IList<IList<string>> table)
         {
             Contract.Requires(dataGrid != null);
             Contract.Requires(table != null);

@@ -65,9 +65,10 @@
         /// <param name="languages"></param>
         /// <returns>The header line.</returns>
         [NotNull, ItemNotNull]
-        private static IEnumerable<IList<string>> GetTableHeaderLines([NotNull] this IEnumerable<CultureKey> languages)
+        private static IEnumerable<IList<string>> GetTableHeaderLines([NotNull, ItemNotNull] this IEnumerable<CultureKey> languages)
         {
             Contract.Requires(languages != null);
+            Contract.Ensures(Contract.Result<IEnumerable<IList<string>>>() != null);
 
             var languageColumns = languages.SelectMany(l => l.GetTableLanguageColumnHeaders());
 
@@ -308,10 +309,12 @@
         }
 
         [System.Diagnostics.Contracts.Pure]
-        public static bool HasValidTableHeaderRow([NotNull] this IList<IList<string>> table)
+        public static bool HasValidTableHeaderRow([NotNull, ItemNotNull] this IList<IList<string>> table)
         {
             Contract.Requires(table != null);
-            Contract.Requires(table.Count > 0);
+
+            if (table.Count == 0)
+                return false;
 
             var headerColumns = table.First();
             Contract.Assume(headerColumns != null);
