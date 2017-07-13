@@ -26,6 +26,13 @@
         {
             get;
         }
+
+        string Translation
+        {
+            get;
+        }
+
+        bool Apply(string prefix);
     }
 
     [ContractClassFor(typeof (ITranslationItem))]
@@ -56,6 +63,19 @@
                 Contract.Ensures(Contract.Result<CultureKey>() != null);
                 throw new NotImplementedException();
             }
+        }
+
+        public string Translation
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public bool Apply(string prefix)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -44,17 +44,6 @@ namespace tomenglertde.ResXManager.View.Visuals
             _results.CollectionChanged += (_, __) => OnPropertyChanged(() => Translation);
         }
 
-        [NotNull]
-        public ResourceTableEntry Entry
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceTableEntry>() != null);
-
-                return _entry;
-            }
-        }
-
         public string Source => _source;
 
         public CultureKey TargetCulture => _targetCulture;
@@ -82,6 +71,11 @@ namespace tomenglertde.ResXManager.View.Visuals
             {
                 SetProperty(ref _translation, value, () => Translation);
             }
+        }
+
+        public bool Apply(string prefix)
+        {
+            return _entry.Values.SetValue(TargetCulture, prefix + Translation);
         }
 
         [NotNull]

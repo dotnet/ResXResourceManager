@@ -22,7 +22,7 @@
         private int _progress;
         private bool _isComplete;
 
-        public TranslationSession(CultureInfo sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull] IList<ITranslationItem> items)
+        public TranslationSession(CultureInfo sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull] ICollection<ITranslationItem> items)
         {
             Contract.Requires(neutralResourcesLanguage != null);
             Contract.Requires(items != null);
@@ -38,7 +38,7 @@
 
         public CultureInfo NeutralResourcesLanguage { get; }
 
-        public IList<ITranslationItem> Items { get; }
+        public ICollection<ITranslationItem> Items { get; }
 
         public bool IsCanceled
         {

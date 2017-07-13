@@ -15,7 +15,7 @@
         bool IsComplete { get; set; }
 
         [NotNull][ItemNotNull]
-        IList<ITranslationItem> Items { get; }
+        ICollection<ITranslationItem> Items { get; }
         [NotNull]
         IList<string> Messages { get; }
         [NotNull]
@@ -37,11 +37,11 @@
         public abstract bool IsCanceled { get; }
         public abstract bool IsComplete { get; set; }
 
-        public IList<ITranslationItem> Items
+        public ICollection<ITranslationItem> Items
         {
             get
             {
-                Contract.Ensures(Contract.Result<IList<ITranslationItem>>() != null);
+                Contract.Ensures(Contract.Result<ICollection<ITranslationItem>>() != null);
                 throw new System.NotImplementedException();
             }
         }

@@ -39,13 +39,13 @@
         private readonly Configuration _configuration;
 
         [NotNull]
-        private readonly ObservableCollection<TranslationItem> _selectedItems = new ObservableCollection<TranslationItem>();
+        private readonly ObservableCollection<ITranslationItem> _selectedItems = new ObservableCollection<ITranslationItem>();
         [NotNull]
         private readonly ObservableCollection<CultureKey> _selectedTargetCultures = new ObservableCollection<CultureKey>();
 
         private CultureKey _sourceCulture;
         [NotNull]
-        private ICollection<TranslationItem> _items = new TranslationItem[0];
+        private ICollection<ITranslationItem> _items = new ITranslationItem[0];
         private ITranslationSession _translationSession;
         [NotNull]
         private ICollection<CultureKey> _allTargetCultures = new CultureKey[0];
@@ -129,11 +129,11 @@
         }
 
         [NotNull]
-        public ICollection<TranslationItem> Items
+        public ICollection<ITranslationItem> Items
         {
             get
             {
-                Contract.Ensures(Contract.Result<ICollection<TranslationItem>>() != null);
+                Contract.Ensures(Contract.Result<ICollection<ITranslationItem>>() != null);
 
                 return _items;
             }
@@ -146,7 +146,7 @@
         }
 
         [NotNull]
-        public ICollection<TranslationItem> SelectedItems
+        public ICollection<ITranslationItem> SelectedItems
         {
             get
             {
@@ -236,7 +236,7 @@
             _translationSession?.Cancel();
         }
 
-        private void Apply([NotNull] IEnumerable<TranslationItem> items)
+        private void Apply([NotNull] IEnumerable<ITranslationItem> items)
         {
             Contract.Requires(items != null);
 
@@ -246,12 +246,9 @@
             {
                 Contract.Assume(item != null);
 
-                var entry = item.Entry;
-
-                if (!entry.CanEdit(item.TargetCulture))
+                if (!item.Apply(prefix))
                     break;
 
-                entry.Values.SetValue(item.TargetCulture, prefix + item.Translation);
                 Items.Remove(item);
             }
         }
@@ -293,15 +290,15 @@
 
             var itemsToTranslate = GetItemsToTranslate(_resourceViewModel.ResourceTableEntries, sourceCulture, _selectedTargetCultures, _configuration.EffectiveTranslationPrefix);
 
-            Items = new ObservableCollection<TranslationItem>(itemsToTranslate);
+            Items = new ObservableCollection<ITranslationItem>(itemsToTranslate);
 
-            TranslationSession = new TranslationSession(sourceCulture.Culture, _configuration.NeutralResourcesLanguage, Items.Cast<ITranslationItem>().ToArray());
+            TranslationSession = new TranslationSession(sourceCulture.Culture, _configuration.NeutralResourcesLanguage, itemsToTranslate);
 
             _translatorHost.Translate(TranslationSession);
         }
 
         [NotNull, ItemNotNull]
-        private static IEnumerable<TranslationItem> GetItemsToTranslate([NotNull, ItemNotNull] IEnumerable<ResourceTableEntry> resourceTableEntries, CultureKey sourceCulture, [NotNull, ItemNotNull] ObservableCollection<CultureKey> targetCultures, string translationPrefix)
+        private static ICollection<ITranslationItem> GetItemsToTranslate([NotNull, ItemNotNull] IEnumerable<ResourceTableEntry> resourceTableEntries, CultureKey sourceCulture, [NotNull, ItemNotNull] ObservableCollection<CultureKey> targetCultures, string translationPrefix)
         {
             Contract.Requires(resourceTableEntries != null);
             Contract.Requires(targetCultures != null);
