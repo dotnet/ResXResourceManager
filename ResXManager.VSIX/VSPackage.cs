@@ -25,6 +25,7 @@
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Visuals;
 
     using TomsToolbox.Core;
@@ -278,20 +279,18 @@
 
         private void ShowSelectedResourceFiles(object sender, EventArgs e)
         {
-            if (!ShowToolWindow())
-                return;
-
-            var resourceViewModel = CompositionHost.GetExportedValue<ResourceViewModel>();
-
             var selectedResourceEntites = GetSelectedResourceEntites()?.Distinct().ToArray();
             if (selectedResourceEntites == null)
                 return;
 
-            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Input, () =>
-            {
-                resourceViewModel.SelectedEntities.Clear();
-                resourceViewModel.SelectedEntities.AddRange(selectedResourceEntites);
-            });
+            // if we open the window the first time, make sure it does not select all entities by default.
+            Settings.Default.AreAllFilesSelected = false;
+
+            var selectedEntities = CompositionHost.GetExportedValue<ResourceViewModel>().SelectedEntities;
+            selectedEntities.Clear();
+            selectedEntities.AddRange(selectedResourceEntites);
+
+            ShowToolWindow();
         }
 
         private void SolutionExplorerContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
