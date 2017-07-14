@@ -150,7 +150,7 @@
         {
             get
             {
-                Contract.Ensures(Contract.Result<ICollection<TranslationItem>>() != null);
+                Contract.Ensures(Contract.Result<ICollection<ITranslationItem>>() != null);
 
                 return _selectedItems;
             }
@@ -302,7 +302,7 @@
         {
             Contract.Requires(resourceTableEntries != null);
             Contract.Requires(targetCultures != null);
-            Contract.Ensures(Contract.Result<IEnumerable<TranslationItem>>() != null);
+            Contract.Ensures(Contract.Result<IEnumerable<ITranslationItem>>() != null);
 
             // #1: all entries that are not invariant and have a valid value in the source culture
             var allEntriesWithSourceValue = resourceTableEntries
