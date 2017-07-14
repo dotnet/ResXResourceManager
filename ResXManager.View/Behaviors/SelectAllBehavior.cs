@@ -10,6 +10,7 @@
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.Properties;
 
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf.Composition;
@@ -35,7 +36,7 @@
         /// </summary>
         [NotNull]
         public static readonly DependencyProperty AreAllFilesSelectedProperty =
-            DependencyProperty.Register("AreAllFilesSelected", typeof(bool?), typeof(SelectAllBehavior), new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (sender, e) => ((SelectAllBehavior)sender).AreAllFilesSelected_Changed((bool?)e.NewValue)));
+            DependencyProperty.Register("AreAllFilesSelected", typeof(bool?), typeof(SelectAllBehavior), new FrameworkPropertyMetadata(Settings.Default.AreAllFilesSelected, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (sender, e) => ((SelectAllBehavior)sender).AreAllFilesSelected_Changed((bool?)e.NewValue)));
 
         protected override void OnAttached()
         {
@@ -96,6 +97,8 @@
 
         private void AreAllFilesSelected_Changed(bool? newValue)
         {
+            Settings.Default.AreAllFilesSelected = newValue ?? false;
+
             var listBox = AssociatedObject;
             if (listBox == null)
                 return;

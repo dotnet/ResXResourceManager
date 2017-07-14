@@ -94,5 +94,17 @@ namespace tomenglertde.ResXManager.View.Properties {
                 this["IsCellSelectionEnabled"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AreAllFilesSelected {
+            get {
+                return ((bool)(this["AreAllFilesSelected"]));
+            }
+            set {
+                this["AreAllFilesSelected"] = value;
+            }
+        }
     }
 }
