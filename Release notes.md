@@ -1,4 +1,9 @@
-﻿1.2
+﻿1.3
+* Improve copy/paste usability
+* Fix #20, #21: Avoid unnecessary selection of all items, and remember selection
+* Speed up loading of translation tab
+
+1.2
 * #4: Add support for Simplified Chinese
 
 1.1
