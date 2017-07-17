@@ -18,7 +18,7 @@
 * #9: AuthenticationKey not saved when changing only the key
 
 1.0.0.97:
-* Add configurable option to exclude sourcefiles from being processed as soon as possible (by Christophe Gijbels <git@gijbels-it.be)
+* Add configurable option to exclude sourcefiles from being processed as soon as possible (by Christophe Gijbels <git@gijbels-it.be>)
 * Migrate all links from codeplex to github, move click-once install/update location.
 * Optimize load sequence, startup time, and startup error logging.
 

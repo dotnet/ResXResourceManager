@@ -56,7 +56,7 @@
 
         private static int ColumnToIndex(string column)
         {
-            return string.IsNullOrEmpty(column) ? 0 : column.Aggregate(0, (current, c) => current * 26 + (c - 'A'));
+            return string.IsNullOrEmpty(column) ? 0 : column.Aggregate(0, (current, c) => current * 26 + (c - 'A' + 1)) - 1;
         }
     }
 }
