@@ -75,7 +75,10 @@ namespace tomenglertde.ResXManager.View.Visuals
 
         public bool Apply(string prefix)
         {
-            return _entry.Values.SetValue(TargetCulture, prefix + Translation);
+            if (!_entry.CanEdit(_targetCulture))
+                return false;
+
+            return _entry.Values.SetValue(_targetCulture, prefix + Translation);
         }
 
         [NotNull]
