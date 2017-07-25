@@ -1,4 +1,8 @@
-﻿1.3
+﻿1.4
+* Fix #29: new files are not created when applying translations, VS crashes on 32bit
+* Fix #26: excel column index >26 was wrong
+
+1.3
 * Improve copy/paste usability
 * Fix #20, #21: Avoid unnecessary selection of all items, and remember selection
 * Speed up loading of translation tab
