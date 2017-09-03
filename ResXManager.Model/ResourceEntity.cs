@@ -11,40 +11,24 @@
 
     using JetBrains.Annotations;
 
+    using PropertyChanged;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
 
     /// <summary>
     /// Represents a logical resource file, e.g. "Resources".
     /// A logical resource entity is linked to multiple physical resource files, one per language, e.g. "Resources.resx", "Resources.de.resx", "Resources.fr.resx".
     /// For windows store apps "de\Resources.resw", "en-us\Resources.resw" are also supported.
     /// </summary>
-    public class ResourceEntity : ObservableObject, IComparable<ResourceEntity>, IComparable, IEquatable<ResourceEntity>
+    [AddINotifyPropertyChangedInterface]
+    public sealed class ResourceEntity : IComparable<ResourceEntity>, IComparable, IEquatable<ResourceEntity>
     {
         [NotNull]
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
-        [NotNull]
-        private readonly ResourceManager _container;
-        [NotNull]
-        private readonly string _projectName;
-        [NotNull]
-        private readonly string _baseName;
-        [NotNull]
-        private readonly string _directoryName;
         [NotNull, ItemNotNull]
         private readonly ObservableCollection<ResourceTableEntry> _resourceTableEntries;
-        [NotNull, ItemNotNull]
-        private readonly ReadOnlyObservableCollection<ResourceTableEntry> _readOnlyResourceTableEntries;
-        [NotNull]
-        private readonly string _displayName;
-        [NotNull]
-        private readonly string _relativePath;
-        [NotNull]
-        private readonly string _sortKey;
-
-        private ProjectFile _neutralProjectFile;
 
         internal ResourceEntity([NotNull] ResourceManager container, [NotNull] string projectName, [NotNull] string baseName, [NotNull] string directoryName, [NotNull] ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
         {
@@ -55,15 +39,15 @@
             Contract.Requires(files != null);
             Contract.Requires(files.Any());
 
-            _container = container;
-            _projectName = projectName;
-            _baseName = baseName;
-            _directoryName = directoryName;
+            Container = container;
+            ProjectName = projectName;
+            BaseName = baseName;
+            DirectoryName = directoryName;
             _languages = GetResourceLanguages(files, duplicateKeyHandling);
-            _relativePath = GetRelativePath(files);
-            _displayName = projectName + @" - " + _relativePath + baseName;
-            _sortKey = string.Concat(@" - ", _displayName, _directoryName);
-            _neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
+            RelativePath = GetRelativePath(files);
+            DisplayName = projectName + @" - " + RelativePath + baseName;
+            SortKey = string.Concat(@" - ", DisplayName, DirectoryName);
+            NeutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
 
             var entriesQuery = _languages.Values
                 .SelectMany(language => language.ResourceKeys)
@@ -71,7 +55,8 @@
                 .Select((key, index) => new ResourceTableEntry(this, key, index, _languages));
 
             _resourceTableEntries = new ObservableCollection<ResourceTableEntry>(entriesQuery);
-            _readOnlyResourceTableEntries = new ReadOnlyObservableCollection<ResourceTableEntry>(_resourceTableEntries);
+
+            Entries = new ReadOnlyObservableCollection<ResourceTableEntry>(_resourceTableEntries);
 
             Contract.Assume(_languages.Any());
         }
@@ -84,7 +69,7 @@
             if (!MergeItems(_languages, GetResourceLanguages(files, duplicateKeyHandling)))
                 return false; // nothing has changed, no need to continue
 
-            _neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
+            var neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
 
             var unmatchedTableEntries = _resourceTableEntries.ToList();
 
@@ -118,7 +103,7 @@
 
             _resourceTableEntries.RemoveRange(unmatchedTableEntries);
 
-            OnPropertyChanged(nameof(NeutralProjectFile));
+            NeutralProjectFile = neutralProjectFile;
 
             return true;
         }
@@ -156,113 +141,50 @@
         }
 
         [NotNull]
-        public ResourceManager Container
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceManager>() != null);
-                return _container;
-            }
-        }
+        public ResourceManager Container { get; }
 
         /// <summary>
         /// Gets the containing project name of the resource entity.
         /// </summary>
         [NotNull]
-        public string ProjectName
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return _projectName;
-            }
-        }
+        public string ProjectName { get; }
 
         /// <summary>
         /// Gets the base name of the resource entity.
         /// </summary>
         [NotNull]
-        public string BaseName
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return _baseName;
-            }
-        }
+        public string BaseName { get; }
 
         [NotNull]
-        public string RelativePath
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return _relativePath;
-            }
-        }
+        public string RelativePath { get; }
 
         [NotNull]
-        public string UniqueName
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return _relativePath + _baseName;
-            }
-        }
+        public string UniqueName => RelativePath + BaseName;
 
         [NotNull]
-        public string DisplayName
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return _displayName;
-            }
-        }
+        public string DisplayName { get; }
 
         /// <summary>
         /// Gets the directory where the physical files are located.
         /// </summary>
         [NotNull]
-        public string DirectoryName
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return _directoryName;
-            }
-        }
+        public string DirectoryName { get; }
 
-        public ProjectFile NeutralProjectFile => _neutralProjectFile;
+        public ProjectFile NeutralProjectFile { get; private set; }
 
-        public bool IsWinFormsDesignerResource => _neutralProjectFile?.IsWinFormsDesignerResource ?? false;
+        public bool IsWinFormsDesignerResource => NeutralProjectFile?.IsWinFormsDesignerResource ?? false;
 
         /// <summary>
         /// Gets the available languages of this resource entity.
         /// </summary>
         [NotNull, ItemNotNull]
-        public ICollection<ResourceLanguage> Languages
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IEnumerable<ResourceLanguage>>() != null);
-                return _languages.Values;
-            }
-        }
+        public ICollection<ResourceLanguage> Languages => _languages.Values;
 
         /// <summary>
         /// Gets all the entries of this resource entity.
         /// </summary>
         [NotNull, ItemNotNull]
-        public ReadOnlyObservableCollection<ResourceTableEntry> Entries
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ReadOnlyObservableCollection<ResourceTableEntry>>() != null);
-                return _readOnlyResourceTableEntries;
-            }
-        }
+        public ReadOnlyObservableCollection<ResourceTableEntry> Entries { get; }
 
         /// <summary>
         /// Removes the specified item.
@@ -323,7 +245,7 @@
 
         public override string ToString()
         {
-            return _displayName;
+            return DisplayName;
         }
 
         public bool CanEdit(CultureKey cultureKey)
@@ -373,9 +295,9 @@
 
         internal bool EqualsAll(string projectName, string baseName, string directoryName)
         {
-            return string.Equals(projectName, _projectName, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(baseName, _baseName, StringComparison.OrdinalIgnoreCase)
-                   && string.Equals(directoryName, _directoryName, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(projectName, ProjectName, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(baseName, BaseName, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(directoryName, DirectoryName, StringComparison.OrdinalIgnoreCase);
         }
 
         [NotNull]
@@ -427,18 +349,10 @@
             return removedLanguages.Any() || changedLanguages.Any() || addedLanguages.Any();
         }
 
-
         #region IComparable/IEquatable implementation
 
         [NotNull]
-        private string SortKey
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return _sortKey;
-            }
-        }
+        private string SortKey { get; }
 
         /// <summary>
         /// Returns a hash code for this instance.
@@ -558,16 +472,16 @@
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_container != null);
+            Contract.Invariant(Container != null);
             Contract.Invariant(_languages != null);
             Contract.Invariant(_resourceTableEntries != null);
-            Contract.Invariant(_readOnlyResourceTableEntries != null);
-            Contract.Invariant(!string.IsNullOrEmpty(_projectName));
-            Contract.Invariant(!string.IsNullOrEmpty(_baseName));
-            Contract.Invariant(!string.IsNullOrEmpty(_directoryName));
-            Contract.Invariant(_displayName != null);
-            Contract.Invariant(_relativePath != null);
-            Contract.Invariant(_sortKey != null);
+            Contract.Invariant(Entries != null);
+            Contract.Invariant(!string.IsNullOrEmpty(ProjectName));
+            Contract.Invariant(!string.IsNullOrEmpty(BaseName));
+            Contract.Invariant(!string.IsNullOrEmpty(DirectoryName));
+            Contract.Invariant(DisplayName != null);
+            Contract.Invariant(RelativePath != null);
+            Contract.Invariant(SortKey != null);
         }
     }
 }

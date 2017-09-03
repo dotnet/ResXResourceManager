@@ -106,7 +106,7 @@
             return new DataGridTextColumn
             {
                 Header = new ColumnHeader(Resources.Key, ColumnType.Key),
-                Binding = new Binding(@"Key") { ValidatesOnExceptions = true },
+                Binding = new Binding(nameof(ResourceTableEntry.Key)) { ValidatesOnExceptions = true },
                 Width = 200,
                 CanUserReorder = false,
             };

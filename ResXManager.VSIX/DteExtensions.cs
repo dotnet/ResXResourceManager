@@ -56,20 +56,14 @@
 
             try
             {
-                IVsMultiItemSelect multiItemSelect;
-                uint itemId;
-
-                var hr = monitorSelection.GetCurrentSelection(out hierarchyPtr, out itemId, out multiItemSelect, out selectionContainerPtr);
+                var hr = monitorSelection.GetCurrentSelection(out hierarchyPtr, out var itemId, out var multiItemSelect, out selectionContainerPtr);
 
                 if (ErrorHandler.Failed(hr))
                     return new VSITEMSELECTION[0];
 
                 if ((itemId == VSConstants.VSITEMID_SELECTION) && (multiItemSelect != null))
                 {
-                    uint cItems;
-                    int info;
-
-                    multiItemSelect.GetSelectionInfo(out cItems, out info);
+                    multiItemSelect.GetSelectionInfo(out var cItems, out var info);
                     var items = new VSITEMSELECTION[cItems];
                     multiItemSelect.GetSelectedItems(0, cItems, items);
                     return items;
@@ -101,15 +95,13 @@
         {
             try
             {
-                string itemFullPath;
-
                 // ReSharper disable once SuspiciousTypeConversion.Global
                 var vsProject = selection.pHier as IVsProject;
 
                 if (vsProject == null)
                     return null;
 
-                vsProject.GetMkDocument(selection.itemid, out itemFullPath);
+                vsProject.GetMkDocument(selection.itemid, out var itemFullPath);
 
                 return itemFullPath;
             }

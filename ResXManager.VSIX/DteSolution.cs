@@ -207,8 +207,7 @@
                     var project = projectItem.ContainingProject;
                     Contract.Assume(project != null);
 
-                    DteProjectFile projectFile;
-                    if (items.TryGetValue(fileName, out projectFile))
+                    if (items.TryGetValue(fileName, out var projectFile))
                     {
                         Contract.Assume(projectFile != null);
                         Contract.Assume(project.Name != null);

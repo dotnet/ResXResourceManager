@@ -17,14 +17,8 @@
     /// </summary>
     public class ProjectFile : ObservableObject
     {
-        [NotNull]
-        private readonly string _filePath;
-        [NotNull]
-        private readonly string _extension;
         private string _fingerPrint;
         private XDocument _document;
-        [NotNull]
-        private readonly string _relativeFilePath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectFile" /> class.
@@ -38,9 +32,9 @@
             Contract.Requires(!string.IsNullOrEmpty(filePath));
             Contract.Requires(rootFolder != null);
 
-            _filePath = filePath;
-            _relativeFilePath = GetRelativePath(rootFolder, filePath);
-            _extension = Path.GetExtension(_filePath);
+            FilePath = filePath;
+            RelativeFilePath = GetRelativePath(rootFolder, filePath);
+            Extension = Path.GetExtension(FilePath);
 
             ProjectName = projectName;
             UniqueProjectName = uniqueProjectName;
@@ -50,52 +44,20 @@
         /// Gets the file name of the file.
         /// </summary>
         [NotNull]
-        public string FilePath
-        {
-            get
-            {
-                Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
-
-                return _filePath;
-            }
-        }
+        public string FilePath { get; }
 
         [NotNull]
-        public string Extension
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
-
-                return _extension;
-            }
-        }
+        public string Extension { get; }
 
         /// <summary>
         /// Gets or sets the name of the project containing the file.
         /// </summary>
-        public string ProjectName
-        {
-            get;
-            set;
-        }
+        public string ProjectName { get; set; }
 
-        public string UniqueProjectName
-        {
-            get;
-            set;
-        }
+        public string UniqueProjectName { get; set; }
 
         [NotNull]
-        public string RelativeFilePath
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
-
-                return _relativeFilePath;
-            }
-        }
+        public string RelativeFilePath { get; }
 
         public bool HasChanges { get; protected set; }
 
@@ -208,9 +170,9 @@
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(!string.IsNullOrEmpty(_filePath));
-            Contract.Invariant(_extension != null);
-            Contract.Invariant(_relativeFilePath != null);
+            Contract.Invariant(!string.IsNullOrEmpty(FilePath));
+            Contract.Invariant(Extension != null);
+            Contract.Invariant(RelativeFilePath != null);
         }
     }
 }

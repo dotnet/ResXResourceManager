@@ -210,8 +210,7 @@
                     return projectItem.Children().Any(IsTextTemplate) ? CodeGenerator.TextTemplate : CodeGenerator.None;
                 }
 
-                CodeGenerator codeGenerator;
-                return Enum.TryParse(customTool, out codeGenerator) ? codeGenerator : CodeGenerator.Unknown;
+                return Enum.TryParse(customTool, out CodeGenerator codeGenerator) ? codeGenerator : CodeGenerator.Unknown;
             }
             catch (ExternalException)
             {

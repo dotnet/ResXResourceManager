@@ -13,6 +13,8 @@
 
     using JetBrains.Annotations;
 
+    using PropertyChanged;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Core;
@@ -23,21 +25,13 @@
     /// Represents all resources found in a folder and its's sub folders.
     /// </summary>
     [Export]
-    public class ResourceManager : ObservableObject
+    [AddINotifyPropertyChangedInterface]
+    public sealed class ResourceManager
     {
         private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
-        private static readonly CultureInfo[] _specificCultures = GetSpecificCultures();
 
         [NotNull]
         private readonly ISourceFilesProvider _sourceFilesProvider;
-
-        [NotNull]
-        private readonly ObservableCollection<ResourceEntity> _resourceEntities = new ObservableCollection<ResourceEntity>();
-        [NotNull]
-        private readonly IObservableCollection<ResourceTableEntry> _tableEntries;
-
-        [NotNull]
-        private readonly ObservableCollection<CultureKey> _cultureKeys = new ObservableCollection<CultureKey>();
 
         private string _snapshot;
 
@@ -51,7 +45,7 @@
             Contract.Requires(sourceFilesProvider != null);
 
             _sourceFilesProvider = sourceFilesProvider;
-            _tableEntries = _resourceEntities.ObservableSelectMany(entity => entity.Entries);
+            TableEntries = ResourceEntities.ObservableSelectMany(entity => entity.Entries);
         }
 
         /// <summary>
@@ -77,7 +71,7 @@
         /// <exception cref="UnauthorizedAccessException"></exception>
         public void Save(StringComparison? fileContentSorting)
         {
-            var changedResourceLanguages = _resourceEntities
+            var changedResourceLanguages = ResourceEntities
                 .SelectMany(entity => entity.Languages)
                 .Where(lang => lang.HasChanges)
                 .ToArray();
@@ -90,70 +84,38 @@
         /// </summary>
         [ItemNotNull]
         [NotNull]
-        public ICollection<ResourceEntity> ResourceEntities
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICollection<ResourceEntity>>() != null);
-
-                return _resourceEntities;
-            }
-        }
+        public ObservableCollection<ResourceEntity> ResourceEntities { get; } = new ObservableCollection<ResourceEntity>();
 
         /// <summary>
         /// Gets the table entries of all entities.
         /// </summary>
         [NotNull]
-        public IObservableCollection<ResourceTableEntry> TableEntries
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IObservableCollection<ResourceTableEntry>>() != null);
-
-                return _tableEntries;
-            }
-        }
+        public IObservableCollection<ResourceTableEntry> TableEntries { get; }
 
         /// <summary>
         /// Gets the cultures of all entities.
         /// </summary>
         [NotNull]
-        public ObservableCollection<CultureKey> Cultures
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ObservableCollection<CultureKey>>() != null);
-
-                return _cultureKeys;
-            }
-        }
+        public ObservableCollection<CultureKey> Cultures { get; } = new ObservableCollection<CultureKey>();
 
         /// <summary>
         /// Gets all system specific cultures.
         /// </summary>
-        [NotNull]
-        public static IEnumerable<CultureInfo> SpecificCultures
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
-
-                return _specificCultures;
-            }
-        }
+        [NotNull, ItemNotNull]
+        public static IEnumerable<CultureInfo> SpecificCultures { get; } = GetSpecificCultures();
 
         public bool HasChanges
         {
             get
             {
-                return _resourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.HasChanges);
+                return ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.HasChanges);
             }
         }
 
         public void ReloadSnapshot()
         {
             if (!string.IsNullOrEmpty(_snapshot))
-                _resourceEntities.LoadSnapshot(_snapshot);
+                ResourceEntities.LoadSnapshot(_snapshot);
         }
 
         public bool Reload(DuplicateKeyHandling duplicateKeyHandling)
@@ -197,16 +159,16 @@
                 return false; // nothing has changed, no need to continue
 
             if (!string.IsNullOrEmpty(_snapshot))
-                _resourceEntities.LoadSnapshot(_snapshot);
+                ResourceEntities.LoadSnapshot(_snapshot);
 
-            var cultureKeys = _resourceEntities
+            var cultureKeys = ResourceEntities
                 .SelectMany(entity => entity.Languages)
                 .Select(lang => lang.CultureKey)
                 .Distinct()
                 .OrderBy(item => item.Culture?.DisplayName)
                 .ToArray();
 
-            _cultureKeys.SynchronizeWith(cultureKeys);
+            Cultures.SynchronizeWith(cultureKeys);
 
             OnLoaded();
 
@@ -219,7 +181,7 @@
 
             var hasChanged = false;
 
-            var unmatchedEntities = _resourceEntities.ToList();
+            var unmatchedEntities = ResourceEntities.ToList();
 
             foreach (var directory in fileNamesByDirectory)
             {
@@ -250,7 +212,7 @@
                         if (string.IsNullOrEmpty(projectName) || !projectFiles.Any())
                             continue;
 
-                        var existingEntity = _resourceEntities.FirstOrDefault(entity => entity.EqualsAll(projectName, baseName, directoryName));
+                        var existingEntity = ResourceEntities.FirstOrDefault(entity => entity.EqualsAll(projectName, baseName, directoryName));
 
                         if (existingEntity != null)
                         {
@@ -261,14 +223,14 @@
                         }
                         else
                         {
-                            _resourceEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles, duplicateKeyHandling));
+                            ResourceEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles, duplicateKeyHandling));
                             hasChanged = true;
                         }
                     }
                 }
             }
 
-            _resourceEntities.RemoveRange(unmatchedEntities);
+            ResourceEntities.RemoveRange(unmatchedEntities);
 
             hasChanged |= unmatchedEntities.Any();
 
@@ -279,9 +241,9 @@
         {
             Contract.Requires(cultureKey != null);
 
-            if (!_cultureKeys.Contains(cultureKey))
+            if (!Cultures.Contains(cultureKey))
             {
-                _cultureKeys.Add(cultureKey);
+                Cultures.Add(cultureKey);
             }
         }
 
@@ -349,10 +311,10 @@
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_resourceEntities != null);
-            Contract.Invariant(_cultureKeys != null);
+            Contract.Invariant(ResourceEntities != null);
+            Contract.Invariant(Cultures != null);
             Contract.Invariant(_sourceFilesProvider != null);
-            Contract.Invariant(_tableEntries != null);
+            Contract.Invariant(TableEntries != null);
         }
     }
 }

@@ -11,7 +11,11 @@
     using System.Text.RegularExpressions;
     using System.Windows.Threading;
 
+    using AutoProperties;
+
     using JetBrains.Annotations;
+
+    using PropertyChanged;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
@@ -24,39 +28,19 @@
     /// <summary>
     /// Represents one entry in the resource table.
     /// </summary>
-    public class ResourceTableEntry : ObservableObject
+
+    public sealed class ResourceTableEntry : ObservableObject
     {
         private const string InvariantKey = "@Invariant";
+
         [NotNull]
         private readonly Regex _duplicateKeyExpression = new Regex(@"_Duplicate\[\d+\]$");
         [NotNull]
-        private readonly ResourceEntity _container;
-
-        [NotNull]
         private string _key;
-
         [NotNull]
         private IDictionary<CultureKey, ResourceLanguage> _languages;
         [NotNull]
-        private ResourceTableValues<string> _values;
-        [NotNull]
-        private ResourceTableValues<string> _comments;
-        [NotNull]
-        private ResourceTableValues<string> _snapshotValues;
-        [NotNull]
-        private ResourceTableValues<string> _snapshotComments;
-        [NotNull]
-        private ResourceTableValues<bool> _fileExists;
-        [NotNull]
-        private ResourceTableValues<ICollection<string>> _valueAnnotations;
-        [NotNull]
-        private ResourceTableValues<ICollection<string>> _commentAnnotations;
-        [NotNull]
         private ResourceLanguage _neutralLanguage;
-
-        private ReadOnlyCollection<CodeReference> _codeReferences;
-        private double _index;
-        private IDictionary<CultureKey, ResourceData> _snapshot;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceTableEntry" /> class.
@@ -72,47 +56,49 @@
             Contract.Requires(languages != null);
             Contract.Requires(languages.Any());
 
-            _container = container;
+            Container = container;
             _key = key;
-            _index = index;
+            Index.SetBackingField(index);
             _languages = languages;
 
-            _values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
-            _values.ValueChanged += Values_ValueChanged;
+            Values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
+            Values.ValueChanged += Values_ValueChanged;
 
-            _comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(_key), (lang, value) => lang.SetComment(_key, value));
-            _comments.ValueChanged += Comments_ValueChanged;
+            Comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(_key), (lang, value) => lang.SetComment(_key, value));
+            Comments.ValueChanged += Comments_ValueChanged;
 
-            _fileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
+            FileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
 
-            _snapshotValues = new ResourceTableValues<string>(_languages, lang => _snapshot?.GetValueOrDefault(lang.CultureKey)?.Text, (lang, value) => false);
-            _snapshotComments = new ResourceTableValues<string>(_languages, lang => _snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment, (lang, value) => false);
+            SnapshotValues = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text, (lang, value) => false);
+            SnapshotComments = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment, (lang, value) => false);
 
-            _valueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
-            _commentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
+            ValueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
+            CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
 
             Contract.Assume(languages.Any());
-            _neutralLanguage = languages.First().Value;
-            Contract.Assume(_neutralLanguage != null);
+            var neutralLanguage = languages.First().Value;
+            Contract.Assume(neutralLanguage != null);
+
+            _neutralLanguage = neutralLanguage;
         }
 
         private void ResetTableValues()
         {
-            _values.ValueChanged -= Values_ValueChanged;
-            _values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
-            _values.ValueChanged += Values_ValueChanged;
+            Values.ValueChanged -= Values_ValueChanged;
+            Values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
+            Values.ValueChanged += Values_ValueChanged;
 
-            _comments.ValueChanged -= Comments_ValueChanged;
-            _comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(_key), (lang, value) => lang.SetComment(_key, value));
-            _comments.ValueChanged += Comments_ValueChanged;
+            Comments.ValueChanged -= Comments_ValueChanged;
+            Comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(_key), (lang, value) => lang.SetComment(_key, value));
+            Comments.ValueChanged += Comments_ValueChanged;
 
-            _fileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
+            FileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
 
-            _snapshotValues = new ResourceTableValues<string>(_languages, lang => _snapshot?.GetValueOrDefault(lang.CultureKey)?.Text, (lang, value) => false);
-            _snapshotComments = new ResourceTableValues<string>(_languages, lang => _snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment, (lang, value) => false);
+            SnapshotValues = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text, (lang, value) => false);
+            SnapshotComments = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment, (lang, value) => false);
 
-            _valueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
-            _commentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
+            ValueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
+            CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
         }
 
         internal void Update(int index, [NotNull] IDictionary<CultureKey, ResourceLanguage> languages)
@@ -122,15 +108,17 @@
 
             var oldComment = Comment;
 
-            _index = index;
+            Index = index;
             _languages = languages;
-            _neutralLanguage = languages.First().Value;
-            Contract.Assume(_neutralLanguage != null);
+
+            var neutralLanguage = languages.First().Value;
+            Contract.Assume(neutralLanguage != null);
+            _neutralLanguage = neutralLanguage;
 
             ResetTableValues();
 
             // Preserve comments in WinForms designer resources, the designer always removes them.
-            if (!string.IsNullOrEmpty(oldComment) && _container.IsWinFormsDesignerResource && string.IsNullOrEmpty(Comment))
+            if (!string.IsNullOrEmpty(oldComment) && Container.IsWinFormsDesignerResource && string.IsNullOrEmpty(Comment))
             {
                 Comment = oldComment;
             }
@@ -140,19 +128,11 @@
 
         internal void UpdateIndex(int index)
         {
-            _index = index;
-            OnPropertyChanged(nameof(Index));
+            Index = index;
         }
 
         [NotNull]
-        public ResourceEntity Container
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceEntity>() != null);
-                return _container;
-            }
-        }
+        public ResourceEntity Container { get; }
 
         /// <summary>
         /// Gets the key of the resource.
@@ -166,6 +146,7 @@
 
                 return _key;
             }
+            // ReSharper disable once MemberCanBePrivate.Global => Implicit bound to data grid.
             set
             {
                 Contract.Requires(!string.IsNullOrEmpty(value));
@@ -200,120 +181,49 @@
         [NotNull]
         public string Comment
         {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return _neutralLanguage.GetComment(Key) ?? string.Empty;
-            }
-            set
-            {
-                _neutralLanguage.SetComment(Key, value);
-                OnPropertyChanged(() => Comment);
-            }
+            get => _neutralLanguage.GetComment(Key) ?? string.Empty;
+            set => _neutralLanguage.SetComment(Key, value);
         }
 
         /// <summary>
         /// Gets the localized values.
         /// </summary>
         [NotNull]
-        public ResourceTableValues<string> Values
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceTableValues<string>>() != null);
-                return _values;
-            }
-        }
+        public ResourceTableValues<string> Values { get; private set; }
 
         /// <summary>
         /// Gets the localized comments.
         /// </summary>
-        [PropertyDependency(nameof(Comment))]
+        [DependsOn(nameof(Comment))]
         [NotNull]
-        public ResourceTableValues<string> Comments
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceTableValues<string>>() != null);
-                return _comments;
-            }
-        }
+        public ResourceTableValues<string> Comments { get; private set; }
 
-        [PropertyDependency(nameof(Snapshot))]
+        [DependsOn(nameof(Snapshot))]
         [NotNull]
-        public ResourceTableValues<string> SnapshotValues
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceTableValues<string>>() != null);
-                return _snapshotValues;
-            }
-        }
+        public ResourceTableValues<string> SnapshotValues { get; private set; }
 
-        [PropertyDependency(nameof(Snapshot))]
+        [DependsOn(nameof(Snapshot))]
         [NotNull]
-        public ResourceTableValues<string> SnapshotComments
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceTableValues<string>>() != null);
-                return _snapshotComments;
-            }
-        }
+        public ResourceTableValues<string> SnapshotComments { get; private set; }
 
-        [PropertyDependency(nameof(Values))]
+        [DependsOn(nameof(Values))]
         [NotNull]
-        public ResourceTableValues<bool> FileExists
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceTableValues<bool>>() != null);
-                return _fileExists;
-            }
-        }
+        public ResourceTableValues<bool> FileExists { get; private set; }
 
-        [PropertyDependency(nameof(Values), nameof(Snapshot))]
+        [DependsOn(nameof(Values), nameof(Snapshot))]
         [NotNull]
-        public ResourceTableValues<ICollection<string>> ValueAnnotations
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceTableValues<ICollection<string>>>() != null);
+        public ResourceTableValues<ICollection<string>> ValueAnnotations { get; private set; }
 
-                return _valueAnnotations;
-            }
-        }
-
-        [PropertyDependency(nameof(Comments), nameof(Snapshot))]
+        [DependsOn(nameof(Comments), nameof(Snapshot))]
         [NotNull]
-        public ResourceTableValues<ICollection<string>> CommentAnnotations
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceTableValues<ICollection<string>>>() != null);
-
-                return _commentAnnotations;
-            }
-        }
+        public ResourceTableValues<ICollection<string>> CommentAnnotations { get; private set; }
 
         [NotNull]
-        public ICollection<CultureKey> Languages
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICollection<CultureKey>>() != null);
+        public ICollection<CultureKey> Languages => _languages.Keys;
 
-                return _languages.Keys;
-            }
-        }
-
-        [PropertyDependency(nameof(Comment))]
         public bool IsInvariant
         {
-            get
-            {
-                return Comment.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0;
-            }
+            get => Comment.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0;
             set
             {
                 if (value)
@@ -339,69 +249,25 @@
             }
         }
 
-        [PropertyDependency(nameof(Key))]
-        public bool IsDuplicateKey
-        {
-            get
-            {
-                return _duplicateKeyExpression.Match(Key).Success;
-            }
-        }
+        [DependsOn(nameof(Key))]
+        public bool IsDuplicateKey => _duplicateKeyExpression.Match(Key).Success;
 
-        public ReadOnlyCollection<CodeReference> CodeReferences
-        {
-            get
-            {
-                return _codeReferences;
-            }
-            internal set
-            {
-                SetProperty(ref _codeReferences, value, nameof(CodeReferences));
-            }
-        }
+        public ReadOnlyCollection<CodeReference> CodeReferences { get; internal set; }
 
-        public double Index
-        {
-            get
-            {
-                return _index;
-            }
-            set
-            {
-                if (SetProperty(ref _index, value, () => Index))
-                {
-                    _container.OnIndexChanged(this);
-                }
-            }
-        }
+        public double Index { get; set; }
 
-        [NotNull]
-        public static IEqualityComparer<ResourceTableEntry> EqualityComparer
+        [UsedImplicitly] // PropertyChanged.Fody
+        private void OnIndexChanged()
         {
-            get
-            {
-                Contract.Ensures(Contract.Result<IEqualityComparer<ResourceTableEntry>>() != null);
-
-                return Comparer.Default;
-            }
+            Container.OnIndexChanged(this);
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public IDictionary<CultureKey, ResourceData> Snapshot
-        {
-            get
-            {
-                return _snapshot;
-            }
-            set
-            {
-                SetProperty(ref _snapshot, value, () => Snapshot);
-            }
-        }
+        public IDictionary<CultureKey, ResourceData> Snapshot { get; set; }
 
         public bool CanEdit(CultureKey cultureKey)
         {
-            return _container.CanEdit(cultureKey);
+            return Container.CanEdit(cultureKey);
         }
 
         public void Refresh()
@@ -415,28 +281,28 @@
         {
             Contract.Requires(cultures != null);
 
-            return HasStringFormatParameterMismatches(cultures.Select(CultureKey.Parse).Select(lang => _values.GetValue(lang)));
+            return HasStringFormatParameterMismatches(cultures.Select(CultureKey.Parse).Select(lang => Values.GetValue(lang)));
         }
 
         public bool HasSnapshotDifferences([NotNull] IEnumerable<object> cultures)
         {
             Contract.Requires(cultures != null);
 
-            return _snapshot != null && cultures.Select(CultureKey.Parse).Any(IsSnapshotDifferent);
+            return Snapshot != null && cultures.Select(CultureKey.Parse).Any(IsSnapshotDifferent);
         }
 
         private bool IsSnapshotDifferent([NotNull] CultureKey culture)
         {
             Contract.Requires(culture != null);
 
-            if (_snapshot == null)
+            if (Snapshot == null)
                 return false;
 
-            var snapshotValue = _snapshot.GetValueOrDefault(culture)?.Text ?? string.Empty;
-            var currentValue = _values.GetValue(culture) ?? string.Empty;
+            var snapshotValue = Snapshot.GetValueOrDefault(culture)?.Text ?? string.Empty;
+            var currentValue = Values.GetValue(culture) ?? string.Empty;
 
-            var snapshotComment = _snapshot.GetValueOrDefault(culture)?.Comment ?? string.Empty;
-            var currentComment = _comments.GetValue(culture) ?? string.Empty;
+            var snapshotComment = Snapshot.GetValueOrDefault(culture)?.Comment ?? string.Empty;
+            var currentComment = Comments.GetValue(culture) ?? string.Empty;
 
             return !string.Equals(snapshotValue, currentValue) || !string.Equals(snapshotComment, currentComment);
         }
@@ -491,7 +357,7 @@
             Contract.Requires(selector != null);
             Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
 
-            var snapshot = _snapshot;
+            var snapshot = Snapshot;
             if (snapshot == null)
                 yield break;
 
@@ -558,30 +424,6 @@
                 .Aggregate(0L, (a, match) => a | (1L << int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture)));
         }
 
-        private class Comparer : IEqualityComparer<ResourceTableEntry>
-        {
-            [NotNull]
-            public static readonly Comparer Default = new Comparer();
-
-            [ContractVerification(false)]
-            public bool Equals(ResourceTableEntry x, ResourceTableEntry y)
-            {
-                if (ReferenceEquals(x, y))
-                    return true;
-                if (ReferenceEquals(x, null))
-                    return false;
-                if (ReferenceEquals(y, null))
-                    return false;
-
-                return x.Container.Equals(y.Container) && x.Key.Equals(y.Key);
-            }
-
-            public int GetHashCode(ResourceTableEntry obj)
-            {
-                return HashCode.Aggregate(obj?.Container.GetHashCode() ?? 0, obj?.Key.GetHashCode() ?? 0);
-            }
-        }
-
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         [Conditional("CONTRACTS_FULL")]
@@ -589,15 +431,15 @@
         {
             Contract.Invariant(_duplicateKeyExpression != null);
             Contract.Invariant(!string.IsNullOrEmpty(_key));
-            Contract.Invariant(_values != null);
-            Contract.Invariant(_comments != null);
-            Contract.Invariant(_snapshotValues != null);
-            Contract.Invariant(_snapshotComments != null);
-            Contract.Invariant(_fileExists != null);
-            Contract.Invariant(_valueAnnotations != null);
-            Contract.Invariant(_commentAnnotations != null);
+            Contract.Invariant(Values != null);
+            Contract.Invariant(Comments != null);
+            Contract.Invariant(SnapshotValues != null);
+            Contract.Invariant(SnapshotComments != null);
+            Contract.Invariant(FileExists != null);
+            Contract.Invariant(ValueAnnotations != null);
+            Contract.Invariant(CommentAnnotations != null);
             Contract.Invariant(_neutralLanguage != null);
-            Contract.Invariant(_container != null);
+            Contract.Invariant(Container != null);
             Contract.Invariant(_languages != null);
             Contract.Invariant(_stringFormatParameterPattern != null);
         }
