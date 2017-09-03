@@ -72,7 +72,7 @@
           <Setter TargetName="Text" Property="Text" Value="{x:Static properties:Resources.NoCodeReferencesToolTip}" />
         </DataTrigger>
         <DataTrigger Binding="{Binding CodeReferences}" Value="{x:Null}">
-          <Setter TargetName="Text" Property="Text" Value="{Binding Path=Progress, Source={toms:Import model:CodeReferenceTracker}, StringFormat={x:Static properties:Resources.CodeReferenceTrackingInProgress}}"/>
+          <Setter TargetName="Text" Property="Text" Value="{Binding Path=Progress, Source={toms:Import model:CodeReferenceTracker}, StringFormat={x:Static properties:Resources.CodeReferenceTrackingInProgress}}" />
           <Setter TargetName="Progress" Property="Visibility" Value="Visible" />
         </DataTrigger>
         <MultiDataTrigger>

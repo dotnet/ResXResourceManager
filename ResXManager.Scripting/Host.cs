@@ -8,7 +8,6 @@
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
-    using System.Text.RegularExpressions;
 
     using JetBrains.Annotations;
 

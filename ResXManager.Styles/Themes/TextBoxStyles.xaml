@@ -16,14 +16,14 @@
                   BorderThickness="{TemplateBinding BorderThickness}">
             <ScrollViewer x:Name="PART_ContentHost"
                           Margin="{TemplateBinding Padding}"
-                          SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}"/>
+                          SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
           </Border>
           <ControlTemplate.Triggers>
             <MultiTrigger>
               <MultiTrigger.Conditions>
-                <Condition Property="IsMouseOver" Value="True"/>
-                <Condition Property="IsEnabled" Value="True"/>
-                <Condition Property="IsReadOnly" Value="True"/>
+                <Condition Property="IsMouseOver" Value="True" />
+                <Condition Property="IsEnabled" Value="True" />
+                <Condition Property="IsReadOnly" Value="True" />
               </MultiTrigger.Conditions>
               <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
             </MultiTrigger>

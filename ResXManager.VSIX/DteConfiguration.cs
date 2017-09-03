@@ -12,6 +12,8 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
+    using Throttle;
+
     using TomsToolbox.Desktop;
 
     [Export(typeof(Configuration))]
@@ -20,7 +22,6 @@
     {
         [NotNull]
         private readonly DteSolution _solution;
-        private readonly DispatcherThrottle _moveToResourcesChangeThrottle;
         private MoveToResourceConfiguration _moveToResources;
 
         [ImportingConstructor]
@@ -31,7 +32,6 @@
             Contract.Requires(tracer != null);
 
             _solution = solution;
-            _moveToResourcesChangeThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, PersistMoveToResources);
         }
 
         [NotNull]
@@ -52,6 +52,7 @@
             base.OnReload();
         }
 
+        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.ContextIdle)]
         private void PersistMoveToResources()
         {
             // ReSharper disable once ExplicitCallerInfoArgument
@@ -64,7 +65,7 @@
             Contract.Ensures(Contract.Result<MoveToResourceConfiguration>() != null);
 
             _moveToResources = current ?? MoveToResourceConfiguration.Default;
-            _moveToResources.ItemPropertyChanged += (_, __) => _moveToResourcesChangeThrottle.Tick();
+            _moveToResources.ItemPropertyChanged += (_, __) => PersistMoveToResources();
 
             return _moveToResources;
         }

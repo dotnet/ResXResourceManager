@@ -303,10 +303,10 @@
     <Style.Triggers>
       <MultiTrigger>
         <MultiTrigger.Conditions>
-          <Condition Property="ItemsControl.IsGrouping" Value="True"/>
-          <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="False"/>
+          <Condition Property="ItemsControl.IsGrouping" Value="True" />
+          <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="False" />
         </MultiTrigger.Conditions>
-        <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+        <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
       </MultiTrigger>
     </Style.Triggers>
   </Style>

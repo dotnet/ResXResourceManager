@@ -25,6 +25,8 @@
     using tomenglertde.ResXManager.View.ColumnHeaders;
     using tomenglertde.ResXManager.View.Properties;
 
+    using Throttle;
+
     using TomsToolbox.Desktop;
     using TomsToolbox.ObservableCollections;
     using TomsToolbox.Wpf;
@@ -35,8 +37,6 @@
     public class ResourceViewModel : ObservableObject
     {
         [NotNull]
-        private readonly DispatcherThrottle _resourceTableEntiyCountUpdateThrottle;
-        [NotNull]
         private readonly ResourceManager _resourceManager;
         [NotNull]
         private readonly Configuration _configuration;
@@ -46,8 +46,6 @@
         private readonly ITracer _tracer;
         [NotNull]
         private readonly CodeReferenceTracker _codeReferenceTracker;
-        [NotNull]
-        private readonly DispatcherThrottle _restartFindCodeReferencesThrottle;
         [NotNull, ItemNotNull]
         private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
         [NotNull, ItemNotNull]
@@ -77,15 +75,10 @@
             _tracer = tracer;
             _performanceTracer = performanceTracer;
 
-            _resourceTableEntiyCountUpdateThrottle = new DispatcherThrottle(() => OnPropertyChanged(nameof(ResourceTableEntryCount)));
-
             _resourceTableEntries = _selectedEntities.ObservableSelectMany(entity => entity.Entries);
-            _resourceTableEntries.CollectionChanged += (_, __) => _resourceTableEntiyCountUpdateThrottle.Tick();
+            _resourceTableEntries.CollectionChanged += (_, __) => ResourceTableEntries_CollectionChanged();
 
-            _restartFindCodeReferencesThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, () => BeginFindCodeReferences(sourceFilesProvider.SourceFiles));
-
-            resourceManager.TableEntries.CollectionChanged += (_, __) => _restartFindCodeReferencesThrottle.Tick();
-
+            resourceManager.TableEntries.CollectionChanged += (_, __) => BeginFindCodeReferences();
             resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
         }
 
@@ -464,7 +457,7 @@
             Reload(false);
         }
 
-        public void Reload(bool forceFindCodeReferences)
+        private void Reload(bool forceFindCodeReferences)
         {
             try
             {
@@ -476,7 +469,7 @@
 
                     if (_resourceManager.Reload(sourceFiles, _configuration.DuplicateKeyHandling) || forceFindCodeReferences)
                     {
-                        _restartFindCodeReferencesThrottle.Tick();
+                        BeginFindCodeReferences();
                     }
 
                     _configuration.Reload();
@@ -488,6 +481,7 @@
             }
         }
 
+        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.ContextIdle)]
         private void BeginFindCodeReferences()
         {
             BeginFindCodeReferences(_sourceFilesProvider.SourceFiles);
@@ -533,6 +527,12 @@
             });
         }
 
+        [Throttled(typeof(DispatcherThrottle))]
+        private void ResourceTableEntries_CollectionChanged()
+        {
+            OnPropertyChanged(nameof(ResourceTableEntryCount));
+        }
+
         public override string ToString()
         {
             return Resources.ShellTabHeader_Main;
@@ -552,8 +552,6 @@
             Contract.Invariant(_resourceTableEntries != null);
             Contract.Invariant(_selectedTableEntries != null);
             Contract.Invariant(_performanceTracer != null);
-            Contract.Invariant(_restartFindCodeReferencesThrottle != null);
-            Contract.Invariant(_resourceTableEntiyCountUpdateThrottle != null);
         }
     }
 }

@@ -3,20 +3,20 @@
                     xmlns:styles="clr-namespace:tomenglertde.ResXManager.Styles">
 
   <ResourceDictionary.MergedDictionaries>
-    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/ButtonStyle.xaml"/>
-    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/CheckBoxStyle.xaml"/>
-    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/ComboBoxStyle.xaml"/>
-    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/MenuStyle.xaml"/>
-    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/GridSplitterStyle.xaml"/>
-    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/GroupBoxStyle.xaml"/>
-    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/ListBoxStyle.xaml"/>
-    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/RadioButtonStyle.xaml"/>
-    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/TabControlStyle.xaml"/>
-    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/TextBoxStyles.xaml"/>
-    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/ToggleButtonStyle.xaml"/>
-    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/ToolTipStyle.xaml"/>
-    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/DataGridStyle.xaml"/>
-    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/WindowStyle.xaml"/>
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/ButtonStyle.xaml" />
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/CheckBoxStyle.xaml" />
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/ComboBoxStyle.xaml" />
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/MenuStyle.xaml" />
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/GridSplitterStyle.xaml" />
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/GroupBoxStyle.xaml" />
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/ListBoxStyle.xaml" />
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/RadioButtonStyle.xaml" />
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/TabControlStyle.xaml" />
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/TextBoxStyles.xaml" />
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/ToggleButtonStyle.xaml" />
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/ToolTipStyle.xaml" />
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/DataGridStyle.xaml" />
+    <ResourceDictionary Source="/ResXManager.Styles;component/Themes/WindowStyle.xaml" />
   </ResourceDictionary.MergedDictionaries>
 
   <!--  Brushes -->
@@ -26,5 +26,5 @@
   <SolidColorBrush x:Key="{x:Static styles:ResourceKeys.BorderBrush}" Color="#CCCEDB" />
 
   <SolidColorBrush x:Key="{x:Static styles:ResourceKeys.AccentDarkBrush}" Color="#CCCEDB" />
-  
+
 </ResourceDictionary>

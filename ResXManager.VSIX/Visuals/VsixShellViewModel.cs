@@ -14,6 +14,8 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Visuals;
 
+    using Throttle;
+
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
@@ -25,8 +27,6 @@
         private readonly ResourceManager _resourceManager;
         [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
-        [NotNull]
-        private readonly DispatcherThrottle _selectedCodeGeneratorsChangedThrottle;
 
         [ImportingConstructor]
         public VsixShellViewModel([NotNull] ResourceManager resourceManager, [NotNull] ResourceViewModel resourceViewModel)
@@ -34,12 +34,11 @@
             Contract.Requires(resourceManager != null);
             Contract.Requires(resourceViewModel != null);
 
-            _selectedCodeGeneratorsChangedThrottle = new DispatcherThrottle(() => OnPropertyChanged(nameof(SelectedCodeGenerators)));
             _resourceManager = resourceManager;
             _resourceViewModel = resourceViewModel;
-            _resourceManager.Loaded += (_, __) => _selectedCodeGeneratorsChangedThrottle.Tick();
+            _resourceManager.Loaded += (_, __) => SelectedCodeGeneratorsChanged();
 
-            resourceViewModel.SelectedEntities.CollectionChanged += (_, __) => _selectedCodeGeneratorsChangedThrottle.Tick();
+            resourceViewModel.SelectedEntities.CollectionChanged += (_, __) => SelectedCodeGeneratorsChanged();
         }
 
         [NotNull]
@@ -91,7 +90,13 @@
                 .OfType<DteProjectFile>()
                 .ForEach(pf => pf.CodeGenerator = codeGenerator);
 
-            _selectedCodeGeneratorsChangedThrottle.Tick();
+            SelectedCodeGeneratorsChanged();
+        }
+
+        [Throttled(typeof(DispatcherThrottle))]
+        private void SelectedCodeGeneratorsChanged()
+        {
+            OnPropertyChanged(nameof(SelectedCodeGenerators));
         }
 
         [ContractInvariantMethod]
@@ -101,7 +106,6 @@
         {
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_resourceViewModel != null);
-            Contract.Invariant(_selectedCodeGeneratorsChangedThrottle != null);
         }
     }
 }

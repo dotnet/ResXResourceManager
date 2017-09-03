@@ -8,6 +8,8 @@
 
     using JetBrains.Annotations;
 
+    using Throttle;
+
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
@@ -18,13 +20,6 @@
     {
         [NotNull]
         private HashSet<EnvDTE.ProjectItem> _projectItems = new HashSet<EnvDTE.ProjectItem>();
-        [NotNull]
-        private readonly DispatcherThrottle _throttle;
-
-        public CustomToolRunner()
-        {
-            _throttle = new DispatcherThrottle(RunCustomTool);
-        }
 
         public void Enqueue(IEnumerable<EnvDTE.ProjectItem> projectItems)
         {
@@ -33,13 +28,13 @@
 
             _projectItems.AddRange(projectItems);
 
-            _throttle.Tick();
+            RunCustomTool();
         }
 
+        [Throttled(typeof(DispatcherThrottle))]
         private void RunCustomTool()
         {
             _projectItems.ForEach(projectItem => projectItem.RunCustomTool());
-
             _projectItems = new HashSet<EnvDTE.ProjectItem>();
         }
 
@@ -54,7 +49,6 @@
         private void ObjectInvariant()
         {
             Contract.Invariant(_projectItems != null);
-            Contract.Invariant(_throttle != null);
         }
     }
 }

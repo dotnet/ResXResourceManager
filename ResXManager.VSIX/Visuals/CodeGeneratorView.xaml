@@ -17,6 +17,6 @@
     <Image Source="{Binding CodeGenerator, Converter={StaticResource ObjectToIconConverter}}"
            ToolTip="{Binding CodeGenerator, Converter={x:Static toms:ObjectToDescriptionConverter.Default}}"
            VerticalAlignment="Top"
-           HorizontalAlignment="Left"/>
+           HorizontalAlignment="Left" />
   </Grid>
 </UserControl>

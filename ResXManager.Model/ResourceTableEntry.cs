@@ -9,11 +9,14 @@
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using System.Windows.Threading;
 
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
+
+    using Throttle;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
@@ -28,10 +31,6 @@
         private readonly Regex _duplicateKeyExpression = new Regex(@"_Duplicate\[\d+\]$");
         [NotNull]
         private readonly ResourceEntity _container;
-        [NotNull]
-        private readonly DispatcherThrottle _deferredValuesChangedThrottle;
-        [NotNull]
-        private readonly DispatcherThrottle _deferredCommentChangedThrottle;
 
         [NotNull]
         private string _key;
@@ -77,9 +76,6 @@
             _key = key;
             _index = index;
             _languages = languages;
-
-            _deferredValuesChangedThrottle = new DispatcherThrottle(() => OnPropertyChanged(nameof(Values)));
-            _deferredCommentChangedThrottle = new DispatcherThrottle(() => OnPropertyChanged(nameof(Comment)));
 
             _values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
             _values.ValueChanged += Values_ValueChanged;
@@ -447,12 +443,24 @@
 
         private void Values_ValueChanged(object sender, EventArgs e)
         {
-            _deferredValuesChangedThrottle.Tick();
+            OnValuesChanged();
+        }
+
+        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Background)]
+        private void OnValuesChanged()
+        {
+            OnPropertyChanged(nameof(Values));
         }
 
         private void Comments_ValueChanged(object sender, EventArgs e)
         {
-            _deferredCommentChangedThrottle.Tick();
+           OnCommentsChanged();
+        }
+
+        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Background)]
+        private void OnCommentsChanged()
+        {
+            OnPropertyChanged(nameof(Comments));
         }
 
         [NotNull]
@@ -590,8 +598,6 @@
             Contract.Invariant(_commentAnnotations != null);
             Contract.Invariant(_neutralLanguage != null);
             Contract.Invariant(_container != null);
-            Contract.Invariant(_deferredValuesChangedThrottle != null);
-            Contract.Invariant(_deferredCommentChangedThrottle != null);
             Contract.Invariant(_languages != null);
             Contract.Invariant(_stringFormatParameterPattern != null);
         }

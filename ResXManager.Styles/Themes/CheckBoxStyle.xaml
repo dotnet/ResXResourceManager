@@ -43,8 +43,8 @@
           <ControlTemplate.Triggers>
             <MultiTrigger>
               <MultiTrigger.Conditions>
-                <Condition Property="IsMouseOver" Value="True"/>
-                <Condition Property="IsEnabled" Value="True"/>
+                <Condition Property="IsMouseOver" Value="True" />
+                <Condition Property="IsEnabled" Value="True" />
               </MultiTrigger.Conditions>
               <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
             </MultiTrigger>

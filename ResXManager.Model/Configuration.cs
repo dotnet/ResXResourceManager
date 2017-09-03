@@ -1,17 +1,17 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
-    using System.Text.RegularExpressions;
     using System.Windows.Threading;
 
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
+
+    using Throttle;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
@@ -27,17 +27,12 @@
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces", Justification = "Works fine with this")]
     public abstract class Configuration : ConfigurationBase
     {
-        [NotNull]
-        private readonly DispatcherThrottle _codeReferencesChangeThrottle;
-
         private CodeReferenceConfiguration _codeReferences;
 
         protected Configuration([NotNull] ITracer tracer)
             : base(tracer)
         {
             Contract.Requires(tracer != null);
-
-            _codeReferencesChangeThrottle = new DispatcherThrottle(DispatcherPriority.ContextIdle, PersistCodeReferences);
         }
 
         [NotNull]
@@ -215,6 +210,7 @@
             GetType().GetProperties().ForEach(p => OnPropertyChanged(p.Name));
         }
 
+        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.ContextIdle)]
         private void PersistCodeReferences()
         {
             // ReSharper disable once ExplicitCallerInfoArgument
@@ -228,17 +224,9 @@
 
             // ReSharper disable once ExplicitCallerInfoArgument
             _codeReferences = GetValue(default(CodeReferenceConfiguration), nameof(CodeReferences)) ?? CodeReferenceConfiguration.Default;
-            _codeReferences.ItemPropertyChanged += (_, __) => _codeReferencesChangeThrottle.Tick();
+            _codeReferences.ItemPropertyChanged += (_, __) => PersistCodeReferences();
 
             return _codeReferences;
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_codeReferencesChangeThrottle != null);
         }
     }
 }

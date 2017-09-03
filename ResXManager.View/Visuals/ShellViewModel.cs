@@ -12,6 +12,8 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
+    using Throttle;
+
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
@@ -22,8 +24,7 @@
         [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         [NotNull]
         private readonly PerformanceTracer _performanceTracer;
-        [NotNull]
-        private readonly DispatcherThrottle _updateThrottle;
+
         private bool _isLoading;
 
         [ImportingConstructor]
@@ -33,7 +34,6 @@
             Contract.Requires(performanceTracer != null);
 
             _performanceTracer = performanceTracer;
-            _updateThrottle = new DispatcherThrottle(DispatcherPriority.Background, () => IsLoading = false);
 
             resourceViewModel.SelectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
         }
@@ -52,7 +52,7 @@
 
         private void SelectedEntities_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            _updateThrottle.Tick();
+            Update();
 
             IsLoading = true;
 
@@ -62,13 +62,18 @@
             }
         }
 
+        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Background)]
+        private void Update()
+        {
+            IsLoading = false;
+        }
+
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_performanceTracer != null);
-            Contract.Invariant(_updateThrottle != null);
         }
     }
 }

@@ -13,7 +13,7 @@
     <Style TargetType="UserControl">
       <Style.Triggers>
         <DataTrigger Binding="{Binding IsLoading}" Value="True">
-          <Setter Property="Cursor" Value="{x:Static Cursors.Wait}"/>
+          <Setter Property="Cursor" Value="{x:Static Cursors.Wait}" />
         </DataTrigger>
       </Style.Triggers>
     </Style>
@@ -27,7 +27,7 @@
                 Style="{DynamicResource {x:Static styles:ResourceKeys.TabControlStyle}}">
       <TabControl.ItemTemplate>
         <DataTemplate>
-          <TextBlock Text="{Binding}"/>
+          <TextBlock Text="{Binding}" />
         </DataTemplate>
       </TabControl.ItemTemplate>
     </TabControl>

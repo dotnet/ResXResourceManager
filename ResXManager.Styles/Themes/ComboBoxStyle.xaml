@@ -109,11 +109,11 @@
           </Border>
         </Popup>
         <Grid Margin="{TemplateBinding Padding}" Grid.Column="0" VerticalAlignment="Center">
-          <TextBox x:Name="PART_EditableTextBox" 
-                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                 BorderThickness="0" Padding="0" Background="Transparent"
-                 IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}" />
+          <TextBox x:Name="PART_EditableTextBox"
+                   HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                   VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                   BorderThickness="0" Padding="0" Background="Transparent"
+                   IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}" />
         </Grid>
         <ToggleButton Grid.Column="1"
                       Background="{TemplateBinding Background}"
@@ -181,8 +181,8 @@
                             ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Focusable="False"
                             IsHitTestVisible="False" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
           <Rectangle x:Name="FocusVisual" StrokeThickness="1" Visibility="Hidden"
-                           Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
-                           StrokeDashArray="1 2" Margin="-2,-1" SnapsToDevicePixels="True" />
+                     Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                     StrokeDashArray="1 2" Margin="-2,-1" SnapsToDevicePixels="True" />
         </Grid>
       </Grid>
     </Border>
@@ -238,8 +238,8 @@
       </Trigger>
       <MultiTrigger>
         <MultiTrigger.Conditions>
-          <Condition Property="IsMouseOver" Value="True"/>
-          <Condition Property="IsEnabled" Value="True"/>
+          <Condition Property="IsMouseOver" Value="True" />
+          <Condition Property="IsEnabled" Value="True" />
         </MultiTrigger.Conditions>
         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
       </MultiTrigger>

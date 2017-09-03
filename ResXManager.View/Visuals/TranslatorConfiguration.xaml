@@ -8,27 +8,31 @@
              xmlns:styles="urn:ResXManager.Styles"
              xmlns:infrastructure="urn:ResXManager.Infrastructure">
   <TabControl TabStripPlacement="Left" Loaded="TabControl_Loaded" Style="{DynamicResource {x:Static styles:ResourceKeys.TabControlStyle}}"
-              ItemsSource="{Binding Translators, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" >
+              ItemsSource="{Binding Translators, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}">
     <TabControl.ItemTemplate>
       <DataTemplate>
-        <TextBlock Text="{Binding DisplayName}" Margin="4"/>
+        <TextBlock Text="{Binding DisplayName}" Margin="4" />
       </DataTemplate>
     </TabControl.ItemTemplate>
     <TabControl.ContentTemplate>
       <DataTemplate DataType="infrastructure:ITranslator">
         <StackPanel Margin="5">
           <DockPanel Margin="10,0">
-            <CheckBox DockPanel.Dock="Left" Content="{x:Static properties:Resources.Enabled}" IsChecked="{Binding IsEnabled}" VerticalAlignment="Bottom"  Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
-            <Decorator DockPanel.Dock="Left" Width="20"/>
+            <CheckBox DockPanel.Dock="Left" Content="{x:Static properties:Resources.Enabled}" IsChecked="{Binding IsEnabled}" VerticalAlignment="Bottom" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+            <Decorator DockPanel.Dock="Left" Width="20" />
             <Button Tag="{Binding Uri, Mode=OneWay}" HorizontalAlignment="Right">
               <Button.Template>
                 <ControlTemplate>
-                  <TextBlock TextTrimming="CharacterEllipsis"><Hyperlink Focusable="False" NavigateUri="{Binding Uri, Mode=OneWay}" ><Run Text="{Binding Uri, Mode=OneWay}" /></Hyperlink></TextBlock>
+                  <TextBlock TextTrimming="CharacterEllipsis">
+                    <Hyperlink Focusable="False" NavigateUri="{Binding Uri, Mode=OneWay}">
+                      <Run Text="{Binding Uri, Mode=OneWay}" />
+                    </Hyperlink>
+                  </TextBlock>
                 </ControlTemplate>
               </Button.Template>
             </Button>
           </DockPanel>
-          <Decorator Height="5"/>
+          <Decorator Height="5" />
           <GroupBox x:Name="AuthenticationGroup" Header="{x:Static properties:Resources.Authentication}"
                     Grid.IsSharedSizeScope="True" Style="{DynamicResource {x:Static styles:ResourceKeys.GroupBoxStyle}}">
             <StackPanel>
@@ -37,22 +41,24 @@
                   <DataTemplate DataType="infrastructure:ICredentialItem">
                     <wpf:SharedWidthHeaderedContentControl Margin="2">
                       <wpf:SharedWidthHeaderedContentControl.Header>
-                        <TextBlock DockPanel.Dock="Left"><Run Text="{Binding Description, Mode=OneWay}"/><Run Text=": "/></TextBlock>
+                        <TextBlock DockPanel.Dock="Left">
+                          <Run Text="{Binding Description, Mode=OneWay}" /><Run Text=": " />
+                        </TextBlock>
                       </wpf:SharedWidthHeaderedContentControl.Header>
-                      <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}"/>
+                      <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
                     </wpf:SharedWidthHeaderedContentControl>
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
               <wpf:SharedWidthHeaderedContentControl Margin="2,0">
-                <CheckBox Margin="1" Content="{x:Static properties:Resources.TranslatorConfiguration_SaveCredentials}" IsChecked="{Binding SaveCredentials}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"/>
+                <CheckBox Margin="1" Content="{x:Static properties:Resources.TranslatorConfiguration_SaveCredentials}" IsChecked="{Binding SaveCredentials}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
               </wpf:SharedWidthHeaderedContentControl>
             </StackPanel>
           </GroupBox>
         </StackPanel>
         <DataTemplate.Triggers>
           <DataTrigger Binding="{Binding Credentials.Count, FallbackValue=0}" Value="0">
-            <Setter TargetName="AuthenticationGroup" Property="Visibility" Value="Collapsed"/>
+            <Setter TargetName="AuthenticationGroup" Property="Visibility" Value="Collapsed" />
           </DataTrigger>
         </DataTemplate.Triggers>
       </DataTemplate>

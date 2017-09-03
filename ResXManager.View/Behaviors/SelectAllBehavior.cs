@@ -12,19 +12,15 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
+    using Throttle;
+
     using TomsToolbox.Desktop;
     using TomsToolbox.Wpf.Composition;
 
     public class SelectAllBehavior : Behavior<ListBox>
     {
-        private readonly DispatcherThrottle _collectionChangedThrottle;
         private bool _isListBoxUpdating;
         private PerformanceTracer _performanceTracer;
-
-        public SelectAllBehavior()
-        {
-            _collectionChangedThrottle = new DispatcherThrottle(ListBox_CollectionChanged);
-        }
 
         public bool? AreAllFilesSelected
         {
@@ -49,7 +45,7 @@
             listBox.SelectAll();
 
             listBox.SelectionChanged += ListBox_SelectionChanged;
-            ((INotifyCollectionChanged)listBox.Items).CollectionChanged += (_, __) => _collectionChangedThrottle.Tick();
+            ((INotifyCollectionChanged)listBox.Items).CollectionChanged += (_, __) => ListBox_CollectionChanged();
 
             _performanceTracer = listBox.GetExportProvider().GetExportedValue<PerformanceTracer>();
         }
@@ -83,6 +79,7 @@
             }
         }
 
+        [Throttled(typeof(DispatcherThrottle))]
         private void ListBox_CollectionChanged()
         {
             var listBox = AssociatedObject;

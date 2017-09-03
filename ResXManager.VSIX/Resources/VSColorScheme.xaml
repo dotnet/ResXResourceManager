@@ -23,16 +23,16 @@
 
   <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ComboBoxBackgroundKey}}" />
   <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.WindowTextKey}}" />
-  
-  <SolidColorBrush x:Key="{x:Static SystemColors.ActiveCaptionBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.TitleBarActiveKey}}"/>
-  <SolidColorBrush x:Key="{x:Static SystemColors.ActiveBorderBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ComboBoxMouseOverBorderKey}}"/>
-  <SolidColorBrush x:Key="{x:Static SystemColors.ActiveCaptionTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowTextKey}}" Opacity=".8"/>
 
-  <SolidColorBrush x:Key="{x:Static SystemColors.InactiveCaptionBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.TitleBarInactiveKey}}"/>
-  <SolidColorBrush x:Key="{x:Static SystemColors.InactiveBorderBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ComboBoxDisabledBorderKey}}"/>
-  <SolidColorBrush x:Key="{x:Static SystemColors.InactiveCaptionTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowTextKey}}" Opacity=".5"/>
+  <SolidColorBrush x:Key="{x:Static SystemColors.ActiveCaptionBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.TitleBarActiveKey}}" />
+  <SolidColorBrush x:Key="{x:Static SystemColors.ActiveBorderBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ComboBoxMouseOverBorderKey}}" />
+  <SolidColorBrush x:Key="{x:Static SystemColors.ActiveCaptionTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowTextKey}}" Opacity=".8" />
+
+  <SolidColorBrush x:Key="{x:Static SystemColors.InactiveCaptionBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.TitleBarInactiveKey}}" />
+  <SolidColorBrush x:Key="{x:Static SystemColors.InactiveBorderBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ComboBoxDisabledBorderKey}}" />
+  <SolidColorBrush x:Key="{x:Static SystemColors.InactiveCaptionTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowTextKey}}" Opacity=".5" />
 
   <SolidColorBrush x:Key="{x:Static styles:ResourceKeys.BorderBrush}" Color="{DynamicResource {x:Static vsfx:VsColors.ActiveBorderKey}}" />
   <SolidColorBrush x:Key="{x:Static styles:ResourceKeys.DisabledBrush}" Color="{DynamicResource {x:Static vsfx:VsColors.ComboBoxDisabledBackgroundKey}}" />
-  
+
 </ResourceDictionary>

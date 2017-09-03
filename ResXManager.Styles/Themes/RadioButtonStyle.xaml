@@ -31,15 +31,15 @@
                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
               <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" />
               <Rectangle x:Name="FocusVisual" StrokeThickness="1" Visibility="Hidden"
-                         Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" 
+                         Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
                          StrokeDashArray="1 2" Margin="-2,-1" SnapsToDevicePixels="True" />
             </Grid>
           </BulletDecorator>
           <ControlTemplate.Triggers>
             <MultiTrigger>
               <MultiTrigger.Conditions>
-                <Condition Property="IsMouseOver" Value="True"/>
-                <Condition Property="IsEnabled" Value="True"/>
+                <Condition Property="IsMouseOver" Value="True" />
+                <Condition Property="IsEnabled" Value="True" />
               </MultiTrigger.Conditions>
               <Setter TargetName="Bullet" Property="Stroke" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
             </MultiTrigger>

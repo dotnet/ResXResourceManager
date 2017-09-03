@@ -4,7 +4,7 @@
                     xmlns:styles="clr-namespace:tomenglertde.ResXManager.Styles">
 
   <Style x:Key="TabItemStyle" TargetType="{x:Type TabItem}">
-    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
     <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
     <Setter Property="Padding" Value="14,2,14,1" />
     <Setter Property="BorderBrush" Value="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}" />
@@ -20,32 +20,32 @@
                     Background="{TemplateBinding Background}"
                     Padding="{TemplateBinding Padding}">
               <Grid HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
-                    VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" >
+                    VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}">
                 <ContentPresenter x:Name="Content" ContentTemplate="{TemplateBinding HeaderTemplate}"
                                   Content="{TemplateBinding Header}"
                                   ContentStringFormat="{TemplateBinding HeaderStringFormat}"
                                   ContentSource="Header"
-                                  RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                  RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                 <Rectangle x:Name="FocusVisual" Margin="-3,-1" Visibility="Collapsed"
-                           Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" 
-                           StrokeThickness="1" StrokeDashArray="1 2"/>
+                           Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                           StrokeThickness="1" StrokeDashArray="1 2" />
               </Grid>
             </Border>
           </Grid>
           <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-              <Setter Property="Background" Value="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}"/>
+              <Setter Property="Background" Value="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}" />
             </Trigger>
             <Trigger Property="IsSelected" Value="True">
               <Setter Property="Panel.ZIndex" Value="1" />
-              <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}"/>
+              <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
             </Trigger>
             <MultiDataTrigger>
               <MultiDataTrigger.Conditions>
-                <Condition Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="True"/>
+                <Condition Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="True" />
                 <Condition Binding="{Binding IsFocusVisualVisible, Source={x:Static toms:KeyboardNavigation.Current}}" Value="True" />
               </MultiDataTrigger.Conditions>
-              <Setter Property="Visibility" TargetName="FocusVisual" Value="Visible"/>
+              <Setter Property="Visibility" TargetName="FocusVisual" Value="Visible" />
             </MultiDataTrigger>
             <Trigger Property="TabStripPlacement" Value="Left">
               <Setter Property="Padding" Value="5,2,5,1" />
@@ -106,7 +106,7 @@
     <Setter Property="Background" Value="{DynamicResource {x:Static  SystemColors.ControlBrushKey}}" />
     <Setter Property="HorizontalContentAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
-    <Setter Property="ItemContainerStyle" Value="{StaticResource TabItemStyle}"/>
+    <Setter Property="ItemContainerStyle" Value="{StaticResource TabItemStyle}" />
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type TabControl}">

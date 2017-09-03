@@ -154,9 +154,9 @@
                 BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}"
                 BorderThickness="1" Visibility="Collapsed">
           <Path x:Name="CheckMark" Stretch="Fill" Margin="1"
-                          Data="M7,0 3,5 1,3 0,4 3,7 9,0 z"
-                          Fill="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
-                          Visibility="Hidden" UseLayoutRounding="False" />
+                Data="M7,0 3,5 1,3 0,4 3,7 9,0 z"
+                Fill="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                Visibility="Hidden" UseLayoutRounding="False" />
         </Border>
         <ContentPresenter Grid.Column="2" Margin="{TemplateBinding Padding}" ContentSource="Header" RecognizesAccessKey="True" />
       </Grid>
@@ -236,19 +236,19 @@
     <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.MenuBrushKey}}" />
     <Style.Triggers>
       <Trigger Property="Role" Value="TopLevelHeader">
-        <Setter Property="Control.Padding" Value="7,2,8,3"/>
+        <Setter Property="Control.Padding" Value="7,2,8,3" />
         <Setter Property="Template" Value="{StaticResource MenuItemTopLevelHeaderTemplate}" />
       </Trigger>
       <Trigger Property="Role" Value="TopLevelItem">
-        <Setter Property="Control.Padding" Value="7,2,8,3"/>
+        <Setter Property="Control.Padding" Value="7,2,8,3" />
         <Setter Property="Template" Value="{StaticResource MenuItemTopLevelItemTemplate}" />
       </Trigger>
       <Trigger Property="Role" Value="SubmenuHeader">
-        <Setter Property="Control.Padding" Value="2,3"/>
+        <Setter Property="Control.Padding" Value="2,3" />
         <Setter Property="Template" Value="{StaticResource MenuItemSubmenuHeaderTemplate}" />
       </Trigger>
       <Trigger Property="Role" Value="SubmenuItem">
-        <Setter Property="Control.Padding" Value="2,3"/>
+        <Setter Property="Control.Padding" Value="2,3" />
         <Setter Property="Template" Value="{StaticResource MenuItemSubmenuItemTemplate}" />
       </Trigger>
     </Style.Triggers>
@@ -290,7 +290,7 @@
 
   <ControlTemplate x:Key="MenuGroupItemTemplate" TargetType="{x:Type GroupItem}">
     <StackPanel>
-      <Separator Style="{DynamicResource {x:Static styles:ResourceKeys.MenuItemSeparatorStyle}}"/>
+      <Separator Style="{DynamicResource {x:Static styles:ResourceKeys.MenuItemSeparatorStyle}}" />
       <ItemsPresenter />
     </StackPanel>
   </ControlTemplate>
@@ -302,10 +302,10 @@
   <GroupStyle x:Key="MenuGroupStyle">
     <GroupStyle.ContainerStyle>
       <Style TargetType="GroupItem">
-        <Setter Property="Template" Value="{StaticResource MenuGroupItemTemplate}"/>
+        <Setter Property="Template" Value="{StaticResource MenuGroupItemTemplate}" />
         <Style.Triggers>
           <DataTrigger Binding="{Binding RelativeSource={RelativeSource PreviousData}}" Value="{x:Null}">
-            <Setter Property="Template" Value="{StaticResource FirstMenuGroupItemTemplate}"/>
+            <Setter Property="Template" Value="{StaticResource FirstMenuGroupItemTemplate}" />
           </DataTrigger>
         </Style.Triggers>
       </Style>
@@ -313,48 +313,48 @@
   </GroupStyle>
 
   <Style x:Key="CompositeMenuItemStyle" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Static styles:ResourceKeys.MenuItemStyle}}">
-    <Setter Property="Header" Value="{Binding Header}"/>
-    <Setter Property="Icon" Value="{Binding Icon, Converter={x:Static toms:ImageSourceToImageConverter.Default}}"/>
-    <Setter Property="ToolTip" Value="{Binding Description}"/>
-    <Setter Property="IsCheckable" Value="{Binding IsCheckable}"/>
-    <Setter Property="toms:StyleBindings.GroupStyle" Value="{StaticResource MenuGroupStyle}"/>
+    <Setter Property="Header" Value="{Binding Header}" />
+    <Setter Property="Icon" Value="{Binding Icon, Converter={x:Static toms:ImageSourceToImageConverter.Default}}" />
+    <Setter Property="ToolTip" Value="{Binding Description}" />
+    <Setter Property="IsCheckable" Value="{Binding IsCheckable}" />
+    <Setter Property="toms:StyleBindings.GroupStyle" Value="{StaticResource MenuGroupStyle}" />
     <Setter Property="toms:StyleBindings.GroupDescriptions">
       <Setter.Value>
         <toms:GroupDescriptionCollection>
-          <PropertyGroupDescription PropertyName="GroupName"/>
+          <PropertyGroupDescription PropertyName="GroupName" />
         </toms:GroupDescriptionCollection>
       </Setter.Value>
     </Setter>
     <Setter Property="toms:StyleBindings.Behaviors">
       <Setter.Value>
         <toms:BehaviorCollection>
-          <toms:ItemsControlCompositionBehavior RegionIdBinding="{Binding SubRegionId}"/>
+          <toms:ItemsControlCompositionBehavior RegionIdBinding="{Binding SubRegionId}" />
         </toms:BehaviorCollection>
       </Setter.Value>
     </Setter>
     <Style.Triggers>
       <DataTrigger Binding="{Binding IsCheckable}" Value="True">
-        <Setter Property="IsChecked" Value="{Binding IsChecked}"/>
+        <Setter Property="IsChecked" Value="{Binding IsChecked}" />
       </DataTrigger>
       <Trigger Property="Role" Value="SubmenuItem">
-        <Setter Property="Command" Value="{Binding Command}"/>
+        <Setter Property="Command" Value="{Binding Command}" />
       </Trigger>
       <Trigger Property="Role" Value="TopLevelItem">
-        <Setter Property="Command" Value="{Binding Command}"/>
+        <Setter Property="Command" Value="{Binding Command}" />
       </Trigger>
     </Style.Triggers>
   </Style>
 
   <Style x:Key="{x:Static styles:ResourceKeys.CompositeContextMenuStyle}" TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource {x:Static styles:ResourceKeys.ContextMenuStyle}}">
-    <Setter Property="toms:StyleBindings.GroupStyle" Value="{StaticResource MenuGroupStyle}"/>
+    <Setter Property="toms:StyleBindings.GroupStyle" Value="{StaticResource MenuGroupStyle}" />
     <Setter Property="toms:StyleBindings.GroupDescriptions">
       <Setter.Value>
         <toms:GroupDescriptionCollection>
-          <PropertyGroupDescription PropertyName="GroupName"/>
+          <PropertyGroupDescription PropertyName="GroupName" />
         </toms:GroupDescriptionCollection>
       </Setter.Value>
     </Setter>
-    <Setter Property="ItemContainerStyle" Value="{StaticResource CompositeMenuItemStyle}"/>
+    <Setter Property="ItemContainerStyle" Value="{StaticResource CompositeMenuItemStyle}" />
   </Style>
 
 </ResourceDictionary>

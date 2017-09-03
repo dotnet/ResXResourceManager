@@ -453,10 +453,15 @@
               </DataTemplate>
 
               <DataTemplate DataType="{x:Type columnHeaders:CommentHeader}">
-                <TextBlock><Run Text="{x:Static properties:Resources.CommentColumnHeader}" /><Run Text=" (" /><InlineUIContainer><Grid>
+                <TextBlock>
+                  <Run Text="{x:Static properties:Resources.CommentColumnHeader}" /><Run Text=" (" />
+                  <InlineUIContainer>
+                    <Grid>
                       <Image x:Name="image" Stretch="None" Margin="1,2,1,-2"
                              Source="{Binding Path=EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
-                    </Grid></InlineUIContainer><Run Text=")" />
+                    </Grid>
+                  </InlineUIContainer>
+                  <Run Text=")" />
                 </TextBlock>
               </DataTemplate>
 
@@ -500,7 +505,7 @@
 
             <DataGrid.ItemsPanel>
               <ItemsPanelTemplate>
-                <VirtualizingStackPanel DataContext="{Binding ElementName=DataGrid}" 
+                <VirtualizingStackPanel DataContext="{Binding ElementName=DataGrid}"
                                         TextElement.FontSize="{Binding Path=(view:Appearance.TextFontSize), RelativeSource={RelativeSource Self}}">
                   <VirtualizingStackPanel.ContextMenu>
                     <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}">
