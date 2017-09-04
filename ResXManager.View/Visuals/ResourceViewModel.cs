@@ -37,8 +37,6 @@
     public class ResourceViewModel : ObservableObject
     {
         [NotNull]
-        private readonly ResourceManager _resourceManager;
-        [NotNull]
         private readonly Configuration _configuration;
         [NotNull]
         private readonly ISourceFilesProvider _sourceFilesProvider;
@@ -46,12 +44,7 @@
         private readonly ITracer _tracer;
         [NotNull]
         private readonly CodeReferenceTracker _codeReferenceTracker;
-        [NotNull, ItemNotNull]
-        private readonly ObservableCollection<ResourceEntity> _selectedEntities = new ObservableCollection<ResourceEntity>();
-        [NotNull, ItemNotNull]
-        private readonly IObservableCollection<ResourceTableEntry> _resourceTableEntries;
-        [NotNull, ItemNotNull]
-        private readonly ObservableCollection<ResourceTableEntry> _selectedTableEntries = new ObservableCollection<ResourceTableEntry>();
+
         [NotNull]
         private readonly PerformanceTracer _performanceTracer;
 
@@ -68,63 +61,31 @@
             Contract.Requires(tracer != null);
             Contract.Requires(performanceTracer != null);
 
-            _resourceManager = resourceManager;
+            ResourceManager = resourceManager;
             _configuration = configuration;
             _sourceFilesProvider = sourceFilesProvider;
             _codeReferenceTracker = codeReferenceTracker;
             _tracer = tracer;
             _performanceTracer = performanceTracer;
 
-            _resourceTableEntries = _selectedEntities.ObservableSelectMany(entity => entity.Entries);
-            _resourceTableEntries.CollectionChanged += (_, __) => ResourceTableEntries_CollectionChanged();
+            ResourceTableEntries = SelectedEntities.ObservableSelectMany(entity => entity.Entries);
+            ResourceTableEntries.CollectionChanged += (_, __) => ResourceTableEntries_CollectionChanged();
 
             resourceManager.TableEntries.CollectionChanged += (_, __) => BeginFindCodeReferences();
             resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
         }
 
         [NotNull]
-        public ResourceManager ResourceManager
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceManager>() != null);
-
-                return _resourceManager;
-            }
-        }
+        public ResourceManager ResourceManager { get; }
 
         [NotNull, ItemNotNull]
-        public IObservableCollection<ResourceTableEntry> ResourceTableEntries
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IObservableCollection<ResourceTableEntry>>() != null);
-
-                return _resourceTableEntries;
-            }
-        }
+        public IObservableCollection<ResourceTableEntry> ResourceTableEntries { get; }
 
         [NotNull, ItemNotNull]
-        public ObservableCollection<ResourceEntity> SelectedEntities
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ObservableCollection<ResourceEntity>>() != null);
-
-                return _selectedEntities;
-            }
-        }
+        public ObservableCollection<ResourceEntity> SelectedEntities { get; } = new ObservableCollection<ResourceEntity>();
 
         [NotNull, ItemNotNull]
-        public IList<ResourceTableEntry> SelectedTableEntries
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IList<ResourceTableEntry>>() != null);
-
-                return _selectedTableEntries;
-            }
-        }
+        public ObservableCollection<ResourceTableEntry> SelectedTableEntries { get; } = new ObservableCollection<ResourceTableEntry>();
 
         [NotNull]
         public CollectionView GroupedResourceTableEntries
@@ -174,13 +135,13 @@
         public ICommand ImportExcelCommand => new DelegateCommand<string>(ImportExcel);
 
         [NotNull]
-        public ICommand ToggleInvariantCommand => new DelegateCommand(() => _selectedTableEntries.Any(), ToggleInvariant);
+        public ICommand ToggleInvariantCommand => new DelegateCommand(() => SelectedTableEntries.Any(), ToggleInvariant);
 
         [NotNull]
         public ICommand ReloadCommand => new DelegateCommand(() => Reload(true));
 
         [NotNull]
-        public ICommand SaveCommand => new DelegateCommand(() => _resourceManager.HasChanges, () => _resourceManager.Save(_configuration.EffectiveResXSortingComparison));
+        public ICommand SaveCommand => new DelegateCommand(() => ResourceManager.HasChanges, () => ResourceManager.Save(_configuration.EffectiveResXSortingComparison));
 
         [NotNull]
         public ICommand BeginFindCodeReferencesCommand => new DelegateCommand(BeginFindCodeReferences);
@@ -201,7 +162,7 @@
             {
                 return new DelegateCommand<ResourceEntity>(entity =>
                 {
-                    var selectedEntities = _selectedEntities;
+                    var selectedEntities = SelectedEntities;
 
                     selectedEntities.Clear();
                     selectedEntities.Add(entity);
@@ -209,7 +170,7 @@
             }
         }
 
-        public int ResourceTableEntryCount => _resourceTableEntries.Count;
+        public int ResourceTableEntryCount => ResourceTableEntries.Count;
 
         public void AddNewKey([NotNull] ResourceEntity entity, [NotNull] string key)
         {
@@ -223,18 +184,19 @@
             if (entry == null)
                 return;
 
-            _resourceManager.ReloadSnapshot();
+            ResourceManager.ReloadSnapshot();
 
-            _selectedTableEntries.Clear();
-            _selectedTableEntries.Add(entry);
+            SelectedTableEntries.Clear();
+            SelectedTableEntries.Add(entry);
         }
 
         [NotNull]
+        // ReSharper disable once AssignNullToNotNullAttribute
         private static Settings Settings => Settings.Default;
 
         private void LoadSnapshot(string fileName)
         {
-            _resourceManager.LoadSnapshot(string.IsNullOrEmpty(fileName) ? null : File.ReadAllText(fileName));
+            ResourceManager.LoadSnapshot(string.IsNullOrEmpty(fileName) ? null : File.ReadAllText(fileName));
 
             LoadedSnapshot = fileName;
         }
@@ -243,7 +205,7 @@
         {
             Contract.Requires(fileName != null);
 
-            var snapshot = _resourceManager.CreateSnapshot();
+            var snapshot = ResourceManager.CreateSnapshot();
 
             File.WriteAllText(fileName, snapshot);
 
@@ -252,12 +214,12 @@
 
         private bool CanDelete()
         {
-            return _selectedTableEntries.Any();
+            return SelectedTableEntries.Any();
         }
 
         private bool CanCut()
         {
-            var entries = _selectedTableEntries;
+            var entries = SelectedTableEntries;
 
             var totalNumberOfEntries = entries.Count;
             if (totalNumberOfEntries == 0)
@@ -271,7 +233,7 @@
 
         private bool CanCopy(DataGrid dataGrid)
         {
-            var entries = _selectedTableEntries;
+            var entries = SelectedTableEntries;
 
             var totalNumberOfEntries = entries.Count;
             if (totalNumberOfEntries == 0)
@@ -285,11 +247,11 @@
 
         private void CutSelected()
         {
-            var selectedItems = _selectedTableEntries.ToList();
+            var selectedItems = SelectedTableEntries.ToList();
 
             var resourceFiles = selectedItems.Select(item => item.Container).Distinct();
 
-            if (resourceFiles.Any(resourceFile => !_resourceManager.CanEdit(resourceFile, null)))
+            if (resourceFiles.Any(resourceFile => !ResourceManager.CanEdit(resourceFile, null)))
                 return;
 
             selectedItems.ToTable().SetClipboardData();
@@ -301,7 +263,7 @@
         {
             Contract.Requires(dataGrid != null);
 
-            var selectedItems = _selectedTableEntries.ToArray();
+            var selectedItems = SelectedTableEntries.ToArray();
 
             if (selectedItems.Length == 0)
             {
@@ -315,14 +277,14 @@
 
         public void DeleteSelected()
         {
-            var selectedItems = _selectedTableEntries.ToList();
+            var selectedItems = SelectedTableEntries.ToList();
 
             if (selectedItems.Count == 0)
                 return;
 
             var resourceFiles = selectedItems.Select(item => item.Container).Distinct();
 
-            if (resourceFiles.Any(resourceFile => !_resourceManager.CanEdit(resourceFile, null)))
+            if (resourceFiles.Any(resourceFile => !ResourceManager.CanEdit(resourceFile, null)))
                 return;
 
             selectedItems.ForEach(item => item.Container.Remove(item));
@@ -339,7 +301,7 @@
             if (dataGrid.SelectionUnit != DataGridSelectionUnit.FullRow)
                 return dataGrid.HasRectangularCellSelection();
 
-            return _selectedEntities.Count == 1;
+            return SelectedEntities.Count == 1;
         }
 
         private void Paste([NotNull] DataGrid dataGrid)
@@ -364,7 +326,7 @@
         {
             Contract.Requires(table != null);
 
-            var selectedEntities = _selectedEntities.ToList();
+            var selectedEntities = SelectedEntities.ToList();
 
             if (selectedEntities.Count != 1)
                 return;
@@ -373,7 +335,7 @@
 
             Contract.Assume(entity != null);
 
-            if (!_resourceManager.CanEdit(entity, null))
+            if (!ResourceManager.CanEdit(entity, null))
                 return;
 
             try
@@ -405,10 +367,9 @@
                 throw new ImportException(Resources.PasteSelectionSizeMismatch);
         }
 
-
         private void ToggleInvariant()
         {
-            var items = _selectedTableEntries.ToList();
+            var items = SelectedTableEntries.ToList();
 
             if (!items.Any())
                 return;
@@ -439,7 +400,7 @@
             var fileName = param.FileName;
             if (fileName != null)
             {
-                _resourceManager.ExportExcelFile(fileName, param.Scope, _configuration.ExcelExportMode);
+                ResourceManager.ExportExcelFile(fileName, param.Scope, _configuration.ExcelExportMode);
             }
         }
 
@@ -447,7 +408,7 @@
         {
             Contract.Requires(fileName != null);
 
-            var changes = _resourceManager.ImportExcelFile(fileName);
+            var changes = ResourceManager.ImportExcelFile(fileName);
 
             changes.Apply();
         }
@@ -467,7 +428,7 @@
 
                     _codeReferenceTracker.StopFind();
 
-                    if (_resourceManager.Reload(sourceFiles, _configuration.DuplicateKeyHandling) || forceFindCodeReferences)
+                    if (ResourceManager.Reload(sourceFiles, _configuration.DuplicateKeyHandling) || forceFindCodeReferences)
                     {
                         BeginFindCodeReferences();
                     }
@@ -497,7 +458,7 @@
             {
                 Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, () =>
                 {
-                    _codeReferenceTracker.BeginFind(_resourceManager, _configuration.CodeReferences, allSourceFiles, _tracer);
+                    _codeReferenceTracker.BeginFind(ResourceManager, _configuration.CodeReferences, allSourceFiles, _tracer);
                 });
             }
         }
@@ -543,14 +504,14 @@
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(ResourceManager != null);
             Contract.Invariant(_configuration != null);
             Contract.Invariant(_sourceFilesProvider != null);
             Contract.Invariant(_tracer != null);
             Contract.Invariant(_codeReferenceTracker != null);
-            Contract.Invariant(_selectedEntities != null);
-            Contract.Invariant(_resourceTableEntries != null);
-            Contract.Invariant(_selectedTableEntries != null);
+            Contract.Invariant(SelectedEntities != null);
+            Contract.Invariant(ResourceTableEntries != null);
+            Contract.Invariant(SelectedTableEntries != null);
             Contract.Invariant(_performanceTracer != null);
         }
     }

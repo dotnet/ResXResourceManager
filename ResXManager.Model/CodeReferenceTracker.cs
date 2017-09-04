@@ -120,7 +120,7 @@
 
                     resourceTableEntries.AsParallel().ForAll(entry =>
                     {
-                        // ReSharper disable once PossibleNullReferenceException
+                        Contract.Assume(entry != null);
                         var key = entry.Key;
 
                         var files = keyFilesLookup.GetValueOrDefault(key);
