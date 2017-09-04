@@ -7,18 +7,6 @@
     [Export]
     public class ThemeManager : ObservableObject
     {
-        private bool _isDarkTheme;
-
-        public bool IsDarkTheme
-        {
-            get
-            {
-                return _isDarkTheme;
-            }
-            set
-            {
-                SetProperty(ref _isDarkTheme, value, nameof(IsDarkTheme));
-            }
-        }
+        public bool IsDarkTheme { get; set; }
     }
 }

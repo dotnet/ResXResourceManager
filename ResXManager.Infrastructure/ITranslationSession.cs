@@ -7,30 +7,39 @@
 
     using JetBrains.Annotations;
 
-    [ContractClass(typeof (TranslationSessionContract))]
+    [ContractClass(typeof(TranslationSessionContract))]
     public interface ITranslationSession
     {
         bool IsActive { get; }
+
         bool IsCanceled { get; }
+
         bool IsComplete { get; set; }
 
-        [NotNull][ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         ICollection<ITranslationItem> Items { get; }
+
         [NotNull]
         IList<string> Messages { get; }
+
         [NotNull]
         CultureInfo NeutralResourcesLanguage { get; }
+
         int Progress { get; set; }
+
         [NotNull]
         CultureInfo SourceLanguage { get; }
+
         [NotNull]
         Dispatcher Dispatcher { get; }
 
         void AddMessage([NotNull] string text);
+
         void Cancel();
     }
 
-    [ContractClassFor(typeof (ITranslationSession))]
+    [ContractClassFor(typeof(ITranslationSession))]
     internal abstract class TranslationSessionContract : ITranslationSession
     {
         public abstract bool IsActive { get; }

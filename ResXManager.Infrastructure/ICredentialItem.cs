@@ -4,20 +4,10 @@
 
     public interface ICredentialItem : INotifyPropertyChanged
     {
-        string Key
-        {
-            get;
-        }
+        string Key { get; }
 
-        string Description
-        {
-            get;
-        }
+        string Description { get; }
 
-        string Value
-        {
-            get;
-            set;
-        }
+        string Value { get; set; }
     }
 }

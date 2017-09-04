@@ -227,9 +227,7 @@
         {
             Contract.Requires(key != null);
 
-            Node node;
-
-            return !_nodes.TryGetValue(key, out node) ? null : node?.Text;
+            return !_nodes.TryGetValue(key, out Node node) ? null : node?.Text;
         }
 
         internal bool SetValue([NotNull] string key, string value)
@@ -314,9 +312,7 @@
         {
             Contract.Requires(key != null);
 
-            Node node;
-
-            if (!_nodes.TryGetValue(key, out node) || (node == null))
+            if (!_nodes.TryGetValue(key, out Node node) || (node == null))
                 return null;
 
             return node.Comment;
@@ -342,9 +338,7 @@
 
             try
             {
-                Node node;
-
-                if (!_nodes.TryGetValue(key, out node) || (node == null))
+                if (!_nodes.TryGetValue(key, out Node node) || (node == null))
                 {
                     node = CreateNode(key);
                 }
@@ -393,12 +387,10 @@
             Contract.Requires(oldKey != null);
             Contract.Requires(!string.IsNullOrEmpty(newKey));
 
-            Node node;
-
             if (!CanEdit())
                 return false;
 
-            if (!_nodes.TryGetValue(oldKey, out node) || (node == null))
+            if (!_nodes.TryGetValue(oldKey, out Node node) || (node == null))
                 return false;
 
             if (_nodes.ContainsKey(newKey))
@@ -421,9 +413,7 @@
 
             try
             {
-                Node node;
-
-                if (!_nodes.TryGetValue(key, out node) || (node == null))
+                if (!_nodes.TryGetValue(key, out Node node) || (node == null))
                 {
                     return false;
                 }

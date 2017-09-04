@@ -7,48 +7,28 @@
 
     using JetBrains.Annotations;
 
-    [ContractClass(typeof (TranslatorContract))]
+    [ContractClass(typeof(TranslatorContract))]
     public interface ITranslator : INotifyPropertyChanged
     {
         [NotNull]
-        string Id
-        {
-            get;
-        }
+        string Id { get; }
 
         [NotNull]
-        string DisplayName
-        {
-            get;
-        }
+        string DisplayName { get; }
 
-        Uri Uri
-        {
-            get;
-        }
+        Uri Uri { get; }
 
-        bool IsEnabled
-        {
-            get;
-            set;
-        }
+        bool IsEnabled { get; set; }
 
-        bool SaveCredentials
-        {
-            get;
-            set;
-        }
+        bool SaveCredentials { get; set; }
 
         void Translate([NotNull] ITranslationSession translationSession);
 
         [NotNull, ItemNotNull]
-        IList<ICredentialItem> Credentials
-        {
-            get;
-        }
+        IList<ICredentialItem> Credentials { get; }
     }
 
-    [ContractClassFor(typeof (ITranslator))]
+    [ContractClassFor(typeof(ITranslator))]
     internal abstract class TranslatorContract : ITranslator
     {
         string ITranslator.Id

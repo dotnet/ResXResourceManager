@@ -6,36 +6,24 @@
 
     using JetBrains.Annotations;
 
-    [ContractClass(typeof (TranslationItemContract))]
+    [ContractClass(typeof(TranslationItemContract))]
     public interface ITranslationItem
     {
         [NotNull]
-        string Source
-        {
-            get;
-        }
+        string Source { get; }
 
         [NotNull]
-        IList<ITranslationMatch> Results
-        {
-            get;
-        }
+        IList<ITranslationMatch> Results { get; }
 
         [NotNull]
-        CultureKey TargetCulture
-        {
-            get;
-        }
+        CultureKey TargetCulture { get; }
 
-        string Translation
-        {
-            get;
-        }
+        string Translation { get; }
 
         bool Apply(string prefix);
     }
 
-    [ContractClassFor(typeof (ITranslationItem))]
+    [ContractClassFor(typeof(ITranslationItem))]
     internal abstract class TranslationItemContract : ITranslationItem
     {
         string ITranslationItem.Source

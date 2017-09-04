@@ -13,21 +13,19 @@
     /// </summary>
     public class CultureKey : IComparable<CultureKey>, IEquatable<CultureKey>, IComparable
     {
-        private readonly CultureInfo _culture;
-
         public static readonly CultureKey Neutral = new CultureKey((CultureInfo)null);
 
         public CultureKey(string cultureName)
         {
-            _culture = cultureName.ToCulture();
+            Culture = cultureName.ToCulture();
         }
 
         public CultureKey(CultureInfo culture)
         {
-            _culture = culture;
+            Culture = culture;
         }
 
-        public CultureInfo Culture => _culture;
+        public CultureInfo Culture { get; }
 
         public override string ToString()
         {
@@ -40,7 +38,7 @@
             Contract.Requires(neutralCultureKey != null);
             Contract.Ensures(Contract.Result<string>() != null);
 
-            return _culture != null ? "." + _culture.Name : neutralCultureKey;
+            return Culture != null ? "." + Culture.Name : neutralCultureKey;
         }
 
         #region IComparable/IEquatable implementation
@@ -53,7 +51,7 @@
         /// </returns>
         public override int GetHashCode()
         {
-            return _culture?.GetHashCode() ?? 0;
+            return Culture?.GetHashCode() ?? 0;
         }
 
         /// <summary>
@@ -85,7 +83,7 @@
             if (ReferenceEquals(right, null))
                 return false;
 
-            return Equals(left._culture, right._culture);
+            return Equals(left.Culture, right.Culture);
         }
 
         /// <summary>
