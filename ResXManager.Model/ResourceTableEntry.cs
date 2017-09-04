@@ -3,11 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Text.RegularExpressions;
     using System.Windows.Threading;
 
@@ -28,19 +31,19 @@
     /// <summary>
     /// Represents one entry in the resource table.
     /// </summary>
-
-    public sealed class ResourceTableEntry : ObservableObject
+    public sealed class ResourceTableEntry : INotifyPropertyChanged, IDataErrorInfo
     {
         private const string InvariantKey = "@Invariant";
 
         [NotNull]
         private readonly Regex _duplicateKeyExpression = new Regex(@"_Duplicate\[\d+\]$");
         [NotNull]
-        private string _key;
-        [NotNull]
         private IDictionary<CultureKey, ResourceLanguage> _languages;
-        [NotNull]
-        private ResourceLanguage _neutralLanguage;
+
+        // the key actually stored in the file, identical to Key if no error occured.
+        private string _storedKey;
+        // the last validation error
+        private string _keyValidationError;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceTableEntry" /> class.
@@ -57,14 +60,17 @@
             Contract.Requires(languages.Any());
 
             Container = container;
-            _key = key;
+            _storedKey = key;
+
+            Key.SetBackingField(key);
             Index.SetBackingField(index);
+
             _languages = languages;
 
-            Values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
+            Values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(Key), (lang, value) => lang.SetValue(Key, value));
             Values.ValueChanged += Values_ValueChanged;
 
-            Comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(_key), (lang, value) => lang.SetComment(_key, value));
+            Comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(Key), (lang, value) => lang.SetComment(Key, value));
             Comments.ValueChanged += Comments_ValueChanged;
 
             FileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
@@ -79,17 +85,17 @@
             var neutralLanguage = languages.First().Value;
             Contract.Assume(neutralLanguage != null);
 
-            _neutralLanguage = neutralLanguage;
+            NeutralLanguage = neutralLanguage;
         }
 
         private void ResetTableValues()
         {
             Values.ValueChanged -= Values_ValueChanged;
-            Values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(_key), (lang, value) => lang.SetValue(_key, value));
+            Values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(Key), (lang, value) => lang.SetValue(Key, value));
             Values.ValueChanged += Values_ValueChanged;
 
             Comments.ValueChanged -= Comments_ValueChanged;
-            Comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(_key), (lang, value) => lang.SetComment(_key, value));
+            Comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(Key), (lang, value) => lang.SetComment(Key, value));
             Comments.ValueChanged += Comments_ValueChanged;
 
             FileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
@@ -113,7 +119,7 @@
 
             var neutralLanguage = languages.First().Value;
             Contract.Assume(neutralLanguage != null);
-            _neutralLanguage = neutralLanguage;
+            NeutralLanguage = neutralLanguage;
 
             ResetTableValues();
 
@@ -138,42 +144,48 @@
         /// Gets the key of the resource.
         /// </summary>
         [NotNull]
-        public string Key
+        // ReSharper disable once MemberCanBePrivate.Global => Implicit bound to data grid.
+        public string Key { get; set; } = string.Empty;
+
+        [UsedImplicitly] // PropertyChanged.Fody
+        private void OnKeyChanged()
         {
-            get
+            _keyValidationError = null;
+
+            var value = Key;
+
+            if (_storedKey == value)
+                return;
+
+            Contract.Assume(_storedKey != null);
+
+            var resourceLanguages = _languages.Values;
+
+            if (!resourceLanguages.All(language => language.CanEdit()))
             {
-                Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
-
-                return _key;
+                _keyValidationError = "Not all languages are editable";
+                return;
             }
-            // ReSharper disable once MemberCanBePrivate.Global => Implicit bound to data grid.
-            set
+
+            if (resourceLanguages.Any(language => language.KeyExists(value)))
             {
-                Contract.Requires(!string.IsNullOrEmpty(value));
-
-                if (_key == value)
-                    return;
-
-                var resourceLanguages = _languages.Values;
-
-                if (resourceLanguages.Any(language => language.KeyExists(value)) || !resourceLanguages.All(language => language.CanEdit()))
-                {
-                    Dispatcher.BeginInvoke(() => OnPropertyChanged(() => Key));
-                    throw new InvalidOperationException("Key already exists: " + value);
-                }
-
-                foreach (var language in resourceLanguages)
-                {
-                    Contract.Assume(language != null);
-                    language.RenameKey(_key, value);
-                }
-
-                _key = value;
-
-                ResetTableValues();
-                OnPropertyChanged(nameof(Key));
+                _keyValidationError = "Key already exists: " + value;
+                return;
             }
+
+            foreach (var language in resourceLanguages)
+            {
+                Contract.Assume(language != null);
+                language.RenameKey(_storedKey, value);
+            }
+
+            ResetTableValues();
+
+            _storedKey = value;
         }
+
+        [NotNull]
+        public ResourceLanguage NeutralLanguage { get; private set; }
 
         /// <summary>
         /// Gets or sets the comment of the neutral language.
@@ -181,8 +193,8 @@
         [NotNull]
         public string Comment
         {
-            get => _neutralLanguage.GetComment(Key) ?? string.Empty;
-            set => _neutralLanguage.SetComment(Key, value);
+            get => NeutralLanguage.GetComment(Key) ?? string.Empty;
+            set => NeutralLanguage.SetComment(Key, value);
         }
 
         /// <summary>
@@ -221,6 +233,7 @@
         [NotNull]
         public ICollection<CultureKey> Languages => _languages.Keys;
 
+        [DependsOn(nameof(Comment))]
         public bool IsInvariant
         {
             get => Comment.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0;
@@ -312,7 +325,7 @@
             OnValuesChanged();
         }
 
-        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Background)]
+        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Input)]
         private void OnValuesChanged()
         {
             OnPropertyChanged(nameof(Values));
@@ -320,10 +333,10 @@
 
         private void Comments_ValueChanged(object sender, EventArgs e)
         {
-           OnCommentsChanged();
+            OnCommentsChanged();
         }
 
-        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Background)]
+        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Input)]
         private void OnCommentsChanged()
         {
             OnPropertyChanged(nameof(Comments));
@@ -377,11 +390,11 @@
             if (language.IsNeutralLanguage)
                 yield break;
 
-            var value = language.GetValue(_key);
+            var value = language.GetValue(Key);
             if (string.IsNullOrEmpty(value))
                 yield break;
 
-            var neutralValue = _neutralLanguage.GetValue(_key);
+            var neutralValue = NeutralLanguage.GetValue(Key);
             if (string.IsNullOrEmpty(neutralValue))
                 yield break;
 
@@ -424,13 +437,25 @@
                 .Aggregate(0L, (a, match) => a | (1L << int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture)));
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        string IDataErrorInfo.this[string columnName] => columnName != nameof(Key) ? null : _keyValidationError;
+
+        string IDataErrorInfo.Error => null;
+
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_duplicateKeyExpression != null);
-            Contract.Invariant(!string.IsNullOrEmpty(_key));
+            Contract.Invariant(!string.IsNullOrEmpty(Key));
             Contract.Invariant(Values != null);
             Contract.Invariant(Comments != null);
             Contract.Invariant(SnapshotValues != null);
@@ -438,7 +463,7 @@
             Contract.Invariant(FileExists != null);
             Contract.Invariant(ValueAnnotations != null);
             Contract.Invariant(CommentAnnotations != null);
-            Contract.Invariant(_neutralLanguage != null);
+            Contract.Invariant(NeutralLanguage != null);
             Contract.Invariant(Container != null);
             Contract.Invariant(_languages != null);
             Contract.Invariant(_stringFormatParameterPattern != null);
