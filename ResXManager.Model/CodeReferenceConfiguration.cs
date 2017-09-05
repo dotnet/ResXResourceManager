@@ -8,6 +8,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
 
     using JetBrains.Annotations;
@@ -15,64 +16,19 @@
     using TomsToolbox.ObservableCollections;
 
     [DataContract]
-    public class CodeReferenceConfigurationItem : INotifyPropertyChanged
+    public sealed class CodeReferenceConfigurationItem : INotifyPropertyChanged
     {
-        private string _extensions;
-        private bool _isCaseSensitive;
-        private string _expression;
-        private string _singleLineComment;
+        [DataMember]
+        public string Extensions { get; set; }
 
         [DataMember]
-        public string Extensions
-        {
-            get
-            {
-                return _extensions;
-            }
-            set
-            {
-                SetProperty(ref _extensions, value, nameof(Extensions));
-            }
-        }
+        public bool IsCaseSensitive { get; set; }
 
         [DataMember]
-        public bool IsCaseSensitive
-        {
-            get
-            {
-                return _isCaseSensitive;
-            }
-            set
-            {
-                SetProperty(ref _isCaseSensitive, value, nameof(IsCaseSensitive));
-            }
-        }
+        public string Expression { get; set; }
 
         [DataMember]
-        public string Expression
-        {
-            get
-            {
-                return _expression;
-            }
-            set
-            {
-                SetProperty(ref _expression, value, nameof(Expression));
-            }
-        }
-
-        [DataMember]
-        public string SingleLineComment
-        {
-            get
-            {
-                return _singleLineComment;
-            }
-            set
-            {
-                SetProperty(ref _singleLineComment, value, nameof(SingleLineComment));
-            }
-        }
+        public string SingleLineComment { get; set; }
 
         [NotNull]
         public IEnumerable<string> ParseExtensions()
@@ -92,16 +48,9 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
-        private void SetProperty<T>(ref T backingField, T value, [NotNull] string propertyName)
+        [NotifyPropertyChangedInvocator, UsedImplicitly]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            Contract.Requires(!string.IsNullOrEmpty(propertyName));
-
-            if (Equals(backingField, value))
-                return;
-
-            backingField = value;
-
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 

@@ -101,17 +101,7 @@
             }
         }
 
-        public string LoadedSnapshot
-        {
-            get
-            {
-                return _loadedSnapshot;
-            }
-            set
-            {
-                SetProperty(ref _loadedSnapshot, value, () => LoadedSnapshot);
-            }
-        }
+        public string LoadedSnapshot { get; set; }
 
         [NotNull]
         public static ICommand ToggleCellSelectionCommand => new DelegateCommand(() => Settings.IsCellSelectionEnabled = !Settings.IsCellSelectionEnabled);
