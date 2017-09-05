@@ -21,7 +21,7 @@ namespace tomenglertde.ResXManager.View.Visuals
     {
         [NotNull]
         private readonly CultureKey _targetCulture;
-        [NotNull]
+        [NotNull, ItemNotNull]
         private readonly ObservableCollection<ITranslationMatch> _results = new ObservableCollection<ITranslationMatch>();
         [NotNull]
         private readonly ResourceTableEntry _entry;
@@ -51,26 +51,12 @@ namespace tomenglertde.ResXManager.View.Visuals
         public IList<ITranslationMatch> Results => _results;
 
         [NotNull]
-        public ICollectionView OrderedResults
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICollectionView>() != null);
-
-                return _orderedResults ?? (_orderedResults = CreateOrderedResults(_results));
-            }
-        }
+        public ICollectionView OrderedResults => _orderedResults ?? (_orderedResults = CreateOrderedResults(_results));
 
         public string Translation
         {
-            get
-            {
-                return _translation ?? _results.OrderByDescending(r => r.Rating).Select(r => r.TranslatedText).FirstOrDefault();
-            }
-            set
-            {
-                SetProperty(ref _translation, value, () => Translation);
-            }
+            get => _translation ?? _results.OrderByDescending(r => r.Rating).Select(r => r.TranslatedText).FirstOrDefault();
+            set => _translation = value;
         }
 
         public bool Apply(string prefix)

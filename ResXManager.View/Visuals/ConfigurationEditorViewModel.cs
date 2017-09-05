@@ -2,6 +2,7 @@
 {
     using System.ComponentModel.Composition;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows.Input;
@@ -20,60 +21,31 @@
     [VisualCompositionExport(RegionId.Content, Sequence = 3)]
     internal class ConfigurationEditorViewModel : ObservableObject
     {
-        [NotNull]
-        private readonly ResourceManager _resourceManager;
-        [NotNull]
-        private readonly Configuration _configuration;
-
         [ImportingConstructor]
         public ConfigurationEditorViewModel([NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(configuration != null);
 
-            _resourceManager = resourceManager;
-            _configuration = configuration;
+            ResourceManager = resourceManager;
+            Configuration = configuration;
         }
 
         [NotNull]
-        public ResourceManager ResourceManager
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceManager>() != null);
-
-                return _resourceManager;
-            }
-        }
+        public ResourceManager ResourceManager { get; }
 
         [NotNull]
-        public Configuration Configuration
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<Configuration>() != null);
-
-                return _configuration;
-            }
-        }
+        public Configuration Configuration { get; }
 
         [NotNull]
-        public ICommand SortNodesByKeyCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(SortNodesByKey);
-            }
-        }
+        public ICommand SortNodesByKeyCommand => new DelegateCommand(SortNodesByKey);
 
         private void SortNodesByKey()
         {
-            _resourceManager.ResourceEntities
+            ResourceManager.ResourceEntities
                 .SelectMany(entity => entity.Languages)
                 .ToArray()
-                .ForEach(language => language.Save(_configuration.ResXSortingComparison));
+                .ForEach(language => language.Save(Configuration.ResXSortingComparison));
         }
 
         public override string ToString()
@@ -82,12 +54,12 @@
         }
 
         [ContractInvariantMethod]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_resourceManager != null);
-            Contract.Invariant(_configuration != null);
+            Contract.Invariant(ResourceManager != null);
+            Contract.Invariant(Configuration != null);
         }
     }
 }

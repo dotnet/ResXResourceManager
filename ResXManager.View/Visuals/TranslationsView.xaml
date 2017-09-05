@@ -81,7 +81,7 @@
                   <StackPanel Orientation="Horizontal" DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridCellsPanel}}" d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}">
                     <TextBlock Text="{x:Static properties:Resources.Translations_Source}" VerticalAlignment="Center" />
                     <Decorator Width="5" />
-                    <ComboBox Width="150" ItemsSource="{Binding ResourceManager.Cultures}"
+                    <ComboBox Width="150" ItemsSource="{Binding Cultures}"
                               SelectedItem="{Binding SourceCulture}" Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}" />
                   </StackPanel>
                 </DataTemplate>

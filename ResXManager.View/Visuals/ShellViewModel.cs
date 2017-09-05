@@ -25,8 +25,6 @@
         [NotNull]
         private readonly PerformanceTracer _performanceTracer;
 
-        private bool _isLoading;
-
         [ImportingConstructor]
         public ShellViewModel([NotNull] ResourceViewModel resourceViewModel, [NotNull] PerformanceTracer performanceTracer)
         {
@@ -38,17 +36,7 @@
             resourceViewModel.SelectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
         }
 
-        public bool IsLoading
-        {
-            get
-            {
-                return _isLoading;
-            }
-            set
-            {
-                SetProperty(ref _isLoading, value, nameof(IsLoading));
-            }
-        }
+        public bool IsLoading { get; set; }
 
         private void SelectedEntities_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -56,10 +44,7 @@
 
             IsLoading = true;
 
-            // using (_performanceTracer.Start("Dispatcher.ProcessMessages"))
-            {
-                Dispatcher.ProcessMessages(DispatcherPriority.Render);
-            }
+            Dispatcher.ProcessMessages(DispatcherPriority.Render);
         }
 
         [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Background)]

@@ -7,6 +7,8 @@
 
     using JetBrains.Annotations;
 
+    using PropertyChanged;
+
     [ContractClass(typeof(TranslatorContract))]
     public interface ITranslator : INotifyPropertyChanged
     {
@@ -29,6 +31,7 @@
     }
 
     [ContractClassFor(typeof(ITranslator))]
+    [DoNotNotify]
     internal abstract class TranslatorContract : ITranslator
     {
         string ITranslator.Id

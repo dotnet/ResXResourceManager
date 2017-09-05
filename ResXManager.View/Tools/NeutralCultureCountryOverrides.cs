@@ -23,6 +23,7 @@
         [NotNull]
         private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
 
+        [NotNull]
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly NeutralCultureCountryOverrides Default = new NeutralCultureCountryOverrides();
 
@@ -38,9 +39,7 @@
             {
                 Contract.Requires(neutralCulture != null);
 
-                CultureInfo specificCulture;
-
-                if (!_overrides.TryGetValue(neutralCulture, out specificCulture))
+                if (!_overrides.TryGetValue(neutralCulture, out CultureInfo specificCulture))
                 {
                     specificCulture = GetDefaultSpecificCulture(neutralCulture);
                 }
@@ -68,9 +67,7 @@
 
         private void OnOverrideChanged(CultureOverrideEventArgs e)
         {
-            var handler = OverrideChanged;
-            if (handler != null)
-                handler(this, e);
+            OverrideChanged?.Invoke(this, e);
         }
 
         private static CultureInfo GetDefaultSpecificCulture([NotNull] CultureInfo neutralCulture)

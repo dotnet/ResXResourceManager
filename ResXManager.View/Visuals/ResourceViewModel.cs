@@ -275,7 +275,7 @@
             }
         }
 
-        public void DeleteSelected()
+        private void DeleteSelected()
         {
             var selectedItems = SelectedTableEntries.ToList();
 

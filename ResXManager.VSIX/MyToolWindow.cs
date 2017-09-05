@@ -125,8 +125,7 @@
         {
             string url;
 
-            var source = e.OriginalSource as FrameworkElement;
-            if (source != null)
+            if (e.OriginalSource is FrameworkElement source)
             {
                 var button = source.TryFindAncestorOrSelf<ButtonBase>();
                 if (button == null)
@@ -158,8 +157,7 @@
             var webBrowsingService = (IVsWebBrowsingService)GetService(typeof(SVsWebBrowsingService));
             if (webBrowsingService != null)
             {
-                IVsWindowFrame pFrame;
-                var hr = webBrowsingService.Navigate(url, (uint)__VSWBNAVIGATEFLAGS.VSNWB_WebURLOnly, out pFrame);
+                var hr = webBrowsingService.Navigate(url, (uint)__VSWBNAVIGATEFLAGS.VSNWB_WebURLOnly, out IVsWindowFrame pFrame);
                 if (ErrorHandler.Succeeded(hr) && (pFrame != null))
                 {
                     hr = pFrame.Show();
@@ -287,10 +285,7 @@
             var service = (IVsQueryEditQuerySave2)GetService(typeof(SVsQueryEditQuerySave));
             if (service != null)
             {
-                uint editVerdict;
-                uint moreInfo;
-
-                if ((0 != service.QueryEditFiles(0, lockedFiles.Length, lockedFiles, null, null, out editVerdict, out moreInfo))
+                if ((0 != service.QueryEditFiles(0, lockedFiles.Length, lockedFiles, null, null, out uint editVerdict, out uint moreInfo))
                     || (editVerdict != (uint)tagVSQueryEditResult.QER_EditOK))
                 {
                     return false;

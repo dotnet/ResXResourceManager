@@ -12,8 +12,6 @@
 
     public class LanguageSelectionBoxViewModel : ObservableObject
     {
-        private CultureInfo _selectedLanguage;
-
         public LanguageSelectionBoxViewModel([NotNull] IEnumerable<CultureInfo> existingLanguages)
         {
             Contract.Requires(existingLanguages != null);
@@ -26,19 +24,8 @@
         }
 
         [Required]
-        public CultureInfo SelectedLanguage
-        {
-            get
-            {
-                return _selectedLanguage;
-            }
-            set
-            {
-                SetProperty(ref _selectedLanguage, value);
-            }
-        }
+        public CultureInfo SelectedLanguage { get; set; }
 
         public ICollection<CultureInfo> Languages { get; }
-
     }
 }

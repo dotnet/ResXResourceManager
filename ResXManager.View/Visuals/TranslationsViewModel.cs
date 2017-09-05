@@ -36,19 +36,9 @@
         [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
         [NotNull]
-        private readonly Configuration _configuration;
-
-        [NotNull]
         private readonly ObservableCollection<ITranslationItem> _selectedItems = new ObservableCollection<ITranslationItem>();
         [NotNull]
         private readonly ObservableCollection<CultureKey> _selectedTargetCultures = new ObservableCollection<CultureKey>();
-
-        private CultureKey _sourceCulture;
-        [NotNull]
-        private ICollection<ITranslationItem> _items = new ITranslationItem[0];
-        private ITranslationSession _translationSession;
-        [NotNull]
-        private ICollection<CultureKey> _allTargetCultures = new CultureKey[0];
 
 
         [ImportingConstructor]
@@ -62,7 +52,8 @@
             _translatorHost = translatorHost;
             _resourceManager = resourceManager;
             _resourceViewModel = resourceViewModel;
-            _configuration = configuration;
+
+            Configuration = configuration;
 
             _resourceManager.Loaded += ResourceManager_Loaded;
 
@@ -72,156 +63,58 @@
         }
 
         [NotNull]
-        public ResourceManager ResourceManager => _resourceManager;
+        public ObservableCollection<CultureKey> Cultures => _resourceManager.Cultures;
 
         [NotNull]
-        public Configuration Configuration => _configuration;
+        public Configuration Configuration { get; }
 
         [NotNull]
         public IEnumerable<ITranslator> Translators => _translatorHost.Translators;
 
-        public CultureKey SourceCulture
+        public CultureKey SourceCulture { get; set; }
+
+        [UsedImplicitly] // PropertyChanged.Fody
+        private void OnSourceCultureChanged()
         {
-            get
-            {
-                return _sourceCulture;
-            }
-            set
-            {
-                if (SetProperty(ref _sourceCulture, value, () => SourceCulture))
-                {
-                    AllTargetCultures = _resourceManager
-                        .Cultures
-                        .ObservableWhere(key => key != _sourceCulture);
-                }
-            }
+            AllTargetCultures = _resourceManager
+                .Cultures
+                .ObservableWhere(key => key != SourceCulture);
         }
 
         [NotNull]
-        public ICollection<CultureKey> AllTargetCultures
+        public ICollection<CultureKey> AllTargetCultures { get; private set; } = new CultureKey[0];
+
+        [UsedImplicitly] // PropertyChanged.Fody
+        private void OnAllTargetCulturesChanged()
         {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICollection<CultureKey>>() != null);
-
-                return _allTargetCultures;
-            }
-            private set
-            {
-                Contract.Requires(value != null);
-
-                if (SetProperty(ref _allTargetCultures, value, nameof(AllTargetCultures)))
-                {
-                    _selectedTargetCultures.SynchronizeWith(value.Except(UnselectedTargetCultures).ToArray());
-                }
-            }
+            _selectedTargetCultures.SynchronizeWith(AllTargetCultures.Except(UnselectedTargetCultures).ToArray());
         }
 
         [NotNull]
-        public ICollection<CultureKey> SelectedTargetCultures
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICollection<CultureKey>>() != null);
-
-                return _selectedTargetCultures;
-            }
-        }
+        public ICollection<CultureKey> SelectedTargetCultures => _selectedTargetCultures;
 
         [NotNull]
-        public ICollection<ITranslationItem> Items
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICollection<ITranslationItem>>() != null);
-
-                return _items;
-            }
-            private set
-            {
-                Contract.Requires(value != null);
-
-                SetProperty(ref _items, value, () => Items);
-            }
-        }
+        public ICollection<ITranslationItem> Items { get; private set; } = new ITranslationItem[0];
 
         [NotNull]
-        public ICollection<ITranslationItem> SelectedItems
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICollection<ITranslationItem>>() != null);
+        public ICollection<ITranslationItem> SelectedItems => _selectedItems;
 
-                return _selectedItems;
-            }
-        }
-
-        public ITranslationSession TranslationSession
-        {
-            get
-            {
-                return _translationSession;
-            }
-            set
-            {
-                SetProperty(ref _translationSession, value, () => TranslationSession);
-            }
-        }
+        public ITranslationSession TranslationSession { get; set; }
 
         [NotNull]
-        public ICommand StartCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => _translationSession == null, UpdateTargetList);
-            }
-        }
+        public ICommand StartCommand => new DelegateCommand(() => TranslationSession == null, UpdateTargetList);
 
         [NotNull]
-        public ICommand RestartCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => SourceCulture != null, UpdateTargetList);
-            }
-        }
+        public ICommand RestartCommand => new DelegateCommand(() => SourceCulture != null, UpdateTargetList);
 
         [NotNull]
-        public ICommand ApplyAllCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => IsSessionComplete && Items.Any(), () => Apply(Items));
-            }
-        }
+        public ICommand ApplyAllCommand => new DelegateCommand(() => IsSessionComplete && Items.Any(), () => Apply(Items));
 
         [NotNull]
-        public ICommand ApplySelectedCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => IsSessionComplete && SelectedItems.Any(), () => Apply(SelectedItems));
-            }
-        }
+        public ICommand ApplySelectedCommand => new DelegateCommand(() => IsSessionComplete && SelectedItems.Any(), () => Apply(SelectedItems));
 
         [NotNull]
-        public ICommand StopCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(() => IsSessionRunning, Stop);
-            }
-        }
+        public ICommand StopCommand => new DelegateCommand(() => IsSessionRunning, Stop);
 
         private void ResourceManager_Loaded(object sender, EventArgs e)
         {
@@ -233,14 +126,14 @@
 
         private void Stop()
         {
-            _translationSession?.Cancel();
+            TranslationSession?.Cancel();
         }
 
         private void Apply([NotNull] IEnumerable<ITranslationItem> items)
         {
             Contract.Requires(items != null);
 
-            var prefix = _configuration.EffectiveTranslationPrefix;
+            var prefix = Configuration.EffectiveTranslationPrefix;
 
             foreach (var item in items.Where(item => !string.IsNullOrEmpty(item.Translation)).ToArray())
             {
@@ -253,9 +146,9 @@
             }
         }
 
-        private bool IsSessionComplete => _translationSession != null && _translationSession.IsComplete;
+        private bool IsSessionComplete => TranslationSession != null && TranslationSession.IsComplete;
 
-        private bool IsSessionRunning => _translationSession != null && !_translationSession.IsComplete && !_translationSession.IsCanceled;
+        private bool IsSessionRunning => TranslationSession != null && !TranslationSession.IsComplete && !TranslationSession.IsCanceled;
 
         [NotNull]
         private static IEnumerable<CultureKey> UnselectedTargetCultures
@@ -280,7 +173,7 @@
 
             SelectedItems.Clear();
 
-            var sourceCulture = _sourceCulture;
+            var sourceCulture = SourceCulture;
 
             if (sourceCulture == null)
             {
@@ -288,11 +181,11 @@
                 return;
             }
 
-            var itemsToTranslate = GetItemsToTranslate(_resourceViewModel.ResourceTableEntries, sourceCulture, _selectedTargetCultures, _configuration.EffectiveTranslationPrefix);
+            var itemsToTranslate = GetItemsToTranslate(_resourceViewModel.ResourceTableEntries, sourceCulture, _selectedTargetCultures, Configuration.EffectiveTranslationPrefix);
 
             Items = new ObservableCollection<ITranslationItem>(itemsToTranslate);
 
-            TranslationSession = new TranslationSession(sourceCulture.Culture, _configuration.NeutralResourcesLanguage, itemsToTranslate);
+            TranslationSession = new TranslationSession(sourceCulture.Culture, Configuration.NeutralResourcesLanguage, itemsToTranslate);
 
             _translatorHost.Translate(TranslationSession);
         }
@@ -365,7 +258,7 @@
 
         private void SelectedTargetCultures_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            UnselectedTargetCultures = _allTargetCultures.Concat(UnselectedTargetCultures).Distinct().Except(_selectedTargetCultures);
+            UnselectedTargetCultures = AllTargetCultures.Concat(UnselectedTargetCultures).Distinct().Except(_selectedTargetCultures);
         }
 
         public override string ToString() => Resources.ShellTabHeader_Translate;
@@ -378,11 +271,11 @@
             Contract.Invariant(_translatorHost != null);
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_resourceViewModel != null);
-            Contract.Invariant(_configuration != null);
+            Contract.Invariant(Configuration != null);
             Contract.Invariant(_selectedItems != null);
             Contract.Invariant(_selectedTargetCultures != null);
-            Contract.Invariant(_items != null);
-            Contract.Invariant(_allTargetCultures != null);
+            Contract.Invariant(Items != null);
+            Contract.Invariant(AllTargetCultures != null);
         }
     }
 }
