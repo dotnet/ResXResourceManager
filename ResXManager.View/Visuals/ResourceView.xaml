@@ -164,11 +164,8 @@
         </GroupStyle>
       </ListBox.GroupStyle>
       <ListBox.ContextMenu>
-        <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}">
-          <i:Interaction.Behaviors>
-            <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListContextMenu}" />
-          </i:Interaction.Behaviors>
-        </ContextMenu>
+        <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}" 
+                     toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.ProjectListContextMenu}" />
       </ListBox.ContextMenu>
       <i:Interaction.Behaviors>
         <behaviors:EntityFilter FilterText="{Binding Text, ElementName=EntityFilter}" />
@@ -508,11 +505,8 @@
                 <VirtualizingStackPanel DataContext="{Binding ElementName=DataGrid}"
                                         TextElement.FontSize="{Binding Path=(view:Appearance.TextFontSize), RelativeSource={RelativeSource Self}}">
                   <VirtualizingStackPanel.ContextMenu>
-                    <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}">
-                      <i:Interaction.Behaviors>
-                        <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ResourceTableContextMenu}" />
-                      </i:Interaction.Behaviors>
-                    </ContextMenu>
+                    <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}" 
+                                 toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.ResourceTableContextMenu}" />
                   </VirtualizingStackPanel.ContextMenu>
                   <i:Interaction.Behaviors>
                     <toms:ZoomFontSizeOnMouseWheelBehavior />

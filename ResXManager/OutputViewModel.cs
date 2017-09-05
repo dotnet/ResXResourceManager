@@ -25,33 +25,14 @@
     public sealed class OutputViewModel : ObservableObject, ITracer
     {
         [NotNull]
-        private readonly ObservableCollection<string> _lines = new ObservableCollection<string>();
+        public ObservableCollection<string> Lines { get; } = new ObservableCollection<string>();
 
         [NotNull]
-        public ICollection<string> Lines
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICollection<string>>() != null);
-
-                return _lines;
-            }
-        }
-
-        [NotNull]
-        public ICommand CopyCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-
-                return new DelegateCommand(Copy);
-            }
-        }
+        public ICommand CopyCommand => new DelegateCommand(Copy);
 
         private void Copy()
         {
-            Clipboard.SetText(string.Join(Environment.NewLine, _lines));
+            Clipboard.SetText(string.Join(Environment.NewLine, Lines));
         }
 
         private void Append([NotNull] string prefix, [NotNull] string value)
@@ -62,9 +43,9 @@
             var lines = value.Split('\n');
 
             // ReSharper disable once PossibleNullReferenceException
-            _lines.Add(DateTime.Now.ToShortTimeString() + "\t" + prefix + lines[0].Trim('\r'));
+            Lines.Add(DateTime.Now.ToShortTimeString() + "\t" + prefix + lines[0].Trim('\r'));
             // ReSharper disable once PossibleNullReferenceException
-            _lines.AddRange(lines.Skip(1).Select(l => l.Trim('\r')));
+            Lines.AddRange(lines.Skip(1).Select(l => l.Trim('\r')));
         }
 
         void ITracer.TraceError(string value)
@@ -92,7 +73,7 @@
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_lines != null);
+            Contract.Invariant(Lines != null);
         }
     }
 }

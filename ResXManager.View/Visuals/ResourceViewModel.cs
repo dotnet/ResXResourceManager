@@ -44,12 +44,8 @@
         private readonly ITracer _tracer;
         [NotNull]
         private readonly CodeReferenceTracker _codeReferenceTracker;
-
         [NotNull]
         private readonly PerformanceTracer _performanceTracer;
-
-        [CanBeNull]
-        private string _loadedSnapshot;
 
         [ImportingConstructor]
         public ResourceViewModel([NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, [NotNull] ISourceFilesProvider sourceFilesProvider, [NotNull] CodeReferenceTracker codeReferenceTracker, [NotNull] ITracer tracer, [NotNull] PerformanceTracer performanceTracer)
@@ -101,6 +97,7 @@
             }
         }
 
+        [CanBeNull]
         public string LoadedSnapshot { get; set; }
 
         [NotNull]

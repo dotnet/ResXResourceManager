@@ -30,11 +30,7 @@
     internal class MainViewModel : ObservableObject
     {
         [NotNull]
-        private readonly ResourceManager _resourceManager;
-        [NotNull]
         private readonly ITracer _tracer;
-        [NotNull]
-        private readonly SourceFilesProvider _sourceFilesProvider;
         [NotNull]
         private readonly Configuration _configuration;
         [NotNull]
@@ -49,11 +45,11 @@
             Contract.Requires(tracer != null);
             Contract.Requires(sourceFilesProvider != null);
 
-            _resourceManager = resourceManager;
+            ResourceManager = resourceManager;
             _configuration = configuration;
             _resourceViewModel = resourceViewModel;
             _tracer = tracer;
-            _sourceFilesProvider = sourceFilesProvider;
+            SourceFilesProvider = sourceFilesProvider;
 
             resourceManager.BeginEditing += ResourceManager_BeginEditing;
 
@@ -82,17 +78,10 @@
         public ICommand BrowseCommand => new DelegateCommand(Browse);
 
         [NotNull]
-        public ResourceManager ResourceManager => _resourceManager;
+        public ResourceManager ResourceManager { get; }
 
         [NotNull]
-        public SourceFilesProvider SourceFilesProvider
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<SourceFilesProvider>() != null);
-                return _sourceFilesProvider;
-            }
-        }
+        public SourceFilesProvider SourceFilesProvider { get; }
 
         private void Browse()
         {
@@ -228,9 +217,9 @@
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(ResourceManager != null);
             Contract.Invariant(_tracer != null);
-            Contract.Invariant(_sourceFilesProvider != null);
+            Contract.Invariant(SourceFilesProvider != null);
             Contract.Invariant(_configuration != null);
             Contract.Invariant(_resourceViewModel != null);
         }
@@ -244,7 +233,6 @@
         private readonly Configuration _configuration;
         [NotNull]
         private readonly PerformanceTracer _performanceTracer;
-        private string _folder;
 
         [ImportingConstructor]
         public SourceFilesProvider([NotNull] Configuration configuration, [NotNull] PerformanceTracer performanceTracer)
@@ -256,18 +244,7 @@
             _performanceTracer = performanceTracer;
         }
 
-        public string Folder
-        {
-            get
-            {
-                return _folder;
-            }
-            set
-            {
-                SetProperty(ref _folder, value, () => Folder);
-            }
-        }
-
+        public string Folder { get; set; }
 
         public IList<ProjectFile> SourceFiles
         {
