@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -10,41 +11,31 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Text;
-    using System.Windows.Threading;
 
     using EnvDTE;
 
     using JetBrains.Annotations;
 
+    using PropertyChanged;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.VSIX.Properties;
+
+    using Throttle;
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
-    internal class MoveToResourceViewModel : ObservableObject
+    internal class MoveToResourceViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
         [NotNull]
         private readonly ICollection<string> _patterns;
-        private readonly ICollection<ResourceTableEntry> _existingEntries;
-        [NotNull]
-        private readonly ICollection<ResourceEntity> _resourceEntities;
-        [NotNull]
-        private readonly ObservableCollection<string> _replacements = new ObservableCollection<string>();
         [NotNull]
         private readonly string _extension;
 
-        private ResourceEntity _selectedResourceEntity;
-        private ResourceTableEntry _selectedResourceEntry;
-        private string _key;
-        private string _value;
-        private string _comment;
-        private string _replacement;
-        private bool _reuseExisiting;
-        private int _selectedReplacementIndex;
         private bool _isUpdating;
-
         public MoveToResourceViewModel([NotNull] ICollection<string> patterns, [NotNull] ICollection<ResourceEntity> resourceEntities, [NotNull] string text, [NotNull] string extension, string className, string functionName)
         {
             Contract.Requires(patterns != null);
@@ -53,188 +44,120 @@
             Contract.Requires(extension != null);
 
             _patterns = patterns;
-            _resourceEntities = resourceEntities;
-            _selectedResourceEntity = resourceEntities.FirstOrDefault();
+            ResourceEntities = resourceEntities;
+            SelectedResourceEntity = resourceEntities.FirstOrDefault();
 
-            _existingEntries = resourceEntities
+            ExistingEntries = resourceEntities
                 .SelectMany(entity => entity.Entries)
                 .Where(entry => entry.Values[null] == text)
                 .ToArray();
-            _reuseExisiting = _existingEntries.Any();
-            _selectedResourceEntry = _existingEntries.FirstOrDefault();
-            _value = text;
+            ReuseExisiting = ExistingEntries.Any();
+            SelectedResourceEntry = ExistingEntries.FirstOrDefault();
             _extension = extension;
 
-            if (!_reuseExisiting)
-                _key = CreateKey(text, className, functionName);
+            Key = CreateKey(text, className, functionName);
+        }
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Background, () => OnPropertyChanged(nameof(Key)));
+        [NotNull]
+        public ICollection<ResourceEntity> ResourceEntities { get; }
 
+        [Required]
+        public ResourceEntity SelectedResourceEntity { get; set; }
+
+        [UsedImplicitly]
+        private void OnSelectedResourceEntityChanged()
+        {
+            Update();
+        }
+
+        public ResourceTableEntry SelectedResourceEntry { get; set; }
+
+        [UsedImplicitly]
+        private void OnSelectedResourceEntryChanged()
+        {
+            Update();
+        }
+
+        [Required(AllowEmptyStrings = false)]
+        [DependsOn(nameof(ReuseExisiting), nameof(SelectedResourceEntity))] // key validation is different when these change
+        public string Key { get; set; }
+
+        [UsedImplicitly]
+        private void OnKeyChanged()
+        {
             Update();
         }
 
         [NotNull]
-        public ICollection<ResourceEntity> ResourceEntities => _resourceEntities;
-
-        [Required]
-        public ResourceEntity SelectedResourceEntity
-        {
-            get
-            {
-                return _selectedResourceEntity;
-            }
-            set
-            {
-                if (SetProperty(ref _selectedResourceEntity, value, nameof(SelectedResourceEntity)))
-                {
-                    Update();
-                }
-            }
-        }
-
-        public ResourceTableEntry SelectedResourceEntry
-        {
-            get
-            {
-                return _selectedResourceEntry;
-            }
-            set
-            {
-                if (SetProperty(ref _selectedResourceEntry, value, nameof(SelectedResourceEntry)))
-                {
-                    Update();
-                }
-            }
-        }
-
-        [PropertyDependency(nameof(ReuseExisiting), nameof(SelectedResourceEntity))]
-        [Required(AllowEmptyStrings = false)]
-        public string Key
-        {
-            get
-            {
-                return _key;
-            }
-            set
-            {
-                if (SetProperty(ref _key, value, nameof(Key)))
-                {
-                    Update();
-                }
-            }
-        }
-
-        [NotNull]
-        public ICollection<string> Replacements => _replacements;
+        public ObservableCollection<string> Replacements { get; } = new ObservableCollection<string>();
 
         [Required(AllowEmptyStrings = false)]
-        public string Replacement
-        {
-            get
-            {
-                return _replacement;
-            }
-            set
-            {
-                SetProperty(ref _replacement, value, nameof(Replacement));
-            }
-        }
+        public string Replacement { get; set; }
 
         [Required(AllowEmptyStrings = false)]
-        public string Value
+        public string Value { get; set; }
+
+        public string Comment { get; set; }
+
+        public bool ReuseExisiting { get; set; }
+
+        [UsedImplicitly]
+        private void OnReuseExisitingChanged()
         {
-            get
+            if (!ReuseExisiting)
             {
-                return _value;
+                Comment = string.Empty;
             }
-            set
+            else
             {
-                SetProperty(ref _value, value, nameof(Value));
+                Key = SelectedResourceEntry?.Key;
+                Value = SelectedResourceEntry?.Values[null];
+                Comment = SelectedResourceEntry?.Comment;
             }
+
+            Update();
         }
 
-        public string Comment
-        {
-            get
-            {
-                return _comment;
-            }
-            set
-            {
-                SetProperty(ref _comment, value, nameof(Comment));
-            }
-        }
-
-        public bool ReuseExisiting
-        {
-            get
-            {
-                return _reuseExisiting;
-            }
-            set
-            {
-                if (SetProperty(ref _reuseExisiting, value, nameof(ReuseExisiting)))
-                {
-                    if (value)
-                    {
-                        Key = _selectedResourceEntry?.Key;
-                        Comment = _selectedResourceEntry?.Comment;
-                    }
-                    else
-                    {
-                        Comment = string.Empty;
-                    }
-
-                    Update();
-                }
-            }
-        }
-
-        public ICollection<ResourceTableEntry> ExistingEntries => _existingEntries;
+        public ICollection<ResourceTableEntry> ExistingEntries { get; }
 
         public int SelectedReplacementIndex
         {
-            get
-            {
-                return _selectedReplacementIndex;
-            }
+            get => Settings.Default.MoveToResourcePreferedReplacementPatternIndex[_extension];
             set
             {
-                if (SetProperty(ref _selectedReplacementIndex, value, nameof(SelectedReplacementIndex)) && !_isUpdating)
+                if (!_isUpdating)
                 {
                     Settings.Default.MoveToResourcePreferedReplacementPatternIndex[_extension] = value;
                 }
             }
         }
 
-        protected override IEnumerable<string> GetDataErrors(string propertyName)
-        {
-            return GetKeyErrors(propertyName).Concat(base.GetDataErrors(propertyName));
-        }
-
-        private IEnumerable<string> GetKeyErrors(string propertyName)
+        [CanBeNull]
+        private string GetKeyErrors(string propertyName)
         {
             if (ReuseExisiting)
-                yield break;
+                return null;
 
             if (!string.Equals(propertyName, nameof(Key)))
-                yield break;
+                return null;
 
             var key = Key;
 
             if (string.IsNullOrEmpty(key))
-                yield break;
+                return null;
 
             if (!key.All(c => (c == '_') || char.IsLetterOrDigit(c)) || char.IsDigit(key.FirstOrDefault()))
-                yield return Resources.KeyContainsInvalidCharacters;
+                return Resources.KeyContainsInvalidCharacters;
 
             if (KeyExists(key))
-                yield return Resources.DuplicateKey;
+                return Resources.DuplicateKey;
+
+            return null;
         }
 
         private bool KeyExists(string value)
         {
-            return _selectedResourceEntity?.Entries.Any(entry => string.Equals(entry.Key, value, StringComparison.OrdinalIgnoreCase)) ?? false;
+            return SelectedResourceEntity?.Entries.Any(entry => string.Equals(entry.Key, value, StringComparison.OrdinalIgnoreCase)) ?? false;
         }
 
         private static string GetLocalNamespace(ProjectItem resxItem)
@@ -267,24 +190,14 @@
             }
         }
 
+        [Throttled(typeof(DispatcherThrottle))]
         private void Update()
         {
             _isUpdating = true;
 
-            _replacements.Clear();
-            _replacements.AddRange(_patterns.Select(EvaluatePattern));
-
-            SelectedReplacementIndex = Settings.Default.MoveToResourcePreferedReplacementPatternIndex[_extension];
-            Replacement = _replacements.Skip(SelectedReplacementIndex).FirstOrDefault() ?? _replacements.FirstOrDefault();
-
-            if (ReuseExisiting)
-            {
-                Key = _selectedResourceEntry?.Key;
-                Value = _selectedResourceEntry?.Values[null];
-                Comment = _selectedResourceEntry?.Comment;
-            }
-
-            Dispatcher.BeginInvoke(() => OnPropertyChanged(nameof(Key))); // to force new validation...
+            Replacements.Clear();
+            Replacements.AddRange(_patterns.Select(EvaluatePattern));
+            Replacement = Replacements.Skip(SelectedReplacementIndex).FirstOrDefault() ?? Replacements.FirstOrDefault();
 
             _isUpdating = false;
         }
@@ -295,7 +208,7 @@
             Contract.Requires(pattern != null);
             Contract.Ensures(Contract.Result<string>() != null);
 
-            var entity = ReuseExisiting ? _selectedResourceEntry?.Container : _selectedResourceEntity;
+            var entity = ReuseExisiting ? SelectedResourceEntry?.Container : SelectedResourceEntity;
 
             var localNamespace = GetLocalNamespace(((DteProjectFile)entity?.NeutralProjectFile)?.DefaultProjectItem);
 
@@ -350,14 +263,26 @@
             return (c == '_') || char.IsLetter(c);
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator, UsedImplicitly]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        string IDataErrorInfo.this[string columnName] => GetKeyErrors(columnName);
+
+        string IDataErrorInfo.Error => null;
+
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
             Contract.Invariant(_patterns != null);
-            Contract.Invariant(_resourceEntities != null);
-            Contract.Invariant(_replacements != null);
+            Contract.Invariant(ResourceEntities != null);
+            Contract.Invariant(Replacements != null);
             Contract.Invariant(_extension != null);
         }
     }

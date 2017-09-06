@@ -8,6 +8,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
 
     using JetBrains.Annotations;
@@ -17,36 +18,13 @@
     using TomsToolbox.ObservableCollections;
 
     [DataContract]
-    public class MoveToResourceConfigurationItem : INotifyPropertyChanged
+    public sealed class MoveToResourceConfigurationItem : INotifyPropertyChanged
     {
-        private string _extensions;
-        private string _patterns;
+        [DataMember]
+        public string Extensions { get; set; }
 
         [DataMember]
-        public string Extensions
-        {
-            get
-            {
-                return _extensions;
-            }
-            set
-            {
-                SetProperty(ref _extensions, value, nameof(Extensions));
-            }
-        }
-
-        [DataMember]
-        public string Patterns
-        {
-            get
-            {
-                return _patterns;
-            }
-            set
-            {
-                SetProperty(ref _patterns, value, nameof(Patterns));
-            }
-        }
+        public string Patterns { get; set; }
 
         [NotNull]
         public IEnumerable<string> ParseExtensions()
@@ -78,16 +56,9 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
-        private void SetProperty<T>(ref T backingField, T value, [NotNull] string propertyName)
+        [NotifyPropertyChangedInvocator, UsedImplicitly]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            Contract.Requires(!string.IsNullOrEmpty(propertyName));
-
-            if (Equals(backingField, value))
-                return;
-
-            backingField = value;
-
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 

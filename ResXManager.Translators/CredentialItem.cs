@@ -6,30 +6,16 @@ namespace tomenglertde.ResXManager.Translators
 
     public class CredentialItem : ObservableObject, ICredentialItem
     {
-        private readonly string _key;
-        private readonly string _description;
-        private string _value;
-
         public CredentialItem(string key, string description)
         {
-            _key = key;
-            _description = description;
+            Key = key;
+            Description = description;
         }
 
-        public string Key => _key;
+        public string Key { get; }
 
-        public string Description => _description;
+        public string Description { get; }
 
-        public string Value
-        {
-            get
-            {
-                return _value;
-            }
-            set
-            {
-                SetProperty(ref _value, value, () => Value);
-            }
-        }
+        public string Value { get; set; }
     }
 }

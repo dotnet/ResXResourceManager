@@ -18,10 +18,6 @@
         [NotNull]
         private readonly ObservableCollection<string> _internalMessage = new ObservableCollection<string>();
 
-        private bool _isCanceled;
-        private int _progress;
-        private bool _isComplete;
-
         public TranslationSession(CultureInfo sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull] ICollection<ITranslationItem> items)
         {
             Contract.Requires(neutralResourcesLanguage != null);
@@ -40,43 +36,12 @@
 
         public ICollection<ITranslationItem> Items { get; }
 
-        public bool IsCanceled
-        {
-            get
-            {
-                return _isCanceled;
-            }
-            private set
-            {
-                SetProperty(ref _isCanceled, value, () => IsCanceled);
-            }
-        }
+        public bool IsCanceled { get; private set; }
 
-        public int Progress
-        {
-            get
-            {
-                return _progress;
-            }
-            set
-            {
-                SetProperty(ref _progress, value, () => Progress);
-            }
-        }
+        public int Progress { get; set; }
 
-        public bool IsComplete
-        {
-            get
-            {
-                return _isComplete;
-            }
-            set
-            {
-                SetProperty(ref _isComplete, value, () => IsComplete);
-            }
-        }
+        public bool IsComplete { get; set; }
 
-        [PropertyDependency("IsComplete")]
         public bool IsActive => !IsComplete;
 
         public IList<string> Messages { get; }

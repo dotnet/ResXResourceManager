@@ -19,12 +19,6 @@ namespace tomenglertde.ResXManager.Translators
     {
         protected static readonly IWebProxy WebProxy;
 
-        [NotNull]
-        private readonly IList<ICredentialItem> _credentials;
-
-        private bool _isEnabled = true;
-        private bool _saveCredentials;
-
         static TranslatorBase()
         {
             try
@@ -46,7 +40,7 @@ namespace tomenglertde.ResXManager.Translators
             Id = id;
             DisplayName = displayName;
             Uri = uri;
-            _credentials = credentials ?? new ICredentialItem[0];
+            Credentials = credentials ?? new ICredentialItem[0];
         }
 
         public string Id { get; }
@@ -56,32 +50,13 @@ namespace tomenglertde.ResXManager.Translators
         public Uri Uri { get; }
 
         [DataMember]
-        public bool IsEnabled
-        {
-            get
-            {
-                return _isEnabled;
-            }
-            set
-            {
-                SetProperty(ref _isEnabled, value, () => IsEnabled);
-            }
-        }
+        public bool IsEnabled { get; set; } = true;
 
         [DataMember]
-        public bool SaveCredentials
-        {
-            get
-            {
-                return _saveCredentials;
-            }
-            set
-            {
-                SetProperty(ref _saveCredentials, value, () => SaveCredentials);
-            }
-        }
+        public bool SaveCredentials { get; set; }
 
-        public IList<ICredentialItem> Credentials => _credentials;
+        [NotNull]
+        public IList<ICredentialItem> Credentials { get; }
 
         public abstract void Translate(ITranslationSession translationSession);
 
@@ -90,7 +65,7 @@ namespace tomenglertde.ResXManager.Translators
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_credentials != null);
+            Contract.Invariant(Credentials != null);
         }
     }
 }
