@@ -10,7 +10,7 @@
              xmlns:toms="urn:TomsToolbox"
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-             xmlns:styles="urn:ResXManager.Styles"
+             xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              x:Name="UserControl"
              d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
   <UserControl.Resources>

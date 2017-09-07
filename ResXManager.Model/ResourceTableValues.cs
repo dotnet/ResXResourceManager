@@ -39,14 +39,8 @@
 
         public T this[string cultureKey]
         {
-            get
-            {
-                return GetValue(cultureKey);
-            }
-            set
-            {
-                SetValue(cultureKey, value);
-            }
+            get => GetValue(cultureKey);
+            set => SetValue(cultureKey, value);
         }
 
         public T GetValue(object culture)

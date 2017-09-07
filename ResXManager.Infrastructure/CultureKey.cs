@@ -17,7 +17,7 @@
 
         public CultureKey(string cultureName)
         {
-            Culture = cultureName.ToCulture();
+            Culture = cultureName?.ToCulture();
         }
 
         public CultureKey(CultureInfo culture)

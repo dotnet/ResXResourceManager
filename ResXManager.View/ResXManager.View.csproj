@@ -178,17 +178,20 @@
       <HintPath>..\packages\Throttle.Fody.0.9.11.0\lib\netstandard1.0\Throttle.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="TomsToolbox.Core, Version=1.0.61.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Core.1.0.61\lib\net40-client\TomsToolbox.Core.dll</HintPath>
+    <Reference Include="TomsToolbox.Core, Version=1.0.62.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Core.1.0.62\lib\net40-client\TomsToolbox.Core.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.Desktop, Version=1.0.61.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.61\lib\net45\TomsToolbox.Desktop.dll</HintPath>
+    <Reference Include="TomsToolbox.Desktop, Version=1.0.62.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.62\lib\net45\TomsToolbox.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.61.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.61\lib\net40-client\TomsToolbox.ObservableCollections.dll</HintPath>
+    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.62.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.62\lib\net40-client\TomsToolbox.ObservableCollections.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.Wpf, Version=1.0.61.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Wpf.1.0.61\lib\net40-client\TomsToolbox.Wpf.dll</HintPath>
+    <Reference Include="TomsToolbox.Wpf, Version=1.0.62.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Wpf.1.0.62\lib\net40-client\TomsToolbox.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="TomsToolbox.Wpf.Styles, Version=1.0.62.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Wpf.Styles.1.0.62\lib\net45\TomsToolbox.Wpf.Styles.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -328,10 +331,6 @@
     <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj">
       <Project>{6AF977DB-2C9F-4D9C-8C2D-CFDDF7E022FC}</Project>
       <Name>ResXManager.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ResXManager.Styles\ResXManager.Styles.csproj">
-      <Project>{e5d732d2-0294-48fd-8314-63dc1a9155fe}</Project>
-      <Name>ResXManager.Styles</Name>
     </ProjectReference>
     <ProjectReference Include="..\ResXManager.Translators\ResXManager.Translators.csproj">
       <Project>{d8b0b04f-4273-45db-ae2d-5a91c89e1225}</Project>
@@ -658,6 +657,9 @@
     <Resource Include="Assets\cellSelection.png" />
     <Resource Include="Assets\save.png" />
     <None Include="FodyWeavers.xml" />
+    <Resource Include="..\16x16.png">
+      <Link>16x16.png</Link>
+    </Resource>
     <Content Include="Properties\Resources.Designer.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

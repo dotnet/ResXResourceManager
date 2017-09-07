@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300"
              xmlns:local="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
              xmlns:view="urn:ResXManager.View"
-             xmlns:styles="urn:ResXManager.Styles"
+             xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              d:DataContext="{d:DesignInstance local:MoveToResourceConfigurationViewModel}">
   <Grid>
     <DataGrid ItemsSource="{Binding Configuration.MoveToResources.Items}"

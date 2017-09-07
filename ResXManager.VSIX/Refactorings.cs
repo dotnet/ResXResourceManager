@@ -147,7 +147,7 @@
                     entry.Comment = viewModel.Comment;
                 }
 
-                selection.ReplaceWith(viewModel.Replacement);
+                selection.ReplaceWith(viewModel.Replacement?.Value);
 
                 return entry;
             }

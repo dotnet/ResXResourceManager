@@ -132,11 +132,6 @@
             Refresh();
         }
 
-        internal void UpdateIndex(int index)
-        {
-            Index = index;
-        }
-
         [NotNull]
         public ResourceEntity Container { get; }
 
@@ -191,11 +186,15 @@
         /// Gets or sets the comment of the neutral language.
         /// </summary>
         [NotNull]
+        [DependsOn(nameof(Comments))]
         public string Comment
         {
             get => NeutralLanguage.GetComment(Key) ?? string.Empty;
             set => NeutralLanguage.SetComment(Key, value);
         }
+
+        [CanBeNull]
+        public string NeutralValue => Values[null];
 
         /// <summary>
         /// Gets the localized values.
@@ -206,7 +205,6 @@
         /// <summary>
         /// Gets the localized comments.
         /// </summary>
-        [DependsOn(nameof(Comment))]
         [NotNull]
         public ResourceTableValues<string> Comments { get; private set; }
 
@@ -226,7 +224,7 @@
         [NotNull]
         public ResourceTableValues<ICollection<string>> ValueAnnotations { get; private set; }
 
-        [DependsOn(nameof(Comments), nameof(Snapshot))]
+        [DependsOn(nameof(Snapshot))]
         [NotNull]
         public ResourceTableValues<ICollection<string>> CommentAnnotations { get; private set; }
 
@@ -285,9 +283,8 @@
 
         public void Refresh()
         {
-            OnPropertyChanged(nameof(Values));
-            OnPropertyChanged(nameof(Comment));
-            OnPropertyChanged(nameof(Index));
+            OnValuesChanged();
+            OnCommentsChanged();
         }
 
         public bool HasStringFormatParameterMismatches([NotNull] IEnumerable<object> cultures)
@@ -329,6 +326,8 @@
         private void OnValuesChanged()
         {
             OnPropertyChanged(nameof(Values));
+            OnPropertyChanged(nameof(FileExists));
+            OnPropertyChanged(nameof(ValueAnnotations));
         }
 
         private void Comments_ValueChanged(object sender, EventArgs e)
@@ -339,7 +338,10 @@
         [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Input)]
         private void OnCommentsChanged()
         {
+            OnPropertyChanged(nameof(Comment));
             OnPropertyChanged(nameof(Comments));
+            OnPropertyChanged(nameof(IsInvariant));
+            OnPropertyChanged(nameof(CommentAnnotations));
         }
 
         [NotNull]

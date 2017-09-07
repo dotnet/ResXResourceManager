@@ -3,9 +3,8 @@
     using System.ComponentModel.Composition;
     using System.Windows;
 
-    using tomenglertde.ResXManager.Styles;
-
     using TomsToolbox.Core;
+    using TomsToolbox.Wpf.Styles;
 
     [Export(typeof(IThemeResourceProvider))]
     internal class ThemeResourceProvider : IThemeResourceProvider

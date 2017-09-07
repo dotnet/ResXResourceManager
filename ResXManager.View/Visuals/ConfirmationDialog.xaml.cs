@@ -1,11 +1,13 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
+    using System.Windows.Media.Imaging;
 
     using JetBrains.Annotations;
 
@@ -34,11 +36,12 @@
                 ResizeMode = ResizeMode.NoResize,
                 WindowStyle = WindowStyle.SingleBorderWindow,
                 SizeToContent = SizeToContent.WidthAndHeight,
+                Icon = new BitmapImage(new Uri("pack://application:,,,/ResXManager.View;component/16x16.png"))
             };
 
             window.SetExportProvider(exportProvider);
             window.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(exportProvider));
-            window.SetResourceReference(StyleProperty, Styles.ResourceKeys.WindowStyle);
+            window.SetResourceReference(StyleProperty, TomsToolbox.Wpf.Styles.ResourceKeys.WindowStyle);
             window.Content = new ConfirmationDialog { Content = content };
 
             return window.ShowDialog();

@@ -7,7 +7,7 @@
              xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
-             xmlns:styles="urn:ResXManager.Styles"
+             xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              d:DataContext="{d:DesignInstance visuals:LanguageConfigurationViewModel}">
   <UserControl.Resources>
 

@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="700"
         xmlns:toms="urn:TomsToolbox"
         xmlns:infrastructure="urn:ResXManager.Infrastructure"
-        xmlns:styles="urn:ResXManager.Styles"
+        xmlns:styles="urn:TomsToolbox.Wpf.Styles"
         Title="ResX Resource Manager" Height="800" Width="1000"
         Style="{DynamicResource {x:Static styles:ResourceKeys.WindowStyle}}"
         toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Main}" />

@@ -16,8 +16,8 @@
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
              xmlns:view="clr-namespace:tomenglertde.ResXManager.View"
-             xmlns:styles="urn:ResXManager.Styles"
-             xmlns:effects="clr-namespace:tomenglertde.ResXManager.Styles.Effects;assembly=ResXManager.Styles"
+             xmlns:styles="urn:TomsToolbox.Wpf.Styles"
+             xmlns:effects="clr-namespace:TomsToolbox.Wpf.Styles.Effects;assembly=TomsToolbox.Wpf.Styles"
              xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
              x:Name="LayoutRoot"
              d:DataContext="{d:DesignInstance visuals:ResourceViewModel}">
@@ -164,7 +164,7 @@
         </GroupStyle>
       </ListBox.GroupStyle>
       <ListBox.ContextMenu>
-        <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}" 
+        <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}"
                      toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.ProjectListContextMenu}" />
       </ListBox.ContextMenu>
       <i:Interaction.Behaviors>
@@ -505,7 +505,7 @@
                 <VirtualizingStackPanel DataContext="{Binding ElementName=DataGrid}"
                                         TextElement.FontSize="{Binding Path=(view:Appearance.TextFontSize), RelativeSource={RelativeSource Self}}">
                   <VirtualizingStackPanel.ContextMenu>
-                    <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}" 
+                    <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}"
                                  toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.ResourceTableContextMenu}" />
                   </VirtualizingStackPanel.ContextMenu>
                   <i:Interaction.Behaviors>

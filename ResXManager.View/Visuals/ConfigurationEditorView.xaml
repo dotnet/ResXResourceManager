@@ -13,7 +13,7 @@
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
              xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
-             xmlns:styles="urn:ResXManager.Styles"
+             xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              d:DataContext="{d:DesignInstance visuals:ConfigurationEditorViewModel}">
   <UserControl.Resources>
 

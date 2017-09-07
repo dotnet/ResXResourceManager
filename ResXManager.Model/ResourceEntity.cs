@@ -289,7 +289,10 @@
 
             foreach (var key in resourceLanguage.ResourceKeys)
             {
-                entries.GetValueOrDefault(key)?.UpdateIndex(index++);
+                if (entries.TryGetValue(key, out var value))
+                {
+                    value.Index = index++;
+                }
             }
         }
 
