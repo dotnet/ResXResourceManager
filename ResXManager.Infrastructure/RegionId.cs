@@ -9,6 +9,7 @@
 
         public const string ProjectListContextMenu = "ProjectListContextMenu";
         public const string ResourceTableContextMenu = "ResourceTableContextMenu";
+        public const string ResourceTableItemContextMenu = "ResourceTableItemContextMenu";
 
         public const string ProjectListItemDecorator = "ProjectListItemDecorator";
     }

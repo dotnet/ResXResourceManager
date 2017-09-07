@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -81,6 +80,8 @@
             ValueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
             CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
 
+            IsItemInvariant = new ResourceTableValues<bool>(_languages, lang => GetIsInvariant(lang.CultureKey), (lang, value) => SetIsInvariant(lang.CultureKey, value));
+
             Contract.Assume(languages.Any());
             var neutralLanguage = languages.First().Value;
             Contract.Assume(neutralLanguage != null);
@@ -105,6 +106,8 @@
 
             ValueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
             CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
+
+            IsItemInvariant = new ResourceTableValues<bool>(_languages, lang => GetIsInvariant(lang.CultureKey), (lang, value) => SetIsInvariant(lang.CultureKey, value));
         }
 
         internal void Update(int index, [NotNull] IDictionary<CultureKey, ResourceLanguage> languages)
@@ -231,33 +234,43 @@
         [NotNull]
         public ICollection<CultureKey> Languages => _languages.Keys;
 
+        [NotNull]
+        [DependsOn(nameof(Comments))]
+        public ResourceTableValues<bool> IsItemInvariant { get; private set; }
+
         [DependsOn(nameof(Comment))]
         public bool IsInvariant
         {
-            get => Comment.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0;
-            set
+            get => GetIsInvariant(CultureKey.Neutral);
+            set => SetIsInvariant(CultureKey.Neutral, value);
+        }
+
+        private bool GetIsInvariant([NotNull] CultureKey culture)
+        {
+            Contract.Requires(culture != null);
+
+            return Comments.GetValue(culture)?.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private bool SetIsInvariant([NotNull] CultureKey culture, bool value)
+        {
+            Contract.Requires(culture != null);
+
+            var comment = Comments.GetValue(culture);
+
+            if (value)
             {
-                if (value)
-                {
-                    if (!IsInvariant)
-                    {
-                        Comment += InvariantKey;
-                    }
-                }
-                else
-                {
-                    var comment = Comment;
-                    int index;
+                if (comment?.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0)
+                    return false;
 
-                    while ((index = comment.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase)) >= 0)
-                    {
-                        Contract.Assume((index + InvariantKey.Length) <= comment.Length);
-                        comment = comment.Remove(index, InvariantKey.Length);
-                    }
-
-                    Comment = comment;
-                }
+                Comments.SetValue(culture, comment + InvariantKey);
             }
+            else
+            {
+                Comments.SetValue(culture, comment?.Replace(InvariantKey, ""));
+            }
+
+            return true;
         }
 
         [DependsOn(nameof(Key))]
@@ -341,6 +354,7 @@
             OnPropertyChanged(nameof(Comment));
             OnPropertyChanged(nameof(Comments));
             OnPropertyChanged(nameof(IsInvariant));
+            OnPropertyChanged(nameof(IsItemInvariant));
             OnPropertyChanged(nameof(CommentAnnotations));
         }
 
@@ -350,9 +364,27 @@
             Contract.Requires(language != null);
             Contract.Ensures(Contract.Result<ICollection<string>>() != null);
 
+            var value = Values.GetValue(language.CultureKey);
+
             return GetStringFormatParameterMismatchAnnotations(language)
-                .Concat(GetSnapshotDifferences(language, Values.GetValue(language.CultureKey), d => d.Text))
+                .Concat(GetSnapshotDifferences(language, value, d => d.Text))
+                .Concat(GetInvariantMismatches(language, value))
                 .ToArray();
+        }
+
+        [NotNull, ItemNotNull]
+        private IEnumerable<string> GetInvariantMismatches([NotNull] ResourceLanguage language, [CanBeNull] string value)
+        {
+            Contract.Requires(language != null);
+            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
+
+            if (language.CultureKey == CultureKey.Neutral)
+                yield break;
+
+            var isInvariant = IsInvariant || IsItemInvariant.GetValue(language.CultureKey);
+
+            if (isInvariant && !string.IsNullOrEmpty(value))
+                yield return "Item is invariant but contains a value";
         }
 
         [NotNull]

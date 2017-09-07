@@ -21,6 +21,8 @@
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Visuals;
 
+    using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Converters;
 
@@ -28,20 +30,35 @@
 
     public static class ColumnManager
     {
+        [NotNull]
         private const string NeutralCultureKeyString = ".";
+        [NotNull]
         private static readonly BitmapImage _codeReferencesImage = new BitmapImage(new Uri("/ResXManager.View;component/Assets/references.png", UriKind.RelativeOrAbsolute));
 
         /// <summary>
         /// Identifies the ResourceFileExists attached property
         /// </summary>
+        [NotNull]
         public static readonly DependencyProperty ResourceFileExistsProperty =
             DependencyProperty.RegisterAttached("ResourceFileExists", typeof(bool), typeof(ColumnManager), new FrameworkPropertyMetadata(true));
 
         /// <summary>
         /// Identifies the CellAnnotations attached property
         /// </summary>
+        [NotNull]
         public static readonly DependencyProperty CellAnnotationsProperty =
             DependencyProperty.RegisterAttached("CellAnnotations", typeof(ICollection<string>), typeof(ColumnManager), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+
+        /// <summary>
+        /// Identifies the IsCellInvariant attached property
+        /// </summary>
+        [NotNull]
+        public static readonly DependencyProperty IsCellInvariantProperty =
+            DependencyProperty.RegisterAttached("IsCellInvariant", typeof(bool), typeof(ColumnManager), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits, IsCellInvariant_Changed));
+
+        [NotNull]
+        public static readonly DependencyProperty SelectedCellsProperty =
+            DependencyProperty.RegisterAttached("SelectedCells", typeof(IList<DataGridCellInfo>), typeof(ColumnManager));
 
         public static void SetupColumns([NotNull] this DataGrid dataGrid, [NotNull] ResourceManager resourceManager, [NotNull] ResourceViewModel resourceViewModel, [NotNull] Configuration configuration)
         {
@@ -54,6 +71,9 @@
 
             dataGridEvents.ColumnVisibilityChanged -= DataGrid_ColumnVisibilityChanged;
             dataGridEvents.ColumnVisibilityChanged += DataGrid_ColumnVisibilityChanged;
+
+            dataGrid.CurrentCellChanged -= DataGrid_CurrentCellChanged;
+            dataGrid.CurrentCellChanged += DataGrid_CurrentCellChanged;
 
             var columns = dataGrid.Columns;
 
@@ -279,6 +299,7 @@
 
             var textCellStyle = new Style(typeof(DataGridCell), cellStyle);
             textCellStyle.Setters.Add(new Setter(CellAnnotationsProperty, new Binding(@"ValueAnnotations[" + key + @"]")));
+            textCellStyle.Setters.Add(new Setter(IsCellInvariantProperty, new Binding(@"IsItemInvariant[" + key + @"]")));
 
             var column = new DataGridTextColumn
             {
@@ -376,6 +397,27 @@
                 Contract.Requires(value != null);
 
                 Settings.Default.HiddenLanguageColumns = string.Join(",", value);
+            }
+        }
+
+        private static void DataGrid_CurrentCellChanged(object sender, EventArgs eventArgs)
+        {
+            var dataGrid = (DataGrid)sender;
+            // postpone update, SelectedCells is updates *after* the current cell has changed.
+            dataGrid?.Dispatcher?.BeginInvoke(() =>
+            {
+                dataGrid.SetValue(SelectedCellsProperty, dataGrid.SelectedCells?.ToArray());
+            });
+        }
+
+        private static void IsCellInvariant_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var dataGrid = d?.TryFindAncestorOrSelf<DataGrid>();
+
+            if (dataGrid != null)
+            {
+                // force an update of the selected cells property, else the value converter won't get triggered.
+                DataGrid_CurrentCellChanged(dataGrid, EventArgs.Empty);
             }
         }
 

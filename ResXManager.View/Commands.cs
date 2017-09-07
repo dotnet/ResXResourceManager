@@ -27,7 +27,7 @@
     }
 
     [Export]
-    [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
+    [VisualCompositionExport(RegionId.ResourceTableContextMenu, RegionId.ResourceTableItemContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Copy)]
     [Text(IconUriKey, "pack://application:,,,/ResXManager.View;component/Assets/copy.png")]
     [Text(GroupNameKey, "Edit")]
@@ -36,7 +36,7 @@
     }
 
     [Export]
-    [VisualCompositionExport(RegionId.ResourceTableContextMenu, RegionId.ProjectListContextMenu)]
+    [VisualCompositionExport(RegionId.ResourceTableContextMenu, RegionId.ProjectListContextMenu, RegionId.ResourceTableItemContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Paste)]
     [Text(IconUriKey, "pack://application:,,,/ResXManager.View;component/Assets/paste.png")]
     [Text(GroupNameKey, "Edit")]
@@ -54,7 +54,16 @@
     }
 
     [Export]
-    [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
+    [VisualCompositionExport(RegionId.ResourceTableItemContextMenu)]
+    [LocalizedDisplayName(StringResourceKey.Invariant)]
+    [Text(IsCheckableKey, "True")]
+    [Text(GroupNameKey, "Edit")]
+    public class IsItemInvariantCommand : CommandSourceFactory
+    {
+    }
+
+    [Export]
+    [VisualCompositionExport(RegionId.ResourceTableContextMenu, RegionId.ResourceTableItemContextMenu)]
     [LocalizedDisplayName(StringResourceKey.CellSelection)]
     [Text(IsCheckableKey, "True")]
     [Text(GroupNameKey, "Options")]

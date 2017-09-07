@@ -13,6 +13,7 @@
     /// </summary>
     public class CultureKey : IComparable<CultureKey>, IEquatable<CultureKey>, IComparable
     {
+        [NotNull]
         public static readonly CultureKey Neutral = new CultureKey((CultureInfo)null);
 
         public CultureKey(string cultureName)

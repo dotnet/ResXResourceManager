@@ -47,9 +47,7 @@
         {
             var cultureKey = CultureKey.Parse(culture);
 
-            ResourceLanguage language;
-
-            if (!_languages.TryGetValue(cultureKey, out language))
+            if (!_languages.TryGetValue(cultureKey, out ResourceLanguage language))
                 return default(T);
 
             Contract.Assume(language != null);
@@ -61,10 +59,22 @@
         {
             var cultureKey = CultureKey.Parse(culture);
 
-            ResourceLanguage language;
-            
-            if (!_languages.TryGetValue(cultureKey, out language))
+            if (!_languages.TryGetValue(cultureKey, out ResourceLanguage language))
                 throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.LanguageNotDefinedError, cultureKey.Culture));
+
+            if (!_setter(language, value))
+                return false;
+
+            OnValueChanged();
+            return true;
+        }
+
+        public bool TrySetValue(object culture, T value)
+        {
+            var cultureKey = CultureKey.Parse(culture);
+
+            if (!_languages.TryGetValue(cultureKey, out ResourceLanguage language))
+                return false;
 
             if (!_setter(language, value))
                 return false;

@@ -1,6 +1,7 @@
 namespace tomenglertde.ResXManager.View.Tools
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Windows;
@@ -12,6 +13,7 @@ namespace tomenglertde.ResXManager.View.Tools
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
+    using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
 
     public static class ExtensionMethods
@@ -97,25 +99,35 @@ namespace tomenglertde.ResXManager.View.Tools
             }
         }
 
-        public static bool IsChildOfEditingElement(this DependencyObject element)
+        public static bool IsKeyDown(this Key key)
         {
-            while (element != null)
+            return (Keyboard.GetKeyStates(key) & KeyStates.Down) != 0;
+        }
+
+        public static bool IsAnyItemInvariant([CanBeNull] this IEnumerable<DataGridCellInfo> cellInfos)
+        {
+            if (cellInfos == null)
+                return false;
+
+            foreach (var info in cellInfos)
             {
-                if (element is TextBox)
+                var col = info.Column?.Header as ILanguageColumnHeader;
+
+                if (col?.ColumnType != ColumnType.Language)
+                    continue;
+
+                var item = info.Item as ResourceTableEntry;
+                if (item == null)
+                    continue;
+
+                if (item.IsItemInvariant.GetValue(col.CultureKey))
+                {
                     return true;
-
-                if (element is DataGrid)
-                    return false;
-
-                element = LogicalTreeHelper.GetParent(element);
+                }
             }
 
             return false;
         }
 
-        public static bool IsKeyDown(this Key key)
-        {
-            return (Keyboard.GetKeyStates(key) & KeyStates.Down) != 0;
-        }
     }
 }

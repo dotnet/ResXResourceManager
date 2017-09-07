@@ -24,6 +24,7 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
     using tomenglertde.ResXManager.View.Properties;
+    using tomenglertde.ResXManager.View.Tools;
 
     using Throttle;
 
@@ -123,6 +124,9 @@
 
         [NotNull]
         public ICommand ToggleInvariantCommand => new DelegateCommand(() => SelectedTableEntries.Any(), ToggleInvariant);
+
+        [NotNull]
+        public ICommand ToggleItemInvariantCommand => new DelegateCommand<DataGrid>(CanToggleItemInvariant, ToggleItemInvariant);
 
         [NotNull]
         public ICommand ReloadCommand => new DelegateCommand(() => Reload(true));
@@ -368,6 +372,36 @@
             var newValue = !first.IsInvariant;
 
             items.ForEach(item => item.IsInvariant = newValue);
+        }
+
+        private void ToggleItemInvariant([NotNull] DataGrid dataGrid)
+        {
+            Contract.Requires(dataGrid != null);
+
+            var cellInfos = dataGrid.SelectedCells;
+            if (cellInfos == null)
+                return;
+
+            var isInvariant = !cellInfos.IsAnyItemInvariant();
+
+            foreach (var info in cellInfos)
+            {
+                var col = info.Column?.Header as ILanguageColumnHeader;
+
+                if (col?.ColumnType != ColumnType.Language)
+                    continue;
+
+                var item = info.Item as ResourceTableEntry;
+
+                item?.IsItemInvariant.TrySetValue(col.CultureKey, isInvariant);
+            }
+        }
+
+        private bool CanToggleItemInvariant([NotNull] DataGrid dataGrid)
+        {
+            Contract.Requires(dataGrid != null);
+
+            return dataGrid.SelectedCells?.Any(cell => (cell.Column?.Header as ILanguageColumnHeader)?.ColumnType == ColumnType.Language) ?? false;
         }
 
         private static bool CanExportExcel(IExportParameters param)

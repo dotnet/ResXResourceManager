@@ -224,7 +224,7 @@
 
             // #3: all entries with no target
             var itemsToTranslate = allEntries.AsParallel()
-                .Where(item => !HasTranslation(item.Target))
+                .Where(item => !HasTranslation(item.Target) && !item.Entry.IsItemInvariant.GetValue(item.TargetCulture))
                 .Select(item => new TranslationItem(item.Entry, item.Source, item.TargetCulture))
                 .ToArray();
 
