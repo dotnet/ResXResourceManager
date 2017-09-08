@@ -143,4 +143,7 @@ In the standalone version the file is not automatically added to the Visual Stud
   <data name="WarningUnsavedChanges" xml:space="preserve">
     <value>You have unsaved changes; reloading all resources will revert all your changes. Do you want to continue?</value>
   </data>
+  <data name="QuerySaveChanges" xml:space="preserve">
+    <value>Do you want to save the changes?</value>
+  </data>
 </root>

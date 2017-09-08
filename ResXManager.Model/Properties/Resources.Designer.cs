@@ -271,6 +271,17 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Key already exists: .
+        /// </summary>
+        [NotNull]
+        public static string KeyAlreadyExists {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("KeyAlreadyExists", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Language is not defined: {0}.
         /// </summary>
         [NotNull]
@@ -289,6 +300,17 @@ namespace tomenglertde.ResXManager.Model.Properties {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Neutral", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Not all languages are editable.
+        /// </summary>
+        [NotNull]
+        public static string NotAllLanguagesAreEditable {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("NotAllLanguagesAreEditable", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -409,6 +431,10 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         InvalidResourceFileValueAttributeMissingError,
         /// <summary>
+        ///   Looks up a localized string similar to Key already exists: .
+        /// </summary>
+        KeyAlreadyExists,
+        /// <summary>
         ///   Looks up a localized string similar to Language is not defined: {0}.
         /// </summary>
         LanguageNotDefinedError,
@@ -416,6 +442,10 @@ namespace tomenglertde.ResXManager.Model.Properties {
         ///   Looks up a localized string similar to Neutral.
         /// </summary>
         Neutral,
+        /// <summary>
+        ///   Looks up a localized string similar to Not all languages are editable.
+        /// </summary>
+        NotAllLanguagesAreEditable,
         /// <summary>
         ///   Looks up a localized string similar to Snapshot: "{0}".
         /// </summary>

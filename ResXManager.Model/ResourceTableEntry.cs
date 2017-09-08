@@ -161,13 +161,13 @@
 
             if (!resourceLanguages.All(language => language.CanEdit()))
             {
-                _keyValidationError = "Not all languages are editable";
+                _keyValidationError = Resources.NotAllLanguagesAreEditable;
                 return;
             }
 
             if (resourceLanguages.Any(language => language.KeyExists(value)))
             {
-                _keyValidationError = "Key already exists: " + value;
+                _keyValidationError = string.Format(CultureInfo.CurrentCulture, Resources.KeyAlreadyExists, value);
                 return;
             }
 

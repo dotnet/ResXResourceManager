@@ -117,6 +117,17 @@ namespace tomenglertde.ResXManager.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Do you want to save the changes?.
+        /// </summary>
+        [NotNull]
+        public static string QuerySaveChanges {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("QuerySaveChanges", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Version: {0}.
         /// </summary>
         /// <remarks>
@@ -165,6 +176,10 @@ namespace tomenglertde.ResXManager.Properties {
         ///   Looks up a localized string similar to Some files in your project are not writable. You m....
         /// </summary>
         ProjectHasReadOnlyFiles,
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to save the changes?.
+        /// </summary>
+        QuerySaveChanges,
         /// <summary>
         ///   Looks up a localized string similar to Version: {0}.
         /// </summary>

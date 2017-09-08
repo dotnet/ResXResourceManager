@@ -192,4 +192,10 @@
     <value>ResX Resource Manager</value>
     <comment>@Invariant</comment>
   </data>
+  <data name="NotAllLanguagesAreEditable" xml:space="preserve">
+    <value>Not all languages are editable</value>
+  </data>
+  <data name="KeyAlreadyExists" xml:space="preserve">
+    <value>Key already exists: </value>
+  </data>
 </root>

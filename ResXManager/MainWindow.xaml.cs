@@ -88,7 +88,7 @@
             if (!resourceManager.HasChanges)
                 return;
 
-            switch (MessageBox.Show("Do you want to save the changes?", "Resource Manager", MessageBoxButton.YesNoCancel))
+            switch (MessageBox.Show(Properties.Resources.QuerySaveChanges, View.Properties.Resources.Title, MessageBoxButton.YesNoCancel))
             {
                 case MessageBoxResult.Cancel:
                     e.Cancel = true;
