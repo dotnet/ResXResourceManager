@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using System.Windows.Controls;
     using System.Windows.Data;
 
@@ -14,7 +15,7 @@
 
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (value as IEnumerable<DataGridCellInfo>).IsAnyItemInvariant();
+            return (value as IEnumerable<DataGridCellInfo>)?.Any(item => item.IsItemInvariant());
         }
 
         object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

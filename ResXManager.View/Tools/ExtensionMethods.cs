@@ -105,26 +105,20 @@ namespace tomenglertde.ResXManager.View.Tools
             return (Keyboard.GetKeyStates(key) & KeyStates.Down) != 0;
         }
 
-        public static bool IsAnyItemInvariant([CanBeNull] this IEnumerable<DataGridCellInfo> cells)
+        public static bool IsItemInvariant([CanBeNull] this DataGridCellInfo info)
         {
-            if (cells == null)
+            var col = info.Column?.Header as ILanguageColumnHeader;
+
+            if (col?.ColumnType != ColumnType.Language)
                 return false;
 
-            foreach (var info in cells)
+            var item = info.Item as ResourceTableEntry;
+            if (item == null)
+                return false;
+
+            if (item.IsItemInvariant.GetValue(col.CultureKey))
             {
-                var col = info.Column?.Header as ILanguageColumnHeader;
-
-                if (col?.ColumnType != ColumnType.Language)
-                    continue;
-
-                var item = info.Item as ResourceTableEntry;
-                if (item == null)
-                    continue;
-
-                if (item.IsItemInvariant.GetValue(col.CultureKey))
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;

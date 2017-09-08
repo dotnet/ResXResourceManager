@@ -405,7 +405,7 @@
             items.ForEach(item => item.IsInvariant = newValue);
         }
 
-        private void ToggleItemInvariant([NotNull] DataGrid dataGrid)
+        private static void ToggleItemInvariant([NotNull] DataGrid dataGrid)
         {
             Contract.Requires(dataGrid != null);
 
@@ -413,7 +413,7 @@
             if (cellInfos == null)
                 return;
 
-            var isInvariant = !cellInfos.IsAnyItemInvariant();
+            var isInvariant = !cellInfos.Any(item => item.IsItemInvariant());
 
             foreach (var info in cellInfos)
             {
@@ -428,7 +428,7 @@
             }
         }
 
-        private bool CanToggleItemInvariant([NotNull] DataGrid dataGrid)
+        private static bool CanToggleItemInvariant([NotNull] DataGrid dataGrid)
         {
             Contract.Requires(dataGrid != null);
 
