@@ -250,7 +250,7 @@
           <Separator />
           <Button ToolTip="{x:Static properties:Resources.DeleteToolTip}"
                   Style="{StaticResource ToolbarCommandButtonStyle}"
-                  Command="{Binding Path=DeleteCommand, Converter={StaticResource DeleteCommandConverter}}">
+                  Command="{Binding Path=DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}">
             <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/delete.png" />
           </Button>
           <Button ToolTip="{x:Static properties:Resources.CutToolTip}"
@@ -493,7 +493,7 @@
             </DataGrid.Resources>
 
             <DataGrid.InputBindings>
-              <KeyBinding Key="Delete" Command="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" />
+              <KeyBinding Key="Delete" Command="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
               <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
               <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
               <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
@@ -641,7 +641,8 @@
 
   <i:Interaction.Behaviors>
     <toms:CommandRoutingBehavior CommandSource="view:DeleteCommand" 
-                                 CommandTarget="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" />
+                                 CommandTarget="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}"
+                                 CommandParameter="{Binding ElementName=DataGrid}" />
     <toms:CommandRoutingBehavior CommandSource="view:CutCommand" 
                                  CommandTarget="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
     <toms:CommandRoutingBehavior CommandSource="view:CopyCommand" 

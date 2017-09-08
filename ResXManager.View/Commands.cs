@@ -9,7 +9,7 @@
     using TomsToolbox.Wpf.Composition;
 
     [Export]
-    [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
+    [VisualCompositionExport(RegionId.ResourceTableContextMenu, RegionId.ResourceTableItemContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Delete)]
     [Text(IconUriKey, "pack://application:,,,/ResXManager.View;component/Assets/delete.png")]
     [Text(GroupNameKey, "Edit")]

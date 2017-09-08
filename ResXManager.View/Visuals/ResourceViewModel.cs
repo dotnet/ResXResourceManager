@@ -111,7 +111,7 @@
         public ICommand CutCommand => new DelegateCommand(CanCut, CutSelected);
 
         [NotNull]
-        public ICommand DeleteCommand => new DelegateCommand(CanDelete, DeleteSelected);
+        public ICommand DeleteCommand => new DelegateCommand<DataGrid>(CanDelete, DeleteSelected);
 
         [NotNull]
         public ICommand PasteCommand => new DelegateCommand<DataGrid>(CanPaste, Paste);
@@ -203,9 +203,13 @@
             LoadedSnapshot = fileName;
         }
 
-        private bool CanDelete()
+        private bool CanDelete(DataGrid dataGrid)
         {
-            return SelectedTableEntries.Any();
+            if (dataGrid == null)
+                return false;
+
+            return (dataGrid.SelectionUnit == DataGridSelectionUnit.CellOrRowHeader) && dataGrid.SelectedCells.Any(cellInfo => cellInfo.IsOfColumnType(ColumnType.Comment, ColumnType.Language))
+                || SelectedTableEntries.Any();
         }
 
         private bool CanCut()
@@ -266,19 +270,46 @@
             }
         }
 
-        private void DeleteSelected()
+        private void DeleteSelected([NotNull] DataGrid dataGrid)
         {
-            var selectedItems = SelectedTableEntries.ToList();
+            Contract.Requires(dataGrid != null);
 
-            if (selectedItems.Count == 0)
-                return;
+            if (dataGrid.SelectionUnit == DataGridSelectionUnit.CellOrRowHeader)
+            {
+                var affectedEntries = new HashSet<ResourceTableEntry>();
 
-            var resourceFiles = selectedItems.Select(item => item.Container).Distinct();
+                foreach (var cellInfo in dataGrid.SelectedCells)
+                {
+                    if (!cellInfo.IsOfColumnType(ColumnType.Comment, ColumnType.Language))
+                        continue;
 
-            if (resourceFiles.Any(resourceFile => !ResourceManager.CanEdit(resourceFile, null)))
-                return;
+                    cellInfo.Column?.OnPastingCellClipboardContent(cellInfo.Item, string.Empty);
 
-            selectedItems.ForEach(item => item.Container.Remove(item));
+                    affectedEntries.Add(cellInfo.Item as ResourceTableEntry);
+                }
+
+                dataGrid.CommitEdit();
+                dataGrid.CommitEdit();
+
+                foreach (var entry in affectedEntries)
+                {
+                    entry?.Refresh();
+                }
+            }
+            else
+            {
+                var selectedItems = SelectedTableEntries.ToList();
+
+                if (selectedItems.Count == 0)
+                    return;
+
+                var resourceFiles = selectedItems.Select(item => item.Container).Distinct();
+
+                if (resourceFiles.Any(resourceFile => !ResourceManager.CanEdit(resourceFile, null)))
+                    return;
+
+                selectedItems.ForEach(item => item.Container.Remove(item));
+            }
         }
 
         private bool CanPaste(DataGrid dataGrid)

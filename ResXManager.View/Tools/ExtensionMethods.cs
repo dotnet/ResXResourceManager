@@ -4,6 +4,7 @@ namespace tomenglertde.ResXManager.View.Tools
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
@@ -127,6 +128,11 @@ namespace tomenglertde.ResXManager.View.Tools
             }
 
             return false;
+        }
+
+        public static bool IsOfColumnType(this DataGridCellInfo cell, [NotNull] params ColumnType[] columnTypes)
+        {
+            return columnTypes.Any(columnType => columnType == (cell.Column?.Header as ILanguageColumnHeader)?.ColumnType);
         }
 
     }
