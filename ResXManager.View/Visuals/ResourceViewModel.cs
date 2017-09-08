@@ -126,7 +126,7 @@
         public ICommand ToggleInvariantCommand => new DelegateCommand(() => SelectedTableEntries.Any(), ToggleInvariant);
 
         [NotNull]
-        public ICommand ToggleItemInvariantCommand => new DelegateCommand<DataGrid>(CanToggleItemInvariant, ToggleItemInvariant);
+        public static ICommand ToggleItemInvariantCommand => new DelegateCommand<DataGrid>(CanToggleItemInvariant, ToggleItemInvariant);
 
         [NotNull]
         public ICommand ReloadCommand => new DelegateCommand(() => Reload(true));
