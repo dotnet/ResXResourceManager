@@ -337,8 +337,7 @@
                 {
                     if (sharedStrings != null)
                     {
-                        int index;
-                        if (int.TryParse(text, out index) && (index >= 0) && (index < sharedStrings.Count))
+                        if (int.TryParse(text, out int index) && (index >= 0) && (index < sharedStrings.Count))
                         {
                             var stringItem = sharedStrings[index];
                             var descendants = stringItem?.Descendants<OpenXmlLeafTextElement>();
@@ -424,6 +423,7 @@
         private static IEnumerable<IEnumerable<string>> GetHeaderRows([NotNull] this IEnumerable<CultureKey> languages, IResourceScope scope)
         {
             Contract.Requires(languages != null);
+            Contract.Ensures(Contract.Result<IEnumerable<IEnumerable<string>>>() != null);
 
             var languageColumnHeaders = languages.GetLanguageColumnHeaders(scope);
 

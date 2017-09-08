@@ -144,8 +144,7 @@
         {
             string url;
 
-            var source = e.OriginalSource as FrameworkElement;
-            if (source != null)
+            if (e.OriginalSource is FrameworkElement source)
             {
                 var button = source.TryFindAncestorOrSelf<ButtonBase>();
                 if (button == null)

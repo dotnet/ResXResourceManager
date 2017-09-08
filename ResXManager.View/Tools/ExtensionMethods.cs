@@ -105,12 +105,12 @@ namespace tomenglertde.ResXManager.View.Tools
             return (Keyboard.GetKeyStates(key) & KeyStates.Down) != 0;
         }
 
-        public static bool IsAnyItemInvariant([CanBeNull] this IEnumerable<DataGridCellInfo> cellInfos)
+        public static bool IsAnyItemInvariant([CanBeNull] this IEnumerable<DataGridCellInfo> cells)
         {
-            if (cellInfos == null)
+            if (cells == null)
                 return false;
 
-            foreach (var info in cellInfos)
+            foreach (var info in cells)
             {
                 var col = info.Column?.Header as ILanguageColumnHeader;
 
@@ -132,6 +132,7 @@ namespace tomenglertde.ResXManager.View.Tools
 
         public static bool IsOfColumnType(this DataGridCellInfo cell, [NotNull] params ColumnType[] columnTypes)
         {
+            Contract.Requires(columnTypes != null);
             return columnTypes.Any(columnType => columnType == (cell.Column?.Header as ILanguageColumnHeader)?.ColumnType);
         }
 
