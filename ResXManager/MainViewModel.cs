@@ -52,6 +52,7 @@
             SourceFilesProvider = sourceFilesProvider;
 
             resourceManager.BeginEditing += ResourceManager_BeginEditing;
+            resourceManager.Reloading += ResourceManager_Reloading; 
 
             try
             {
@@ -127,6 +128,17 @@
                 _tracer.TraceError(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void ResourceManager_Reloading(object sender, CancelEventArgs e)
+        {
+            if (!ResourceManager.HasChanges)
+                return;
+
+            if (MessageBoxResult.Yes == MessageBox.Show(Resources.WarningUnsavedChanges, View.Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Hand, MessageBoxResult.No))
+                return;
+
+            e.Cancel = true;
         }
 
         private void ResourceManager_BeginEditing(object sender, [NotNull] ResourceBeginEditingEventArgs e)

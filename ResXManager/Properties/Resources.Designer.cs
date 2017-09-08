@@ -129,6 +129,17 @@ namespace tomenglertde.ResXManager.Properties {
                 return ResourceManager.GetString("Version", resourceCulture) ?? string.Empty;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You have unsaved changes; reloading all resources ....
+        /// </summary>
+        [NotNull]
+        public static string WarningUnsavedChanges {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("WarningUnsavedChanges", resourceCulture) ?? string.Empty;
+            }
+        }
     }
 
     /// <summary>
@@ -161,6 +172,10 @@ namespace tomenglertde.ResXManager.Properties {
         /// @Invariant
         /// </remarks>
         Version,
+        /// <summary>
+        ///   Looks up a localized string similar to You have unsaved changes; reloading all resources ....
+        /// </summary>
+        WarningUnsavedChanges,
     }
 
     /// <summary>

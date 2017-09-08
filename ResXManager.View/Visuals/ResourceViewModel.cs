@@ -424,7 +424,10 @@
 
                 var item = info.Item as ResourceTableEntry;
 
-                item?.IsItemInvariant.TrySetValue(col.CultureKey, isInvariant);
+                if (item?.CanEdit(col.CultureKey) != true)
+                    return;
+
+                item.IsItemInvariant.SetValue(col.CultureKey, isInvariant);
             }
         }
 

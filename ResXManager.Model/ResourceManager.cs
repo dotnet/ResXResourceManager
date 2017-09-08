@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.ComponentModel.Composition;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -36,6 +37,7 @@
         private string _snapshot;
 
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
+        public event EventHandler<CancelEventArgs> Reloading;
         public event EventHandler<EventArgs> Loaded;
         public event EventHandler<LanguageEventArgs> LanguageChanged;
 
@@ -126,6 +128,11 @@
         public bool Reload([NotNull] IList<ProjectFile> sourceFiles, DuplicateKeyHandling duplicateKeyHandling)
         {
             Contract.Requires(sourceFiles != null);
+
+            var args = new CancelEventArgs();
+            Reloading?.Invoke(this, args);
+            if (args.Cancel)
+                return false;
 
             return Load(sourceFiles, duplicateKeyHandling);
         }

@@ -270,6 +270,7 @@
                 Comments.SetValue(culture, comment?.Replace(InvariantKey, ""));
             }
 
+            Refresh();
             return true;
         }
 

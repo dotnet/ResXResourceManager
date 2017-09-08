@@ -140,4 +140,7 @@ In the standalone version the file is not automatically added to the Visual Stud
   <data name="Version" xml:space="preserve">
     <value>Version: {0}</value>
   <comment>@Invariant</comment></data>
+  <data name="WarningUnsavedChanges" xml:space="preserve">
+    <value>You have unsaved changes; reloading all resources will revert all your changes. Do you want to continue?</value>
+  </data>
 </root>

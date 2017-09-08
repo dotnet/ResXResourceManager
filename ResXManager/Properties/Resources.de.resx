@@ -137,4 +137,7 @@ Die Datei wird nicht automatisch dem Visual Studio-Projekt hinzugefügt.</value>
 
 {0}</value>
   </data>
+  <data name="WarningUnsavedChanges" xml:space="preserve">
+    <value>Es gibt noch ungesicherte Änderungen. Neu laden der Dateien wird alle Änderungen rückgängig machen. Wollen sie trotzdem fortfahren?</value>
+  </data>
 </root>

@@ -69,20 +69,6 @@
             return true;
         }
 
-        public bool TrySetValue(object culture, T value)
-        {
-            var cultureKey = CultureKey.Parse(culture);
-
-            if (!_languages.TryGetValue(cultureKey, out ResourceLanguage language))
-                return false;
-
-            if (!_setter(language, value))
-                return false;
-
-            OnValueChanged();
-            return true;
-        }
-
         public event EventHandler ValueChanged;
 
         public IEnumerator<ResourceLanguage> GetEnumerator()
