@@ -139,10 +139,17 @@
                 dataGrid.Items.Filter = row =>
                 {
                     var entry = (ResourceTableEntry)row;
-                    var items = visibleLanguages.Select(lang => new { Value = entry.Values.GetValue(lang), IsInvariant = entry.IsItemInvariant.GetValue(lang) || entry.IsInvariant });
+                    Contract.Assume(entry != null);
+
+                    var neutralCulture = entry.NeutralLanguage.CultureKey;
+
+                    var hasInvariantMismatches = visibleLanguages
+                        .Where(lang => neutralCulture != lang)
+                        .Select(lang => new { Value = entry.Values.GetValue(lang), IsInvariant = entry.IsItemInvariant.GetValue(lang) || entry.IsInvariant })
+                        .Any(v => v.IsInvariant != string.IsNullOrEmpty(v.Value));
 
                     return entry.IsDuplicateKey
-                        || items.Any(v => v.IsInvariant != string.IsNullOrEmpty(v.Value))
+                        || hasInvariantMismatches
                         || entry.HasStringFormatParameterMismatches(visibleLanguages)
                         || entry.HasSnapshotDifferences(visibleLanguages);
                 };
