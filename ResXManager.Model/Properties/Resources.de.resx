@@ -184,4 +184,10 @@
   <data name="StringFormatParameterMismatchError" xml:space="preserve">
     <value>Warnung: Dieser Text enthält String-Format Parameterinkonsistenzen!</value>
   </data>
+  <data name="NotAllLanguagesAreEditable" xml:space="preserve">
+    <value>Nicht alle Ressourcendateien sind editierbar</value>
+  </data>
+  <data name="KeyAlreadyExists" xml:space="preserve">
+    <value>Der Schlüssel existiert bereits: {0}</value>
+  </data>
 </root>

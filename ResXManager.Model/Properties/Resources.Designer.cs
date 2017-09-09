@@ -271,7 +271,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Key already exists: .
+        ///   Looks up a localized string similar to This key already exists: {0}.
         /// </summary>
         [NotNull]
         public static string KeyAlreadyExists {
@@ -304,7 +304,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Not all languages are editable.
+        ///   Looks up a localized string similar to Not all resource files are editable.
         /// </summary>
         [NotNull]
         public static string NotAllLanguagesAreEditable {
@@ -431,7 +431,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         InvalidResourceFileValueAttributeMissingError,
         /// <summary>
-        ///   Looks up a localized string similar to Key already exists: .
+        ///   Looks up a localized string similar to This key already exists: {0}.
         /// </summary>
         KeyAlreadyExists,
         /// <summary>
@@ -443,7 +443,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         Neutral,
         /// <summary>
-        ///   Looks up a localized string similar to Not all languages are editable.
+        ///   Looks up a localized string similar to Not all resource files are editable.
         /// </summary>
         NotAllLanguagesAreEditable,
         /// <summary>
