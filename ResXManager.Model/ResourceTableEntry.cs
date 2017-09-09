@@ -219,11 +219,10 @@
         [NotNull]
         public ResourceTableValues<string> SnapshotComments { get; private set; }
 
-        [DependsOn(nameof(Values))]
         [NotNull]
         public ResourceTableValues<bool> FileExists { get; private set; }
 
-        [DependsOn(nameof(Values), nameof(Snapshot))]
+        [DependsOn(nameof(Snapshot))]
         [NotNull]
         public ResourceTableValues<ICollection<string>> ValueAnnotations { get; private set; }
 
@@ -235,7 +234,6 @@
         public ICollection<CultureKey> Languages => _languages.Keys;
 
         [NotNull]
-        [DependsOn(nameof(Comments))]
         public ResourceTableValues<bool> IsItemInvariant { get; private set; }
 
         [DependsOn(nameof(Comment))]
