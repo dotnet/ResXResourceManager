@@ -391,7 +391,7 @@
 
         private void ToggleInvariant()
         {
-            var items = SelectedTableEntries.ToList();
+            var items = SelectedTableEntries.ToArray();
 
             if (!items.Any())
                 return;
@@ -402,7 +402,15 @@
 
             var newValue = !first.IsInvariant;
 
-            items.ForEach(item => item.IsInvariant = newValue);
+            foreach (var item in items)
+            {
+                Contract.Assume(item != null);
+
+                if (!item.CanEdit(item.NeutralLanguage.CultureKey))
+                    return;
+
+                item.IsInvariant = newValue;
+            }
         }
 
         private static void ToggleItemInvariant([NotNull] DataGrid dataGrid)

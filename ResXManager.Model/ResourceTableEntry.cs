@@ -39,7 +39,7 @@
         [NotNull]
         private IDictionary<CultureKey, ResourceLanguage> _languages;
 
-        // the key actually stored in the file, identical to Key if no error occured.
+        // the key actually stored in the file, identical to Key if no error occurred.
         private string _storedKey;
         // the last validation error
         private string _keyValidationError;
@@ -195,9 +195,6 @@
             get => NeutralLanguage.GetComment(Key) ?? string.Empty;
             set => NeutralLanguage.SetComment(Key, value);
         }
-
-        [CanBeNull]
-        public string NeutralValue => Values[null];
 
         /// <summary>
         /// Gets the localized values.
