@@ -1,4 +1,9 @@
-﻿1.4
+﻿1.5
+* **Library references updated: In case of crashes, [.Net Framework August 2017 Preview of quality rollup](https://blogs.msdn.microsoft.com/dotnet/2017/08/16/net-framework-august-2017-preview-of-quality-rollup/) might be needed!** (WPF fails to load resources if two versions of the same assembly are loaded. [378607])
+* Fix #34: allow invariant per cell.
+* Delete cell content in cell selection mode.
+
+1.4
 * Fix #29: new files are not created when applying translations, VS crashes on 32bit
 * Fix #26: excel column index >26 was wrong
 
