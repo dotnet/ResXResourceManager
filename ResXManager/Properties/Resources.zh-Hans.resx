@@ -125,7 +125,7 @@
 首页: https://github.com/tom-englert/ResXResourceManager
 报告问题: https://github.com/tom-englert/ResXResourceManager/issues
 评价我们: https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details
-翻译自https://github.com/yinyue200</value>
+翻译自 https://github.com/yinyue200</value>
   </data>
   <data name="ProjectHasNoResourceFile" xml:space="preserve">
     <value>该项目没有语言{0}的资源文件。
@@ -137,5 +137,11 @@
     <value>项目中的某些文件不可写。 您可能需要在编辑文件之前查看文件：
 
 {0}</value>
+  </data>
+  <data name="WarningUnsavedChanges" xml:space="preserve">
+    <value>你有未保存的更改，重新价值所有资源将放弃所有更改，你确定要继续吗？</value>
+  </data>
+  <data name="QuerySaveChanges" xml:space="preserve">
+    <value>你要保持这些更改吗</value>
   </data>
 </root>
