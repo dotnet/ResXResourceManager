@@ -182,4 +182,10 @@
   <data name="StringFormatParameterMismatchError" xml:space="preserve">
     <value>警告︰ 此项目包含字符串格式参数不匹配！</value>
   </data>
+  <data name="NotAllLanguagesAreEditable" xml:space="preserve">
+    <value>某些资源文件是只读的</value>
+  </data>
+  <data name="KeyAlreadyExists" xml:space="preserve">
+    <value>名称 {0} 已经存在</value>
+  </data>
 </root>
