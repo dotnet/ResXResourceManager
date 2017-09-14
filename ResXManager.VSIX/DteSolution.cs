@@ -81,6 +81,7 @@
 
         public EnvDTE80.DTE2 Dte => _serviceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
 
+        [CanBeNull]
         public EnvDTE.Globals Globals
         {
             get
@@ -110,6 +111,7 @@
             }
         }
 
+        [CanBeNull]
         public string FullName => Solution?.FullName;
 
         public EnvDTE.ProjectItem AddFile([NotNull] string fullName)

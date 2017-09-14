@@ -117,7 +117,8 @@
 
             var oldComment = Comment;
 
-            Index = index;
+            UpdateIndex(index);
+
             _languages = languages;
 
             var neutralLanguage = languages.First().Value;
@@ -274,7 +275,21 @@
 
         public ReadOnlyCollection<CodeReference> CodeReferences { get; internal set; }
 
+        [UsedImplicitly]
         public double Index { get; set; }
+
+        /// <summary>
+        /// Updates the index to it's actual value only, without trying to adjust the file content.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        internal void UpdateIndex(double value)
+        {
+            if (Math.Abs(value - Index) <= double.Epsilon)
+                return;
+
+            Index.SetBackingField(value);
+            OnPropertyChanged(nameof(Index));
+        }
 
         [UsedImplicitly] // PropertyChanged.Fody
         private void OnIndexChanged()

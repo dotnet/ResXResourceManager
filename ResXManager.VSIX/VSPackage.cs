@@ -28,6 +28,8 @@
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Visuals;
 
+    using Throttle;
+
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
     using TomsToolbox.Desktop.Composition;
@@ -461,6 +463,7 @@
                 .Any(extension => ProjectFileExtensions.SupportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase));
         }
 
+        [Throttled(typeof(DispatcherThrottle))]
         private void ReloadSolution()
         {
             CompositionHost.GetExportedValue<ResourceViewModel>().Reload();

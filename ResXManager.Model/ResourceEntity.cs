@@ -291,7 +291,7 @@
             {
                 if (entries.TryGetValue(key, out var value))
                 {
-                    value.Index = index++;
+                    value.UpdateIndex(index++);
                 }
             }
         }
