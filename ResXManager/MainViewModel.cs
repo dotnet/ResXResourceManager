@@ -23,6 +23,7 @@
     using tomenglertde.ResXManager.View.Visuals;
 
     using TomsToolbox.Desktop;
+    using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
@@ -192,7 +193,7 @@
                         File.WriteAllText(languageFileName, Model.Properties.Resources.EmptyResxTemplate);
                     }
 
-                    entity.AddLanguage(new ProjectFile(languageFileName, rootFolder, entity.ProjectName, null), _configuration.DuplicateKeyHandling);
+                    entity.AddLanguage(new ProjectFile(_resourceViewModel.ResourceManager, languageFileName, rootFolder, entity.ProjectName, null), _configuration.DuplicateKeyHandling);
                     return true;
                 }
                 catch (Exception ex)
@@ -245,13 +246,17 @@
         private readonly Configuration _configuration;
         [NotNull]
         private readonly PerformanceTracer _performanceTracer;
+        [NotNull]
+        private readonly ICompositionHost _compositionHost;
 
         [ImportingConstructor]
-        public SourceFilesProvider([NotNull] Configuration configuration, [NotNull] PerformanceTracer performanceTracer)
+        public SourceFilesProvider([NotNull] ICompositionHost compositionHost, [NotNull] Configuration configuration, [NotNull] PerformanceTracer performanceTracer)
         {
+            Contract.Requires(compositionHost != null);
             Contract.Requires(configuration != null);
             Contract.Requires(performanceTracer != null);
 
+            _compositionHost = compositionHost;
             _configuration = configuration;
             _performanceTracer = performanceTracer;
         }
@@ -268,7 +273,7 @@
 
                 using (_performanceTracer.Start("Enumerate source files"))
                 {
-                    return new DirectoryInfo(folder).GetAllSourceFiles(new FileFilter(_configuration));
+                    return _compositionHost.GetExportedValue<ResourceManager>().GetAllSourceFiles(new DirectoryInfo(folder), new FileFilter(_configuration));
                 }
             }
         }
@@ -280,6 +285,7 @@
         {
             Contract.Invariant(_configuration != null);
             Contract.Invariant(_performanceTracer != null);
+            Contract.Invariant(_compositionHost != null);
         }
     }
 }

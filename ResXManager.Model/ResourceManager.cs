@@ -40,6 +40,7 @@
         public event EventHandler<CancelEventArgs> Reloading;
         public event EventHandler<EventArgs> Loaded;
         public event EventHandler<LanguageEventArgs> LanguageChanged;
+        public event EventHandler<ProjectFileEventArgs> ProjectFileSaved;
 
         [ImportingConstructor]
         private ResourceManager([NotNull] ISourceFilesProvider sourceFilesProvider)
@@ -253,6 +254,13 @@
             Contract.Requires(language != null);
 
             LanguageChanged?.Invoke(this, new LanguageEventArgs(language));
+        }
+
+        internal void OnProjectFileSaved([NotNull] ProjectFile projectFile)
+        {
+            Contract.Requires(projectFile != null);
+
+            ProjectFileSaved?.Invoke(this, new ProjectFileEventArgs(projectFile));
         }
 
         public static bool IsValidLanguageName([NotNull] string languageName)

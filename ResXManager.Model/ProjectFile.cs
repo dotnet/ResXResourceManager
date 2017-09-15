@@ -17,8 +17,10 @@
     /// </summary>
     public class ProjectFile : ObservableObject
     {
+        [NotNull]
+        private readonly ResourceManager _resourceManager;
+
         private string _fingerPrint;
-        private XDocument _document;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectFile" /> class.
@@ -27,10 +29,13 @@
         /// <param name="rootFolder">The root folder to calculate the relative path from.</param>
         /// <param name="projectName">Name of the project.</param>
         /// <param name="uniqueProjectName">Unique name of the project file.</param>
-        public ProjectFile([NotNull] string filePath, [NotNull] string rootFolder, string projectName, string uniqueProjectName)
+        public ProjectFile([NotNull] ResourceManager resourceManager, [NotNull] string filePath, [NotNull] string rootFolder, string projectName, string uniqueProjectName)
         {
+            Contract.Requires(resourceManager != null);
             Contract.Requires(!string.IsNullOrEmpty(filePath));
             Contract.Requires(rootFolder != null);
+
+            _resourceManager = resourceManager;
 
             FilePath = filePath;
             RelativeFilePath = GetRelativePath(rootFolder, filePath);
@@ -68,7 +73,6 @@
 
             var document = InternalLoad();
 
-            _document = document;
             _fingerPrint = document.ToString(SaveOptions.DisableFormatting);
 
             HasChanges = false;
@@ -84,12 +88,12 @@
             return XDocument.Load(FilePath);
         }
 
-        public void Changed()
+        public void Changed([CanBeNull] XDocument document)
         {
-            if (_document == null)
+            if (document == null)
                 return;
 
-            InternalChanged(_document);
+            InternalChanged(document);
         }
 
         protected virtual void InternalChanged([NotNull] XDocument document)
@@ -99,10 +103,8 @@
             HasChanges = _fingerPrint != document.ToString(SaveOptions.DisableFormatting);
         }
 
-        public void Save()
+        public void Save([CanBeNull] XDocument document)
         {
-            var document = _document;
-
             if (document == null)
                 return;
 
@@ -118,6 +120,8 @@
             Contract.Requires(document != null);
 
             document.Save(FilePath);
+
+            _resourceManager.OnProjectFileSaved(this);
         }
 
         /// <summary>

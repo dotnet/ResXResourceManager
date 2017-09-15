@@ -367,7 +367,7 @@
 
                 if (projectFile == null)
                 {
-                    projectFile = new DteProjectFile(_compositionHost.GetExportedValue<DteSolution>(), languageFileName, projectName, containingProject.UniqueName, projectItem);
+                    projectFile = new DteProjectFile(_compositionHost.GetExportedValue<ResourceManager>(), _compositionHost.GetExportedValue<DteSolution>(), languageFileName, projectName, containingProject.UniqueName, projectItem);
                 }
                 else
                 {

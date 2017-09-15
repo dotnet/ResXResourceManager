@@ -13,7 +13,7 @@
     public static class ResourceManagerExtensions
     {
         [NotNull]
-        public static IList<ProjectFile> GetAllSourceFiles([NotNull] this DirectoryInfo solutionFolder, [NotNull] IFileFilter fileFilter)
+        public static IList<ProjectFile> GetAllSourceFiles([NotNull] this ResourceManager resourceManager, [NotNull] DirectoryInfo solutionFolder, [NotNull] IFileFilter fileFilter)
         {
             Contract.Requires(solutionFolder != null);
             Contract.Requires(fileFilter != null);
@@ -26,7 +26,7 @@
 
             var allProjectFiles = fileInfos
                 .Where(fileFilter.IncludeFile)
-                .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
+                .Select(fileInfo => new ProjectFile(resourceManager, fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
                 .Where(file => file.IsResourceFile() || fileFilter.IsSourceFile(file))
                 .ToArray();
 

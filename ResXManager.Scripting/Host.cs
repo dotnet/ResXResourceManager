@@ -171,7 +171,7 @@
                 File.WriteAllText(languageFileName, Resources.EmptyResxTemplate);
             }
 
-            entity.AddLanguage(new ProjectFile(languageFileName, rootFolder, entity.ProjectName, null), DuplicateKeyHandling.Fail);
+            entity.AddLanguage(new ProjectFile(_resourceManager, languageFileName, rootFolder, entity.ProjectName, null), DuplicateKeyHandling.Fail);
 
             return true;
         }

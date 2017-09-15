@@ -36,7 +36,8 @@
         [NotNull]
         private readonly XDocument _document;
         [NotNull]
-        private readonly XElement _documentRoot;
+        // ReSharper disable once AssignNullToNotNullAttribute
+        private XElement _documentRoot => _document.Root;
         [NotNull]
         private readonly ProjectFile _file;
         [NotNull]
@@ -75,7 +76,6 @@
             try
             {
                 _document = file.Load();
-                _documentRoot = _document.Root;
             }
             catch (XmlException ex)
             {
@@ -91,13 +91,11 @@
             _valueNodeName = defaultNamespace.GetName(@"value");
             _commentNodeName = defaultNamespace.GetName(@"comment");
 
-            UpdateNodes(file, duplicateKeyHandling);
+            UpdateNodes(duplicateKeyHandling);
         }
 
-        private void UpdateNodes([NotNull] ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
+        private void UpdateNodes(DuplicateKeyHandling duplicateKeyHandling)
         {
-            Contract.Requires(file != null);
-
             var data = _documentRoot.Elements(_dataNodeName);
 
             var elements = data
@@ -113,7 +111,7 @@
             else
             {
                 if (elements.Any(item => string.IsNullOrEmpty(item.Key)))
-                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.EmptyKeysError , file.FilePath));
+                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.EmptyKeysError , _file.FilePath));
             }
 
             try
@@ -123,20 +121,15 @@
             catch (ArgumentException ex)
             {
                 var duplicateKeys = string.Join(@", ", elements.GroupBy(item => item.Key).Where(group => group.Count() > 1).Select(group => Quote + group.Key + Quote));
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.DuplicateKeyError, file.FilePath, duplicateKeys), ex);
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.DuplicateKeyError, _file.FilePath, duplicateKeys), ex);
             }
         }
 
         /// <summary>
         /// Gets the culture of this language.
         /// </summary>
-        public CultureInfo Culture
-        {
-            get
-            {
-                return _cultureKey.Culture;
-            }
-        }
+        [CanBeNull]
+        public CultureInfo Culture => _cultureKey.Culture;
 
         /// <summary>
         /// Gets the display name of this language.
@@ -246,7 +239,7 @@
 
         private void OnChanged()
         {
-            _file.Changed();
+            _file.Changed(_document);
 
             Container.Container.OnLanguageChanged(this);
         }
@@ -268,15 +261,15 @@
             {
                 if (SortNodes(fileContentSorting.Value))
                 {
-                    _file.Changed();
+                    _file.Changed(_document);
 
-                    UpdateNodes(_file, DuplicateKeyHandling.Rename);
+                    UpdateNodes(DuplicateKeyHandling.Rename);
 
                     Container.OnItemOrderChanged(this);
                 }
             }
 
-            _file.Save();
+            _file.Save(_document);
         }
 
         private bool SortNodes(StringComparison stringComparison)

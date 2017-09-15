@@ -225,8 +225,8 @@
             var events = (EnvDTE80.Events2)Dte.Events;
 
             _solutionEvents = events.SolutionEvents;
-            _solutionEvents.Opened += SolutionEvents_Opened;
-            _solutionEvents.AfterClosing += SolutionEvents_AfterClosing;
+            _solutionEvents.Opened += Solution_Opened;
+            _solutionEvents.AfterClosing += Solution_AfterClosing;
 
             _solutionEvents.ProjectAdded += Solution_ContentChanged;
             _solutionEvents.ProjectRemoved += Solution_ContentChanged;
@@ -423,14 +423,19 @@
             }
         }
 
-        private void SolutionEvents_Opened()
+        private void Solution_Opened()
         {
             Tracer.WriteLine("DTE event: Solution opened");
 
             ReloadSolution();
+
+            var resourceManager = CompositionHost.GetExportedValue<ResourceManager>();
+
+            resourceManager.ProjectFileSaved -= ResourceManager_ProjectFileSaved;
+            resourceManager.ProjectFileSaved += ResourceManager_ProjectFileSaved;
         }
 
-        private void SolutionEvents_AfterClosing()
+        private void Solution_AfterClosing()
         {
             Tracer.WriteLine("DTE event: Solution closed");
 
@@ -487,6 +492,21 @@
                 return;
 
             ReloadSolution();
+        }
+
+        private void ResourceManager_ProjectFileSaved([NotNull] object sender, [NotNull] ProjectFileEventArgs e)
+        {
+            // ReSharper disable once PossibleNullReferenceException
+            bool Predicate(ResourceEntity item) => item.Languages.Any(lang => lang.ProjectFile == e.ProjectFile);
+
+            var entity = CompositionHost.GetExportedValue<ResourceManager>().ResourceEntities.FirstOrDefault(Predicate);
+
+            var neutralProjectFile = (DteProjectFile)entity?.NeutralProjectFile;
+
+            // VS will run the custom tool on the project item only. Run the custom tool on any of the descendants, too.
+            var projectItems = neutralProjectFile?.ProjectItems.SelectMany(projectItem => projectItem.Descendants());
+
+            _customToolRunner.Enqueue(projectItems);
         }
 
         private static bool AffectsResourceFile(EnvDTE.Document document)
