@@ -80,7 +80,7 @@
             if (columns.Count == 0)
             {
                 columns.Add(CreateKeyColumn());
-                columns.Add(CreateIndexColumn(resourceViewModel));
+                columns.Add(CreateIndexColumn(resourceViewModel, configuration));
                 columns.Add(CreateCodeReferencesColumn(dataGrid));
             }
 
@@ -133,7 +133,7 @@
         }
 
         [NotNull]
-        private static DataGridTextColumn CreateIndexColumn(ResourceViewModel resourceViewModel)
+        private static DataGridTextColumn CreateIndexColumn(ResourceViewModel resourceViewModel, Configuration configuration)
         {
             Contract.Ensures(Contract.Result<DataGridTextColumn>() != null);
 
@@ -165,7 +165,15 @@
             column.SetIsFilterVisible(false);
 
             BindingOperations.SetBinding(column, DataGridColumn.VisibilityProperty, new Binding(nameof(Settings.IsIndexColumnVisible)) { Source = Settings.Default, Converter = BooleanToVisibilityConverter.Default });
-            BindingOperations.SetBinding(column, DataGridColumn.IsReadOnlyProperty, new Binding(nameof(ResourceViewModel.SelectedEntities) + ".Count") { Source = resourceViewModel, Converter = BinaryOperationConverter.Inequality, ConverterParameter = 1 });
+            BindingOperations.SetBinding(column, DataGridColumn.IsReadOnlyProperty, new MultiBinding
+            {
+                Converter = LogicalMultiValueConverter.Or,
+                Bindings =
+                {
+                    new Binding(nameof(ResourceViewModel.SelectedEntities) + ".Count") { Source = resourceViewModel, Converter = BinaryOperationConverter.Inequality, ConverterParameter = 1 },
+                    new Binding(nameof(Configuration.SortFileContentOnSave)) { Source = configuration }
+                }
+            });
 
             return column;
         }

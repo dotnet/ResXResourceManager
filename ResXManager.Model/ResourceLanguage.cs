@@ -17,7 +17,10 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
 
+    using Throttle;
+
     using TomsToolbox.Core;
+    using TomsToolbox.Desktop;
 
     /// <summary>
     /// Represents a set of localized resources.
@@ -239,6 +242,7 @@
             SetNodeData(key, node => node.Text = value);
         }
 
+        [Throttled(typeof(DispatcherThrottle))]
         private void OnChanged()
         {
             _file.Changed(_document, false);
