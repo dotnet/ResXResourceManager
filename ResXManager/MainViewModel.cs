@@ -246,8 +246,6 @@
         private readonly Configuration _configuration;
         [NotNull]
         private readonly PerformanceTracer _performanceTracer;
-        [NotNull]
-        private readonly ICompositionHost _compositionHost;
 
         [ImportingConstructor]
         public SourceFilesProvider([NotNull] Configuration configuration, [NotNull] PerformanceTracer performanceTracer)
