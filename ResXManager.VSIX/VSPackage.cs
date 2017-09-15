@@ -418,7 +418,7 @@
             ReloadSolution();
         }
 
-        private void DocumentEvents_DocumentSaved(EnvDTE.Document document)
+        private void DocumentEvents_DocumentSaved([NotNull] EnvDTE.Document document)
         {
             Tracer.WriteLine("DTE event: Document saved");
 
@@ -444,6 +444,9 @@
             var projectItems = neutralProjectFile?.ProjectItems.SelectMany(projectItem => projectItem.Descendants());
 
             _customToolRunner.Enqueue(projectItems);
+
+            if (!document.Windows.OfType<EnvDTE.Window>().Any(w => w.Visible))
+                return;
 
             ReloadSolution();
         }
