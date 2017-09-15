@@ -82,15 +82,15 @@
             return XDocument.Load(FilePath);
         }
 
-        public void Changed([CanBeNull] XDocument document, bool willSaveImmedeately)
+        public void Changed([CanBeNull] XDocument document, bool willSaveImmediately)
         {
             if (document == null)
                 return;
 
-            InternalChanged(document, willSaveImmedeately);
+            InternalChanged(document, willSaveImmediately);
         }
 
-        protected virtual void InternalChanged([NotNull] XDocument document, bool willSaveImmedeately)
+        protected virtual void InternalChanged([NotNull] XDocument document, bool willSaveImmediately)
         {
             Contract.Requires(document != null);
 

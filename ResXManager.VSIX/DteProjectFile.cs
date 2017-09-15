@@ -84,13 +84,13 @@
             return projectItem.TryGetContent() ?? new XDocument();
         }
 
-        protected override void InternalChanged(XDocument document, bool willSaveImmedeately)
+        protected override void InternalChanged(XDocument document, bool willSaveImmediately)
         {
             var projectItem = DefaultProjectItem;
 
             try
             {
-                if (!willSaveImmedeately)
+                if (!willSaveImmediately)
                     projectItem.Open();
 
                 if (projectItem.TrySetContent(document))
@@ -104,7 +104,7 @@
                 // in case of errors write directly to the file...
             }
 
-            base.InternalChanged(document, willSaveImmedeately);
+            base.InternalChanged(document, willSaveImmediately);
         }
 
         protected override void InternalSave(XDocument document)
