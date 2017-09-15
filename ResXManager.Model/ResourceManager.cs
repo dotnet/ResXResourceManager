@@ -106,13 +106,7 @@
         [NotNull, ItemNotNull]
         public static IEnumerable<CultureInfo> SpecificCultures { get; } = GetSpecificCultures();
 
-        public bool HasChanges
-        {
-            get
-            {
-                return ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.HasChanges);
-            }
-        }
+        public bool HasChanges => ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.HasChanges);
 
         public void ReloadSnapshot()
         {

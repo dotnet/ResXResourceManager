@@ -24,6 +24,9 @@
         [NotNull]
         private readonly ITracer _tracer;
 
+        [CanBeNull]
+        private IEnumerable<DteProjectFile> _projectFiles;
+
         [ImportingConstructor]
         public DteSolution([NotNull][Import(nameof(VSPackage))] IServiceProvider serviceProvider, [NotNull] ITracer tracer)
         {
@@ -38,10 +41,18 @@
         /// Gets all files of all project in the solution.
         /// </summary>
         /// <returns>The files.</returns>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IEnumerable<DteProjectFile> GetProjectFiles()
         {
             Contract.Ensures(Contract.Result<IEnumerable<ProjectFile>>() != null);
+
+            return _projectFiles ?? (_projectFiles = EnumerateProjectFiles());
+        }
+
+        [NotNull, ItemNotNull]
+        private IEnumerable<DteProjectFile> EnumerateProjectFiles()
+        {
+            Contract.Ensures(Contract.Result<IEnumerable<DteProjectFile>>() != null);
 
             var items = new Dictionary<string, DteProjectFile>();
 
@@ -77,9 +88,11 @@
         }
 
         // ReSharper disable once SuspiciousTypeConversion.Global
-        public EnvDTE80.Solution2 Solution => Dte?.Solution as EnvDTE80.Solution2;
+        [CanBeNull, ItemNotNull]
+        private EnvDTE80.Solution2 Solution => Dte?.Solution as EnvDTE80.Solution2;
 
-        public EnvDTE80.DTE2 Dte => _serviceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
+        [CanBeNull]
+        private EnvDTE80.DTE2 Dte => _serviceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
 
         [CanBeNull]
         public EnvDTE.Globals Globals
@@ -114,6 +127,7 @@
         [CanBeNull]
         public string FullName => Solution?.FullName;
 
+        [CanBeNull]
         public EnvDTE.ProjectItem AddFile([NotNull] string fullName)
         {
             Contract.Requires(fullName != null);
@@ -121,6 +135,11 @@
             var solutionItemsProject = GetProjects().FirstOrDefault(IsSolutionItemsFolder) ?? Solution?.AddSolutionFolder(SolutionItemsFolderName);
 
             return solutionItemsProject?.AddFromFile(fullName);
+        }
+
+        public void Invalidate()
+        {
+            _projectFiles = null;
         }
 
         private static bool IsSolutionItemsFolder(EnvDTE.Project project)

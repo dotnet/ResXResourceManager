@@ -59,6 +59,11 @@
 
         private EnvDTE.SolutionEvents _solutionEvents;
         private EnvDTE.DocumentEvents _documentEvents;
+        private EnvDTE.ProjectItemsEvents _projectItemsEvents;
+        private EnvDTE.ProjectItemsEvents _solutionItemsEvents;
+        private EnvDTE.ProjectItemsEvents _miscFilesEvents;
+        private EnvDTE.ProjectsEvents _projectsEvents;
+
         private static VSPackage _instance;
 
         public VSPackage()
@@ -222,6 +227,30 @@
             _solutionEvents = events.SolutionEvents;
             _solutionEvents.Opened += SolutionEvents_Opened;
             _solutionEvents.AfterClosing += SolutionEvents_AfterClosing;
+
+            _solutionEvents.ProjectAdded += Solution_ContentChanged;
+            _solutionEvents.ProjectRemoved += Solution_ContentChanged;
+            _solutionEvents.ProjectRenamed += (item, newName) => Solution_ContentChanged(item);
+
+            _projectItemsEvents = events.ProjectItemsEvents;
+            _projectItemsEvents.ItemAdded += Solution_ContentChanged;
+            _projectItemsEvents.ItemRemoved += Solution_ContentChanged;
+            _projectItemsEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
+
+            _solutionItemsEvents = events.SolutionItemsEvents;
+            _solutionItemsEvents.ItemAdded += Solution_ContentChanged;
+            _solutionItemsEvents.ItemRemoved += Solution_ContentChanged;
+            _solutionItemsEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
+
+            _miscFilesEvents = events.MiscFilesEvents;
+            _miscFilesEvents.ItemAdded += Solution_ContentChanged;
+            _miscFilesEvents.ItemRemoved += Solution_ContentChanged;
+            _miscFilesEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
+
+            _projectsEvents = events.ProjectsEvents;
+            _projectsEvents.ItemAdded += Solution_ContentChanged;
+            _projectsEvents.ItemRemoved += Solution_ContentChanged;
+            _projectsEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
 
             _documentEvents = events.DocumentEvents;
             _documentEvents.DocumentOpened += DocumentEvents_DocumentOpened;
@@ -408,6 +437,15 @@
             ReloadSolution();
         }
 
+        private void Solution_ContentChanged(object item)
+        {
+            Tracer.WriteLine("DTE event: Solution content changed");
+
+            CompositionHost.GetExportedValue<DteSolution>().Invalidate();
+
+            ReloadSolution();
+        }
+
         private void DocumentEvents_DocumentOpened(EnvDTE.Document document)
         {
             Tracer.WriteLine("DTE event: Document opened");
@@ -431,12 +469,11 @@
             // => find the resource entity that contains the document and run the custom tool on the neutral project file.
 
             // ReSharper disable once PossibleNullReferenceException
-            Func<ResourceEntity, bool> predicate = e => e.Languages
-                .Select(lang => lang.ProjectFile)
+            bool Predicate(ResourceEntity e) => e.Languages.Select(lang => lang.ProjectFile)
                 .OfType<DteProjectFile>()
                 .Any(projectFile => projectFile.ProjectItems.Any(p => p.Document == document));
 
-            var entity = CompositionHost.GetExportedValue<ResourceManager>().ResourceEntities.FirstOrDefault(predicate);
+            var entity = CompositionHost.GetExportedValue<ResourceManager>().ResourceEntities.FirstOrDefault(Predicate);
 
             var neutralProjectFile = (DteProjectFile)entity?.NeutralProjectFile;
 
@@ -445,7 +482,8 @@
 
             _customToolRunner.Enqueue(projectItems);
 
-            if (!document.Windows.OfType<EnvDTE.Window>().Any(w => w.Visible))
+            // no need to reload the solution if there is no other editor window open
+            if (document.Windows?.OfType<EnvDTE.Window>().Any(w => w.Visible) != true)
                 return;
 
             ReloadSolution();
