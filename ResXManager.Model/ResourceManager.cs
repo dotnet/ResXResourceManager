@@ -109,6 +109,8 @@
 
         public bool HasChanges => ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.HasChanges);
 
+        public bool IsSaving => ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.IsSaving);
+
         public void ReloadSnapshot()
         {
             if (!string.IsNullOrEmpty(_snapshot))
@@ -256,11 +258,11 @@
             LanguageChanged?.Invoke(this, new LanguageEventArgs(language));
         }
 
-        internal void OnProjectFileSaved([NotNull] ProjectFile projectFile)
+        internal void OnProjectFileSaved([NotNull] ResourceLanguage language, [NotNull] ProjectFile projectFile)
         {
             Contract.Requires(projectFile != null);
 
-            ProjectFileSaved?.Invoke(this, new ProjectFileEventArgs(projectFile));
+            ProjectFileSaved?.Invoke(this, new ProjectFileEventArgs(language, projectFile));
         }
 
         public static bool IsValidLanguageName([NotNull] string languageName)

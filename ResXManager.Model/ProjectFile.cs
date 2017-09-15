@@ -17,9 +17,6 @@
     /// </summary>
     public class ProjectFile : ObservableObject
     {
-        [NotNull]
-        private readonly ResourceManager _resourceManager;
-
         private string _fingerPrint;
 
         /// <summary>
@@ -29,13 +26,10 @@
         /// <param name="rootFolder">The root folder to calculate the relative path from.</param>
         /// <param name="projectName">Name of the project.</param>
         /// <param name="uniqueProjectName">Unique name of the project file.</param>
-        public ProjectFile([NotNull] ResourceManager resourceManager, [NotNull] string filePath, [NotNull] string rootFolder, string projectName, string uniqueProjectName)
+        public ProjectFile([NotNull] string filePath, [NotNull] string rootFolder, string projectName, string uniqueProjectName)
         {
-            Contract.Requires(resourceManager != null);
             Contract.Requires(!string.IsNullOrEmpty(filePath));
             Contract.Requires(rootFolder != null);
-
-            _resourceManager = resourceManager;
 
             FilePath = filePath;
             RelativeFilePath = GetRelativePath(rootFolder, filePath);
@@ -88,15 +82,15 @@
             return XDocument.Load(FilePath);
         }
 
-        public void Changed([CanBeNull] XDocument document)
+        public void Changed([CanBeNull] XDocument document, bool willSaveImmedeately)
         {
             if (document == null)
                 return;
 
-            InternalChanged(document);
+            InternalChanged(document, willSaveImmedeately);
         }
 
-        protected virtual void InternalChanged([NotNull] XDocument document)
+        protected virtual void InternalChanged([NotNull] XDocument document, bool willSaveImmedeately)
         {
             Contract.Requires(document != null);
 
@@ -120,8 +114,6 @@
             Contract.Requires(document != null);
 
             document.Save(FilePath);
-
-            _resourceManager.OnProjectFileSaved(this);
         }
 
         /// <summary>

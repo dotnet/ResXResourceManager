@@ -46,7 +46,7 @@ namespace ResXManager.Scripting
 
                 _fileExclusionFilter = ExclusionFilter.TryCreateRegex();
 
-                return _compositionHost.GetExportedValue<ResourceManager>().GetAllSourceFiles(new DirectoryInfo(folder), this);
+                return new DirectoryInfo(folder).GetAllSourceFiles(this);
             }
         }
 

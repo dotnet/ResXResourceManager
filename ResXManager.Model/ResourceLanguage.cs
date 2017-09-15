@@ -111,7 +111,7 @@
             else
             {
                 if (elements.Any(item => string.IsNullOrEmpty(item.Key)))
-                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.EmptyKeysError , _file.FilePath));
+                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.EmptyKeysError, _file.FilePath));
             }
 
             try
@@ -153,6 +153,8 @@
         }
 
         public bool HasChanges => _file.HasChanges;
+
+        public bool IsSaving { get; private set; }
 
         [NotNull]
         public string FileName
@@ -239,7 +241,7 @@
 
         private void OnChanged()
         {
-            _file.Changed(_document);
+            _file.Changed(_document, false);
 
             Container.Container.OnLanguageChanged(this);
         }
@@ -257,19 +259,30 @@
         /// <exception cref="UnauthorizedAccessException"></exception>
         public void Save(StringComparison? fileContentSorting)
         {
-            if (fileContentSorting.HasValue)
+            try
             {
-                if (SortNodes(fileContentSorting.Value))
+                IsSaving = true;
+
+                if (fileContentSorting.HasValue)
                 {
-                    _file.Changed(_document);
+                    if (SortNodes(fileContentSorting.Value))
+                    {
+                        _file.Changed(_document, true);
 
-                    UpdateNodes(DuplicateKeyHandling.Rename);
+                        UpdateNodes(DuplicateKeyHandling.Rename);
 
-                    Container.OnItemOrderChanged(this);
+                        Container.OnItemOrderChanged(this);
+                    }
                 }
-            }
 
-            _file.Save(_document);
+                _file.Save(_document);
+
+                Container.Container.OnProjectFileSaved(this, _file);
+            }
+            finally
+            {
+                IsSaving = false;
+            }
         }
 
         private bool SortNodes(StringComparison stringComparison)

@@ -468,6 +468,10 @@
             if (!AffectsResourceFile(document))
                 return;
 
+            var resourceManager = CompositionHost.GetExportedValue<ResourceManager>();
+            if (resourceManager.IsSaving)
+                return;
+
             // Run custom tool (usually attached to neutral language) even if a localized language changes,
             // e.g. if custom tool is a text template, we might want not only to generate the designer file but also 
             // extract some localization information.
@@ -478,7 +482,7 @@
                 .OfType<DteProjectFile>()
                 .Any(projectFile => projectFile.ProjectItems.Any(p => p.Document == document));
 
-            var entity = CompositionHost.GetExportedValue<ResourceManager>().ResourceEntities.FirstOrDefault(Predicate);
+            var entity = resourceManager.ResourceEntities.FirstOrDefault(Predicate);
 
             var neutralProjectFile = (DteProjectFile)entity?.NeutralProjectFile;
 
@@ -486,22 +490,15 @@
             var projectItems = neutralProjectFile?.ProjectItems.SelectMany(projectItem => projectItem.Descendants());
 
             _customToolRunner.Enqueue(projectItems);
-
-            // no need to reload the solution if there is no other editor window open
-            if (document.Windows?.OfType<EnvDTE.Window>().Any(w => w.Visible) != true)
-                return;
 
             ReloadSolution();
         }
 
         private void ResourceManager_ProjectFileSaved([NotNull] object sender, [NotNull] ProjectFileEventArgs e)
         {
-            // ReSharper disable once PossibleNullReferenceException
-            bool Predicate(ResourceEntity item) => item.Languages.Any(lang => lang.ProjectFile == e.ProjectFile);
+            var entity = e.Language.Container;
 
-            var entity = CompositionHost.GetExportedValue<ResourceManager>().ResourceEntities.FirstOrDefault(Predicate);
-
-            var neutralProjectFile = (DteProjectFile)entity?.NeutralProjectFile;
+            var neutralProjectFile = (DteProjectFile)entity.NeutralProjectFile;
 
             // VS will run the custom tool on the project item only. Run the custom tool on any of the descendants, too.
             var projectItems = neutralProjectFile?.ProjectItems.SelectMany(projectItem => projectItem.Descendants());
@@ -509,7 +506,7 @@
             _customToolRunner.Enqueue(projectItems);
         }
 
-        private static bool AffectsResourceFile(EnvDTE.Document document)
+        private static bool AffectsResourceFile([CanBeNull] EnvDTE.Document document)
         {
             Contract.Ensures((Contract.Result<bool>() == false) || (document != null));
 

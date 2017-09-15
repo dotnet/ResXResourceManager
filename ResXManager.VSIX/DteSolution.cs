@@ -25,21 +25,18 @@
         private readonly IServiceProvider _serviceProvider;
         [NotNull]
         private readonly ITracer _tracer;
-        [NotNull]
-        private readonly ICompositionHost _compositionHost;
 
         [CanBeNull]
         private IEnumerable<DteProjectFile> _projectFiles;
 
         [ImportingConstructor]
-        public DteSolution([NotNull][Import(nameof(VSPackage))] IServiceProvider serviceProvider, [NotNull] ITracer tracer, [NotNull] ICompositionHost compositionHost)
+        public DteSolution([NotNull][Import(nameof(VSPackage))] IServiceProvider serviceProvider, [NotNull] ITracer tracer)
         {
             Contract.Requires(serviceProvider != null);
             Contract.Requires(tracer != null);
 
             _serviceProvider = serviceProvider;
             _tracer = tracer;
-            _compositionHost = compositionHost;
         }
 
         /// <summary>
@@ -224,8 +221,6 @@
             if (projectItem.Object is VSLangProj.References) // MPF project (e.g. WiX) references folder, do not traverse...
                 return;
 
-            var resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
-
             if (projectItem.FileCount > 0)
             {
                 var fileName = TryGetFileName(projectItem);
@@ -244,7 +239,7 @@
                     }
                     else
                     {
-                        items.Add(fileName, new DteProjectFile(resourceManager, this, fileName, project.Name, project.UniqueName, projectItem));
+                        items.Add(fileName, new DteProjectFile(this, fileName, project.Name, project.UniqueName, projectItem));
                     }
                 }
             }

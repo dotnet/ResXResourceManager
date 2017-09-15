@@ -32,10 +32,9 @@
         /// <param name="projectName">Name of the project.</param>
         /// <param name="uniqueProjectName">Unique name of the project file.</param>
         /// <param name="projectItem">The project item, or null if the projectItem is not known.</param>
-        public DteProjectFile([NotNull] ResourceManager resourceManager, [NotNull] DteSolution solution, [NotNull] string filePath, string projectName, string uniqueProjectName, [NotNull] EnvDTE.ProjectItem projectItem)
-            : base(resourceManager, filePath, solution.SolutionFolder, projectName, uniqueProjectName)
+        public DteProjectFile([NotNull] DteSolution solution, [NotNull] string filePath, string projectName, string uniqueProjectName, [NotNull] EnvDTE.ProjectItem projectItem)
+            : base(filePath, solution.SolutionFolder, projectName, uniqueProjectName)
         {
-            Contract.Requires(resourceManager != null);
             Contract.Requires(solution != null);
             Contract.Requires(!string.IsNullOrEmpty(filePath));
             Contract.Requires(projectItem != null);
@@ -85,12 +84,15 @@
             return projectItem.TryGetContent() ?? new XDocument();
         }
 
-        protected override void InternalChanged(XDocument document)
+        protected override void InternalChanged(XDocument document, bool willSaveImmedeately)
         {
             var projectItem = DefaultProjectItem;
 
             try
             {
+                if (!willSaveImmedeately)
+                    projectItem.Open();
+
                 if (projectItem.TrySetContent(document))
                 {
                     HasChanges = !projectItem.Document?.Saved ?? false;
@@ -102,7 +104,7 @@
                 // in case of errors write directly to the file...
             }
 
-            base.InternalChanged(document);
+            base.InternalChanged(document, willSaveImmedeately);
         }
 
         protected override void InternalSave(XDocument document)
@@ -126,10 +128,7 @@
 
         public CodeGenerator CodeGenerator
         {
-            get
-            {
-                return GetCodeGenerator();
-            }
+            get => GetCodeGenerator();
             set
             {
                 if (GetCodeGenerator() != value)
@@ -152,6 +151,7 @@
             }
         }
 
+        [CanBeNull]
         public EnvDTE.ProjectItem ParentItem
         {
             get
