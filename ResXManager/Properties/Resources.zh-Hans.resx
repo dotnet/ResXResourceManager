@@ -128,10 +128,10 @@
 翻译自 https://github.com/yinyue200</value>
   </data>
   <data name="ProjectHasNoResourceFile" xml:space="preserve">
-    <value>该项目没有语言{0}的资源文件。
+    <value>该项目没有语言 {0} 的资源文件。
 
 要创建资源文件吗？
-在独立版本中，文件不会自动添加到Visual Studio项目中。</value>
+在独立版本中，文件不会自动添加到 Visual Studio 项目中。</value>
   </data>
   <data name="ProjectHasReadOnlyFiles" xml:space="preserve">
     <value>项目中的某些文件不可写。 您可能需要在编辑文件之前查看文件：
@@ -142,6 +142,6 @@
     <value>你有未保存的更改，重新加载所有资源将放弃所有更改，你确定要继续吗？</value>
   </data>
   <data name="QuerySaveChanges" xml:space="preserve">
-    <value>你要保持这些更改吗</value>
+    <value>你要保存这些更改吗</value>
   </data>
 </root>

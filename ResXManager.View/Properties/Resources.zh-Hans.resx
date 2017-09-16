@@ -192,13 +192,13 @@
     <value>支持开源社区。 </value>
   </data>
   <data name="EditSolutionConfigurationNotification" xml:space="preserve">
-    <value>您正在编辑配置特定于活动解决方案。如果您想要编辑的默认配置，只需关闭解决方案。 </value>
+    <value>您正在编辑特定于活动解决方案的配置，如果要编辑默认配置，只需关闭解决方案。 </value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>已启用</value>
   </data>
   <data name="ErrorAddingNewResourceFile" xml:space="preserve">
-    <value>添加新的资源时出现错误文件"{0}"。 </value>
+    <value>添加新资源文件"{0}"时出现错误。 </value>
   </data>
   <data name="ExportExcelAll" xml:space="preserve">
     <value>导出全部</value>
@@ -249,7 +249,7 @@
     <value>您是否要按键对所有资源文件的所有节点进行排序？</value>
   </data>
   <data name="SortNodesByKey" xml:space="preserve">
-    <value>保存RESX文件时，将按名称对XML数据节点进行排序</value>
+    <value>保存 RESX 文件时，将按名称对 XML 数据节点进行排序</value>
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>排序方法：</value>
@@ -283,9 +283,9 @@
   </data>
   <data name="ResourceFilterToolTip" xml:space="preserve">
     <value>用于过滤资源文件的正则表达式。
-该模式将与字符串“{project} - {folder}\{file}”进行比较，
+该模式将与字符串 “{project} - {folder}\{file}” 进行比较，
 这与分组视图中的组标题相同
-使用例如 ".* - (?!Migrations)"来隐藏EF迁移。</value>
+使用例如 ".* - (?!Migrations)" 来隐藏EF迁移。</value>
   </data>
   <data name="RegularExpression" xml:space="preserve">
     <value>正则表达式</value>
@@ -309,7 +309,7 @@
     <value>粘贴 (Ctrl+V)</value>
   </data>
   <data name="NoSelection" xml:space="preserve">
-    <value>没有选择</value>
+    <value>没有选择。</value>
   </data>
   <data name="NoResourceFileForResource" xml:space="preserve">
     <value>没有匹配的资源文件</value>
@@ -345,7 +345,7 @@
     <value>导入</value>
   </data>
   <data name="ImportNormalizedTableExpected" xml:space="preserve">
-    <value>我期待一个标准化的表</value>
+    <value>要求一个标准化的表</value>
   </data>
   <data name="IndexColumnHeaderToolTip" xml:space="preserve">
     <value>资源文件中条目的索引。</value>
