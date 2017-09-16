@@ -1,4 +1,8 @@
-﻿1.5
+﻿1.6
+* Fix #36, #39: Performance issues during save when SortFileContentOnSave is active.
+* Only allow to manually change index if SortFileContentOnSave is off.
+
+1.5
 * **Library references updated: In case of crashes, [.Net Framework August 2017 Preview of quality rollup](https://blogs.msdn.microsoft.com/dotnet/2017/08/16/net-framework-august-2017-preview-of-quality-rollup/) might be needed!** (WPF fails to load resources if two versions of the same assembly are loaded. [378607])
 * Fix #34: allow invariant per cell.
 * Delete cell content in cell selection mode.
