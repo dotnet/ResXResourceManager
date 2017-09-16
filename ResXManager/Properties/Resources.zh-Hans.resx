@@ -142,6 +142,6 @@
     <value>你有未保存的更改，重新价值所有资源将放弃所有更改，你确定要继续吗？</value>
   </data>
   <data name="QuerySaveChanges" xml:space="preserve">
-    <value>你要保持这些更改吗</value>
+    <value>你要保存这些更改吗</value>
   </data>
 </root>
