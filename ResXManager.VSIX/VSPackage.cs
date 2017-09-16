@@ -446,7 +446,7 @@
         {
             Tracer.WriteLine("DTE event: Solution content changed");
 
-            CompositionHost.GetExportedValue<DteSolution>().Invalidate();
+            CompositionHost.GetExportedValue<ISourceFilesProvider>().Invalidate();
 
             ReloadSolution();
         }

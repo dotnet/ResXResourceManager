@@ -5,6 +5,8 @@ namespace ResXManager.Scripting
     using System.IO;
     using System.Text.RegularExpressions;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
@@ -12,10 +14,11 @@ namespace ResXManager.Scripting
     [Export(typeof(ISourceFilesProvider))]
     internal class SourceFilesProvider : ISourceFilesProvider, IFileFilter
     {
+        [CanBeNull]
         private Regex _fileExclusionFilter;
-
+        [CanBeNull]
         public string Folder { get; set; }
-
+        [CanBeNull]
         public string ExclusionFilter { get; set; }
 
         public IList<ProjectFile> SourceFiles
@@ -30,6 +33,10 @@ namespace ResXManager.Scripting
 
                 return new DirectoryInfo(folder).GetAllSourceFiles(this);
             }
+        }
+
+        public void Invalidate()
+        {
         }
 
         public bool IsSourceFile(ProjectFile file)

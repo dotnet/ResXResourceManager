@@ -129,7 +129,7 @@
         public static ICommand ToggleItemInvariantCommand => new DelegateCommand<DataGrid>(CanToggleItemInvariant, ToggleItemInvariant);
 
         [NotNull]
-        public ICommand ReloadCommand => new DelegateCommand(() => Reload(true));
+        public ICommand ReloadCommand => new DelegateCommand(ForceReload);
 
         [NotNull]
         public ICommand SaveCommand => new DelegateCommand(() => ResourceManager.HasChanges, () => ResourceManager.Save(_configuration.EffectiveResXSortingComparison));
@@ -474,6 +474,12 @@
             var changes = ResourceManager.ImportExcelFile(fileName);
 
             changes.Apply();
+        }
+
+        private void ForceReload()
+        {
+            _sourceFilesProvider.Invalidate();
+            Reload(true);
         }
 
         public void Reload()

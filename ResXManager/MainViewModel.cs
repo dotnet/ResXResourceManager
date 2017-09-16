@@ -257,6 +257,7 @@
             _performanceTracer = performanceTracer;
         }
 
+        [CanBeNull]
         public string Folder { get; set; }
 
         public IList<ProjectFile> SourceFiles
@@ -272,6 +273,10 @@
                     return new DirectoryInfo(folder).GetAllSourceFiles(new FileFilter(_configuration));
                 }
             }
+        }
+
+        public void Invalidate()
+        {
         }
 
         [ContractInvariantMethod]

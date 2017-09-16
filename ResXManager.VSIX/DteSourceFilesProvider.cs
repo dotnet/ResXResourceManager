@@ -45,6 +45,8 @@
             }
         }
 
+        public void Invalidate() => Solution.Invalidate();
+
         [NotNull, ItemNotNull]
         private IEnumerable<DteProjectFile> DteSourceFiles
         {
@@ -61,8 +63,11 @@
         {
             Contract.Ensures(Contract.Result<IEnumerable<DteProjectFile>>() != null);
 
-            return _compositionHost.GetExportedValue<DteSolution>().GetProjectFiles();
+            return Solution.GetProjectFiles();
         }
+
+        [NotNull]
+        private DteSolution Solution => _compositionHost.GetExportedValue<DteSolution>();
 
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]

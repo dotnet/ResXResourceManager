@@ -8,8 +8,10 @@
     [ContractClass(typeof (SourceFilesProviderContract))]
     public interface ISourceFilesProvider
     {
-        [NotNull]
+        [NotNull, ItemNotNull]
         IList<ProjectFile> SourceFiles { get; }
+
+        void Invalidate();
     }
 
     [ContractClassFor(typeof (ISourceFilesProvider))]
@@ -22,6 +24,11 @@
                 Contract.Ensures(Contract.Result<IList<ProjectFile>>() != null);
                 throw new System.NotImplementedException();
             }
+        }
+
+        public void Invalidate()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
