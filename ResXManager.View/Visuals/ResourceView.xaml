@@ -527,6 +527,7 @@
 
             <DataGrid.RowStyle>
               <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Static styles:ResourceKeys.DataGridRowStyle}}">
+                <Setter Property="MaxHeight" Value="100"/>
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding IsDuplicateKey}" Value="True">
                     <Setter Property="Background" Value="{StaticResource HighlightBrush}" />
