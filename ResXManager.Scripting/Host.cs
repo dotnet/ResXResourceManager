@@ -193,8 +193,9 @@
         }
     }
 
+    [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
     [Export(typeof(IConfiguration))]
-    [Export(typeof(Scripting.Configuration))]
+    [Export(typeof(Configuration))]
     public class Configuration : IConfiguration
     {
         public bool SaveFilesImmediatelyUponChange => false;
