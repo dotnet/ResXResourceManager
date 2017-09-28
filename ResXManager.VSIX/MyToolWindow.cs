@@ -377,7 +377,7 @@
 
             if (projectFile != null)
             {
-                entity.AddLanguage(projectFile, _configuration.DuplicateKeyHandling);
+                entity.AddLanguage(projectFile);
             }
         }
 

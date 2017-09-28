@@ -30,7 +30,7 @@
         [NotNull, ItemNotNull]
         private readonly ObservableCollection<ResourceTableEntry> _resourceTableEntries;
 
-        internal ResourceEntity([NotNull] ResourceManager container, [NotNull] string projectName, [NotNull] string baseName, [NotNull] string directoryName, [NotNull] ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
+        internal ResourceEntity([NotNull] ResourceManager container, [NotNull] string projectName, [NotNull] string baseName, [NotNull] string directoryName, [NotNull] ICollection<ProjectFile> files)
         {
             Contract.Requires(container != null);
             Contract.Requires(!string.IsNullOrEmpty(projectName));
@@ -43,7 +43,7 @@
             ProjectName = projectName;
             BaseName = baseName;
             DirectoryName = directoryName;
-            _languages = GetResourceLanguages(files, duplicateKeyHandling);
+            _languages = GetResourceLanguages(files);
             RelativePath = GetRelativePath(files);
             DisplayName = projectName + @" - " + RelativePath + baseName;
             SortKey = string.Concat(@" - ", DisplayName, DirectoryName);
@@ -61,12 +61,12 @@
             Contract.Assume(_languages.Any());
         }
 
-        internal bool Update([NotNull] ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
+        internal bool Update([NotNull, ItemNotNull] ICollection<ProjectFile> files)
         {
             Contract.Requires(files != null);
             Contract.Requires(files.Any());
 
-            if (!MergeItems(_languages, GetResourceLanguages(files, duplicateKeyHandling)))
+            if (!MergeItems(_languages, GetResourceLanguages(files)))
                 return false; // nothing has changed, no need to continue
 
             var neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
@@ -230,12 +230,12 @@
         /// </summary>
         /// <param name="file">The file.</param>
         /// <param name="duplicateKeyHandling">How to handle duplicate keys.</param>
-        public void AddLanguage([NotNull] ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
+        public void AddLanguage([NotNull] ProjectFile file)
         {
             Contract.Requires(file != null);
 
             var cultureKey = file.GetCultureKey();
-            var resourceLanguage = new ResourceLanguage(this, cultureKey, file, duplicateKeyHandling);
+            var resourceLanguage = new ResourceLanguage(this, cultureKey, file);
 
             _languages.Add(cultureKey, resourceLanguage);
             _resourceTableEntries.ForEach(entry => entry.Refresh());
@@ -304,7 +304,7 @@
         }
 
         [NotNull]
-        private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages([NotNull] IEnumerable<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
+        private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages([NotNull] IEnumerable<ProjectFile> files)
         {
             Contract.Requires(files != null);
             Contract.Requires(files.Any());
@@ -315,7 +315,7 @@
                 from file in files
                 let cultureKey = file.GetCultureKey()
                 orderby cultureKey
-                select new ResourceLanguage(this, cultureKey, file, duplicateKeyHandling);
+                select new ResourceLanguage(this, cultureKey, file);
 
             var languages = languageQuery.ToDictionary(language => language.CultureKey);
 

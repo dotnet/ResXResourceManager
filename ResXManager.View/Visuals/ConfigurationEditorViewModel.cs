@@ -45,7 +45,7 @@
             ResourceManager.ResourceEntities
                 .SelectMany(entity => entity.Languages)
                 .ToArray()
-                .ForEach(language => language.Save(Configuration.ResXSortingComparison));
+                .ForEach(language => language.SortNodes(Configuration.ResXSortingComparison));
         }
 
         public override string ToString()

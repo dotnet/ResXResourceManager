@@ -9,6 +9,7 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Windows.Threading;
     using System.Xml;
     using System.Xml.Linq;
 
@@ -28,19 +29,26 @@
     [Localizable(false)]
     public class ResourceLanguage : IEquatable<ResourceLanguage>
     {
+        [NotNull]
         private const string Quote = "\"";
+        [NotNull]
         private const string WinFormsMemberNamePrefix = @">>";
-
+        [NotNull]
         private static readonly XName _spaceAttributeName = XNamespace.Xml.GetName(@"space");
+        [NotNull]
         private static readonly XName _typeAttributeName = XNamespace.None.GetName(@"type");
+        [NotNull]
         private static readonly XName _mimetypeAttributeName = XNamespace.None.GetName(@"mimetype");
+        [NotNull]
         private static readonly XName _nameAttributeName = XNamespace.None.GetName(@"name");
 
         [NotNull]
         private readonly XDocument _document;
+
         [NotNull]
         // ReSharper disable once AssignNullToNotNullAttribute
         private XElement _documentRoot => _document.Root;
+
         [NotNull]
         private readonly ProjectFile _file;
         [NotNull]
@@ -56,6 +64,8 @@
         private readonly XName _commentNodeName;
         [NotNull]
         private readonly ResourceEntity _container;
+        [NotNull]
+        private readonly IConfiguration _configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceLanguage" /> class.
@@ -63,10 +73,9 @@
         /// <param name="container">The containing resource entity.</param>
         /// <param name="cultureKey">The culture key.</param>
         /// <param name="file">The .resx file having all the localization.</param>
-        /// <param name="duplicateKeyHandling">How to handle duplicate keys.</param>
         /// <exception cref="System.InvalidOperationException">
         /// </exception>
-        internal ResourceLanguage([NotNull] ResourceEntity container, [NotNull] CultureKey cultureKey, [NotNull] ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
+        internal ResourceLanguage([NotNull] ResourceEntity container, [NotNull] CultureKey cultureKey, [NotNull] ProjectFile file)
         {
             Contract.Requires(container != null);
             Contract.Requires(cultureKey != null);
@@ -75,6 +84,7 @@
             _container = container;
             _cultureKey = cultureKey;
             _file = file;
+            _configuration = container.Container.Configuration;
 
             try
             {
@@ -94,10 +104,10 @@
             _valueNodeName = defaultNamespace.GetName(@"value");
             _commentNodeName = defaultNamespace.GetName(@"comment");
 
-            UpdateNodes(duplicateKeyHandling);
+            UpdateNodes();
         }
 
-        private void UpdateNodes(DuplicateKeyHandling duplicateKeyHandling)
+        private void UpdateNodes()
         {
             var data = _documentRoot.Elements(_dataNodeName);
 
@@ -107,7 +117,7 @@
                 .Where(item => !item.Key.StartsWith(WinFormsMemberNamePrefix, StringComparison.OrdinalIgnoreCase))
                 .ToArray();
 
-            if (duplicateKeyHandling == DuplicateKeyHandling.Rename)
+            if (_configuration.DuplicateKeyHandling == DuplicateKeyHandling.Rename)
             {
                 MakeKeysValid(elements);
             }
@@ -245,7 +255,7 @@
         [Throttled(typeof(DispatcherThrottle))]
         private void OnChanged()
         {
-            _file.Changed(_document, false);
+            _file.Changed(_document, _configuration.SaveFilesImmediatelyUponChange);
 
             Container.Container.OnLanguageChanged(this);
         }
@@ -258,26 +268,13 @@
         /// <summary>
         /// Saves this instance to the resource file.
         /// </summary>
-        /// <param name="fileContentSorting">If a string comparison is specified, the file content will be sorted by the key.</param>
         /// <exception cref="IOException"></exception>
         /// <exception cref="UnauthorizedAccessException"></exception>
-        public void Save(StringComparison? fileContentSorting)
+        public void Save()
         {
             try
             {
                 IsSaving = true;
-
-                if (fileContentSorting.HasValue)
-                {
-                    if (SortNodes(fileContentSorting.Value))
-                    {
-                        _file.Changed(_document, true);
-
-                        UpdateNodes(DuplicateKeyHandling.Rename);
-
-                        Container.OnItemOrderChanged(this);
-                    }
-                }
 
                 _file.Save(_document);
 
@@ -289,17 +286,61 @@
             }
         }
 
-        private bool SortNodes(StringComparison stringComparison)
+        public void SortNodes(StringComparison stringComparison)
+        {
+            if (!SortDocument(stringComparison))
+                return;
+
+            UpdateNodes();
+            Container.OnItemOrderChanged(this);
+
+            _file.Changed(_document, true);
+
+            Save();
+        }
+
+        private bool SortDocument(StringComparison stringComparison)
+        {
+            return SortAndAdd(stringComparison, null);
+        }
+
+        private bool SortAndAdd(StringComparison stringComparison, [CanBeNull] XElement newNode)
         {
             var comparer = new DelegateComparer<string>((left, right) => string.Compare(left, right, stringComparison));
+            string GetName(XElement node) => node.Attribute(_nameAttributeName)?.Value.TrimStart('>') ?? string.Empty;
 
             var nodes = _documentRoot
                 .Elements(_dataNodeName)
                 .ToArray();
 
             var sortedNodes = nodes
-                .OrderBy(node => node.Attribute(_nameAttributeName)?.Value.TrimStart('>') ?? string.Empty, comparer)
+                .OrderBy(node => GetName(node), comparer)
                 .ToArray();
+
+            var hasContentChanged = SortNodes(nodes, sortedNodes);
+
+            if (newNode == null)
+                return hasContentChanged;
+
+            var newNodeName = GetName(newNode);
+            var nextNode = sortedNodes.FirstOrDefault(node => comparer.Compare(GetName(node), newNodeName) > 0);
+
+            if (nextNode != null)
+            {
+                nextNode.AddBeforeSelf(newNode);
+            }
+            else
+            {
+                _documentRoot.Add(newNode);
+            }
+
+            return true;
+        }
+
+        private bool SortNodes([NotNull, ItemNotNull] XElement[] nodes, [NotNull, ItemNotNull] XElement[] sortedNodes)
+        {
+            Contract.Requires(nodes != null);
+            Contract.Requires(sortedNodes != null);
 
             if (nodes.SequenceEqual(sortedNodes))
                 return false;
@@ -318,6 +359,7 @@
             return true;
         }
 
+        [CanBeNull]
         internal string GetComment([NotNull] string key)
         {
             Contract.Requires(key != null);
@@ -380,16 +422,28 @@
             Contract.Requires(key != null);
             Contract.Ensures(Contract.Result<Node>() != null);
 
-            Node node;
             var content = new XElement(_valueNodeName);
             content.Add(new XText(string.Empty));
 
             var entry = new XElement(_dataNodeName, new XAttribute(_nameAttributeName, key), new XAttribute(_spaceAttributeName, @"preserve"));
             entry.Add(content);
 
-            _documentRoot.Add(entry);
-            _nodes.Add(key, node = new Node(this, entry));
-            return node;
+            var fileContentSorting = _configuration.EffectiveResXSortingComparison;
+
+            if (fileContentSorting.HasValue)
+            {
+                SortAndAdd(fileContentSorting.Value, entry);
+            }
+            else
+            {
+                _documentRoot.Add(entry);
+            }
+
+            UpdateNodes();
+
+            Dispatcher.CurrentDispatcher.BeginInvoke(() => Container.OnItemOrderChanged(this));
+
+            return _nodes[key];
         }
 
         internal bool RenameKey([NotNull] string oldKey, [NotNull] string newKey)
@@ -703,8 +757,6 @@
 
                 return nameAttribute;
             }
-
-
 
             [ContractInvariantMethod]
             [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]

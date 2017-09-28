@@ -24,8 +24,20 @@
         Fail
     }
 
+    public interface IConfiguration
+    {
+        bool SaveFilesImmediatelyUponChange { get; }
+
+        [NotNull]
+        CultureInfo NeutralResourcesLanguage { get; }
+
+        StringComparison? EffectiveResXSortingComparison { get; }
+
+        DuplicateKeyHandling DuplicateKeyHandling { get; }
+    }
+
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces", Justification = "Works fine with this")]
-    public abstract class Configuration : ConfigurationBase
+    public abstract class Configuration : ConfigurationBase, IConfiguration
     {
         private CodeReferenceConfiguration _codeReferences;
 
@@ -82,13 +94,10 @@
             }
         }
 
-        [NotNull]
         public CultureInfo NeutralResourcesLanguage
         {
             get
             {
-                Contract.Ensures(Contract.Result<CultureInfo>() != null);
-
                 return GetValue(default(CultureInfo)) ?? new CultureInfo("en-US");
             }
             set

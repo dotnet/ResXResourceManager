@@ -5,6 +5,7 @@
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Controls.Primitives;
@@ -27,20 +28,16 @@
     public partial class MainWindow
     {
         [NotNull]
-        private readonly Configuration _configuration;
-        [NotNull]
         private readonly ITracer _tracer;
         private Size _lastKnownSize;
         private Vector _laskKnownLocation;
 
         [ImportingConstructor]
-        public MainWindow([NotNull] ExportProvider exportProvider, [NotNull] Configuration configuration, [NotNull] ITracer tracer)
+        public MainWindow([NotNull] ExportProvider exportProvider, [NotNull] ITracer tracer)
         {
             Contract.Requires(exportProvider != null);
-            Contract.Requires(configuration != null);
             Contract.Requires(tracer != null);
 
-            _configuration = configuration;
             _tracer = tracer;
 
             try
@@ -100,7 +97,7 @@
                 case MessageBoxResult.Yes:
                     try
                     {
-                        resourceManager.Save(_configuration.EffectiveResXSortingComparison);
+                        resourceManager.Save();
                     }
                     catch (Exception ex)
                     {
@@ -169,11 +166,10 @@
         }
 
         [ContractInvariantMethod]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_configuration != null);
             Contract.Invariant(_tracer != null);
         }
     }

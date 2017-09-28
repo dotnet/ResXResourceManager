@@ -43,9 +43,11 @@
         public event EventHandler<ProjectFileEventArgs> ProjectFileSaved;
 
         [ImportingConstructor]
-        private ResourceManager([NotNull] ISourceFilesProvider sourceFilesProvider)
+        private ResourceManager([NotNull] ISourceFilesProvider sourceFilesProvider, [NotNull] IConfiguration configuration)
         {
             Contract.Requires(sourceFilesProvider != null);
+            Contract.Requires(configuration != null);
+            Configuration = configuration;
 
             _sourceFilesProvider = sourceFilesProvider;
             TableEntries = ResourceEntities.ObservableSelectMany(entity => entity.Entries);
@@ -56,7 +58,7 @@
         /// </summary>
         /// <param name="allSourceFiles">All resource x files.</param>
         /// <param name="duplicateKeyHandling">The duplicate key handling mode.</param>
-        private bool Load([NotNull] IList<ProjectFile> allSourceFiles, DuplicateKeyHandling duplicateKeyHandling)
+        private bool Load([NotNull] IList<ProjectFile> allSourceFiles)
         {
             Contract.Requires(allSourceFiles != null);
 
@@ -64,7 +66,7 @@
                 .Where(file => file.IsResourceFile())
                 .GroupBy(file => file.GetBaseDirectory());
 
-            return InternalLoad(resourceFilesByDirectory, duplicateKeyHandling);
+            return InternalLoad(resourceFilesByDirectory);
         }
 
         /// <summary>
@@ -72,14 +74,14 @@
         /// </summary>
         /// <exception cref="IOException"></exception>
         /// <exception cref="UnauthorizedAccessException"></exception>
-        public void Save(StringComparison? fileContentSorting)
+        public void Save()
         {
             var changedResourceLanguages = ResourceEntities
                 .SelectMany(entity => entity.Languages)
                 .Where(lang => lang.HasChanges)
                 .ToArray();
 
-            changedResourceLanguages.ForEach(resourceLanguage => resourceLanguage.Save(fileContentSorting));
+            changedResourceLanguages.ForEach(resourceLanguage => resourceLanguage.Save());
         }
 
         /// <summary>
@@ -107,6 +109,9 @@
         [NotNull, ItemNotNull]
         public static IEnumerable<CultureInfo> SpecificCultures { get; } = GetSpecificCultures();
 
+        [NotNull]
+        public IConfiguration Configuration { get; }
+
         public bool HasChanges => ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.HasChanges);
 
         public bool IsSaving => ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.IsSaving);
@@ -117,12 +122,12 @@
                 ResourceEntities.LoadSnapshot(_snapshot);
         }
 
-        public bool Reload(DuplicateKeyHandling duplicateKeyHandling)
+        public bool Reload()
         {
-            return Reload(_sourceFilesProvider.SourceFiles, duplicateKeyHandling);
+            return Reload(_sourceFilesProvider.SourceFiles);
         }
 
-        public bool Reload([NotNull] IList<ProjectFile> sourceFiles, DuplicateKeyHandling duplicateKeyHandling)
+        public bool Reload([NotNull] IList<ProjectFile> sourceFiles)
         {
             Contract.Requires(sourceFiles != null);
 
@@ -131,7 +136,7 @@
             if (args.Cancel)
                 return false;
 
-            return Load(sourceFiles, duplicateKeyHandling);
+            return Load(sourceFiles);
         }
 
         public bool CanEdit([NotNull] ResourceEntity resourceEntity, CultureKey cultureKey)
@@ -155,11 +160,11 @@
             Loaded?.Invoke(this, EventArgs.Empty);
         }
 
-        private bool InternalLoad([NotNull] IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory, DuplicateKeyHandling duplicateKeyHandling)
+        private bool InternalLoad([NotNull] IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory)
         {
             Contract.Requires(resourceFilesByDirectory != null);
 
-            if (!LoadEntities(resourceFilesByDirectory, duplicateKeyHandling))
+            if (!LoadEntities(resourceFilesByDirectory))
                 return false; // nothing has changed, no need to continue
 
             if (!string.IsNullOrEmpty(_snapshot))
@@ -179,7 +184,7 @@
             return true;
         }
 
-        private bool LoadEntities([NotNull] IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory, DuplicateKeyHandling duplicateKeyHandling)
+        private bool LoadEntities([NotNull] IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory)
         {
             Contract.Requires(fileNamesByDirectory != null);
 
@@ -220,14 +225,14 @@
 
                         if (existingEntity != null)
                         {
-                            if (existingEntity.Update(projectFiles, duplicateKeyHandling))
+                            if (existingEntity.Update(projectFiles))
                                 hasChanged = true;
 
                             unmatchedEntities.Remove(existingEntity);
                         }
                         else
                         {
-                            ResourceEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles, duplicateKeyHandling));
+                            ResourceEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles));
                             hasChanged = true;
                         }
                     }

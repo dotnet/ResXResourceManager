@@ -8,6 +8,7 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
+    [Export(typeof(IConfiguration))]
     [Export(typeof(Configuration))]
     public class StandaloneConfiguration : Configuration
     {

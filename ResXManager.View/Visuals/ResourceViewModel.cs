@@ -132,7 +132,7 @@
         public ICommand ReloadCommand => new DelegateCommand(ForceReload);
 
         [NotNull]
-        public ICommand SaveCommand => new DelegateCommand(() => ResourceManager.HasChanges, () => ResourceManager.Save(_configuration.EffectiveResXSortingComparison));
+        public ICommand SaveCommand => new DelegateCommand(() => ResourceManager.HasChanges, () => ResourceManager.Save());
 
         [NotNull]
         public ICommand BeginFindCodeReferencesCommand => new DelegateCommand(BeginFindCodeReferences);
@@ -497,7 +497,7 @@
 
                     _codeReferenceTracker.StopFind();
 
-                    if (ResourceManager.Reload(sourceFiles, _configuration.DuplicateKeyHandling) || forceFindCodeReferences)
+                    if (ResourceManager.Reload(sourceFiles) || forceFindCodeReferences)
                     {
                         BeginFindCodeReferences();
                     }
@@ -547,7 +547,7 @@
                     if (!language.HasChanges)
                         return;
 
-                    language.Save(_configuration.EffectiveResXSortingComparison);
+                    language.Save();
                 }
                 catch (Exception ex)
                 {

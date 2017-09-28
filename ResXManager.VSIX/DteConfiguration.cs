@@ -16,6 +16,7 @@
 
     using TomsToolbox.Desktop;
 
+    [Export(typeof(IConfiguration))]
     [Export(typeof(Configuration))]
     [Export(typeof(DteConfiguration))]
     internal class DteConfiguration : Configuration

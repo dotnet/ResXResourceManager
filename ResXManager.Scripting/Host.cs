@@ -2,12 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Windows.Forms;
 
     using JetBrains.Annotations;
 
@@ -25,6 +28,8 @@
         private readonly SourceFilesProvider _sourceFilesProvider;
         [NotNull]
         private readonly ResourceManager _resourceManager;
+        [NotNull]
+        private readonly Configuration _configuration;
 
         public Host()
         {
@@ -37,6 +42,8 @@
             _sourceFilesProvider = _compositionHost.GetExportedValue<SourceFilesProvider>();
             _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
             _resourceManager.BeginEditing += ResourceManager_BeginEditing;
+
+            _configuration = _compositionHost.GetExportedValue<Configuration>();
         }
 
         [NotNull]
@@ -47,17 +54,12 @@
             _sourceFilesProvider.Folder = folder;
             _sourceFilesProvider.ExclusionFilter = exclusionFilter;
 
-            _resourceManager.Reload(DuplicateKeyHandling.Fail);
+            _resourceManager.Reload();
         }
 
         public void Save()
         {
-            Save(null);
-        }
-
-        public void Save(StringComparison? keySortingComparison)
-        {
-            _resourceManager.Save(keySortingComparison);
+            _resourceManager.Save();
         }
 
         public void ExportExcel([NotNull] string filePath)
@@ -171,10 +173,13 @@
                 File.WriteAllText(languageFileName, Resources.EmptyResxTemplate);
             }
 
-            entity.AddLanguage(new ProjectFile(languageFileName, rootFolder, entity.ProjectName, null), DuplicateKeyHandling.Fail);
+            entity.AddLanguage(new ProjectFile(languageFileName, rootFolder, entity.ProjectName, null));
 
             return true;
         }
+
+        [NotNull]
+        public Configuration Configuration => _configuration;
 
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
@@ -184,6 +189,20 @@
             Contract.Invariant(_compositionHost != null);
             Contract.Invariant(_sourceFilesProvider != null);
             Contract.Invariant(_resourceManager != null);
+            Contract.Invariant(_configuration != null);
         }
+    }
+
+    [Export(typeof(IConfiguration))]
+    [Export(typeof(Scripting.Configuration))]
+    public class Configuration : IConfiguration
+    {
+        public bool SaveFilesImmediatelyUponChange => false;
+
+        public CultureInfo NeutralResourcesLanguage { get; set; } = new CultureInfo("en-US");
+
+        public StringComparison? EffectiveResXSortingComparison { get; set; }
+
+        public DuplicateKeyHandling DuplicateKeyHandling { get; set; }
     }
 }
