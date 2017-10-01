@@ -1,4 +1,8 @@
-﻿1.6
+﻿1.7
+- Fix #39: SortNodesByKey is not active when saving files by Visual Studios "Save All" button.
+- Fix #42: Update toolbox to fix performance issue with TextBoxVisibleWhiteSpaceDecorator
+
+1.6
 * Fix #36, #39: Performance issues during save when SortFileContentOnSave is active.
 * Only allow to manually change index if SortFileContentOnSave is off.
 
