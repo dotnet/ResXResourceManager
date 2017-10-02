@@ -23,6 +23,7 @@
     {
         [NotNull]
         private readonly DteSolution _solution;
+        [CanBeNull]
         private MoveToResourceConfiguration _moveToResources;
 
         [ImportingConstructor]
@@ -42,7 +43,7 @@
             {
                 Contract.Ensures(Contract.Result<MoveToResourceConfiguration>() != null);
 
-                return _moveToResources ?? LoadMoveToResourceConfiguration(GetValue(default(MoveToResourceConfiguration)));
+                return _moveToResources ?? LoadMoveToResourceConfiguration(GetValue(default(MoveToResourceConfiguration), nameof(MoveToResources)));
             }
         }
 

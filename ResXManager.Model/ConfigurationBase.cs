@@ -6,26 +6,41 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
+    using System.Linq;
+    using System.Reflection;
     using System.Runtime.CompilerServices;
+
+    using AutoProperties;
 
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
 
+    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public sealed class DefaultValueAttribute : Attribute
+    {
+        [NotNull]
+        public object Value { get; }
+
+        public DefaultValueAttribute([NotNull] object value)
+        {
+            Value = value;
+        }
+    }
 
     /// <summary>
     /// Handle global persistence.
     /// </summary>
     public abstract class ConfigurationBase : ObservableObject
     {
-        [NotNull]
-        private readonly ITracer _tracer;
         private const string FileName = "Configuration.xml";
+
         [NotNull]
         // ReSharper disable once AssignNullToNotNullAttribute
         private static readonly string _directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "tom-englert.de", "ResXManager");
-
         [NotNull]
         private readonly string _filePath;
         [NotNull]
@@ -37,7 +52,7 @@
 
             Contract.Assume(!string.IsNullOrEmpty(_directory));
 
-            _tracer = tracer;
+            Tracer = tracer;
             _filePath = Path.Combine(_directory, FileName);
 
             try
@@ -67,20 +82,22 @@
             get;
         }
 
-        [NotNull]
-        protected ITracer Tracer
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ITracer>() != null);
+        [NotNull, InterceptIgnore]
+        protected ITracer Tracer { get; }
 
-                return _tracer;
-            }
+        [CanBeNull, GetInterceptor, UsedImplicitly]
+        protected T GetProperty<T>([NotNull] string key, [CanBeNull] PropertyInfo propertyInfo)
+        {
+            Contract.Requires(key != null);
+
+            return GetValue(GetDefaultValue<T>(propertyInfo), key);
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Required by [CallerMemberName]")]
-        protected T GetValue<T>(T defaultValue, [CallerMemberName] string key = null)
+        [CanBeNull]
+        protected T GetValue<T>([CanBeNull] T defaultValue, [NotNull] string key)
         {
+            Contract.Requires(key != null);
+
             try
             {
                 return InternalGetValue(defaultValue, key);
@@ -92,31 +109,26 @@
             return defaultValue;
         }
 
-        protected virtual T InternalGetValue<T>(T defaultValue, string key)
+        [CanBeNull]
+        protected virtual T InternalGetValue<T>([CanBeNull] T defaultValue, [NotNull] string key)
         {
-            if (key == null)
-                return defaultValue;
+            Contract.Requires(key != null);
 
             return ConvertFromString<T>(_configuration.GetValue(key, ConvertToString(defaultValue)));
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Required by [CallerMemberName]")]
-        protected void SetValue<T>(T value, [CallerMemberName] string key = null)
-        {
-            if (string.IsNullOrEmpty(key))
-                return;
-
-            if (Equals(GetValue(key), value))
-                return;
-
-            InternalSetValue(value, key);
-
-            OnPropertyChanged(key);
-        }
-
-        protected virtual void InternalSetValue<T>(T value, [NotNull] string key)
+        [SetInterceptor, UsedImplicitly]
+        protected void SetValue<T>([CanBeNull] T value, [NotNull] string key)
         {
             Contract.Requires(key != null);
+
+            InternalSetValue(value, key);
+        }
+
+        protected virtual void InternalSetValue<T>([CanBeNull] T value, [NotNull] string key)
+        {
+            Contract.Requires(key != null);
+
             try
             {
                 _configuration.SetValue(key, ConvertToString(value));
@@ -128,11 +140,12 @@
             }
             catch (Exception ex)
             {
-                _tracer.TraceError("Fatal error writing configuration file: " + _filePath + " - " + ex.Message);
+                Tracer.TraceError("Fatal error writing configuration file: " + _filePath + " - " + ex.Message);
             }
         }
 
-        protected static T ConvertFromString<T>(string value)
+        [CanBeNull]
+        protected static T ConvertFromString<T>([CanBeNull] string value)
         {
             try
             {
@@ -150,7 +163,8 @@
             return default(T);
         }
 
-        protected static string ConvertToString<T>(T value)
+        [CanBeNull]
+        protected static string ConvertToString<T>([CanBeNull] T value)
         {
             if (ReferenceEquals(value, null))
                 return null;
@@ -168,12 +182,28 @@
             return type.GetCustomTypeConverter() ?? TypeDescriptor.GetConverter(type);
         }
 
+        [CanBeNull]
+        private static T GetDefaultValue<T>([CanBeNull] MemberInfo propertyInfo)
+        {
+            var defaultValueAttribute = propertyInfo?.GetCustomAttributes<DefaultValueAttribute>().Select(attr => attr?.Value).FirstOrDefault();
+
+            switch (defaultValueAttribute)
+            {
+                case T defaultValue:
+                    return defaultValue;
+                case string stringValue:
+                    return ConvertFromString<T>(stringValue);
+            }
+
+            return default(T);
+        }
+
         [ContractInvariantMethod]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
         [Conditional("CONTRACTS_FULL")]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_tracer != null);
+            Contract.Invariant(Tracer != null);
             Contract.Invariant(_configuration != null);
             Contract.Invariant(!string.IsNullOrEmpty(_filePath));
             Contract.Invariant(!string.IsNullOrEmpty(_directory));

@@ -141,8 +141,8 @@
     <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoProperties, Version=1.1.0.0, Culture=neutral, PublicKeyToken=4d0e9a1cbec0d397, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoProperties.Fody.1.1.0.0\lib\netstandard1.0\AutoProperties.dll</HintPath>
+    <Reference Include="AutoProperties, Version=1.4.0.0, Culture=neutral, PublicKeyToken=4d0e9a1cbec0d397, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoProperties.Fody.1.4.0.0\lib\netstandard1.0\AutoProperties.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">

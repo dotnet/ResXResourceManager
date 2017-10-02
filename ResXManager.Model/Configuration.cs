@@ -39,7 +39,7 @@
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces", Justification = "Works fine with this")]
     public abstract class Configuration : ConfigurationBase, IConfiguration
     {
-        private CodeReferenceConfiguration _codeReferences;
+        [CanBeNull] private CodeReferenceConfiguration _codeReferences;
 
         protected Configuration([NotNull] ITracer tracer)
             : base(tracer)
@@ -48,163 +48,47 @@
         }
 
         [NotNull]
-        public CodeReferenceConfiguration CodeReferences
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<CodeReferenceConfiguration>() != null);
+        public CodeReferenceConfiguration CodeReferences => _codeReferences ?? LoadCodeReferenceConfiguration();
 
-                return _codeReferences ?? LoadCodeReferenceConfiguration();
-            }
-        }
+        [DefaultValue(@"Migrations\\\d{15}"), CanBeNull]
+        public string FileExclusionFilter { get; set; }
 
-        public string FileExclusionFilter
-        {
-            get
-            {
-                return GetValue(@"Migrations\\\d{15}");
-            }
-            set
-            {
-                SetValue(value);
-            }
-        }
+        [DefaultValue(true)]
+        public bool SaveFilesImmediatelyUponChange { get; set; }
 
-        public bool SaveFilesImmediatelyUponChange
-        {
-            get
-            {
-                return GetValue(true);
-            }
-            set
-            {
-                SetValue(value);
-            }
-        }
+        [DefaultValue(false)]
+        public bool SortFileContentOnSave { get; set; }
 
-        public bool SortFileContentOnSave
-        {
-            get
-            {
-                return GetValue(false);
-            }
-            set
-            {
-                SetValue(value);
-            }
-        }
+        [DefaultValue("en-US")]
+        public CultureInfo NeutralResourcesLanguage { get; set; }
 
-        public CultureInfo NeutralResourcesLanguage
-        {
-            get
-            {
-                return GetValue(default(CultureInfo)) ?? new CultureInfo("en-US");
-            }
-            set
-            {
-                SetValue(value);
-            }
-        }
-
-        public StringComparison ResXSortingComparison
-        {
-            get
-            {
-                return GetValue(StringComparison.OrdinalIgnoreCase);
-            }
-            set
-            {
-                SetValue(value);
-            }
-        }
+        [DefaultValue(StringComparison.OrdinalIgnoreCase)]
+        public StringComparison ResXSortingComparison { get; set; }
 
         public StringComparison? EffectiveResXSortingComparison => SortFileContentOnSave ? ResXSortingComparison : (StringComparison?)null;
 
-        public bool ConfirmAddLanguageFile
-        {
-            get
-            {
-                return GetValue(true);
-            }
-            set
-            {
-                SetValue(value);
-            }
-        }
+        [DefaultValue(true)]
+        public bool ConfirmAddLanguageFile { get; set; }
 
-        public bool AutoCreateNewLanguageFiles
-        {
-            get
-            {
-                return GetValue(false);
-            }
-            set
-            {
-                SetValue(value);
-            }
-        }
+        [DefaultValue(false)]
+        public bool AutoCreateNewLanguageFiles { get; set; }
 
-        public bool PrefixTranslations
-        {
-            get
-            {
-                return GetValue(false);
-            }
-            set
-            {
-                SetValue(value);
-            }
-        }
+        [DefaultValue(false)]
+        public bool PrefixTranslations { get; set; }
 
-        public string TranslationPrefix
-        {
-            get
-            {
-                return GetValue("#TODO#_");
-            }
-            set
-            {
-                SetValue(value);
-            }
-        }
+        [DefaultValue("#TODO#_")]
+        public string TranslationPrefix { get; set; }
 
         public string EffectiveTranslationPrefix => PrefixTranslations ? TranslationPrefix : string.Empty;
 
-        public ExcelExportMode ExcelExportMode
-        {
-            get
-            {
-                return GetValue(default(ExcelExportMode));
-            }
-            set
-            {
-                SetValue(value);
-            }
-        }
+        [DefaultValue(default(ExcelExportMode))]
+        public ExcelExportMode ExcelExportMode { get; set; }
 
-        public DuplicateKeyHandling DuplicateKeyHandling
-        {
-            get
-            {
-                return GetValue(default(DuplicateKeyHandling));
-            }
-            set
-            {
-                SetValue(value);
-            }
-        }
+        [DefaultValue(default(DuplicateKeyHandling))]
+        public DuplicateKeyHandling DuplicateKeyHandling { get; set; }
 
-        public bool ShowPerformanceTraces
-        {
-            get
-            {
-                return GetValue(false);
-            }
-            set
-            {
-                SetValue(value);
-            }
-        }
+        [DefaultValue(false)]
+        public bool ShowPerformanceTraces { get; set; }
 
         public void Reload()
         {

@@ -19,22 +19,8 @@
             Contract.Requires(tracer != null);
         }
 
-        public override bool IsScopeSupported
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<bool>() == false);
-                return false;
-            }
-        }
+        public override bool IsScopeSupported => false;
 
-        public override ConfigurationScope Scope
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<tomenglertde.ResXManager.Model.ConfigurationScope>() == tomenglertde.ResXManager.Model.ConfigurationScope.Global);
-                return ConfigurationScope.Global;
-            }
-        }
+        public override ConfigurationScope Scope => ConfigurationScope.Global;
     }
 }
