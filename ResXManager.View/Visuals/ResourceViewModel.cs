@@ -501,8 +501,6 @@
                     {
                         BeginFindCodeReferences();
                     }
-
-                    _configuration.Reload();
                 }
             }
             catch (Exception ex)

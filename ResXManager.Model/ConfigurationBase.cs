@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -8,7 +9,6 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     using AutoProperties;
 
@@ -18,18 +18,6 @@
 
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
-
-    [AttributeUsage(AttributeTargets.Property)]
-    public sealed class DefaultValueAttribute : Attribute
-    {
-        [NotNull]
-        public object Value { get; }
-
-        public DefaultValueAttribute([NotNull] object value)
-        {
-            Value = value;
-        }
-    }
 
     /// <summary>
     /// Handle global persistence.
@@ -45,6 +33,8 @@
         private readonly string _filePath;
         [NotNull]
         private readonly XmlConfiguration _configuration;
+        [NotNull]
+        private readonly Dictionary<string, object> _chachedObjects = new Dictionary<string, object>();
 
         protected ConfigurationBase([NotNull] ITracer tracer)
         {
@@ -90,11 +80,33 @@
         {
             Contract.Requires(key != null);
 
-            return GetValue(GetDefaultValue<T>(propertyInfo), key);
+            if (!typeof(INotifyChanged).IsAssignableFrom(typeof(T)))
+            {
+                return GetValue(GetDefaultValue<T>(propertyInfo), key);
+            }
+
+            if (_chachedObjects.TryGetValue(key, out var item))
+            {
+                return (T)item;
+            }
+
+            var value = GetValue(GetDefaultValue<T>(propertyInfo), key);
+
+            if (value == null)
+                return default(T);
+
+            ((INotifyChanged)value).Changed += (sender, e) =>
+            {
+                SetValue((T)sender, key);
+            };
+
+            _chachedObjects.Add(key, value);
+
+            return value;
         }
 
         [CanBeNull]
-        protected T GetValue<T>([CanBeNull] T defaultValue, [NotNull] string key)
+        private T GetValue<T>([CanBeNull] T defaultValue, [NotNull] string key)
         {
             Contract.Requires(key != null);
 
@@ -114,7 +126,7 @@
         {
             Contract.Requires(key != null);
 
-            return ConvertFromString<T>(_configuration.GetValue(key, ConvertToString(defaultValue)));
+            return ConvertFromString(_configuration.GetValue(key, null), defaultValue);
         }
 
         [SetInterceptor, UsedImplicitly]
@@ -145,7 +157,7 @@
         }
 
         [CanBeNull]
-        protected static T ConvertFromString<T>([CanBeNull] string value)
+        protected static T ConvertFromString<T>([CanBeNull] string value, [CanBeNull] T defaultValue)
         {
             try
             {
@@ -153,14 +165,14 @@
                 {
                     var typeConverter = GetTypeConverter(typeof(T));
                     var obj = typeConverter.ConvertFromInvariantString(value);
-                    return obj == null ? default(T) : (T)obj;
+                    return obj == null ? defaultValue : (T)obj;
                 }
             }
             catch (NotSupportedException)
             {
             }
 
-            return default(T);
+            return defaultValue;
         }
 
         [CanBeNull]
@@ -192,7 +204,7 @@
                 case T defaultValue:
                     return defaultValue;
                 case string stringValue:
-                    return ConvertFromString<T>(stringValue);
+                    return ConvertFromString(stringValue, default(T));
             }
 
             return default(T);
@@ -207,6 +219,7 @@
             Contract.Invariant(_configuration != null);
             Contract.Invariant(!string.IsNullOrEmpty(_filePath));
             Contract.Invariant(!string.IsNullOrEmpty(_directory));
+            Contract.Invariant(_chachedObjects != null);
         }
     }
 }

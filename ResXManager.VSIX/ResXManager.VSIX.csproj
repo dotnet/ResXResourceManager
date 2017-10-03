@@ -144,6 +144,10 @@
     <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoProperties, Version=1.5.0.0, Culture=neutral, PublicKeyToken=4d0e9a1cbec0d397, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoProperties.Fody.1.5.0.0\lib\netstandard1.0\AutoProperties.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DataGridExtensions, Version=1.0.37.0, Culture=neutral, PublicKeyToken=43de855f87de903a, processorArchitecture=MSIL">
       <HintPath>..\packages\DataGridExtensions.1.0.37\lib\net40-Client\DataGridExtensions.dll</HintPath>
     </Reference>

@@ -1,20 +1,16 @@
 ﻿namespace tomenglertde.ResXManager.VSIX
 {
     using System;
+    using System.ComponentModel;
     using System.ComponentModel.Composition;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Windows.Threading;
 
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
-
-    using Throttle;
-
-    using TomsToolbox.Desktop;
 
     [Export(typeof(IConfiguration))]
     [Export(typeof(Configuration))]
@@ -23,10 +19,9 @@
     {
         [NotNull]
         private readonly DteSolution _solution;
-        [CanBeNull]
-        private MoveToResourceConfiguration _moveToResources;
 
         [ImportingConstructor]
+        // ReSharper disable once NotNullMemberIsNotInitialized
         public DteConfiguration([NotNull] DteSolution solution, [NotNull] ITracer tracer)
             : base(tracer)
         {
@@ -36,41 +31,9 @@
             _solution = solution;
         }
 
-        [NotNull]
-        public MoveToResourceConfiguration MoveToResources
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<MoveToResourceConfiguration>() != null);
-
-                return _moveToResources ?? LoadMoveToResourceConfiguration(GetValue(default(MoveToResourceConfiguration), nameof(MoveToResources)));
-            }
-        }
-
-        protected override void OnReload()
-        {
-            _moveToResources = null;
-
-            base.OnReload();
-        }
-
-        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.ContextIdle)]
-        private void PersistMoveToResources()
-        {
-            // ReSharper disable once ExplicitCallerInfoArgument
-            SetValue(MoveToResources, nameof(MoveToResources));
-        }
-
-        [NotNull]
-        private MoveToResourceConfiguration LoadMoveToResourceConfiguration(MoveToResourceConfiguration current)
-        {
-            Contract.Ensures(Contract.Result<MoveToResourceConfiguration>() != null);
-
-            _moveToResources = current ?? MoveToResourceConfiguration.Default;
-            _moveToResources.ItemPropertyChanged += (_, __) => PersistMoveToResources();
-
-            return _moveToResources;
-        }
+        [NotNull, UsedImplicitly]
+        [DefaultValue(MoveToResourceConfiguration.Default)]
+        public MoveToResourceConfiguration MoveToResources { get; }
 
         public override bool IsScopeSupported => true;
 
@@ -78,7 +41,7 @@
 
         protected override T InternalGetValue<T>(T defaultValue, string key)
         {
-            return TryGetValue(GetKey(key), out T value) ? value : base.InternalGetValue(defaultValue, key);
+            return TryGetValue(GetKey(key), defaultValue, out T value) ? value : base.InternalGetValue(defaultValue, key);
         }
 
         protected override void InternalSetValue<T>(T value, string key)
@@ -95,9 +58,9 @@
             }
         }
 
-        private bool TryGetValue<T>(string key, out T value)
+        private bool TryGetValue<T>(string key, T defaultValue, out T value)
         {
-            value = default(T);
+            value = defaultValue;
 
             return TryGetValue(_solution.Globals, key, ref value);
         }
@@ -108,7 +71,7 @@
             {
                 if ((globals != null) && globals.VariableExists[key])
                 {
-                    value = ConvertFromString<T>(globals[key] as string);
+                    value = ConvertFromString(globals[key] as string, value);
                     return true;
                 }
             }
