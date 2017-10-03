@@ -3,6 +3,7 @@
     using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
 
     using JetBrains.Annotations;
@@ -24,6 +25,7 @@
             Items = new ObservableCollection<T>();
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required by serializer")]
         [DataMember(Name = "Items")]
         [NotNull, ItemNotNull]
         public ObservableCollection<T> Items
