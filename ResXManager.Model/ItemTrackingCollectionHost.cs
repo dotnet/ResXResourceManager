@@ -11,6 +11,7 @@
     using TomsToolbox.Core;
     using TomsToolbox.ObservableCollections;
 
+    [DataContract]
     public abstract class ItemTrackingCollectionHost<T> : INotifyChanged
         where T:class, INotifyPropertyChanged
     {
