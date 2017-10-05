@@ -19,7 +19,8 @@
 
     internal static class DteExtensions
     {
-        public static EnvDTE.Document TryGetDocument(this EnvDTE.ProjectItem projectItem)
+        [CanBeNull]
+        public static EnvDTE.Document TryGetDocument([CanBeNull] this EnvDTE.ProjectItem projectItem)
         {
             try
             {
@@ -31,6 +32,7 @@
             }
         }
 
+        [CanBeNull]
         public static XDocument TryGetContent([NotNull] this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
@@ -91,6 +93,7 @@
             }
         }
 
+        [CanBeNull]
         public static string GetMkDocument(this VSITEMSELECTION selection)
         {
             try
@@ -111,8 +114,9 @@
             }
         }
 
+        [CanBeNull]
         [ContractVerification(false)]
-        private static XDocument TryGetContent(EnvDTE.Document document)
+        private static XDocument TryGetContent([CanBeNull] EnvDTE.Document document)
         {
             try
             {
@@ -136,7 +140,7 @@
         }
 
         [ContractVerification(false)]
-        private static bool TrySetContent(EnvDTE.Document document, XDocument value)
+        private static bool TrySetContent([CanBeNull] EnvDTE.Document document, [CanBeNull] XDocument value)
         {
             try
             {
@@ -156,38 +160,37 @@
             }
         }
 
-        [NotNull]
-        public static IEnumerable<EnvDTE.ProjectItem> Children(this EnvDTE.ProjectItem projectItem)
+        [CanBeNull, ItemNotNull]
+        public static IEnumerable<EnvDTE.ProjectItem> TryGetProjectItems([CanBeNull] this EnvDTE.ProjectItem projectItem)
+        {
+            try
+            {
+                return projectItem?.ProjectItems?.OfType<EnvDTE.ProjectItem>().ToArray();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        [NotNull, ItemNotNull]
+        public static IEnumerable<EnvDTE.ProjectItem> Children([CanBeNull] this EnvDTE.ProjectItem projectItem)
         {
             Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.ProjectItem>>() != null);
 
-            if (projectItem == null)
-                return Enumerable.Empty<EnvDTE.ProjectItem>();
-
-            var projectItems = projectItem.ProjectItems;
-            if (projectItems == null)
-                return Enumerable.Empty<EnvDTE.ProjectItem>();
-
-            return projectItems.OfType<EnvDTE.ProjectItem>();
+            return projectItem?.TryGetProjectItems() ?? Enumerable.Empty<EnvDTE.ProjectItem>();
         }
 
-        [NotNull]
-        public static IEnumerable<EnvDTE.ProjectItem> Descendants(this EnvDTE.ProjectItem projectItem)
+        [NotNull, ItemNotNull]
+        public static IEnumerable<EnvDTE.ProjectItem> Descendants([CanBeNull] this EnvDTE.ProjectItem projectItem)
         {
             Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.ProjectItem>>() != null);
 
-            if (projectItem == null)
-                return Enumerable.Empty<EnvDTE.ProjectItem>();
-
-            var projectItems = projectItem.ProjectItems;
-            if (projectItems == null)
-                return Enumerable.Empty<EnvDTE.ProjectItem>();
-
-            return projectItem.ProjectItems.OfType<EnvDTE.ProjectItem>().SelectMany(p => p.DescendantsAndSelf());
+            return projectItem?.TryGetProjectItems()?.SelectMany(p => p.DescendantsAndSelf()) ?? Enumerable.Empty<EnvDTE.ProjectItem>();
         }
 
-        [NotNull]
-        public static IEnumerable<EnvDTE.ProjectItem> DescendantsAndSelf(this EnvDTE.ProjectItem projectItem)
+        [NotNull, ItemNotNull]
+        public static IEnumerable<EnvDTE.ProjectItem> DescendantsAndSelf([CanBeNull] this EnvDTE.ProjectItem projectItem)
         {
             Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.ProjectItem>>() != null);
 
@@ -202,7 +205,7 @@
             }
         }
 
-        public static void SetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName, object value)
+        public static void SetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName, [CanBeNull] object value)
         {
             Contract.Requires(projectItem != null);
             Contract.Requires(propertyName != null);
@@ -212,6 +215,7 @@
                 item.Value = value;
         }
 
+        [CanBeNull]
         public static object GetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName)
         {
             Contract.Requires(projectItem != null);
@@ -265,11 +269,9 @@
         {
             Contract.Requires(projectItem != null);
 
-            var projectItems = projectItem.ProjectItems;
-
             try
             {
-                return projectItems?.AddFromFile(fileName);
+                return projectItem.ProjectItems?.AddFromFile(fileName);
             }
             catch (Exception)
             {
@@ -281,11 +283,9 @@
         {
             Contract.Requires(project != null);
 
-            var projectItems = project.ProjectItems;
-
             try
             {
-                return projectItems?.AddFromFile(fileName);
+                return project.ProjectItems?.AddFromFile(fileName);
             }
             catch (Exception)
             {
