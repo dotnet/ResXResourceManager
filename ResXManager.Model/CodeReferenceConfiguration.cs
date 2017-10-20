@@ -58,6 +58,13 @@
     [UsedImplicitly]
     public sealed class CodeReferenceConfiguration : ItemTrackingCollectionHost<CodeReferenceConfigurationItem>
     {
-        public const string Default = @"{""Items"":[{""Expression"":""\\W($File.$Key)\\W"",""Extensions"":"".cs,.xaml,.cshtml"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},{""Expression"":""ResourceManager.GetString\\(\""($Key)\""\\)"",""Extensions"":"".cs"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},{""Expression"":""typeof\\((\\w+\\.)*($File)\\).+\""($Key)\""|\""($Key)\"".+typeof\\((\\w+\\.)*($File)\\)"",""Extensions"":"".cs"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},{""Expression"":""\\W($Key)\\W"",""Extensions"":"".vb"",""IsCaseSensitive"":false,""SingleLineComment"":""'""},{""Expression"":""\\W($File::$Key)\\W"",""Extensions"":"".cpp,.c,.hxx,.h"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},{""Expression"":""&lt;%\\$\\s+Resources:\\s*($File)\\s*,\\s*($Key)\\s*%&gt;"",""Extensions"":"".aspx,.ascx"",""IsCaseSensitive"":true,""SingleLineComment"":null},{""Expression"":""StringResourceKey\\.($Key)"",""Extensions"":"".cs"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""}]}";
+        public const string Default = @"{""Items"":[
+{""Expression"":""\\W($File.$Key)\\W"",""Extensions"":"".cs,.xaml,.cshtml"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
+{""Expression"":""ResourceManager.GetString\\(\""($Key)\""\\)"",""Extensions"":"".cs"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
+{""Expression"":""typeof\\((\\w+\\.)*($File)\\).+\""($Key)\""|\""($Key)\"".+typeof\\((\\w+\\.)*($File)\\)"",""Extensions"":"".cs"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
+{""Expression"":""\\W($Key)\\W"",""Extensions"":"".vb"",""IsCaseSensitive"":false,""SingleLineComment"":""'""},
+{""Expression"":""\\W($File::$Key)\\W"",""Extensions"":"".cpp,.c,.hxx,.h"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
+{""Expression"":""&lt;%\\$\\s+Resources:\\s*($File)\\s*,\\s*($Key)\\s*%&gt;"",""Extensions"":"".aspx,.ascx,.master"",""IsCaseSensitive"":true,""SingleLineComment"":null},
+{""Expression"":""StringResourceKey\\.($Key)"",""Extensions"":"".cs"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""}]}";
     }
 }
