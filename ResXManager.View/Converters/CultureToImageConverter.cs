@@ -10,6 +10,7 @@
 
     public class CultureToImageConverter : IValueConverter
     {
+        [NotNull]
         public static readonly IValueConverter Default = new CultureToImageConverter();
 
         [NotNull]

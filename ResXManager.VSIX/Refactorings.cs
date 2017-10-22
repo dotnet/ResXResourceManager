@@ -21,9 +21,10 @@
 
     public interface IRefactorings
     {
-        bool CanMoveToResource(EnvDTE.Document document);
+        bool CanMoveToResource([CanBeNull] EnvDTE.Document document);
 
-        ResourceTableEntry MoveToResource(EnvDTE.Document document);
+        [CanBeNull]
+        ResourceTableEntry MoveToResource([CanBeNull] EnvDTE.Document document);
     }
 
     [Export(typeof(IRefactorings))]
@@ -31,6 +32,7 @@
     {
         [NotNull]
         private readonly ICompositionHost _compositionHost;
+        [CanBeNull]
         private ResourceEntity _lastUsedEntity;
 
         [ImportingConstructor]
@@ -155,6 +157,7 @@
             return null;
         }
 
+        [CanBeNull]
         private static ResourceEntity GetPreferredResourceEntity([NotNull] EnvDTE.Document document, [NotNull][ItemNotNull] IEnumerable<ResourceEntity> entities)
         {
             Contract.Requires(document != null);
@@ -172,7 +175,7 @@
             }
         }
 
-        private static bool IsInProject([NotNull] ResourceEntity entity, EnvDTE.Project project)
+        private static bool IsInProject([NotNull] ResourceEntity entity, [CanBeNull] EnvDTE.Project project)
         {
             Contract.Requires(entity != null);
 
@@ -183,6 +186,7 @@
                 .Contains(project) ?? false;
         }
 
+        [CanBeNull]
         private static Selection GetSelection([NotNull] EnvDTE.Document document)
         {
             Contract.Requires(document != null);
@@ -208,9 +212,10 @@
             private readonly EnvDTE.TextDocument _textDocument;
             [NotNull]
             private readonly string _line;
+            [CanBeNull]
             private readonly EnvDTE.FileCodeModel _codeModel;
 
-            public Selection([NotNull] EnvDTE.TextDocument textDocument, [NotNull] string line, EnvDTE.FileCodeModel codeModel)
+            public Selection([NotNull] EnvDTE.TextDocument textDocument, [NotNull] string line, [CanBeNull] EnvDTE.FileCodeModel codeModel)
             {
                 Contract.Requires(textDocument != null);
                 Contract.Requires(line != null);
@@ -244,6 +249,7 @@
 
             public bool IsEmpty => Begin.EqualTo(End);
 
+            [CanBeNull]
             public string Text => _textDocument.Selection?.Text;
 
             [NotNull]
@@ -256,8 +262,10 @@
                 }
             }
 
+            [CanBeNull]
             public string FunctionName => GetCodeElement(EnvDTE.vsCMElement.vsCMElementFunction)?.Name;
 
+            [CanBeNull]
             public string ClassName => GetCodeElement(EnvDTE.vsCMElement.vsCMElementClass)?.Name;
 
             public void MoveTo(int startColumn, int endColumn)
@@ -270,7 +278,7 @@
                 selection.MoveToLineAndOffset(Begin.Line, endColumn, true);
             }
 
-            public void ReplaceWith(string replacement)
+            public void ReplaceWith([CanBeNull] string replacement)
             {
                 var selection = _textDocument.Selection;
                 // using "selection.Text = replacement" does not work here, since it will trigger auto-complete, 
@@ -278,6 +286,7 @@
                 selection?.ReplaceText(selection.Text, replacement);
             }
 
+            [CanBeNull]
             private EnvDTE.CodeElement GetCodeElement(EnvDTE.vsCMElement scope)
             {
                 try
@@ -302,7 +311,8 @@
 
         private interface IParser
         {
-            string LocateString(Selection selection, bool moveSelection);
+            [CanBeNull]
+            string LocateString([CanBeNull] Selection selection, bool moveSelection);
         }
 
         private class GenericParser : IParser

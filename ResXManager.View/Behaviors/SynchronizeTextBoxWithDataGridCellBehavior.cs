@@ -14,6 +14,7 @@
 
     public class SynchronizeTextBoxWithDataGridCellBehavior : Behavior<TextBox>
     {
+        [CanBeNull]
         public DataGrid DataGrid
         {
             get { return (DataGrid)GetValue(DataGridProperty); }
@@ -26,7 +27,7 @@
         public static readonly DependencyProperty DataGridProperty =
             DependencyProperty.Register("DataGrid", typeof(DataGrid), typeof(SynchronizeTextBoxWithDataGridCellBehavior), new FrameworkPropertyMetadata(null, (sender, e) => ((SynchronizeTextBoxWithDataGridCellBehavior)sender).DataGrid_Changed((DataGrid)e.OldValue, (DataGrid)e.NewValue)));
 
-        private void DataGrid_Changed(DataGrid oldValue, DataGrid newValue)
+        private void DataGrid_Changed([CanBeNull] DataGrid oldValue, [CanBeNull] DataGrid newValue)
         {
             if (oldValue != null)
             {
@@ -40,6 +41,7 @@
             }
         }
 
+        [CanBeNull]
         private TextBox TextBox
         {
             get
@@ -50,7 +52,7 @@
             }
         }
 
-        private void DataGrid_CurrentCellChanged([NotNull] object sender, EventArgs e)
+        private void DataGrid_CurrentCellChanged([NotNull] object sender, [NotNull] EventArgs e)
         {
             Contract.Requires(sender != null);
 
@@ -61,12 +63,10 @@
             var dataGrid = (DataGrid)sender;
             var currentCell = dataGrid.CurrentCell;
 
-            var column = currentCell.Column as DataGridBoundColumn;
-            if (column == null)
+            if (!(currentCell.Column is DataGridBoundColumn column))
                 return;
 
-            var header = column.Header as ILanguageColumnHeader;
-            if (header != null)
+            if (column.Header is ILanguageColumnHeader header)
             {
                 textBox.IsHitTestVisible = true;
                 textBox.DataContext = currentCell.Item;

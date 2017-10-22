@@ -52,6 +52,7 @@
         [NotifyPropertyChangedInvocator, UsedImplicitly]
         private void OnPropertyChanged([NotNull] string propertyName)
         {
+            Contract.Requires(propertyName != null);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 

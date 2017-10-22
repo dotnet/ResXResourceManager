@@ -41,6 +41,7 @@
         /// <summary>
         /// Gets or sets the prompt to be displayed.
         /// </summary>
+        [CanBeNull]
         public string Prompt
         {
             get { return (string)GetValue(PromptProperty); }
@@ -56,6 +57,7 @@
         /// <summary>
         /// Gets or sets the text that the user has entered.
         /// </summary>
+        [CanBeNull]
         public string Text
         {
             get { return (string)GetValue(TextProperty); }
@@ -68,7 +70,7 @@
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register("Text", typeof(string), typeof(InputBox), new FrameworkPropertyMetadata(null, (sender, e) => ((InputBox)sender).Text_Changed((string)e.NewValue)));
 
-        private void Text_Changed(string newValue)
+        private void Text_Changed([CanBeNull] string newValue)
         {
             TextChanged?.Invoke(this, new TextEventArgs(newValue ?? string.Empty));
         }
@@ -81,9 +83,11 @@
             get { return this.GetValue<bool>(IsInputValidProperty); }
             set { SetValue(IsInputValidProperty, value); }
         }
+
         /// <summary>
         /// Identifies the IsInputValid dependency property
         /// </summary>
+        [CanBeNull]
         public static readonly DependencyProperty IsInputValidProperty =
             DependencyProperty.Register("IsInputValid", typeof(bool), typeof(InputBox), new FrameworkPropertyMetadata(false));
 

@@ -18,6 +18,7 @@ namespace tomenglertde.ResXManager.View.Tools
 
     public static class ExtensionMethods
     {
+        [CanBeNull]
         public static CultureKey GetCultureKey([NotNull] this DataGridColumn column)
         {
             Contract.Requires(column != null);
@@ -25,6 +26,7 @@ namespace tomenglertde.ResXManager.View.Tools
             return (column.Header as ILanguageColumnHeader)?.CultureKey;
         }
 
+        [CanBeNull]
         public static CultureInfo GetCulture([NotNull] this DataGridColumn column)
         {
             Contract.Requires(column != null);
@@ -32,7 +34,7 @@ namespace tomenglertde.ResXManager.View.Tools
             return column.GetCultureKey()?.Culture;
         }
 
-        public static void SetEditingElementStyle([NotNull] this DataGridBoundColumn column, Binding languageBinding, Binding flowDirectionBinding)
+        public static void SetEditingElementStyle([NotNull] this DataGridBoundColumn column, [CanBeNull] Binding languageBinding, [CanBeNull] Binding flowDirectionBinding)
         {
             Contract.Requires(column != null);
 
@@ -52,7 +54,7 @@ namespace tomenglertde.ResXManager.View.Tools
             column.EditingElementStyle = textBoxStyle;
         }
 
-        public static void SetElementStyle([NotNull] this DataGridBoundColumn column, Binding languageBinding, Binding flowDirectionBinding)
+        public static void SetElementStyle([NotNull] this DataGridBoundColumn column, [CanBeNull] Binding languageBinding, [CanBeNull] Binding flowDirectionBinding)
         {
             Contract.Requires(column != null);
 
@@ -104,7 +106,7 @@ namespace tomenglertde.ResXManager.View.Tools
             return (Keyboard.GetKeyStates(key) & KeyStates.Down) != 0;
         }
 
-        public static bool IsItemInvariant([CanBeNull] this DataGridCellInfo info)
+        public static bool IsItemInvariant(this DataGridCellInfo info)
         {
             var col = info.Column?.Header as ILanguageColumnHeader;
 

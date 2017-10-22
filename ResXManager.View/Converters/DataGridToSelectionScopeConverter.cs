@@ -17,6 +17,7 @@
 
     public class DataGridToSelectionScopeConverter : IValueConverter
     {
+        [NotNull]
         public static readonly IValueConverter Default = new DataGridToSelectionScopeConverter();
 
         [NotNull]
@@ -33,9 +34,10 @@
 
         private class DataGridSelectionScope : IResourceScope, IExportParameters
         {
+            [CanBeNull]
             private readonly DataGrid _dataGrid;
 
-            public DataGridSelectionScope(DataGrid dataGrid)
+            public DataGridSelectionScope([CanBeNull] DataGrid dataGrid)
             {
                 _dataGrid = dataGrid;
             }
@@ -45,7 +47,7 @@
                 get
                 {
                     if (_dataGrid == null)
-                      return Enumerable.Empty<ResourceTableEntry>() ;
+                        return Enumerable.Empty<ResourceTableEntry>();
 
                     return _dataGrid.SelectedItems.Cast<ResourceTableEntry>();
                 }

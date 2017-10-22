@@ -32,7 +32,7 @@
         [NotNull]
         private readonly string _extension;
 
-        public MoveToResourceViewModel([NotNull, ItemNotNull] ICollection<string> patterns, [NotNull][ItemNotNull] ICollection<ResourceEntity> resourceEntities, [NotNull] string text, [NotNull] string extension, string className, string functionName)
+        public MoveToResourceViewModel([NotNull, ItemNotNull] ICollection<string> patterns, [NotNull][ItemNotNull] ICollection<ResourceEntity> resourceEntities, [NotNull] string text, [NotNull] string extension, [CanBeNull] string className, [CanBeNull] string functionName)
         {
             Contract.Requires(patterns != null);
             Contract.Requires(resourceEntities != null);
@@ -61,12 +61,15 @@
         public ICollection<ResourceEntity> ResourceEntities { get; }
 
         [Required]
+        [CanBeNull]
         public ResourceEntity SelectedResourceEntity { get; set; }
 
+        [CanBeNull]
         public ResourceTableEntry SelectedResourceEntry { get; set; }
 
         [Required(AllowEmptyStrings = false)]
         [DependsOn(nameof(ReuseExisiting), nameof(SelectedResourceEntity))] // must raise a change event for key, key validation is different when these change
+        [CanBeNull]
         public string Key { get; set; }
 
         [NotNull, ItemNotNull]
@@ -178,7 +181,7 @@
         }
 
         [NotNull]
-        private static string CreateKey([NotNull] string text, string className, string functionName)
+        private static string CreateKey([NotNull] string text, [CanBeNull] string className, [CanBeNull] string functionName)
         {
             Contract.Requires(text != null);
             Contract.Ensures(Contract.Result<string>() != null);
@@ -226,7 +229,7 @@
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator, UsedImplicitly]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName][CanBeNull] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             Update();

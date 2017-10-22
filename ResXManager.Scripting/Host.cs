@@ -48,7 +48,7 @@
         [NotNull]
         public ResourceManager ResourceManager => _resourceManager;
 
-        public void Load(string folder, string exclusionFilter = @"Migrations\\\d{15}")
+        public void Load([CanBeNull] string folder, [CanBeNull] string exclusionFilter = @"Migrations\\\d{15}")
         {
             _sourceFilesProvider.Folder = folder;
             _sourceFilesProvider.ExclusionFilter = exclusionFilter;
@@ -68,28 +68,28 @@
             ExportExcel(filePath, null);
         }
 
-        public void ExportExcel([NotNull] string filePath, object entries)
+        public void ExportExcel([NotNull] string filePath, [CanBeNull] object entries)
         {
             Contract.Requires(filePath != null);
 
             ExportExcel(filePath, entries as IEnumerable<object>, null);
         }
 
-        public void ExportExcel([NotNull] string filePath, object entries, object languages)
+        public void ExportExcel([NotNull] string filePath, [CanBeNull] object entries, [CanBeNull] object languages)
         {
             Contract.Requires(filePath != null);
 
             ExportExcel(filePath, entries, languages, null);
         }
 
-        public void ExportExcel([NotNull] string filePath, object entries, object languages, object comments)
+        public void ExportExcel([NotNull] string filePath, [CanBeNull] object entries, [CanBeNull] object languages, [CanBeNull] object comments)
         {
             Contract.Requires(filePath != null);
 
             ExportExcel(filePath, entries, languages, comments, ExcelExportMode.SingleSheet);
         }
 
-        public void ExportExcel([NotNull] string filePath, object entries, object languages, object comments, ExcelExportMode exportMode)
+        public void ExportExcel([NotNull] string filePath, [CanBeNull] object entries, [CanBeNull] object languages, [CanBeNull] object comments, ExcelExportMode exportMode)
         {
             Contract.Requires(filePath != null);
 
@@ -118,7 +118,7 @@
             return _resourceManager.CreateSnapshot();
         }
 
-        public void LoadSnapshot(string value)
+        public void LoadSnapshot([CanBeNull] string value)
         {
             _resourceManager.LoadSnapshot(value);
         }
@@ -128,7 +128,7 @@
             _compositionHost.Dispose();
         }
 
-        private void ResourceManager_BeginEditing(object sender, [NotNull] ResourceBeginEditingEventArgs e)
+        private void ResourceManager_BeginEditing([NotNull] object sender, [NotNull] ResourceBeginEditingEventArgs e)
         {
             if (!CanEdit(e.Entity, e.CultureKey))
             {
@@ -136,7 +136,7 @@
             }
         }
 
-        private bool CanEdit([NotNull] ResourceEntity entity, CultureKey cultureKey)
+        private bool CanEdit([NotNull] ResourceEntity entity, [CanBeNull] CultureKey cultureKey)
         {
             Contract.Requires(entity != null);
 

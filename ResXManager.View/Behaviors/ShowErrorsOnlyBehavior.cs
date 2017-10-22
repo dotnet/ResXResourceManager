@@ -19,6 +19,7 @@
 
     public class ShowErrorsOnlyBehavior : Behavior<DataGrid>
     {
+        [CanBeNull]
         public ToggleButton ToggleButton
         {
             get { return (ToggleButton)GetValue(ToggleButtonProperty); }
@@ -52,6 +53,7 @@
             DataGrid.GetAdditionalEvents().ColumnVisibilityChanged -= DataGrid_ColumnVisibilityChanged;
         }
 
+        [CanBeNull]
         private DataGrid DataGrid
         {
             get
@@ -61,7 +63,7 @@
             }
         }
 
-        private void ToggleButton_Changed(ToggleButton oldValue, ToggleButton newValue)
+        private void ToggleButton_Changed([CanBeNull] ToggleButton oldValue, [CanBeNull] ToggleButton newValue)
         {
             if (oldValue != null)
             {
@@ -77,12 +79,12 @@
             }
         }
 
-        private void ToggleButton_StateChanged(object sender, EventArgs e)
+        private void ToggleButton_StateChanged([NotNull] object sender, [NotNull] EventArgs e)
         {
             Refresh((ToggleButton)sender);
         }
 
-        private void Refresh(ToggleButton button)
+        private void Refresh([CanBeNull] ToggleButton button)
         {
             var dataGrid = DataGrid;
 
@@ -96,7 +98,7 @@
                 dataGrid.ScrollIntoView(selectedItem);
         }
 
-        private void DataGrid_ColumnVisibilityChanged(object source, EventArgs e)
+        private void DataGrid_ColumnVisibilityChanged([NotNull] object source, [NotNull] EventArgs e)
         {
             var toggleButton = ToggleButton;
 

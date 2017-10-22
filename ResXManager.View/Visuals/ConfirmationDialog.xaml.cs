@@ -24,7 +24,7 @@
             InitializeComponent();
         }
 
-        public static bool? Show([NotNull] ExportProvider exportProvider, object content, string title)
+        public static bool? Show([NotNull] ExportProvider exportProvider, [CanBeNull] object content, [CanBeNull] string title)
         {
             Contract.Requires(exportProvider != null);
 

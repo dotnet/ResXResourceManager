@@ -2,6 +2,8 @@
 {
     using System.ComponentModel.Composition;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf.Composition;
@@ -11,11 +13,12 @@
     internal class MoveToResourceConfigurationViewModel
     {
         [ImportingConstructor]
-        public MoveToResourceConfigurationViewModel(DteConfiguration configuration)
+        public MoveToResourceConfigurationViewModel([NotNull] DteConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        [NotNull]
         public DteConfiguration Configuration { get; }
     }
 }

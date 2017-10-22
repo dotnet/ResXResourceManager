@@ -28,7 +28,9 @@ namespace tomenglertde.ResXManager.View.Visuals
         [NotNull]
         private readonly string _source;
         [ItemNotNull]
+        [CanBeNull]
         private ICollectionView _orderedResults;
+        [CanBeNull]
         private string _translation;
 
         public TranslationItem([NotNull] ResourceTableEntry entry, [NotNull] string source, [NotNull] CultureKey targetCulture)

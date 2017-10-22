@@ -117,6 +117,8 @@
             Settings.StartupSize = _lastKnownSize;
         }
 
+        [NotNull]
+        // ReSharper disable once AssignNullToNotNullAttribute
         private static Settings Settings => Settings.Default;
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
@@ -137,7 +139,7 @@
                 _laskKnownLocation = new Vector(Left, Top);
         }
 
-        private static void Navigate_Click(object sender, [NotNull] RoutedEventArgs e)
+        private static void Navigate_Click([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
             string url;
 

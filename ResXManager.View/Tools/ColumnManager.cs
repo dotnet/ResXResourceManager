@@ -104,7 +104,7 @@
             }
         }
 
-        public static void CreateNewLanguageColumn([NotNull] this DataGrid dataGrid, [NotNull] Configuration configuration, CultureInfo culture)
+        public static void CreateNewLanguageColumn([NotNull] this DataGrid dataGrid, [NotNull] Configuration configuration, [CanBeNull] CultureInfo culture)
         {
             Contract.Requires(dataGrid != null);
             Contract.Requires(configuration != null);
@@ -133,7 +133,7 @@
         }
 
         [NotNull]
-        private static DataGridTextColumn CreateIndexColumn(ResourceViewModel resourceViewModel, Configuration configuration)
+        private static DataGridTextColumn CreateIndexColumn([CanBeNull] ResourceViewModel resourceViewModel, [CanBeNull] Configuration configuration)
         {
             Contract.Ensures(Contract.Result<DataGridTextColumn>() != null);
 
@@ -322,7 +322,7 @@
             columns.AddLanguageColumn(column, languageBinding, flowDirectionBinding);
         }
 
-        private static void AddLanguageColumn([NotNull][ItemNotNull] this ICollection<DataGridColumn> columns, [NotNull] DataGridBoundColumn column, [NotNull] Binding languageBinding, Binding flowDirectionBinding)
+        private static void AddLanguageColumn([NotNull][ItemNotNull] this ICollection<DataGridColumn> columns, [NotNull] DataGridBoundColumn column, [NotNull] Binding languageBinding, [CanBeNull] Binding flowDirectionBinding)
         {
             Contract.Requires(columns != null);
             Contract.Requires(languageBinding != null);
@@ -333,7 +333,7 @@
             columns.Add(column);
         }
 
-        private static void DataGrid_ColumnVisibilityChanged([NotNull] object sender, EventArgs e)
+        private static void DataGrid_ColumnVisibilityChanged([NotNull] object sender, [NotNull] EventArgs e)
         {
             Contract.Requires(sender != null);
 
@@ -412,7 +412,7 @@
             }
         }
 
-        private static void DataGrid_CurrentCellChanged(object sender, EventArgs eventArgs)
+        private static void DataGrid_CurrentCellChanged([NotNull] object sender, [NotNull] EventArgs eventArgs)
         {
             var dataGrid = (DataGrid)sender;
             // postpone update, SelectedCells is updates *after* the current cell has changed.
@@ -422,7 +422,7 @@
             });
         }
 
-        private static void IsCellInvariant_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void IsCellInvariant_Changed([CanBeNull] DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var dataGrid = d?.TryFindAncestorOrSelf<DataGrid>();
 
@@ -435,6 +435,7 @@
 
         private class IsRightToLeftToFlowDirectionConverter : IValueConverter
         {
+            [NotNull]
             public static readonly IValueConverter Default = new IsRightToLeftToFlowDirectionConverter();
 
             [NotNull]

@@ -26,6 +26,7 @@
         }
 
         [NotNull]
+        [ItemNotNull]
         IEnumerable<CultureKey> Comments
         {
             get;

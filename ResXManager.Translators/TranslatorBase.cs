@@ -56,17 +56,8 @@ namespace tomenglertde.ResXManager.Translators
         [DataMember]
         public bool SaveCredentials { get; set; }
 
-        [NotNull]
         public IList<ICredentialItem> Credentials { get; }
 
         public abstract void Translate(ITranslationSession translationSession);
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(Credentials != null);
-        }
     }
 }

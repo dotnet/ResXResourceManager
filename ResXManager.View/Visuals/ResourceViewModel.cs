@@ -186,7 +186,7 @@
         // ReSharper disable once AssignNullToNotNullAttribute
         private static Settings Settings => Settings.Default;
 
-        private void LoadSnapshot(string fileName)
+        private void LoadSnapshot([CanBeNull] string fileName)
         {
             ResourceManager.LoadSnapshot(string.IsNullOrEmpty(fileName) ? null : File.ReadAllText(fileName));
 
@@ -204,7 +204,7 @@
             LoadedSnapshot = fileName;
         }
 
-        private bool CanDelete(DataGrid dataGrid)
+        private bool CanDelete([CanBeNull] DataGrid dataGrid)
         {
             if (dataGrid == null)
                 return false;
@@ -227,7 +227,7 @@
             return numberOfDistinctEntries == totalNumberOfEntries;
         }
 
-        private bool CanCopy(DataGrid dataGrid)
+        private bool CanCopy([CanBeNull] DataGrid dataGrid)
         {
             var entries = SelectedTableEntries;
 
@@ -313,7 +313,7 @@
             }
         }
 
-        private bool CanPaste(DataGrid dataGrid)
+        private bool CanPaste([CanBeNull] DataGrid dataGrid)
         {
             if (dataGrid == null)
                 return false;
@@ -447,7 +447,7 @@
             return dataGrid.SelectedCells?.Any(cell => (cell.Column?.Header as ILanguageColumnHeader)?.ColumnType == ColumnType.Language) ?? false;
         }
 
-        private static bool CanExportExcel(IExportParameters param)
+        private static bool CanExportExcel([CanBeNull] IExportParameters param)
         {
             if (param == null)
                 return true;
@@ -531,7 +531,7 @@
             }
         }
 
-        private void ResourceManager_LanguageChanged(object sender, LanguageEventArgs e)
+        private void ResourceManager_LanguageChanged([NotNull] object sender, [NotNull] LanguageEventArgs e)
         {
             if (!_configuration.SaveFilesImmediatelyUponChange)
                 return;

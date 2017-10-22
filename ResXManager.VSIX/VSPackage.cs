@@ -265,7 +265,7 @@
         }
 
         [NotNull]
-        private static OleMenuCommand CreateMenuCommand([NotNull] IMenuCommandService mcs, int cmdId, EventHandler invokeHandler)
+        private static OleMenuCommand CreateMenuCommand([NotNull] IMenuCommandService mcs, int cmdId, [CanBeNull] EventHandler invokeHandler)
         {
             Contract.Requires(mcs != null);
             Contract.Ensures(Contract.Result<OleMenuCommand>() != null);
@@ -276,11 +276,12 @@
             return menuCommand;
         }
 
-        private void ShowToolWindow(object sender, EventArgs e)
+        private void ShowToolWindow([CanBeNull] object sender, [CanBeNull] EventArgs e)
         {
             ShowToolWindow();
         }
 
+        [CanBeNull]
         private MyToolWindow FindToolWindow()
         {
             try
@@ -315,7 +316,7 @@
             }
         }
 
-        private void ShowSelectedResourceFiles(object sender, EventArgs e)
+        private void ShowSelectedResourceFiles([CanBeNull] object sender, [CanBeNull] EventArgs e)
         {
             var selectedResourceEntites = GetSelectedResourceEntites()?.Distinct().ToArray();
             if (selectedResourceEntites == null)
@@ -331,7 +332,7 @@
             ShowToolWindow();
         }
 
-        private void SolutionExplorerContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
+        private void SolutionExplorerContextMenuCommand_BeforeQueryStatus([CanBeNull] object sender, [CanBeNull] EventArgs e)
         {
             var menuCommand = sender as OleMenuCommand;
             if (menuCommand == null)
@@ -361,7 +362,7 @@
 
         [NotNull]
         [ItemNotNull]
-        private IEnumerable<ResourceEntity> GetSelectedResourceEntites(string fileName)
+        private IEnumerable<ResourceEntity> GetSelectedResourceEntites([CanBeNull] string fileName)
         {
             Contract.Ensures(Contract.Result<IEnumerable<ResourceEntity>>() != null);
             if (string.IsNullOrEmpty(fileName))
@@ -374,7 +375,7 @@
                 .ToArray();
         }
 
-        private static bool ContainsChildOfWinFormsDesignerItem([NotNull] ResourceEntity entity, string fileName)
+        private static bool ContainsChildOfWinFormsDesignerItem([NotNull] ResourceEntity entity, [CanBeNull] string fileName)
         {
             Contract.Requires(entity != null);
 
@@ -383,14 +384,14 @@
                 .Any(projectFile => string.Equals(projectFile.ParentItem?.TryGetFileName(), fileName) && projectFile.IsWinFormsDesignerResource);
         }
 
-        private static bool ContainsFile([NotNull] ResourceEntity entity, string fileName)
+        private static bool ContainsFile([NotNull] ResourceEntity entity, [CanBeNull] string fileName)
         {
             Contract.Requires(entity != null);
 
             return entity.Languages.Any(lang => lang.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
         }
 
-        private void MoveToResource(object sender, EventArgs e)
+        private void MoveToResource([CanBeNull] object sender, [CanBeNull] EventArgs e)
         {
             var entry = CompositionHost.GetExportedValue<IRefactorings>().MoveToResource(Dte.ActiveDocument);
             if (entry == null)
@@ -419,7 +420,7 @@
             });
         }
 
-        private void TextEditorContextMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
+        private void TextEditorContextMenuCommand_BeforeQueryStatus([CanBeNull] object sender, [CanBeNull] EventArgs e)
         {
             var menuCommand = sender as OleMenuCommand;
             if (menuCommand == null)
@@ -451,7 +452,7 @@
             ReloadSolution();
         }
 
-        private void Solution_ContentChanged(object item)
+        private void Solution_ContentChanged([CanBeNull] object item)
         {
             Tracer.WriteLine("DTE event: Solution content changed");
 
@@ -460,7 +461,7 @@
             ReloadSolution();
         }
 
-        private void DocumentEvents_DocumentOpened(EnvDTE.Document document)
+        private void DocumentEvents_DocumentOpened([CanBeNull] EnvDTE.Document document)
         {
             Tracer.WriteLine("DTE event: Document opened");
 

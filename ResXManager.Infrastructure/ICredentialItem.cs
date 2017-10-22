@@ -6,7 +6,8 @@
 
     using JetBrains.Annotations;
 
-    [ContractClass(typeof(CredentialItemContract))]
+    using PropertyChanged;
+
     public interface ICredentialItem : INotifyPropertyChanged
     {
         [NotNull]
@@ -17,40 +18,5 @@
 
         [CanBeNull]
         string Value { get; set; }
-    }
-
-    [ContractClassFor(typeof(ICredentialItem))]
-    internal abstract class CredentialItemContract : ICredentialItem
-    {
-        public string Key
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public string Description
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public string Value
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public abstract event PropertyChangedEventHandler PropertyChanged;
     }
 }

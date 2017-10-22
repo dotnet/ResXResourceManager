@@ -60,7 +60,8 @@
     internal static class ExtensionMethods
     {
         [NotNull]
-        public static IEnumerable<T> PsCast<T>([NotNull] this IEnumerable items)
+        [ItemNotNull]
+        public static IEnumerable<T> PsCast<T>([NotNull][ItemNotNull] this IEnumerable items)
         {
             Contract.Requires(items != null);
             Contract.Ensures(Contract.Result<IEnumerable<T>>() != null);

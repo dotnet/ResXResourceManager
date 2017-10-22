@@ -121,7 +121,7 @@
             }
         }
 
-        private void Navigate_Click(object sender, [NotNull] RoutedEventArgs e)
+        private void Navigate_Click([CanBeNull] object sender, [NotNull] RoutedEventArgs e)
         {
             string url;
 
@@ -169,7 +169,7 @@
             Process.Start(url);
         }
 
-        private void ResourceManager_BeginEditing(object sender, [NotNull] ResourceBeginEditingEventArgs e)
+        private void ResourceManager_BeginEditing([CanBeNull] object sender, [NotNull] ResourceBeginEditingEventArgs e)
         {
             if (!CanEdit(e.Entity, e.CultureKey))
             {
@@ -177,7 +177,7 @@
             }
         }
 
-        private bool CanEdit([NotNull] ResourceEntity entity, CultureKey cultureKey)
+        private bool CanEdit([NotNull] ResourceEntity entity, [CanBeNull] CultureKey cultureKey)
         {
             Contract.Requires(entity != null);
 
@@ -237,7 +237,7 @@
             return false;
         }
 
-        private static void ActivateWindow(EnvDTE.Window window)
+        private static void ActivateWindow([CanBeNull] EnvDTE.Window window)
         {
             try
             {
@@ -392,12 +392,12 @@
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
 
-        private void View_Loaded(object sender, RoutedEventArgs e)
+        private void View_Loaded([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
             _compositionHost.GetExportedValue<ResourceViewModel>().Reload();
         }
 
-        private void VisualComposition_Error(object sender, [NotNull] TextEventArgs e)
+        private void VisualComposition_Error([CanBeNull] object sender, [NotNull] TextEventArgs e)
         {
             _tracer.TraceError(e.Text);
         }

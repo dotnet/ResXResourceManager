@@ -1,4 +1,6 @@
-﻿namespace tomenglertde.ResXManager.View.Converters
+﻿using JetBrains.Annotations;
+
+namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
     using System.Globalization;
@@ -9,6 +11,7 @@
 
     public class LanguageColumnFilterConverter : IValueConverter
     {
+        [NotNull]
         public static readonly IValueConverter Default = new LanguageColumnFilterConverter();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -21,7 +24,7 @@
             return collectionView;
         }
 
-        private static bool Filter(object item)
+        private static bool Filter([CanBeNull] object item)
         {
             return ((DataGridColumn)item)?.Header is ILanguageColumnHeader;
         }

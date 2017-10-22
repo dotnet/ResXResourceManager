@@ -255,13 +255,14 @@
             }
         }
 
-        public static void SetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem, string value)
+        public static void SetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem, [CanBeNull] string value)
         {
             Contract.Requires(projectItem != null);
 
             SetProperty(projectItem, @"CustomTool", value);
         }
 
+        [CanBeNull]
         public static string GetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);
@@ -269,7 +270,8 @@
             return GetProperty(projectItem, @"CustomTool") as string;
         }
 
-        public static EnvDTE.ProjectItem AddFromFile([NotNull] this EnvDTE.ProjectItem projectItem, string fileName)
+        [CanBeNull]
+        public static EnvDTE.ProjectItem AddFromFile([NotNull] this EnvDTE.ProjectItem projectItem, [CanBeNull] string fileName)
         {
             Contract.Requires(projectItem != null);
 
@@ -283,7 +285,8 @@
             }
         }
 
-        public static EnvDTE.ProjectItem AddFromFile([NotNull] this EnvDTE.Project project, string fileName)
+        [CanBeNull]
+        public static EnvDTE.ProjectItem AddFromFile([NotNull] this EnvDTE.Project project, [CanBeNull] string fileName)
         {
             Contract.Requires(project != null);
 

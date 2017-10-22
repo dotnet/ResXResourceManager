@@ -27,7 +27,7 @@
         private readonly ITracer _tracer;
 
         [ImportingConstructor]
-        public ConfigurationEditorView(ExportProvider exportProvider, [NotNull] ITracer tracer)
+        public ConfigurationEditorView([CanBeNull] ExportProvider exportProvider, [NotNull] ITracer tracer)
         {
             Contract.Requires(tracer != null);
 
@@ -46,7 +46,7 @@
             }
         }
 
-        private void CommandConverter_Error(object sender, [NotNull] ErrorEventArgs e)
+        private void CommandConverter_Error([NotNull] object sender, [NotNull] ErrorEventArgs e)
         {
             var ex = e.GetException();
             if (ex == null)
@@ -57,7 +57,7 @@
             MessageBox.Show(ex.Message, Properties.Resources.Title);
         }
 
-        private void SortNodesByKeyCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        private void SortNodesByKeyCommandConverter_Executing([NotNull] object sender, [NotNull] ConfirmedCommandEventArgs e)
         {
             if (MessageBox.Show(Properties.Resources.SortNodesByKey_Confirmation, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {

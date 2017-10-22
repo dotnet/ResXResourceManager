@@ -18,11 +18,11 @@
     public class NeutralCultureCountryOverrides
     {
         private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,";
-        private static readonly IEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>> _comparer = new DelegateEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>>(item => item.Key);
 
         [NotNull]
+        private static readonly IEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>> _comparer = new DelegateEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>>(item => item.Key);
+        [NotNull]
         private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
-
         [NotNull]
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly NeutralCultureCountryOverrides Default = new NeutralCultureCountryOverrides();
@@ -33,6 +33,7 @@
 
         public event EventHandler<CultureOverrideEventArgs> OverrideChanged;
 
+        [CanBeNull]
         public CultureInfo this[[NotNull] CultureInfo neutralCulture]
         {
             get
@@ -65,11 +66,12 @@
             }
         }
 
-        private void OnOverrideChanged(CultureOverrideEventArgs e)
+        private void OnOverrideChanged([CanBeNull] CultureOverrideEventArgs e)
         {
             OverrideChanged?.Invoke(this, e);
         }
 
+        [CanBeNull]
         private static CultureInfo GetDefaultSpecificCulture([NotNull] CultureInfo neutralCulture)
         {
             Contract.Requires(neutralCulture != null);

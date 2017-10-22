@@ -1,4 +1,6 @@
-﻿namespace tomenglertde.ResXManager.View.Converters
+﻿using JetBrains.Annotations;
+
+namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
     using System.Globalization;
@@ -7,6 +9,7 @@
 
     public class CultureToXmlLanguageConverter : IValueConverter
     {
+        [NotNull]
         public static readonly IValueConverter Default = new CultureToXmlLanguageConverter();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

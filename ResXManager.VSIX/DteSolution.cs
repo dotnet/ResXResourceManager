@@ -143,7 +143,7 @@
             _projectFiles = null;
         }
 
-        private static bool IsSolutionItemsFolder(EnvDTE.Project project)
+        private static bool IsSolutionItemsFolder([CanBeNull] EnvDTE.Project project)
         {
             if (project == null)
                 return false;
@@ -181,7 +181,7 @@
             }
         }
 
-        private void GetProjectFiles(string projectName, [ItemNotNull] EnvDTE.ProjectItems projectItems, [NotNull] IDictionary<string, DteProjectFile> items)
+        private void GetProjectFiles([CanBeNull] string projectName, [ItemNotNull][CanBeNull] EnvDTE.ProjectItems projectItems, [NotNull] IDictionary<string, DteProjectFile> items)
         {
             Contract.Requires(items != null);
 
@@ -213,7 +213,7 @@
             }
         }
 
-        private void GetProjectFiles(string projectName, [NotNull] EnvDTE.ProjectItem projectItem, [NotNull] IDictionary<string, DteProjectFile> items)
+        private void GetProjectFiles([CanBeNull] string projectName, [NotNull] EnvDTE.ProjectItem projectItem, [NotNull] IDictionary<string, DteProjectFile> items)
         {
             Contract.Requires(projectItem != null);
             Contract.Requires(items != null);
@@ -252,6 +252,7 @@
             }
         }
 
+        [CanBeNull]
         private string TryGetFileName([NotNull] EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);

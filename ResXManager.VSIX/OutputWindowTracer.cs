@@ -26,7 +26,7 @@
             _serviceProvider = serviceProvider;
         }
 
-        private void LogMessageToOutputWindow(string value)
+        private void LogMessageToOutputWindow([CanBeNull] string value)
         {
             var outputWindow = _serviceProvider.GetService(typeof(SVsOutputWindow)) as IVsOutputWindow;
             if (outputWindow == null)

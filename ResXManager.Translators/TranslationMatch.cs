@@ -12,7 +12,7 @@ namespace tomenglertde.ResXManager.Translators
         private readonly string _translatedTranslatedText;
         private readonly double _rating;
 
-        public TranslationMatch(ITranslator translator, string translatedTranslatedText, double rating)
+        public TranslationMatch([CanBeNull] ITranslator translator, [CanBeNull] string translatedTranslatedText, double rating)
         {
             _translator = translator;
             _translatedTranslatedText = translatedTranslatedText;

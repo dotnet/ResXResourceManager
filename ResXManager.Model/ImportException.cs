@@ -17,7 +17,7 @@ namespace tomenglertde.ResXManager.Model
         {
         }
 
-        public ImportException([CanBeNull] string message, Exception inner) : base(message, inner)
+        public ImportException([CanBeNull] string message, [CanBeNull] Exception inner) : base(message, inner)
         {
         }
 

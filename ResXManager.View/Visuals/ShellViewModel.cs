@@ -38,7 +38,7 @@
 
         public bool IsLoading { get; set; }
 
-        private void SelectedEntities_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void SelectedEntities_CollectionChanged([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
         {
             Update();
 

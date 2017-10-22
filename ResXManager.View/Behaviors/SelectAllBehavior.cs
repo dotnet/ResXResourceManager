@@ -20,6 +20,7 @@
     public class SelectAllBehavior : Behavior<ListBox>
     {
         private bool _isListBoxUpdating;
+        [CanBeNull]
         private PerformanceTracer _performanceTracer;
 
         public bool? AreAllFilesSelected
@@ -50,7 +51,7 @@
             _performanceTracer = listBox.GetExportProvider().GetExportedValue<PerformanceTracer>();
         }
 
-        private void ListBox_SelectionChanged(object sender, EventArgs e)
+        private void ListBox_SelectionChanged([NotNull] object sender, [NotNull] EventArgs e)
         {
             var listBox = AssociatedObject;
             if (listBox == null)

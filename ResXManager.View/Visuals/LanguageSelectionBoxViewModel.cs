@@ -24,9 +24,11 @@
         }
 
         [Required]
+        [CanBeNull]
         public CultureInfo SelectedLanguage { get; set; }
 
         [ItemNotNull]
+        [CanBeNull]
         public ICollection<CultureInfo> Languages { get; }
     }
 }

@@ -33,7 +33,7 @@
         /// <param name="projectName">Name of the project.</param>
         /// <param name="uniqueProjectName">Unique name of the project file.</param>
         /// <param name="projectItem">The project item, or null if the projectItem is not known.</param>
-        public DteProjectFile([NotNull] DteSolution solution, [NotNull] string filePath, string projectName, string uniqueProjectName, [NotNull] EnvDTE.ProjectItem projectItem)
+        public DteProjectFile([NotNull] DteSolution solution, [NotNull] string filePath, [CanBeNull] string projectName, [CanBeNull] string uniqueProjectName, [NotNull] EnvDTE.ProjectItem projectItem)
             : base(filePath, solution.SolutionFolder, projectName, uniqueProjectName)
         {
             Contract.Requires(solution != null);

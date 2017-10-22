@@ -43,7 +43,7 @@
         public static readonly DependencyProperty IsEnabledProperty =
             DependencyProperty.RegisterAttached("IsEnabled", typeof(bool), typeof(Spellcheck), new FrameworkPropertyMetadata(false, IsEnabled_Changed));
 
-        private static void IsEnabled_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void IsEnabled_Changed([CanBeNull] DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var textBox = d as TextBoxBase;
             if (textBox == null)

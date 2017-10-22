@@ -1,4 +1,6 @@
-﻿namespace tomenglertde.ResXManager.View.Converters
+﻿using JetBrains.Annotations;
+
+namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
     using System.Collections.Generic;
@@ -11,6 +13,7 @@
 
     public sealed class IsCellSelectionInvariantConverter : IValueConverter
     {
+        [NotNull]
         public static readonly IsCellSelectionInvariantConverter Default = new IsCellSelectionInvariantConverter();
 
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)

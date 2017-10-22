@@ -67,7 +67,7 @@
             DataGrid.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
         }
 
-        private void AddLanguage_Click(object sender, RoutedEventArgs e)
+        private void AddLanguage_Click([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
             var exisitingCultures = _resourceManager.Cultures
                 .Select(c => c.Culture)
@@ -93,7 +93,7 @@
             }
         }
 
-        private void CreateSnapshotCommandConverter_Executing(object sender, [NotNull] ConfirmedCommandEventArgs e)
+        private void CreateSnapshotCommandConverter_Executing([NotNull] object sender, [NotNull] ConfirmedCommandEventArgs e)
         {
             var dlg = new SaveFileDialog
             {
@@ -113,7 +113,7 @@
             WaitCursor.Start(this);
         }
 
-        private void LoadSnapshotCommandConverter_Executing(object sender, [NotNull] ConfirmedCommandEventArgs e)
+        private void LoadSnapshotCommandConverter_Executing([NotNull] object sender, [NotNull] ConfirmedCommandEventArgs e)
         {
             var dlg = new OpenFileDialog
             {
@@ -134,7 +134,7 @@
             WaitCursor.Start(this);
         }
 
-        private void ExportExcelCommandConverter_Executing(object sender, [NotNull] ConfirmedCommandEventArgs e)
+        private void ExportExcelCommandConverter_Executing([NotNull] object sender, [NotNull] ConfirmedCommandEventArgs e)
         {
             var dlg = new SaveFileDialog
             {
@@ -154,7 +154,7 @@
             WaitCursor.Start(this);
         }
 
-        private void ImportExcelCommandConverter_Executing(object sender, [NotNull] ConfirmedCommandEventArgs e)
+        private void ImportExcelCommandConverter_Executing([NotNull] object sender, [NotNull] ConfirmedCommandEventArgs e)
         {
             var dlg = new OpenFileDialog
             {
@@ -175,7 +175,7 @@
             WaitCursor.Start(this);
         }
 
-        private void DeleteCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        private void DeleteCommandConverter_Executing([NotNull] object sender, [NotNull] ConfirmedCommandEventArgs e)
         {
             if (MessageBox.Show(Properties.Resources.ConfirmDeleteItems, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {
@@ -183,7 +183,7 @@
             }
         }
 
-        private void CutCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        private void CutCommandConverter_Executing([NotNull] object sender, [NotNull] ConfirmedCommandEventArgs e)
         {
             if (MessageBox.Show(Properties.Resources.ConfirmCutItems, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {
@@ -191,7 +191,7 @@
             }
         }
 
-        private void CommandConverter_Error(object sender, [NotNull] ErrorEventArgs e)
+        private void CommandConverter_Error([NotNull] object sender, [NotNull] ErrorEventArgs e)
         {
             var ex = e.GetException();
 
@@ -205,7 +205,7 @@
 
         private class ExportParameters : IExportParameters
         {
-            public ExportParameters(string fileName, IResourceScope scope)
+            public ExportParameters([CanBeNull] string fileName, [CanBeNull] IResourceScope scope)
             {
                 FileName = fileName;
                 Scope = scope;

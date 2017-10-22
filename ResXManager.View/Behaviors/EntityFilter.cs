@@ -10,6 +10,7 @@
 
     public class EntityFilter : Behavior<ListBox>
     {
+        [CanBeNull]
         public string FilterText
         {
             get { return (string)GetValue(FilterTextProperty); }
@@ -23,7 +24,7 @@
             DependencyProperty.Register("FilterText", typeof(string), typeof(EntityFilter),
                 new FrameworkPropertyMetadata(null, (sender, e) => ((EntityFilter)sender).FilterText_Changed((string)e.NewValue)));
 
-        private void FilterText_Changed(string value)
+        private void FilterText_Changed([CanBeNull] string value)
         {
             var listBox = AssociatedObject;
             if (listBox == null)
