@@ -35,11 +35,6 @@
         private readonly ResourceManager _resourceManager;
         [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
-        [NotNull]
-        private readonly ObservableCollection<ITranslationItem> _selectedItems = new ObservableCollection<ITranslationItem>();
-        [NotNull]
-        private readonly ObservableCollection<CultureKey> _selectedTargetCultures = new ObservableCollection<CultureKey>();
-
 
         [ImportingConstructor]
         public TranslationsViewModel([NotNull] TranslatorHost translatorHost, [NotNull] ResourceManager resourceManager, [NotNull] ResourceViewModel resourceViewModel, [NotNull] Configuration configuration)
@@ -59,18 +54,21 @@
 
             SourceCulture = _resourceManager.Cultures.FirstOrDefault();
 
-            _selectedTargetCultures.CollectionChanged += SelectedTargetCultures_CollectionChanged;
+            var selectedTargetCultures = new ObservableCollection<CultureKey>();
+            selectedTargetCultures.CollectionChanged += SelectedTargetCultures_CollectionChanged;
+            SelectedTargetCultures = selectedTargetCultures;
         }
 
-        [NotNull]
+        [NotNull, ItemNotNull]
         public ObservableCollection<CultureKey> Cultures => _resourceManager.Cultures;
 
         [NotNull]
         public Configuration Configuration { get; }
 
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IEnumerable<ITranslator> Translators => _translatorHost.Translators;
 
+        [CanBeNull]
         public CultureKey SourceCulture { get; set; }
 
         [UsedImplicitly] // PropertyChanged.Fody
@@ -81,24 +79,27 @@
                 .ObservableWhere(key => key != SourceCulture);
         }
 
-        [NotNull]
+        [NotNull, ItemNotNull]
         public ICollection<CultureKey> AllTargetCultures { get; private set; } = new CultureKey[0];
 
         [UsedImplicitly] // PropertyChanged.Fody
         private void OnAllTargetCulturesChanged()
         {
-            _selectedTargetCultures.SynchronizeWith(AllTargetCultures.Except(UnselectedTargetCultures).ToArray());
+            var selectedCultures = AllTargetCultures.Except(UnselectedTargetCultures).OrderBy(c => c).ToArray();
+
+            Dispatcher.BeginInvoke(() => { SelectedTargetCultures.SynchronizeWith(selectedCultures); });
         }
 
-        [NotNull]
-        public ICollection<CultureKey> SelectedTargetCultures => _selectedTargetCultures;
+        [NotNull, ItemNotNull]
+        public ICollection<CultureKey> SelectedTargetCultures { get; }
 
-        [NotNull]
+        [NotNull, ItemNotNull]
         public ICollection<ITranslationItem> Items { get; private set; } = new ITranslationItem[0];
 
-        [NotNull]
-        public ICollection<ITranslationItem> SelectedItems => _selectedItems;
+        [NotNull, ItemNotNull]
+        public ICollection<ITranslationItem> SelectedItems { get; } = new ObservableCollection<ITranslationItem>();
 
+        [CanBeNull]
         public ITranslationSession TranslationSession { get; set; }
 
         [NotNull]
@@ -116,7 +117,7 @@
         [NotNull]
         public ICommand StopCommand => new DelegateCommand(() => IsSessionRunning, Stop);
 
-        private void ResourceManager_Loaded(object sender, EventArgs e)
+        private void ResourceManager_Loaded([NotNull] object sender, [NotNull] EventArgs e)
         {
             if ((SourceCulture == null) || !_resourceManager.Cultures.Contains(SourceCulture))
                 SourceCulture = _resourceManager.Cultures.FirstOrDefault();
@@ -129,7 +130,7 @@
             TranslationSession?.Cancel();
         }
 
-        private void Apply([NotNull] IEnumerable<ITranslationItem> items)
+        private void Apply([NotNull, ItemNotNull] IEnumerable<ITranslationItem> items)
         {
             Contract.Requires(items != null);
 
@@ -157,13 +158,16 @@
             {
                 Contract.Ensures(Contract.Result<IEnumerable<CultureKey>>() != null);
 
-                return (Settings.Default.TranslationUnselectedTargetCultures ?? string.Empty).Split(',').Select(c => c.ToCultureKey()).Where(c => c != null);
+                return (Settings.Default.TranslationUnselectedTargetCultures ?? string.Empty)
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(c => c.ToCultureKey())
+                    .Where(c => c != null);
             }
             set
             {
                 Contract.Requires(value != null);
 
-                Settings.Default.TranslationUnselectedTargetCultures = string.Join(",", value);
+                Settings.Default.TranslationUnselectedTargetCultures = string.Join(",", value.Select(c => c.ToString(".")));
             }
         }
 
@@ -181,7 +185,7 @@
                 return;
             }
 
-            var itemsToTranslate = GetItemsToTranslate(_resourceViewModel.ResourceTableEntries, sourceCulture, _selectedTargetCultures, Configuration.EffectiveTranslationPrefix);
+            var itemsToTranslate = GetItemsToTranslate(_resourceViewModel.ResourceTableEntries, sourceCulture, SelectedTargetCultures, Configuration.EffectiveTranslationPrefix);
 
             Items = new ObservableCollection<ITranslationItem>(itemsToTranslate);
 
@@ -191,7 +195,7 @@
         }
 
         [NotNull, ItemNotNull]
-        private static ICollection<ITranslationItem> GetItemsToTranslate([NotNull, ItemNotNull] IEnumerable<ResourceTableEntry> resourceTableEntries, CultureKey sourceCulture, [NotNull, ItemNotNull] ObservableCollection<CultureKey> targetCultures, string translationPrefix)
+        private static ICollection<ITranslationItem> GetItemsToTranslate([NotNull, ItemNotNull] IEnumerable<ResourceTableEntry> resourceTableEntries, [CanBeNull] CultureKey sourceCulture, [NotNull, ItemNotNull] ICollection<CultureKey> targetCultures, [CanBeNull] string translationPrefix)
         {
             Contract.Requires(resourceTableEntries != null);
             Contract.Requires(targetCultures != null);
@@ -256,9 +260,9 @@
             return itemsToTranslate;
         }
 
-        private void SelectedTargetCultures_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void SelectedTargetCultures_CollectionChanged([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
         {
-            UnselectedTargetCultures = AllTargetCultures.Concat(UnselectedTargetCultures).Distinct().Except(_selectedTargetCultures);
+            Dispatcher.BeginInvoke(() => UnselectedTargetCultures = AllTargetCultures.Concat(UnselectedTargetCultures).Distinct().Except(SelectedTargetCultures));
         }
 
         public override string ToString() => Resources.ShellTabHeader_Translate;
@@ -272,8 +276,6 @@
             Contract.Invariant(_resourceManager != null);
             Contract.Invariant(_resourceViewModel != null);
             Contract.Invariant(Configuration != null);
-            Contract.Invariant(_selectedItems != null);
-            Contract.Invariant(_selectedTargetCultures != null);
             Contract.Invariant(Items != null);
             Contract.Invariant(AllTargetCultures != null);
         }
