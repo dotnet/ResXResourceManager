@@ -201,7 +201,6 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
-    <Compile Include="AdmAuthentication.cs" />
     <Compile Include="AzureAuthentication.cs" />
     <Compile Include="AzureTranslator.cs" />
     <Compile Include="CredentialItem.cs" />

@@ -33,7 +33,7 @@ namespace tomenglertde.ResXManager.Translators
             }
         }
 
-        protected TranslatorBase([NotNull] string id, [NotNull] string displayName, [CanBeNull] Uri uri, [CanBeNull] IList<ICredentialItem> credentials)
+        protected TranslatorBase([NotNull] string id, [NotNull] string displayName, [CanBeNull] Uri uri, [CanBeNull][ItemNotNull] IList<ICredentialItem> credentials)
         {
             Contract.Requires(id != null);
             Contract.Requires(displayName != null);

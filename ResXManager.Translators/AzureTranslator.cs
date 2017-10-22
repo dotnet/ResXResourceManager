@@ -126,7 +126,7 @@ namespace tomenglertde.ResXManager.Translators
         [CanBeNull]
         private string AuthenticationKey => Credentials[0].Value;
 
-        private void ReturnResults([NotNull] IEnumerable<ITranslationItem> items, [NotNull] IEnumerable<GetTranslationsResponse> responses)
+        private void ReturnResults([NotNull][ItemNotNull] IEnumerable<ITranslationItem> items, [NotNull][ItemNotNull] IEnumerable<GetTranslationsResponse> responses)
         {
             Contract.Requires(items != null);
             Contract.Requires(responses != null);
@@ -153,6 +153,7 @@ namespace tomenglertde.ResXManager.Translators
         }
 
         [NotNull]
+        [ItemNotNull]
         private static IList<ICredentialItem> GetCredentials()
         {
             Contract.Ensures(Contract.Result<IList<ICredentialItem>>() != null);

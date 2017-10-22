@@ -24,6 +24,7 @@
     [Export(typeof(ITranslator))]
     public class MyMemoryTranslator : TranslatorBase
     {
+        [NotNull]
         private static readonly Uri _uri = new Uri("http://mymemory.translated.net/doc");
 
         public MyMemoryTranslator()
@@ -32,6 +33,7 @@
         }
 
         [NotNull]
+        [ItemNotNull]
         private static IList<ICredentialItem> GetCredentials()
         {
             Contract.Ensures(Contract.Result<IList<ICredentialItem>>() != null);
@@ -195,6 +197,7 @@
 
             [DataMember(Name = "matches")]
             [CanBeNull]
+            [ItemNotNull]
             public MatchData[] Matches
             {
                 get;

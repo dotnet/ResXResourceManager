@@ -22,8 +22,6 @@
         [NotNull, ItemCanBeNull]
         private static async Task<string> GetAccessTokenAsync([CanBeNull] string authenticationKey)
         {
-            Contract.Ensures(Contract.Result<Task<string>>() != null);
-
             using (var client = new HttpClient())
             using (var request = new HttpRequestMessage())
             {

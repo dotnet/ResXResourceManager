@@ -9,9 +9,9 @@
 
     public class GoogleTranslator : TranslatorBase
     {
-        [CanBeNull]
+        [NotNull]
         private static readonly Uri _uri = new Uri("Todo");
-        [CanBeNull]
+        [NotNull, ItemNotNull]
         private static readonly IList<ICredentialItem> _credentialItems = new ICredentialItem[] { new CredentialItem("APIKey", "API Key") };
 
         public GoogleTranslator()

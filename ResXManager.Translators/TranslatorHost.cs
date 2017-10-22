@@ -22,6 +22,7 @@
     public class TranslatorHost
     {
         [NotNull]
+        [ItemNotNull]
         private readonly ITranslator[] _translators;
 
         [ImportingConstructor]
@@ -41,6 +42,7 @@
         }
 
         [NotNull]
+        [ItemNotNull]
         public IEnumerable<ITranslator> Translators
         {
             get
@@ -108,7 +110,7 @@
             settings.Configuration = JsonConvert.SerializeObject(values);
         }
 
-        private static void LoadConfiguration([NotNull] ITranslator[] translators, [CanBeNull] string configuration)
+        private static void LoadConfiguration([NotNull][ItemNotNull] ITranslator[] translators, [CanBeNull] string configuration)
         {
             Contract.Requires(translators != null);
 
@@ -145,7 +147,7 @@
             }
         }
 
-        private void RegisterChangeEvents([NotNull] ITranslator[] translators)
+        private void RegisterChangeEvents([NotNull][ItemNotNull] ITranslator[] translators)
         {
             Contract.Requires(translators != null);
 
