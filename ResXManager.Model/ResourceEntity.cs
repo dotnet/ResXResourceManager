@@ -351,7 +351,7 @@
         {
             var hasChanges = false;
 
-            foreach (var targetItem in targets)
+            foreach (var targetItem in targets.ToArray())
             {
                 var cultureKey = targetItem.Key;
                 var target = targetItem.Value;
