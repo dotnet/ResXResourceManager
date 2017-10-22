@@ -17,7 +17,7 @@
     public static class Snapshot
     {
         [NotNull]
-        public static string CreateSnapshot([NotNull] this ICollection<ResourceEntity> resourceEntities)
+        public static string CreateSnapshot([NotNull][ItemNotNull] this ICollection<ResourceEntity> resourceEntities)
         {
             Contract.Requires(resourceEntities != null);
             Contract.Ensures(Contract.Result<string>() != null);
@@ -44,7 +44,7 @@
             return JsonConvert.SerializeObject(entitySnapshots) ?? string.Empty;
         }
 
-        public static void LoadSnapshot([NotNull] this ICollection<ResourceEntity> resourceEntities, string snapshot)
+        public static void LoadSnapshot([NotNull][ItemNotNull] this ICollection<ResourceEntity> resourceEntities, [CanBeNull] string snapshot)
         {
             Contract.Requires(resourceEntities != null);
 
@@ -59,7 +59,7 @@
             }
         }
 
-        private static void UnloadSnapshot([NotNull] IEnumerable<ResourceEntity> resourceEntities)
+        private static void UnloadSnapshot([NotNull][ItemNotNull] IEnumerable<ResourceEntity> resourceEntities)
         {
             Contract.Requires(resourceEntities != null);
 
@@ -67,7 +67,7 @@
                 .ForEach(entry => entry.Snapshot = null);
         }
 
-        private static void Load([NotNull] this IEnumerable<ResourceEntity> resourceEntities, [NotNull] IEnumerable<EntitySnapshot> entitySnapshots)
+        private static void Load([NotNull][ItemNotNull] this IEnumerable<ResourceEntity> resourceEntities, [NotNull][ItemNotNull] IEnumerable<EntitySnapshot> entitySnapshots)
         {
             Contract.Requires(resourceEntities != null);
             Contract.Requires(entitySnapshots != null);
@@ -94,7 +94,8 @@
                    && string.Equals(entity.UniqueName, snapshot.UniqueName, StringComparison.OrdinalIgnoreCase);
         }
 
-        private static string NullIfEmpty(string value)
+        [CanBeNull]
+        private static string NullIfEmpty([CanBeNull] string value)
         {
             return string.IsNullOrEmpty(value) ? null : value;
         }
@@ -102,6 +103,7 @@
         [DataContract]
         private class EntitySnapshot
         {
+            [CanBeNull]
             [DataMember]
             public string ProjectName
             {
@@ -109,6 +111,7 @@
                 set;
             }
 
+            [CanBeNull]
             [DataMember]
             public string UniqueName
             {
@@ -116,6 +119,8 @@
                 set;
             }
 
+            [CanBeNull]
+            [ItemNotNull]
             [DataMember]
             public ICollection<EntrySnapshot> Entries
             {
@@ -127,6 +132,7 @@
         [DataContract]
         private class EntrySnapshot
         {
+            [CanBeNull]
             [DataMember]
             public string Key
             {
@@ -134,6 +140,8 @@
                 set;
             }
 
+            [CanBeNull]
+            [ItemNotNull]
             [DataMember]
             public ICollection<DataSnapshot> Data
             {
@@ -145,6 +153,7 @@
         [DataContract]
         private class DataSnapshot
         {
+            [CanBeNull]
             [DataMember(Name = "L", EmitDefaultValue = false)]
             public string Language
             {
@@ -152,6 +161,7 @@
                 set;
             }
 
+            [CanBeNull]
             [DataMember(Name = "C", EmitDefaultValue = false)]
             public string Comment
             {
@@ -159,6 +169,7 @@
                 set;
             }
 
+            [CanBeNull]
             [DataMember(Name = "T", EmitDefaultValue = false)]
             public string Text
             {

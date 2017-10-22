@@ -17,6 +17,7 @@ namespace tomenglertde.ResXManager.Translators
     [DataContract]
     public abstract class TranslatorBase : ObservableObject, ITranslator
     {
+        [CanBeNull]
         protected static readonly IWebProxy WebProxy;
 
         static TranslatorBase()
@@ -32,7 +33,7 @@ namespace tomenglertde.ResXManager.Translators
             }
         }
 
-        protected TranslatorBase([NotNull] string id, [NotNull] string displayName, Uri uri, IList<ICredentialItem> credentials)
+        protected TranslatorBase([NotNull] string id, [NotNull] string displayName, [CanBeNull] Uri uri, [CanBeNull] IList<ICredentialItem> credentials)
         {
             Contract.Requires(id != null);
             Contract.Requires(displayName != null);

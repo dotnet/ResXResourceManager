@@ -22,6 +22,7 @@
         [NotNull]
         private readonly DteSolution _solution;
         [NotNull]
+        [ItemNotNull]
         private readonly List<EnvDTE.ProjectItem> _projectItems = new List<EnvDTE.ProjectItem>();
 
         /// <summary>

@@ -13,14 +13,16 @@
         string Source { get; }
 
         [NotNull]
+        [ItemNotNull]
         IList<ITranslationMatch> Results { get; }
 
         [NotNull]
         CultureKey TargetCulture { get; }
 
+        [CanBeNull]
         string Translation { get; }
 
-        bool Apply(string prefix);
+        bool Apply([CanBeNull] string prefix);
     }
 
     [ContractClassFor(typeof(ITranslationItem))]

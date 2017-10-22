@@ -4,7 +4,6 @@
     using System.ComponentModel;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
 
     using JetBrains.Annotations;

@@ -16,9 +16,10 @@
     {
         [NotNull]
         private readonly ResourceEntity _entity;
+        [CanBeNull]
         private readonly CultureKey _cultureKey;
 
-        public ResourceBeginEditingEventArgs([NotNull] ResourceEntity entity, CultureKey cultureKey)
+        public ResourceBeginEditingEventArgs([NotNull] ResourceEntity entity, [CanBeNull] CultureKey cultureKey)
         {
             Contract.Requires(entity != null);
 
@@ -26,6 +27,7 @@
             _cultureKey = cultureKey;
         }
 
+        [CanBeNull]
         public CultureKey CultureKey => _cultureKey;
 
         [NotNull]

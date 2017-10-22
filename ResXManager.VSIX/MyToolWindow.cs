@@ -157,7 +157,7 @@
             var webBrowsingService = (IVsWebBrowsingService)GetService(typeof(SVsWebBrowsingService));
             if (webBrowsingService != null)
             {
-                var hr = webBrowsingService.Navigate(url, (uint)__VSWBNAVIGATEFLAGS.VSNWB_WebURLOnly, out IVsWindowFrame pFrame);
+                var hr = webBrowsingService.Navigate(url, (uint)__VSWBNAVIGATEFLAGS.VSNWB_WebURLOnly, out var pFrame);
                 if (ErrorHandler.Succeeded(hr) && (pFrame != null))
                 {
                     hr = pFrame.Show();
@@ -279,13 +279,13 @@
             }
         }
 
-        private bool QueryEditFiles([NotNull] string[] lockedFiles)
+        private bool QueryEditFiles([NotNull][ItemNotNull] string[] lockedFiles)
         {
             Contract.Requires(lockedFiles != null);
             var service = (IVsQueryEditQuerySave2)GetService(typeof(SVsQueryEditQuerySave));
             if (service != null)
             {
-                if ((0 != service.QueryEditFiles(0, lockedFiles.Length, lockedFiles, null, null, out uint editVerdict, out uint moreInfo))
+                if ((0 != service.QueryEditFiles(0, lockedFiles.Length, lockedFiles, null, null, out var editVerdict, out var moreInfo))
                     || (editVerdict != (uint)tagVSQueryEditResult.QER_EditOK))
                 {
                     return false;
@@ -295,7 +295,8 @@
         }
 
         [NotNull]
-        private static string[] GetLockedFiles([NotNull] IEnumerable<ResourceLanguage> languages)
+        [ItemNotNull]
+        private static string[] GetLockedFiles([NotNull][ItemNotNull] IEnumerable<ResourceLanguage> languages)
         {
             Contract.Requires(languages != null);
             Contract.Ensures(Contract.Result<string[]>() != null);
@@ -383,7 +384,7 @@
 
         [NotNull]
         [Localizable(false)]
-        private static string FormatFileNames([NotNull] IEnumerable<string> lockedFiles)
+        private static string FormatFileNames([NotNull][ItemNotNull] IEnumerable<string> lockedFiles)
         {
             Contract.Requires(lockedFiles != null);
             Contract.Ensures(Contract.Result<string>() != null);

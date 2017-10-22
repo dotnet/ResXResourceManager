@@ -3,11 +3,15 @@
     using System;
     using System.Collections.Generic;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
 
     public class GoogleTranslator : TranslatorBase
     {
+        [CanBeNull]
         private static readonly Uri _uri = new Uri("Todo");
+        [CanBeNull]
         private static readonly IList<ICredentialItem> _credentialItems = new ICredentialItem[] { new CredentialItem("APIKey", "API Key") };
 
         public GoogleTranslator()

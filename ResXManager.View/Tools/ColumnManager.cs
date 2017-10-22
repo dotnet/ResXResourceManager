@@ -322,7 +322,7 @@
             columns.AddLanguageColumn(column, languageBinding, flowDirectionBinding);
         }
 
-        private static void AddLanguageColumn([NotNull] this ICollection<DataGridColumn> columns, [NotNull] DataGridBoundColumn column, [NotNull] Binding languageBinding, Binding flowDirectionBinding)
+        private static void AddLanguageColumn([NotNull][ItemNotNull] this ICollection<DataGridColumn> columns, [NotNull] DataGridBoundColumn column, [NotNull] Binding languageBinding, Binding flowDirectionBinding)
         {
             Contract.Requires(columns != null);
             Contract.Requires(languageBinding != null);
@@ -344,7 +344,8 @@
         }
 
         [NotNull]
-        private static IEnumerable<string> UpdateColumnSettings<T>([NotNull] IEnumerable<string> current, [NotNull] DataGrid dataGrid, [NotNull] Func<DataGridColumn, bool> includePredicate)
+        [ItemNotNull]
+        private static IEnumerable<string> UpdateColumnSettings<T>([NotNull][ItemNotNull] IEnumerable<string> current, [NotNull] DataGrid dataGrid, [NotNull] Func<DataGridColumn, bool> includePredicate)
             where T : LanguageColumnHeaderBase
         {
             Contract.Requires(current != null);
@@ -360,6 +361,7 @@
         }
 
         [NotNull]
+        [ItemNotNull]
         private static IEnumerable<string> GetColumnKeys<T>([NotNull] DataGrid dataGrid, [NotNull] Func<DataGridColumn, bool> predicate)
             where T : LanguageColumnHeaderBase
         {
@@ -375,6 +377,7 @@
         }
 
         [NotNull]
+        [ItemNotNull]
         private static IEnumerable<string> VisibleCommentColumns
         {
             get
@@ -392,6 +395,7 @@
         }
 
         [NotNull]
+        [ItemNotNull]
         private static IEnumerable<string> HiddenLanguageColumns
         {
             get

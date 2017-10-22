@@ -9,7 +9,7 @@ namespace tomenglertde.ResXManager.Model
 
     public class EntryChange
     {
-        public EntryChange([NotNull] ResourceTableEntry entry, string text, CultureInfo culture, ColumnKind columnKind, string originalText)
+        public EntryChange([NotNull] ResourceTableEntry entry, [CanBeNull] string text, [CanBeNull] CultureInfo culture, ColumnKind columnKind, [CanBeNull] string originalText)
         {
             Contract.Requires(entry != null);
 
@@ -23,12 +23,15 @@ namespace tomenglertde.ResXManager.Model
         [NotNull]
         public ResourceTableEntry Entry { get; }
 
+        [CanBeNull]
         public string Text { get; }
 
+        [CanBeNull]
         public CultureInfo Culture { get; }
 
         public ColumnKind ColumnKind { get; }
 
+        [CanBeNull]
         public string OriginalText { get; }
 
         [ContractInvariantMethod]

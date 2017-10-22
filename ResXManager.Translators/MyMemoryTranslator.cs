@@ -41,6 +41,7 @@
 
         [DataMember(Name = "Key")]
         [ContractVerification(false)]
+        [CanBeNull]
         public string SerializedKey
         {
             get
@@ -54,6 +55,7 @@
         }
 
         [ContractVerification(false)]
+        [CanBeNull]
         private string Key => Credentials[0]?.Value;
 
         public override void Translate(ITranslationSession translationSession)
@@ -100,7 +102,8 @@
             }
         }
 
-        private static Response TranslateText([NotNull] string input, string key, [NotNull] CultureInfo sourceLanguage, [NotNull] CultureInfo targetLanguage)
+        [CanBeNull]
+        private static Response TranslateText([NotNull] string input, [CanBeNull] string key, [NotNull] CultureInfo sourceLanguage, [NotNull] CultureInfo targetLanguage)
         {
             Contract.Requires(input != null);
             Contract.Requires(sourceLanguage != null);
@@ -136,6 +139,7 @@
         private class ResponseData
         {
             [DataMember(Name = "translatedText")]
+            [CanBeNull]
             public string TranslatedText
             {
                 get;
@@ -155,6 +159,7 @@
         private class MatchData
         {
             [DataMember(Name = "translation")]
+            [CanBeNull]
             public string Translation
             {
                 get;
@@ -181,6 +186,7 @@
         private class Response
         {
             [DataMember(Name = "responseData")]
+            [CanBeNull]
             public ResponseData ResponseData
             {
                 get;
@@ -188,6 +194,7 @@
             }
 
             [DataMember(Name = "matches")]
+            [CanBeNull]
             public MatchData[] Matches
             {
                 get;

@@ -41,7 +41,7 @@
 
         protected override T InternalGetValue<T>(T defaultValue, string key)
         {
-            return TryGetValue(GetKey(key), defaultValue, out T value) ? value : base.InternalGetValue(defaultValue, key);
+            return TryGetValue(GetKey(key), defaultValue, out var value) ? value : base.InternalGetValue(defaultValue, key);
         }
 
         protected override void InternalSetValue<T>(T value, string key)

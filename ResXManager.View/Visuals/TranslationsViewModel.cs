@@ -152,6 +152,7 @@
         private bool IsSessionRunning => TranslationSession != null && !TranslationSession.IsComplete && !TranslationSession.IsCanceled;
 
         [NotNull]
+        [ItemNotNull]
         private static IEnumerable<CultureKey> UnselectedTargetCultures
         {
             get

@@ -20,6 +20,7 @@ namespace tomenglertde.ResXManager.Translators
     [Export(typeof(ITranslator))]
     public class AzureTranslator : TranslatorBase
     {
+        [NotNull]
         private static readonly Uri _uri = new Uri("https://www.microsoft.com/en-us/translator/getstarted.aspx");
 
         public AzureTranslator()
@@ -108,6 +109,7 @@ namespace tomenglertde.ResXManager.Translators
 
         [DataMember(Name = "AuthenticationKey")]
         [ContractVerification(false)]
+        [CanBeNull]
         public string SerializedAuthenticationKey
         {
             get
@@ -121,6 +123,7 @@ namespace tomenglertde.ResXManager.Translators
         }
 
         [ContractVerification(false)]
+        [CanBeNull]
         private string AuthenticationKey => Credentials[0].Value;
 
         private void ReturnResults([NotNull] IEnumerable<ITranslationItem> items, [NotNull] IEnumerable<GetTranslationsResponse> responses)

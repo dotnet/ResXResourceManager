@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Diagnostics;
@@ -33,7 +32,7 @@
         [NotNull]
         private readonly string _extension;
 
-        public MoveToResourceViewModel([NotNull, ItemNotNull] ICollection<string> patterns, [NotNull] ICollection<ResourceEntity> resourceEntities, [NotNull] string text, [NotNull] string extension, string className, string functionName)
+        public MoveToResourceViewModel([NotNull, ItemNotNull] ICollection<string> patterns, [NotNull][ItemNotNull] ICollection<ResourceEntity> resourceEntities, [NotNull] string text, [NotNull] string extension, string className, string functionName)
         {
             Contract.Requires(patterns != null);
             Contract.Requires(resourceEntities != null);
@@ -58,6 +57,7 @@
         }
 
         [NotNull]
+        [ItemNotNull]
         public ICollection<ResourceEntity> ResourceEntities { get; }
 
         [Required]
@@ -72,16 +72,21 @@
         [NotNull, ItemNotNull]
         public ICollection<Replacement> Replacements { get; }
 
+        [CanBeNull]
         [Required]
         public Replacement Replacement { get; set; }
 
+        [CanBeNull]
         [Required(AllowEmptyStrings = false)]
         public string Value { get; set; }
 
+        [CanBeNull]
         public string Comment { get; set; }
 
         public bool ReuseExisiting { get; set; }
 
+        [NotNull]
+        [ItemNotNull]
         public ICollection<ResourceTableEntry> ExistingEntries { get; }
 
         public int SelectedReplacementIndex
@@ -91,7 +96,7 @@
         }
 
         [CanBeNull]
-        private string GetKeyErrors(string propertyName)
+        private string GetKeyErrors([CanBeNull] string propertyName)
         {
             if (ReuseExisiting)
                 return null;
@@ -113,23 +118,26 @@
             return null;
         }
 
-        private bool KeyExists(string value)
+        private bool KeyExists([CanBeNull] string value)
         {
             return SelectedResourceEntity?.Entries.Any(entry => string.Equals(entry.Key, value, StringComparison.OrdinalIgnoreCase)) ?? false;
         }
 
-        private static string GetLocalNamespace(ProjectItem resxItem)
+        [NotNull]
+        private static string GetLocalNamespace([CanBeNull] ProjectItem resxItem)
         {
+            Contract.Ensures(Contract.Result<string>() != null);
+
             try
             {
-                if (resxItem == null)
+                var resxPath = resxItem?.TryGetFileName();
+                if (resxPath == null)
                     return string.Empty;
 
-                var resxPath = resxItem.FileNames[0];
                 var resxFolder = Path.GetDirectoryName(resxPath);
                 var project = resxItem.ContainingProject;
                 var projectFolder = Path.GetDirectoryName(project?.FullName);
-                var rootNamespace = project?.Properties?.Item(@"RootNamespace")?.Value?.ToString();
+                var rootNamespace = project?.Properties?.Item(@"RootNamespace")?.Value?.ToString() ?? string.Empty;
 
                 if ((resxFolder == null) || (projectFolder == null))
                     return string.Empty;
@@ -254,6 +262,7 @@
             _evaluator = evaluator;
         }
 
+        [CanBeNull]
         public string Value => _evaluator(_pattern);
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -263,9 +272,9 @@
             OnPropertyChanged(nameof(Value));
         }
 
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([NotNull] string propertyName)
         {
+            Contract.Requires(propertyName != null);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 

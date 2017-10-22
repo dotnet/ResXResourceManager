@@ -35,6 +35,7 @@
             _configuration = configuration;
         }
 
+        [CanBeNull]
         public IDisposable Start([Localizable(false)][NotNull] string message)
         {
             Contract.Requires(message != null);

@@ -5,17 +5,11 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
-    using System.Windows.Threading;
 
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
-
-    using Throttle;
-
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
 
     public enum DuplicateKeyHandling
     {
@@ -77,8 +71,10 @@
         public bool PrefixTranslations { get; set; }
 
         [DefaultValue("#TODO#_")]
+        [CanBeNull]
         public string TranslationPrefix { get; set; }
 
+        [CanBeNull]
         public string EffectiveTranslationPrefix => PrefixTranslations ? TranslationPrefix : string.Empty;
 
         [DefaultValue(default(ExcelExportMode))]

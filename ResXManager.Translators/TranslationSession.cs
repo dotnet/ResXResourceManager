@@ -18,7 +18,7 @@
         [NotNull]
         private readonly ObservableCollection<string> _internalMessage = new ObservableCollection<string>();
 
-        public TranslationSession(CultureInfo sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull] ICollection<ITranslationItem> items)
+        public TranslationSession([CanBeNull] CultureInfo sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull] ICollection<ITranslationItem> items)
         {
             Contract.Requires(neutralResourcesLanguage != null);
             Contract.Requires(items != null);

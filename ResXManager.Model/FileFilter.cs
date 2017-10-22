@@ -15,8 +15,9 @@
     public class FileFilter : IFileFilter
     {
         [NotNull]
+        [ItemNotNull]
         private readonly string[] _extensions;
-
+        [CanBeNull]
         private readonly Regex _fileExclusionFilter;
 
         public FileFilter([NotNull] Configuration configuration)

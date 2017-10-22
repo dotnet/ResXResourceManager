@@ -21,6 +21,7 @@
         ICollection<ITranslationItem> Items { get; }
 
         [NotNull]
+        [ItemNotNull]
         IList<string> Messages { get; }
 
         [NotNull]

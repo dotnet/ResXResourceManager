@@ -8,16 +8,18 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    [ContractClass(typeof (ResourceScopeContract))]
+    [ContractClass(typeof(ResourceScopeContract))]
     public interface IResourceScope
     {
         [NotNull]
+        [ItemNotNull]
         IEnumerable<ResourceTableEntry> Entries
         {
             get;
         }
 
         [NotNull]
+        [ItemNotNull]
         IEnumerable<CultureKey> Languages
         {
             get;
@@ -30,7 +32,7 @@
         }
     }
 
-    [ContractClassFor(typeof (IResourceScope))]
+    [ContractClassFor(typeof(IResourceScope))]
     internal abstract class ResourceScopeContract : IResourceScope
     {
         IEnumerable<ResourceTableEntry> IResourceScope.Entries

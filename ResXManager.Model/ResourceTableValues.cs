@@ -37,17 +37,19 @@
             _setter = setter;
         }
 
-        public T this[string cultureKey]
+        [CanBeNull]
+        public T this[[CanBeNull] string cultureKey]
         {
             get => GetValue(cultureKey);
             set => SetValue(cultureKey, value);
         }
 
-        public T GetValue(object culture)
+        [CanBeNull]
+        public T GetValue([CanBeNull] object culture)
         {
             var cultureKey = CultureKey.Parse(culture);
 
-            if (!_languages.TryGetValue(cultureKey, out ResourceLanguage language))
+            if (!_languages.TryGetValue(cultureKey, out var language))
                 return default(T);
 
             Contract.Assume(language != null);
@@ -55,11 +57,11 @@
             return _getter(language);
         }
 
-        public bool SetValue(object culture, T value)
+        public bool SetValue([CanBeNull] object culture, [CanBeNull] T value)
         {
             var cultureKey = CultureKey.Parse(culture);
 
-            if (!_languages.TryGetValue(cultureKey, out ResourceLanguage language))
+            if (!_languages.TryGetValue(cultureKey, out var language))
                 throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.LanguageNotDefinedError, cultureKey.Culture));
 
             if (!_setter(language, value))

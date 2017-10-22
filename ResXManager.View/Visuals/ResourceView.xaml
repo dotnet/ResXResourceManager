@@ -508,10 +508,10 @@
                     <ContextMenu>
                       <ContextMenu.Style>
                         <Style TargetType="ContextMenu" BasedOn="{StaticResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}">
-                          <Setter Property="toms:VisualComposition.RegionId" Value="{x:Static infrastructure:RegionId.ResourceTableContextMenu}"/>
+                          <Setter Property="toms:VisualComposition.RegionId" Value="{x:Static infrastructure:RegionId.ResourceTableContextMenu}" />
                           <Style.Triggers>
                             <DataTrigger Binding="{Binding IsCellSelectionEnabled, Source={x:Static properties:Settings.Default}}" Value="True">
-                              <Setter Property="toms:VisualComposition.RegionId" Value="{x:Static infrastructure:RegionId.ResourceTableItemContextMenu}"/>
+                              <Setter Property="toms:VisualComposition.RegionId" Value="{x:Static infrastructure:RegionId.ResourceTableItemContextMenu}" />
                             </DataTrigger>
                           </Style.Triggers>
                         </Style>
@@ -527,7 +527,7 @@
 
             <DataGrid.RowStyle>
               <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Static styles:ResourceKeys.DataGridRowStyle}}">
-                <Setter Property="MaxHeight" Value="100"/>
+                <Setter Property="MaxHeight" Value="100" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding IsDuplicateKey}" Value="True">
                     <Setter Property="Background" Value="{StaticResource HighlightBrush}" />
@@ -641,26 +641,26 @@
   </Grid>
 
   <i:Interaction.Behaviors>
-    <toms:CommandRoutingBehavior CommandSource="view:DeleteCommand" 
+    <toms:CommandRoutingBehavior CommandSource="view:DeleteCommand"
                                  CommandTarget="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}"
                                  CommandParameter="{Binding ElementName=DataGrid}" />
-    <toms:CommandRoutingBehavior CommandSource="view:CutCommand" 
+    <toms:CommandRoutingBehavior CommandSource="view:CutCommand"
                                  CommandTarget="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
-    <toms:CommandRoutingBehavior CommandSource="view:CopyCommand" 
-                                 CommandTarget="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" 
+    <toms:CommandRoutingBehavior CommandSource="view:CopyCommand"
+                                 CommandTarget="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                  CommandParameter="{Binding ElementName=DataGrid}" />
-    <toms:CommandRoutingBehavior CommandSource="view:PasteCommand" 
-                                 CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" 
+    <toms:CommandRoutingBehavior CommandSource="view:PasteCommand"
+                                 CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                  CommandParameter="{Binding ElementName=DataGrid}" />
-    <toms:CommandRoutingBehavior CommandSource="view:IsInvariantCommand" 
-                                 CommandTarget="{Binding ToggleInvariantCommand}" 
+    <toms:CommandRoutingBehavior CommandSource="view:IsInvariantCommand"
+                                 CommandTarget="{Binding ToggleInvariantCommand}"
                                  IsChecked="{Binding Path=SelectedItem.IsInvariant, Mode=OneWay, ElementName=DataGrid}" />
-    <toms:CommandRoutingBehavior CommandSource="view:IsItemInvariantCommand" 
-                                 CommandTarget="{Binding ToggleItemInvariantCommand}" 
-                                 CommandParameter="{Binding ElementName=DataGrid}" 
+    <toms:CommandRoutingBehavior CommandSource="view:IsItemInvariantCommand"
+                                 CommandTarget="{Binding ToggleItemInvariantCommand}"
+                                 CommandParameter="{Binding ElementName=DataGrid}"
                                  IsChecked="{Binding Path=(tools:ColumnManager.SelectedCells), Mode=OneWay, ElementName=DataGrid, Converter={x:Static converters:IsCellSelectionInvariantConverter.Default}}" />
-    <toms:CommandRoutingBehavior CommandSource="view:ToggleCellSelectionCommand" 
-                                 CommandTarget="{Binding ToggleCellSelectionCommand}" 
+    <toms:CommandRoutingBehavior CommandSource="view:ToggleCellSelectionCommand"
+                                 CommandTarget="{Binding ToggleCellSelectionCommand}"
                                  IsChecked="{Binding IsCellSelectionEnabled, Mode=OneWay, Source={x:Static properties:Settings.Default}}" />
   </i:Interaction.Behaviors>
 

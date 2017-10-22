@@ -13,6 +13,7 @@
     public static class ResourceManagerExtensions
     {
         [NotNull]
+        [ItemNotNull]
         public static IList<ProjectFile> GetAllSourceFiles([NotNull] this DirectoryInfo solutionFolder, [NotNull] IFileFilter fileFilter)
         {
             Contract.Requires(solutionFolder != null);
@@ -67,6 +68,7 @@
             return allProjectFiles;
         }
 
+        [CanBeNull]
         private static FileInfo FindProject([NotNull] DirectoryInfo directory, [NotNull] string solutionFolder)
         {
             Contract.Requires(directory != null);

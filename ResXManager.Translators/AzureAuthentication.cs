@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.Translators
 {
     using System;
+    using System.Diagnostics.Contracts;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -9,6 +10,8 @@
     internal static class AzureAuthentication
     {
         private const string OcpApimSubscriptionKeyHeader = "Ocp-Apim-Subscription-Key";
+
+        [NotNull]
         private static readonly Uri _serviceUrl = new Uri("https://api.cognitive.microsoft.com/sts/v1.0/issueToken");
 
         /// <summary>
@@ -16,9 +19,11 @@
         /// </summary>
         /// <param name="authenticationKey">Subscription secret key.</param>
         /// <returns>The encoded JWT token.</returns>
-        public static async Task<string> GetAccessTokenAsync(string authenticationKey)
-
+        [NotNull, ItemCanBeNull]
+        private static async Task<string> GetAccessTokenAsync([CanBeNull] string authenticationKey)
         {
+            Contract.Ensures(Contract.Result<Task<string>>() != null);
+
             using (var client = new HttpClient())
             using (var request = new HttpRequestMessage())
             {
@@ -43,7 +48,7 @@
         /// <param name="authenticationKey">Subscription secret key.</param>
         /// <returns>The encoded JWT token, prefixed with "Bearer ".</returns>
         [ItemNotNull]
-        public static async Task<string> GetBearerAccessTokenAsync(string authenticationKey)
+        public static async Task<string> GetBearerAccessTokenAsync([CanBeNull] string authenticationKey)
         {
             return "Bearer " + await GetAccessTokenAsync(authenticationKey);
         }

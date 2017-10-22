@@ -155,7 +155,7 @@
             return null;
         }
 
-        private static ResourceEntity GetPreferredResourceEntity([NotNull] EnvDTE.Document document, [NotNull] IEnumerable<ResourceEntity> entities)
+        private static ResourceEntity GetPreferredResourceEntity([NotNull] EnvDTE.Document document, [NotNull][ItemNotNull] IEnumerable<ResourceEntity> entities)
         {
             Contract.Requires(document != null);
             Contract.Requires(entities != null);

@@ -30,7 +30,7 @@
         [NotNull, ItemNotNull]
         private readonly ObservableCollection<ResourceTableEntry> _resourceTableEntries;
 
-        internal ResourceEntity([NotNull] ResourceManager container, [NotNull] string projectName, [NotNull] string baseName, [NotNull] string directoryName, [NotNull] ICollection<ProjectFile> files)
+        internal ResourceEntity([NotNull] ResourceManager container, [NotNull] string projectName, [NotNull] string baseName, [NotNull] string directoryName, [NotNull][ItemNotNull] ICollection<ProjectFile> files)
         {
             Contract.Requires(container != null);
             Contract.Requires(!string.IsNullOrEmpty(projectName));
@@ -108,7 +108,7 @@
         }
 
         [NotNull]
-        private static string GetRelativePath([NotNull] ICollection<ProjectFile> files)
+        private static string GetRelativePath([NotNull][ItemNotNull] ICollection<ProjectFile> files)
         {
             Contract.Requires(files != null);
             Contract.Ensures(Contract.Result<string>() != null);
@@ -169,6 +169,7 @@
         [NotNull]
         public string DirectoryName { get; }
 
+        [CanBeNull]
         public ProjectFile NeutralProjectFile { get; private set; }
 
         public bool IsWinFormsDesignerResource => NeutralProjectFile?.IsWinFormsDesignerResource ?? false;
@@ -206,6 +207,7 @@
         /// Adds an item with the specified key.
         /// </summary>
         /// <param name="key">The key.</param>
+        [CanBeNull]
         public ResourceTableEntry Add([NotNull] string key)
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
@@ -247,7 +249,7 @@
             return DisplayName;
         }
 
-        public bool CanEdit(CultureKey cultureKey)
+        public bool CanEdit([CanBeNull] CultureKey cultureKey)
         {
             return Container.CanEdit(this, cultureKey);
         }
@@ -295,7 +297,7 @@
             }
         }
 
-        internal bool EqualsAll(string projectName, string baseName, string directoryName)
+        internal bool EqualsAll([CanBeNull] string projectName, [CanBeNull] string baseName, [CanBeNull] string directoryName)
         {
             return string.Equals(projectName, ProjectName, StringComparison.OrdinalIgnoreCase)
                    && string.Equals(baseName, BaseName, StringComparison.OrdinalIgnoreCase)
@@ -303,7 +305,7 @@
         }
 
         [NotNull]
-        private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages([NotNull] IEnumerable<ProjectFile> files)
+        private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages([NotNull][ItemNotNull] IEnumerable<ProjectFile> files)
         {
             Contract.Requires(files != null);
             Contract.Requires(files.Any());
@@ -348,6 +350,9 @@
 
         private bool UpdateChangedEntries([NotNull] IDictionary<CultureKey, ResourceLanguage> targets, [NotNull] IDictionary<CultureKey, ResourceLanguage> sources)
         {
+            Contract.Requires(targets != null);
+            Contract.Requires(sources != null);
+
             var hasChanges = false;
 
             foreach (var targetItem in targets.ToArray())

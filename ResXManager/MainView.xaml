@@ -20,6 +20,6 @@
       </MenuItem>
     </Menu>
 
-    <ContentControl toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Shell}"/>
+    <ContentControl toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Shell}" />
   </DockPanel>
 </UserControl>

@@ -231,21 +231,22 @@
             return mimeTypeAttribute == null;
         }
 
+        [CanBeNull]
         internal string GetValue([NotNull] string key)
         {
             Contract.Requires(key != null);
 
-            return !_nodes.TryGetValue(key, out Node node) ? null : node?.Text;
+            return !_nodes.TryGetValue(key, out var node) ? null : node?.Text;
         }
 
-        internal bool SetValue([NotNull] string key, string value)
+        internal bool SetValue([NotNull] string key, [CanBeNull] string value)
         {
             Contract.Requires(key != null);
 
             return GetValue(key) == value || SetNodeData(key, node => node.Text = value);
         }
 
-        public void ForceValue([NotNull] string key, string value)
+        public void ForceValue([NotNull] string key, [CanBeNull] string value)
         {
             Contract.Requires(key != null);
 
@@ -364,13 +365,13 @@
         {
             Contract.Requires(key != null);
 
-            if (!_nodes.TryGetValue(key, out Node node) || (node == null))
+            if (!_nodes.TryGetValue(key, out var node) || (node == null))
                 return null;
 
             return node.Comment;
         }
 
-        internal bool SetComment([NotNull] string key, string value)
+        internal bool SetComment([NotNull] string key, [CanBeNull] string value)
         {
             Contract.Requires(key != null);
 
@@ -390,7 +391,7 @@
 
             try
             {
-                if (!_nodes.TryGetValue(key, out Node node) || (node == null))
+                if (!_nodes.TryGetValue(key, out var node) || (node == null))
                 {
                     node = CreateNode(key);
                 }
@@ -454,7 +455,7 @@
             if (!CanEdit())
                 return false;
 
-            if (!_nodes.TryGetValue(oldKey, out Node node) || (node == null))
+            if (!_nodes.TryGetValue(oldKey, out var node) || (node == null))
                 return false;
 
             if (_nodes.ContainsKey(newKey))
@@ -477,7 +478,7 @@
 
             try
             {
-                if (!_nodes.TryGetValue(key, out Node node) || (node == null))
+                if (!_nodes.TryGetValue(key, out var node) || (node == null))
                 {
                     return false;
                 }
@@ -502,7 +503,7 @@
             return _nodes.ContainsKey(key);
         }
 
-        internal void MoveNode([NotNull] ResourceTableEntry resourceTableEntry, [NotNull] IEnumerable<ResourceTableEntry> previousEntries)
+        internal void MoveNode([NotNull] ResourceTableEntry resourceTableEntry, [NotNull][ItemNotNull] IEnumerable<ResourceTableEntry> previousEntries)
         {
             Contract.Requires(resourceTableEntry != null);
             Contract.Requires(previousEntries != null);
@@ -537,7 +538,7 @@
             return _document.ToString(SaveOptions.DisableFormatting) == other._document.ToString(SaveOptions.DisableFormatting);
         }
 
-        private static void MakeKeysValid([NotNull] ICollection<Node> elements)
+        private static void MakeKeysValid([NotNull][ItemNotNull] ICollection<Node> elements)
         {
             Contract.Requires(elements != null);
 
@@ -574,7 +575,7 @@
         }
 
         [NotNull]
-        private static string GenerateUniqueKey([NotNull] ICollection<Node> elements, [NotNull] Node item, string text, ref int index)
+        private static string GenerateUniqueKey([NotNull][ItemNotNull] ICollection<Node> elements, [NotNull] Node item, [CanBeNull] string text, ref int index)
         {
             Contract.Requires(elements != null);
             Contract.Requires(item != null);
@@ -604,7 +605,9 @@
             private readonly ResourceLanguage _owner;
             [NotNull]
             private readonly XElement _element;
+            [CanBeNull]
             private string _text;
+            [CanBeNull]
             private string _comment;
 
             public Node([NotNull] ResourceLanguage owner, [NotNull] XElement element)
@@ -645,6 +648,7 @@
                 }
             }
 
+            [CanBeNull]
             public string Text
             {
                 get
@@ -672,6 +676,7 @@
                 }
             }
 
+            [CanBeNull]
             public string Comment
             {
                 get
@@ -715,6 +720,7 @@
                 }
             }
 
+            [CanBeNull]
             private string LoadText()
             {
                 var entry = Element;
@@ -730,6 +736,7 @@
                 return textNode == null ? string.Empty : textNode.Value;
             }
 
+            [CanBeNull]
             private string LoadComment()
             {
                 var entry = Element;
@@ -783,6 +790,8 @@
             Contract.Invariant(_valueNodeName != null);
             Contract.Invariant(_commentNodeName != null);
             Contract.Invariant(_container != null);
+            Contract.Invariant(Quote != null);
+            Contract.Invariant(WinFormsMemberNamePrefix != null);
         }
     }
 }

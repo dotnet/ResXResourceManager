@@ -40,8 +40,11 @@
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
 
         // the key actually stored in the file, identical to Key if no error occurred.
+        [CanBeNull]
         private string _storedKey;
+
         // the last validation error
+        [CanBeNull]
         private string _keyValidationError;
 
         /// <summary>
@@ -179,37 +182,46 @@
         /// Gets the localized values.
         /// </summary>
         [NotNull]
+        [ItemNotNull]
         public ResourceTableValues<string> Values { get; private set; }
 
         /// <summary>
         /// Gets the localized comments.
         /// </summary>
         [NotNull]
+        [ItemNotNull]
         public ResourceTableValues<string> Comments { get; private set; }
 
         [DependsOn(nameof(Snapshot))]
         [NotNull]
+        [ItemNotNull]
         public ResourceTableValues<string> SnapshotValues { get; private set; }
 
         [DependsOn(nameof(Snapshot))]
         [NotNull]
+        [ItemNotNull]
         public ResourceTableValues<string> SnapshotComments { get; private set; }
 
         [NotNull]
+        [ItemNotNull]
         public ResourceTableValues<bool> FileExists { get; private set; }
 
         [DependsOn(nameof(Snapshot))]
         [NotNull]
+        [ItemNotNull]
         public ResourceTableValues<ICollection<string>> ValueAnnotations { get; private set; }
 
         [DependsOn(nameof(Snapshot))]
         [NotNull]
+        [ItemNotNull]
         public ResourceTableValues<ICollection<string>> CommentAnnotations { get; private set; }
 
         [NotNull]
+        [ItemNotNull]
         public ICollection<CultureKey> Languages => _languages.Keys;
 
         [NotNull]
+        [ItemNotNull]
         public ResourceTableValues<bool> IsItemInvariant { get; private set; }
 
         [DependsOn(nameof(Comment))]
@@ -251,6 +263,8 @@
         [DependsOn(nameof(Key))]
         public bool IsDuplicateKey => _duplicateKeyExpression.Match(Key).Success;
 
+        [ItemNotNull]
+        [CanBeNull]
         public ReadOnlyCollection<CodeReference> CodeReferences { get; internal set; }
 
         [UsedImplicitly]
@@ -276,9 +290,10 @@
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [CanBeNull]
         public IDictionary<CultureKey, ResourceData> Snapshot { get; set; }
 
-        public bool CanEdit(CultureKey cultureKey)
+        public bool CanEdit([CanBeNull] CultureKey cultureKey)
         {
             return Container.CanEdit(cultureKey);
         }
@@ -289,14 +304,14 @@
             OnCommentsChanged();
         }
 
-        public bool HasStringFormatParameterMismatches([NotNull] IEnumerable<object> cultures)
+        public bool HasStringFormatParameterMismatches([NotNull][ItemNotNull] IEnumerable<object> cultures)
         {
             Contract.Requires(cultures != null);
 
             return HasStringFormatParameterMismatches(cultures.Select(CultureKey.Parse).Select(lang => Values.GetValue(lang)));
         }
 
-        public bool HasSnapshotDifferences([NotNull] IEnumerable<object> cultures)
+        public bool HasSnapshotDifferences([NotNull][ItemNotNull] IEnumerable<object> cultures)
         {
             Contract.Requires(cultures != null);
 
@@ -319,7 +334,7 @@
             return !string.Equals(snapshotValue, currentValue) || !string.Equals(snapshotComment, currentComment);
         }
 
-        private void Values_ValueChanged(object sender, EventArgs e)
+        private void Values_ValueChanged([CanBeNull] object sender, [CanBeNull] EventArgs e)
         {
             OnValuesChanged();
         }
@@ -332,7 +347,7 @@
             OnPropertyChanged(nameof(ValueAnnotations));
         }
 
-        private void Comments_ValueChanged(object sender, EventArgs e)
+        private void Comments_ValueChanged([CanBeNull] object sender, [CanBeNull] EventArgs e)
         {
             OnCommentsChanged();
         }
@@ -348,6 +363,7 @@
         }
 
         [NotNull]
+        [ItemNotNull]
         private ICollection<string> GetValueAnnotations([NotNull] ResourceLanguage language)
         {
             Contract.Requires(language != null);
@@ -377,6 +393,7 @@
         }
 
         [NotNull]
+        [ItemNotNull]
         private ICollection<string> GetCommentAnnotations([NotNull] ResourceLanguage language)
         {
             Contract.Requires(language != null);
@@ -387,7 +404,7 @@
         }
 
         [NotNull, ItemNotNull]
-        private IEnumerable<string> GetSnapshotDifferences([NotNull] ResourceLanguage language, string current, [NotNull] Func<ResourceData, string> selector)
+        private IEnumerable<string> GetSnapshotDifferences([NotNull] ResourceLanguage language, [CanBeNull] string current, [NotNull] Func<ResourceData, string> selector)
         {
             Contract.Requires(language != null);
             Contract.Requires(selector != null);
@@ -425,14 +442,14 @@
                 yield return Resources.StringFormatParameterMismatchError;
         }
 
-        private static bool HasStringFormatParameterMismatches([NotNull] params string[] values)
+        private static bool HasStringFormatParameterMismatches([NotNull][ItemNotNull] params string[] values)
         {
             Contract.Requires(values != null);
 
             return HasStringFormatParameterMismatches((IEnumerable<string>)values);
         }
 
-        private static bool HasStringFormatParameterMismatches([NotNull] IEnumerable<string> values)
+        private static bool HasStringFormatParameterMismatches([NotNull][ItemNotNull] IEnumerable<string> values)
         {
             Contract.Requires(values != null);
 
@@ -449,7 +466,7 @@
         [NotNull]
         private static readonly Regex _stringFormatParameterPattern = new Regex(@"\{(\d+)(,\d+)?(:\S+)?\}");
 
-        private static long GetStringFormatFlags(string value)
+        private static long GetStringFormatFlags([CanBeNull] string value)
         {
             if (string.IsNullOrEmpty(value))
                 return 0;
@@ -463,7 +480,7 @@
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName][CanBeNull] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

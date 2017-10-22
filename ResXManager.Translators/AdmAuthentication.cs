@@ -16,10 +16,11 @@
         private const string DatamarketAccessUri = "https://datamarket.accesscontrol.windows.net/v2/OAuth2-13";
         private const string AuthTokenPrefix = "Bearer ";
 
+        [NotNull]
         private static readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof(AdmAccessToken));
 
         [NotNull]
-        public static string GetAuthToken(IWebProxy webProxy, [NotNull] string clientId, [NotNull] string clientSecret)
+        public static string GetAuthToken([CanBeNull] IWebProxy webProxy, [NotNull] string clientId, [NotNull] string clientSecret)
         {
             Contract.Requires(!string.IsNullOrEmpty(clientId));
             Contract.Requires(!string.IsNullOrEmpty(clientSecret));
@@ -43,7 +44,7 @@
         }
 
         [NotNull]
-        private static AdmAccessToken GetAccessToken(IWebProxy webProxy, [NotNull] string requestDetails)
+        private static AdmAccessToken GetAccessToken([CanBeNull] IWebProxy webProxy, [NotNull] string requestDetails)
         {
             Contract.Requires(requestDetails != null);
             Contract.Ensures(Contract.Result<AdmAccessToken>() != null);
@@ -69,7 +70,7 @@
         }
 
         [NotNull]
-        private static string CreateRequestDetails(string clientId, string clientSecret)
+        private static string CreateRequestDetails([CanBeNull] string clientId, [CanBeNull] string clientSecret)
         {
             Contract.Ensures(Contract.Result<string>() != null);
 
@@ -78,7 +79,7 @@
         }
 
         [NotNull]
-        private static HttpWebRequest CreateWebRequest(IWebProxy webProxy)
+        private static HttpWebRequest CreateWebRequest([CanBeNull] IWebProxy webProxy)
         {
             Contract.Ensures(Contract.Result<HttpWebRequest>() != null);
 
@@ -93,12 +94,16 @@
         internal class AdmAccessToken
         {
             [DataMember(Name = "access_token")]
+            [CanBeNull]
             public string AccessToken { get; set; }
             [DataMember(Name = "token_type")]
+            [CanBeNull]
             public string TokenType { get; set; }
             [DataMember(Name = "expires_in")]
+            [CanBeNull]
             public string ExpiresIn { get; set; }
             [DataMember(Name = "scope")]
+            [CanBeNull]
             public string Scope { get; set; }
         }
     }

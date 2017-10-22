@@ -85,6 +85,7 @@
         public ObservableCollection<ResourceTableEntry> SelectedTableEntries { get; } = new ObservableCollection<ResourceTableEntry>();
 
         [NotNull]
+        [ItemNotNull]
         public CollectionView GroupedResourceTableEntries
         {
             get

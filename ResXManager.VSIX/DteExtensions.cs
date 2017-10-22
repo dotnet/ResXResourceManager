@@ -325,6 +325,7 @@
             }
         }
 
+        [CanBeNull]
         public static string TryGetFileName([NotNull] this EnvDTE.ProjectItem projectItem)
         {
             Contract.Requires(projectItem != null);

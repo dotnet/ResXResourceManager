@@ -43,7 +43,7 @@
 
     public static class TracerExtensions
     {
-        public static void TraceError([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull] params object[] args)
+        public static void TraceError([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
         {
             Contract.Requires(tracer != null);
             Contract.Requires(format != null);
@@ -52,7 +52,7 @@
             tracer.TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
-        public static void TraceWarning([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull] params object[] args)
+        public static void TraceWarning([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
         {
             Contract.Requires(tracer != null);
             Contract.Requires(format != null);
@@ -61,7 +61,7 @@
             tracer.TraceWarning(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
-        public static void WriteLine([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull] params object[] args)
+        public static void WriteLine([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
         {
             Contract.Requires(tracer != null);
             Contract.Requires(format != null);
@@ -71,7 +71,7 @@
         }
 
         [StringFormatMethod("format")]
-        public static void TraceError([NotNull] this ExportProvider exportProvider, [Localizable(false)][NotNull] string format, [NotNull] params object[] args)
+        public static void TraceError([NotNull] this ExportProvider exportProvider, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
         {
             Contract.Requires(exportProvider != null);
             Contract.Requires(format != null);
@@ -82,7 +82,7 @@
         }
 
         [StringFormatMethod("format")]
-        public static void TraceError([NotNull] this ICompositionHost exportProvider, [Localizable(false)][NotNull] string format, [NotNull] params object[] args)
+        public static void TraceError([NotNull] this ICompositionHost exportProvider, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
         {
             Contract.Requires(exportProvider != null);
             Contract.Requires(format != null);

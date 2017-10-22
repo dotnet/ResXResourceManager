@@ -16,16 +16,17 @@
         [NotNull]
         public static readonly CultureKey Neutral = new CultureKey((CultureInfo)null);
 
-        public CultureKey(string cultureName)
+        public CultureKey([CanBeNull] string cultureName)
         {
             Culture = cultureName?.ToCulture();
         }
 
-        public CultureKey(CultureInfo culture)
+        public CultureKey([CanBeNull] CultureInfo culture)
         {
             Culture = culture;
         }
 
+        [CanBeNull]
         public CultureInfo Culture { get; }
 
         public override string ToString()
@@ -75,7 +76,7 @@
             return InternalEquals(this, other);
         }
 
-        private static bool InternalEquals(CultureKey left, CultureKey right)
+        private static bool InternalEquals([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
         {
             if (ReferenceEquals(left, right))
                 return true;
@@ -90,14 +91,14 @@
         /// <summary>
         /// Implements the operator ==.
         /// </summary>
-        public static bool operator ==(CultureKey left, CultureKey right)
+        public static bool operator ==([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
         {
             return InternalEquals(left, right);
         }
         /// <summary>
         /// Implements the operator !=.
         /// </summary>
-        public static bool operator !=(CultureKey left, CultureKey right)
+        public static bool operator !=([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
         {
             return !InternalEquals(left, right);
         }
@@ -123,7 +124,7 @@
             return Compare(this, obj as CultureKey);
         }
 
-        private static int Compare(CultureKey left, CultureKey right)
+        private static int Compare([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
         {
             if (ReferenceEquals(left, right))
                 return 0;
@@ -138,28 +139,28 @@
         /// <summary>
         /// Implements the operator &gt;.
         /// </summary>
-        public static bool operator >(CultureKey left, CultureKey right)
+        public static bool operator >([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
         {
             return Compare(left, right) > 0;
         }
         /// <summary>
         /// Implements the operator &lt;.
         /// </summary>
-        public static bool operator <(CultureKey left, CultureKey right)
+        public static bool operator <([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
         {
             return Compare(left, right) < 0;
         }
         /// <summary>
         /// Implements the operator &gt;=.
         /// </summary>
-        public static bool operator >=(CultureKey left, CultureKey right)
+        public static bool operator >=([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
         {
             return Compare(left, right) >= 0;
         }
         /// <summary>
         /// Implements the operator &lt;=.
         /// </summary>
-        public static bool operator <=(CultureKey left, CultureKey right)
+        public static bool operator <=([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
         {
             return Compare(left, right) <= 0;
         }
@@ -167,7 +168,7 @@
         #endregion
 
         [NotNull]
-        public static implicit operator CultureKey(CultureInfo culture)
+        public static implicit operator CultureKey([CanBeNull] CultureInfo culture)
         {
             Contract.Ensures(Contract.Result<CultureKey>() != null);
 
@@ -175,7 +176,7 @@
         }
 
         [NotNull]
-        public static CultureKey Parse(object item)
+        public static CultureKey Parse([CanBeNull] object item)
         {
             Contract.Ensures(Contract.Result<CultureKey>() != null);
 

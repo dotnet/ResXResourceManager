@@ -13,15 +13,15 @@ namespace tomenglertde.ResXManager.Model
         {
         }
 
-        public ImportException(string message) : base(message)
+        public ImportException([CanBeNull] string message) : base(message)
         {
         }
 
-        public ImportException(string message, Exception inner) : base(message, inner)
+        public ImportException([CanBeNull] string message, Exception inner) : base(message, inner)
         {
         }
 
-        protected ImportException([NotNull] SerializationInfo info, StreamingContext context) 
+        protected ImportException([NotNull] SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             Contract.Requires(info != null);

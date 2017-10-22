@@ -12,7 +12,7 @@
 
     public class LanguageSelectionBoxViewModel : ObservableObject
     {
-        public LanguageSelectionBoxViewModel([NotNull] IEnumerable<CultureInfo> existingLanguages)
+        public LanguageSelectionBoxViewModel([NotNull][ItemNotNull] IEnumerable<CultureInfo> existingLanguages)
         {
             Contract.Requires(existingLanguages != null);
 
@@ -26,6 +26,7 @@
         [Required]
         public CultureInfo SelectedLanguage { get; set; }
 
+        [ItemNotNull]
         public ICollection<CultureInfo> Languages { get; }
     }
 }

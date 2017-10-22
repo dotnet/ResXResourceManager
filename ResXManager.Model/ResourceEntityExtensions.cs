@@ -17,6 +17,7 @@
         private const string CommentHeaderPrefix = "Comment";
 
         [NotNull]
+        [ItemNotNull]
         private static readonly string[] _fixedColumnHeaders = { KeyColumnHeader };
 
         /// <summary>
@@ -25,7 +26,8 @@
         /// <param name="entries">The entries.</param>
         /// <returns>The table.</returns>
         [NotNull]
-        public static IList<IList<string>> ToTable([NotNull] this ICollection<ResourceTableEntry> entries)
+        [ItemNotNull]
+        public static IList<IList<string>> ToTable([NotNull][ItemNotNull] this ICollection<ResourceTableEntry> entries)
         {
             Contract.Requires(entries != null);
             Contract.Ensures(Contract.Result<IList<IList<string>>>() != null);
@@ -41,6 +43,7 @@
         }
 
         [ItemNotNull]
+        [CanBeNull]
         private static IEnumerable<string> GetTableLanguageColumnHeaders([NotNull] this CultureKey cultureKey)
         {
             Contract.Requires(cultureKey != null);
@@ -51,7 +54,9 @@
             yield return cultureName;
         }
 
-        private static IEnumerable<string> GetTableDataColumns([NotNull] this ResourceTableEntry entry, CultureKey cultureKey)
+        [ItemNotNull]
+        [CanBeNull]
+        private static IEnumerable<string> GetTableDataColumns([NotNull] this ResourceTableEntry entry, [CanBeNull] CultureKey cultureKey)
         {
             Contract.Requires(entry != null);
 
@@ -82,7 +87,8 @@
         /// <param name="languages"></param>
         /// <returns>The data table.</returns>
         [NotNull]
-        private static IEnumerable<IList<string>> GetTableDataLines([NotNull] this IEnumerable<ResourceTableEntry> entries, [NotNull] IEnumerable<CultureKey> languages)
+        [ItemNotNull]
+        private static IEnumerable<IList<string>> GetTableDataLines([NotNull][ItemNotNull] this IEnumerable<ResourceTableEntry> entries, [NotNull][ItemNotNull] IEnumerable<CultureKey> languages)
         {
             Contract.Requires(entries != null);
             Contract.Requires(languages != null);
@@ -100,7 +106,8 @@
         /// The columns of this line.
         /// </returns>
         [NotNull]
-        private static IEnumerable<string> GetTableLine([NotNull] this ResourceTableEntry entry, [NotNull] IEnumerable<CultureKey> languages)
+        [ItemNotNull]
+        private static IEnumerable<string> GetTableLine([NotNull] this ResourceTableEntry entry, [NotNull][ItemNotNull] IEnumerable<CultureKey> languages)
         {
             Contract.Requires(entry != null);
             Contract.Requires(languages != null);
@@ -120,6 +127,7 @@
             return languageName;
         }
 
+        [CanBeNull]
         private static CultureInfo ExtractCulture([NotNull] this string dataColumnHeader)
         {
             Contract.Requires(dataColumnHeader != null);
@@ -127,6 +135,7 @@
             return GetLanguageName(dataColumnHeader).ToCulture();
         }
 
+        [CanBeNull]
         private static CultureKey ExtractCultureKey([NotNull] this string dataColumnHeader)
         {
             Contract.Requires(dataColumnHeader != null);
@@ -141,6 +150,7 @@
             return dataColumnHeader.StartsWith(CommentHeaderPrefix, StringComparison.OrdinalIgnoreCase) ? ColumnKind.Comment : ColumnKind.Text;
         }
 
+        [CanBeNull]
         private static string GetEntryData([NotNull] this ResourceTableEntry entry, [NotNull] CultureKey culture, ColumnKind columnKind)
         {
             Contract.Requires(entry != null);
@@ -180,7 +190,7 @@
             }
         }
 
-        private static bool SetEntryData([NotNull] this ResourceTableEntry entry, CultureInfo culture, ColumnKind columnKind, string text)
+        private static bool SetEntryData([NotNull] this ResourceTableEntry entry, [CanBeNull] CultureInfo culture, ColumnKind columnKind, [CanBeNull] string text)
         {
             Contract.Requires(entry != null);
 
@@ -205,7 +215,7 @@
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <param name="table">The text.</param>
-        public static void ImportTable([NotNull] this ResourceEntity entity, [NotNull] IList<IList<string>> table)
+        public static void ImportTable([NotNull] this ResourceEntity entity, [NotNull][ItemNotNull] IList<IList<string>> table)
         {
             Contract.Requires(entity != null);
             Contract.Requires(table != null);
@@ -220,7 +230,7 @@
             return change.Entry.SetEntryData(change.Culture, change.ColumnKind, change.Text);
         }
 
-        public static void Apply([NotNull] this ICollection<EntryChange> changes)
+        public static void Apply([NotNull][ItemNotNull] this ICollection<EntryChange> changes)
         {
             Contract.Requires(changes != null);
 
@@ -235,7 +245,8 @@
         }
 
         [NotNull]
-        public static ICollection<EntryChange> ImportTable([NotNull] this ResourceEntity entity, [NotNull] ICollection<string> fixedColumnHeaders, [NotNull] IList<IList<string>> table)
+        [ItemNotNull]
+        public static ICollection<EntryChange> ImportTable([NotNull] this ResourceEntity entity, [NotNull][ItemNotNull] ICollection<string> fixedColumnHeaders, [NotNull][ItemNotNull] IList<IList<string>> table)
         {
             Contract.Requires(entity != null);
             Contract.Requires(fixedColumnHeaders != null);
@@ -286,7 +297,8 @@
         }
 
         [NotNull]
-        private static IList<string> GetHeaderColumns([NotNull] ICollection<IList<string>> table, [NotNull] ICollection<string> fixedColumnHeaders)
+        [ItemNotNull]
+        private static IList<string> GetHeaderColumns([NotNull][ItemNotNull] ICollection<IList<string>> table, [NotNull][ItemNotNull] ICollection<string> fixedColumnHeaders)
         {
             Contract.Requires(table != null);
             Contract.Requires(table.Count > 0);
@@ -333,7 +345,7 @@
             return headerCultures.All(c => c != null);
         }
 
-        private static void VerifyCultures([NotNull] ResourceEntity entity, [NotNull] IEnumerable<CultureInfo> languages)
+        private static void VerifyCultures([NotNull] ResourceEntity entity, [NotNull][ItemNotNull] IEnumerable<CultureInfo> languages)
         {
             Contract.Requires(entity != null);
             Contract.Requires(languages != null);

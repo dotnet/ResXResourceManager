@@ -5,6 +5,8 @@
     using System.Globalization;
     using System.Text.RegularExpressions;
 
+    using JetBrains.Annotations;
+
     public static class ExtensionMethods
     {
         /// <summary>
@@ -14,8 +16,9 @@
         /// <returns>
         /// The culture, or <c>null</c> if the key name is empty.
         /// </returns>
-        /// <exception cref="System.InvalidOperationException">Error parsing language:  + cultureKeyName</exception>
-        public static CultureInfo ToCulture(this string cultureKeyName)
+        /// <exception cref="InvalidOperationException">Error parsing language:  + cultureKeyName</exception>
+        [CanBeNull]
+        public static CultureInfo ToCulture([CanBeNull] this string cultureKeyName)
         {
             try
             {
@@ -38,7 +41,8 @@
         /// The cultureKey, or <c>null</c> if the culture is invalid.
         /// </returns>
         [ContractVerification(false)] // because of try/catch
-        public static CultureKey ToCultureKey(this string cultureKeyName)
+        [CanBeNull]
+        public static CultureKey ToCultureKey([CanBeNull] this string cultureKeyName)
         {
             try
             {
@@ -53,7 +57,8 @@
             return null;
         }
 
-        public static Regex TryCreateRegex(this string expression)
+        [CanBeNull]
+        public static Regex TryCreateRegex([CanBeNull] this string expression)
         {
             try
             {

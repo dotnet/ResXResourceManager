@@ -7,14 +7,18 @@
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Desktop;
 
     public class CultureToImageSourceConverter : IValueConverter
     {
+        [NotNull]
         public static readonly IValueConverter Default = new CultureToImageSourceConverter();
 
+        [NotNull, ItemNotNull]
         private static readonly string[] _existingFlags =
         {
             "ad", "ae", "af", "ag", "ai", "al", "am", "an", "ao", "ar", "as", "at", "au", "aw", "ax", "az", "ba", "bb", "bd", "be", "bf",
@@ -43,7 +47,8 @@
             return Convert(value as CultureInfo);
         }
 
-        internal static ImageSource Convert(CultureInfo culture)
+        [CanBeNull]
+        internal static ImageSource Convert([CanBeNull] CultureInfo culture)
         {
             if (culture == null)
                 return null;

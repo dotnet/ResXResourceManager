@@ -29,11 +29,13 @@
     [AddINotifyPropertyChangedInterface]
     public sealed class ResourceManager
     {
+        [NotNull, ItemNotNull]
         private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
 
         [NotNull]
         private readonly ISourceFilesProvider _sourceFilesProvider;
 
+        [CanBeNull]
         private string _snapshot;
 
         public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
@@ -58,7 +60,7 @@
         /// </summary>
         /// <param name="allSourceFiles">All resource x files.</param>
         /// <param name="duplicateKeyHandling">The duplicate key handling mode.</param>
-        private bool Load([NotNull] IList<ProjectFile> allSourceFiles)
+        private bool Load([NotNull][ItemNotNull] IList<ProjectFile> allSourceFiles)
         {
             Contract.Requires(allSourceFiles != null);
 
@@ -95,12 +97,14 @@
         /// Gets the table entries of all entities.
         /// </summary>
         [NotNull]
+        [ItemNotNull]
         public IObservableCollection<ResourceTableEntry> TableEntries { get; }
 
         /// <summary>
         /// Gets the cultures of all entities.
         /// </summary>
         [NotNull]
+        [ItemNotNull]
         public ObservableCollection<CultureKey> Cultures { get; } = new ObservableCollection<CultureKey>();
 
         /// <summary>
@@ -127,7 +131,7 @@
             return Reload(_sourceFilesProvider.SourceFiles);
         }
 
-        public bool Reload([NotNull] IList<ProjectFile> sourceFiles)
+        public bool Reload([NotNull][ItemNotNull] IList<ProjectFile> sourceFiles)
         {
             Contract.Requires(sourceFiles != null);
 
@@ -139,7 +143,7 @@
             return Load(sourceFiles);
         }
 
-        public bool CanEdit([NotNull] ResourceEntity resourceEntity, CultureKey cultureKey)
+        public bool CanEdit([NotNull] ResourceEntity resourceEntity, [CanBeNull] CultureKey cultureKey)
         {
             Contract.Requires(resourceEntity != null);
 
@@ -160,7 +164,7 @@
             Loaded?.Invoke(this, EventArgs.Empty);
         }
 
-        private bool InternalLoad([NotNull] IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory)
+        private bool InternalLoad([NotNull][ItemNotNull] IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory)
         {
             Contract.Requires(resourceFilesByDirectory != null);
 
@@ -184,7 +188,7 @@
             return true;
         }
 
-        private bool LoadEntities([NotNull] IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory)
+        private bool LoadEntities([NotNull][ItemNotNull] IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory)
         {
             Contract.Requires(fileNamesByDirectory != null);
 
@@ -265,6 +269,7 @@
 
         internal void OnProjectFileSaved([NotNull] ResourceLanguage language, [NotNull] ProjectFile projectFile)
         {
+            Contract.Requires(language != null);
             Contract.Requires(projectFile != null);
 
             ProjectFileSaved?.Invoke(this, new ProjectFileEventArgs(language, projectFile));
@@ -278,6 +283,7 @@
         }
 
         [NotNull]
+        [ItemNotNull]
         private static string[] GetSortedCultureNames()
         {
             Contract.Ensures(Contract.Result<string[]>() != null);
@@ -295,6 +301,7 @@
         }
 
         [NotNull]
+        [ItemNotNull]
         private static CultureInfo[] GetSpecificCultures()
         {
             Contract.Ensures(Contract.Result<CultureInfo[]>() != null);
@@ -307,7 +314,7 @@
             return specificCultures;
         }
 
-        public void LoadSnapshot(string value)
+        public void LoadSnapshot([CanBeNull] string value)
         {
             ResourceEntities.LoadSnapshot(value);
 
@@ -331,6 +338,7 @@
             Contract.Invariant(Cultures != null);
             Contract.Invariant(_sourceFilesProvider != null);
             Contract.Invariant(TableEntries != null);
+            Contract.Invariant(_sortedCultureNames != null);
         }
     }
 }

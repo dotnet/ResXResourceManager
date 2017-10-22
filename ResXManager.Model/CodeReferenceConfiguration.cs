@@ -4,7 +4,6 @@
     using System.ComponentModel;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
 
     using JetBrains.Annotations;
@@ -45,6 +44,7 @@
         [NotifyPropertyChangedInvocator, UsedImplicitly]
         private void OnPropertyChanged([NotNull] string propertyName)
         {
+            Contract.Requires(propertyName != null);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 

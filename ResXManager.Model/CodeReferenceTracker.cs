@@ -22,6 +22,7 @@
     [Export]
     public class CodeReferenceTracker
     {
+        [CanBeNull]
         private Engine _engine;
 
         private CodeReferenceTracker()
@@ -62,7 +63,7 @@
 
             public int Progress => (int)(_total <= 0 ? 0 : Math.Max(1, (100 * _visited) / _total));
 
-            public Engine([NotNull] CodeReferenceConfiguration configuration, [NotNull] ICollection<ProjectFile> sourceFiles, [NotNull] ICollection<ResourceTableEntry> resourceTableEntries, [NotNull] ITracer tracer)
+            public Engine([NotNull] CodeReferenceConfiguration configuration, [NotNull][ItemNotNull] ICollection<ProjectFile> sourceFiles, [NotNull][ItemNotNull] ICollection<ResourceTableEntry> resourceTableEntries, [NotNull] ITracer tracer)
             {
                 Contract.Requires(configuration != null);
                 Contract.Requires(sourceFiles != null);
@@ -167,10 +168,12 @@
 
         private class CodeMatch
         {
+            [ItemNotNull]
+            [CanBeNull]
             private readonly IList<string> _segments;
 
             [ContractVerification(false)] // too many assumptions would be needed...
-            public CodeMatch([NotNull] string line, [NotNull] string key, Regex regex, StringComparison stringComparison, string singleLineComment)
+            public CodeMatch([NotNull] string line, [NotNull] string key, [CanBeNull] Regex regex, StringComparison stringComparison, [CanBeNull] string singleLineComment)
             {
                 Contract.Requires(line != null);
                 Contract.Requires(key != null);
@@ -235,6 +238,8 @@
 
             public bool Success { get; }
 
+            [ItemNotNull]
+            [CanBeNull]
             public IList<string> Segments
             {
                 get
@@ -264,10 +269,11 @@
             private readonly Dictionary<string, HashSet<int>> _keyLinesLookup = new Dictionary<string, HashSet<int>>();
             [NotNull, ItemNotNull]
             private readonly CodeReferenceConfigurationItem[] _configurations;
-
+            [ItemNotNull]
+            [CanBeNull]
             private readonly string[] _lines;
 
-            public FileInfo([NotNull] ProjectFile projectFile, [NotNull, ItemNotNull] IEnumerable<CodeReferenceConfigurationItem> configurations, [NotNull] ICollection<string> keys, ref long visited)
+            public FileInfo([NotNull] ProjectFile projectFile, [NotNull, ItemNotNull] IEnumerable<CodeReferenceConfigurationItem> configurations, [NotNull][ItemNotNull] ICollection<string> keys, ref long visited)
             {
                 Contract.Requires(projectFile != null);
                 Contract.Requires(configurations != null);
@@ -297,9 +303,10 @@
             public bool HasConfigurations => _configurations.Any();
 
             [NotNull]
+            [ItemNotNull]
             public IEnumerable<string> Keys => _keyLinesLookup.Keys;
 
-            public void FindCodeReferences([NotNull] ResourceTableEntry entry, [NotNull] ICollection<CodeReference> references, [NotNull] ITracer tracer)
+            public void FindCodeReferences([NotNull] ResourceTableEntry entry, [NotNull][ItemNotNull] ICollection<CodeReference> references, [NotNull] ITracer tracer)
             {
                 Contract.Requires(entry != null);
                 Contract.Requires(references != null);
@@ -379,7 +386,7 @@
 
     public class CodeReference
     {
-        internal CodeReference([NotNull] ProjectFile projectFile, int lineNumber, [NotNull] IList<string> lineSegemnts)
+        internal CodeReference([NotNull] ProjectFile projectFile, int lineNumber, [NotNull][ItemNotNull] IList<string> lineSegemnts)
         {
             Contract.Requires(projectFile != null);
             Contract.Requires(lineSegemnts != null);
@@ -391,14 +398,18 @@
 
         public int LineNumber { get; private set; }
 
+        [CanBeNull]
         public ProjectFile ProjectFile { get; private set; }
 
+        [ItemNotNull]
+        [CanBeNull]
         public IList<string> LineSegments { get; private set; }
     }
 
     internal static class CodeReferenceExtensionMethods
     {
         [NotNull]
+        [ItemNotNull]
         public static string[] ReadAllLines([NotNull] this ProjectFile file)
         {
             Contract.Requires(file != null);

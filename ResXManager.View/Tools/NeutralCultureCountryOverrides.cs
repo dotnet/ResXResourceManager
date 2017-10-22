@@ -39,7 +39,7 @@
             {
                 Contract.Requires(neutralCulture != null);
 
-                if (!_overrides.TryGetValue(neutralCulture, out CultureInfo specificCulture))
+                if (!_overrides.TryGetValue(neutralCulture, out var specificCulture))
                 {
                     specificCulture = GetDefaultSpecificCulture(neutralCulture);
                 }

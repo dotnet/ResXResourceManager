@@ -19,6 +19,7 @@
             InitializeComponent();
         }
 
+        [ItemNotNull]
         public IEnumerable<ITranslator> Translators
         {
             get { return (IEnumerable<ITranslator>)GetValue(TranslatorsProperty); }
@@ -29,7 +30,7 @@
         /// </summary>
         [NotNull]
         public static readonly DependencyProperty TranslatorsProperty =
-            DependencyProperty.Register("Translators", typeof (IEnumerable<ITranslator>), typeof (TranslatorConfiguration));
+            DependencyProperty.Register("Translators", typeof(IEnumerable<ITranslator>), typeof(TranslatorConfiguration));
 
         private void TabControl_Loaded([NotNull] object sender, RoutedEventArgs e)
         {

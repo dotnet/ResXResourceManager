@@ -57,13 +57,20 @@
         [NotNull]
         private readonly ManualResetEvent _compositionHostLoaded = new ManualResetEvent(false);
 
+        [CanBeNull]
         private EnvDTE.SolutionEvents _solutionEvents;
+        [CanBeNull]
         private EnvDTE.DocumentEvents _documentEvents;
+        [CanBeNull]
         private EnvDTE.ProjectItemsEvents _projectItemsEvents;
+        [CanBeNull]
         private EnvDTE.ProjectItemsEvents _solutionItemsEvents;
+        [CanBeNull]
         private EnvDTE.ProjectItemsEvents _miscFilesEvents;
+        [CanBeNull]
         private EnvDTE.ProjectsEvents _projectsEvents;
 
+        [CanBeNull]
         private static VSPackage _instance;
 
         public VSPackage()
@@ -138,7 +145,7 @@
             CompositionHost.Dispose();
         }
 
-        private static void ShowLoaderErrors([NotNull] ICompositionHost compositionHost, [NotNull] IList<string> loaderErrors)
+        private static void ShowLoaderErrors([NotNull] ICompositionHost compositionHost, [NotNull][ItemNotNull] IList<string> loaderErrors)
         {
             Contract.Requires(compositionHost != null);
             Contract.Requires(loaderErrors != null);
@@ -335,6 +342,7 @@
             menuCommand.Visible = GetSelectedResourceEntites() != null;
         }
 
+        [CanBeNull, ItemNotNull]
         private IEnumerable<ResourceEntity> GetSelectedResourceEntites()
         {
             var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
@@ -352,6 +360,7 @@
         }
 
         [NotNull]
+        [ItemNotNull]
         private IEnumerable<ResourceEntity> GetSelectedResourceEntites(string fileName)
         {
             Contract.Ensures(Contract.Result<IEnumerable<ResourceEntity>>() != null);
@@ -463,6 +472,8 @@
 
         private void DocumentEvents_DocumentSaved([NotNull] EnvDTE.Document document)
         {
+            Contract.Requires(document != null);
+
             Tracer.WriteLine("DTE event: Document saved");
 
             if (!AffectsResourceFile(document))

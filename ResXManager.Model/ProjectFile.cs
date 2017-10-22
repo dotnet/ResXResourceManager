@@ -17,6 +17,7 @@
     /// </summary>
     public class ProjectFile : ObservableObject
     {
+        [CanBeNull]
         private string _fingerPrint;
 
         /// <summary>
@@ -26,7 +27,7 @@
         /// <param name="rootFolder">The root folder to calculate the relative path from.</param>
         /// <param name="projectName">Name of the project.</param>
         /// <param name="uniqueProjectName">Unique name of the project file.</param>
-        public ProjectFile([NotNull] string filePath, [NotNull] string rootFolder, string projectName, string uniqueProjectName)
+        public ProjectFile([NotNull] string filePath, [NotNull] string rootFolder, [CanBeNull] string projectName, [CanBeNull] string uniqueProjectName)
         {
             Contract.Requires(!string.IsNullOrEmpty(filePath));
             Contract.Requires(rootFolder != null);
@@ -51,8 +52,10 @@
         /// <summary>
         /// Gets or sets the name of the project containing the file.
         /// </summary>
+        [CanBeNull]
         public string ProjectName { get; set; }
 
+        [CanBeNull]
         public string UniqueProjectName { get; set; }
 
         [NotNull]

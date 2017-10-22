@@ -51,11 +51,11 @@
         <TextBox>
           <TextBox.Style>
             <Style TargetType="TextBox" BasedOn="{StaticResource {x:Static styles:ResourceKeys.TextBoxStyle}}">
-              <Setter Property="Text" Value="{Binding Key, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+              <Setter Property="Text" Value="{Binding Key, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
               <Style.Triggers>
                 <DataTrigger Binding="{Binding ReuseExisiting}" Value="True">
-                  <Setter Property="Text" Value="{Binding SelectedResourceEntry.Key}"/>
-                  <Setter Property="IsEnabled" Value="False"/>
+                  <Setter Property="Text" Value="{Binding SelectedResourceEntry.Key}" />
+                  <Setter Property="IsEnabled" Value="False" />
                 </DataTrigger>
               </Style.Triggers>
             </Style>
@@ -76,11 +76,11 @@
             <TextBox x:Name="ValueTextBox" Height="40" AcceptsReturn="True">
               <TextBox.Style>
                 <Style TargetType="TextBox" BasedOn="{StaticResource {x:Static styles:ResourceKeys.TextBoxStyle}}">
-                  <Setter Property="Text" Value="{Binding Value}"/>
+                  <Setter Property="Text" Value="{Binding Value}" />
                   <Style.Triggers>
                     <DataTrigger Binding="{Binding ReuseExisiting}" Value="True">
-                      <Setter Property="Text" Value="{Binding Path=SelectedResourceEntry.Values[.], Mode=OneWay}"/>
-                      <Setter Property="IsEnabled" Value="False"/>
+                      <Setter Property="Text" Value="{Binding Path=SelectedResourceEntry.Values[.], Mode=OneWay}" />
+                      <Setter Property="IsEnabled" Value="False" />
                     </DataTrigger>
                   </Style.Triggers>
                 </Style>
@@ -108,11 +108,11 @@
             <TextBox x:Name="CommentTextBox" Height="40" AcceptsReturn="True">
               <TextBox.Style>
                 <Style TargetType="TextBox" BasedOn="{StaticResource {x:Static styles:ResourceKeys.TextBoxStyle}}">
-                  <Setter Property="Text" Value="{Binding Comment}"/>
+                  <Setter Property="Text" Value="{Binding Comment}" />
                   <Style.Triggers>
                     <DataTrigger Binding="{Binding ReuseExisiting}" Value="True">
-                      <Setter Property="Text" Value="{Binding SelectedResourceEntry.Comment}"/>
-                      <Setter Property="IsEnabled" Value="False"/>
+                      <Setter Property="Text" Value="{Binding SelectedResourceEntry.Comment}" />
+                      <Setter Property="IsEnabled" Value="False" />
                     </DataTrigger>
                   </Style.Triggers>
                 </Style>

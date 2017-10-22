@@ -4,11 +4,14 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
+    using JetBrains.Annotations;
+
     public class ExcelRange
     {
+        [CanBeNull]
         private static readonly Regex _rangeRegex = new Regex(@"(((?<sheetName>\w+)|('(?<sheetName>.*?)'))!)?\$?(?<startColumn>[A-Z]+)\$?(?<startRow>[0-9]*)(:\$?(?<endColumn>[A-Z]+)\$?(?<endRow>[0-9]*))?");
 
-        public ExcelRange(string definition)
+        public ExcelRange([CanBeNull] string definition)
         {
             if (string.IsNullOrEmpty(definition))
                 return;

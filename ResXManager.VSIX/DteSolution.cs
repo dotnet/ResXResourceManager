@@ -14,8 +14,6 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
-    using TomsToolbox.Desktop.Composition;
-
     [Export]
     internal class DteSolution
     {
@@ -27,6 +25,7 @@
         private readonly ITracer _tracer;
 
         [CanBeNull]
+        [ItemNotNull]
         private IEnumerable<DteProjectFile> _projectFiles;
 
         [ImportingConstructor]
@@ -154,6 +153,7 @@
         }
 
         [NotNull]
+        [ItemNotNull]
         private IEnumerable<EnvDTE.Project> GetProjects()
         {
             Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.Project>>() != null);
@@ -181,7 +181,7 @@
             }
         }
 
-        private void GetProjectFiles(string projectName, EnvDTE.ProjectItems projectItems, [NotNull] IDictionary<string, DteProjectFile> items)
+        private void GetProjectFiles(string projectName, [ItemNotNull] EnvDTE.ProjectItems projectItems, [NotNull] IDictionary<string, DteProjectFile> items)
         {
             Contract.Requires(items != null);
 

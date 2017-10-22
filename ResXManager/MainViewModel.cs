@@ -23,7 +23,6 @@
     using tomenglertde.ResXManager.View.Visuals;
 
     using TomsToolbox.Desktop;
-    using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
@@ -53,7 +52,7 @@
             SourceFilesProvider = sourceFilesProvider;
 
             resourceManager.BeginEditing += ResourceManager_BeginEditing;
-            resourceManager.Reloading += ResourceManager_Reloading; 
+            resourceManager.Reloading += ResourceManager_Reloading;
 
             try
             {
@@ -131,7 +130,7 @@
             }
         }
 
-        private void ResourceManager_Reloading(object sender, CancelEventArgs e)
+        private void ResourceManager_Reloading([NotNull] object sender, [NotNull] CancelEventArgs e)
         {
             if (!ResourceManager.HasChanges)
                 return;
@@ -142,7 +141,7 @@
             e.Cancel = true;
         }
 
-        private void ResourceManager_BeginEditing(object sender, [NotNull] ResourceBeginEditingEventArgs e)
+        private void ResourceManager_BeginEditing([NotNull] object sender, [NotNull] ResourceBeginEditingEventArgs e)
         {
             if (!CanEdit(e.Entity, e.CultureKey))
             {
@@ -150,7 +149,7 @@
             }
         }
 
-        private bool CanEdit([NotNull] ResourceEntity entity, CultureKey cultureKey)
+        private bool CanEdit([NotNull] ResourceEntity entity, [CanBeNull] CultureKey cultureKey)
         {
             Contract.Requires(entity != null);
 
@@ -217,7 +216,7 @@
 
         [NotNull]
         [Localizable(false)]
-        private static string FormatFileNames([NotNull] IEnumerable<string> lockedFiles)
+        private static string FormatFileNames([NotNull][ItemNotNull] IEnumerable<string> lockedFiles)
         {
             Contract.Requires(lockedFiles != null);
             Contract.Ensures(Contract.Result<string>() != null);

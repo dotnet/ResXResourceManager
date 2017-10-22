@@ -27,7 +27,7 @@ namespace tomenglertde.ResXManager.View.Visuals
         private readonly ResourceTableEntry _entry;
         [NotNull]
         private readonly string _source;
-
+        [ItemNotNull]
         private ICollectionView _orderedResults;
         private string _translation;
 
@@ -51,6 +51,7 @@ namespace tomenglertde.ResXManager.View.Visuals
         public IList<ITranslationMatch> Results => _results;
 
         [NotNull]
+        [ItemNotNull]
         public ICollectionView OrderedResults => _orderedResults ?? (_orderedResults = CreateOrderedResults(_results));
 
         public string Translation
@@ -68,7 +69,8 @@ namespace tomenglertde.ResXManager.View.Visuals
         }
 
         [NotNull]
-        private static ICollectionView CreateOrderedResults([NotNull] IList results)
+        [ItemNotNull]
+        private static ICollectionView CreateOrderedResults([NotNull][ItemNotNull] IList results)
         {
             Contract.Requires(results != null);
             Contract.Ensures(Contract.Result<ICollectionView>() != null);

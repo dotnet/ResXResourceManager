@@ -124,7 +124,7 @@
                 {
                     Contract.Assume(translator != null);
 
-                    if (!values.TryGetValue(translator.Id, out string setting))
+                    if (!values.TryGetValue(translator.Id, out var setting))
                         continue;
                     if (string.IsNullOrEmpty(setting))
                         continue;

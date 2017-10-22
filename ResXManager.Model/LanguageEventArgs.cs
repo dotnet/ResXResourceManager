@@ -44,9 +44,10 @@
     {
         [NotNull]
         private readonly ResourceEntity _entity;
+        [CanBeNull]
         private readonly CultureInfo _culture;
 
-        public LanguageChangingEventArgs([NotNull] ResourceEntity entity, CultureInfo culture)
+        public LanguageChangingEventArgs([NotNull] ResourceEntity entity, [CanBeNull] CultureInfo culture)
         {
             Contract.Requires(entity != null);
 
@@ -64,6 +65,7 @@
             }
         }
 
+        [CanBeNull]
         public CultureInfo Culture => _culture;
 
         [ContractInvariantMethod]

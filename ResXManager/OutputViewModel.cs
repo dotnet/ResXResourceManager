@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel.Composition;
     using System.Diagnostics;
@@ -25,6 +24,7 @@
     public sealed class OutputViewModel : ObservableObject, ITracer
     {
         [NotNull]
+        [ItemNotNull]
         public ObservableCollection<string> Lines { get; } = new ObservableCollection<string>();
 
         [NotNull]

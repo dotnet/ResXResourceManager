@@ -61,7 +61,7 @@
         /// </summary>
         /// <param name="tracer">The tracer.</param>
         /// <param name="reader">The reader providing the XML stream.</param>
-        public XmlConfiguration([NotNull] ITracer tracer, TextReader reader)
+        public XmlConfiguration([NotNull] ITracer tracer, [CanBeNull] TextReader reader)
         {
             Contract.Requires(tracer != null);
 
@@ -108,7 +108,8 @@
         /// <returns>
         /// The value stored in the XML file, or null if the value does not exist.
         /// </returns>
-        public string GetValue([NotNull] string key, string defaultValue)
+        [CanBeNull]
+        public string GetValue([NotNull] string key, [CanBeNull] string defaultValue)
         {
             Contract.Requires(key != null);
 
@@ -126,7 +127,7 @@
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value. If value is null, the node will be deleted from the xml stream.</param>
-        public void SetValue([NotNull] string key, string value)
+        public void SetValue([NotNull] string key, [CanBeNull] string value)
         {
             Contract.Requires(key != null);
 
