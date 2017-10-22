@@ -10,49 +10,19 @@
 
     public class CultureOverrideEventArgs : EventArgs
     {
-        [NotNull]
-        private readonly CultureInfo _neutralCulture;
-        [NotNull]
-        private readonly CultureInfo _specificCulture;
-
-        public CultureOverrideEventArgs([NotNull] CultureInfo neutralCulture, [NotNull] CultureInfo specificCulture)
+        public CultureOverrideEventArgs([NotNull] CultureInfo neutralCulture, [CanBeNull] CultureInfo specificCulture)
         {
             Contract.Requires(neutralCulture != null);
             Contract.Requires(specificCulture != null);
 
-            _specificCulture = specificCulture;
-            _neutralCulture = neutralCulture;
+            SpecificCulture = specificCulture;
+            NeutralCulture = neutralCulture;
         }
 
         [NotNull]
-        public CultureInfo NeutralCulture
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<CultureInfo>() != null);
+        public CultureInfo NeutralCulture { get; }
 
-                return _neutralCulture;
-            }
-        }
-
-        [NotNull]
-        public CultureInfo SpecificCulture
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<CultureInfo>() != null);
-
-                return _specificCulture;
-            }
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_neutralCulture != null);
-            Contract.Invariant(_specificCulture != null);
-        }
+        [CanBeNull]
+        public CultureInfo SpecificCulture { get; }
     }
 }

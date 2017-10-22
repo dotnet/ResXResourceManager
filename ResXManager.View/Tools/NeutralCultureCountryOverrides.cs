@@ -52,7 +52,7 @@
                 Contract.Requires(neutralCulture != null);
                 Contract.Requires(value != null);
 
-                if (value.Equals(GetDefaultSpecificCulture(neutralCulture)))
+                if (Equals(value, GetDefaultSpecificCulture(neutralCulture)))
                 {
                     _overrides.Remove(neutralCulture);
                 }
