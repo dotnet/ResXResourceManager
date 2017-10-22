@@ -88,7 +88,7 @@
                 {
                     Contract.Assume(_languages.Any());
 
-                    existingEntry.Update(index, _languages);
+                    existingEntry.Update(index);
                     unmatchedTableEntries.Remove(existingEntry);
                 }
                 else
@@ -324,7 +324,7 @@
             return languages;
         }
 
-        private static bool MergeItems([NotNull] IDictionary<CultureKey, ResourceLanguage> targets, [NotNull] IDictionary<CultureKey, ResourceLanguage> sources)
+        private bool MergeItems([NotNull] IDictionary<CultureKey, ResourceLanguage> targets, [NotNull] IDictionary<CultureKey, ResourceLanguage> sources)
         {
             Contract.Requires(targets != null);
             Contract.Requires(sources != null);
@@ -336,12 +336,7 @@
             removedLanguages
                 .ForEach(key => targets.Remove(key));
 
-            var changedLanguages = targets.Keys
-                .Where(key => !targets[key].IsContentEqual(sources[key]))
-                .ToArray();
-
-            changedLanguages
-                .ForEach(key => targets[key] = sources[key]);
+            var hasChanges = UpdateChangedEntries(targets, sources);
 
             var addedLanguages = sources.Keys.Except(targets.Keys)
                 .ToArray();
@@ -349,7 +344,36 @@
             addedLanguages
                 .ForEach(key => targets.Add(key, sources[key]));
 
-            return removedLanguages.Any() || changedLanguages.Any() || addedLanguages.Any();
+            return removedLanguages.Any() || hasChanges || addedLanguages.Any();
+        }
+
+        private bool UpdateChangedEntries([NotNull] IDictionary<CultureKey, ResourceLanguage> targets, [NotNull] IDictionary<CultureKey, ResourceLanguage> sources)
+        {
+            var hasChanges = false;
+
+            foreach (var targetItem in targets)
+            {
+                var cultureKey = targetItem.Key;
+                var target = targetItem.Value;
+
+                var source = sources[cultureKey];
+
+                if (target.IsContentEqual(source))
+                    continue;
+
+                if (IsWinFormsDesignerResource)
+                {
+                    foreach (var resourceKey in source.ResourceKeys)
+                    {
+                        source.SetComment(resourceKey, target.GetComment(resourceKey));
+                    }
+                }
+
+                targets[cultureKey] = source;
+                hasChanges = true;
+            }
+
+            return hasChanges;
         }
 
         #region IComparable/IEquatable implementation

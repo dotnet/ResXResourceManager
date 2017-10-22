@@ -24,7 +24,11 @@
         {
             try
             {
-                return projectItem?.Document;
+                if (projectItem?.IsOpen != true)
+                    return null;
+
+                projectItem.Open();
+                return projectItem.Document;
             }
             catch
             {

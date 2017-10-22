@@ -37,7 +37,7 @@
         [NotNull]
         private readonly Regex _duplicateKeyExpression = new Regex(@"_Duplicate\[\d+\]$");
         [NotNull]
-        private IDictionary<CultureKey, ResourceLanguage> _languages;
+        private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
 
         // the key actually stored in the file, identical to Key if no error occurred.
         private string _storedKey;
@@ -81,12 +81,6 @@
             CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
 
             IsItemInvariant = new ResourceTableValues<bool>(_languages, lang => GetIsInvariant(lang.CultureKey), (lang, value) => SetIsInvariant(lang.CultureKey, value));
-
-            Contract.Assume(languages.Any());
-            var neutralLanguage = languages.First().Value;
-            Contract.Assume(neutralLanguage != null);
-
-            NeutralLanguage = neutralLanguage;
         }
 
         private void ResetTableValues()
@@ -110,28 +104,11 @@
             IsItemInvariant = new ResourceTableValues<bool>(_languages, lang => GetIsInvariant(lang.CultureKey), (lang, value) => SetIsInvariant(lang.CultureKey, value));
         }
 
-        internal void Update(int index, [NotNull] IDictionary<CultureKey, ResourceLanguage> languages)
+        internal void Update(int index)
         {
-            Contract.Requires(languages != null);
-            Contract.Requires(languages.Any());
-
-            var oldComment = Comment;
-
             UpdateIndex(index);
 
-            _languages = languages;
-
-            var neutralLanguage = languages.First().Value;
-            Contract.Assume(neutralLanguage != null);
-            NeutralLanguage = neutralLanguage;
-
             ResetTableValues();
-
-            // Preserve comments in WinForms designer resources, the designer always removes them.
-            if (!string.IsNullOrEmpty(oldComment) && Container.IsWinFormsDesignerResource && string.IsNullOrEmpty(Comment))
-            {
-                Comment = oldComment;
-            }
 
             Refresh();
         }
@@ -184,7 +161,8 @@
         }
 
         [NotNull]
-        public ResourceLanguage NeutralLanguage { get; private set; }
+        // ReSharper disable once AssignNullToNotNullAttribute
+        public ResourceLanguage NeutralLanguage => _languages.First().Value;
 
         /// <summary>
         /// Gets or sets the comment of the neutral language.
