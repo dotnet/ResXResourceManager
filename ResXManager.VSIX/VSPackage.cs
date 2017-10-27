@@ -512,8 +512,9 @@
 
             var neutralProjectFile = (DteProjectFile)entity.NeutralProjectFile;
 
-            // VS will run the custom tool on the project item only. Run the custom tool on any of the descendants, too.
-            var projectItems = neutralProjectFile?.ProjectItems.SelectMany(projectItem => projectItem.Descendants());
+            // VS will run the custom tool on the project item only if the document is open => Run the custom tool on any of the descendants, too.
+            // VS will not run the custom tool if just the file is saved in background, and no document is open => Run the custom tool on all descendants and self.
+            var projectItems = neutralProjectFile?.ProjectItems.SelectMany(projectItem => projectItem.GetIsOpen() ? projectItem.Descendants() : projectItem.DescendantsAndSelf());
 
             _customToolRunner.Enqueue(projectItems);
         }

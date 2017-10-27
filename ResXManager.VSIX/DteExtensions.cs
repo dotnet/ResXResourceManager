@@ -51,6 +51,20 @@
             }
         }
 
+        public static bool GetIsOpen([NotNull] this EnvDTE.ProjectItem projectItem)
+        {
+            Contract.Requires(projectItem != null);
+
+            try
+            {
+                return projectItem.IsOpen;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         [NotNull]
         public static ICollection<VSITEMSELECTION> GetSelectedProjectItems([NotNull] this IVsMonitorSelection monitorSelection)
         {
