@@ -1,4 +1,9 @@
-﻿1.8
+﻿1.9
+- Fix #51: Designer files are not created after modification of resources.
+- Fix target culture selection in translation view.
+- Fix: preserve comments in WinForms designer resources
+
+1.8
 - Fix #44: avoid reporting errors when items are not available
 - Fix #48: extend default list of file extensions for web projects
 - Fix #46: Make languages scroll vertically if panel size exceeds container size
