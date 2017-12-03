@@ -154,18 +154,6 @@
         {
             Contract.Requires(url != null);
 
-            var webBrowsingService = (IVsWebBrowsingService)GetService(typeof(SVsWebBrowsingService));
-            if (webBrowsingService != null)
-            {
-                var hr = webBrowsingService.Navigate(url, (uint)__VSWBNAVIGATEFLAGS.VSNWB_WebURLOnly, out var pFrame);
-                if (ErrorHandler.Succeeded(hr) && (pFrame != null))
-                {
-                    hr = pFrame.Show();
-                    if (ErrorHandler.Succeeded(hr))
-                        return;
-                }
-            }
-
             Process.Start(url);
         }
 
