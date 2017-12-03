@@ -121,7 +121,7 @@
             }
         }
 
-        private void Navigate_Click([CanBeNull] object sender, [NotNull] RoutedEventArgs e)
+        private static void Navigate_Click([CanBeNull] object sender, [NotNull] RoutedEventArgs e)
         {
             string url;
 
@@ -150,7 +150,7 @@
         }
 
         [Localizable(false)]
-        private void CreateWebBrowser([NotNull] string url)
+        private static void CreateWebBrowser([NotNull] string url)
         {
             Contract.Requires(url != null);
 
