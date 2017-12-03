@@ -108,6 +108,9 @@
         [NotNull]
         private ITracer Tracer => CompositionHost.GetExportedValue<ITracer>();
 
+        [NotNull]
+        private PerformanceTracer PerformanceTracer => CompositionHost.GetExportedValue<PerformanceTracer>();
+
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
@@ -123,8 +126,7 @@
             ConnectEvents();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
-            var mcs = GetService(typeof(IMenuCommandService)) as IMenuCommandService;
-            if (null == mcs)
+            if (!(GetService(typeof(IMenuCommandService)) is IMenuCommandService mcs))
                 return;
 
             // Create the command for the menu item.
@@ -334,8 +336,7 @@
 
         private void SolutionExplorerContextMenuCommand_BeforeQueryStatus([CanBeNull] object sender, [CanBeNull] EventArgs e)
         {
-            var menuCommand = sender as OleMenuCommand;
-            if (menuCommand == null)
+            if (!(sender is OleMenuCommand menuCommand))
                 return;
 
             menuCommand.Text = Resources.OpenInResXManager;
@@ -422,8 +423,7 @@
 
         private void TextEditorContextMenuCommand_BeforeQueryStatus([CanBeNull] object sender, [CanBeNull] EventArgs e)
         {
-            var menuCommand = sender as OleMenuCommand;
-            if (menuCommand == null)
+            if (!(sender is OleMenuCommand menuCommand))
                 return;
 
             using (CompositionHost.GetExportedValue<PerformanceTracer>().Start("Can move to resource"))
@@ -435,75 +435,80 @@
 
         private void Solution_Opened()
         {
-            Tracer.WriteLine("DTE event: Solution opened");
+            using (PerformanceTracer.Start("DTE event: Solution opened"))
+            {
+                ReloadSolution();
 
-            ReloadSolution();
+                var resourceManager = CompositionHost.GetExportedValue<ResourceManager>();
 
-            var resourceManager = CompositionHost.GetExportedValue<ResourceManager>();
-
-            resourceManager.ProjectFileSaved -= ResourceManager_ProjectFileSaved;
-            resourceManager.ProjectFileSaved += ResourceManager_ProjectFileSaved;
+                resourceManager.ProjectFileSaved -= ResourceManager_ProjectFileSaved;
+                resourceManager.ProjectFileSaved += ResourceManager_ProjectFileSaved;
+            }
         }
 
         private void Solution_AfterClosing()
         {
-            Tracer.WriteLine("DTE event: Solution closed");
-
-            ReloadSolution();
+            using (PerformanceTracer.Start("DTE event: Solution closed"))
+            {
+                ReloadSolution();
+            }
         }
 
         private void Solution_ContentChanged([CanBeNull] object item)
         {
-            Tracer.WriteLine("DTE event: Solution content changed");
+            using (PerformanceTracer.Start("DTE event: Solution content changed"))
+            {
+                CompositionHost.GetExportedValue<ISourceFilesProvider>().Invalidate();
 
-            CompositionHost.GetExportedValue<ISourceFilesProvider>().Invalidate();
-
-            ReloadSolution();
+                ReloadSolution();
+            }
         }
 
         private void DocumentEvents_DocumentOpened([CanBeNull] EnvDTE.Document document)
         {
-            Tracer.WriteLine("DTE event: Document opened");
+            using (PerformanceTracer.Start("DTE event: Document opened"))
+            {
+                if (!AffectsResourceFile(document))
+                    return;
 
-            if (!AffectsResourceFile(document))
-                return;
-
-            ReloadSolution();
+                ReloadSolution();
+            }
         }
 
         private void DocumentEvents_DocumentSaved([NotNull] EnvDTE.Document document)
         {
             Contract.Requires(document != null);
 
-            Tracer.WriteLine("DTE event: Document saved");
+            using (PerformanceTracer.Start("DTE event: Document saved"))
+            {
+                if (!AffectsResourceFile(document))
+                    return;
 
-            if (!AffectsResourceFile(document))
-                return;
+                var resourceManager = CompositionHost.GetExportedValue<ResourceManager>();
+                if (resourceManager.IsSaving)
+                    return;
 
-            var resourceManager = CompositionHost.GetExportedValue<ResourceManager>();
-            if (resourceManager.IsSaving)
-                return;
+                // Run custom tool (usually attached to neutral language) even if a localized language changes,
+                // e.g. if custom tool is a text template, we might want not only to generate the designer file but also
+                // extract some localization information.
+                // => find the resource entity that contains the document and run the custom tool on the neutral project file.
 
-            // Run custom tool (usually attached to neutral language) even if a localized language changes,
-            // e.g. if custom tool is a text template, we might want not only to generate the designer file but also 
-            // extract some localization information.
-            // => find the resource entity that contains the document and run the custom tool on the neutral project file.
+                // ReSharper disable once PossibleNullReferenceException
+                bool Predicate(ResourceEntity e) => e.Languages.Select(lang => lang.ProjectFile)
+                    .OfType<DteProjectFile>()
+                    .Any(projectFile => projectFile.ProjectItems.Any(p => p.Document == document));
 
-            // ReSharper disable once PossibleNullReferenceException
-            bool Predicate(ResourceEntity e) => e.Languages.Select(lang => lang.ProjectFile)
-                .OfType<DteProjectFile>()
-                .Any(projectFile => projectFile.ProjectItems.Any(p => p.Document == document));
+                var entity = resourceManager.ResourceEntities.FirstOrDefault(Predicate);
 
-            var entity = resourceManager.ResourceEntities.FirstOrDefault(Predicate);
+                var neutralProjectFile = (DteProjectFile)entity?.NeutralProjectFile;
 
-            var neutralProjectFile = (DteProjectFile)entity?.NeutralProjectFile;
+                // VS will run the custom tool on the project item only. Run the custom tool on any of the descendants, too.
+                var projectItems = neutralProjectFile?.ProjectItems.SelectMany(projectItem => projectItem.Descendants());
 
-            // VS will run the custom tool on the project item only. Run the custom tool on any of the descendants, too.
-            var projectItems = neutralProjectFile?.ProjectItems.SelectMany(projectItem => projectItem.Descendants());
+                _customToolRunner.Enqueue(projectItems);
 
-            _customToolRunner.Enqueue(projectItems);
-
-            ReloadSolution();
+                ReloadSolution();
+            }
         }
 
         private void ResourceManager_ProjectFileSaved([NotNull] object sender, [NotNull] ProjectFileEventArgs e)
