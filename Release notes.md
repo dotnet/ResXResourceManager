@@ -1,4 +1,8 @@
-﻿1.9
+﻿1.10
+- Fix #57: Don't use the outdated VS internal browser to show web pages
+- Fix #58: Only log solution events if performance tracing is on
+
+1.9
 - Fix #51: Designer files are not created after modification of resources.
 - Fix target culture selection in translation view.
 - Fix: preserve comments in WinForms designer resources
