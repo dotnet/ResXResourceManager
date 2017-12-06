@@ -7,7 +7,7 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
-
+    using System.Text;
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Spreadsheet;
@@ -292,18 +292,21 @@
             Contract.Requires(sheetData != null);
             Contract.Requires(rowData != null);
 
-            return sheetData.AppendItem(rowData.Aggregate(new Row(), (seed, item) => seed.AppendItem(CreateCell(item))));
+            int row = sheetData.ChildElements.OfType<Row>().Count() + 1;
+            int column = 1;
+            return sheetData.AppendItem(rowData.Aggregate(new Row(), (seed, item) => seed.AppendItem(CreateCell(item, row, column++))));
         }
 
         [NotNull]
         [ItemNotNull]
-        private static Cell CreateCell([CanBeNull] string text)
+        private static Cell CreateCell([CanBeNull] string text, int row, int column)
         {
             Contract.Ensures(Contract.Result<Cell>() != null);
 
             return new Cell
             {
                 DataType = CellValues.InlineString,
+                CellReference = CreateCellReference(row, column),
                 InlineString = new InlineString
                 {
                     Text = new Text(text ?? string.Empty)
@@ -312,6 +315,28 @@
                     }
                 }
             };
+        }
+
+        private static string CreateCellReference(int row, int column)
+        {
+            return GetExcelColumnName(column) + row;
+        }
+
+        // From: https://stackoverflow.com/questions/181596/how-to-convert-a-column-number-eg-127-into-an-excel-column-eg-aa
+        private static string GetExcelColumnName(int columnNumber)
+        {
+            int dividend = columnNumber;
+            string columnName = String.Empty;
+            int modulo;
+
+            while (dividend > 0)
+            {
+                modulo = (dividend - 1) % 26;
+                columnName = Convert.ToChar(65 + modulo).ToString() + columnName;
+                dividend = (int)((dividend - modulo) / 26);
+            }
+
+            return columnName;
         }
 
         [ItemNotNull]
