@@ -292,8 +292,8 @@
             Contract.Requires(sheetData != null);
             Contract.Requires(rowData != null);
 
-            int row = sheetData.ChildElements.OfType<Row>().Count() + 1;
-            int column = 1;
+            var row = (sheetData.ChildElements?.OfType<Row>()?.Count() ?? 0) + 1;
+            var column = 1;
             return sheetData.AppendItem(rowData.Aggregate(new Row(), (seed, item) => seed.AppendItem(CreateCell(item, row, column++))));
         }
 
@@ -317,23 +317,24 @@
             };
         }
 
+        [NotNull]
         private static string CreateCellReference(int row, int column)
         {
-            return GetExcelColumnName(column) + row;
+            return GetExcelColumnName(column) + row.ToString(CultureInfo.InvariantCulture);
         }
 
         // From: https://stackoverflow.com/questions/181596/how-to-convert-a-column-number-eg-127-into-an-excel-column-eg-aa
+        [NotNull]
         private static string GetExcelColumnName(int columnNumber)
         {
-            int dividend = columnNumber;
-            string columnName = String.Empty;
-            int modulo;
+            var dividend = columnNumber;
+            var columnName = string.Empty;
 
             while (dividend > 0)
             {
-                modulo = (dividend - 1) % 26;
-                columnName = Convert.ToChar(65 + modulo).ToString() + columnName;
-                dividend = (int)((dividend - modulo) / 26);
+                var modulo = (dividend - 1) % 26;
+                columnName = Convert.ToChar(65 + modulo) + columnName;
+                dividend = (dividend - modulo) / 26;
             }
 
             return columnName;
