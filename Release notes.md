@@ -1,4 +1,7 @@
-﻿1.10
+﻿1.11
+- add CellReference to make ClosedXML and EPPlus excel libraries happy
+
+1.10
 - Fix #57: Don't use the outdated VS internal browser to show web pages
 - Fix #58: Only log solution events if performance tracing is on
 
