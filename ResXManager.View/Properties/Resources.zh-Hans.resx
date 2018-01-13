@@ -222,10 +222,10 @@
     <value>卸载快照</value>
   </data>
   <data name="TranslatorConfiguration_SaveCredentials" xml:space="preserve">
-    <value>保存凭据（凭据将以本地配置文件中的明文保存）</value>
+    <value>保存凭据（凭据以明文方式存储在本地配置文件中）</value>
   </data>
   <data name="TranslationsPrefixHeader" xml:space="preserve">
-    <value>Prefix translations with </value>
+    <value>为翻译加入前缀:</value>
   </data>
   <data name="Translations_Targets" xml:space="preserve">
     <value>目标：</value>
