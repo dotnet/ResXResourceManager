@@ -168,10 +168,6 @@
 
         private class CodeMatch
         {
-            [ItemNotNull]
-            [CanBeNull]
-            private readonly IList<string> _segments;
-
             [ContractVerification(false)] // too many assumptions would be needed...
             public CodeMatch([NotNull] string line, [NotNull] string key, [CanBeNull] Regex regex, StringComparison stringComparison, [CanBeNull] string singleLineComment)
             {
@@ -190,7 +186,7 @@
 
                     var length = key.Length;
 
-                    _segments = new[] { line.Substring(0, keyIndex), line.Substring(keyIndex, length), line.Substring(keyIndex + length) };
+                    Segments = new[] { line.Substring(0, keyIndex), line.Substring(keyIndex, length), line.Substring(keyIndex + length) };
                 }
                 else
                 {
@@ -207,22 +203,22 @@
 
                         keyIndexes.Add(keyIndex);
 
-                        _segments = new[] { line.Substring(0, keyIndex), line.Substring(keyIndex, length), line.Substring(keyIndex + length) };
+                        Segments = new[] { line.Substring(0, keyIndex), line.Substring(keyIndex, length), line.Substring(keyIndex + length) };
                     }
                     else
                     {
-                        _segments = new List<string>();
+                        Segments = new List<string>();
                         var keyIndex = 0;
                         foreach (var group in match.Groups.Cast<Group>().Skip(1).Where(group => group?.Success == true))
                         {
-                            _segments.Add(line.Substring(keyIndex, group.Index - keyIndex));
+                            Segments.Add(line.Substring(keyIndex, group.Index - keyIndex));
                             keyIndex = group.Index;
                             keyIndexes.Add(keyIndex);
-                            _segments.Add(line.Substring(keyIndex, group.Length));
+                            Segments.Add(line.Substring(keyIndex, group.Length));
                             keyIndex += group.Length;
                         }
 
-                        _segments.Add(line.Substring(keyIndex));
+                        Segments.Add(line.Substring(keyIndex));
                     }
                 }
 
@@ -238,25 +234,8 @@
 
             public bool Success { get; }
 
-            [ItemNotNull]
-            [CanBeNull]
-            public IList<string> Segments
-            {
-                get
-                {
-                    Contract.Ensures(!Success || (Contract.Result<IList<string>>() != null));
-
-                    return _segments;
-                }
-            }
-
-            [ContractInvariantMethod]
-            [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-            [Conditional("CONTRACTS_FULL")]
-            private void ObjectInvariant()
-            {
-                Contract.Invariant(!Success || (_segments != null));
-            }
+            [NotNull, ItemNotNull]
+            public IList<string> Segments { get; } = new string[0];
         }
 
         private class FileInfo
@@ -352,9 +331,7 @@
                                 if (!match.Success)
                                     continue;
 
-                                var segemnts = match.Segments;
-
-                                references.Add(new CodeReference(_projectFile, lineNumber, segemnts));
+                                references.Add(new CodeReference(_projectFile, lineNumber, match.Segments));
                                 break;
                             }
                             catch (Exception ex) // Should not happen, but was reported by someone.
@@ -386,14 +363,14 @@
 
     public class CodeReference
     {
-        internal CodeReference([NotNull] ProjectFile projectFile, int lineNumber, [NotNull][ItemNotNull] IList<string> lineSegemnts)
+        internal CodeReference([NotNull] ProjectFile projectFile, int lineNumber, [NotNull][ItemNotNull] IList<string> lineSegments)
         {
             Contract.Requires(projectFile != null);
-            Contract.Requires(lineSegemnts != null);
+            Contract.Requires(lineSegments != null);
 
             ProjectFile = projectFile;
             LineNumber = lineNumber;
-            LineSegments = lineSegemnts;
+            LineSegments = lineSegments;
         }
 
         public int LineNumber { get; private set; }
