@@ -17,7 +17,7 @@
     using TomsToolbox.Wpf;
 
     [Export]
-    internal class AddNewKeyCommand : DelegateCommand
+    internal class AddNewKeyCommand : DelegateCommand<DependencyObject>
     {
         [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
@@ -33,10 +33,10 @@
             _resourceViewModel = resourceViewModel;
             _exportProvider = exportProvider;
 
-            ExecuteCallback = Execute;
+            ExecuteCallback = InternalExecute;
         }
 
-        private void Execute()
+        private void InternalExecute(DependencyObject parameter)
         {
             if (_resourceViewModel.SelectedEntities.Count() != 1)
             {
@@ -59,15 +59,18 @@
             var application = Application.Current;
             Contract.Assume(application != null);
 
+            var owner = parameter != null ? Window.GetWindow(parameter) : application.MainWindow;
+
             var inputBox = new InputBox(_exportProvider)
             {
                 Title = Resources.Title,
                 Prompt = Resources.NewKeyPrompt,
-                Owner = application.MainWindow,
+                Owner = owner,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
 
             inputBox.TextChanged += (_, args) =>
+                // ReSharper disable once PossibleNullReferenceException
                 inputBox.IsInputValid = !string.IsNullOrWhiteSpace(args.Text) && !resourceFile.Entries.Any(entry => entry.Key.Equals(args.Text, StringComparison.OrdinalIgnoreCase));
 
             if (inputBox.ShowDialog() != true)

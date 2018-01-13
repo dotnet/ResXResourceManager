@@ -41,6 +41,7 @@ namespace tomenglertde.ResXManager.View.Tools
             var textBoxStyle = new Style(typeof(TextBox), column.EditingElementStyle);
             var setters = textBoxStyle.Setters;
 
+            // ReSharper disable AssignNullToNotNullAttribute
             setters.Add(new EventSetter(UIElement.PreviewKeyDownEvent, (KeyEventHandler)EditingElement_PreviewKeyDown));
             setters.Add(new Setter(TextBoxBase.AcceptsReturnProperty, true));
 
@@ -48,6 +49,7 @@ namespace tomenglertde.ResXManager.View.Tools
             setters.Add(new Setter(FrameworkElement.LanguageProperty, languageBinding));
 
             setters.Add(new Setter(FrameworkElement.FlowDirectionProperty, flowDirectionBinding));
+            // ReSharper restore AssignNullToNotNullAttribute
 
             textBoxStyle.Seal();
 
@@ -61,8 +63,10 @@ namespace tomenglertde.ResXManager.View.Tools
             var elementStyle = new Style(typeof(TextBlock), column.ElementStyle);
             var setters = elementStyle.Setters;
 
+            // ReSharper disable AssignNullToNotNullAttribute
             setters.Add(new Setter(FrameworkElement.LanguageProperty, languageBinding));
             setters.Add(new Setter(FrameworkElement.FlowDirectionProperty, flowDirectionBinding));
+            // ReSharper restore AssignNullToNotNullAttribute
 
             elementStyle.Seal();
             column.ElementStyle = elementStyle;
@@ -92,6 +96,7 @@ namespace tomenglertde.ResXManager.View.Tools
                 if (parent == null)
                     return;
 
+                // ReSharper disable once AssignNullToNotNullAttribute
                 var args = new KeyEventArgs(e.KeyboardDevice, e.InputSource, e.Timestamp, Key.Return)
                 {
                     RoutedEvent = UIElement.KeyDownEvent
@@ -101,7 +106,7 @@ namespace tomenglertde.ResXManager.View.Tools
             }
         }
 
-        public static bool IsKeyDown(this Key key)
+        private static bool IsKeyDown(this Key key)
         {
             return (Keyboard.GetKeyStates(key) & KeyStates.Down) != 0;
         }
@@ -113,8 +118,7 @@ namespace tomenglertde.ResXManager.View.Tools
             if (col?.ColumnType != ColumnType.Language)
                 return false;
 
-            var item = info.Item as ResourceTableEntry;
-            if (item == null)
+            if (!(info.Item is ResourceTableEntry item))
                 return false;
 
             if (item.IsItemInvariant.GetValue(col.CultureKey))

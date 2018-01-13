@@ -80,8 +80,8 @@
   </UserControl.Resources>
 
   <UserControl.InputBindings>
-    <KeyBinding Key="N" Modifiers="Control" Command="{toms:Import tools:AddNewKeyCommand}" />
-    <KeyBinding Key="Insert" Modifiers="Shift" Command="{toms:Import tools:AddNewKeyCommand}" />
+    <KeyBinding Key="N" Modifiers="Control" Command="{toms:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}"/>
+    <KeyBinding Key="Insert" Modifiers="Shift" Command="{toms:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}"/>
   </UserControl.InputBindings>
 
   <Grid FocusManager.FocusedElement="{Binding ElementName=DataGrid}">
@@ -270,7 +270,7 @@
           </Button>
           <Button ToolTip="{x:Static properties:Resources.AddKeyToolTip}"
                   Style="{StaticResource ToolbarCommandButtonStyle}"
-                  Command="{toms:Import tools:AddNewKeyCommand}">
+                  Command="{toms:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}">
             <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/add.png" />
           </Button>
           <Separator />
