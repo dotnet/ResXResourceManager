@@ -1133,6 +1133,17 @@ namespace tomenglertde.ResXManager.View.Properties {
                 return ResourceManager.GetString("UnloadSnapshot", resourceCulture) ?? string.Empty;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Wrap long lines.
+        /// </summary>
+        [NotNull]
+        public static string WrapLongLinesToolTip {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("WrapLongLinesToolTip", resourceCulture) ?? string.Empty;
+            }
+        }
     }
 
     /// <summary>
@@ -1532,6 +1543,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Unload Snapshot.
         /// </summary>
         UnloadSnapshot,
+        /// <summary>
+        ///   Looks up a localized string similar to Wrap long lines.
+        /// </summary>
+        WrapLongLinesToolTip,
     }
 
     /// <summary>

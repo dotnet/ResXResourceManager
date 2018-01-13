@@ -247,6 +247,10 @@
                         IsChecked="{Binding IsCellSelectionEnabled, Mode=TwoWay, Source={x:Static properties:Settings.Default}}">
             <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/cellSelection.png" />
           </ToggleButton>
+          <ToggleButton ToolTip="{x:Static properties:Resources.WrapLongLinesToolTip}"
+                        IsChecked="{Binding IsWrapLinesEnabled, Mode=TwoWay, Source={x:Static properties:Settings.Default}}">
+            <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/wrap.png" />
+          </ToggleButton>
           <Separator />
           <Button ToolTip="{x:Static properties:Resources.DeleteToolTip}"
                   Style="{StaticResource ToolbarCommandButtonStyle}"

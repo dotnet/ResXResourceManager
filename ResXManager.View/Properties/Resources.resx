@@ -413,4 +413,7 @@ Use e.g. ".* - (?!Migrations)" to hide EF migrations.</value>
   <data name="FileExclusionFilters_Header" xml:space="preserve">
     <value>File exclusion filter</value>
   </data>
+  <data name="WrapLongLinesToolTip" xml:space="preserve">
+    <value>Wrap long lines</value>
+  </data>
 </root>

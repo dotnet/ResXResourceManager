@@ -615,49 +615,13 @@
     <EmbeddedResource Include="Properties\Resources.zh-Hans.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\refresh.png" />
-    <Resource Include="Assets\copy.png" />
-    <Resource Include="Assets\paste.png" />
-    <Resource Include="Assets\add.png" />
-    <Resource Include="Assets\flat.png" />
-    <Resource Include="Assets\grouped.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\columns.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\addColumns.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\errorFilter.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\like.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\btn_donate_SM.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\excel.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\cut.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\delete.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\references.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\snapshot.png" />
+    <Resource Include="Assets\*.png" />
+    <Resource Include="Assets\*.gif" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\cellSelection.png" />
-    <Resource Include="Assets\save.png" />
     <None Include="FodyWeavers.xml" />
     <Resource Include="..\16x16.png">
       <Link>16x16.png</Link>

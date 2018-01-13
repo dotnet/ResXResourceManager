@@ -305,9 +305,27 @@
 
             columns.AddLanguageColumn(commentColumn, languageBinding, flowDirectionBinding);
 
-            var textCellStyle = new Style(typeof(DataGridCell), cellStyle);
-            textCellStyle.Setters.Add(new Setter(CellAnnotationsProperty, new Binding(@"ValueAnnotations[" + key + @"]")));
-            textCellStyle.Setters.Add(new Setter(IsCellInvariantProperty, new Binding(@"IsItemInvariant[" + key + @"]")));
+            var textCellStyle = new Style(typeof(DataGridCell), cellStyle)
+            {
+                Setters =
+                {
+                    new Setter(CellAnnotationsProperty, new Binding(@"ValueAnnotations[" + key + @"]")),
+                    new Setter(IsCellInvariantProperty, new Binding(@"IsItemInvariant[" + key + @"]")),
+                }
+            };
+
+            var textElementStyle = new Style(typeof(TextBlock))
+            {
+                Triggers =
+                {
+                    new DataTrigger
+                    {
+                        Binding = new Binding(nameof(Settings.IsWrapLinesEnabled)) { Source = Settings.Default },
+                        Value = true,
+                        Setters = { new Setter(TextBlock.TextWrappingProperty, TextWrapping.WrapWithOverflow ) }
+                    }
+                }
+            };
 
             var column = new DataGridTextColumn
             {
@@ -315,6 +333,7 @@
                 Binding = new Binding(@"Values[" + key + @"]"),
                 MinWidth = 120,
                 CellStyle = textCellStyle,
+                ElementStyle = textElementStyle,
                 Width = new DataGridLength(2, DataGridLengthUnitType.Star),
                 Visibility = HiddenLanguageColumns.Contains(key, StringComparer.OrdinalIgnoreCase) ? Visibility.Hidden : Visibility.Visible
             };
