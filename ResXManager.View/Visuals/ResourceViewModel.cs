@@ -182,6 +182,20 @@
             SelectedTableEntries.Add(entry);
         }
 
+        public void SelectEntry([NotNull] ResourceTableEntry entry)
+        {
+            if (!ResourceManager.TableEntries.Contains(entry))
+                return;
+
+            var entity = entry.Container;
+
+            if (!SelectedEntities.Contains(entity))
+                SelectedEntities.Add(entity);
+
+            SelectedTableEntries.Clear();
+            SelectedTableEntries.Add(entry);
+        }
+
         [NotNull]
         // ReSharper disable once AssignNullToNotNullAttribute
         private static Settings Settings => Settings.Default;

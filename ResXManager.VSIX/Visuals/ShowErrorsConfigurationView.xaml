@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="tomenglertde.ResXManager.VSIX.Visuals.ShowErrorsConfigurationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
+             xmlns:local="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.11.0"
+             xmlns:toms="urn:TomsToolbox"
+             xmlns:properties="clr-namespace:tomenglertde.ResXManager.VSIX"
+             d:DataContext="{d:DesignInstance local:ShowErrorsConfigurationViewModel}">
+  <StackPanel>
+    <CheckBox Content="{x:Static properties:Resources.ShowErrorsConfiguration_SwitchHeader}" IsChecked="{Binding Configuration.ShowErrorsInErrorList}" />
+    <Decorator Height="10" />
+    <DockPanel>
+      <TextBlock Text="{x:Static properties:Resources.ShowErrorsConfiguration_ShowAs}" DockPanel.Dock="Left" VerticalAlignment="Center" />
+      <Decorator Width="8" DockPanel.Dock="Left" />
+      <ComboBox ItemsSource="{Binding Source={x:Type shell:TaskErrorCategory}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
+                SelectedItem="{Binding Configuration.TaskErrorCategory}" 
+                Width="200" HorizontalAlignment="Left"/>
+    </DockPanel>
+  </StackPanel>
+</UserControl>

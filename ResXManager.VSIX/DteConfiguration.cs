@@ -9,6 +9,8 @@
 
     using JetBrains.Annotations;
 
+    using Microsoft.VisualStudio.Shell;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
@@ -34,6 +36,14 @@
         [NotNull, UsedImplicitly]
         [DefaultValue(MoveToResourceConfiguration.Default)]
         public MoveToResourceConfiguration MoveToResources { get; }
+
+        [UsedImplicitly]
+        [DefaultValue(true)]
+        public bool ShowErrorsInErrorList { get; set; }
+
+        [UsedImplicitly]
+        [DefaultValue(TaskErrorCategory.Warning)]
+        public TaskErrorCategory TaskErrorCategory { get; set; }
 
         public override bool IsScopeSupported => true;
 

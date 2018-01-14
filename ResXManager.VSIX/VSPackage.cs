@@ -27,6 +27,7 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Visuals;
+    using tomenglertde.ResXManager.VSIX.Visuals;
 
     using Throttle;
 
@@ -212,6 +213,10 @@
             {
                 dispatcher.BeginInvoke(() => ShowLoaderErrors(_compositionHost, errors));
             }
+            else
+            {
+                dispatcher.BeginInvoke(() => ErrorProvider.Register(_compositionHost.Container));
+            }
         }
 
         [NotNull]
@@ -297,7 +302,7 @@
             }
         }
 
-        private bool ShowToolWindow()
+        internal bool ShowToolWindow()
         {
             try
             {
@@ -402,23 +407,7 @@
             if (!Properties.Settings.Default.MoveToResourceOpenInResXManager)
                 return;
 
-            var dispatcher = Dispatcher.CurrentDispatcher;
-
-            dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
-            {
-                ShowToolWindow();
-
-                var resourceViewModel = CompositionHost.GetExportedValue<ResourceViewModel>();
-
-                dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
-                {
-                    if (!resourceViewModel.SelectedEntities.Contains(entry.Container))
-                        resourceViewModel.SelectedEntities.Add(entry.Container);
-
-                    resourceViewModel.SelectedTableEntries.Clear();
-                    resourceViewModel.SelectedTableEntries.Add(entry);
-                });
-            });
+            CompositionHost.GetExportedValue<VsixShellViewModel>().SelectEntry(entry);
         }
 
         private void TextEditorContextMenuCommand_BeforeQueryStatus([CanBeNull] object sender, [CanBeNull] EventArgs e)

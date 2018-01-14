@@ -369,27 +369,75 @@
             Contract.Requires(language != null);
             Contract.Ensures(Contract.Result<ICollection<string>>() != null);
 
-            var value = Values.GetValue(language.CultureKey);
+            var cultureKey = language.CultureKey;
+
+            var value = Values.GetValue(cultureKey);
 
             return GetStringFormatParameterMismatchAnnotations(language)
                 .Concat(GetSnapshotDifferences(language, value, d => d.Text))
-                .Concat(GetInvariantMismatches(language, value))
+                .Concat(GetInvariantMismatches(cultureKey, value))
                 .ToArray();
         }
 
-        [NotNull, ItemNotNull]
-        private IEnumerable<string> GetInvariantMismatches([NotNull] ResourceLanguage language, [CanBeNull] string value)
+        public bool GetError([NotNull] CultureKey culture, out string errorMessage)
         {
-            Contract.Requires(language != null);
+            Contract.Requires(culture != null);
+
+            errorMessage = null;
+
+            var value = Values.GetValue(culture);
+
+            var isInvariant = IsInvariant || IsItemInvariant.GetValue(culture);
+
+            if (string.IsNullOrEmpty(value))
+            {
+                if (!isInvariant)
+                {
+                    errorMessage = GetErrorPrefix(culture) + Resources.ResourceTableEntry_Error_MissingTranslation;
+                    return true;
+                }
+            }
+            else
+            {
+                if (culture == CultureKey.Neutral)
+                    return false;
+
+                if (isInvariant)
+                {
+                    errorMessage = GetErrorPrefix(culture) + Resources.ResourceTableEntry_Error_InvariantWithValue;
+                    return true;
+                }
+
+                var neutralValue = NeutralLanguage.GetValue(Key);
+                if (string.IsNullOrEmpty(neutralValue))
+                    return false;
+
+                if (HasStringFormatParameterMismatches(neutralValue, value))
+                {
+                    errorMessage = GetErrorPrefix(culture) + Resources.ResourceTableEntry_Error_StringFormatParameterMismatch;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        [NotNull]
+        private string GetErrorPrefix([NotNull] CultureKey culture) => string.Format(CultureInfo.CurrentCulture, "{0}{1}: ", Key, culture);
+
+        [NotNull, ItemNotNull]
+        private IEnumerable<string> GetInvariantMismatches([NotNull] CultureKey culture, [CanBeNull] string value)
+        {
+            Contract.Requires(culture != null);
             Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
 
-            if (language.CultureKey == CultureKey.Neutral)
+            if (culture == CultureKey.Neutral)
                 yield break;
 
-            var isInvariant = IsInvariant || IsItemInvariant.GetValue(language.CultureKey);
+            var isInvariant = IsInvariant || IsItemInvariant.GetValue(culture);
 
             if (isInvariant && !string.IsNullOrEmpty(value))
-                yield return "Item is invariant but contains a value";
+                yield return Resources.ResourceTableEntry_Error_InvariantWithValue;
         }
 
         [NotNull]
@@ -439,7 +487,7 @@
                 yield break;
 
             if (HasStringFormatParameterMismatches(neutralValue, value))
-                yield return Resources.StringFormatParameterMismatchError;
+                yield return Resources.ResourceTableEntry_Error_StringFormatParameterMismatch;
         }
 
         private static bool HasStringFormatParameterMismatches([NotNull][ItemNotNull] params string[] values)

@@ -179,7 +179,7 @@
   <data name="SnapshotAnnotation" xml:space="preserve">
     <value>快照：“{0}”</value>
   </data>
-  <data name="StringFormatParameterMismatchError" xml:space="preserve">
+  <data name="ResourceTableEntry_Error_StringFormatParameterMismatch" xml:space="preserve">
     <value>警告︰ 此项目包含字符串格式参数不匹配！</value>
   </data>
   <data name="NotAllLanguagesAreEditable" xml:space="preserve">

@@ -8,6 +8,7 @@
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows.Input;
+    using System.Windows.Threading;
 
     using JetBrains.Annotations;
 
@@ -27,15 +28,18 @@
         private readonly ResourceManager _resourceManager;
         [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
+        [NotNull]
+        private readonly ShellViewModel _shellViewModel;
 
         [ImportingConstructor]
-        public VsixShellViewModel([NotNull] ResourceManager resourceManager, [NotNull] ResourceViewModel resourceViewModel)
+        public VsixShellViewModel([NotNull] ResourceManager resourceManager, [NotNull] ResourceViewModel resourceViewModel, [NotNull] ShellViewModel shellViewModel)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(resourceViewModel != null);
 
             _resourceManager = resourceManager;
             _resourceViewModel = resourceViewModel;
+            _shellViewModel = shellViewModel;
             _resourceManager.Loaded += (_, __) => SelectedCodeGeneratorsChanged();
 
             resourceViewModel.SelectedEntities.CollectionChanged += (_, __) => SelectedCodeGeneratorsChanged();
@@ -64,6 +68,16 @@
 
                 return CodeGenerator.None;
             }
+        }
+
+        public void SelectEntry([NotNull] ResourceTableEntry entry)
+        {
+            VSPackage.Instance.ShowToolWindow();
+
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
+            {
+                _shellViewModel.SelectEntry(entry);
+            });
         }
 
         [NotNull]

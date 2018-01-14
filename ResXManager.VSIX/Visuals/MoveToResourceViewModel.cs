@@ -27,7 +27,7 @@
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
-    internal class MoveToResourceViewModel : INotifyPropertyChanged, IDataErrorInfo
+    internal sealed class MoveToResourceViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
         [NotNull]
         private readonly string _extension;
@@ -229,7 +229,7 @@
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator, UsedImplicitly]
-        protected virtual void OnPropertyChanged([CallerMemberName][CanBeNull] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName][CanBeNull] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             Update();
