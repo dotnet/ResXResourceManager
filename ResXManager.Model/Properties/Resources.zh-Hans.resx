@@ -139,6 +139,7 @@
   <data name="FileSaveError" xml:space="preserve">
     <value>保存文件“{0}”时出错：
 {1}</value>
+
   </data>
   <data name="ImportColumnMismatchError" xml:space="preserve">
     <value>预期至少三个列。 </value>
@@ -187,5 +188,11 @@
   </data>
   <data name="KeyAlreadyExists" xml:space="preserve">
     <value>名称 {0} 已经存在</value>
+  </data>
+    <data name="ResourceTableEntry_Error_MissingTranslation" xml:space="preserve">
+      <value>缺少翻译</value>
+  </data>
+  <data name="ResourceTableEntry_Error_InvariantWithValue" xml:space="preserve">
+    <value>项目无效但包含值</value>
   </data>
 </root>
