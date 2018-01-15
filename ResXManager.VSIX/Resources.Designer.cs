@@ -390,6 +390,39 @@ namespace tomenglertde.ResXManager.VSIX {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Error reporting.
+        /// </summary>
+        [NotNull]
+        public static string ShowErrorsConfiguration_Header {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ShowErrorsConfiguration_Header", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Show as.
+        /// </summary>
+        [NotNull]
+        public static string ShowErrorsConfiguration_ShowAs {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ShowErrorsConfiguration_ShowAs", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Show messages in error list.
+        /// </summary>
+        [NotNull]
+        public static string ShowErrorsConfiguration_SwitchHeader {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ShowErrorsConfiguration_SwitchHeader", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Show white space and formatting symbols.
         /// </summary>
         [NotNull]
@@ -563,6 +596,18 @@ namespace tomenglertde.ResXManager.VSIX {
         ///   Looks up a localized string similar to Error loading resource files: {0}. &amp;#13;&amp;#....
         /// </summary>
         ResourceLoadingError,
+        /// <summary>
+        ///   Looks up a localized string similar to Error reporting.
+        /// </summary>
+        ShowErrorsConfiguration_Header,
+        /// <summary>
+        ///   Looks up a localized string similar to Show as.
+        /// </summary>
+        ShowErrorsConfiguration_ShowAs,
+        /// <summary>
+        ///   Looks up a localized string similar to Show messages in error list.
+        /// </summary>
+        ShowErrorsConfiguration_SwitchHeader,
         /// <summary>
         ///   Looks up a localized string similar to Show white space and formatting symbols.
         /// </summary>

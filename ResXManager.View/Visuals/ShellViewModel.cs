@@ -18,25 +18,36 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
+    [Export]
     [VisualCompositionExport(RegionId.Shell)]
-    internal class ShellViewModel : ObservableObject
+    public class ShellViewModel : ObservableObject
     {
-        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         [NotNull]
-        private readonly PerformanceTracer _performanceTracer;
+        private readonly ResourceViewModel _resourceViewModel;
 
         [ImportingConstructor]
-        public ShellViewModel([NotNull] ResourceViewModel resourceViewModel, [NotNull] PerformanceTracer performanceTracer)
+        public ShellViewModel([NotNull] ResourceViewModel resourceViewModel)
         {
             Contract.Requires(resourceViewModel != null);
-            Contract.Requires(performanceTracer != null);
 
-            _performanceTracer = performanceTracer;
+            _resourceViewModel = resourceViewModel;
 
             resourceViewModel.SelectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
         }
 
         public bool IsLoading { get; set; }
+
+        public int SelectedTabIndex { get; set; }
+
+        public void SelectEntry([NotNull] ResourceTableEntry entry)
+        {
+            SelectedTabIndex = 0;
+
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
+            {
+                _resourceViewModel.SelectEntry(entry);
+            });
+        }
 
         private void SelectedEntities_CollectionChanged([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
         {
@@ -51,14 +62,6 @@
         private void Update()
         {
             IsLoading = false;
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_performanceTracer != null);
         }
     }
 }

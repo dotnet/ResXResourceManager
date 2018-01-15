@@ -315,6 +315,28 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Item is invariant but contains a value.
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntry_Error_InvariantWithValue {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ResourceTableEntry_Error_InvariantWithValue", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Missing translation.
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntry_Error_MissingTranslation {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ResourceTableEntry_Error_MissingTranslation", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Snapshot: "{0}".
         /// </summary>
         [NotNull]
@@ -329,10 +351,10 @@ namespace tomenglertde.ResXManager.Model.Properties {
         ///   Looks up a localized string similar to Warning: This item contains string format paramete....
         /// </summary>
         [NotNull]
-        public static string StringFormatParameterMismatchError {
+        public static string ResourceTableEntry_Error_StringFormatParameterMismatch {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("StringFormatParameterMismatchError", resourceCulture) ?? string.Empty;
+                return ResourceManager.GetString("ResourceTableEntry_Error_StringFormatParameterMismatch", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -447,13 +469,21 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         NotAllLanguagesAreEditable,
         /// <summary>
+        ///   Looks up a localized string similar to Item is invariant but contains a value.
+        /// </summary>
+        ResourceTableEntry_Error_InvariantWithValue,
+        /// <summary>
+        ///   Looks up a localized string similar to Missing translation.
+        /// </summary>
+        ResourceTableEntry_Error_MissingTranslation,
+        /// <summary>
         ///   Looks up a localized string similar to Snapshot: "{0}".
         /// </summary>
         SnapshotAnnotation,
         /// <summary>
         ///   Looks up a localized string similar to Warning: This item contains string format paramete....
         /// </summary>
-        StringFormatParameterMismatchError,
+        ResourceTableEntry_Error_StringFormatParameterMismatch,
         /// <summary>
         ///   Looks up a localized string similar to ResX Resource Manager.
         /// </summary>

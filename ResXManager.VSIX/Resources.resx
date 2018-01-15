@@ -232,4 +232,13 @@ See output window for details.</value>
 
 {0}</value>
   </data>
+  <data name="ShowErrorsConfiguration_Header" xml:space="preserve">
+    <value>Error reporting</value>
+  </data>
+  <data name="ShowErrorsConfiguration_SwitchHeader" xml:space="preserve">
+    <value>Show messages in error list</value>
+  </data>
+  <data name="ShowErrorsConfiguration_ShowAs" xml:space="preserve">
+    <value>Show as</value>
+  </data>
 </root>

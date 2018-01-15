@@ -185,7 +185,7 @@
   <data name="SnapshotAnnotation" xml:space="preserve">
     <value>Snapshot: "{0}"</value>
   </data>
-  <data name="StringFormatParameterMismatchError" xml:space="preserve">
+  <data name="ResourceTableEntry_Error_StringFormatParameterMismatch" xml:space="preserve">
     <value>Warning: This item contains string format parameter mismatches!</value>
   </data>
   <data name="Title" xml:space="preserve">
@@ -197,5 +197,11 @@
   </data>
   <data name="KeyAlreadyExists" xml:space="preserve">
     <value>This key already exists: {0}</value>
+  </data>
+  <data name="ResourceTableEntry_Error_MissingTranslation" xml:space="preserve">
+    <value>Missing translation</value>
+  </data>
+  <data name="ResourceTableEntry_Error_InvariantWithValue" xml:space="preserve">
+    <value>Item is invariant but contains a value</value>
   </data>
 </root>

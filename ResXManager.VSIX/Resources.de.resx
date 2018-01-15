@@ -201,4 +201,13 @@ Mehr Details finden sich im Ausgabefenster.</value>
 
 {0}</value>
   </data>
+  <data name="ShowErrorsConfiguration_Header" xml:space="preserve">
+    <value>Fehlerausgabe</value>
+  </data>
+  <data name="ShowErrorsConfiguration_SwitchHeader" xml:space="preserve">
+    <value>Meldungen in der Fehlerliste ausgeben</value>
+  </data>
+  <data name="ShowErrorsConfiguration_ShowAs" xml:space="preserve">
+    <value>Anzeigen als</value>
+  </data>
 </root>
