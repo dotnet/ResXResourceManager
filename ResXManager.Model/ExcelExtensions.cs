@@ -415,7 +415,13 @@
                     columnIndex += 1;
                 }
 
-                yield return cell.GetText(sharedStrings);
+                var text = cell.GetText(sharedStrings);
+                // depending on how multi-line text is pasted into Excel, \r\n might be translated into _x000D_\n, 
+                // because Excel internally only use \n as line delimiter.
+                text = text.Replace("_x000D_\n", "\n");
+
+                yield return text;
+
                 columnIndex += 1;
             }
         }
