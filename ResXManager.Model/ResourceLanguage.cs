@@ -67,6 +67,8 @@
         [NotNull]
         private readonly IConfiguration _configuration;
 
+        private bool _hasUncommittedChanges;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceLanguage" /> class.
         /// </summary>
@@ -165,7 +167,16 @@
             }
         }
 
-        public bool HasChanges => _file.HasChanges;
+        public bool HasChanges
+        {
+            get
+            {
+                if (_hasUncommittedChanges)
+                    CommitChanges();
+
+                return _file.HasChanges;
+            }
+        }
 
         public bool IsSaving { get; private set; }
 
@@ -253,9 +264,23 @@
             SetNodeData(key, node => node.Text = value);
         }
 
-        [Throttled(typeof(DispatcherThrottle))]
         private void OnChanged()
         {
+            _hasUncommittedChanges = true;
+
+            DeferredCommitChanges();
+        }
+
+        [Throttled(typeof(DispatcherThrottle))]
+        private void DeferredCommitChanges()
+        {
+            CommitChanges();
+        }
+
+        private void CommitChanges()
+        {
+            _hasUncommittedChanges = false;
+
             _file.Changed(_document, _configuration.SaveFilesImmediatelyUponChange);
 
             Container.Container.OnLanguageChanged(this);
