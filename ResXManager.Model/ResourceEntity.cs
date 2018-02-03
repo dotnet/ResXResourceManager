@@ -46,7 +46,8 @@
             _languages = GetResourceLanguages(files);
             RelativePath = GetRelativePath(files);
             DisplayName = projectName + @" - " + RelativePath + baseName;
-            NeutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
+
+            NeutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey(container.Configuration) == CultureKey.Neutral);
 
             var entriesQuery = _languages.Values
                 .SelectMany(language => language.ResourceKeys)
@@ -68,7 +69,7 @@
             if (!MergeItems(_languages, GetResourceLanguages(files)))
                 return false; // nothing has changed, no need to continue
 
-            var neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey() == CultureKey.Neutral);
+            var neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey(Container.Configuration) == CultureKey.Neutral);
 
             var unmatchedTableEntries = _resourceTableEntries.ToList();
 
@@ -235,7 +236,7 @@
         {
             Contract.Requires(file != null);
 
-            var cultureKey = file.GetCultureKey();
+            var cultureKey = file.GetCultureKey(Container.Configuration);
             var resourceLanguage = new ResourceLanguage(this, cultureKey, file);
 
             _languages.Add(cultureKey, resourceLanguage);
@@ -314,7 +315,7 @@
 
             var languageQuery =
                 from file in files
-                let cultureKey = file.GetCultureKey()
+                let cultureKey = file.GetCultureKey(Container.Configuration)
                 orderby cultureKey
                 select new ResourceLanguage(this, cultureKey, file);
 

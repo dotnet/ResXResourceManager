@@ -275,9 +275,10 @@
             ProjectFileSaved?.Invoke(this, new ProjectFileEventArgs(language, projectFile));
         }
 
-        public static bool IsValidLanguageName([NotNull] string languageName)
+        public static bool IsValidLanguageName(string languageName)
         {
-            Contract.Requires(languageName != null);
+            if (string.IsNullOrEmpty(languageName))
+                return false;
 
             return Array.BinarySearch(_sortedCultureNames, languageName, StringComparer.OrdinalIgnoreCase) >= 0;
         }

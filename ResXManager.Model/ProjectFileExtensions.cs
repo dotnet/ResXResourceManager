@@ -52,7 +52,7 @@
         }
 
         [NotNull]
-        public static CultureKey GetCultureKey([NotNull] this ProjectFile projectFile)
+        public static CultureKey GetCultureKey([NotNull] this ProjectFile projectFile, [NotNull] IConfiguration configuration)
         {
             Contract.Requires(projectFile != null);
             Contract.Ensures(Contract.Result<CultureKey>() != null);
@@ -81,7 +81,9 @@
                 if (!ResourceManager.IsValidLanguageName(cultureName))
                     throw new ArgumentException(@"Invalid file. File name does not conform to the pattern '.\<cultureName>\<basename>.resw'");
 
-                return new CultureKey(cultureName);
+                var culture = cultureName.ToCulture();
+
+                return Equals(configuration.NeutralResourcesLanguage, culture) ? CultureKey.Neutral : new CultureKey(culture);
             }
 
             throw new InvalidOperationException("Unsupported file format: " + extension);
