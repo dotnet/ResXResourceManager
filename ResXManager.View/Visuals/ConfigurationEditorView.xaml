@@ -134,10 +134,13 @@
       <Decorator Height="5" />
 
       <GroupBox Header="{x:Static properties:Resources.Configuration_ExcelExportModeHeader}" Style="{StaticResource GroupStyle}">
-        <ListBox Margin="10" BorderThickness="0" Background="Transparent"
-                 ItemsSource="{Binding Source={x:Type model:ExcelExportMode}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
-                 SelectedItem="{Binding Configuration.ExcelExportMode}"
-                 ItemContainerStyle="{StaticResource EmumSelectorItemContainerStyle}" />
+        <StackPanel Margin="10" KeyboardNavigation.TabNavigation="Local">
+          <CheckBox IsChecked="{Binding Configuration.UseRuntimeAvailableProperties}" Content="{x:Static properties:Resources.UseRuntimeAvailableProperties}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"/>
+          <ListBox BorderThickness="0" Background="Transparent" Margin="10"
+                   ItemsSource="{Binding Source={x:Type model:ExcelExportMode}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
+                   SelectedItem="{Binding Configuration.ExcelExportMode}"
+                   ItemContainerStyle="{StaticResource EmumSelectorItemContainerStyle}" />
+        </StackPanel>
       </GroupBox>
 
       <Decorator Height="5" />

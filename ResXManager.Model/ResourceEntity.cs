@@ -30,6 +30,9 @@
         [NotNull, ItemNotNull]
         private readonly ObservableCollection<ResourceTableEntry> _resourceTableEntries;
 
+        private string _resourceNamespace = null;
+        private readonly ICollection<ProjectFile> _resourceEntityFiles;
+
         internal ResourceEntity([NotNull] ResourceManager container, [NotNull] string projectName, [NotNull] string baseName, [NotNull] string directoryName, [NotNull][ItemNotNull] ICollection<ProjectFile> files)
         {
             Contract.Requires(container != null);
@@ -48,6 +51,12 @@
             DisplayName = projectName + @" - " + RelativePath + baseName;
 
             NeutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey(container.Configuration) == CultureKey.Neutral);
+
+            //Set the AssemblyName of the File
+            AssemblyName = files.FirstOrDefault()?.AssemblyName ?? string.Empty;
+
+            //Set the Namespace of the File
+            _resourceEntityFiles = files;
 
             var entriesQuery = _languages.Values
                 .SelectMany(language => language.ResourceKeys)
@@ -148,6 +157,28 @@
         /// </summary>
         [NotNull]
         public string ProjectName { get; }
+
+        /// <summary>
+        /// AssemblyName -> read from the .csproj-File
+        /// </summary>
+        [NotNull]
+        public string AssemblyName { get; }
+
+        /// <summary>
+        /// Namespace -> partially read from the .csproj-File
+        /// The rest is calculated with the Path from the Project-File to the .resx-File
+        /// </summary>
+        [NotNull]
+        public string Namespace {
+            get
+            {
+                if (_resourceNamespace == null)
+                {
+                    _resourceNamespace = GetNamespace();
+                }
+                return _resourceNamespace;
+            }
+        }
 
         /// <summary>
         /// Gets the base name of the resource entity.
@@ -297,7 +328,7 @@
                 }
             }
         }
-
+        
         internal bool EqualsAll([CanBeNull] string projectName, [CanBeNull] string baseName, [CanBeNull] string directoryName)
         {
             return string.Equals(projectName, ProjectName, StringComparison.OrdinalIgnoreCase)
@@ -395,6 +426,49 @@
             Contract.Invariant(!string.IsNullOrEmpty(DirectoryName));
             Contract.Invariant(DisplayName != null);
             Contract.Invariant(RelativePath != null);
+        }
+
+        private string GetNamespace()
+        {
+            ProjectFile resourceFile = _resourceEntityFiles.First();
+
+            string resourcenamespace;
+            //Get the ProjectFile Directory and make sure that every file seperator is the same
+            Uri projectDirectoryUri = new Uri(DirectoryName);
+
+            //Get the RelativeFilePath to the File and make sure that every file seperator is the same
+            Uri relativeFileUri = new Uri(Path.GetDirectoryName(resourceFile.FilePath) ?? string.Empty);
+
+            //Calculate the difference betweend the relative path and the project path
+            string relativeFilePath = projectDirectoryUri.MakeRelativeUri(relativeFileUri).ToString();
+
+            //Get the index of the first folder seperator and remove the path to this location
+            //With this, overlaps between the RootNamespace and the RelativePath are prevented
+            //All file seperators are replaced with dots
+            int firstFolderEndIdx = relativeFilePath.IndexOf("/", StringComparison.InvariantCultureIgnoreCase);
+            string relativeNamespace = (firstFolderEndIdx == -1 ? string.Empty : relativeFilePath.Substring(firstFolderEndIdx)).Replace("/", ".");
+
+            //Append a leading dot, if there isn't already one
+            relativeNamespace = (relativeNamespace.StartsWith(".", StringComparison.InvariantCultureIgnoreCase)
+                    ? string.Empty
+                    : ".")
+                + relativeNamespace;
+
+            //Get the BaseName of the file and replace all file seperators with dots
+            string fileBaseName = resourceFile.GetBaseName().Replace(@"\", ".");
+
+            //Create the Namespace by joining the RootNamespace, the RelativeNamespace and the FileBase
+            //If the RelativeNamespace is empty -> don't insert a dot between RelativeNamespace and FileBase
+            if (!string.IsNullOrEmpty(fileBaseName) && !string.IsNullOrEmpty(resourceFile.RootNamespace))
+            {
+                resourcenamespace = resourceFile.RootNamespace + relativeNamespace + (relativeNamespace.Equals(".") ? string.Empty : ".") + fileBaseName;
+            }
+            else
+            {
+                resourcenamespace = string.Empty;
+            }
+
+            return resourcenamespace;
         }
     }
 }

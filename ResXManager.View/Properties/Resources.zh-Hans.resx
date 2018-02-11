@@ -405,6 +405,9 @@
     <value>+Ctrl =&gt; Apply star sizes to right columns
 +Shift =&gt; Extend beyond available size</value>
   </data>
+  <data name="UseRuntimeAvailableProperties" xml:space="preserve">
+    <value>在Excel導出上使用程序集名稱而不是項目名稱和命名空間，而不是文件名稱</value>
+  </data>
   <data name="WrapLongLinesToolTip" xml:space="preserve">
     <value>自动换行</value>
   </data>
