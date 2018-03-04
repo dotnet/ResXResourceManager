@@ -353,46 +353,41 @@
             return stringTable?.OfType<SharedStringItem>().ToArray();
         }
 
-        [NotNull]
+        [CanBeNull]
         private static string GetText([NotNull][ItemNotNull] this CellType cell, [ItemNotNull][CanBeNull] IList<SharedStringItem> sharedStrings)
         {
             Contract.Requires(cell != null);
             Contract.Ensures(Contract.Result<string>() != null);
 
             var cellValue = cell.CellValue;
-
             var dataType = cell.DataType;
 
-            if (cellValue != null)
-            {
-                var text = cellValue.Text ?? string.Empty;
+            if (cellValue == null)
+                return GetTextFromTextElement(cell);
 
-                if ((dataType != null) && (dataType == CellValues.SharedString))
-                {
-                    if (sharedStrings != null)
-                    {
-                        if (int.TryParse(text, out var index) && (index >= 0) && (index < sharedStrings.Count))
-                        {
-                            var stringItem = sharedStrings[index];
-                            var descendants = stringItem?.Descendants<OpenXmlLeafTextElement>();
-                            if (descendants != null)
-                            {
-                                text = string.Concat(descendants.Select(element => element.Text));
-                            }
-                        }
-                    }
-                }
+            var text = cellValue.Text;
 
-                return text;
-            }
-            else
+            if ((dataType != null) && (dataType == CellValues.SharedString) && (sharedStrings != null) && (int.TryParse(text, out var index) && (index >= 0) && (index < sharedStrings.Count)))
             {
-                var descendants = cell.Descendants<OpenXmlLeafTextElement>();
-                Contract.Assume(descendants != null);
-                var content = descendants.Select(element => element.Text);
-                var text = string.Concat(content);
-                return text;
+                var stringItem = sharedStrings[index];
+
+                return GetTextFromTextElement(stringItem) ?? text;
             }
+
+            return text;
+
+        }
+
+        private static string GetTextFromTextElement([NotNull] OpenXmlElement cell)
+        {
+            // ReSharper disable AssignNullToNotNullAttribute
+            // ReSharper disable PossibleNullReferenceException
+            return cell.ChildElements
+                .OfType<OpenXmlLeafTextElement>()
+                .Select(item => item.Text)
+                .FirstOrDefault();
+            // ReSharper restore AssignNullToNotNullAttribute
+            // ReSharper restore PossibleNullReferenceException
         }
 
         [NotNull]
@@ -415,7 +410,7 @@
                     columnIndex += 1;
                 }
 
-                var text = cell.GetText(sharedStrings);
+                var text = cell.GetText(sharedStrings) ?? string.Empty;
                 // depending on how multi-line text is pasted into Excel, \r\n might be translated into _x000D_\n, 
                 // because Excel internally only use \n as line delimiter.
                 text = text.Replace("_x000D_\n", "\n");
