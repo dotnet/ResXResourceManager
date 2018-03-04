@@ -65,6 +65,6 @@
     [UsedImplicitly]
     public class MoveToResourceConfiguration : ItemTrackingCollectionHost<MoveToResourceConfigurationItem>
     {
-        public const string Default = @"{""Items"":[{""Extensions"":"".cs,.vb"",""Patterns"":""$Namespace.$File.$Key|$File.$Key|StringResourceKey.$Key|$Namespace.StringResourceKey.$Key""},{""Extensions"":"".cshtml,.vbhtml"",""Patterns"":""@$Namespace.$File.$Key|@$File.$Key|@StringResourceKey.$Key|@$Namespace.StringResourceKey.$Key""},{""Extensions"":"".cpp,.c,.hxx,.h"",""Patterns"":""$File::$Key""},{""Extensions"":"".aspx,.ascx"",""Patterns"":""&lt;%$ Resources:$File,$Key %&gt;""},{""Extensions"":"".xaml"",""Patterns"":""\""{x:Static properties:$File.$Key}\""""}]}";
+        public const string Default = @"{""Items"":[{""Extensions"":"".cs,.vb"",""Patterns"":""$Namespace.$File.$Key|$File.$Key|StringResourceKey.$Key|$Namespace.StringResourceKey.$Key|nameof($File.$Key), ResourceType = typeof($File)|ErrorMessageResourceType = typeof($File), ErrorMessageResourceName = nameof($File.$Key)""},{""Extensions"":"".cshtml,.vbhtml"",""Patterns"":""@$Namespace.$File.$Key|@$File.$Key|@StringResourceKey.$Key|@$Namespace.StringResourceKey.$Key""},{""Extensions"":"".cpp,.c,.hxx,.h"",""Patterns"":""$File::$Key""},{""Extensions"":"".aspx,.ascx"",""Patterns"":""&lt;%$ Resources:$File,$Key %&gt;""},{""Extensions"":"".xaml"",""Patterns"":""\""{x:Static properties:$File.$Key}\""""}]}";
     }
 }

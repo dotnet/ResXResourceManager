@@ -13,7 +13,7 @@
 
     [DataContract]
     public abstract class ItemTrackingCollectionHost<T> : INotifyChanged
-        where T:class, INotifyPropertyChanged
+        where T : class, INotifyPropertyChanged
     {
         [NotNull, ItemNotNull]
         private ObservableCollection<T> _items;
