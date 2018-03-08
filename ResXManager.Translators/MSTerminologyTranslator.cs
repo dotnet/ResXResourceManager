@@ -4,6 +4,8 @@
 	using System.Collections.Generic;
 	using System.ComponentModel.Composition;
 	using System.Diagnostics.Contracts;
+	using System.Globalization;
+	using System.ServiceModel;
 
 	using JetBrains.Annotations;
 
@@ -17,25 +19,20 @@
 	public class MSTerminologyTranslator : TranslatorBase
 	{
 		[NotNull]
+		private static readonly BasicHttpBinding _binding = new BasicHttpBinding();
+		[NotNull]
+		private static readonly EndpointAddress _endpoint = new EndpointAddress("http://api.terminology.microsoft.com/Terminology.svc");
+		[NotNull]
 		private static readonly Uri _uri = new Uri("https://www.microsoft.com/en-us/language/default.aspx");
 
 		public MSTerminologyTranslator()
-			: base("MSTerm", "Microsoft Terminology", _uri, GetCredentials())
+			: base("MSTerm", "Microsoft Terminology", _uri, new ICredentialItem[0])
 		{
-		}
-
-		[NotNull]
-		[ItemNotNull]
-		private static IList<ICredentialItem> GetCredentials()
-		{
-			Contract.Ensures(Contract.Result<IList<ICredentialItem>>() != null);
-
-			return new ICredentialItem[] { };
 		}
 
 		public override void Translate(ITranslationSession translationSession)
 		{
-			using (var client = new TerminologyClient())
+			using (var client = new TerminologyClient(_binding, _endpoint))
 			{
 				var translationSources = new TranslationSources() {TranslationSource.UiStrings};
 				foreach (var item in translationSession.Items)
@@ -46,11 +43,12 @@
 					Contract.Assume(item != null);
 
 					var targetCulture = item.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage;
+					if (targetCulture.IsNeutralCulture) targetCulture = CultureInfo.CreateSpecificCulture(targetCulture.Name);
 
 					try
 					{
-						var response = client.GetTranslations(item.Source, translationSession.SourceLanguage.IetfLanguageTag,
-							targetCulture.IetfLanguageTag, SearchStringComparison.CaseInsensitive, SearchOperator.Contains,
+						var response = client.GetTranslations(item.Source, translationSession.SourceLanguage.Name,
+							targetCulture.Name, SearchStringComparison.CaseInsensitive, SearchOperator.Contains,
 							translationSources, false, 5, false, null);
 						if (response != null)
 						{
