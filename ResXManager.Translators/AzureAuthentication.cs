@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.Translators
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Net.Http;
     using System.Threading.Tasks;
 
