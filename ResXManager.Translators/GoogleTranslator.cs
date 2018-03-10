@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
@@ -129,20 +130,23 @@
             }
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Instantiated by the data contract serializer")]
         [DataContract]
-        public class Translation
+        private class Translation
         {
             [DataMember(Name = "translatedText")]
             public string TranslatedText { get; set; }
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Instantiated by the data contract serializer")]
         [DataContract]
-        public class Data
+        private class Data
         {
             [DataMember(Name = "translations")]
             public List<Translation> Translations { get; set; }
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Instantiated by the data contract serializer")]
         [DataContract]
         private class TranslationRootObject
         {
