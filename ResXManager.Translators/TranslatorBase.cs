@@ -5,6 +5,7 @@ namespace tomenglertde.ResXManager.Translators
     using System.Diagnostics.Contracts;
     using System.Net;
     using System.Runtime.Serialization;
+    using System.Text.RegularExpressions;
 
     using JetBrains.Annotations;
 
@@ -15,6 +16,9 @@ namespace tomenglertde.ResXManager.Translators
     [DataContract]
     public abstract class TranslatorBase : ObservableObject, ITranslator
     {
+        [NotNull]
+        private static readonly Regex _removeKeyboardShortcutIndicatorsRegex = new Regex(@"[&_](?=[\w\d])", RegexOptions.Compiled);
+
         [CanBeNull]
         protected static readonly IWebProxy WebProxy;
 
@@ -57,5 +61,11 @@ namespace tomenglertde.ResXManager.Translators
         public IList<ICredentialItem> Credentials { get; }
 
         public abstract void Translate(ITranslationSession translationSession);
+
+        [NotNull]
+        protected static string RemoveKeyboardShortcutIndicators([NotNull] string value)
+        {
+            return _removeKeyboardShortcutIndicatorsRegex.Replace(value, string.Empty);
+        }
     }
 }

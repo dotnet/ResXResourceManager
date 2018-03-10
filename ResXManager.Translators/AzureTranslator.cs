@@ -61,7 +61,7 @@ namespace tomenglertde.ResXManager.Translators
                         var operationContext = OperationContext.Current;
                         Contract.Assume(operationContext != null); // because we are inside OperationContextScope
                         operationContext.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
-                        var replRegex = new Regex(@"&(?=[\w\d])", RegexOptions.Compiled);
+
                         var translateOptions = new TranslateOptions()
                         {
                             ContentType = "text/plain",
@@ -82,7 +82,10 @@ namespace tomenglertde.ResXManager.Translators
                                 while (true)
                                 {
                                     var sourceItems = itemsEnumerator.Take(10);
-                                    var sourceStrings = sourceItems.Select(item => replRegex.Replace(item.Source, string.Empty)).ToArray();
+                                    var sourceStrings = sourceItems
+                                        .Select(item => item.Source)
+                                        .Select(RemoveKeyboardShortcutIndicators)
+                                        .ToArray();
 
                                     if (!sourceStrings.Any())
                                         break;

@@ -48,6 +48,7 @@
                         var response = client.GetTranslations(item.Source, translationSession.SourceLanguage.Name,
                             targetCulture.Name, SearchStringComparison.CaseInsensitive, SearchOperator.Contains,
                             translationSources, false, 5, false, null);
+
                         if (response != null)
                         {
                             translationSession.Dispatcher.BeginInvoke(() =>
@@ -59,7 +60,9 @@
                                 {
                                     Contract.Assume(match != null);
                                     foreach (var trans in match.Translations)
+                                    {
                                         item.Results.Add(new TranslationMatch(this, trans.TranslatedText, match.ConfidenceLevel / 100.0));
+                                    }
                                 }
                             });
                         }

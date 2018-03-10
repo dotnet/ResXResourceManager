@@ -111,9 +111,11 @@
             Contract.Requires(sourceLanguage != null);
             Contract.Requires(targetLanguage != null);
 
+            var rawInput = RemoveKeyboardShortcutIndicators(input);
+
             var url = string.Format(CultureInfo.InvariantCulture,
                 "http://api.mymemory.translated.net/get?q={0}!&langpair={1}|{2}",
-                HttpUtility.UrlEncode(input, Encoding.UTF8),
+                HttpUtility.UrlEncode(rawInput, Encoding.UTF8),
                 sourceLanguage.IetfLanguageTag,
                 targetLanguage.IetfLanguageTag);
 

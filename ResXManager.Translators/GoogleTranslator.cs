@@ -45,7 +45,6 @@
                 return;
             }
 
-            var replRegex = new Regex(@"&(?=[\w\d])", RegexOptions.Compiled);
             foreach (var languageGroup in translationSession.Items.GroupBy(item => item.TargetCulture))
             {
                 if (translationSession.IsCanceled)
@@ -68,7 +67,10 @@
                         // Build out list of parameters
                         var parameters = new List<string>(30);
                         foreach (var item in sourceItems)
-                            parameters.AddRange(new[] { "q", replRegex.Replace(item.Source, string.Empty) });
+                        {
+                            parameters.AddRange(new[] { "q", RemoveKeyboardShortcutIndicators(item.Source) });
+                        }
+
                         parameters.AddRange(new[] {
                             "target", targetCulture.TwoLetterISOLanguageName,
                             "format", "text",
