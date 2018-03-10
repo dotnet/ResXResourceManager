@@ -8,7 +8,6 @@ namespace tomenglertde.ResXManager.Translators
     using System.Runtime.Serialization;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using System.Text.RegularExpressions;
 
     using JetBrains.Annotations;
 

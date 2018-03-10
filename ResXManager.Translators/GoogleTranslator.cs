@@ -10,7 +10,6 @@
     using System.Net.Http;
     using System.Runtime.Serialization;
     using System.Text;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     using JetBrains.Annotations;
@@ -86,8 +85,8 @@
                         {
                             translationSession.Dispatcher.BeginInvoke(() =>
                             {
-                                foreach (var tuple in sourceItems.Zip(t.Result.data.translations,
-                                    (a, b) => new Tuple<ITranslationItem, string>(a, b.translatedText)))
+                                foreach (var tuple in sourceItems.Zip(t.Result.Data.Translations,
+                                    (a, b) => new Tuple<ITranslationItem, string>(a, b.TranslatedText)))
                                 {
                                     Contract.Assume(tuple != null);
                                     Contract.Assume(tuple.Item1 != null);
@@ -104,44 +103,51 @@
             }
         }
 
-        private static async Task<T> GetHttpResponse<T>(string baseUrl, string authHeader, ICollection<string> parameters, Func<Stream, T> conv)
+        private static async Task<T> GetHttpResponse<T>(string baseUrl, string authHeader, [NotNull] ICollection<string> parameters, Func<Stream, T> conv)
         {
             var url = BuildUrl(baseUrl, parameters);
             using (var c = new HttpClient())
             {
                 if (!string.IsNullOrWhiteSpace(authHeader))
+                {
                     c.DefaultRequestHeaders.Add("Authorization", authHeader);
+                }
+
                 Debug.WriteLine("Google URL: " + url);
                 using (var stream = await c.GetStreamAsync(url))
+                {
                     return conv(stream);
+                }
             }
         }
 
-        private static T JsonConverter<T>(Stream stream)
+        private static T JsonConverter<T>([NotNull] Stream stream)
         {
             using (var reader = new StreamReader(stream, Encoding.UTF8))
+            {
                 return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
+            }
+        }
+
+        [DataContract]
+        public class Translation
+        {
+            [DataMember(Name = "translatedText")]
+            public string TranslatedText { get; set; }
+        }
+
+        [DataContract]
+        public class Data
+        {
+            [DataMember(Name = "translations")]
+            public List<Translation> Translations { get; set; }
         }
 
         [DataContract]
         private class TranslationRootObject
         {
-            [DataMember]
-            public Data data { get; set; }
-
-            [DataContract]
-            public class Data
-            {
-                [DataMember]
-                public List<Translation> translations { get; set; }
-
-                [DataContract]
-                public class Translation
-                {
-                    [DataMember]
-                    public string translatedText { get; set; }
-                }
-            }
+            [DataMember(Name="data")]
+            public Data Data { get; set; }
         }
 
         /// <summary>Builds the URL from a base, method name, and name/value paired parameters. All parameters are encoded.</summary>
@@ -149,7 +155,8 @@
         /// <param name="pairs">The name/value paired parameters.</param>
         /// <returns>Resulting URL.</returns>
         /// <exception cref="System.ArgumentException">There must be an even number of strings supplied for parameters.</exception>
-        private static string BuildUrl(string url, ICollection<string> pairs)
+        [NotNull]
+        private static string BuildUrl(string url, [NotNull, ItemNotNull] ICollection<string> pairs)
         {
             if (pairs.Count % 2 != 0)
                 throw new ArgumentException("There must be an even number of strings supplied for parameters.");
