@@ -1,4 +1,16 @@
-﻿1.11
+﻿1.12
+- Fix #60: Center dialog on the window containing the ResourceView
+- Fix #33: Text wrapping in cells can be enabled.
+- Fix #28: output warnings in the error list.
+- Fix #69: Excel translates \r into `_x000D_` during paste => remove extra `_x000D_`
+- Fix #76 / Fix #77: deferred commit of changes prohibits saving from scripting model.
+- Fix #78: UWP (.resw) projects need to detect the neutral language from the settings.
+- Fix #88: Only import primary cell text, ignore any metadata.
+- MoveToResource: Add patterns as suggested by huntertran in #82
+- Fix #92: Add Microsoft Terminology Services as a translation option
+- Fix #93: Remove keyboard shortcut specifier ('&' or '_') in strings before translating 
+
+1.11
 - add CellReference to make ClosedXML and EPPlus excel libraries happy
 
 1.10
