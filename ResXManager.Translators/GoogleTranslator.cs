@@ -6,6 +6,7 @@
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net.Http;
@@ -53,7 +54,6 @@
                 Contract.Assume(languageGroup != null);
 
                 var targetCulture = languageGroup.Key.Culture ?? translationSession.NeutralResourcesLanguage;
-                if (!targetCulture.IsNeutralCulture) targetCulture = targetCulture.Parent;
 
                 using (var itemsEnumerator = languageGroup.GetEnumerator())
                 {
@@ -72,9 +72,9 @@
                         }
 
                         parameters.AddRange(new[] {
-                            "target", targetCulture.TwoLetterISOLanguageName,
+                            "target", GoogleLangCode(targetCulture),
                             "format", "text",
-                            "source", translationSession.SourceLanguage.TwoLetterISOLanguageName,
+                            "source", GoogleLangCode(translationSession.SourceLanguage),
                             "model", "base",
                             "key", APIKey });
 
@@ -102,6 +102,18 @@
                     }
                 }
             }
+        }
+
+        private static string GoogleLangCode(CultureInfo ci)
+        {
+            var iso1 = ci.TwoLetterISOLanguageName;
+            var ms = ci.Name.ToLowerInvariant();
+
+            if (iso1 == "zh")
+                return new[] {"zh-hant", "zh-cht", "zh-hk", "zh-mo", "zh-tw"}.Contains(ms) ? "zh-TW" : "zh-CN";
+            if (ms == "haw-us")
+                return "haw";
+            return iso1;
         }
 
         private static async Task<T> GetHttpResponse<T>(string baseUrl, string authHeader, [NotNull] ICollection<string> parameters, Func<Stream, T> conv)
