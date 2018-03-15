@@ -89,33 +89,47 @@
 
         private void BuildEvents_OnBuildBegin(vsBuildScope scope, vsBuildAction action)
         {
-            _tasks.Clear();
+            _errorListProvider.SuspendRefresh();
 
-            if (!_configuration.ShowErrorsInErrorList)
-                return;
-
-            var errorCategory = _configuration.TaskErrorCategory;
-
-            var cultures = _resourceManager.Cultures;
-
-            foreach (var entry in _resourceManager.TableEntries)
+            try
             {
-                foreach (var culture in cultures)
-                {
-                    if (entry.GetError(culture, out var error))
-                    {
-                        var task = new ResourceErrorTask(entry)
-                        {
-                            ErrorCategory = errorCategory,
-                            Category = TaskCategory.BuildCompile,
-                            Text = error,
-                            Document = entry.Container.UniqueName, 
-                        };
+                _tasks.Clear();
 
-                        task.Navigate += Task_Navigate;
-                        _tasks.Add(task);
+                if (!_configuration.ShowErrorsInErrorList)
+                    return;
+
+                var errorCategory = _configuration.TaskErrorCategory;
+
+                var cultures = _resourceManager.Cultures;
+
+                var errorCount = 0;
+
+                foreach (var entry in _resourceManager.TableEntries)
+                {
+                    foreach (var culture in cultures)
+                    {
+                        if (++errorCount >= 20)
+                            return;
+
+                        if (entry.GetError(culture, out var error))
+                        {
+                            var task = new ResourceErrorTask(entry)
+                            {
+                                ErrorCategory = errorCategory,
+                                Category = TaskCategory.BuildCompile,
+                                Text = error,
+                                Document = entry.Container.UniqueName,
+                            };
+
+                            task.Navigate += Task_Navigate;
+                            _tasks.Add(task);
+                        }
                     }
                 }
+            }
+            finally
+            {
+                _errorListProvider.ResumeRefresh();
             }
         }
 
