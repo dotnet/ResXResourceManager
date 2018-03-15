@@ -1,4 +1,9 @@
-﻿1.12
+﻿1.13
+- Fix #98: Newtonsoft.json was excluded by MS build task.
+- Fix #95: zh-hant support for Google Translator.
+- Fix #97: Too many warnings about missing translations block the build.
+
+1.12
 - Fix #60: Center dialog on the window containing the ResourceView
 - Fix #33: Text wrapping in cells can be enabled.
 - Fix #28: output warnings in the error list.
