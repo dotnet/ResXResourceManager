@@ -20,6 +20,7 @@
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
+    using Microsoft.Win32;
 
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
@@ -40,8 +41,10 @@
     {
         [NotNull]
         private readonly ITracer _tracer;
+
         [NotNull]
         private readonly Configuration _configuration;
+
         [NotNull]
         private readonly ICompositionHost _compositionHost;
 
@@ -91,6 +94,7 @@
 
                 _tracer.WriteLine(Resources.AssemblyLocation, folder);
                 _tracer.WriteLine(Resources.Version, new AssemblyName(executingAssembly.FullName).Version);
+                _tracer.WriteLine(".NET Framework Version: {0} (https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed)", FrameworkVersion());
 
                 EventManager.RegisterClassHandler(typeof(VsixShellView), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
 
@@ -267,7 +271,7 @@
             }
         }
 
-        private bool QueryEditFiles([NotNull][ItemNotNull] string[] lockedFiles)
+        private bool QueryEditFiles([NotNull] [ItemNotNull] string[] lockedFiles)
         {
             Contract.Requires(lockedFiles != null);
             var service = (IVsQueryEditQuerySave2)GetService(typeof(SVsQueryEditQuerySave));
@@ -279,12 +283,13 @@
                     return false;
                 }
             }
+
             return true;
         }
 
         [NotNull]
         [ItemNotNull]
-        private static string[] GetLockedFiles([NotNull][ItemNotNull] IEnumerable<ResourceLanguage> languages)
+        private static string[] GetLockedFiles([NotNull] [ItemNotNull] IEnumerable<ResourceLanguage> languages)
         {
             Contract.Requires(languages != null);
             Contract.Ensures(Contract.Result<string[]>() != null);
@@ -372,7 +377,7 @@
 
         [NotNull]
         [Localizable(false)]
-        private static string FormatFileNames([NotNull][ItemNotNull] IEnumerable<string> lockedFiles)
+        private static string FormatFileNames([NotNull] [ItemNotNull] IEnumerable<string> lockedFiles)
         {
             Contract.Requires(lockedFiles != null);
             Contract.Ensures(Contract.Result<string>() != null);
@@ -388,6 +393,16 @@
         private void VisualComposition_Error([CanBeNull] object sender, [NotNull] TextEventArgs e)
         {
             _tracer.TraceError(e.Text);
+        }
+
+        const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
+
+        private static int FrameworkVersion()
+        {
+            using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
+            {
+                return (int?)ndpKey?.GetValue("Release") ?? 0;
+            }
         }
 
         [ContractInvariantMethod]
