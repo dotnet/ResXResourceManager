@@ -104,15 +104,18 @@
             }
         }
 
-        private static string GoogleLangCode(CultureInfo ci)
+        [NotNull]
+        private static string GoogleLangCode([NotNull] CultureInfo cultureInfo)
         {
-            var iso1 = ci.TwoLetterISOLanguageName;
-            var ms = ci.Name.ToLowerInvariant();
+            var iso1 = cultureInfo.TwoLetterISOLanguageName;
+            var name = cultureInfo.Name;
 
-            if (iso1 == "zh")
-                return new[] {"zh-hant", "zh-cht", "zh-hk", "zh-mo", "zh-tw"}.Contains(ms) ? "zh-TW" : "zh-CN";
-            if (ms == "haw-us")
+            if (string.Equals(iso1, "zh", StringComparison.OrdinalIgnoreCase))
+                return new[] {"zh-hant", "zh-cht", "zh-hk", "zh-mo", "zh-tw"}.Contains(name, StringComparer.OrdinalIgnoreCase) ? "zh-TW" : "zh-CN";
+
+            if (string.Equals(name, "haw-us", StringComparison.OrdinalIgnoreCase))
                 return "haw";
+
             return iso1;
         }
 
