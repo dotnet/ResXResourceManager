@@ -108,22 +108,22 @@
                 {
                     foreach (var culture in cultures)
                     {
+                        if (!entry.GetError(culture, out var error))
+                            continue;
+
                         if (++errorCount >= 20)
                             return;
 
-                        if (entry.GetError(culture, out var error))
+                        var task = new ResourceErrorTask(entry)
                         {
-                            var task = new ResourceErrorTask(entry)
-                            {
-                                ErrorCategory = errorCategory,
-                                Category = TaskCategory.BuildCompile,
-                                Text = error,
-                                Document = entry.Container.UniqueName,
-                            };
+                            ErrorCategory = errorCategory,
+                            Category = TaskCategory.BuildCompile,
+                            Text = error,
+                            Document = entry.Container.UniqueName,
+                        };
 
-                            task.Navigate += Task_Navigate;
-                            _tasks.Add(task);
-                        }
+                        task.Navigate += Task_Navigate;
+                        _tasks.Add(task);
                     }
                 }
             }
