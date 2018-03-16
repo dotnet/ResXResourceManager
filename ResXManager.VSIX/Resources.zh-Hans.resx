@@ -229,4 +229,13 @@
   <data name="Warning" xml:space="preserve">
     <value>警告：</value>
   </data>
+  <data name="ShowErrorsConfiguration_Header" xml:space="preserve">
+    <value>错误提示</value>
+  </data>
+  <data name="ShowErrorsConfiguration_SwitchHeader" xml:space="preserve">
+    <value>在错误列表中显示</value>
+  </data>
+  <data name="ShowErrorsConfiguration_ShowAs" xml:space="preserve">
+    <value>显示为</value>
+  </data>
 </root>
