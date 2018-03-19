@@ -383,9 +383,13 @@
             // ReSharper disable AssignNullToNotNullAttribute
             // ReSharper disable PossibleNullReferenceException
             return cell.ChildElements
-                .OfType<OpenXmlLeafTextElement>()
-                .Select(item => item.Text)
-                .FirstOrDefault();
+                       .OfType<OpenXmlLeafTextElement>()
+                       .Select(item => item.Text)
+                       .FirstOrDefault() ??
+                   cell.ChildElements
+                       .OfType<InlineString>()
+                       .Select(item => item.Text.InnerText)
+                       .FirstOrDefault();
             // ReSharper restore AssignNullToNotNullAttribute
             // ReSharper restore PossibleNullReferenceException
         }
