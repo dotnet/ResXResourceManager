@@ -1,4 +1,8 @@
-﻿1.13
+﻿1.14
+- Fix #107/#108: Excel import of unchanged or formatted cells.
+- Update Chinese translation
+
+1.13
 - Fix #98: Newtonsoft.json was excluded by MS build task.
 - Fix #95: zh-hant support for Google Translator.
 - Fix #97: Too many warnings about missing translations block the build.
