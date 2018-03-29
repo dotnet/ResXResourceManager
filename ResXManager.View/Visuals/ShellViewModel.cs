@@ -55,7 +55,14 @@
 
             IsLoading = true;
 
-            Dispatcher.ProcessMessages(DispatcherPriority.Render);
+            try
+            {
+                Dispatcher.ProcessMessages(DispatcherPriority.Render);
+            }
+            catch
+            {
+                // sometimes dispatcher processing is suspended, just ignore, as this is only used to improve UI responsiveness
+            }
         }
 
         [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Background)]
