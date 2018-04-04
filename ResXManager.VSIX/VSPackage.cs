@@ -77,6 +77,7 @@
         public VSPackage()
         {
             _instance = this;
+            AppDomain.CurrentDomain.AssemblyResolve += AppDomain_AssemblyResolve;
         }
 
         [NotNull]
@@ -532,6 +533,17 @@
         private void ReloadSolution()
         {
             CompositionHost.GetExportedValue<ResourceViewModel>().Reload();
+        }
+
+        private static Assembly AppDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            var assemblyName = new AssemblyName(args.Name);
+
+            if (assemblyName.Name != "System.Windows.Interactivity") 
+                return null;
+
+            assemblyName.Version = new Version(4, 5, 0, 0);
+            return Assembly.Load(assemblyName);
         }
 
         [ContractInvariantMethod]
