@@ -1,4 +1,7 @@
-﻿1.14
+﻿1.15
+- Fix #72 and related: Issues with mixed versions of System.Windows.Interactivity
+
+1.14
 - Fix #107/#108: Excel import of unchanged or formatted cells.
 - Update Chinese translation
 
