@@ -159,7 +159,7 @@
             if (!loaderErrors.Any())
                 return;
 
-            var message = "Loader errors at start:\n" + string.Join("\n", loaderErrors);
+            var message = "Loader errors at start:\n\n" + string.Join("\n\n", loaderErrors);
 
             try
             {
@@ -185,7 +185,7 @@
 
             if (interactivity != null)
             {
-                errors.Add($"Found old version of {SystemWindowsInteractivity} already loaded from {interactivity.CodeBase}. This might cause errors!");
+                errors.Add(string.Format(CultureInfo.CurrentCulture, "Found old version of {0} already loaded from {1}. This might cause errors!", SystemWindowsInteractivity, interactivity.CodeBase));
             }
 
             // var stopwatch = new Stopwatch();
