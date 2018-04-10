@@ -74,6 +74,8 @@
         [CanBeNull]
         private static VSPackage _instance;
 
+        private const string SystemWindowsInteractivity = "System.Windows.Interactivity";
+
         public VSPackage()
         {
             _instance = this;
@@ -178,6 +180,14 @@
 
             var errors = new List<string>();
 
+            var interactivity = AppDomain.CurrentDomain.GetAssemblies()
+                .FirstOrDefault(IsSystemWindowsInteractivity40);
+
+            if (interactivity != null)
+            {
+                errors.Add($"Found old version of {SystemWindowsInteractivity} already loaded from {interactivity.CodeBase}. This might cause errors!");
+            }
+
             // var stopwatch = new Stopwatch();
 
             _compositionHost.Container.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
@@ -218,6 +228,14 @@
             {
                 dispatcher.BeginInvoke(() => ErrorProvider.Register(_compositionHost.Container));
             }
+        }
+
+        private static bool IsSystemWindowsInteractivity40([NotNull] Assembly a)
+        {
+            var assemblyName = a.GetName();
+
+            return string.Equals(assemblyName.Name, SystemWindowsInteractivity, StringComparison.OrdinalIgnoreCase)
+                   && assemblyName.Version != new Version(4, 5, 0, 0);
         }
 
         [NotNull]
@@ -539,7 +557,7 @@
         {
             var assemblyName = new AssemblyName(args.Name);
 
-            if (assemblyName.Name != "System.Windows.Interactivity") 
+            if (assemblyName.Name != SystemWindowsInteractivity)
                 return null;
 
             assemblyName.Version = new Version(4, 5, 0, 0);
