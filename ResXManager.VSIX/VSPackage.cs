@@ -51,6 +51,9 @@
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     public sealed class VSPackage : Package
     {
+        private const string SystemWindowsInteractivity = "System.Windows.Interactivity";
+        private const string MicrosoftExpressionInteractions = "Microsoft.Expression.Interactions";
+
         [NotNull]
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
         [NotNull]
@@ -73,8 +76,6 @@
 
         [CanBeNull]
         private static VSPackage _instance;
-
-        private const string SystemWindowsInteractivity = "System.Windows.Interactivity";
 
         public VSPackage()
         {
@@ -178,15 +179,10 @@
             var path = Path.GetDirectoryName(GetType().Assembly.Location);
             Contract.Assume(!string.IsNullOrEmpty(path));
 
-            var errors = new List<string>();
-
-            var interactivity = AppDomain.CurrentDomain.GetAssemblies()
-                .FirstOrDefault(IsSystemWindowsInteractivity40);
-
-            if (interactivity != null)
-            {
-                errors.Add(string.Format(CultureInfo.CurrentCulture, "Found old version of {0} already loaded from {1}. This might cause errors!", SystemWindowsInteractivity, interactivity.CodeBase));
-            }
+            var errors = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(IsOldInteractivityAssembly)
+                .Select(oldAssembly => string.Format(CultureInfo.CurrentCulture, "Found old version of '{0}' loaded from {1}. This might cause errors!", oldAssembly.FullName, oldAssembly.CodeBase))
+                .ToList();
 
             // var stopwatch = new Stopwatch();
 
@@ -230,11 +226,12 @@
             }
         }
 
-        private static bool IsSystemWindowsInteractivity40([NotNull] Assembly a)
+        private static bool IsOldInteractivityAssembly([NotNull] Assembly a)
         {
             var assemblyName = a.GetName();
 
-            return string.Equals(assemblyName.Name, SystemWindowsInteractivity, StringComparison.OrdinalIgnoreCase)
+            return (string.Equals(assemblyName.Name, SystemWindowsInteractivity, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(assemblyName.Name, MicrosoftExpressionInteractions, StringComparison.OrdinalIgnoreCase))
                    && assemblyName.Version != new Version(4, 5, 0, 0);
         }
 
@@ -557,7 +554,7 @@
         {
             var assemblyName = new AssemblyName(args.Name);
 
-            if (assemblyName.Name != SystemWindowsInteractivity)
+            if ((assemblyName.Name != SystemWindowsInteractivity) && (assemblyName.Name != MicrosoftExpressionInteractions))
                 return null;
 
             assemblyName.Version = new Version(4, 5, 0, 0);
