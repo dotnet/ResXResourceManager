@@ -104,7 +104,17 @@
             {
                 Contract.Ensures(Contract.Result<ICompositionHost>() != null);
 
+                var stopwatch = Stopwatch.StartNew();
+
                 _compositionHostLoaded.WaitOne();
+
+                stopwatch.Stop();
+
+                if (stopwatch.Elapsed >= TimeSpan.FromMilliseconds(100))
+                {
+                    var tracer = _compositionHost.GetExportedValue<ITracer>();
+                    tracer.WriteLine("Init: " + stopwatch.ElapsedMilliseconds + " ms");
+                }
 
                 return _compositionHost;
             }
@@ -440,7 +450,7 @@
 
         private void Solution_Opened()
         {
-            using (PerformanceTracer.Start("DTE event: Solution opened"))
+            //using (PerformanceTracer.Start("DTE event: Solution opened"))
             {
                 ReloadSolution();
 
@@ -453,25 +463,25 @@
 
         private void Solution_AfterClosing()
         {
-            using (PerformanceTracer.Start("DTE event: Solution closed"))
+            //using (PerformanceTracer.Start("DTE event: Solution closed"))
             {
+                Invalidate();
                 ReloadSolution();
             }
         }
 
         private void Solution_ContentChanged([CanBeNull] object item)
         {
-            using (PerformanceTracer.Start("DTE event: Solution content changed"))
+            //using (PerformanceTracer.Start("DTE event: Solution content changed"))
             {
-                CompositionHost.GetExportedValue<ISourceFilesProvider>().Invalidate();
-
+                Invalidate();
                 ReloadSolution();
             }
         }
 
         private void DocumentEvents_DocumentOpened([CanBeNull] EnvDTE.Document document)
         {
-            using (PerformanceTracer.Start("DTE event: Document opened"))
+            //using (PerformanceTracer.Start("DTE event: Document opened"))
             {
                 if (!AffectsResourceFile(document))
                     return;
@@ -484,7 +494,7 @@
         {
             Contract.Requires(document != null);
 
-            using (PerformanceTracer.Start("DTE event: Document saved"))
+            //using (PerformanceTracer.Start("DTE event: Document saved"))
             {
                 if (!AffectsResourceFile(document))
                     return;
@@ -544,7 +554,13 @@
                 .Any(extension => ProjectFileExtensions.SupportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase));
         }
 
-        [Throttled(typeof(DispatcherThrottle))]
+        [Throttled(typeof(DispatcherThrottle), (int) DispatcherPriority.Background)]
+        private void Invalidate()
+        {
+            CompositionHost.GetExportedValue<ISourceFilesProvider>().Invalidate();
+        }
+
+        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.ContextIdle)]
         private void ReloadSolution()
         {
             CompositionHost.GetExportedValue<ResourceViewModel>().Reload();

@@ -26,7 +26,7 @@
         private readonly ThemeManager _themeManager;
 
         [ImportingConstructor]
-        public VsixShellView([NotNull] ExportProvider exportProvider, [NotNull] ThemeManager themeManager)
+        public VsixShellView([NotNull] ExportProvider exportProvider, [NotNull] ThemeManager themeManager, VsixShellViewModel viewModel)
         {
             Contract.Requires(exportProvider != null);
             Contract.Requires(themeManager != null);
@@ -38,6 +38,9 @@
                 this.SetExportProvider(exportProvider);
 
                 InitializeComponent();
+
+                DataContext = viewModel;
+                Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(exportProvider));
             }
             catch (Exception ex)
             {

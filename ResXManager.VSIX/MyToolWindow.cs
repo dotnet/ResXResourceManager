@@ -12,12 +12,13 @@
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
+    using System.Windows.Threading;
 
     using JetBrains.Annotations;
 
-    using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.Win32;
@@ -30,7 +31,6 @@
     using TomsToolbox.Core;
     using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.XamlExtensions;
 
     /// <summary>
@@ -47,6 +47,9 @@
 
         [NotNull]
         private readonly ICompositionHost _compositionHost;
+
+        [NotNull]
+        private readonly ContentControl _contentWrapper = new ContentControl { Focusable = false };
 
         /// <summary>
         /// Standard constructor for the tool window.
@@ -72,6 +75,9 @@
             _compositionHost = compositionHost;
 
             VisualComposition.Error += VisualComposition_Error;
+
+            _contentWrapper.Loaded += ContentWrapper_Loaded;
+            _contentWrapper.Unloaded += ContentWrapper_Unloaded;
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -82,12 +88,6 @@
             try
             {
                 _tracer.WriteLine(Resources.IntroMessage);
-
-                var view = _compositionHost.GetExportedValue<VsixShellView>();
-                view.Loaded += View_Loaded;
-                view.DataContext = _compositionHost.GetExportedValue<VsixShellViewModel>();
-                // ReSharper disable once PossibleNullReferenceException
-                view.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
 
                 var executingAssembly = Assembly.GetExecutingAssembly();
                 var folder = Path.GetDirectoryName(executingAssembly.Location);
@@ -101,15 +101,29 @@
                 // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
                 // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
                 // the object returned by the Content property.
-                Content = view;
-
-                Dte.SetFontSize(view);
+                Content = _contentWrapper;
             }
             catch (Exception ex)
             {
                 _tracer.TraceError("MyToolWindow OnCreate failed: " + ex);
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
             }
+        }
+
+        private void ContentWrapper_Loaded(object sender, RoutedEventArgs e)
+        {
+            _compositionHost.GetExportedValue<ResourceViewModel>().Reload();
+
+            var view = _compositionHost.GetExportedValue<VsixShellView>();
+
+            _contentWrapper.Content = view;
+
+            Dte.SetFontSize(view);
+        }
+
+        private void ContentWrapper_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _contentWrapper.Content = null;
         }
 
         [NotNull]
@@ -385,11 +399,6 @@
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
 
-        private void View_Loaded([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
-        {
-            _compositionHost.GetExportedValue<ResourceViewModel>().Reload();
-        }
-
         private void VisualComposition_Error([CanBeNull] object sender, [NotNull] TextEventArgs e)
         {
             _tracer.TraceError(e.Text);
@@ -413,6 +422,7 @@
             Contract.Invariant(_configuration != null);
             Contract.Invariant(_tracer != null);
             Contract.Invariant(_compositionHost != null);
+            Contract.Invariant(_contentWrapper != null);
         }
     }
 }
