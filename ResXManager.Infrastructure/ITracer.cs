@@ -107,5 +107,13 @@
 
             exportProvider.GetExportedValue<ITracer>().TraceError(message);
         }
+
+        public static void WriteLine([NotNull] this ExportProvider exportProvider, [Localizable(false)] [NotNull] string message)
+        {
+            Contract.Requires(exportProvider != null);
+            Contract.Requires(message != null);
+
+            exportProvider.GetExportedValue<ITracer>().WriteLine(message);
+        }
     }
 }

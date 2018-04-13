@@ -162,15 +162,28 @@
             CompositionHost.Dispose();
         }
 
-        private static void ShowLoaderErrors([NotNull] ICompositionHost compositionHost, [NotNull][ItemNotNull] IList<string> loaderErrors)
+        private static void ShowLoaderMessages([NotNull] ICompositionHost compositionHost, [NotNull, ItemNotNull] IList<string> errors, [NotNull, ItemNotNull] IList<string> warnings)
         {
             Contract.Requires(compositionHost != null);
-            Contract.Requires(loaderErrors != null);
+            Contract.Requires(errors != null);
 
-            if (!loaderErrors.Any())
+
+            if (warnings.Any())
+            {
+                try
+                {
+                    compositionHost.GetExportedValue<ITracer>().TraceError(string.Join("\n", warnings));
+                }
+                catch
+                {
+                    // ignore warnings, just show errors
+                }
+            }
+
+            if (!errors.Any())
                 return;
 
-            var message = "Loader errors at start:\n\n" + string.Join("\n\n", loaderErrors);
+            var message = "Loader errors:\n" + string.Join("\n", errors);
 
             try
             {
@@ -186,31 +199,36 @@
         {
             Contract.Requires(dispatcher != null);
 
-            var path = Path.GetDirectoryName(GetType().Assembly.Location);
+            var thisAssembly = GetType().Assembly;
+
+            var path = Path.GetDirectoryName(thisAssembly.Location);
             Contract.Assume(!string.IsNullOrEmpty(path));
 
-            var errors = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(IsOldInteractivityAssembly)
-                .Select(oldAssembly => string.Format(CultureInfo.CurrentCulture, "Found old version of '{0}' loaded from {1}. This might cause errors!", oldAssembly.FullName, oldAssembly.CodeBase))
-                .ToList();
+            var assemblyFileNames = Directory.EnumerateFiles(path, @"*.dll")
+                .Where(file => !"DocumentFormat.OpenXml.dll".Equals(Path.GetFileName(file), StringComparison.OrdinalIgnoreCase))
+                .ToArray();
 
-            // var stopwatch = new Stopwatch();
+            var assemblyNames = new HashSet<string>(assemblyFileNames.Select(Path.GetFileNameWithoutExtension));
+
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            var warnings = loadedAssemblies
+                .Where(a => assemblyNames.Contains(a.GetName().Name))
+                .Where(a => !string.Equals(Path.GetDirectoryName(a.Location), path, StringComparison.OrdinalIgnoreCase))
+                .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
+                .ToArray();
 
             _compositionHost.Container.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
 
-            foreach (var file in Directory.GetFiles(path, @"*.dll"))
+            var errors = new List<string>();
+
+            foreach (var file in assemblyFileNames)
             {
                 Contract.Assume(!string.IsNullOrEmpty(file));
 
-                if ("DocumentFormat.OpenXml.dll".Equals(Path.GetFileName(file), StringComparison.OrdinalIgnoreCase))
-                    continue;
-
                 try
                 {
-                    // stopwatch.Restart();
                     _compositionHost.AddCatalog(new AssemblyCatalog(file));
-                    // errors.Add("Assembly: " + Path.GetFileName(file) + " => " + stopwatch.ElapsedMilliseconds);
-                    // stopwatch.Stop();
                 }
                 catch (ReflectionTypeLoadException ex)
                 {
@@ -226,14 +244,8 @@
 
             _compositionHostLoaded.Set();
 
-            if (errors.Any())
-            {
-                dispatcher.BeginInvoke(() => ShowLoaderErrors(_compositionHost, errors));
-            }
-            else
-            {
-                dispatcher.BeginInvoke(() => ErrorProvider.Register(_compositionHost.Container));
-            }
+            dispatcher.BeginInvoke(() => ShowLoaderMessages(_compositionHost, errors, warnings));
+            dispatcher.BeginInvoke(() => ErrorProvider.Register(_compositionHost.Container));
         }
 
         private static bool IsOldInteractivityAssembly([NotNull] Assembly a)
