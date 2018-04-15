@@ -162,17 +162,19 @@
             CompositionHost.Dispose();
         }
 
-        private static void ShowLoaderMessages([NotNull] ICompositionHost compositionHost, [NotNull, ItemNotNull] IList<string> errors, [NotNull, ItemNotNull] IList<string> warnings)
+        private static void ShowLoaderMessages([NotNull] ExportProvider exportProvider, [NotNull, ItemNotNull] IList<string> errors, [NotNull, ItemNotNull] IList<string> messages)
         {
-            Contract.Requires(compositionHost != null);
+            Contract.Requires(exportProvider != null);
             Contract.Requires(errors != null);
 
-
-            if (warnings.Any())
+            if (messages.Any())
             {
                 try
                 {
-                    compositionHost.GetExportedValue<ITracer>().TraceError(string.Join("\n", warnings));
+                    foreach (var warning in messages)
+                    {
+                        exportProvider.WriteLine(warning);
+                    }
                 }
                 catch
                 {
@@ -183,15 +185,16 @@
             if (!errors.Any())
                 return;
 
-            var message = "Loader errors:\n" + string.Join("\n", errors);
-
             try
             {
-                compositionHost.GetExportedValue<ITracer>().TraceError(message);
+                foreach (var error in errors)
+                {
+                    exportProvider.TraceError(error);
+                }
             }
             catch
             {
-                MessageBox.Show(message);
+                MessageBox.Show("Loader errors:\n" + string.Join("\n", errors));
             }
         }
 
@@ -212,13 +215,15 @@
 
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            var warnings = loadedAssemblies
+            var messages = loadedAssemblies
                 .Where(a => assemblyNames.Contains(a.GetName().Name))
                 .Where(a => !string.Equals(Path.GetDirectoryName(a.Location), path, StringComparison.OrdinalIgnoreCase))
                 .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
                 .ToArray();
 
-            _compositionHost.Container.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
+            var compositionContainer = _compositionHost.Container;
+
+            compositionContainer.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
 
             var errors = new List<string>();
 
@@ -244,8 +249,8 @@
 
             _compositionHostLoaded.Set();
 
-            dispatcher.BeginInvoke(() => ShowLoaderMessages(_compositionHost, errors, warnings));
-            dispatcher.BeginInvoke(() => ErrorProvider.Register(_compositionHost.Container));
+            dispatcher.BeginInvoke(() => ShowLoaderMessages(compositionContainer, errors, messages));
+            dispatcher.BeginInvoke(() => ErrorProvider.Register(compositionContainer));
         }
 
         private static bool IsOldInteractivityAssembly([NotNull] Assembly a)
@@ -566,7 +571,7 @@
                 .Any(extension => ProjectFileExtensions.SupportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase));
         }
 
-        [Throttled(typeof(DispatcherThrottle), (int) DispatcherPriority.Background)]
+        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Background)]
         private void Invalidate()
         {
             CompositionHost.GetExportedValue<ISourceFilesProvider>().Invalidate();
