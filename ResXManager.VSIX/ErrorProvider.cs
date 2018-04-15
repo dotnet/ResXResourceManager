@@ -84,7 +84,14 @@
 
         public static void Register([NotNull] ExportProvider exportProvider)
         {
-            exportProvider.GetExportedValue<ErrorProvider>();
+            try
+            {
+                exportProvider.GetExportedValue<ErrorProvider>();
+            }
+            catch
+            {
+                // we had loader errors, ignore this... 
+            }
         }
 
         private void BuildEvents_OnBuildBegin(vsBuildScope scope, vsBuildAction action)

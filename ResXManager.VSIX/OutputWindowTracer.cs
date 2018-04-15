@@ -13,14 +13,14 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    [Export(typeof(ITracer))]
     public class OutputWindowTracer : ITracer
     {
         [NotNull]
         private readonly IServiceProvider _serviceProvider;
 
-        [ImportingConstructor]
-        public OutputWindowTracer([NotNull][Import(nameof(VSPackage))] IServiceProvider serviceProvider)
+        private static Guid _outputPaneGuid = new Guid("{C49C2D45-A34D-4255-9382-40CE2BDAD575}");
+
+        public OutputWindowTracer([NotNull]IServiceProvider serviceProvider)
         {
             Contract.Requires(serviceProvider != null);
             _serviceProvider = serviceProvider;
@@ -28,19 +28,15 @@
 
         private void LogMessageToOutputWindow([CanBeNull] string value)
         {
-            var outputWindow = _serviceProvider.GetService(typeof(SVsOutputWindow)) as IVsOutputWindow;
-            if (outputWindow == null)
+            if (!(_serviceProvider.GetService(typeof(SVsOutputWindow)) is IVsOutputWindow outputWindow))
                 return;
 
-            var outputPaneGuid = new Guid("{C49C2D45-A34D-4255-9382-40CE2BDAD575}");
-
-            IVsOutputWindowPane pane;
-            var errorCode = outputWindow.GetPane(ref outputPaneGuid, out pane);
+            var errorCode = outputWindow.GetPane(ref _outputPaneGuid, out var pane);
 
             if (ErrorHandler.Failed(errorCode) || pane == null)
             {
-                outputWindow.CreatePane(ref outputPaneGuid, Resources.ToolWindowTitle, Convert.ToInt32(true), Convert.ToInt32(false));
-                outputWindow.GetPane(ref outputPaneGuid, out pane);
+                outputWindow.CreatePane(ref _outputPaneGuid, Resources.ToolWindowTitle, Convert.ToInt32(true), Convert.ToInt32(false));
+                outputWindow.GetPane(ref _outputPaneGuid, out pane);
             }
 
             pane?.OutputString(value);

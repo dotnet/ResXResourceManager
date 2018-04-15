@@ -80,6 +80,7 @@
         public VSPackage()
         {
             _instance = this;
+            Tracer = new OutputWindowTracer(this);
             AppDomain.CurrentDomain.AssemblyResolve += AppDomain_AssemblyResolve;
         }
 
@@ -112,8 +113,7 @@
 
                 if (stopwatch.Elapsed >= TimeSpan.FromMilliseconds(100))
                 {
-                    var tracer = _compositionHost.GetExportedValue<ITracer>();
-                    tracer.WriteLine("Init: " + stopwatch.ElapsedMilliseconds + " ms");
+                    Tracer.WriteLine("Init: " + stopwatch.ElapsedMilliseconds + " ms");
                 }
 
                 return _compositionHost;
@@ -121,10 +121,7 @@
         }
 
         [NotNull]
-        private ITracer Tracer => CompositionHost.GetExportedValue<ITracer>();
-
-        [NotNull]
-        private PerformanceTracer PerformanceTracer => CompositionHost.GetExportedValue<PerformanceTracer>();
+        private ITracer Tracer { get; }
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -162,34 +159,17 @@
             CompositionHost.Dispose();
         }
 
-        private static void ShowLoaderMessages([NotNull] ExportProvider exportProvider, [NotNull, ItemNotNull] IList<string> errors, [NotNull, ItemNotNull] IList<string> messages)
+        private void ShowLoaderMessages([NotNull, ItemNotNull] IList<string> errors, [NotNull, ItemNotNull] IList<string> messages)
         {
-            Contract.Requires(exportProvider != null);
-            Contract.Requires(errors != null);
-
-            if (messages.Any())
-            {
-                try
-                {
-                    foreach (var warning in messages)
-                    {
-                        exportProvider.WriteLine(warning);
-                    }
-                }
-                catch
-                {
-                    // ignore warnings, just show errors
-                }
-            }
-
-            if (!errors.Any())
-                return;
-
             try
             {
                 foreach (var error in errors)
                 {
-                    exportProvider.TraceError(error);
+                    Tracer.TraceError(error);
+                }
+                foreach (var message in messages)
+                {
+                    Tracer.WriteLine(message);
                 }
             }
             catch
@@ -201,6 +181,11 @@
         private void FillCatalog([NotNull] Dispatcher dispatcher)
         {
             Contract.Requires(dispatcher != null);
+
+            var compositionContainer = _compositionHost.Container;
+
+            compositionContainer.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
+            compositionContainer.ComposeExportedValue(Tracer);
 
             var thisAssembly = GetType().Assembly;
 
@@ -220,10 +205,6 @@
                 .Where(a => !string.Equals(Path.GetDirectoryName(a.Location), path, StringComparison.OrdinalIgnoreCase))
                 .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
                 .ToArray();
-
-            var compositionContainer = _compositionHost.Container;
-
-            compositionContainer.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
 
             var errors = new List<string>();
 
@@ -249,17 +230,8 @@
 
             _compositionHostLoaded.Set();
 
-            dispatcher.BeginInvoke(() => ShowLoaderMessages(compositionContainer, errors, messages));
+            dispatcher.BeginInvoke(() => ShowLoaderMessages(errors, messages));
             dispatcher.BeginInvoke(() => ErrorProvider.Register(compositionContainer));
-        }
-
-        private static bool IsOldInteractivityAssembly([NotNull] Assembly a)
-        {
-            var assemblyName = a.GetName();
-
-            return (string.Equals(assemblyName.Name, SystemWindowsInteractivity, StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(assemblyName.Name, MicrosoftExpressionInteractions, StringComparison.OrdinalIgnoreCase))
-                   && assemblyName.Version != new Version(4, 5, 0, 0);
         }
 
         [NotNull]
@@ -583,7 +555,7 @@
             CompositionHost.GetExportedValue<ResourceViewModel>().Reload();
         }
 
-        private static Assembly AppDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        private Assembly AppDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             var assemblyName = new AssemblyName(args.Name);
 
@@ -591,7 +563,12 @@
                 return null;
 
             assemblyName.Version = new Version(4, 5, 0, 0);
-            return Assembly.Load(assemblyName);
+
+            var assembly = Assembly.Load(assemblyName);
+
+            Tracer.WriteLine("Resolved " + assembly.FullName + " from " + assembly.CodeBase);
+
+            return assembly;
         }
 
         [ContractInvariantMethod]
