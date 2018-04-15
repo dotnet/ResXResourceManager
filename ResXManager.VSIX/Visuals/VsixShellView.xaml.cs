@@ -65,6 +65,7 @@
                 var messages = loadedAssemblies
                     .Where(a => assemblyNames.Contains(a.GetName().Name))
                     .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Assembly '{0}' loaded from {1}", assembly.FullName, assembly.CodeBase))
+                    .OrderBy(text => text, StringComparer.OrdinalIgnoreCase)
                     .ToArray();
 
                 foreach (var message in messages)
