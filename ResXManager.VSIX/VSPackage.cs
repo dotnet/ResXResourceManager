@@ -204,7 +204,7 @@
                 .Where(a => assemblyNames.Contains(a.GetName().Name))
                 .Where(a => !string.Equals(Path.GetDirectoryName(a.Location), path, StringComparison.OrdinalIgnoreCase))
                 .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
-                .ToArray();
+                .ToList();
 
             var errors = new List<string>();
 
@@ -214,7 +214,9 @@
 
                 try
                 {
-                    _compositionHost.AddCatalog(new AssemblyCatalog(file));
+                    var assembly = Assembly.LoadFrom(file);
+                    messages.Add(string.Format(CultureInfo.CurrentCulture, "Loaded assembly '{0}' from {1}.", assembly.FullName, assembly.CodeBase));
+                    _compositionHost.AddCatalog(new AssemblyCatalog(assembly));
                 }
                 catch (ReflectionTypeLoadException ex)
                 {
