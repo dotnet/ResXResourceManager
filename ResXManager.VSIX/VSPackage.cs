@@ -178,6 +178,7 @@
             }
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFrom")]
         private void FillCatalog([NotNull] Dispatcher dispatcher)
         {
             Contract.Requires(dispatcher != null);
