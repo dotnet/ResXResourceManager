@@ -53,6 +53,7 @@
     {
         private const string SystemWindowsInteractivity = "System.Windows.Interactivity";
         private const string MicrosoftExpressionInteractions = "Microsoft.Expression.Interactions";
+        private const string dll = ".dll";
 
         [NotNull]
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
@@ -77,10 +78,21 @@
         [CanBeNull]
         private static VSPackage _instance;
 
+        [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFrom")]
+        static VSPackage()
+        {
+            var path = Path.GetDirectoryName(typeof(VSPackage).Assembly.Location);
+            Contract.Assume(!string.IsNullOrEmpty(path));
+
+            Assembly.LoadFrom(Path.Combine(path, SystemWindowsInteractivity + dll));
+            Assembly.LoadFrom(Path.Combine(path, MicrosoftExpressionInteractions + dll));
+        }
+
         public VSPackage()
         {
             _instance = this;
             Tracer = new OutputWindowTracer(this);
+
             AppDomain.CurrentDomain.AssemblyResolve += AppDomain_AssemblyResolve;
         }
 
@@ -197,16 +209,7 @@
                 .Where(file => !"DocumentFormat.OpenXml.dll".Equals(Path.GetFileName(file), StringComparison.OrdinalIgnoreCase))
                 .ToArray();
 
-            var assemblyNames = new HashSet<string>(assemblyFileNames.Select(Path.GetFileNameWithoutExtension));
-
-            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-            var messages = loadedAssemblies
-                .Where(a => assemblyNames.Contains(a.GetName().Name))
-                .Where(a => !string.Equals(Path.GetDirectoryName(a.Location), path, StringComparison.OrdinalIgnoreCase))
-                .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
-                .ToList();
-
+            var messages = new List<string>();
             var errors = new List<string>();
 
             foreach (var file in assemblyFileNames)
