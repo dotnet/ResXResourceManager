@@ -209,7 +209,16 @@
                 .Where(file => !"DocumentFormat.OpenXml.dll".Equals(Path.GetFileName(file), StringComparison.OrdinalIgnoreCase))
                 .ToArray();
 
-            var messages = new List<string>();
+            var assemblyNames = new HashSet<string>(assemblyFileNames.Select(Path.GetFileNameWithoutExtension));
+
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            var messages = loadedAssemblies
+                .Where(a => assemblyNames.Contains(a.GetName().Name))
+                .Where(a => !string.Equals(Path.GetDirectoryName(a.Location), path, StringComparison.OrdinalIgnoreCase))
+                .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
+                .ToList();
+
             var errors = new List<string>();
 
             foreach (var file in assemblyFileNames)
