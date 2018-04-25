@@ -78,14 +78,10 @@
         [CanBeNull]
         private static VSPackage _instance;
 
-        [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFrom")]
         static VSPackage()
         {
             var path = Path.GetDirectoryName(typeof(VSPackage).Assembly.Location);
             Contract.Assume(!string.IsNullOrEmpty(path));
-
-            Assembly.LoadFrom(Path.Combine(path, SystemWindowsInteractivity + dll));
-            Assembly.LoadFrom(Path.Combine(path, MicrosoftExpressionInteractions + dll));
         }
 
         public VSPackage()
@@ -221,7 +217,7 @@
 
             var errors = new List<string>();
 
-            foreach (var file in assemblyFileNames)
+            foreach (var file in Directory.EnumerateFiles(path, @"ResXManager.*.dll"))
             {
                 Contract.Assume(!string.IsNullOrEmpty(file));
 
@@ -570,20 +566,20 @@
             CompositionHost.GetExportedValue<ResourceViewModel>().Reload();
         }
 
-        private Assembly AppDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        private Assembly AppDomain_AssemblyResolve(object sender, [NotNull] ResolveEventArgs args)
         {
             var assemblyName = new AssemblyName(args.Name);
 
-            if ((assemblyName.Name != SystemWindowsInteractivity) && (assemblyName.Name != MicrosoftExpressionInteractions))
-                return null;
+            switch (assemblyName.Name)
+            {
+                case SystemWindowsInteractivity:
+                    return typeof(System.Windows.Interactivity.Behavior).Assembly;
 
-            assemblyName.Version = new Version(4, 5, 0, 0);
+                case MicrosoftExpressionInteractions:
+                    return typeof(Microsoft.Expression.Interactivity.Core.ActionCommand).Assembly;
+            }
 
-            var assembly = Assembly.Load(assemblyName);
-
-            Tracer.WriteLine("Resolved " + assembly.FullName + " from " + assembly.CodeBase);
-
-            return assembly;
+            return null;
         }
 
         [ContractInvariantMethod]
