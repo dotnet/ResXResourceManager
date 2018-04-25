@@ -1,4 +1,7 @@
-﻿1.16
+﻿1.17
+- Fix #117, #122, #123 and related: Issues with mixed versions of System.Windows.Interactivity
+
+1.16
 - Fix #117 and related: Issues with mixed versions of System.Windows.Interactivity
 
 1.15
