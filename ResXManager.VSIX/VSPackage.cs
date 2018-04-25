@@ -201,17 +201,14 @@
             var path = Path.GetDirectoryName(thisAssembly.Location);
             Contract.Assume(!string.IsNullOrEmpty(path));
 
-            var assemblyFileNames = Directory.EnumerateFiles(path, @"*.dll")
-                .Where(file => !"DocumentFormat.OpenXml.dll".Equals(Path.GetFileName(file), StringComparison.OrdinalIgnoreCase))
-                .ToArray();
-
-            var assemblyNames = new HashSet<string>(assemblyFileNames.Select(Path.GetFileNameWithoutExtension));
-
+            var allLocalAssemblyFileNames = Directory.EnumerateFiles(path, @"*.dll");
+            var allLocalAssemblyNames = new HashSet<string>(allLocalAssemblyFileNames.Select(Path.GetFileNameWithoutExtension));
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 
             var messages = loadedAssemblies
-                .Where(a => assemblyNames.Contains(a.GetName().Name))
+                .Where(a => allLocalAssemblyNames.Contains(a.GetName().Name))
                 .Where(a => !string.Equals(Path.GetDirectoryName(a.Location), path, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(a => a.FullName, StringComparer.OrdinalIgnoreCase)
                 .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
                 .ToList();
 
