@@ -17,7 +17,6 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Core;
     using TomsToolbox.Wpf.Composition;
 
     /// <summary>
@@ -49,29 +48,7 @@
             }
             catch (Exception ex)
             {
-                exportProvider.TraceError(ex.ToString());
-
-                var path = Path.GetDirectoryName(GetType().Assembly.Location);
-                Contract.Assume(!string.IsNullOrEmpty(path));
-
-                var assemblyFileNames = Directory.EnumerateFiles(path, @"*.dll")
-                    .Where(file => !"DocumentFormat.OpenXml.dll".Equals(Path.GetFileName(file), StringComparison.OrdinalIgnoreCase))
-                    .ToArray();
-
-                var assemblyNames = new HashSet<string>(assemblyFileNames.Select(Path.GetFileNameWithoutExtension));
-
-                var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-                var messages = loadedAssemblies
-                    .Where(a => assemblyNames.Contains(a.GetName().Name))
-                    .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Assembly '{0}' loaded from {1}", assembly.FullName, assembly.CodeBase))
-                    .OrderBy(text => text, StringComparer.OrdinalIgnoreCase)
-                    .ToArray();
-
-                foreach (var message in messages)
-                {
-                    exportProvider.WriteLine(message);
-                }
+                exportProvider.TraceXamlLoaderError(ex);
             }
         }
 

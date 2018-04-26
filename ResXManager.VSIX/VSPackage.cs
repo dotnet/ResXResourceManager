@@ -51,10 +51,6 @@
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     public sealed class VSPackage : Package
     {
-        private const string SystemWindowsInteractivity = "System.Windows.Interactivity";
-        private const string MicrosoftExpressionInteractions = "Microsoft.Expression.Interactions";
-        private const string dll = ".dll";
-
         [NotNull]
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
         [NotNull]
@@ -78,18 +74,10 @@
         [CanBeNull]
         private static VSPackage _instance;
 
-        static VSPackage()
-        {
-            var path = Path.GetDirectoryName(typeof(VSPackage).Assembly.Location);
-            Contract.Assume(!string.IsNullOrEmpty(path));
-        }
-
         public VSPackage()
         {
             _instance = this;
             Tracer = new OutputWindowTracer(this);
-
-            AppDomain.CurrentDomain.AssemblyResolve += AppDomain_AssemblyResolve;
         }
 
         [NotNull]
@@ -201,16 +189,18 @@
             var path = Path.GetDirectoryName(thisAssembly.Location);
             Contract.Assume(!string.IsNullOrEmpty(path));
 
-            var allLocalAssemblyFileNames = Directory.EnumerateFiles(path, @"*.dll");
-            var allLocalAssemblyNames = new HashSet<string>(allLocalAssemblyFileNames.Select(Path.GetFileNameWithoutExtension));
-            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var messages = new List<string>();
 
-            var messages = loadedAssemblies
-                .Where(a => allLocalAssemblyNames.Contains(a.GetName().Name))
-                .Where(a => !string.Equals(Path.GetDirectoryName(a.Location), path, StringComparison.OrdinalIgnoreCase))
-                .OrderBy(a => a.FullName, StringComparer.OrdinalIgnoreCase)
-                .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
-                .ToList();
+            //var allLocalAssemblyFileNames = Directory.EnumerateFiles(path, @"*.dll");
+            //var allLocalAssemblyNames = new HashSet<string>(allLocalAssemblyFileNames.Select(Path.GetFileNameWithoutExtension));
+            //var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            //var messages = loadedAssemblies
+            //    .Where(a => allLocalAssemblyNames.Contains(a.GetName().Name))
+            //    .Where(a => !string.Equals(Path.GetDirectoryName(a.Location), path, StringComparison.OrdinalIgnoreCase))
+            //    .OrderBy(a => a.FullName, StringComparer.OrdinalIgnoreCase)
+            //    .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
+            //    .ToList();
 
             var errors = new List<string>();
 
@@ -561,22 +551,6 @@
         private void ReloadSolution()
         {
             CompositionHost.GetExportedValue<ResourceViewModel>().Reload();
-        }
-
-        private Assembly AppDomain_AssemblyResolve(object sender, [NotNull] ResolveEventArgs args)
-        {
-            var assemblyName = new AssemblyName(args.Name);
-
-            switch (assemblyName.Name)
-            {
-                case SystemWindowsInteractivity:
-                    return typeof(System.Windows.Interactivity.Behavior).Assembly;
-
-                case MicrosoftExpressionInteractions:
-                    return typeof(Microsoft.Expression.Interactivity.Core.ActionCommand).Assembly;
-            }
-
-            return null;
         }
 
         [ContractInvariantMethod]

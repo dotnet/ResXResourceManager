@@ -42,7 +42,7 @@
             }
             catch (Exception ex)
             {
-                tracer.TraceError(ex.ToString());
+                exportProvider.TraceXamlLoaderError(ex);
             }
         }
 

@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -38,17 +39,17 @@
         private readonly ResourceViewModel _resourceViewModel;
 
         [ImportingConstructor]
-        public ResourceView([NotNull] ICompositionHost compositionHost)
+        public ResourceView([NotNull] ExportProvider exportProvider)
         {
-            Contract.Requires(compositionHost != null);
+            Contract.Requires(exportProvider != null);
 
-            _resourceManager = compositionHost.GetExportedValue<ResourceManager>();
-            _resourceViewModel = compositionHost.GetExportedValue<ResourceViewModel>();
-            _configuration = compositionHost.GetExportedValue<Configuration>();
+            _resourceManager = exportProvider.GetExportedValue<ResourceManager>();
+            _resourceViewModel = exportProvider.GetExportedValue<ResourceViewModel>();
+            _configuration = exportProvider.GetExportedValue<Configuration>();
 
             try
             {
-                this.SetExportProvider(compositionHost.Container);
+                this.SetExportProvider(exportProvider);
 
                 _resourceManager.Loaded += ResourceManager_Loaded;
 
@@ -58,7 +59,7 @@
             }
             catch (Exception ex)
             {
-                compositionHost.TraceError(ex.ToString());
+                exportProvider.TraceXamlLoaderError(ex);
             }
         }
 
