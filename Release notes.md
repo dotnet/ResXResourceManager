@@ -1,4 +1,7 @@
-﻿1.17
+﻿1.18
+- Fix Update all dependencies to use and reference only the latest version of System.Windows.Interactivity
+
+1.17
 - Fix #117, #122, #123 and related: Issues with mixed versions of System.Windows.Interactivity
 
 1.16

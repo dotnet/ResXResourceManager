@@ -80,9 +80,9 @@
         {
             if (ReferenceEquals(left, right))
                 return true;
-            if (ReferenceEquals(left, null))
+            if (left is null)
                 return false;
-            if (ReferenceEquals(right, null))
+            if (right is null)
                 return false;
 
             return Equals(left.Culture, right.Culture);
@@ -128,9 +128,9 @@
         {
             if (ReferenceEquals(left, right))
                 return 0;
-            if (ReferenceEquals(left, null))
+            if (left is null)
                 return -1;
-            if (ReferenceEquals(right, null))
+            if (right is null)
                 return 1;
 
             return string.Compare(left.ToString(), right.ToString(), StringComparison.OrdinalIgnoreCase);
