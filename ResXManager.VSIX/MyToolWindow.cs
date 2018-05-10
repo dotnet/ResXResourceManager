@@ -96,6 +96,10 @@
                 _tracer.WriteLine(Resources.Version, new AssemblyName(executingAssembly.FullName).Version);
                 _tracer.WriteLine(".NET Framework Version: {0} (https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed)", FrameworkVersion());
 
+                const string switchName = @"Switch.System.Windows.Baml2006.AppendLocalAssemblyVersionForSourceUri";
+                AppContext.TryGetSwitch(switchName, out var isEnabled);
+                _tracer.WriteLine("{0}={1} (https://github.com/Microsoft/dotnet/blob/master/releases/net472/dotnet472-changes.md#wpf)", switchName, isEnabled);
+
                 EventManager.RegisterClassHandler(typeof(VsixShellView), ButtonBase.ClickEvent, new RoutedEventHandler(Navigate_Click));
 
                 // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
