@@ -1,4 +1,7 @@
-﻿1.18
+﻿1.19
+- Update DGX to fix #91
+
+1.18
 - Fix Update all dependencies to use and reference only the latest version of System.Windows.Interactivity
 
 1.17
