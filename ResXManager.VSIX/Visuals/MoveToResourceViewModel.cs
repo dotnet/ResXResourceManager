@@ -189,9 +189,9 @@
             var keyBuilder = new StringBuilder();
 
             if (!string.IsNullOrEmpty(className))
-                keyBuilder.AppendFormat(@"{0}_", className);
+                keyBuilder.Append(className).Append(@"_");
             if (!string.IsNullOrEmpty(functionName))
-                keyBuilder.AppendFormat(@"{0}_", functionName);
+                keyBuilder.Append(functionName).Append(@"_");
 
             var makeUpper = true;
 
