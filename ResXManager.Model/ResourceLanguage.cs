@@ -452,7 +452,7 @@
             content.Add(new XText(string.Empty));
 
             var entry = new XElement(_dataNodeName, new XAttribute(_nameAttributeName, key), new XAttribute(_spaceAttributeName, @"preserve"));
-            entry.Add(content);
+            entry.Add(content, new XText("\n  "));
 
             var fileContentSorting = _configuration.EffectiveResXSortingComparison;
 
@@ -728,7 +728,7 @@
                         if (valueElement == null)
                         {
                             valueElement = new XElement(_owner._commentNodeName);
-                            entry.Add(valueElement);
+                            entry.Add(new XText("  "), valueElement, new XText("\n  "));
                         }
 
                         var textNode = valueElement.FirstNode as XText;
