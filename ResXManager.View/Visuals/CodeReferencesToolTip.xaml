@@ -5,7 +5,6 @@
          xmlns:model="urn:ResXManager.Model"
          xmlns:system="clr-namespace:System;assembly=mscorlib"
          xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-         xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
          xmlns:toms="urn:TomsToolbox"
          xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
          d:DataContext="{d:DesignInstance model:ResourceTableEntry}">
@@ -61,10 +60,10 @@
           </ItemsControl>
         </Grid>
         <i:Interaction.Triggers>
-          <ei:TimerTrigger MillisecondsPerTick="1000">
+          <toms:TimerTrigger Interval="00:00:01">
             <toms:UpdatePropertyAction TargetName="Text" Property="{x:Static TextBlock.TextProperty}" />
             <toms:UpdatePropertyAction TargetName="Progress" Property="{x:Static ProgressBar.ValueProperty}" />
-          </ei:TimerTrigger>
+          </toms:TimerTrigger>
         </i:Interaction.Triggers>
       </Border>
       <ControlTemplate.Triggers>
