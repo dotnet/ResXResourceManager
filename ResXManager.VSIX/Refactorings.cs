@@ -34,6 +34,7 @@
         private readonly ICompositionHost _compositionHost;
         [CanBeNull]
         private ResourceEntity _lastUsedEntity;
+        private bool _isLastUsedEntityInSameProject;
 
         [ImportingConstructor]
         public Refactorings([NotNull] ICompositionHost compositionHost)
@@ -107,7 +108,7 @@
 
             var entities = resourceManager.ResourceEntities
                 .Where(entity => !entity.IsWinFormsDesignerResource)
-                .ToArray();
+                .ToList();
 
             // ReSharper disable once PossibleNullReferenceException
             var filter = Settings.Default.ResourceFilter?.Trim();
@@ -115,19 +116,24 @@
             if (!string.IsNullOrEmpty(filter))
             {
                 var regex = new Regex(filter, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-
-                entities = entities
-                    .Where(item => regex.Match(item.ToString()).Success)
-                    .ToArray();
+                entities.RemoveAll(item => !regex.Match(item.ToString()).Success);
             }
 
-            var favorites = new[] { GetPreferredResourceEntity(document, entities), _lastUsedEntity }
-                .Where(item => item != null)
-                .ToArray();
+            var projectResources = new HashSet<ResourceEntity>(GetResourceEntiesFromProject(document, entities));
 
-            entities = favorites
-                .Concat(entities.Except(favorites))
-                .ToArray();
+            // put resources from the same project on top
+            entities.RemoveAll(entity => projectResources.Contains(entity));
+            entities.InsertRange(0, projectResources);
+
+            // put the last used entry on top, if it's in the same project, or the last access was cross-project.
+            if (_lastUsedEntity != null)
+            {
+                if (!_isLastUsedEntityInSameProject || IsInProject(_lastUsedEntity, document))
+                {
+                    entities.Remove(_lastUsedEntity);
+                    entities.Insert(0, _lastUsedEntity);
+                }
+            }
 
             var viewModel = new MoveToResourceViewModel(patterns, entities, text, extension, selection.ClassName, selection.FunctionName);
 
@@ -140,8 +146,12 @@
                 if (!viewModel.ReuseExisiting)
                 {
                     var entity = _lastUsedEntity = viewModel.SelectedResourceEntity;
+                    if (entity == null)
+                        return null;
 
-                    entry = entity?.Add(viewModel.Key);
+                    _isLastUsedEntityInSameProject = IsInProject(entity, document);
+
+                    entry = entity.Add(viewModel.Key);
                     if (entry == null)
                         return null;
 
@@ -157,8 +167,8 @@
             return null;
         }
 
-        [CanBeNull]
-        private static ResourceEntity GetPreferredResourceEntity([NotNull] EnvDTE.Document document, [NotNull][ItemNotNull] IEnumerable<ResourceEntity> entities)
+        [NotNull, ItemNotNull]
+        private static IEnumerable<ResourceEntity> GetResourceEntiesFromProject([NotNull] EnvDTE.Document document, [NotNull][ItemNotNull] IEnumerable<ResourceEntity> entities)
         {
             Contract.Requires(document != null);
             Contract.Requires(entities != null);
@@ -167,11 +177,25 @@
             {
                 var project = document.ProjectItem?.ContainingProject;
 
-                return entities.FirstOrDefault(entity => IsInProject(entity, project));
+                return entities.Where(entity => IsInProject(entity, project));
             }
             catch (Exception)
             {
-                return null;
+                return Enumerable.Empty<ResourceEntity>();
+            }
+        }
+
+        private static bool IsInProject([NotNull] ResourceEntity entity, [CanBeNull] EnvDTE.Document document)
+        {
+            try
+            {
+                var project = document?.ProjectItem?.ContainingProject;
+
+                return IsInProject(entity, project);
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 
