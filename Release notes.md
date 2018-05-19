@@ -1,4 +1,8 @@
-﻿1.19
+﻿1.20
+- Fix #75: indenting of comments
+- Fix #129: MoveToResource - improve usability, better strategy to remember the last selected resource
+
+1.19
 - Update DGX to fix #91
 
 1.18
