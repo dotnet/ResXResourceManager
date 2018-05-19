@@ -1,7 +1,7 @@
-using JetBrains.Annotations;
-
 namespace tomenglertde.ResXManager.VSIX
 {
+    using JetBrains.Annotations;
+
     using Microsoft.VisualStudio;
 
     internal static class ItemKind

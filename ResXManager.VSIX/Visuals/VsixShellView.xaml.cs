@@ -1,15 +1,11 @@
 ﻿namespace tomenglertde.ResXManager.VSIX.Visuals
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
     using System.Windows;
     using System.Windows.Media;
 

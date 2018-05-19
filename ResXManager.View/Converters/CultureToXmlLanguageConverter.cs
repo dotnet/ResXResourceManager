@@ -1,11 +1,11 @@
-﻿using JetBrains.Annotations;
-
-namespace tomenglertde.ResXManager.View.Converters
+﻿namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
     using System.Globalization;
     using System.Windows.Data;
     using System.Windows.Markup;
+
+    using JetBrains.Annotations;
 
     public class CultureToXmlLanguageConverter : IValueConverter
     {

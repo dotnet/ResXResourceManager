@@ -19,7 +19,6 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Tools;
 
-    using TomsToolbox.Desktop.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Converters;

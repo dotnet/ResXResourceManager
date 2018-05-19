@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Weavers>
-  <AutoProperties/>
-  <Throttle/>
-  <PropertyChanged/>
-  <LoadAssembliesOnStartup IncludeAssemblies="System.Windows.Interactivity|Microsoft.Expression.Interactions|DataGridExtensions"/>
+  <AutoProperties />
+  <Throttle />
+  <PropertyChanged />
+  <LoadAssembliesOnStartup IncludeAssemblies="System.Windows.Interactivity|Microsoft.Expression.Interactions|DataGridExtensions" />
 </Weavers>

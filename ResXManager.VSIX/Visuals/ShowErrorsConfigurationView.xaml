@@ -16,8 +16,8 @@
       <TextBlock Text="{x:Static properties:Resources.ShowErrorsConfiguration_ShowAs}" DockPanel.Dock="Left" VerticalAlignment="Center" />
       <Decorator Width="8" DockPanel.Dock="Left" />
       <ComboBox ItemsSource="{Binding Source={x:Type shell:TaskErrorCategory}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
-                SelectedItem="{Binding Configuration.TaskErrorCategory}" 
-                Width="200" HorizontalAlignment="Left"/>
+                SelectedItem="{Binding Configuration.TaskErrorCategory}"
+                Width="200" HorizontalAlignment="Left" />
     </DockPanel>
   </StackPanel>
 </UserControl>

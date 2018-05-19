@@ -1,8 +1,8 @@
-﻿using JetBrains.Annotations;
-
-namespace tomenglertde.ResXManager.View.ColumnHeaders
+﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
     using System.Windows.Controls;
+
+    using JetBrains.Annotations;
 
     public class ColumnHeader : ContentControl, IColumnHeader
     {

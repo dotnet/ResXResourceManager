@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace tomenglertde.ResXManager.View.Converters
+﻿namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
     using System.Collections.Generic;
@@ -8,6 +6,8 @@ namespace tomenglertde.ResXManager.View.Converters
     using System.Linq;
     using System.Windows.Controls;
     using System.Windows.Data;
+
+    using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.View.Tools;
 

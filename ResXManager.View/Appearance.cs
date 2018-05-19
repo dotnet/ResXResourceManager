@@ -1,8 +1,8 @@
-﻿using JetBrains.Annotations;
-
-namespace tomenglertde.ResXManager.View
+﻿namespace tomenglertde.ResXManager.View
 {
     using System.Windows;
+
+    using JetBrains.Annotations;
 
     public static class Appearance
     {

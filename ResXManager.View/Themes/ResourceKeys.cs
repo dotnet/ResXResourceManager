@@ -1,8 +1,8 @@
-﻿using JetBrains.Annotations;
-
-namespace tomenglertde.ResXManager.View.Themes
+﻿namespace tomenglertde.ResXManager.View.Themes
 {
     using System.Windows;
+
+    using JetBrains.Annotations;
 
     public static class ResourceKeys
     {

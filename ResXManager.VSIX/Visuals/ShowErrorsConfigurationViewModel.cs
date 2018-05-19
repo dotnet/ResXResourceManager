@@ -1,6 +1,5 @@
 ﻿namespace tomenglertde.ResXManager.VSIX.Visuals
 {
-    using System.ComponentModel;
     using System.ComponentModel.Composition;
 
     using JetBrains.Annotations;

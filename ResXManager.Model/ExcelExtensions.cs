@@ -7,7 +7,7 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
-    using System.Text;
+
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Spreadsheet;

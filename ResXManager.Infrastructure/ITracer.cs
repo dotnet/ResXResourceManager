@@ -13,7 +13,6 @@
 
     using TomsToolbox.Desktop.Composition;
 
-    [ContractClass(typeof(TracerContract))]
     public interface ITracer
     {
         void TraceError([Localizable(false)][NotNull] string value);
@@ -21,28 +20,6 @@
         void TraceWarning([Localizable(false)][NotNull] string value);
 
         void WriteLine([Localizable(false)][NotNull] string value);
-    }
-
-    [ContractClassFor(typeof(ITracer))]
-    internal abstract class TracerContract : ITracer
-    {
-        void ITracer.TraceError(string value)
-        {
-            Contract.Requires(value != null);
-            throw new System.NotImplementedException();
-        }
-
-        void ITracer.TraceWarning(string value)
-        {
-            Contract.Requires(value != null);
-            throw new System.NotImplementedException();
-        }
-
-        void ITracer.WriteLine(string value)
-        {
-            Contract.Requires(value != null);
-            throw new System.NotImplementedException();
-        }
     }
 
     public static class TracerExtensions

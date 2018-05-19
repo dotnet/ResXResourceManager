@@ -80,8 +80,8 @@
   </UserControl.Resources>
 
   <UserControl.InputBindings>
-    <KeyBinding Key="N" Modifiers="Control" Command="{toms:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}"/>
-    <KeyBinding Key="Insert" Modifiers="Shift" Command="{toms:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}"/>
+    <KeyBinding Key="N" Modifiers="Control" Command="{toms:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}" />
+    <KeyBinding Key="Insert" Modifiers="Shift" Command="{toms:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}" />
   </UserControl.InputBindings>
 
   <Grid FocusManager.FocusedElement="{Binding ElementName=DataGrid}">

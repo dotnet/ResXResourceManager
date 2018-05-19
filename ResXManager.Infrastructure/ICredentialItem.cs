@@ -1,12 +1,8 @@
 ﻿namespace tomenglertde.ResXManager.Infrastructure
 {
-    using System;
     using System.ComponentModel;
-    using System.Diagnostics.Contracts;
 
     using JetBrains.Annotations;
-
-    using PropertyChanged;
 
     public interface ICredentialItem : INotifyPropertyChanged
     {

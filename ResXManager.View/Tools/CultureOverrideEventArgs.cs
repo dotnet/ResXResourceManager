@@ -1,8 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Tools
 {
     using System;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
 

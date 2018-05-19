@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.VSIX
 {
     using System;
-    using System.ComponentModel.Composition;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;

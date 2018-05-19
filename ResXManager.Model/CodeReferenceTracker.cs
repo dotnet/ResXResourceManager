@@ -373,14 +373,14 @@
             LineSegments = lineSegments;
         }
 
-        public int LineNumber { get; private set; }
+        public int LineNumber { get; }
 
         [CanBeNull]
-        public ProjectFile ProjectFile { get; private set; }
+        public ProjectFile ProjectFile { get; }
 
         [ItemNotNull]
         [CanBeNull]
-        public IList<string> LineSegments { get; private set; }
+        public IList<string> LineSegments { get; }
     }
 
     internal static class CodeReferenceExtensionMethods
