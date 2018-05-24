@@ -88,6 +88,7 @@
   <ItemGroup>
     <Reference Include="AutoProperties, Version=1.10.0.0, Culture=neutral, PublicKeyToken=4d0e9a1cbec0d397, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoProperties.Fody.1.10.0.0\lib\netstandard1.0\AutoProperties.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
@@ -109,6 +110,7 @@
     </Reference>
     <Reference Include="PropertyChanged, Version=2.5.6.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
       <HintPath>..\packages\PropertyChanged.Fody.2.5.6\lib\net452\PropertyChanged.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -270,6 +272,26 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <PublishFile Include="AutoProperties">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Assembly</FileType>
+    </PublishFile>
+    <PublishFile Include="JetBrains.Annotations">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Assembly</FileType>
+    </PublishFile>
     <PublishFile Include="Properties\Resources.Designer.tt">
       <Visible>False</Visible>
       <Group>
@@ -279,6 +301,16 @@
       <PublishState>Exclude</PublishState>
       <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="PropertyChanged">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Assembly</FileType>
     </PublishFile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
