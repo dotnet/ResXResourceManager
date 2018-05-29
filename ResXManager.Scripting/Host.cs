@@ -204,5 +204,7 @@
         public StringComparison? EffectiveResXSortingComparison { get; set; }
 
         public DuplicateKeyHandling DuplicateKeyHandling { get; set; }
+
+        public bool UseRuntimeAvailableProperties { get; set; }
     }
 }

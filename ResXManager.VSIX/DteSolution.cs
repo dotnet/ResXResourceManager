@@ -230,16 +230,26 @@
                     var project = projectItem.ContainingProject;
                     Contract.Assume(project != null);
 
+                    FileInfo projectFileInfo = new FileInfo(project.FullName);
+                    var assemblyName = ResourceManagerExtensions.GetValueOrDefaultFromCsProj(projectFileInfo, "AssemblyName", project.Name);
+                    var rootNamespace = ResourceManagerExtensions.GetValueOrDefaultFromCsProj(projectFileInfo, "RootNamespace", project.Name);
+
                     if (items.TryGetValue(fileName, out var projectFile))
                     {
                         Contract.Assume(projectFile != null);
                         Contract.Assume(project.Name != null);
 
+                        projectFile.AssemblyName = assemblyName;
+                        projectFile.RootNamespace = rootNamespace;
                         projectFile.AddProject(project.Name, projectItem);
                     }
                     else
                     {
-                        items.Add(fileName, new DteProjectFile(this, fileName, project.Name, project.UniqueName, projectItem));
+                        items.Add(fileName, new DteProjectFile(this, fileName, project.Name, project.UniqueName, projectItem)
+                        {
+                            AssemblyName = assemblyName,
+                            RootNamespace = rootNamespace
+                        });
                     }
                 }
             }

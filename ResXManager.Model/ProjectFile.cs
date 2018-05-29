@@ -50,6 +50,18 @@
         public string Extension { get; }
 
         /// <summary>
+        /// AssemblyName -> read from the .csproj-File.
+        /// </summary>
+        [CanBeNull]
+        public string AssemblyName { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the root namespace of the project file.
+        /// </summary>
+        [CanBeNull]
+        public string RootNamespace { get; set; }
+        
+        /// <summary>
         /// Gets or sets the name of the project containing the file.
         /// </summary>
         [CanBeNull]

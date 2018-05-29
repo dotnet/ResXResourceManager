@@ -416,4 +416,7 @@ Use e.g. ".* - (?!Migrations)" to hide EF migrations.</value>
   <data name="WrapLongLinesToolTip" xml:space="preserve">
     <value>Wrap long lines</value>
   </data>
+  <data name="UseRuntimeAvailableProperties" xml:space="preserve">
+    <value>Use Assembly Name instead of Project Name and Namespace instead of File Name on Excel export</value>
+  </data>
 </root>

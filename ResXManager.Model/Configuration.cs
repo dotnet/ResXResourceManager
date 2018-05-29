@@ -29,6 +29,11 @@
         StringComparison? EffectiveResXSortingComparison { get; }
 
         DuplicateKeyHandling DuplicateKeyHandling { get; }
+
+        /// <summary>
+        /// Gets or sets, whether to use Namespace and AssemblyName or File and ProjectName at excel export and import
+        /// </summary>
+        bool UseRuntimeAvailableProperties { get; }
     }
 
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces", Justification = "Works fine with this")]
@@ -80,6 +85,12 @@
         [DefaultValue(default(ExcelExportMode))]
         public ExcelExportMode ExcelExportMode { get; set; }
 
+        /// <summary>
+        /// Gets or sets, whether to use Namespace and AssemblyName or File and ProjectName at excel export and import
+        /// </summary>
+        [DefaultValue(false)]
+        public bool UseRuntimeAvailableProperties { get; set; }
+        
         [DefaultValue(default(DuplicateKeyHandling))]
         public DuplicateKeyHandling DuplicateKeyHandling { get; set; }
 

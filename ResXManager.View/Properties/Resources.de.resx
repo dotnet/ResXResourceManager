@@ -407,4 +407,7 @@ Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
   <data name="WrapLongLinesToolTip" xml:space="preserve">
     <value>Lange Zeilen umbrechen</value>
   </data>
+  <data name="UseRuntimeAvailableProperties" xml:space="preserve">
+    <value>Verwende beim Excel Export den Assembly Namen anstatt des Projektnamen und den Namensraum anstatt des Dateinamen</value>
+  </data>
 </root>

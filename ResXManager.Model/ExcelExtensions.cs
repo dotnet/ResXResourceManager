@@ -27,9 +27,16 @@
 
     public static partial class ResourceEntityExtensions
     {
-        [NotNull, ItemNotNull]
-        private static readonly string[] _singleSheetFixedColumnHeaders = { "Project", "File", "Key" };
-
+        /// <summary>
+        /// Extracted HeaderRow values to static variables because of simplicity
+        /// Furthermore, the HeaderRow values have to be checked in order to choose on what value has to be checked on import
+        /// </summary>
+        private const string AssemblyName = "AssemblyName";
+        private const string Namespace = "Namespace";
+        private const string Project = "Project";
+        private const string File = "File";
+        private const string Key = "Key";
+        
         public static void ExportExcelFile([NotNull] this ResourceManager resourceManager, [NotNull] string filePath, [CanBeNull] IResourceScope scope, ExcelExportMode exportMode)
         {
             Contract.Requires(resourceManager != null);
@@ -42,23 +49,26 @@
                 var workbookPart = package.AddWorkbookPart();
                 Contract.Assume(workbookPart != null);
 
+                //Get whether to use the Assembly and/or the Namespace
+                bool useRuntimeAvailableProperties = resourceManager.Configuration.UseRuntimeAvailableProperties;
+
                 if (exportMode == ExcelExportMode.MultipleSheets)
                 {
-                    ExportToMultipleSheets(resourceManager, workbookPart, scope);
+                    ExportToMultipleSheets(resourceManager, workbookPart, scope, useRuntimeAvailableProperties);
                 }
                 else
                 {
-                    ExportToSingleSheet(workbookPart, scope ?? new FullScope(resourceManager.ResourceEntities));
+                    ExportToSingleSheet(workbookPart, scope ?? new FullScope(resourceManager.ResourceEntities), useRuntimeAvailableProperties);
                 }
             }
         }
 
-        private static void ExportToMultipleSheets([NotNull] ResourceManager resourceManager, [NotNull] WorkbookPart workbookPart, [CanBeNull] IResourceScope scope)
+        private static void ExportToMultipleSheets([NotNull] ResourceManager resourceManager, [NotNull] WorkbookPart workbookPart, [CanBeNull] IResourceScope scope, bool useRuntimeAvailableProperties)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(workbookPart != null);
 
-            var entitiesQuery = GetMultipleSheetEntities(resourceManager);
+            var entitiesQuery = GetMultipleSheetEntities(resourceManager, useRuntimeAvailableProperties);
 
             if (scope != null)
             {
@@ -80,7 +90,7 @@
             }
         }
 
-        private static void ExportToSingleSheet([NotNull] WorkbookPart workbookPart, [NotNull] IResourceScope scope)
+        private static void ExportToSingleSheet([NotNull] WorkbookPart workbookPart, [NotNull] IResourceScope scope, bool useRuntimeAvailableProperties)
         {
             Contract.Requires(workbookPart != null);
             Contract.Requires(scope != null);
@@ -96,12 +106,34 @@
 
             worksheetPart.Worksheet = worksheet;
 
-            var headerRow = _singleSheetFixedColumnHeaders.Concat(languages.GetLanguageColumnHeaders(scope));
-            var dataRows = entries.Select(e => new[] { e.Container.ProjectName, e.Container.UniqueName }.Concat(e.GetDataRow(languages, scope)));
+            var columnHeaders = GenerateSingleSheetFixedColumnHeaders(useRuntimeAvailableProperties);
+
+            var headerRow = columnHeaders.Concat(languages.GetLanguageColumnHeaders(scope));
+
+            //Check whether the AssemblyName/Namespace should be exported or the ProjectName/UniqueName
+            var dataRows = entries.Select(e => new[]{
+                    useRuntimeAvailableProperties
+                        ? e.Container.AssemblyName
+                        : e.Container.ProjectName,
+                    useRuntimeAvailableProperties
+                        ? e.Container.Namespace
+                        : e.Container.UniqueName
+                }
+                .Concat(e.GetDataRow(languages, scope)));
 
             var rows = new[] { headerRow }.Concat(dataRows);
 
             worksheet.AppendItem(rows.Aggregate(new SheetData(), AppendRow));
+        }
+
+        private static string[] GenerateSingleSheetFixedColumnHeaders(bool useRuntimeAvailableProperties)
+        {
+            if (!useRuntimeAvailableProperties)
+            {
+                return new []{ Project, File, Key};
+            }
+            //If the AssemblyName and the Namespace should be used, change the first column of a single sheet header and the second 
+            return new[] { AssemblyName, Namespace, Key };
         }
 
         [NotNull, ItemNotNull]
@@ -131,16 +163,21 @@
 
                 var firstRow = firstSheet.GetRows(workbookPart).FirstOrDefault();
 
-                var changes = IsSingleSheetHeader(firstRow, sharedStrings)
-                    ? ImportSingleSheet(resourceManager, firstSheet, workbookPart, sharedStrings)
-                    : ImportMultipleSheets(resourceManager, sheets, workbookPart, sharedStrings);
+                bool useAssembly = firstRow?.GetCellValues(sharedStrings)[0].Equals(AssemblyName) ?? false;
+                bool useNamespace = firstRow?.GetCellValues(sharedStrings)[1].Equals(Namespace) ?? false;
+                bool useRuntimeAvailableProperties = useAssembly && useNamespace;
+
+                var changes = IsSingleSheetHeader(firstRow, sharedStrings, useRuntimeAvailableProperties)
+                    ? ImportSingleSheet(resourceManager, firstSheet, workbookPart, sharedStrings, useRuntimeAvailableProperties)
+                    : ImportMultipleSheets(resourceManager, sheets, workbookPart, sharedStrings, useRuntimeAvailableProperties);
 
                 return changes.ToArray();
             }
         }
 
         [NotNull, ItemNotNull]
-        private static IEnumerable<EntryChange> ImportSingleSheet([NotNull] ResourceManager resourceManager, [NotNull, ItemNotNull] Sheet firstSheet, [NotNull] WorkbookPart workbookPart, [ItemNotNull][CanBeNull] IList<SharedStringItem> sharedStrings)
+        private static IEnumerable<EntryChange> ImportSingleSheet([NotNull] ResourceManager resourceManager, [NotNull, ItemNotNull] Sheet firstSheet, [NotNull] WorkbookPart workbookPart,
+            [ItemNotNull][CanBeNull] IList<SharedStringItem> sharedStrings, bool useRuntimeAvailableProperties)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(firstSheet != null);
@@ -172,17 +209,25 @@
                 {
                     Contract.Assume(fileRows != null);
 
-                    var uniqueName = fileRows.Key;
-                    if (string.IsNullOrEmpty(uniqueName))
+                    var fileColumnEntry = fileRows.Key;
+                    if (string.IsNullOrEmpty(fileColumnEntry))
                         continue;
 
+                    //Depending on the parameter useAssembly -> check for ProjectName or AssemblyName
                     var projectEntities = resourceManager.ResourceEntities
-                        .Where(item => projectName.Equals(item.ProjectName, StringComparison.OrdinalIgnoreCase))
+                        .Where(item => projectName
+                            .Equals(useRuntimeAvailableProperties ? item.AssemblyName : item.ProjectName,
+                                StringComparison.OrdinalIgnoreCase))
                         .ToArray();
 
-                    var entity = projectEntities.FirstOrDefault(item => uniqueName.Equals(item.UniqueName, StringComparison.OrdinalIgnoreCase))
+                    //Depending on the parameter useNamespace -> check for UniqueName or Namespace
+                    var entity = projectEntities.FirstOrDefault(item => fileColumnEntry
+                            .Equals(useRuntimeAvailableProperties ? item.Namespace : item.UniqueName
+                                , StringComparison.OrdinalIgnoreCase))
                         // fallback for backward compatibility:
-                        ?? projectEntities.FirstOrDefault(item => uniqueName.Equals(item.BaseName, StringComparison.OrdinalIgnoreCase));
+                        ?? projectEntities.FirstOrDefault(item => fileColumnEntry
+                            .Equals(useRuntimeAvailableProperties ? item.Namespace : item.BaseName
+                                , StringComparison.OrdinalIgnoreCase));
 
                     if (entity == null)
                         continue;
@@ -198,14 +243,15 @@
         }
 
         [NotNull, ItemNotNull]
-        private static IEnumerable<EntryChange> ImportMultipleSheets([NotNull] ResourceManager resourceManager, [NotNull][ItemNotNull] Sheets sheets, [NotNull] WorkbookPart workbookPart, [ItemNotNull][CanBeNull] IList<SharedStringItem> sharedStrings)
+        private static IEnumerable<EntryChange> ImportMultipleSheets([NotNull] ResourceManager resourceManager, [NotNull][ItemNotNull] Sheets sheets,
+            [NotNull] WorkbookPart workbookPart, [ItemNotNull][CanBeNull] IList<SharedStringItem> sharedStrings, bool useRuntimeAvailableProperties)
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(sheets != null);
             Contract.Requires(workbookPart != null);
             Contract.Ensures(Contract.Result<IEnumerable<EntryChange>>() != null);
 
-            var entities = GetMultipleSheetEntities(resourceManager).ToArray();
+            var entities = GetMultipleSheetEntities(resourceManager, useRuntimeAvailableProperties).ToArray();
 
             var changes = sheets.OfType<Sheet>()
                 .SelectMany(sheet => FindResourceEntity(entities, sheet).ImportTable(_fixedColumnHeaders, sheet.GetTable(workbookPart, sharedStrings)));
@@ -226,11 +272,15 @@
                 .ToArray();
         }
 
-        private static bool IsSingleSheetHeader([ItemNotNull][CanBeNull] Row firstRow, [ItemNotNull][CanBeNull] IList<SharedStringItem> sharedStrings)
+        private static bool IsSingleSheetHeader([ItemNotNull][CanBeNull] Row firstRow, [ItemNotNull][CanBeNull] IList<SharedStringItem> sharedStrings, bool useRuntimeAvailableProperties)
         {
-            return (firstRow != null) && firstRow.GetCellValues(sharedStrings)
-                .Take(_singleSheetFixedColumnHeaders.Length)
-                .SequenceEqual(_singleSheetFixedColumnHeaders);
+            if (firstRow != null)
+            {
+                IList<string> cellValues = firstRow.GetCellValues(sharedStrings);
+                string[] columnsToCheck = GenerateSingleSheetFixedColumnHeaders(useRuntimeAvailableProperties);
+                return cellValues.Take(columnsToCheck.Length).SequenceEqual(columnsToCheck);
+            }
+            return false;
         }
 
         [NotNull]
@@ -554,7 +604,7 @@
 
         [NotNull]
         [ItemNotNull]
-        private static IEnumerable<MultipleSheetEntity> GetMultipleSheetEntities([NotNull] ResourceManager resourceManager)
+        private static IEnumerable<MultipleSheetEntity> GetMultipleSheetEntities([NotNull] ResourceManager resourceManager, bool useRuntimeAvailableProperties)
         {
             Contract.Requires(resourceManager != null);
             Contract.Ensures(Contract.Result<IEnumerable<MultipleSheetEntity>>() != null);
@@ -562,8 +612,8 @@
             var uniqueNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             return resourceManager.ResourceEntities
-                .OrderBy(entity => entity.ProjectName)
-                .ThenBy(entity => entity.BaseName)
+                .OrderBy(entity => useRuntimeAvailableProperties ? entity.AssemblyName : entity.ProjectName)
+                .ThenBy(entity => useRuntimeAvailableProperties ? entity.Namespace : entity.BaseName)
                 .Select((entity, index) => new MultipleSheetEntity(entity, index, uniqueNames));
         }
 

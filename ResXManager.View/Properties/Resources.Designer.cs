@@ -1135,13 +1135,23 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Wrap long lines.
+        ///   Looks up a localized string similar to Use Assembly Name instead of Project Name on Excel....
         /// </summary>
         [NotNull]
         public static string WrapLongLinesToolTip {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("WrapLongLinesToolTip", resourceCulture) ?? string.Empty;
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Use Assembly Name instead of Project Name on Excel....
+        /// </summary>
+        [NotNull]
+        public static string UseRuntimeAvailableProperties {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("UseRuntimeAvailableProperties", resourceCulture) ?? string.Empty;
             }
         }
     }
@@ -1547,6 +1557,9 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Wrap long lines.
         /// </summary>
         WrapLongLinesToolTip,
+        ///   Looks up a localized string similar to Use Assembly Name instead of Project Name and Name....
+        /// </summary>
+        UseRuntimeAvailableProperties,
     }
 
     /// <summary>

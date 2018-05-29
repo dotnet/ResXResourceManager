@@ -1,11 +1,12 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
+    using JetBrains.Annotations;
+
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
-
-    using JetBrains.Annotations;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// Resource manager specific extension methods.
@@ -43,25 +44,26 @@
                 var directory = new DirectoryInfo(directoryPath);
                 var project = FindProject(directory, solutionFolder.FullName);
 
-                var projectName = "<no project>";
                 var uniqueProjectName = (string)null;
 
                 if (project != null)
                 {
-                    projectName = Path.ChangeExtension(project.Name, null);
-
+                    var projectName = Path.ChangeExtension(project.Name, null);
+                    
                     var fullProjectName = project.FullName;
                     if (fullProjectName.Length >= solutionFolderLength) // project found is in solution tree
                     {
                         uniqueProjectName = fullProjectName.Substring(solutionFolderLength);
                     }
-                }
 
-                foreach (var file in directoryFiles)
-                {
-                    Contract.Assume(file != null);
-                    file.ProjectName = projectName;
-                    file.UniqueProjectName = uniqueProjectName;
+                    foreach (var file in directoryFiles)
+                    {
+                        Contract.Assume(file != null);
+                        file.ProjectName = projectName;
+                        file.AssemblyName = GetValueOrDefaultFromCsProj(project, "AssemblyName", projectName);
+                        file.RootNamespace = GetValueOrDefaultFromCsProj(project, "RootNamespace", projectName);
+                        file.UniqueProjectName = uniqueProjectName;
+                    }
                 }
             }
 
@@ -89,6 +91,25 @@
             }
 
             return null;
+        }
+
+        /// <summary>
+        ///     Loads an element's content from the csproj file. If element is not present, the <see cref="defaultValue"/> is taken.
+        /// </summary>
+        public static string GetValueOrDefaultFromCsProj(FileInfo csProjectFileInfo, string elementName, string defaultValue)
+        {
+            Contract.Requires(csProjectFileInfo != null);
+            Contract.Requires(!string.IsNullOrEmpty(elementName));
+            
+            //Try to read value of element from the .csproj-File
+            var content = File.ReadAllText(csProjectFileInfo.FullName);
+            Regex r = new Regex($"(<{elementName}>)(.*)(</{elementName}>)");
+            Match match = r.Match(content);
+            if (!match.Success || match.Groups.Count <= 3)
+            {
+                return defaultValue;
+            }
+            return match.Groups[2].Value;
         }
     }
 }
