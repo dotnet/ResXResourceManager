@@ -1,4 +1,8 @@
-﻿1.20
+﻿1.21
+- Fix #133: Member name same as containing type generates compile error.
+- Fix #132: Missing/empty neutral resources aren't shown if "show only warnings" is enabled
+
+1.20
 - Fix #75: indenting of comments
 - Fix #129: MoveToResource - improve usability, better strategy to remember the last selected resource
 
