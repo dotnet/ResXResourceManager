@@ -70,8 +70,9 @@
             };
 
             inputBox.TextChanged += (_, args) =>
-                // ReSharper disable once PossibleNullReferenceException
-                inputBox.IsInputValid = !string.IsNullOrWhiteSpace(args.Text) && !resourceFile.Entries.Any(entry => entry.Key.Equals(args.Text, StringComparison.OrdinalIgnoreCase));
+                inputBox.IsInputValid = !string.IsNullOrWhiteSpace(args?.Text) 
+                                        && !resourceFile.Entries.Any(entry => entry.Key.Equals(args.Text, StringComparison.OrdinalIgnoreCase))
+                                        && !args.Text.Equals(resourceFile.BaseName, StringComparison.OrdinalIgnoreCase);
 
             if (inputBox.ShowDialog() != true)
                 return;
