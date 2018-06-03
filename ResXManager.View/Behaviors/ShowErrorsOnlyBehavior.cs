@@ -146,8 +146,7 @@
                     var neutralCulture = entry.NeutralLanguage.CultureKey;
 
                     var hasInvariantMismatches = visibleLanguages
-                        .Where(lang => neutralCulture != lang)
-                        .Select(lang => new { Value = entry.Values.GetValue(lang), IsInvariant = entry.IsItemInvariant.GetValue(lang) || entry.IsInvariant })
+                        .Select(lang => new { Value = entry.Values.GetValue(lang), IsInvariant = (neutralCulture != lang) && (entry.IsItemInvariant.GetValue(lang) || entry.IsInvariant) })
                         .Any(v => v.IsInvariant != string.IsNullOrEmpty(v.Value));
 
                     return entry.IsDuplicateKey
