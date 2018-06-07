@@ -137,14 +137,9 @@
 
             var content = File.ReadAllText(filePath);
 
-            if (content.StartsWith(String.Join("\t", _singleSheetFixedColumnHeaders)))
+            if (content.StartsWith(string.Join("\t", _singleSheetFixedColumnHeaders), StringComparison.OrdinalIgnoreCase))
             {
-                var data = content.ParseTable();
-
-                if (data == null)
-                    return new EntryChange[0];
-
-                return ImportSingleSheet(resourceManager, data).ToArray();
+                return ImportSingleSheet(resourceManager, content.ParseTable()).ToArray();
             }
 
             using (var package = SpreadsheetDocument.Open(filePath, false))
@@ -189,8 +184,11 @@
         }
 
         [NotNull, ItemNotNull]
-        private static IEnumerable<EntryChange> ImportSingleSheet([NotNull] ResourceManager resourceManager, [NotNull, ItemNotNull] IList<IList<string>> data)
+        private static IEnumerable<EntryChange> ImportSingleSheet([NotNull] ResourceManager resourceManager, [CanBeNull, ItemNotNull] IList<IList<string>> data)
         {
+            if (data == null)
+                yield break;
+
             var firstRow = data.FirstOrDefault();
 
             Contract.Assume(firstRow != null);

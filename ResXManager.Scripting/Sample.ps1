@@ -53,7 +53,7 @@ if ($changes -ne $null)
 	#  items:				  default = $null (export all items)
 	#  languages of values:   default = $null (export all languages)
 	#  languages of comments: default = $null (export no comments)
-	#  export mode:           default = 0 (single sheet), 1 = multiple sheets
+	#  export mode:           default = 0 (single sheet), 1 = multiple sheets, 2 = text only tab delimited
 	"Export changes since last snapshot to Excel"
 	$myhost.ExportExcel($excelFileName, $changes, @($neutralCulture, $outputCulture))
 }
