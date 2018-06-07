@@ -196,4 +196,7 @@
   <data name="ResourceTableEntry_Error_InvariantWithValue" xml:space="preserve">
     <value>Invarianter Eintrag enthält Übersetzung</value>
   </data>
+  <data name="ExcelExport_PlainTextTabDelimited" xml:space="preserve">
+    <value>Nur Text, Tabulator getrennt</value>
+  </data>
 </root>

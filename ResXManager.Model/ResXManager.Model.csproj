@@ -143,6 +143,7 @@
     <Compile Include="ResourceBeginEditingEventArgs.cs" />
     <Compile Include="Snapshot.cs" />
     <Compile Include="FileFilter.cs" />
+    <Compile Include="TextExtensions.cs" />
     <Compile Include="XmlConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>

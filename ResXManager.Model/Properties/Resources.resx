@@ -204,4 +204,7 @@
   <data name="ResourceTableEntry_Error_InvariantWithValue" xml:space="preserve">
     <value>Item is invariant but contains a value</value>
   </data>
+  <data name="ExcelExport_PlainTextTabDelimited" xml:space="preserve">
+    <value>Plain text, tab delimited</value>
+  </data>
 </root>

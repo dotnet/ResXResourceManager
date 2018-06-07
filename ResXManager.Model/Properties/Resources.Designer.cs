@@ -139,6 +139,17 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Plain text, tab delimited.
+        /// </summary>
+        [NotNull]
+        public static string ExcelExport_PlainTextTabDelimited {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("ExcelExport_PlainTextTabDelimited", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Single sheet.
         /// </summary>
         [NotNull]
@@ -337,17 +348,6 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Snapshot: "{0}".
-        /// </summary>
-        [NotNull]
-        public static string SnapshotAnnotation {
-            get {
-                Contract.Ensures(Contract.Result<string>() != null);
-                return ResourceManager.GetString("SnapshotAnnotation", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Warning: This item contains string format paramete....
         /// </summary>
         [NotNull]
@@ -355,6 +355,17 @@ namespace tomenglertde.ResXManager.Model.Properties {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ResourceTableEntry_Error_StringFormatParameterMismatch", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Snapshot: "{0}".
+        /// </summary>
+        [NotNull]
+        public static string SnapshotAnnotation {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("SnapshotAnnotation", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -404,6 +415,10 @@ namespace tomenglertde.ResXManager.Model.Properties {
         ///   Looks up a localized string similar to Multiple sheets.
         /// </summary>
         ExcelExport_MultipleSheets,
+        /// <summary>
+        ///   Looks up a localized string similar to Plain text, tab delimited.
+        /// </summary>
+        ExcelExport_PlainTextTabDelimited,
         /// <summary>
         ///   Looks up a localized string similar to Single sheet.
         /// </summary>
@@ -477,13 +492,13 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         ResourceTableEntry_Error_MissingTranslation,
         /// <summary>
-        ///   Looks up a localized string similar to Snapshot: "{0}".
-        /// </summary>
-        SnapshotAnnotation,
-        /// <summary>
         ///   Looks up a localized string similar to Warning: This item contains string format paramete....
         /// </summary>
         ResourceTableEntry_Error_StringFormatParameterMismatch,
+        /// <summary>
+        ///   Looks up a localized string similar to Snapshot: "{0}".
+        /// </summary>
+        SnapshotAnnotation,
         /// <summary>
         ///   Looks up a localized string similar to ResX Resource Manager.
         /// </summary>

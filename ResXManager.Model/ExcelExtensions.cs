@@ -6,6 +6,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
 
     using DocumentFormat.OpenXml;
@@ -22,7 +23,9 @@
         [LocalizedDisplayName(StringResourceKey.ExcelExport_SingleSheet)]
         SingleSheet,
         [LocalizedDisplayName(StringResourceKey.ExcelExport_MultipleSheets)]
-        MultipleSheets
+        MultipleSheets,
+        [LocalizedDisplayName(StringResourceKey.ExcelExport_PlainTextTabDelimited)]
+        Text
     }
 
     public static partial class ResourceEntityExtensions
@@ -34,6 +37,12 @@
         {
             Contract.Requires(resourceManager != null);
             Contract.Requires(filePath != null);
+
+            if (exportMode == ExcelExportMode.Text)
+            {
+                ExportToText(filePath, scope ?? new FullScope(resourceManager.ResourceEntities));
+                return;
+            }
 
             using (var package = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook))
             {
@@ -51,6 +60,21 @@
                     ExportToSingleSheet(workbookPart, scope ?? new FullScope(resourceManager.ResourceEntities));
                 }
             }
+        }
+
+        private static void ExportToText([NotNull] string filePath, [NotNull] IResourceScope scope)
+        {
+            var languages = scope.Languages.Concat(scope.Comments).Distinct().ToArray();
+            var entries = scope.Entries.ToArray();
+
+            var headerRow = (IList<string>)_singleSheetFixedColumnHeaders.Concat(languages.GetLanguageColumnHeaders(scope)).ToArray();
+            var dataRows = entries.Select(e => (IList<string>)new[] { e.Container.ProjectName, e.Container.UniqueName }.Concat(e.GetDataRow(languages, scope)).ToArray());
+
+            var rows = (new[] { headerRow }.Concat(dataRows)).ToArray();
+
+            var data = rows.ToTextString();
+
+            File.WriteAllText(filePath, data);
         }
 
         private static void ExportToMultipleSheets([NotNull] ResourceManager resourceManager, [NotNull] WorkbookPart workbookPart, [CanBeNull] IResourceScope scope)
@@ -111,6 +135,18 @@
             Contract.Requires(filePath != null);
             Contract.Ensures(Contract.Result<IEnumerable<EntryChange>>() != null);
 
+            var content = File.ReadAllText(filePath);
+
+            if (content.StartsWith(String.Join("\t", _singleSheetFixedColumnHeaders)))
+            {
+                var data = content.ParseTable();
+
+                if (data == null)
+                    return new EntryChange[0];
+
+                return ImportSingleSheet(resourceManager, data).ToArray();
+            }
+
             using (var package = SpreadsheetDocument.Open(filePath, false))
             {
                 Contract.Assume(package != null);
@@ -149,6 +185,12 @@
 
             var data = firstSheet.GetRows(workbookPart).Select(row => row.GetCellValues(sharedStrings)).ToArray();
 
+            return ImportSingleSheet(resourceManager, data);
+        }
+
+        [NotNull, ItemNotNull]
+        private static IEnumerable<EntryChange> ImportSingleSheet([NotNull] ResourceManager resourceManager, [NotNull, ItemNotNull] IList<IList<string>> data)
+        {
             var firstRow = data.FirstOrDefault();
 
             Contract.Assume(firstRow != null);
@@ -419,7 +461,7 @@
                 }
 
                 var text = cell.GetText(sharedStrings) ?? string.Empty;
-                // depending on how multi-line text is pasted into Excel, \r\n might be translated into _x000D_\n, 
+                // depending on how multi-line text is pasted into Excel, \r\n might be translated into _x000D_\n,
                 // because Excel internally only use \n as line delimiter.
                 text = text.Replace("_x000D_\n", "\n");
 

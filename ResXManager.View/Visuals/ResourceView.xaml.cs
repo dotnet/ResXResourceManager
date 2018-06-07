@@ -136,6 +136,7 @@
 
         private void ExportExcelCommandConverter_Executing([NotNull] object sender, [NotNull] ConfirmedCommandEventArgs e)
         {
+
             var dlg = new SaveFileDialog
             {
                 AddExtension = true,
@@ -145,6 +146,12 @@
                 FilterIndex = 0,
                 FileName = DateTime.Today.ToString("yyyy_MM_dd", CultureInfo.InvariantCulture)
             };
+
+            if (_configuration.ExcelExportMode == ExcelExportMode.Text)
+            {
+                dlg.DefaultExt = ".txt";
+                dlg.Filter = "Text files|*.txt|All Files|*.*";
+            }
 
             if (!dlg.ShowDialog().GetValueOrDefault())
                 e.Cancel = true;
@@ -162,7 +169,7 @@
                 CheckPathExists = true,
                 CheckFileExists = true,
                 DefaultExt = ".xlsx",
-                Filter = "Excel Worksheets|*.xlsx|All Files|*.*",
+                Filter = "Exported files|*.xlsx;*.txt|All Files|*.*",
                 FilterIndex = 0,
                 Multiselect = false
             };

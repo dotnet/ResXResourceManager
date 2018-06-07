@@ -160,8 +160,7 @@
 
             if (snapshot != null)
             {
-                ResourceData data;
-                if (!snapshot.TryGetValue(culture, out data) || (data == null))
+                if (!snapshot.TryGetValue(culture, out var data) || (data == null))
                     return null;
 
                 switch (columnKind)
