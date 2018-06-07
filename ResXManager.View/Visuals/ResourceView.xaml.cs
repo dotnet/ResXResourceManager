@@ -150,7 +150,7 @@
             if (_configuration.ExcelExportMode == ExcelExportMode.Text)
             {
                 dlg.DefaultExt = ".txt";
-                dlg.Filter = "Text files|*.txt|All Files|*.*";
+                dlg.Filter = "Text files|*.txt|CSV files|*.csv|All Files|*.*";
             }
 
             if (!dlg.ShowDialog().GetValueOrDefault())
@@ -169,7 +169,7 @@
                 CheckPathExists = true,
                 CheckFileExists = true,
                 DefaultExt = ".xlsx",
-                Filter = "Exported files|*.xlsx;*.txt|All Files|*.*",
+                Filter = "Exported files|*.xlsx;*.txt;*.csv|All Files|*.*",
                 FilterIndex = 0,
                 Multiselect = false
             };
