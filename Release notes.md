@@ -1,4 +1,9 @@
-﻿1.21
+﻿1.22
+- Fix #142: Sorting in UI is not culture aware
+- Fix #136: Add text only (csv) export/import feature
+- Fix #135: MoveToResource patterns for aspx - fix existing pattern and add alternatives.
+ 
+1.21
 - Fix #133: Member name same as containing type generates compile error.
 - Fix #132: Missing/empty neutral resources aren't shown if "show only warnings" is enabled
 
