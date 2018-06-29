@@ -26,8 +26,8 @@
             Contract.Assume(fileInfos != null);
 
             var allProjectFiles = fileInfos
-                .Where(fileFilter.IncludeFile)
                 .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
+                .Where(fileFilter.IncludeFile)
                 .Where(file => file.IsResourceFile() || fileFilter.IsSourceFile(file))
                 .ToArray();
 

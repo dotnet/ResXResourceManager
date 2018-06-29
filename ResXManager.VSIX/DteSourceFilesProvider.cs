@@ -54,7 +54,7 @@
             {
                 var fileFilter = new FileFilter(_configuration);
 
-                return GetProjectFiles().Where(p => fileFilter.IncludeFile(new FileInfo(p.FilePath)) && (p.IsResourceFile() || fileFilter.IsSourceFile(p)));
+                return GetProjectFiles().Where(p => fileFilter.IncludeFile(p) && (p.IsResourceFile() || fileFilter.IsSourceFile(p)));
             }
         }
 

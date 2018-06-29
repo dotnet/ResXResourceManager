@@ -37,9 +37,9 @@
             return _extensions.Contains(file.Extension, StringComparer.OrdinalIgnoreCase);
         }
 
-        public bool IncludeFile(FileInfo fileInfo)
+        public bool IncludeFile(ProjectFile file)
         {
-            return _fileExclusionFilter?.IsMatch(fileInfo.FullName) != true;
+            return _fileExclusionFilter?.IsMatch(file.RelativeFilePath) != true;
         }
 
         [ContractInvariantMethod]

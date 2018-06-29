@@ -44,9 +44,9 @@ namespace ResXManager.Scripting
             return false;
         }
 
-        public bool IncludeFile(FileInfo fileInfo)
+        public bool IncludeFile(ProjectFile file)
         {
-            return _fileExclusionFilter?.IsMatch(fileInfo.FullName) != true;
+            return _fileExclusionFilter?.IsMatch(file.RelativeFilePath) != true;
         }
     }
 }

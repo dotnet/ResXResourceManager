@@ -527,7 +527,14 @@
         [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.ContextIdle)]
         private void BeginFindCodeReferences()
         {
-            BeginFindCodeReferences(_sourceFilesProvider.SourceFiles);
+            try
+            {
+                BeginFindCodeReferences(_sourceFilesProvider.SourceFiles);
+            }
+            catch (Exception ex)
+            {
+                _tracer.TraceError(ex.ToString());
+            }
         }
 
         private void BeginFindCodeReferences([NotNull, ItemNotNull] IList<ProjectFile> allSourceFiles)

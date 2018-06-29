@@ -36,6 +36,8 @@
         private readonly Configuration _configuration;
         [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
+        [NotNull]
+        private readonly ITracer _tracer;
 
         [ImportingConstructor]
         public ResourceView([NotNull] ExportProvider exportProvider)
@@ -45,6 +47,7 @@
             _resourceManager = exportProvider.GetExportedValue<ResourceManager>();
             _resourceViewModel = exportProvider.GetExportedValue<ResourceViewModel>();
             _configuration = exportProvider.GetExportedValue<Configuration>();
+            _tracer = exportProvider.GetExportedValue<ITracer>();
 
             try
             {
@@ -205,9 +208,9 @@
             if (ex == null)
                 return;
 
-            var text = ex is ImportException ? ex.Message : ex.ToString();
+            MessageBox.Show(ex.Message, Properties.Resources.Title);
 
-            MessageBox.Show(text, Properties.Resources.Title);
+            _tracer.TraceError(ex.ToString());
         }
 
         private class ExportParameters : IExportParameters
