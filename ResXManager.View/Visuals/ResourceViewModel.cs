@@ -223,8 +223,10 @@
             if (dataGrid == null)
                 return false;
 
-            return (dataGrid.SelectionUnit == DataGridSelectionUnit.CellOrRowHeader) && dataGrid.SelectedCells.Any(cellInfo => cellInfo.IsOfColumnType(ColumnType.Comment, ColumnType.Language))
-                || SelectedTableEntries.Any();
+            if (dataGrid.SelectionUnit == DataGridSelectionUnit.CellOrRowHeader)
+                return dataGrid.SelectedCells.All(cellInfo => cellInfo.IsOfColumnType(ColumnType.Comment, ColumnType.Language));
+
+            return SelectedTableEntries.Any();
         }
 
         private bool CanCut()

@@ -132,7 +132,10 @@ namespace tomenglertde.ResXManager.View.Tools
         public static bool IsOfColumnType(this DataGridCellInfo cell, [NotNull] params ColumnType[] columnTypes)
         {
             Contract.Requires(columnTypes != null);
-            return columnTypes.Any(columnType => columnType == (cell.Column?.Header as ILanguageColumnHeader)?.ColumnType);
+
+            var cellColumnType = (cell.Column?.Header as ILanguageColumnHeader)?.ColumnType;
+
+            return columnTypes.Any(columnType => columnType == cellColumnType);
         }
 
     }
