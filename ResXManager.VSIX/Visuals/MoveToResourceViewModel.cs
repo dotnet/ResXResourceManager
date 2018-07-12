@@ -148,7 +148,9 @@
                 var localNamespace = rootNamespace;
                 if (resxFolder.StartsWith(projectFolder, StringComparison.OrdinalIgnoreCase))
                 {
-                    localNamespace += resxFolder.Substring(projectFolder.Length).Replace('\\', '.');
+                    localNamespace += resxFolder.Substring(projectFolder.Length)
+                        .Replace('\\', '.')
+                        .Replace("My Project", "My"); // VB workaround
                 }
 
                 return localNamespace;
