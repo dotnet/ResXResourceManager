@@ -1,4 +1,9 @@
-﻿1.22
+﻿1.23
+- Fix #144: Avoid usage of file info to not fail on long file names according to provided stack trace.
+- Fix #148: Improve UX, delete is only enabled if all selected cells can be cleared.
+- Fix #152: Workaround for VB special 'My' folder
+
+1.22
 - Fix #142: Sorting in UI is not culture aware
 - Fix #136: Add text only (csv) export/import feature
 - Fix #135: MoveToResource patterns for aspx - fix existing pattern and add alternatives.
