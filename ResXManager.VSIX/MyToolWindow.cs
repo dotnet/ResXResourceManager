@@ -15,6 +15,7 @@
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
+    using System.Windows.Media;
 
     using JetBrains.Annotations;
 
@@ -48,7 +49,10 @@
         private readonly ICompositionHost _compositionHost;
 
         [NotNull]
-        private readonly ContentControl _contentWrapper = new ContentControl { Focusable = false };
+        private readonly ContentControl _contentWrapper = new ContentControl
+        {
+            Focusable = false, Content = new Border { Background = Brushes.Red }
+        };
 
         /// <summary>
         /// Standard constructor for the tool window.
@@ -115,13 +119,21 @@
 
         private void ContentWrapper_Loaded(object sender, RoutedEventArgs e)
         {
-            _compositionHost.GetExportedValue<ResourceViewModel>().Reload();
+            try
+            {
+                _compositionHost.GetExportedValue<ResourceViewModel>().Reload();
 
-            var view = _compositionHost.GetExportedValue<VsixShellView>();
+                var view = _compositionHost.GetExportedValue<VsixShellView>();
 
-            _contentWrapper.Content = view;
+                _contentWrapper.Content = view;
 
-            Dte.SetFontSize(view);
+                Dte.SetFontSize(view);
+            }
+            catch (Exception ex)
+            {
+                _tracer.TraceError("ContentWrapper_Loaded failed: " + ex);
+                MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
+            }
         }
 
         private void ContentWrapper_Unloaded(object sender, RoutedEventArgs e)
