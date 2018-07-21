@@ -24,6 +24,7 @@
 
     public static class TracerExtensions
     {
+        [StringFormatMethod("format")]
         public static void TraceError([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
         {
             Contract.Requires(tracer != null);
@@ -33,6 +34,7 @@
             tracer.TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
+        [StringFormatMethod("format")]
         public static void TraceWarning([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
         {
             Contract.Requires(tracer != null);
@@ -42,6 +44,7 @@
             tracer.TraceWarning(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
+        [StringFormatMethod("format")]
         public static void WriteLine([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
         {
             Contract.Requires(tracer != null);

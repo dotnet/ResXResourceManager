@@ -81,6 +81,7 @@
 
             _contentWrapper.Loaded += ContentWrapper_Loaded;
             _contentWrapper.Unloaded += ContentWrapper_Unloaded;
+            _contentWrapper.SizeChanged += ContentWrapper_SizeChanged;
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -121,6 +122,8 @@
         {
             try
             {
+                _tracer.WriteLine("Content loaded: {0} - {1}", _contentWrapper.ActualWidth, _contentWrapper.ActualHeight);
+
                 _compositionHost.GetExportedValue<ResourceViewModel>().Reload();
 
                 var view = _compositionHost.GetExportedValue<VsixShellView>();
@@ -138,7 +141,14 @@
 
         private void ContentWrapper_Unloaded(object sender, RoutedEventArgs e)
         {
+            _tracer.WriteLine("Content unloaded");
+
             _contentWrapper.Content = null;
+        }
+
+        private void ContentWrapper_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            _tracer.WriteLine("Content resized: {0} - {1}", _contentWrapper.ActualWidth, _contentWrapper.ActualHeight);
         }
 
         [NotNull]
