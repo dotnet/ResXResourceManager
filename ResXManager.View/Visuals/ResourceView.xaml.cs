@@ -210,6 +210,9 @@
 
             MessageBox.Show(ex.Message, Properties.Resources.Title);
 
+            if (ex is ImportException)
+                return;
+
             _tracer.TraceError(ex.ToString());
         }
 
