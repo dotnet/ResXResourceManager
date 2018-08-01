@@ -48,9 +48,9 @@
       </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
       <toms:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.KeyHeader}">
-        <TextBox>
-          <TextBox.Style>
-            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Static styles:ResourceKeys.TextBoxStyle}}">
+        <ComboBox SelectedIndex="{Binding SelectedKeyIndex}" ItemsSource="{Binding Keys}" IsEditable="True">
+          <ComboBox.Style>
+            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
               <Setter Property="Text" Value="{Binding Key, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
               <Style.Triggers>
                 <DataTrigger Binding="{Binding ReuseExisiting}" Value="True">
@@ -59,8 +59,8 @@
                 </DataTrigger>
               </Style.Triggers>
             </Style>
-          </TextBox.Style>
-        </TextBox>
+          </ComboBox.Style>
+        </ComboBox>
       </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
       <toms:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.CodeHeader}">

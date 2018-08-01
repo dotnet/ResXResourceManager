@@ -1,9 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.VSIX.Properties
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     using JetBrains.Annotations;
 
@@ -16,6 +13,8 @@
     {
         [NotNull]
         private readonly ObservableIndexer<string, int> _moveToResourcePreferedReplacementPatternIndex = new ObservableIndexer<string, int>(_ => 0);
+        [NotNull]
+        private readonly ObservableIndexer<string, int> _moveToResourcePreferedKeyPatternIndex = new ObservableIndexer<string, int>(_ => 0);
 
         static Settings()
         {
@@ -34,31 +33,37 @@
                 // invalid source, go with default...
             }
 
+            try
+            {
+                var values = JsonConvert.DeserializeObject<KeyValuePair<string, int>[]>(MoveToResourcePreferedKeyPatterns);
+                values?.ForEach(value => _moveToResourcePreferedKeyPatternIndex[value.Key] = value.Value);
+            }
+            catch
+            {
+                // invalid source, go with default...
+            }
+
             _moveToResourcePreferedReplacementPatternIndex.CollectionChanged += (_, __) => MoveToResource_PreferedReplacementPatternIndex_Changed();
             _moveToResourcePreferedReplacementPatternIndex.PropertyChanged += (_, __) => MoveToResource_PreferedReplacementPatternIndex_Changed();
+
+            _moveToResourcePreferedKeyPatternIndex.CollectionChanged += (_, __) => MoveToResource_PreferedKeyPatternIndex_Changed();
+            _moveToResourcePreferedKeyPatternIndex.PropertyChanged += (_, __) => MoveToResource_PreferedKeyPatternIndex_Changed();
         }
 
         [NotNull]
-        public ObservableIndexer<string, int> MoveToResourcePreferedReplacementPatternIndex
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ObservableIndexer<string, int>>() != null);
-                return _moveToResourcePreferedReplacementPatternIndex;
-            }
-        }
+        public ObservableIndexer<string, int> MoveToResourcePreferedReplacementPatternIndex => _moveToResourcePreferedReplacementPatternIndex;
+
+        [NotNull]
+        public ObservableIndexer<string, int> MoveToResourcePreferedKeyPatternIndex => _moveToResourcePreferedKeyPatternIndex;
 
         private void MoveToResource_PreferedReplacementPatternIndex_Changed()
         {
             MoveToResourcePreferedReplacementPatterns = JsonConvert.SerializeObject(_moveToResourcePreferedReplacementPatternIndex);
         }
 
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
+        private void MoveToResource_PreferedKeyPatternIndex_Changed()
         {
-            Contract.Invariant(_moveToResourcePreferedReplacementPatternIndex != null);
+            MoveToResourcePreferedKeyPatterns = JsonConvert.SerializeObject(_moveToResourcePreferedKeyPatternIndex);
         }
     }
 }

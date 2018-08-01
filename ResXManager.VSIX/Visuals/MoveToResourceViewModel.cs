@@ -4,9 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -32,13 +29,8 @@
         [NotNull]
         private readonly string _extension;
 
-        public MoveToResourceViewModel([NotNull, ItemNotNull] ICollection<string> patterns, [NotNull][ItemNotNull] ICollection<ResourceEntity> resourceEntities, [NotNull] string text, [NotNull] string extension, [CanBeNull] string className, [CanBeNull] string functionName)
+        public MoveToResourceViewModel([NotNull, ItemNotNull] ICollection<string> patterns, [NotNull][ItemNotNull] ICollection<ResourceEntity> resourceEntities, [NotNull] string text, [NotNull] string extension, [CanBeNull] string className, [CanBeNull] string functionName, [CanBeNull] string fileName)
         {
-            Contract.Requires(patterns != null);
-            Contract.Requires(resourceEntities != null);
-            Contract.Requires(text != null);
-            Contract.Requires(extension != null);
-
             ResourceEntities = resourceEntities;
             SelectedResourceEntity = resourceEntities.FirstOrDefault();
 
@@ -52,7 +44,8 @@
             _extension = extension;
 
             Replacements = patterns.Select(p => new Replacement(p, EvaluatePattern)).ToArray();
-            Key = CreateKey(text, className, functionName);
+            Keys = new[] { CreateKey(text, null, null), CreateKey(text, null, functionName), CreateKey(text, className ?? fileName, functionName) }.Distinct().ToArray();
+            Key = Keys.Skip(SelectedKeyIndex).FirstOrDefault() ?? Keys.FirstOrDefault();
             Value = text;
         }
 
@@ -66,6 +59,9 @@
 
         [CanBeNull]
         public ResourceTableEntry SelectedResourceEntry { get; set; }
+
+        [NotNull, ItemNotNull]
+        public ICollection<string> Keys { get; }
 
         [Required(AllowEmptyStrings = false)]
         [DependsOn(nameof(ReuseExisiting), nameof(SelectedResourceEntity))] // must raise a change event for key, key validation is different when these change
@@ -96,6 +92,16 @@
         {
             get => Settings.Default.MoveToResourcePreferedReplacementPatternIndex[_extension];
             set => Settings.Default.MoveToResourcePreferedReplacementPatternIndex[_extension] = value;
+        }
+
+        public int SelectedKeyIndex
+        {
+            get => Settings.Default.MoveToResourcePreferedKeyPatternIndex[_extension];
+            set
+            {
+                if (value >= 0) 
+                    Settings.Default.MoveToResourcePreferedKeyPatternIndex[_extension] = value;
+            }
         }
 
         [CanBeNull]
@@ -129,8 +135,6 @@
         [NotNull]
         private static string GetLocalNamespace([CanBeNull] ProjectItem resxItem)
         {
-            Contract.Ensures(Contract.Result<string>() != null);
-
             try
             {
                 var resxPath = resxItem?.TryGetFileName();
@@ -170,9 +174,6 @@
         [NotNull]
         private string EvaluatePattern([NotNull] string pattern)
         {
-            Contract.Requires(pattern != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
             var entity = ReuseExisiting ? SelectedResourceEntry?.Container : SelectedResourceEntity;
             var key = ReuseExisiting ? SelectedResourceEntry?.Key : Key;
             var localNamespace = GetLocalNamespace(((DteProjectFile)entity?.NeutralProjectFile)?.DefaultProjectItem);
@@ -185,15 +186,15 @@
         [NotNull]
         private static string CreateKey([NotNull] string text, [CanBeNull] string className, [CanBeNull] string functionName)
         {
-            Contract.Requires(text != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
             var keyBuilder = new StringBuilder();
 
             if (!string.IsNullOrEmpty(className))
                 keyBuilder.Append(className).Append(@"_");
             if (!string.IsNullOrEmpty(functionName))
                 keyBuilder.Append(functionName).Append(@"_");
+
+            var words = text.Split(' ', '\t', '\r', '\n');
+            text = string.Join(" ", words.Where(word => word?.Length > 3));
 
             var makeUpper = true;
 
@@ -240,16 +241,6 @@
         string IDataErrorInfo.this[string columnName] => GetKeyErrors(columnName);
 
         string IDataErrorInfo.Error => null;
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(ResourceEntities != null);
-            Contract.Invariant(Replacements != null);
-            Contract.Invariant(_extension != null);
-        }
     }
 
     public sealed class Replacement : INotifyPropertyChanged
@@ -261,8 +252,6 @@
 
         public Replacement([NotNull] string pattern, [NotNull] Func<string, string> evaluator)
         {
-            Contract.Requires(pattern != null);
-            Contract.Requires(evaluator != null);
             _pattern = pattern;
             _evaluator = evaluator;
         }
@@ -279,17 +268,7 @@
 
         private void OnPropertyChanged([NotNull] string propertyName)
         {
-            Contract.Requires(propertyName != null);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822: MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_pattern != null);
-            Contract.Invariant(_evaluator != null);
         }
     }
 }
