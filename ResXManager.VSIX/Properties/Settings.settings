@@ -14,5 +14,8 @@
     <Setting Name="MoveToResourcePreferedReplacementPatterns" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="MoveToResourcePreferedKeyPatterns" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

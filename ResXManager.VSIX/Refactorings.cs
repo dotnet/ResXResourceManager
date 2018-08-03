@@ -79,6 +79,8 @@
             if (extension == null)
                 return null;
 
+            var fileName = Path.GetFileNameWithoutExtension(document.FullName);
+
             var configurationItems = _compositionHost.GetExportedValue<DteConfiguration>().MoveToResources.Items;
 
             var configuration = configurationItems
@@ -135,7 +137,7 @@
                 }
             }
 
-            var viewModel = new MoveToResourceViewModel(patterns, entities, text, extension, selection.ClassName, selection.FunctionName);
+            var viewModel = new MoveToResourceViewModel(patterns, entities, text, extension, selection.ClassName, selection.FunctionName, fileName);
 
             var confirmed = ConfirmationDialog.Show(_compositionHost.Container, viewModel, Resources.MoveToResource).GetValueOrDefault();
 
