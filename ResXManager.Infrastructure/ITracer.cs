@@ -100,9 +100,12 @@
             exportProvider.GetExportedValue<ITracer>().WriteLine(message);
         }
 
-        public static void TraceXamlLoaderError([NotNull] this ExportProvider exportProvider, [NotNull] Exception ex)
+        public static void TraceXamlLoaderError([NotNull] this ExportProvider exportProvider, [CanBeNull] Exception ex)
         {
-            exportProvider.TraceError(ex.Message);
+            var exception = ex?.Message;
+
+            if (exception != null)
+                exportProvider.TraceError(exception);
 
             var path = Path.GetDirectoryName(typeof(ITracer).Assembly.Location);
             Contract.Assume(!string.IsNullOrEmpty(path));

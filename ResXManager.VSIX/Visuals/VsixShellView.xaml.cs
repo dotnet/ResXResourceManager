@@ -3,16 +3,15 @@
     using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Media;
+    using System.Windows.Threading;
 
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
 
+    using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
     /// <summary>
@@ -28,9 +27,6 @@
         [ImportingConstructor]
         public VsixShellView([NotNull] ExportProvider exportProvider, [NotNull] ThemeManager themeManager, VsixShellViewModel viewModel)
         {
-            Contract.Requires(exportProvider != null);
-            Contract.Requires(themeManager != null);
-
             _themeManager = themeManager;
 
             try
@@ -66,12 +62,15 @@
             return color?.R * 0.21 + color?.G * 0.72 + color?.B * 0.07 ?? 0.0;
         }
 
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
+        private void Self_Loaded(object sender, RoutedEventArgs e)
         {
-            Contract.Invariant(_themeManager != null);
+            this.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
+            {
+                if (Content == null)
+                {
+                    this.GetExportProvider().TraceXamlLoaderError(null);
+                }
+            });
         }
     }
 }

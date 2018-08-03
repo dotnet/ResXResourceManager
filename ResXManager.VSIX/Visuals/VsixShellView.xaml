@@ -11,7 +11,8 @@
              d:DataContext="{d:DesignInstance visuals:VsixShellViewModel}"
              toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Shell}"
              Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-             Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+             Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+             Loaded="Self_Loaded">
   <UserControl.Resources>
     <ResourceDictionary Source="/ResXManager.VSIX;component/Resources/VSColorScheme.xaml" />
   </UserControl.Resources>
