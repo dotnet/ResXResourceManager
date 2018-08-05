@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
+    using System.ComponentModel.Composition.Primitives;
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Threading;
@@ -68,7 +69,19 @@
             {
                 if (Content == null)
                 {
-                    this.GetExportProvider().TraceXamlLoaderError(null);
+                    var exportProvider = this.GetExportProvider();
+
+                    exportProvider.TraceXamlLoaderError(null);
+
+                    var exports = exportProvider.GetExports(new ImportDefinition(_ => true, null, ImportCardinality.ZeroOrMore, true, false));
+
+                    exportProvider.WriteLine("");
+                    exportProvider.WriteLine("Exports:");
+
+                    foreach (var export in exports)
+                    {
+                        exportProvider.WriteLine(export.Definition.ToString());
+                    }
                 }
             });
         }

@@ -78,6 +78,7 @@
             _compositionHost = compositionHost;
 
             VisualComposition.Error += VisualComposition_Error;
+            VisualComposition.Trace += VisualComposition_Trace;
 
             _contentWrapper.Loaded += ContentWrapper_Loaded;
             _contentWrapper.Unloaded += ContentWrapper_Unloaded;
@@ -427,6 +428,11 @@
         private void VisualComposition_Error([CanBeNull] object sender, [NotNull] TextEventArgs e)
         {
             _tracer.TraceError(e.Text);
+        }
+
+        private void VisualComposition_Trace([CanBeNull] object sender, [NotNull] TextEventArgs e)
+        {
+            _tracer.WriteLine("VCF: " + e.Text);
         }
 
         const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
