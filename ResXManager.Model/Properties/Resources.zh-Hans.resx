@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -189,10 +189,13 @@
   <data name="KeyAlreadyExists" xml:space="preserve">
     <value>名称 {0} 已经存在</value>
   </data>
-    <data name="ResourceTableEntry_Error_MissingTranslation" xml:space="preserve">
+  <data name="ResourceTableEntry_Error_MissingTranslation" xml:space="preserve">
       <value>缺少翻译</value>
   </data>
   <data name="ResourceTableEntry_Error_InvariantWithValue" xml:space="preserve">
     <value>项目无效但包含值</value>
+  </data>
+  <data name="ExcelExport_PlainTextTabDelimited" xml:space="preserve">
+    <value>纯文本，制表符分隔</value>
   </data>
 </root>
