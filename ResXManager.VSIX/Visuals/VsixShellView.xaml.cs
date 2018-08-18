@@ -72,16 +72,6 @@
                     var exportProvider = this.GetExportProvider();
 
                     exportProvider.TraceXamlLoaderError(null);
-
-                    var exports = exportProvider.GetExports(new ImportDefinition(_ => true, null, ImportCardinality.ZeroOrMore, true, false));
-
-                    exportProvider.WriteLine("");
-                    exportProvider.WriteLine("Exports:");
-
-                    foreach (var export in exports)
-                    {
-                        exportProvider.WriteLine(export.Definition.ToString());
-                    }
                 }
             });
         }

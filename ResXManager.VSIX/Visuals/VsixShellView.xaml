@@ -9,7 +9,6 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:vsix="clr-namespace:tomenglertde.ResXManager.VSIX"
              d:DataContext="{d:DesignInstance visuals:VsixShellViewModel}"
-             toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Shell}"
              Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
              Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
              Loaded="Self_Loaded">
@@ -18,6 +17,7 @@
   </UserControl.Resources>
 
   <i:Interaction.Behaviors>
+    <toms:ContentControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.Shell}"/>
     <toms:CommandRoutingBehavior CommandSource="{x:Type vsix:ResXFileCodeGeneratorCommand}"
                                  CommandTarget="{Binding SetCodeProviderCommand}"
                                  CommandParameter="{x:Static vsix:CodeGenerator.ResXFileCodeGenerator}"

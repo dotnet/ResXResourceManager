@@ -188,7 +188,7 @@
         </DockPanel>
       </GroupBox>
 
-      <ItemsControl toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Configuration}">
+      <ItemsControl>
         <ItemsControl.ItemTemplate>
           <DataTemplate>
             <StackPanel>
@@ -199,6 +199,9 @@
             </StackPanel>
           </DataTemplate>
         </ItemsControl.ItemTemplate>
+        <i:Interaction.Behaviors>
+          <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.Configuration}" />
+        </i:Interaction.Behaviors>
       </ItemsControl>
 
     </StackPanel>

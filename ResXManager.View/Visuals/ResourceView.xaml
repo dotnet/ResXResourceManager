@@ -164,8 +164,11 @@
         </GroupStyle>
       </ListBox.GroupStyle>
       <ListBox.ContextMenu>
-        <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}"
-                     toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.ProjectListContextMenu}" />
+        <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}">
+          <i:Interaction.Behaviors>
+            <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListContextMenu}" />
+          </i:Interaction.Behaviors>
+        </ContextMenu>
       </ListBox.ContextMenu>
       <i:Interaction.Behaviors>
         <behaviors:EntityFilter FilterText="{Binding Text, ElementName=EntityFilter}" />

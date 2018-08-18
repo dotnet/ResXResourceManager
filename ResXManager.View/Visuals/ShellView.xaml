@@ -7,6 +7,7 @@
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              xmlns:toms="urn:TomsToolbox"
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
              d:DataContext="{d:DesignInstance visuals:ShellViewModel}">
   <UserControl.Style>
@@ -23,7 +24,6 @@
     <TabControl x:Name="TabControl"
                 TabStripPlacement="Bottom"
                 Padding="0" BorderThickness="1" Margin="-1,-1,-1,5" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}"
-                toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Content}"
                 SelectedIndex="{Binding Path=SelectedTabIndex}"
                 Style="{DynamicResource {x:Static styles:ResourceKeys.TabControlStyle}}">
       <TabControl.ItemTemplate>
@@ -31,6 +31,9 @@
           <TextBlock Text="{Binding}" />
         </DataTemplate>
       </TabControl.ItemTemplate>
+      <i:Interaction.Behaviors>
+        <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.Content}" />
+      </i:Interaction.Behaviors>
     </TabControl>
     <Button x:Name="DonateButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5,0"
             Background="Transparent" BorderBrush="Transparent"
