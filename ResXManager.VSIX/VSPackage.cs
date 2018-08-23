@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.ComponentModel.Design;
@@ -126,6 +127,16 @@
         protected override void Initialize()
         {
             base.Initialize();
+
+            try
+            {
+                DesignerProperties.IsInDesignModeProperty.OverrideMetadata(typeof(System.Windows.Interactivity.BehaviorCollection), new FrameworkPropertyMetadata(false));
+                DesignerProperties.IsInDesignModeProperty.OverrideMetadata(typeof(System.Windows.Interactivity.TriggerCollection), new FrameworkPropertyMetadata(false));
+            }
+            catch
+            {
+                // if that fails, there is nothing we can do about it...
+            }
 
             var dispatcher = Dispatcher.CurrentDispatcher;
 
