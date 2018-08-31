@@ -1,4 +1,8 @@
-﻿1.23
+﻿1.24
+- Fix #151 and #84: Enhance the Move To Resource dialog.
+- Fix #143: Add a workaround for the Visual Studio UWP Designer bug to make it work until it gets finally fixed by Microsoft.
+
+1.23
 - Fix #144: Avoid usage of file info to not fail on long file names according to provided stack trace.
 - Fix #148: Improve UX, delete is only enabled if all selected cells can be cleared.
 - Fix #152: Workaround for VB special 'My' folder

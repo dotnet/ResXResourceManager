@@ -78,7 +78,7 @@
             _compositionHost = compositionHost;
 
             VisualComposition.Error += VisualComposition_Error;
-            VisualComposition.Trace += VisualComposition_Trace;
+            // VisualComposition.Trace += VisualComposition_Trace;
 
             _contentWrapper.Loaded += ContentWrapper_Loaded;
             _contentWrapper.Unloaded += ContentWrapper_Unloaded;
