@@ -263,6 +263,28 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Remove empty entries in resources.
+        /// </summary>
+        [NotNull]
+        public static string Configuration_EmptyValueHandling {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("Configuration_EmptyValueHandling", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Empty resource value handling.
+        /// </summary>
+        [NotNull]
+        public static string Configuration_EmptyValueHandlingHeader {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("Configuration_EmptyValueHandlingHeader", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Excel export mode.
         /// </summary>
         [NotNull]
@@ -1224,6 +1246,14 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Duplicate/empty resource key handling.
         /// </summary>
         Configuration_DuplicateKeyHandling,
+        /// <summary>
+        ///   Looks up a localized string similar to Remove empty entries in resources.
+        /// </summary>
+        Configuration_EmptyValueHandling,
+        /// <summary>
+        ///   Looks up a localized string similar to Empty resource value handling.
+        /// </summary>
+        Configuration_EmptyValueHandlingHeader,
         /// <summary>
         ///   Looks up a localized string similar to Excel export mode.
         /// </summary>
