@@ -23,6 +23,8 @@
     {
         bool SaveFilesImmediatelyUponChange { get; }
 
+        bool RemoveEmptyEntries { get; }
+
         [NotNull]
         CultureInfo NeutralResourcesLanguage { get; }
 
@@ -49,6 +51,9 @@
 
         [DefaultValue(true)]
         public bool SaveFilesImmediatelyUponChange { get; set; }
+
+        [DefaultValue(true)]
+        public bool RemoveEmptyEntries { get; set; }
 
         [DefaultValue(false)]
         public bool SortFileContentOnSave { get; set; }

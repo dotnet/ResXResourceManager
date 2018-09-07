@@ -149,6 +149,15 @@
                  ItemContainerStyle="{StaticResource EmumSelectorItemContainerStyle}" />
       </GroupBox>
 
+      <Decorator Height="5"/>
+
+      <GroupBox Header="{x:Static properties:Resources.Configuration_EmptyValueHandlingHeader}" Style="{StaticResource GroupStyle}">
+          <CheckBox Margin="10"
+                    Style="{StaticResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
+                    Content="{x:Static properties:Resources.Configuration_EmptyValueHandling}"
+                    IsChecked="{Binding Configuration.RemoveEmptyEntries}"/>
+      </GroupBox>
+
       <Decorator Height="5" />
 
       <GroupBox Header="{x:Static properties:Resources.Diagnostics}" Style="{StaticResource GroupStyle}">

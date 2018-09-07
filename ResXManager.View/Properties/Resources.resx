@@ -416,4 +416,10 @@ Use e.g. ".* - (?!Migrations)" to hide EF migrations.</value>
   <data name="WrapLongLinesToolTip" xml:space="preserve">
     <value>Wrap long lines</value>
   </data>
+  <data name="Configuration_EmptyValueHandling" xml:space="preserve">
+    <value>Remove empty entries in resources</value>
+  </data>
+  <data name="Configuration_EmptyValueHandlingHeader" xml:space="preserve">
+    <value>Empty resource value handling</value>
+  </data>
 </root>
