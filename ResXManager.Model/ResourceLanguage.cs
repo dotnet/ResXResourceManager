@@ -425,7 +425,7 @@
 
                 if (!IsNeutralLanguage)
                 {
-                    if (string.IsNullOrEmpty(node.Text) && string.IsNullOrEmpty(node.Comment))
+                    if (_configuration.RemoveEmptyEntries && string.IsNullOrEmpty(node.Text) && string.IsNullOrEmpty(node.Comment))
                     {
                         node.Element.Remove();
                         _nodes.Remove(key);
