@@ -3,13 +3,12 @@
     using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Windows;
+
+    using DataGridExtensions;
 
     using JetBrains.Annotations;
 
@@ -42,12 +41,11 @@
         [ImportingConstructor]
         public ResourceView([NotNull] ExportProvider exportProvider)
         {
-            Contract.Requires(exportProvider != null);
-
             _resourceManager = exportProvider.GetExportedValue<ResourceManager>();
             _resourceViewModel = exportProvider.GetExportedValue<ResourceViewModel>();
             _configuration = exportProvider.GetExportedValue<Configuration>();
             _tracer = exportProvider.GetExportedValue<ITracer>();
+            _resourceViewModel.ClearFiltersRequest += ResourceViewModel_ClearFiltersRequest;
 
             try
             {
@@ -64,6 +62,8 @@
                 exportProvider.TraceXamlLoaderError(ex);
             }
         }
+
+        private void ResourceViewModel_ClearFiltersRequest(object sender, EventArgs e) => DataGrid.GetFilter().Clear();
 
         private void ResourceManager_Loaded([NotNull] object sender, [NotNull] EventArgs e)
         {
@@ -233,17 +233,6 @@
             {
                 get;
             }
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_resourceManager != null);
-            Contract.Invariant(_configuration != null);
-            Contract.Invariant(DataGrid != null);
-            Contract.Invariant(_resourceViewModel != null);
         }
     }
 }

@@ -72,6 +72,8 @@
             resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
         }
 
+        internal event EventHandler ClearFiltersRequest;
+
         [NotNull]
         public ResourceManager ResourceManager { get; }
 
@@ -176,6 +178,8 @@
             if (entry == null)
                 return;
 
+            ClearFiltersRequest?.Invoke(this, EventArgs.Empty);
+
             ResourceManager.ReloadSnapshot();
 
             SelectedTableEntries.Clear();
@@ -188,6 +192,8 @@
                 return;
 
             var entity = entry.Container;
+
+            ClearFiltersRequest?.Invoke(this, EventArgs.Empty);
 
             if (!SelectedEntities.Contains(entity))
                 SelectedEntities.Add(entity);
