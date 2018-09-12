@@ -126,20 +126,20 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="TomsToolbox.Core, Version=1.0.73.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Core.1.0.73\lib\net40-client\TomsToolbox.Core.dll</HintPath>
+    <Reference Include="TomsToolbox.Core, Version=1.0.74.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Core.1.0.74\lib\net40-client\TomsToolbox.Core.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.Desktop, Version=1.0.73.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.73\lib\net45\TomsToolbox.Desktop.dll</HintPath>
+    <Reference Include="TomsToolbox.Desktop, Version=1.0.74.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.74\lib\net45\TomsToolbox.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.73.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.73\lib\net45\TomsToolbox.ObservableCollections.dll</HintPath>
+    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.74.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.74\lib\net45\TomsToolbox.ObservableCollections.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.Wpf, Version=1.0.73.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Wpf.1.0.73\lib\net45\TomsToolbox.Wpf.dll</HintPath>
+    <Reference Include="TomsToolbox.Wpf, Version=1.0.74.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Wpf.1.0.74\lib\net45\TomsToolbox.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.Wpf.Styles, Version=1.0.73.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Wpf.Styles.1.0.73\lib\net45\TomsToolbox.Wpf.Styles.dll</HintPath>
+    <Reference Include="TomsToolbox.Wpf.Styles, Version=1.0.74.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Wpf.Styles.1.0.74\lib\net45\TomsToolbox.Wpf.Styles.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -294,11 +294,11 @@
     <MakeDir Directories="$(SolutionDir)Deploy" />
     <Exec Command="PowerShell -command Compress-Archive -Path '$(PublishDir)Application Files',@(ZipFiles, ',') -DestinationPath '$(SolutionDir)Deploy\Publish.zip' -Force" />
   </Target>
-  <Import Project="..\packages\Fody.3.1.4\build\Fody.targets" Condition="Exists('..\packages\Fody.3.1.4\build\Fody.targets')" />
+  <Import Project="..\packages\Fody.3.2.1\build\Fody.targets" Condition="Exists('..\packages\Fody.3.2.1\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Fody.3.1.4\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.1.4\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.3.2.1\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.2.1\build\Fody.targets'))" />
   </Target>
 </Project>

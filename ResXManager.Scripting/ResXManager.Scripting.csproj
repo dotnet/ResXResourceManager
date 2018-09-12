@@ -55,14 +55,14 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="TomsToolbox.Core, Version=1.0.73.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Core.1.0.73\lib\net40-client\TomsToolbox.Core.dll</HintPath>
+    <Reference Include="TomsToolbox.Core, Version=1.0.74.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Core.1.0.74\lib\net40-client\TomsToolbox.Core.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.Desktop, Version=1.0.73.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.Desktop.1.0.73\lib\net45\TomsToolbox.Desktop.dll</HintPath>
+    <Reference Include="TomsToolbox.Desktop, Version=1.0.74.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.Desktop.1.0.74\lib\net45\TomsToolbox.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.73.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
-      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.73\lib\net45\TomsToolbox.ObservableCollections.dll</HintPath>
+    <Reference Include="TomsToolbox.ObservableCollections, Version=1.0.74.0, Culture=neutral, PublicKeyToken=60b39f873a8e3fc2, processorArchitecture=MSIL">
+      <HintPath>..\packages\TomsToolbox.ObservableCollections.1.0.74\lib\net45\TomsToolbox.ObservableCollections.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
