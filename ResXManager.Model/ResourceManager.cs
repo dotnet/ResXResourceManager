@@ -291,8 +291,11 @@
 
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
 
+            var pseudoLocales = new[] { "qps-ploc", "qps-ploca", "qps-plocm", "qps-Latn-x-sh" };
+
             var cultureNames = allCultures
                 .SelectMany(culture => new[] { culture.IetfLanguageTag, culture.Name })
+                .Concat(pseudoLocales)
                 .Distinct()
                 .ToArray();
 
