@@ -2,9 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -35,9 +33,6 @@
 
         public static void ExportExcelFile([NotNull] this ResourceManager resourceManager, [NotNull] string filePath, [CanBeNull] IResourceScope scope, ExcelExportMode exportMode)
         {
-            Contract.Requires(resourceManager != null);
-            Contract.Requires(filePath != null);
-
             if (exportMode == ExcelExportMode.Text)
             {
                 ExportToText(filePath, scope ?? new FullScope(resourceManager.ResourceEntities));
@@ -46,10 +41,9 @@
 
             using (var package = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook))
             {
-                Contract.Assume(package != null);
-
                 var workbookPart = package.AddWorkbookPart();
-                Contract.Assume(workbookPart != null);
+
+                GeneratedCode.GeneratedClass.AddStylesToWorkbookPart(workbookPart);
 
                 if (exportMode == ExcelExportMode.MultipleSheets)
                 {
@@ -79,9 +73,6 @@
 
         private static void ExportToMultipleSheets([NotNull] ResourceManager resourceManager, [NotNull] WorkbookPart workbookPart, [CanBeNull] IResourceScope scope)
         {
-            Contract.Requires(resourceManager != null);
-            Contract.Requires(workbookPart != null);
-
             var entitiesQuery = GetMultipleSheetEntities(resourceManager);
 
             if (scope != null)
@@ -94,47 +85,48 @@
 
             workbookPart.Workbook = new Workbook().AppendItem(entities.Aggregate(new Sheets(), (seed, item) => seed.AppendItem(item.CreateSheet())));
 
+            var dataAppender = new DataAppender(_fixedColumnHeaders.Length);
+
             foreach (var item in entities)
             {
-                Contract.Assume(item != null);
-
-                var worksheetPart = workbookPart.AddNewPart<WorksheetPart>(item.Id);
-                Contract.Assume(worksheetPart != null);
-                worksheetPart.Worksheet = new Worksheet().AppendItem(item.GetDataRows(scope).Aggregate(new SheetData(), AppendRow));
+                workbookPart
+                    .AddNewPart<WorksheetPart>(item.Id)
+                    .Worksheet = new Worksheet()
+                        .AppendItem(item.GetDataRows(scope).Aggregate(new SheetData(), dataAppender.AppendRow))
+                        .Protect();
             }
         }
 
         private static void ExportToSingleSheet([NotNull] WorkbookPart workbookPart, [NotNull] IResourceScope scope)
         {
-            Contract.Requires(workbookPart != null);
-            Contract.Requires(scope != null);
-
             var languages = scope.Languages.Concat(scope.Comments).Distinct().ToArray();
             var entries = scope.Entries.ToArray();
 
             var sheet = new Sheet { Name = "ResXResourceManager", Id = "Id1", SheetId = 1 };
-            workbookPart.Workbook = new Workbook().AppendItem(new Sheets(sheet));
-            var worksheetPart = workbookPart.AddNewPart<WorksheetPart>(sheet.Id);
-            Contract.Assume(worksheetPart != null);
-            var worksheet = new Worksheet();
-
-            worksheetPart.Worksheet = worksheet;
 
             var headerRow = _singleSheetFixedColumnHeaders.Concat(languages.GetLanguageColumnHeaders(scope));
             var dataRows = entries.Select(e => new[] { e.Container.ProjectName, e.Container.UniqueName }.Concat(e.GetDataRow(languages, scope)));
-
             var rows = new[] { headerRow }.Concat(dataRows);
 
-            worksheet.AppendItem(rows.Aggregate(new SheetData(), AppendRow));
+            var dataAppender = new DataAppender(_singleSheetFixedColumnHeaders.Length);
+
+            workbookPart.Workbook = new Workbook().AppendItem(new Sheets(sheet));
+
+            workbookPart
+                .AddNewPart<WorksheetPart>(sheet.Id)
+                .Worksheet = new Worksheet()
+                    .AppendItem(rows.Aggregate(new SheetData(), dataAppender.AppendRow))
+                    .Protect();
+        }
+
+        private static Worksheet Protect(this Worksheet worksheet)
+        {
+            return worksheet.AppendItem(new SheetProtection { Sheet = true, Objects = true, Scenarios = true, FormatColumns = false, FormatRows = false, Sort = false, AutoFilter = false });
         }
 
         [NotNull, ItemNotNull]
         public static IList<EntryChange> ImportExcelFile([NotNull] this ResourceManager resourceManager, [NotNull] string filePath)
         {
-            Contract.Requires(resourceManager != null);
-            Contract.Requires(filePath != null);
-            Contract.Ensures(Contract.Result<IEnumerable<EntryChange>>() != null);
-
             var content = File.ReadAllText(filePath);
 
             if (content.StartsWith(string.Join("\t", _singleSheetFixedColumnHeaders), StringComparison.OrdinalIgnoreCase))
@@ -144,17 +136,10 @@
 
             using (var package = SpreadsheetDocument.Open(filePath, false))
             {
-                Contract.Assume(package != null);
                 var workbookPart = package.WorkbookPart;
-                Contract.Assume(workbookPart != null);
-
                 var workbook = workbookPart.Workbook;
-                Contract.Assume(workbook != null);
-
                 var sharedStrings = workbookPart.GetSharedStrings();
-
                 var sheets = workbook.Sheets;
-                Contract.Assume(sheets != null);
 
                 var firstSheet = sheets.OfType<Sheet>().FirstOrDefault();
                 if (firstSheet == null)
@@ -173,11 +158,6 @@
         [NotNull, ItemNotNull]
         private static IEnumerable<EntryChange> ImportSingleSheet([NotNull] ResourceManager resourceManager, [NotNull, ItemNotNull] Sheet firstSheet, [NotNull] WorkbookPart workbookPart, [ItemNotNull][CanBeNull] IList<SharedStringItem> sharedStrings)
         {
-            Contract.Requires(resourceManager != null);
-            Contract.Requires(firstSheet != null);
-            Contract.Requires(workbookPart != null);
-            Contract.Ensures(Contract.Result<IEnumerable<EntryChange>>() != null);
-
             var data = firstSheet.GetRows(workbookPart).Select(row => row.GetCellValues(sharedStrings)).ToArray();
 
             return ImportSingleSheet(resourceManager, data);
@@ -191,16 +171,12 @@
 
             var firstRow = data.FirstOrDefault();
 
-            Contract.Assume(firstRow != null);
-
             var headerRow = (IList<string>)firstRow.Skip(2).ToArray();
 
             var rowsByProject = data.Skip(1).GroupBy(row => row.FirstOrDefault() ?? string.Empty, row => (IList<string>)row.Skip(1).ToArray());
 
             foreach (var projectRows in rowsByProject)
             {
-                Contract.Assume(projectRows != null);
-
                 var projectName = projectRows.Key;
 
                 if (string.IsNullOrEmpty(projectName))
@@ -210,8 +186,6 @@
 
                 foreach (var fileRows in rowsByFile)
                 {
-                    Contract.Assume(fileRows != null);
-
                     var uniqueName = fileRows.Key;
                     if (string.IsNullOrEmpty(uniqueName))
                         continue;
@@ -240,11 +214,6 @@
         [NotNull, ItemNotNull]
         private static IEnumerable<EntryChange> ImportMultipleSheets([NotNull] ResourceManager resourceManager, [NotNull][ItemNotNull] Sheets sheets, [NotNull] WorkbookPart workbookPart, [ItemNotNull][CanBeNull] IList<SharedStringItem> sharedStrings)
         {
-            Contract.Requires(resourceManager != null);
-            Contract.Requires(sheets != null);
-            Contract.Requires(workbookPart != null);
-            Contract.Ensures(Contract.Result<IEnumerable<EntryChange>>() != null);
-
             var entities = GetMultipleSheetEntities(resourceManager).ToArray();
 
             var changes = sheets.OfType<Sheet>()
@@ -257,10 +226,6 @@
         [ItemNotNull]
         private static IList<string>[] GetTable([NotNull][ItemNotNull] this Sheet sheet, [NotNull] WorkbookPart workbookPart, [ItemNotNull][CanBeNull] IList<SharedStringItem> sharedStrings)
         {
-            Contract.Requires(sheet != null);
-            Contract.Requires(workbookPart != null);
-            Contract.Ensures(Contract.Result<IList<string>[]>() != null);
-
             return sheet.GetRows(workbookPart)
                 .Select(row => row.GetCellValues(sharedStrings))
                 .ToArray();
@@ -277,9 +242,6 @@
         [ItemNotNull]
         private static IList<string> GetCellValues([NotNull][ItemNotNull] this Row row, [ItemNotNull][CanBeNull] IList<SharedStringItem> sharedStrings)
         {
-            Contract.Requires(row != null);
-            Contract.Ensures(Contract.Result<IList<string>>() != null);
-
             return row.OfType<Cell>().GetCellValues(sharedStrings).ToArray();
         }
 
@@ -287,10 +249,6 @@
         [ItemNotNull]
         private static IEnumerable<Row> GetRows([NotNull][ItemNotNull] this Sheet sheet, [NotNull] WorkbookPart workbookPart)
         {
-            Contract.Requires(sheet != null);
-            Contract.Requires(workbookPart != null);
-            Contract.Ensures(Contract.Result<IEnumerable<Row>>() != null);
-
             var worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id);
 
             return worksheetPart?.Worksheet?.ChildElements?.OfType<SheetData>()?.FirstOrDefault()?.OfType<Row>() ?? Enumerable.Empty<Row>();
@@ -299,11 +257,7 @@
         [NotNull]
         private static ResourceEntity FindResourceEntity([NotNull][ItemNotNull] this IEnumerable<MultipleSheetEntity> entities, [NotNull][ItemNotNull] Sheet sheet)
         {
-            Contract.Requires(entities != null);
-            Contract.Requires(sheet != null);
-            Contract.Ensures(Contract.Result<ResourceEntity>() != null);
-
-            var name = GetName(sheet);
+            var name = sheet.Name.Value;
 
             var entity = entities.Where(item => item.SheetName.Equals(name, StringComparison.OrdinalIgnoreCase))
                 .Select(item => item.ResourceEntity)
@@ -315,77 +269,77 @@
             return entity;
         }
 
-        [ContractVerification(false)]
-        [NotNull]
-        private static string GetName([NotNull][ItemNotNull] this Sheet sheet)
+        private class DataAppender
         {
-            Contract.Requires(sheet != null);
-            Contract.Ensures(Contract.Result<string>() != null);
+            private readonly int _numberOfFixedColumns;
 
-            return sheet.Name.Value;
-        }
-
-        [ItemNotNull]
-        [CanBeNull]
-        private static SheetData AppendRow([NotNull][ItemNotNull] SheetData sheetData, [NotNull][ItemNotNull] IEnumerable<string> rowData)
-        {
-            Contract.Requires(sheetData != null);
-            Contract.Requires(rowData != null);
-
-            var row = (sheetData.ChildElements?.OfType<Row>()?.Count() ?? 0) + 1;
-            var column = 1;
-            return sheetData.AppendItem(rowData.Aggregate(new Row(), (seed, item) => seed.AppendItem(CreateCell(item, row, column++))));
-        }
-
-        [NotNull]
-        [ItemNotNull]
-        private static Cell CreateCell([CanBeNull] string text, int row, int column)
-        {
-            Contract.Ensures(Contract.Result<Cell>() != null);
-
-            return new Cell
+            public DataAppender(int numberOfFixedColumns)
             {
-                DataType = CellValues.InlineString,
-                CellReference = CreateCellReference(row, column),
-                InlineString = new InlineString
-                {
-                    Text = new Text(text ?? string.Empty)
-                    {
-                        Space = SpaceProcessingModeValues.Preserve
-                    }
-                }
-            };
-        }
-
-        [NotNull]
-        private static string CreateCellReference(int row, int column)
-        {
-            return GetExcelColumnName(column) + row.ToString(CultureInfo.InvariantCulture);
-        }
-
-        // From: https://stackoverflow.com/questions/181596/how-to-convert-a-column-number-eg-127-into-an-excel-column-eg-aa
-        [NotNull]
-        private static string GetExcelColumnName(int columnNumber)
-        {
-            var dividend = columnNumber;
-            var columnName = string.Empty;
-
-            while (dividend > 0)
-            {
-                var modulo = (dividend - 1) % 26;
-                columnName = Convert.ToChar(65 + modulo) + columnName;
-                dividend = (dividend - modulo) / 26;
+                _numberOfFixedColumns = numberOfFixedColumns;
             }
 
-            return columnName;
+            [ItemNotNull]
+            [CanBeNull]
+            public SheetData AppendRow([NotNull] [ItemNotNull] SheetData sheetData, [NotNull] [ItemNotNull] IEnumerable<string> rowData)
+            {
+                var row = (sheetData.ChildElements?.OfType<Row>()?.Count() ?? 0) + 1;
+                var column = 1;
+                return sheetData.AppendItem(rowData.Aggregate(new Row(), (seed, item) => seed.AppendItem(CreateCell(item, row, column++))));
+            }
+
+            [NotNull]
+            [ItemNotNull]
+            private Cell CreateCell([CanBeNull] string text, int row, int column)
+            {
+                var cell = new Cell
+                {
+                    DataType = CellValues.InlineString,
+                    CellReference = CreateCellReference(row, column),
+                    InlineString = new InlineString
+                    {
+                        Text = new Text(text ?? string.Empty)
+                        {
+                            Space = SpaceProcessingModeValues.Preserve
+                        }
+                    }
+                };
+
+                if ((row <= 1) || (column <= _numberOfFixedColumns))
+                {
+                    cell.StyleIndex = 1; // locked
+                }
+
+                return cell;
+            }
+
+            [NotNull]
+            private static string CreateCellReference(int row, int column)
+            {
+                return GetExcelColumnName(column) + row.ToString(CultureInfo.InvariantCulture);
+            }
+
+            // From: https://stackoverflow.com/questions/181596/how-to-convert-a-column-number-eg-127-into-an-excel-column-eg-aa
+            [NotNull]
+            private static string GetExcelColumnName(int columnNumber)
+            {
+                var dividend = columnNumber;
+                var columnName = string.Empty;
+
+                while (dividend > 0)
+                {
+                    var modulo = (dividend - 1) % 26;
+                    columnName = Convert.ToChar(65 + modulo) + columnName;
+                    dividend = (dividend - modulo) / 26;
+                }
+
+                return columnName;
+            }
         }
 
         [ItemNotNull]
         [CanBeNull]
         private static IList<SharedStringItem> GetSharedStrings([NotNull] this WorkbookPart workbookPart)
         {
-            Contract.Requires(workbookPart != null);
-
             var sharedStringsPart = workbookPart.SharedStringTablePart;
 
             var stringTable = sharedStringsPart?.SharedStringTable;
@@ -396,9 +350,6 @@
         [CanBeNull]
         private static string GetText([NotNull][ItemNotNull] this CellType cell, [ItemNotNull][CanBeNull] IList<SharedStringItem> sharedStrings)
         {
-            Contract.Requires(cell != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
             var cellValue = cell.CellValue;
             var dataType = cell.DataType;
 
@@ -442,14 +393,10 @@
         [ItemNotNull]
         private static IEnumerable<string> GetCellValues([NotNull][ItemNotNull] this IEnumerable<Cell> cells, [ItemNotNull][CanBeNull] IList<SharedStringItem> sharedStrings)
         {
-            Contract.Requires(cells != null);
-            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-
             var columnIndex = 0;
 
             foreach (var cell in cells)
             {
-                Contract.Assume(cell != null);
                 var cellColumnIndex = new ExcelRange(cell.CellReference).StartColumnIndex;
 
                 while (columnIndex < cellColumnIndex)
@@ -473,8 +420,6 @@
         [CanBeNull]
         private static IEnumerable<string> GetLanguageColumnHeaders([NotNull] this CultureKey language, [CanBeNull] IResourceScope scope)
         {
-            Contract.Requires(language != null);
-
             var cultureKeyName = language.ToString();
 
             if ((scope == null) || scope.Comments.Contains(language))
@@ -488,9 +433,6 @@
         [CanBeNull]
         private static IEnumerable<string> GetLanguageDataColumns([NotNull] this ResourceTableEntry entry, [NotNull] CultureKey language, [CanBeNull] IResourceScope scope)
         {
-            Contract.Requires(entry != null);
-            Contract.Requires(language != null);
-
             if ((scope == null) || scope.Comments.Contains(language))
                 yield return entry.Comments.GetValue(language);
 
@@ -509,9 +451,6 @@
         [NotNull, ItemNotNull]
         private static IEnumerable<IEnumerable<string>> GetHeaderRows([NotNull][ItemNotNull] this IEnumerable<CultureKey> languages, [CanBeNull] IResourceScope scope)
         {
-            Contract.Requires(languages != null);
-            Contract.Ensures(Contract.Result<IEnumerable<IEnumerable<string>>>() != null);
-
             var languageColumnHeaders = languages.GetLanguageColumnHeaders(scope);
 
             yield return _fixedColumnHeaders.Concat(languageColumnHeaders);
@@ -521,9 +460,6 @@
         [ItemNotNull]
         private static IEnumerable<string> GetLanguageColumnHeaders([NotNull][ItemNotNull] this IEnumerable<CultureKey> languages, [CanBeNull] IResourceScope scope)
         {
-            Contract.Requires(languages != null);
-            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-
             return languages.SelectMany(lang => lang.GetLanguageColumnHeaders(scope));
         }
 
@@ -540,10 +476,6 @@
         [ItemNotNull]
         private static IEnumerable<IEnumerable<string>> GetDataRows([NotNull] this ResourceEntity entity, [NotNull][ItemNotNull] IEnumerable<CultureKey> languages, [CanBeNull] IResourceScope scope)
         {
-            Contract.Requires(entity != null);
-            Contract.Requires(languages != null);
-            Contract.Ensures(Contract.Result<IEnumerable<IEnumerable<string>>>() != null);
-
             var entries = scope?.Entries.Where(entry => entry.Container == entity) ?? entity.Entries;
 
             return entries.Select(entry => entry.GetDataRow(languages, scope));
@@ -562,10 +494,6 @@
         [ItemNotNull]
         private static IEnumerable<string> GetDataRow([NotNull] this ResourceTableEntry entry, [NotNull][ItemNotNull] IEnumerable<CultureKey> languages, [CanBeNull] IResourceScope scope)
         {
-            Contract.Requires(entry != null);
-            Contract.Requires(languages != null);
-            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-
             return new[] { entry.Key }.Concat(entry.GetLanguageDataColumns(languages, scope));
         }
 
@@ -573,10 +501,6 @@
         [ItemNotNull]
         private static IEnumerable<string> GetLanguageDataColumns([NotNull] this ResourceTableEntry entry, [NotNull][ItemNotNull] IEnumerable<CultureKey> languages, [CanBeNull] IResourceScope scope)
         {
-            Contract.Requires(entry != null);
-            Contract.Requires(languages != null);
-            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-
             return languages.SelectMany(l => entry.GetLanguageDataColumns(l, scope));
         }
 
@@ -596,9 +520,6 @@
         [ItemNotNull]
         private static IEnumerable<MultipleSheetEntity> GetMultipleSheetEntities([NotNull] ResourceManager resourceManager)
         {
-            Contract.Requires(resourceManager != null);
-            Contract.Ensures(Contract.Result<IEnumerable<MultipleSheetEntity>>() != null);
-
             var uniqueNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             return resourceManager.ResourceEntities
@@ -610,22 +531,16 @@
         private class MultipleSheetEntity
         {
             private const int MaxSheetNameLength = 31;
-            [NotNull]
-            private readonly ResourceEntity _resourceEntity;
+
             [CanBeNull]
             private readonly UInt32Value _sheetId;
-            [NotNull]
-            private readonly string _sheetName;
 
             public MultipleSheetEntity([NotNull] ResourceEntity resourceEntity, int index, [NotNull][ItemNotNull] ISet<string> uniqueNames)
             {
-                Contract.Requires(resourceEntity != null);
-                Contract.Requires(uniqueNames != null);
-
-                _resourceEntity = resourceEntity;
+                ResourceEntity = resourceEntity;
 
                 var sheetName = GetSheetName(resourceEntity, uniqueNames);
-                _sheetName = sheetName;
+                SheetName = sheetName;
 
                 Id = "Id" + index + 1;
                 _sheetId = UInt32Value.FromUInt32((uint)index + 1);
@@ -634,10 +549,6 @@
             [NotNull]
             private static string GetSheetName([NotNull] ResourceEntity resourceEntity, [NotNull][ItemNotNull] ISet<string> uniqueNames)
             {
-                Contract.Requires(resourceEntity != null);
-                Contract.Requires(uniqueNames != null);
-                Contract.Ensures(Contract.Result<string>() != null);
-
                 var name = string.Join("|", resourceEntity.ProjectName, resourceEntity.BaseName);
 
                 if ((name.Length > MaxSheetNameLength) || uniqueNames.Contains(name))
@@ -658,51 +569,28 @@
             [NotNull]
             private static string GenrateShortName(int i, [NotNull] string name)
             {
-                Contract.Requires(name != null);
-                Contract.Ensures(Contract.Result<string>() != null);
-
                 var suffix = "~" + i;
-                Contract.Assume(suffix.Length < MaxSheetNameLength);
                 var prefixLenght = Math.Min(name.Length, MaxSheetNameLength - suffix.Length);
 
                 return name.Substring(0, prefixLenght) + suffix;
             }
 
             [NotNull]
-            public string SheetName
-            {
-                get
-                {
-                    Contract.Ensures(Contract.Result<string>() != null);
-                    return _sheetName;
-                }
-            }
+            public string SheetName { get; }
 
             [NotNull]
-            public ResourceEntity ResourceEntity
-            {
-                get
-                {
-                    Contract.Ensures(Contract.Result<ResourceEntity>() != null);
-                    return _resourceEntity;
-                }
-            }
+            public ResourceEntity ResourceEntity { get; }
 
             [CanBeNull]
-            public string Id
-            {
-                get;
-            }
+            public string Id { get; }
 
             [NotNull]
             [ItemNotNull]
             public Sheet CreateSheet()
             {
-                Contract.Ensures(Contract.Result<Sheet>() != null);
-
                 return new Sheet
                 {
-                    Name = _sheetName,
+                    Name = SheetName,
                     SheetId = _sheetId,
                     Id = Id
                 };
@@ -712,23 +600,12 @@
             [ItemNotNull]
             public IEnumerable<IEnumerable<string>> GetDataRows([CanBeNull] IResourceScope scope)
             {
-                Contract.Ensures(Contract.Result<IEnumerable<IEnumerable<string>>>() != null);
-
-                var languages = _resourceEntity.Languages
+                var languages = ResourceEntity.Languages
                     .Select(l => l.CultureKey)
                     .ToArray();
 
                 return languages.GetHeaderRows(scope)
-                    .Concat(_resourceEntity.GetDataRows(languages, scope));
-            }
-
-            [ContractInvariantMethod]
-            [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-            [Conditional("CONTRACTS_FULL")]
-            private void ObjectInvariant()
-            {
-                Contract.Invariant(_resourceEntity != null);
-                Contract.Invariant(_sheetName != null);
+                    .Concat(ResourceEntity.GetDataRows(languages, scope));
             }
         }
 
@@ -736,8 +613,6 @@
         {
             public FullScope([NotNull][ItemNotNull] ICollection<ResourceEntity> entities)
             {
-                Contract.Requires(entities != null);
-
                 Entries = entities.SelectMany(entity => entity.Entries)
                     .ToArray();
 
@@ -764,6 +639,105 @@
             public IEnumerable<CultureKey> Comments
             {
                 get;
+            }
+        }
+    }
+
+    namespace GeneratedCode
+    {
+        using DocumentFormat.OpenXml.Packaging;
+        using DocumentFormat.OpenXml.Spreadsheet;
+        using DocumentFormat.OpenXml;
+
+        // Generated from an empty document using the OpenXML SDK Productivity Tool
+        [SuppressMessage("ReSharper", "All")]
+        public static class GeneratedClass
+        {
+            public static void AddStylesToWorkbookPart(WorkbookPart part)
+            {
+                var workbookStylesPart = part.AddNewPart<WorkbookStylesPart>("WorkbookStyles");
+
+                var stylesheet1 = new Stylesheet { MCAttributes = new MarkupCompatibilityAttributes { Ignorable = "x14ac" } };
+                stylesheet1.AddNamespaceDeclaration("mc", "http://schemas.openxmlformats.org/markup-compatibility/2006");
+                stylesheet1.AddNamespaceDeclaration("x14ac", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac");
+
+                var fonts1 = new Fonts { Count = 1U, KnownFonts = true };
+
+                var font1 = new Font();
+                var fontSize1 = new FontSize { Val = 11D };
+                var color1 = new Color { Theme = 1U };
+                var fontName1 = new FontName { Val = "Calibri" };
+                var fontFamilyNumbering1 = new FontFamilyNumbering { Val = 2 };
+                var fontScheme1 = new FontScheme { Val = FontSchemeValues.Minor };
+
+                font1.Append(fontSize1);
+                font1.Append(color1);
+                font1.Append(fontName1);
+                font1.Append(fontFamilyNumbering1);
+                font1.Append(fontScheme1);
+
+                fonts1.Append(font1);
+
+                var fills1 = new Fills { Count = 2U };
+
+                var fill1 = new Fill();
+                var patternFill1 = new PatternFill { PatternType = PatternValues.None };
+
+                fill1.Append(patternFill1);
+
+                var fill2 = new Fill();
+                var patternFill2 = new PatternFill { PatternType = PatternValues.Gray125 };
+
+                fill2.Append(patternFill2);
+
+                fills1.Append(fill1);
+                fills1.Append(fill2);
+
+                var borders1 = new Borders { Count = 1U };
+
+                var border1 = new Border();
+                var leftBorder1 = new LeftBorder();
+                var rightBorder1 = new RightBorder();
+                var topBorder1 = new TopBorder();
+                var bottomBorder1 = new BottomBorder();
+                var diagonalBorder1 = new DiagonalBorder();
+
+                border1.Append(leftBorder1);
+                border1.Append(rightBorder1);
+                border1.Append(topBorder1);
+                border1.Append(bottomBorder1);
+                border1.Append(diagonalBorder1);
+
+                borders1.Append(border1);
+
+                var cellStyleFormats1 = new CellStyleFormats { Count = 1U };
+                var cellStyleFormat = new CellFormat { NumberFormatId = 0U, FontId = 0U, FillId = 0U, BorderId = 0U };
+
+                cellStyleFormats1.Append(cellStyleFormat);
+
+                var cellFormats = new CellFormats { Count = 2U };
+
+                // index 0 (default) => unlocked
+                var cellFormat0 = new CellFormat { NumberFormatId = 0U, FontId = 0U, FillId = 0U, BorderId = 0U, FormatId = 0U, ApplyProtection = true }.AppendItem(new Protection { Locked = false });
+                // index 1 => locked
+                var cellFormat1 = new CellFormat { NumberFormatId = 0U, FontId = 0U, FillId = 0U, BorderId = 0U, FormatId = 0U };
+
+                cellFormats.Append(cellFormat0);
+                cellFormats.Append(cellFormat1);
+
+                var cellStyles1 = new CellStyles { Count = 1U };
+                var cellStyle1 = new CellStyle { Name = "Normal", FormatId = 0U, BuiltinId = 0U };
+
+                cellStyles1.Append(cellStyle1);
+
+                stylesheet1.Append(fonts1);
+                stylesheet1.Append(fills1);
+                stylesheet1.Append(borders1);
+                stylesheet1.Append(cellStyleFormats1);
+                stylesheet1.Append(cellFormats);
+                stylesheet1.Append(cellStyles1);
+
+                workbookStylesPart.Stylesheet = stylesheet1;
             }
         }
     }
