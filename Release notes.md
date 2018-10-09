@@ -1,4 +1,10 @@
-﻿1.24
+﻿1.25
+- Fix #166: Option for automatic removing of empty entries
+- Fix #171: Bad caret visualization on Move to resource utility with Visual Studio dark theme
+- Fix #172: Support pseudo-locales
+- Fix #177: Lock untranslatable columns in Excel
+
+1.24
 - Fix #151 and #84: Enhance the Move To Resource dialog.
 - Fix #143: Add a workaround for the Visual Studio UWP Designer bug to make it work until it gets finally fixed by Microsoft.
 
