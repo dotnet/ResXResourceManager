@@ -262,7 +262,7 @@
           </Button>
           <Button ToolTip="{x:Static properties:Resources.CutToolTip}"
                   Style="{StaticResource ToolbarCommandButtonStyle}"
-                  Command="{Binding Path=CutCommand, Converter={StaticResource CutCommandConverter}}">
+                  Command="{Binding Path=CutCommand, Converter={StaticResource CutCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}">
             <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/cut.png" />
           </Button>
           <Button ToolTip="{x:Static properties:Resources.CopyToolTip}"
@@ -501,8 +501,8 @@
 
             <DataGrid.InputBindings>
               <KeyBinding Key="Delete" Command="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
-              <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
-              <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
+              <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}"/>
+              <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}"/>
               <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
               <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
             </DataGrid.InputBindings>
@@ -652,7 +652,8 @@
                                  CommandTarget="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}"
                                  CommandParameter="{Binding ElementName=DataGrid}" />
     <toms:CommandRoutingBehavior CommandSource="view:CutCommand"
-                                 CommandTarget="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" />
+                                 CommandTarget="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" 
+                                 CommandParameter="{Binding ElementName=DataGrid}"/>
     <toms:CommandRoutingBehavior CommandSource="view:CopyCommand"
                                  CommandTarget="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                  CommandParameter="{Binding ElementName=DataGrid}" />

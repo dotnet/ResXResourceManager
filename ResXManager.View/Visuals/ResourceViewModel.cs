@@ -111,7 +111,7 @@
         public ICommand CopyCommand => new DelegateCommand<DataGrid>(CanCopy, CopySelected);
 
         [NotNull]
-        public ICommand CutCommand => new DelegateCommand(CanCut, CutSelected);
+        public ICommand CutCommand => new DelegateCommand<DataGrid>(CanCut, CutSelected);
 
         [NotNull]
         public ICommand DeleteCommand => new DelegateCommand<DataGrid>(CanDelete, DeleteSelected);
@@ -224,84 +224,67 @@
             LoadedSnapshot = fileName;
         }
 
-        private bool CanDelete([CanBeNull] DataGrid dataGrid)
+        private bool CanCut([NotNull] DataGrid dataGrid)
         {
-            if (dataGrid == null)
-                return false;
-
-            if (dataGrid.SelectionUnit == DataGridSelectionUnit.CellOrRowHeader)
-                return dataGrid.SelectedCells.All(cellInfo => cellInfo.IsOfColumnType(ColumnType.Comment, ColumnType.Language));
-
-            return SelectedTableEntries.Any();
+            return CanCopy(dataGrid) && CanDelete(dataGrid);
         }
 
-        private bool CanCut()
+        private void CutSelected([NotNull] DataGrid dataGrid)
         {
-            var entries = SelectedTableEntries;
-
-            var totalNumberOfEntries = entries.Count;
-            if (totalNumberOfEntries == 0)
-                return false;
-
-            // Only allow is all keys are different.
-            var numberOfDistinctEntries = entries.Select(e => e.Key).Distinct().Count();
-
-            return numberOfDistinctEntries == totalNumberOfEntries;
+            CopySelected(dataGrid);
+            DeleteSelected(dataGrid);
         }
 
-        private bool CanCopy([CanBeNull] DataGrid dataGrid)
+        private bool CanCopy([NotNull] DataGrid dataGrid)
         {
-            var entries = SelectedTableEntries;
+            if (dataGrid.GetIsEditing())
+                return false;
 
-            var totalNumberOfEntries = entries.Count;
-            if (totalNumberOfEntries == 0)
+            if (Settings.IsCellSelectionEnabled)
                 return dataGrid.HasRectangularCellSelection(); // cell selection
 
+            var entries = SelectedTableEntries;
+            var totalNumberOfEntries = entries.Count;
             // Only allow if all keys are different.
             var numberOfDistinctEntries = entries.Select(e => e.Key).Distinct().Count();
 
             return numberOfDistinctEntries == totalNumberOfEntries;
         }
 
-        private void CutSelected()
-        {
-            var selectedItems = SelectedTableEntries.ToList();
-
-            var resourceFiles = selectedItems.Select(item => item.Container).Distinct();
-
-            if (resourceFiles.Any(resourceFile => !ResourceManager.CanEdit(resourceFile, null)))
-                return;
-
-            selectedItems.ToTable().SetClipboardData();
-
-            selectedItems.ForEach(item => item.Container.Remove(item));
-        }
-
         private void CopySelected([NotNull] DataGrid dataGrid)
         {
             Contract.Requires(dataGrid != null);
 
-            var selectedItems = SelectedTableEntries.ToArray();
-
-            if (selectedItems.Length == 0)
+            if (Settings.IsCellSelectionEnabled)
             {
                 dataGrid.GetCellSelection().SetClipboardData();
             }
             else
             {
+                var selectedItems = SelectedTableEntries;
+
                 selectedItems.ToTable().SetClipboardData();
             }
         }
 
+        private bool CanDelete([NotNull] DataGrid dataGrid)
+        {
+            if (dataGrid.GetIsEditing())
+                return false;
+
+            if (Settings.IsCellSelectionEnabled)
+                return dataGrid.GetSelectedVisibleCells().All(cellInfo => cellInfo.IsOfColumnType(ColumnType.Comment, ColumnType.Language));
+
+            return SelectedTableEntries.Any();
+        }
+
         private void DeleteSelected([NotNull] DataGrid dataGrid)
         {
-            Contract.Requires(dataGrid != null);
-
-            if (dataGrid.SelectionUnit == DataGridSelectionUnit.CellOrRowHeader)
+            if (Settings.IsCellSelectionEnabled)
             {
                 var affectedEntries = new HashSet<ResourceTableEntry>();
 
-                foreach (var cellInfo in dataGrid.SelectedCells)
+                foreach (var cellInfo in dataGrid.GetSelectedVisibleCells().ToArray())
                 {
                     if (!cellInfo.IsOfColumnType(ColumnType.Comment, ColumnType.Language))
                         continue;
@@ -335,15 +318,15 @@
             }
         }
 
-        private bool CanPaste([CanBeNull] DataGrid dataGrid)
+        private bool CanPaste([NotNull] DataGrid dataGrid)
         {
-            if (dataGrid == null)
+            if (dataGrid.GetIsEditing())
                 return false;
 
             if (!Clipboard.ContainsText())
                 return false;
 
-            if (dataGrid.SelectionUnit != DataGridSelectionUnit.FullRow)
+            if (Settings.IsCellSelectionEnabled)
                 return dataGrid.HasRectangularCellSelection();
 
             return SelectedEntities.Count == 1;
@@ -357,7 +340,7 @@
             if (table == null)
                 throw new ImportException(Resources.ImportNormalizedTableExpected);
 
-            if (dataGrid.SelectionUnit != DataGridSelectionUnit.FullRow)
+            if (Settings.IsCellSelectionEnabled)
             {
                 PasteCells(dataGrid, table);
             }
@@ -405,7 +388,7 @@
             Contract.Requires(dataGrid != null);
             Contract.Requires(table != null);
 
-            if (dataGrid.SelectedCells.Any(cell => (cell.Item as ResourceTableEntry)?.Container.CanEdit((cell.Column?.Header as ILanguageColumnHeader)?.CultureKey) == false))
+            if (dataGrid.GetSelectedVisibleCells().Any(cell => (cell.Item as ResourceTableEntry)?.Container.CanEdit((cell.Column?.Header as ILanguageColumnHeader)?.CultureKey) == false))
                 return;
 
             if (!dataGrid.PasteCells(table))
@@ -438,11 +421,7 @@
 
         private static void ToggleItemInvariant([NotNull] DataGrid dataGrid)
         {
-            Contract.Requires(dataGrid != null);
-
-            var cellInfos = dataGrid.SelectedCells;
-            if (cellInfos == null)
-                return;
+            var cellInfos = dataGrid.GetSelectedVisibleCells().ToArray();
 
             var isInvariant = !cellInfos.Any(item => item.IsItemInvariant());
 
@@ -464,9 +443,9 @@
 
         private static bool CanToggleItemInvariant([NotNull] DataGrid dataGrid)
         {
-            Contract.Requires(dataGrid != null);
-
-            return dataGrid.SelectedCells?.Any(cell => (cell.Column?.Header as ILanguageColumnHeader)?.ColumnType == ColumnType.Language) ?? false;
+            return dataGrid
+                .GetSelectedVisibleCells()
+                .Any(cell => (cell.Column?.Header as ILanguageColumnHeader)?.ColumnType == ColumnType.Language);
         }
 
         private static bool CanExportExcel([CanBeNull] IExportParameters param)

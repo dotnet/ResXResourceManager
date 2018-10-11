@@ -1,6 +1,8 @@
 namespace tomenglertde.ResXManager.View.Tools
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
@@ -138,5 +140,18 @@ namespace tomenglertde.ResXManager.View.Tools
             return columnTypes.Any(columnType => columnType == cellColumnType);
         }
 
+        [NotNull]
+        public static IEnumerable<DataGridCellInfo> GetSelectedVisibleCells([NotNull] this DataGrid dataGrid)
+        {
+            // ReSharper disable once AssignNullToNotNullAttribute
+            return dataGrid.SelectedCells.Where(cell => cell.IsValid && cell.Column?.Visibility == Visibility.Visible);
+        }
+
+        public static bool GetIsEditing([NotNull] this DataGrid dataGrid)
+        {
+            var view = (IEditableCollectionView)dataGrid.Items;
+
+            return view.IsEditingItem || view.IsAddingNew;
+        }
     }
 }

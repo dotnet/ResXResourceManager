@@ -435,9 +435,9 @@
         {
             var dataGrid = (DataGrid)sender;
             // postpone update, SelectedCells is updates *after* the current cell has changed.
-            dataGrid?.Dispatcher?.BeginInvoke(() =>
+            dataGrid.Dispatcher?.BeginInvoke(() =>
             {
-                dataGrid.SetValue(SelectedCellsProperty, dataGrid.SelectedCells?.ToArray());
+                dataGrid.SetValue(SelectedCellsProperty, dataGrid.GetSelectedVisibleCells().ToArray());
             });
         }
 
