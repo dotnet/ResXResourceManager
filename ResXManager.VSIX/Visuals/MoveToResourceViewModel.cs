@@ -193,9 +193,6 @@
             if (!string.IsNullOrEmpty(functionName))
                 keyBuilder.Append(functionName).Append(@"_");
 
-            var words = text.Split(' ', '\t', '\r', '\n');
-            text = string.Join(" ", words.Where(word => word?.Length > 3));
-
             var makeUpper = true;
 
             foreach (var c in text)
