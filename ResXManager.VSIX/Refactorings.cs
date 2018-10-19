@@ -13,6 +13,7 @@
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.Behaviors;
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Visuals;
     using tomenglertde.ResXManager.VSIX.Visuals;
@@ -113,12 +114,10 @@
                 .ToList();
 
             // ReSharper disable once PossibleNullReferenceException
-            var filter = Settings.Default.ResourceFilter?.Trim();
-
-            if (!string.IsNullOrEmpty(filter))
+            var filter = EntityFilter.BuildFilter(Settings.Default.ResourceFilter);
+            if (filter != null)
             {
-                var regex = new Regex(filter, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                entities.RemoveAll(item => !regex.Match(item.ToString()).Success);
+                entities.RemoveAll(item => !filter(item.ToString()));
             }
 
             var projectResources = new HashSet<ResourceEntity>(GetResourceEntiesFromProject(document, entities));

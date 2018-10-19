@@ -98,7 +98,7 @@
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
-    <DockPanel Margin="5" VerticalAlignment="Top" Grid.Column="0" Grid.Row="0">
+    <DockPanel Margin="5,3" VerticalAlignment="Top" Grid.Column="0" Grid.Row="0">
       <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Height="16" VerticalAlignment="Top">
         <Decorator Width="14" />
         <CheckBox VerticalAlignment="Center"

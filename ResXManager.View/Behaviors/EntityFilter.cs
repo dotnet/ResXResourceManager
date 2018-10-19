@@ -30,20 +30,35 @@
             if (listBox == null)
                 return;
 
-            if (!string.IsNullOrEmpty(value))
+            listBox.Items.Filter = BuildFilter(value);
+        }
+
+        public static Predicate<object> BuildFilter([CanBeNull] string value)
+        {
+            value = value?.Trim();
+
+            if (string.IsNullOrEmpty(value)) 
+                return null;
+
+            try
             {
-                try
-                {
-                    var regex = new Regex(value.Trim(), RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                    listBox.Items.Filter = item => regex.Match(item.ToString()).Success;
-                    return;
-                }
-                catch (ArgumentException)
-                {
-                }
+                var regex = new Regex(value, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                return item => regex.Match(item.ToString()).Success;
+            }
+            catch (ArgumentException)
+            {
             }
 
-            listBox.Items.Filter = null;
+            try
+            {
+                var regex = new Regex(value.Replace(@"\", @"\\"), RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                return item => regex.Match(item.ToString()).Success;
+            }
+            catch (ArgumentException)
+            {
+            }
+
+            return null;
         }
 
         protected override void OnAttached()
