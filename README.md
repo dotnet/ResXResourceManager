@@ -7,6 +7,14 @@ The most popular tool to localize and manage all kind of applications with resx-
 with more than 300K downloads from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager) 
 and hundreds of [5 star reviews](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details)
 
+---
+This is a community driven Open Source project. 
+As such it needs your support to keep it alive and evolving. 
+Contributions can be in the form of your time via fixing bugs, or contributing features. 
+If you cannot commit to this, consider donating to the [ResXResourceManager OpenCollective](https://opencollective.com/resxresourcemanager) to ensure ResXResourceManager will continue to be a great project that can help you in your daily work.
+
+---
+
 This tool provides central access to all ResX-based string resources in your solution. You can quickly navigate through all resource files and view the content in a well-arranged data grid.
 All available languages are displayed side by side in columns, to make it easy to find untranslated strings or clean up orphaned entries. All strings can be quickly edited in place, untranslated entries will be created on the fly while typing.
 
@@ -28,5 +36,9 @@ The standalone version can be installed as click-once application [here](https:/
 ### Standalone Application:
 ![Standalone Application](Assets/StandaloneMainScreen.png)
 
+Support this Project: 
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=799WX673GPQM8"><img title="Donate" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="Donate" /></a>
+<a href="https://opencollective.com/resxresourcemanager" alt="Support"><object style="height:65px" type="image/svg+xml" data="https://opencollective.com/resxresourcemanager/tiers/backer.svg?avatarHeight=72&width=200"></object></a>
 Powered by <a href="http://www.jetbrains.com/resharper/"><img src="http://www.tom-englert.de/Images/icon_ReSharper.png" alt="ReSharper" width="64" height="64" /></a>
-<p>Support this Project: <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=799WX673GPQM8"> <img style="border: none; margin-bottom: -6px;" title="Donate" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="Donate" /></a></p>
+
+
