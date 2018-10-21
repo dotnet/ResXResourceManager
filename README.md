@@ -4,14 +4,14 @@
 
 
 The most popular tool to localize and manage all kind of applications with resx-based resources, 
-with more than 300K downloads from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager) 
+with more than 800K downloads from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager) 
 and hundreds of [5 star reviews](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details)
 
 ---
 This is a community driven Open Source project. 
 As such it needs your support to keep it alive and evolving. 
 Contributions can be in the form of your time via fixing bugs, or contributing features. 
-If you cannot commit to this, consider donating to the [ResXResourceManager OpenCollective](https://opencollective.com/resxresourcemanager) to ensure ResXResourceManager will continue to be a great project that can help you in your daily work.
+If you cannot commit to this, consider donating to the [ResXResourceManager OpenCollective](https://opencollective.com/resxresourcemanager) to ensure ResX Resource Manager will continue to be a great project that can help you in your daily work.
 
 ---
 
