@@ -472,7 +472,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Support the Open Source Community..
+        ///   Looks up a localized string similar to Support this project with a donation.
         /// </summary>
         [NotNull]
         public static string DonateButtonToolTip {
@@ -820,6 +820,28 @@ namespace tomenglertde.ResXManager.View.Properties {
             get {
                 Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("NoSelection", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Got it - do not show this notification again..
+        /// </summary>
+        [NotNull]
+        public static string OpenSourceOverlay_Confirmation {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("OpenSourceOverlay_Confirmation", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;lt;StackPanel xmlns="http://schemas.microsoft....
+        /// </summary>
+        [NotNull]
+        public static string OpenSourceOverlay_Message {
+            get {
+                Contract.Ensures(Contract.Result<string>() != null);
+                return ResourceManager.GetString("OpenSourceOverlay_Message", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -1323,7 +1345,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         Diagnostics,
         /// <summary>
-        ///   Looks up a localized string similar to Support the Open Source Community..
+        ///   Looks up a localized string similar to Support this project with a donation.
         /// </summary>
         DonateButtonToolTip,
         /// <summary>
@@ -1450,6 +1472,14 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to No selection..
         /// </summary>
         NoSelection,
+        /// <summary>
+        ///   Looks up a localized string similar to Got it - do not show this notification again..
+        /// </summary>
+        OpenSourceOverlay_Confirmation,
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;lt;StackPanel xmlns="http://schemas.microsoft....
+        /// </summary>
+        OpenSourceOverlay_Message,
         /// <summary>
         ///   Looks up a localized string similar to Paste (Ctrl+V).
         /// </summary>

@@ -323,14 +323,21 @@
             </MenuItem>
           </Menu>
           <Separator />
-          <Button x:Name="LikeButton" ToolTip="{x:Static properties:Resources.LikeButtonToolTip}"
+          <Button ToolTip="{x:Static properties:Resources.LikeButtonToolTip}"
                   Tag="https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details">
             <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/like.png" />
           </Button>
-          <Button x:Name="HelpButton" ToolTip="{x:Static properties:Resources.HelpButtonToolTip}"
+          <Button ToolTip="{x:Static properties:Resources.DonateButtonToolTip}"
+                  Tag="https://opencollective.com/resxresourcemanager">
+            <Grid>
+              <Ellipse Width="16" Height="16" Fill="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+              <TextBlock Text="$" FontWeight="Bold" Foreground="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1,0,0,2" />
+            </Grid>
+          </Button>
+          <Button ToolTip="{x:Static properties:Resources.HelpButtonToolTip}"
                   Tag="https://github.com/tom-englert/ResXResourceManager/wiki">
             <Grid Width="16" Height="16">
-              <TextBlock Text="?" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" />
+              <TextBlock Text="?" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1,0,0,2" />
             </Grid>
           </Button>
         </ToolBar>

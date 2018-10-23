@@ -219,7 +219,7 @@ Wollen Sie trotzdem einen neuen Eintrag hinzufügen?</value>
     <value>Diagnose</value>
   </data>
   <data name="DonateButtonToolTip" xml:space="preserve">
-    <value>Unterstützen Sie die Open-Source Community</value>
+    <value>Unterstützen sie dieses Projekt mit einer kleinen Spende</value>
   </data>
   <data name="EditDefaultConfigurationNotification" xml:space="preserve">
     <value>Sie bearbeiten die Standardeinstellungen. Wenn sie projektmappenspezifischen Einstellungen bearbeiten möchten öffnen sie eine Projektmappe.</value>
@@ -412,5 +412,23 @@ Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
   </data>
   <data name="Configuration_EmptyValueHandlingHeader" xml:space="preserve">
     <value>Behandlung leerer Ressourceneinträge</value>
+  </data>
+  <data name="OpenSourceOverlay_Confirmation" xml:space="preserve">
+    <value>Diesen Hinweis nicht mehr anzeigen.</value>
+  </data>
+  <data name="OpenSourceOverlay_Message" xml:space="preserve">
+    <value>&lt;StackPanel xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"&gt;
+&lt;TextBlock FontWeight="Bold" FontSize="20"&gt;
+Dies ist ein Open-Source-Projekt.
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+Als solches braucht es ihre Unterstützung, um es am Leben zu erhalten und weiteentwickelt werden zu können.
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+Der beste Weg, einen Beitrag zu leisten, ist mitzuhelfen &lt;Hyperlink NavigateUri = "https://github.com/tom-englert/ResXResourceManager/issues"&gt; Fehler zu beheben oder neue Funktionen hinzuzufügen.&lt;/Hyperlink&gt;
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+Sie können aber auch mit einer &lt;Hyperlink NavigateUri = "https://opencollective.com/resxresourcemanager"&gt;kleinen Spende&lt;/Hyperlink&gt; dazu Beitragen, dass der ResX&amp;#160;Resource&amp;#160;Manager ein großartiges Projekt bleibt, und Sie auch weiterhin bei Ihrer täglichen Arbeit unterstützen kann.
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+Ihr ResXManager-Team.
+&lt;/TextBlock&gt;
+&lt;/StackPanel&gt;</value>
   </data>
 </root>

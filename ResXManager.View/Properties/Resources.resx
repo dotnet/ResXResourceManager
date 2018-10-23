@@ -224,7 +224,7 @@ Do you want to add a new entry anyway?</value>
     <value>Diagnostics</value>
   </data>
   <data name="DonateButtonToolTip" xml:space="preserve">
-    <value>Support the Open Source Community.</value>
+    <value>Support this project with a donation</value>
   </data>
   <data name="EditDefaultConfigurationNotification" xml:space="preserve">
     <value>Your are editing the default configuration. If you want to change settings that apply only to a specific solution, just open the solution.</value>
@@ -421,5 +421,23 @@ Use e.g. ".* - (?!Migrations)" to hide EF migrations.</value>
   </data>
   <data name="Configuration_EmptyValueHandlingHeader" xml:space="preserve">
     <value>Empty resource value handling</value>
+  </data>
+  <data name="OpenSourceOverlay_Message" xml:space="preserve">
+    <value>&lt;StackPanel xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"&gt;
+&lt;TextBlock FontWeight="Bold" FontSize="20"&gt;
+This is a community driven Open Source project.
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+As such it needs your support to keep it alive and evolving.
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+The best way to contribute is to help &lt;Hyperlink NavigateUri="https://github.com/tom-englert/ResXResourceManager/issues"&gt;fixing bugs, or adding new features.&lt;/Hyperlink&gt;
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+However, if you cannot help with coding, consider to &lt;Hyperlink NavigateUri="https://opencollective.com/resxresourcemanager"&gt;donate a small amount&lt;/Hyperlink&gt; to ensure ResX&amp;#160;Resource&amp;#160;Manager will continue to be a great project that can help you in your daily work.
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+Your ResXManager team.
+&lt;/TextBlock&gt;
+&lt;/StackPanel&gt;</value>
+  </data>
+  <data name="OpenSourceOverlay_Confirmation" xml:space="preserve">
+    <value>Got it - do not show this notification again.</value>
   </data>
 </root>

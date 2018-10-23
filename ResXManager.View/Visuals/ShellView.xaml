@@ -62,6 +62,50 @@
       </Button.Style>
       <Image SnapsToDevicePixels="True" Stretch="None" Source="/ResXManager.View;component/Assets/btn_donate_SM.gif" />
     </Button>
+    <Grid MouseDown="OpenSourceOverlay_MouseDown" Loaded="OpenSourceOverlay_Loaded">
+      <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+              Opacity="0.5" />
+      <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+              Width="600" HorizontalAlignment="Center" VerticalAlignment="Center"
+              BorderThickness="3" CornerRadius="5"
+              BorderBrush="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Padding="5">
+        <Grid>
+          <StackPanel Margin="15">
+            <Decorator Loaded="OpenSourceOverlayTextContainer_Loaded">
+              <Decorator.Resources>
+                <Style TargetType="TextBlock">
+                  <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+                  <Setter Property="FontSize" Value="16" />
+                </Style>
+                <Style TargetType="Hyperlink">
+                  <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=NavigateUri}"></Setter>
+                </Style>
+              </Decorator.Resources>
+              <StackPanel xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                <TextBlock FontWeight="Bold" FontSize="20">This is a community driven Open Source project.</TextBlock>
+                <Decorator Height="10"/>
+                <TextBlock>As such it needs your support to keep it alive and evolving.</TextBlock>
+                <Decorator Height="10"/>
+                <TextBlock>The best way to contribute is to help <Hyperlink NavigateUri="https://github.com/tom-englert/ResXResourceManager/issues">fixing bugs, or adding new features.</Hyperlink></TextBlock>
+                <Decorator Height="10"/>
+                <TextBlock>However, if you cannot help with coding, consider to <Hyperlink NavigateUri="https://opencollective.com/resxresourcemanager">donate a small amount</Hyperlink> to ensure ResX Resource Manager will continue to be a great project that can help you in your daily work.</TextBlock>
+                <Decorator Height="10"/>
+                <TextBlock>Your ResXManager team.</TextBlock>
+              </StackPanel>
+            </Decorator>
+            <Decorator Height="20" />
+            <CheckBox Content="{x:Static properties:Resources.OpenSourceOverlay_Confirmation}"
+                    HorizontalAlignment="Left"
+                    IsChecked="{Binding IsOpenSourceMessageConfirmed, Source={x:Static properties:Settings.Default}}" />
+          </StackPanel>
+          <Path Width="12" Height="12" Data="M2,2 L10,10 M10,2 L2,10" 
+                HorizontalAlignment="Right" VerticalAlignment="Top" 
+                StrokeThickness="3" Opacity=".5"
+                Stroke="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                />
+        </Grid>
+      </Border>
+    </Grid>
   </Grid>
 
 </UserControl>
