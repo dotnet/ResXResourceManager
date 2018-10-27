@@ -8,10 +8,11 @@ with more than 800K downloads from the [Visual Studio Marketplace](https://marke
 and hundreds of [5 star reviews](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details)
 
 ---
+
 This is a community driven Open Source project. 
 As such it needs your support to keep it alive and evolving. 
-Contributions can be in the form of your time via fixing bugs, or contributing features. 
-If you cannot commit to this, consider donating to the [ResXResourceManager OpenCollective](https://opencollective.com/resxresourcemanager) to ensure ResX Resource Manager will continue to be a great project that can help you in your daily work.
+The best way to contribute is to help [fixing bugs, or adding new features](https://github.com/tom-englert/ResXResourceManager/issues).
+However, if you cannot help with coding, consider to [donate a small amount](https://opencollective.com/resxresourcemanager) to ensure <span>ResX&nbsp;Resource&nbsp;Manager</span> will continue to be a great project that can help you in your daily work.
 
 ---
 
