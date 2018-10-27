@@ -1,4 +1,9 @@
-﻿1.25
+﻿1.26
+- Fix #180: Improve Copy/Paste UX.
+- Fix #181: Revert skipping small words in the key
+- Fix #182: Improve UX when using the entity FilterText: Auto-escape backslashes if Regex is not valid.
+
+1.25
 - Fix #166: Option for automatic removing of empty entries
 - Fix #171: Bad caret visualization on Move to resource utility with Visual Studio dark theme
 - Fix #172: Support pseudo-locales
