@@ -21,7 +21,7 @@ namespace tomenglertde.ResXManager.Translators
     public class AzureTranslator : TranslatorBase
     {
         [NotNull]
-        private static readonly Uri _uri = new Uri("https://www.microsoft.com/en-us/translator/getstarted.aspx");
+        private static readonly Uri _uri = new Uri("https://www.microsoft.com/en-us/translator/");
 
         public AzureTranslator()
             : base("Azure", "Azure", _uri, GetCredentials())
