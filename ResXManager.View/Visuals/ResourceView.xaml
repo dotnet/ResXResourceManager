@@ -328,7 +328,7 @@
             <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/like.png" />
           </Button>
           <Button ToolTip="{x:Static properties:Resources.DonateButtonToolTip}"
-                  Tag="https://opencollective.com/resxresourcemanager">
+                  Tag="https://github.com/tom-englert/ResXResourceManager/wiki/Donate">
             <Grid>
               <Ellipse Width="16" Height="16" Fill="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
               <TextBlock Text="$" FontWeight="Bold" Foreground="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1,0,0,2" />

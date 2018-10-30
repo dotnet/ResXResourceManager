@@ -39,9 +39,9 @@ The standalone version can be installed as click-once application [here](https:/
 
 Support this Project: 
 
-<a href="https://opencollective.com/resxresourcemanager" alt="Support"><img style="height:65px" src="https://opencollective.com/resxresourcemanager/tiers/backer.svg?avatarHeight=72&width=200" /></a>
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TQQR8AKGNHELQ"><img title="Donate" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="Donate" /></a>
 
-<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=799WX673GPQM8"><img title="Donate" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="Donate" /></a>
+<a href="https://opencollective.com/resxresourcemanager" alt="Support"><img style="height:65px" src="https://opencollective.com/resxresourcemanager/tiers/backer.svg?avatarHeight=72&width=200" /></a>
 
 Powered by 
 

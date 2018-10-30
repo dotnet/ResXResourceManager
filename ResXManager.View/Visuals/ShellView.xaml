@@ -88,7 +88,7 @@
                 <Decorator Height="10"/>
                 <TextBlock>The best way to contribute is to help <Hyperlink NavigateUri="https://github.com/tom-englert/ResXResourceManager/issues">fixing bugs, or adding new features.</Hyperlink></TextBlock>
                 <Decorator Height="10"/>
-                <TextBlock>However, if you cannot help with coding, consider to <Hyperlink NavigateUri="https://opencollective.com/resxresourcemanager">donate a small amount</Hyperlink> to ensure ResX Resource Manager will continue to be a great project that can help you in your daily work.</TextBlock>
+                <TextBlock>However, if you cannot help with coding, consider to <Hyperlink NavigateUri="https://github.com/tom-englert/ResXResourceManager/wiki/Donate">donate a small amount</Hyperlink> to ensure ResX Resource Manager will continue to be a great project that can help you in your daily work.</TextBlock>
                 <Decorator Height="10"/>
                 <TextBlock>Your ResXManager team.</TextBlock>
               </StackPanel>
