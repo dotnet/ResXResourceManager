@@ -1,4 +1,8 @@
-﻿1.26
+﻿1.27
+- Fix #184: double-check command parameters
+- Fix #185: broken translator url
+
+1.26
 - Fix #180: Improve Copy/Paste UX.
 - Fix #181: Revert skipping small words in the key
 - Fix #182: Improve UX when using the entity FilterText: Auto-escape backslashes if Regex is not valid.
