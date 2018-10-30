@@ -5,9 +5,6 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel.Composition;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Windows;
@@ -51,13 +48,6 @@
         [ImportingConstructor]
         public ResourceViewModel([NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, [NotNull] ISourceFilesProvider sourceFilesProvider, [NotNull] CodeReferenceTracker codeReferenceTracker, [NotNull] ITracer tracer, [NotNull] PerformanceTracer performanceTracer)
         {
-            Contract.Requires(resourceManager != null);
-            Contract.Requires(configuration != null);
-            Contract.Requires(sourceFilesProvider != null);
-            Contract.Requires(codeReferenceTracker != null);
-            Contract.Requires(tracer != null);
-            Contract.Requires(performanceTracer != null);
-
             ResourceManager = resourceManager;
             _configuration = configuration;
             _sourceFilesProvider = sourceFilesProvider;
@@ -168,9 +158,6 @@
 
         public void AddNewKey([NotNull] ResourceEntity entity, [NotNull] string key)
         {
-            Contract.Requires(entity != null);
-            Contract.Requires(!string.IsNullOrEmpty(key));
-
             if (!entity.CanEdit(null))
                 return;
 
@@ -215,8 +202,6 @@
 
         private void CreateSnapshot([NotNull] string fileName)
         {
-            Contract.Requires(fileName != null);
-
             var snapshot = ResourceManager.CreateSnapshot();
 
             File.WriteAllText(fileName, snapshot);
@@ -224,19 +209,22 @@
             LoadedSnapshot = fileName;
         }
 
-        private bool CanCut([NotNull] DataGrid dataGrid)
+        private bool CanCut([CanBeNull] DataGrid dataGrid)
         {
             return CanCopy(dataGrid) && CanDelete(dataGrid);
         }
 
-        private void CutSelected([NotNull] DataGrid dataGrid)
+        private void CutSelected([CanBeNull] DataGrid dataGrid)
         {
             CopySelected(dataGrid);
             DeleteSelected(dataGrid);
         }
 
-        private bool CanCopy([NotNull] DataGrid dataGrid)
+        private bool CanCopy([CanBeNull] DataGrid dataGrid)
         {
+            if (dataGrid == null)
+                return false;
+
             if (dataGrid.GetIsEditing())
                 return false;
 
@@ -251,9 +239,10 @@
             return numberOfDistinctEntries == totalNumberOfEntries;
         }
 
-        private void CopySelected([NotNull] DataGrid dataGrid)
+        private void CopySelected([CanBeNull] DataGrid dataGrid)
         {
-            Contract.Requires(dataGrid != null);
+            if (dataGrid == null)
+                return;
 
             if (Settings.IsCellSelectionEnabled)
             {
@@ -267,8 +256,11 @@
             }
         }
 
-        private bool CanDelete([NotNull] DataGrid dataGrid)
+        private bool CanDelete([CanBeNull] DataGrid dataGrid)
         {
+            if (dataGrid == null)
+                return false;
+
             if (dataGrid.GetIsEditing())
                 return false;
 
@@ -278,8 +270,11 @@
             return SelectedTableEntries.Any();
         }
 
-        private void DeleteSelected([NotNull] DataGrid dataGrid)
+        private void DeleteSelected([CanBeNull] DataGrid dataGrid)
         {
+            if (dataGrid == null)
+                return;
+
             if (Settings.IsCellSelectionEnabled)
             {
                 var affectedEntries = new HashSet<ResourceTableEntry>();
@@ -318,8 +313,11 @@
             }
         }
 
-        private bool CanPaste([NotNull] DataGrid dataGrid)
+        private bool CanPaste([CanBeNull] DataGrid dataGrid)
         {
+            if (dataGrid == null)
+                return false;
+
             if (dataGrid.GetIsEditing())
                 return false;
 
@@ -332,9 +330,10 @@
             return SelectedEntities.Count == 1;
         }
 
-        private void Paste([NotNull] DataGrid dataGrid)
+        private void Paste([CanBeNull] DataGrid dataGrid)
         {
-            Contract.Requires(dataGrid != null);
+            if (dataGrid == null)
+                return;
 
             var table = ClipboardHelper.GetClipboardDataAsTable();
             if (table == null)
@@ -352,16 +351,12 @@
 
         private void PasteRows([NotNull, ItemNotNull] IList<IList<string>> table)
         {
-            Contract.Requires(table != null);
-
             var selectedEntities = SelectedEntities.ToList();
 
             if (selectedEntities.Count != 1)
                 return;
 
             var entity = selectedEntities[0];
-
-            Contract.Assume(entity != null);
 
             if (!ResourceManager.CanEdit(entity, null))
                 return;
@@ -385,9 +380,6 @@
 
         private static void PasteCells([NotNull] DataGrid dataGrid, [NotNull, ItemNotNull] IList<IList<string>> table)
         {
-            Contract.Requires(dataGrid != null);
-            Contract.Requires(table != null);
-
             if (dataGrid.GetSelectedVisibleCells().Any(cell => (cell.Item as ResourceTableEntry)?.Container.CanEdit((cell.Column?.Header as ILanguageColumnHeader)?.CultureKey) == false))
                 return;
 
@@ -410,8 +402,6 @@
 
             foreach (var item in items)
             {
-                Contract.Assume(item != null);
-
                 if (!item.CanEdit(item.NeutralLanguage.CultureKey))
                     return;
 
@@ -419,8 +409,11 @@
             }
         }
 
-        private static void ToggleItemInvariant([NotNull] DataGrid dataGrid)
+        private static void ToggleItemInvariant([CanBeNull] DataGrid dataGrid)
         {
+            if (dataGrid == null)
+                return;
+
             var cellInfos = dataGrid.GetSelectedVisibleCells().ToArray();
 
             var isInvariant = !cellInfos.Any(item => item.IsItemInvariant());
@@ -441,8 +434,11 @@
             }
         }
 
-        private static bool CanToggleItemInvariant([NotNull] DataGrid dataGrid)
+        private static bool CanToggleItemInvariant([CanBeNull] DataGrid dataGrid)
         {
+            if (dataGrid == null)
+                return false;
+
             return dataGrid
                 .GetSelectedVisibleCells()
                 .Any(cell => (cell.Column?.Header as ILanguageColumnHeader)?.ColumnType == ColumnType.Language);
@@ -451,27 +447,26 @@
         private static bool CanExportExcel([CanBeNull] IExportParameters param)
         {
             if (param == null)
-                return true;
+                return false;
 
             var scope = param.Scope;
 
             return (scope == null) || (scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()));
         }
 
-        private void ExportExcel([NotNull] IExportParameters param)
+        private void ExportExcel([CanBeNull] IExportParameters param)
         {
-            Contract.Requires(param != null);
-
-            var fileName = param.FileName;
+            var fileName = param?.FileName;
             if (fileName != null)
             {
                 ResourceManager.ExportExcelFile(fileName, param.Scope, _configuration.ExcelExportMode);
             }
         }
 
-        private void ImportExcel([NotNull] string fileName)
+        private void ImportExcel([CanBeNull] string fileName)
         {
-            Contract.Requires(fileName != null);
+            if (string.IsNullOrEmpty(fileName))
+                return;
 
             var changes = ResourceManager.ImportExcelFile(fileName);
 
@@ -526,8 +521,6 @@
 
         private void BeginFindCodeReferences([NotNull, ItemNotNull] IList<ProjectFile> allSourceFiles)
         {
-            Contract.Requires(allSourceFiles != null);
-
             _codeReferenceTracker.StopFind();
 
             if (Model.Properties.Settings.Default.IsFindCodeReferencesEnabled)
@@ -573,22 +566,6 @@
         public override string ToString()
         {
             return Resources.ShellTabHeader_Main;
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(ResourceManager != null);
-            Contract.Invariant(_configuration != null);
-            Contract.Invariant(_sourceFilesProvider != null);
-            Contract.Invariant(_tracer != null);
-            Contract.Invariant(_codeReferenceTracker != null);
-            Contract.Invariant(SelectedEntities != null);
-            Contract.Invariant(ResourceTableEntries != null);
-            Contract.Invariant(SelectedTableEntries != null);
-            Contract.Invariant(_performanceTracer != null);
         }
     }
 }

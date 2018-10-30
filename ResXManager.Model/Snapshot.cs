@@ -46,8 +46,6 @@
 
         public static void LoadSnapshot([NotNull][ItemNotNull] this ICollection<ResourceEntity> resourceEntities, [CanBeNull] string snapshot)
         {
-            Contract.Requires(resourceEntities != null);
-
             if (string.IsNullOrEmpty(snapshot))
             {
                 UnloadSnapshot(resourceEntities);
