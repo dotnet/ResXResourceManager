@@ -66,7 +66,7 @@
 
         public StringComparison? EffectiveResXSortingComparison => SortFileContentOnSave ? ResXSortingComparison : (StringComparison?)null;
 
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         public bool ConfirmAddLanguageFile { get; set; }
 
         [DefaultValue(false)]
