@@ -447,7 +447,7 @@
         private static bool CanExportExcel([CanBeNull] IExportParameters param)
         {
             if (param == null)
-                return false;
+                return true; // param will be added by converter when exporting...
 
             var scope = param.Scope;
 
