@@ -1,4 +1,8 @@
-﻿1.27
+﻿1.28
+- Fix #188: Revert extra null check
+- Fix #186: change default configuration for ConfirmAddLanguageFile to false.
+
+1.27
 - Fix #184: double-check command parameters
 - Fix #185: broken translator url
 
