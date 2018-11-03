@@ -1,7 +1,8 @@
 <img style="float: right;" src="Assets/VS2017%20Launch%20Partner%20Logo%20Small.png">
 
 # ResX Resource Manager ![Badge](https://tom-englert.visualstudio.com/_apis/public/build/definitions/75bf84d2-d359-404a-a712-07c9f693f635/7/badge) 
-
+[![Backers on Open Collective](https://opencollective.com/ResXResourceManager/backers/badge.svg)](#backers)
+ [![Sponsors on Open Collective](https://opencollective.com/ResXResourceManager/sponsors/badge.svg)](#sponsors) 
 
 The most popular tool to localize and manage all kind of applications with resx-based resources, 
 with more than 800K downloads from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager) 
@@ -46,3 +47,32 @@ Support this Project:
 Powered by 
 
 <a href="http://www.jetbrains.com/resharper/"><img src="http://www.tom-englert.de/Images/icon_ReSharper.png" alt="ReSharper" width="64" height="64" /></a>
+
+## Contributors
+
+This project exists thanks to all the people who contribute. <img src="https://opencollective.com/ResXResourceManager/contributors.svg?width=890&button=false" />
+
+
+## Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/ResXResourceManager#backer)]
+
+<a href="https://opencollective.com/ResXResourceManager#backers" target="_blank"><img src="https://opencollective.com/ResXResourceManager/backers.svg?width=890"></a>
+
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/ResXResourceManager#sponsor)]
+
+<a href="https://opencollective.com/ResXResourceManager/sponsor/0/website" target="_blank"><img src="https://opencollective.com/ResXResourceManager/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/ResXResourceManager/sponsor/1/website" target="_blank"><img src="https://opencollective.com/ResXResourceManager/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/ResXResourceManager/sponsor/2/website" target="_blank"><img src="https://opencollective.com/ResXResourceManager/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/ResXResourceManager/sponsor/3/website" target="_blank"><img src="https://opencollective.com/ResXResourceManager/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/ResXResourceManager/sponsor/4/website" target="_blank"><img src="https://opencollective.com/ResXResourceManager/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/ResXResourceManager/sponsor/5/website" target="_blank"><img src="https://opencollective.com/ResXResourceManager/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/ResXResourceManager/sponsor/6/website" target="_blank"><img src="https://opencollective.com/ResXResourceManager/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/ResXResourceManager/sponsor/7/website" target="_blank"><img src="https://opencollective.com/ResXResourceManager/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/ResXResourceManager/sponsor/8/website" target="_blank"><img src="https://opencollective.com/ResXResourceManager/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/ResXResourceManager/sponsor/9/website" target="_blank"><img src="https://opencollective.com/ResXResourceManager/sponsor/9/avatar.svg"></a>
+
+
