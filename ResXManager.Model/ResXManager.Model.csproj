@@ -145,6 +145,7 @@
     <Compile Include="ResourceEntity.cs" />
     <Compile Include="ResourceLanguage.cs" />
     <Compile Include="ResourceManager.cs" />
+    <Compile Include="ResourceTableEntryEventArgs.cs" />
     <Compile Include="ResourceTableValues.cs" />
     <Compile Include="ResourceBeginEditingEventArgs.cs" />
     <Compile Include="Snapshot.cs" />

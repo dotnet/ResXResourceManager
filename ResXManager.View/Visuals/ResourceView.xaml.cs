@@ -63,7 +63,18 @@
             }
         }
 
-        private void ResourceViewModel_ClearFiltersRequest(object sender, EventArgs e) => DataGrid.GetFilter().Clear();
+        private void ResourceViewModel_ClearFiltersRequest(object sender, [NotNull] ResourceTableEntryEventArgs e)
+        {
+            var filter = DataGrid.Items.Filter;
+
+            if (filter == null)
+                return;
+
+            if (filter(e.Entry))
+                return;
+
+            DataGrid.GetFilter().Clear();
+        }
 
         private void ResourceManager_Loaded([NotNull] object sender, [NotNull] EventArgs e)
         {
