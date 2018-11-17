@@ -1,4 +1,8 @@
-﻿1.28
+﻿1.29
+- Fix #192: Do not reset filter if requested entry already matches.
+- Fix #189: Default Excel-export file name contains time stamp
+
+1.28
 - Fix #188: Revert extra null check
 - Fix #186: change default configuration for ConfirmAddLanguageFile to false.
 
