@@ -1,8 +1,6 @@
 <img style="float: right;" src="Assets/VS2017%20Launch%20Partner%20Logo%20Small.png">
 
-# ResX Resource Manager ![Badge](https://tom-englert.visualstudio.com/_apis/public/build/definitions/75bf84d2-d359-404a-a712-07c9f693f635/7/badge) 
-[![Backers on Open Collective](https://opencollective.com/ResXResourceManager/backers/badge.svg)](#backers)
- [![Sponsors on Open Collective](https://opencollective.com/ResXResourceManager/sponsors/badge.svg)](#sponsors) 
+# ResX Resource Manager ![Badge](https://tom-englert.visualstudio.com/_apis/public/build/definitions/75bf84d2-d359-404a-a712-07c9f693f635/7/badge) [![Backers on Open Collective](https://opencollective.com/ResXResourceManager/backers/badge.svg)](#backers)  [![Sponsors on Open Collective](https://opencollective.com/ResXResourceManager/sponsors/badge.svg)](#sponsors) 
 
 The most popular tool to localize and manage all kind of applications with resx-based resources, 
 with more than 800K downloads from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager) 
@@ -38,29 +36,27 @@ The standalone version can be installed as click-once application [here](https:/
 ### Standalone Application:
 ![Standalone Application](Assets/StandaloneMainScreen.png)
 
-Support this Project: 
+### Support this Project: 
 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TQQR8AKGNHELQ"><img title="Donate" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="Donate" /></a>
 
-<a href="https://opencollective.com/resxresourcemanager" alt="Support"><img style="height:65px" src="https://opencollective.com/resxresourcemanager/tiers/backer.svg?avatarHeight=72&width=200" /></a>
-
-Powered by 
+### Powered by 
 
 <a href="http://www.jetbrains.com/resharper/"><img src="http://www.tom-englert.de/Images/icon_ReSharper.png" alt="ReSharper" width="64" height="64" /></a>
 
-## Contributors
+### Contributors
 
 This project exists thanks to all the people who contribute. <img src="https://opencollective.com/ResXResourceManager/contributors.svg?width=890&button=false" />
 
 
-## Backers
+### Backers
 
 Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/ResXResourceManager#backer)]
 
 <a href="https://opencollective.com/ResXResourceManager#backers" target="_blank"><img src="https://opencollective.com/ResXResourceManager/backers.svg?width=890"></a>
 
 
-## Sponsors
+### Sponsors
 
 Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/ResXResourceManager#sponsor)]
 
