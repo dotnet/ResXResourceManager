@@ -150,7 +150,6 @@
 
         private void ExportExcelCommandConverter_Executing([NotNull] object sender, [NotNull] ConfirmedCommandEventArgs e)
         {
-
             var dlg = new SaveFileDialog
             {
                 AddExtension = true,
@@ -158,7 +157,7 @@
                 DefaultExt = ".xlsx",
                 Filter = "Excel Worksheets|*.xlsx|All Files|*.*",
                 FilterIndex = 0,
-                FileName = DateTime.Today.ToString("yyyy_MM_dd", CultureInfo.InvariantCulture)
+                FileName = DateTime.Now.ToString("yyyy_MM_dd_hh_mm", CultureInfo.InvariantCulture)
             };
 
             if (_configuration.ExcelExportMode == ExcelExportMode.Text)
