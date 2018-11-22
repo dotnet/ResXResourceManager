@@ -157,7 +157,7 @@
                 DefaultExt = ".xlsx",
                 Filter = "Excel Worksheets|*.xlsx|All Files|*.*",
                 FilterIndex = 0,
-                FileName = DateTime.Now.ToString("yyyy_MM_dd_hh_mm", CultureInfo.InvariantCulture)
+                FileName = DateTime.Now.ToString("yyyy_MM_dd_HH_mm", CultureInfo.InvariantCulture)
             };
 
             if (_configuration.ExcelExportMode == ExcelExportMode.Text)
