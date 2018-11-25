@@ -112,10 +112,16 @@
 
             workbookPart.Workbook = new Workbook().AppendItem(new Sheets(sheet));
 
+            var sheetData = rows.Aggregate(new SheetData(), dataAppender.AppendRow);
+            if (sheetData.ChildElements.Count > 1048576)
+            {
+                throw new ImportException("The Excel limit is 1048576 rows per sheet. The data can't be exported");
+            }
+
             workbookPart
                 .AddNewPart<WorksheetPart>(sheet.Id)
                 .Worksheet = new Worksheet()
-                    .AppendItem(rows.Aggregate(new SheetData(), dataAppender.AppendRow))
+                    .AppendItem(sheetData)
                     .Protect();
         }
 
@@ -291,6 +297,11 @@
             [ItemNotNull]
             private Cell CreateCell([CanBeNull] string text, int row, int column)
             {
+                if (text?.Length > 32767)
+                {
+                    throw new ImportException("The Excel limit is 32767 characters per cell. This text can't be exported: " + text.Substring(0, 50) + "...");
+                }
+
                 var cell = new Cell
                 {
                     DataType = CellValues.InlineString,
