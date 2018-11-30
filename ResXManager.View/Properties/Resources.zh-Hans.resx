@@ -390,7 +390,7 @@
     <value>剪切选中的行？</value>
   </data>
   <data name="CommentToken" xml:space="preserve">
-    <value>Comment Token</value>
+    <value>注释标记</value>
   </data>
   <data name="Configuration_DuplicateKeyHandling" xml:space="preserve">
     <value>重复/空资源名称处理</value>
@@ -407,5 +407,29 @@
   </data>
   <data name="WrapLongLinesToolTip" xml:space="preserve">
     <value>自动换行</value>
+  </data>
+  <data name="Configuration_EmptyValueHandling" xml:space="preserve">
+    <value>删除资源中的空白项</value>
+  </data>
+  <data name="Configuration_EmptyValueHandlingHeader" xml:space="preserve">
+    <value>空白资源值处理</value>
+  </data>
+  <data name="OpenSourceOverlay_Confirmation" xml:space="preserve">
+    <value>知道了 - 不要再显示此通知</value>
+  </data>
+  <data name="OpenSourceOverlay_Message" xml:space="preserve">
+    <value>&lt;StackPanel xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"&gt;
+&lt;TextBlock FontWeight="Bold" FontSize="20"&gt;
+这是一个开源项目。
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+它需要您的支持来不断更新
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+最好的贡献方法是帮助 &lt;Hyperlink NavigateUri="https://github.com/tom-englert/ResXResourceManager/issues"&gt;修复 BUG 或者加入新功能&lt;/Hyperlink&gt;
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+如果您不能帮助编写代码，考虑&lt;Hyperlink NavigateUri="https://github.com/tom-englert/ResXResourceManager/wiki/Donate"&gt;捐助（Donate）一点小钱&lt;/Hyperlink&gt; 来确保 ResX&amp;#160;Resource&amp;#160;Manager 变得更好以便协助您的开发工作
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+ResXManager 团队
+&lt;/TextBlock&gt;
+&lt;/StackPanel&gt;</value>
   </data>
 </root>
