@@ -79,7 +79,7 @@
     <ApplicationIcon>ResourceManager.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>651F02F6AD0F19DE5BC82F07FFD8223A83696F69</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>13FB09D11A28E242EEC91D24AD72309AA9E44A05</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' != 'Debug'">
     <ManifestKeyFile>ResXManager_Key.pfx</ManifestKeyFile>
