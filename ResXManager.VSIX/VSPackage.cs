@@ -128,17 +128,6 @@
         {
             base.Initialize();
 
-            try
-            {
-                // Workaround for the UWP Designer bug in VS2017. Should be fixed in the next release after 15.8.1
-                DesignerProperties.IsInDesignModeProperty.OverrideMetadata(typeof(System.Windows.Interactivity.BehaviorCollection), new FrameworkPropertyMetadata(false));
-                DesignerProperties.IsInDesignModeProperty.OverrideMetadata(typeof(System.Windows.Interactivity.TriggerCollection), new FrameworkPropertyMetadata(false));
-            }
-            catch
-            {
-                // if that fails, there is nothing we can do about it...
-            }
-
             var dispatcher = Dispatcher.CurrentDispatcher;
 
             ThreadPool.QueueUserWorkItem(_ => FillCatalog(dispatcher));
