@@ -1,4 +1,10 @@
-﻿1.29
+﻿1.30
+- #189: fix typo in datetime pattern
+- #194: Exceeding Excels's limits should abort when calling ExportExcell
+- #196: Support for Visual Studio 2019
+- #193: reduce noise of messages in the output window
+
+1.29
 - Fix #192: Do not reset filter if requested entry already matches.
 - Fix #189: Default Excel-export file name contains time stamp
 

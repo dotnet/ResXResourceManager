@@ -38,7 +38,7 @@
     <ProductName>ResX Resource Manager</ProductName>
     <PublisherName>tom-englert.de</PublisherName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.29.0.0</ApplicationVersion>
+    <ApplicationVersion>1.30.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
