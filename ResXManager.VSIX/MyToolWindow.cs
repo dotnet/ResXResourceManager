@@ -5,7 +5,6 @@
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -120,8 +119,6 @@
         {
             try
             {
-                _tracer.WriteLine("Content loaded: {0} - {1}", _contentWrapper.ActualWidth, _contentWrapper.ActualHeight);
-
                 _compositionHost.GetExportedValue<ResourceViewModel>().Reload();
 
                 var view = _compositionHost.GetExportedValue<VsixShellView>();
@@ -139,8 +136,6 @@
 
         private void ContentWrapper_Unloaded(object sender, RoutedEventArgs e)
         {
-            _tracer.WriteLine("Content unloaded");
-
             _contentWrapper.Content = null;
         }
 
@@ -149,10 +144,7 @@
         {
             get
             {
-                Contract.Ensures(Contract.Result<EnvDTE.DTE>() != null);
-
                 var dte = (EnvDTE.DTE)GetService(typeof(EnvDTE.DTE));
-                Contract.Assume(dte != null);
                 return dte;
             }
         }
@@ -188,8 +180,6 @@
         [Localizable(false)]
         private static void CreateWebBrowser([NotNull] string url)
         {
-            Contract.Requires(url != null);
-
             Process.Start(url);
         }
 
@@ -203,8 +193,6 @@
 
         private bool CanEdit([NotNull] ResourceEntity entity, [CanBeNull] CultureKey cultureKey)
         {
-            Contract.Requires(entity != null);
-
             var languages = entity.Languages.Where(lang => (cultureKey == null) || cultureKey.Equals(lang.CultureKey)).ToArray();
 
             if (!languages.Any())
@@ -277,9 +265,6 @@
         [NotNull, ItemNotNull]
         private Tuple<string, EnvDTE.Window>[] GetLanguagesOpenedInAnotherEditor([NotNull, ItemNotNull] IEnumerable<ResourceLanguage> languages)
         {
-            Contract.Requires(languages != null);
-            Contract.Ensures(Contract.Result<Tuple<string, EnvDTE.Window>[]>() != null);
-
             try
             {
                 var openDocuments = Dte.Windows?
@@ -305,7 +290,6 @@
 
         private bool QueryEditFiles([NotNull] [ItemNotNull] string[] lockedFiles)
         {
-            Contract.Requires(lockedFiles != null);
             var service = (IVsQueryEditQuerySave2)GetService(typeof(SVsQueryEditQuerySave));
             if (service != null)
             {
@@ -323,9 +307,6 @@
         [ItemNotNull]
         private static string[] GetLockedFiles([NotNull] [ItemNotNull] IEnumerable<ResourceLanguage> languages)
         {
-            Contract.Requires(languages != null);
-            Contract.Ensures(Contract.Result<string[]>() != null);
-
             return languages.Where(l => !l.ProjectFile.IsWritable)
                 .Select(l => l.FileName)
                 .ToArray();
@@ -333,9 +314,6 @@
 
         private bool AddLanguage([NotNull] ResourceEntity entity, [NotNull] CultureInfo culture)
         {
-            Contract.Requires(entity != null);
-            Contract.Requires(culture != null);
-
             var resourceLanguages = entity.Languages;
             if (!resourceLanguages.Any())
                 return false;
@@ -349,8 +327,6 @@
             }
 
             var neutralLanguage = resourceLanguages.First();
-            Contract.Assume(neutralLanguage != null);
-
             var languageFileName = neutralLanguage.ProjectFile.GetLanguageFileName(culture);
 
             if (!File.Exists(languageFileName))
@@ -369,28 +345,14 @@
 
         private void AddProjectItems([NotNull] ResourceEntity entity, [NotNull] ResourceLanguage neutralLanguage, [NotNull] string languageFileName)
         {
-            Contract.Requires(entity != null);
-            Contract.Requires(neutralLanguage != null);
-            Contract.Requires(!string.IsNullOrEmpty(languageFileName));
-
             DteProjectFile projectFile = null;
 
             foreach (var neutralLanguageProjectItem in ((DteProjectFile)neutralLanguage.ProjectFile).ProjectItems)
             {
-                Contract.Assume(neutralLanguageProjectItem != null);
-
                 var collection = neutralLanguageProjectItem.Collection;
-                Contract.Assume(collection != null);
-
                 var projectItem = collection.AddFromFile(languageFileName);
-                Contract.Assume(projectItem != null);
-
                 var containingProject = projectItem.ContainingProject;
-                Contract.Assume(containingProject != null);
-
                 var projectName = containingProject.Name;
-                Contract.Assume(projectName != null);
-
                 if (projectFile == null)
                 {
                     projectFile = new DteProjectFile(_compositionHost.GetExportedValue<DteSolution>(), languageFileName, projectName, containingProject.UniqueName, projectItem);
@@ -411,9 +373,6 @@
         [Localizable(false)]
         private static string FormatFileNames([NotNull] [ItemNotNull] IEnumerable<string> lockedFiles)
         {
-            Contract.Requires(lockedFiles != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
 
@@ -422,7 +381,7 @@
             _tracer.TraceError(e.Text);
         }
 
-        const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
+        private const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
 
         private static int FrameworkVersion()
         {
@@ -430,17 +389,6 @@
             {
                 return (int?)ndpKey?.GetValue("Release") ?? 0;
             }
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_configuration != null);
-            Contract.Invariant(_tracer != null);
-            Contract.Invariant(_compositionHost != null);
-            Contract.Invariant(_contentWrapper != null);
         }
     }
 }

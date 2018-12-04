@@ -2,13 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.ComponentModel.Design;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -86,8 +84,6 @@
         {
             get
             {
-                Contract.Ensures(Contract.Result<VSPackage>() != null);
-
                 if (_instance == null)
                     throw new InvalidOperationException("Package is the entry point and is the first class to be created.");
 
@@ -100,8 +96,6 @@
         {
             get
             {
-                Contract.Ensures(Contract.Result<ICompositionHost>() != null);
-
                 var stopwatch = Stopwatch.StartNew();
 
                 _compositionHostLoaded.WaitOne();
@@ -158,6 +152,11 @@
 
         private void ShowLoaderMessages([NotNull, ItemNotNull] IList<string> errors, [NotNull, ItemNotNull] IList<string> messages)
         {
+            if (!errors.Any())
+            {
+                return;
+            }
+
             try
             {
                 foreach (var error in errors)
@@ -178,8 +177,6 @@
         [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFrom")]
         private void FillCatalog([NotNull] Dispatcher dispatcher)
         {
-            Contract.Requires(dispatcher != null);
-
             var compositionContainer = _compositionHost.Container;
 
             compositionContainer.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
@@ -188,7 +185,6 @@
             var thisAssembly = GetType().Assembly;
 
             var path = Path.GetDirectoryName(thisAssembly.Location);
-            Contract.Assume(!string.IsNullOrEmpty(path));
 
             var messages = new List<string>();
 
@@ -207,8 +203,6 @@
 
             foreach (var file in Directory.EnumerateFiles(path, @"ResXManager.*.dll"))
             {
-                Contract.Assume(!string.IsNullOrEmpty(file));
-
                 try
                 {
                     var assembly = Assembly.LoadFrom(file);
@@ -238,15 +232,11 @@
         {
             get
             {
-                Contract.Ensures(Contract.Result<EnvDTE80.DTE2>() != null);
-
                 var dte = (EnvDTE80.DTE2)GetService(typeof(SDTE));
-                Contract.Assume(dte != null);
                 return dte;
             }
         }
 
-        [ContractVerification(false)]
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private void ConnectEvents()
         {
@@ -288,9 +278,6 @@
         [NotNull]
         private static OleMenuCommand CreateMenuCommand([NotNull] IMenuCommandService mcs, int cmdId, [CanBeNull] EventHandler invokeHandler)
         {
-            Contract.Requires(mcs != null);
-            Contract.Ensures(Contract.Result<OleMenuCommand>() != null);
-
             var menuCommandId = new CommandID(GuidList.guidResXManager_VSIXCmdSet, cmdId);
             var menuCommand = new OleMenuCommand(invokeHandler, menuCommandId);
             mcs.AddCommand(menuCommand);
@@ -339,8 +326,8 @@
 
         private void ShowSelectedResourceFiles([CanBeNull] object sender, [CanBeNull] EventArgs e)
         {
-            var selectedResourceEntites = GetSelectedResourceEntites()?.Distinct().ToArray();
-            if (selectedResourceEntites == null)
+            var selectedResourceEntities = GetSelectedResourceEntities()?.Distinct().ToArray();
+            if (selectedResourceEntities == null)
                 return;
 
             // if we open the window the first time, make sure it does not select all entities by default.
@@ -348,7 +335,7 @@
 
             var selectedEntities = CompositionHost.GetExportedValue<ResourceViewModel>().SelectedEntities;
             selectedEntities.Clear();
-            selectedEntities.AddRange(selectedResourceEntites);
+            selectedEntities.AddRange(selectedResourceEntities);
 
             ShowToolWindow();
         }
@@ -360,21 +347,20 @@
 
             menuCommand.Text = Resources.OpenInResXManager;
 
-            menuCommand.Visible = GetSelectedResourceEntites() != null;
+            menuCommand.Visible = GetSelectedResourceEntities() != null;
         }
 
         [CanBeNull, ItemNotNull]
-        private IEnumerable<ResourceEntity> GetSelectedResourceEntites()
+        private IEnumerable<ResourceEntity> GetSelectedResourceEntities()
         {
             var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
-            Contract.Assume(monitorSelection != null);
 
             var selection = monitorSelection.GetSelectedProjectItems();
 
             var entities = selection
                 .Select(item => item.GetMkDocument())
                 .Where(file => !string.IsNullOrEmpty(file))
-                .SelectMany(GetSelectedResourceEntites)
+                .SelectMany(GetSelectedResourceEntities)
                 .ToArray();
 
             return (entities.Length > 0) && (entities.Length == selection.Count) ? entities : null;
@@ -382,9 +368,8 @@
 
         [NotNull]
         [ItemNotNull]
-        private IEnumerable<ResourceEntity> GetSelectedResourceEntites([CanBeNull] string fileName)
+        private IEnumerable<ResourceEntity> GetSelectedResourceEntities([CanBeNull] string fileName)
         {
-            Contract.Ensures(Contract.Result<IEnumerable<ResourceEntity>>() != null);
             if (string.IsNullOrEmpty(fileName))
                 return Enumerable.Empty<ResourceEntity>();
 
@@ -397,8 +382,6 @@
 
         private static bool ContainsChildOfWinFormsDesignerItem([NotNull] ResourceEntity entity, [CanBeNull] string fileName)
         {
-            Contract.Requires(entity != null);
-
             return entity.Languages.Select(lang => lang.ProjectFile)
                 .OfType<DteProjectFile>()
                 .Any(projectFile => string.Equals(projectFile.ParentItem?.TryGetFileName(), fileName) && projectFile.IsWinFormsDesignerResource);
@@ -406,8 +389,6 @@
 
         private static bool ContainsFile([NotNull] ResourceEntity entity, [CanBeNull] string fileName)
         {
-            Contract.Requires(entity != null);
-
             return entity.Languages.Any(lang => lang.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
         }
 
@@ -480,8 +461,6 @@
 
         private void DocumentEvents_DocumentSaved([NotNull] EnvDTE.Document document)
         {
-            Contract.Requires(document != null);
-
             //using (PerformanceTracer.Start("DTE event: Document saved"))
             {
                 if (!AffectsResourceFile(document))
@@ -529,8 +508,6 @@
 
         private static bool AffectsResourceFile([CanBeNull] EnvDTE.Document document)
         {
-            Contract.Ensures((Contract.Result<bool>() == false) || (document != null));
-
             if (document == null)
                 return false;
 
@@ -552,16 +529,6 @@
         private void ReloadSolution()
         {
             CompositionHost.GetExportedValue<ResourceViewModel>().Reload();
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_customToolRunner != null);
-            Contract.Invariant(_compositionHost != null);
-            Contract.Invariant(_compositionHostLoaded != null);
         }
     }
 }
