@@ -203,7 +203,7 @@
                 var directoryName = directory.Key;
                 Contract.Assume(!string.IsNullOrEmpty(directoryName));
 
-                var filesByBaseName = directory.GroupBy(file => file.GetBaseName());
+                var filesByBaseName = directory.GroupBy(file => file.GetBaseName(), StringComparer.OrdinalIgnoreCase);
 
                 foreach (var files in filesByBaseName)
                 {
