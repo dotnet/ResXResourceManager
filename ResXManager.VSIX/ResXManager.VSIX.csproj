@@ -17,10 +17,9 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
-    <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == '11.0'">11.0</MinimumVisualStudioVersion>
-    <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == '12.0'">12.0</MinimumVisualStudioVersion>
     <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == '14.0'">14.0</MinimumVisualStudioVersion>
     <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == '15.0'">15.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == '16.0'">16.0</MinimumVisualStudioVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
     <NuGetPackageImportStamp>
