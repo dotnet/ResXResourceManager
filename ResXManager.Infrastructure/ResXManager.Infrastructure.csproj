@@ -108,7 +108,7 @@
       <Version>2018.2.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>5.0.8</Version>
+      <Version>6.0.8</Version>
     </PackageReference>
     <PackageReference Include="PropertyChanged.Fody">
       <Version>2.6.0</Version>
