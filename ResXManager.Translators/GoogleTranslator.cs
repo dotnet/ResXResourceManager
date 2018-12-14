@@ -16,8 +16,6 @@
 
     using JetBrains.Annotations;
 
-    using Newtonsoft.Json;
-
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Core;

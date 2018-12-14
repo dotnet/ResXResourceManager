@@ -39,7 +39,7 @@
     /// </summary>
     // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is a package.
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Package already handles this.")]
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true,  AllowsBackgroundLoading = true)]
     // This attribute is used to register the informations needed to show the this package in the Help/About dialog of Visual Studio.
     [InstalledProductRegistration(@"#110", @"#112", Product.Version, IconResourceID = 400)]
     // This attribute is needed to let the shell know that this package exposes some menus.
@@ -47,8 +47,8 @@
     // This attribute registers a tool window exposed by this package.
     [ProvideToolWindow(typeof(MyToolWindow))]
     [Guid(GuidList.guidResXManager_VSIXPkgString)]
-    [ProvideAutoLoad(UIContextGuids.SolutionExists)]
-    public sealed class VSPackage : Package
+    [ProvideAutoLoad(UIContextGuids.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
+    public sealed class VSPackage : AsyncPackage
     {
         [NotNull]
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
@@ -118,18 +118,24 @@
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
         /// </summary>
-        protected override void Initialize()
+        protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, [NotNull] IProgress<ServiceProgressData> progress)
         {
-            base.Initialize();
+            await base.InitializeAsync(cancellationToken, progress).ConfigureAwait(false);
 
-            var dispatcher = Dispatcher.CurrentDispatcher;
+            var loaderMessages = await System.Threading.Tasks.Task.Run(() => FillCatalog(), cancellationToken).ConfigureAwait(false);
 
-            ThreadPool.QueueUserWorkItem(_ => FillCatalog(dispatcher));
+            var menuCommandService = await GetServiceAsync(typeof(IMenuCommandService));
+
+            await JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            ShowLoaderMessages(loaderMessages);
+
+            ErrorProvider.Register(_compositionHost.Container);
 
             ConnectEvents();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
-            if (!(GetService(typeof(IMenuCommandService)) is IMenuCommandService mcs))
+            if (!(menuCommandService is IMenuCommandService mcs))
                 return;
 
             // Create the command for the menu item.
@@ -150,32 +156,33 @@
             CompositionHost.Dispose();
         }
 
-        private void ShowLoaderMessages([NotNull, ItemNotNull] IList<string> errors, [NotNull, ItemNotNull] IList<string> messages)
+        private void ShowLoaderMessages([NotNull] LoaderMessages messages)
         {
-            if (!errors.Any())
+            if (!messages.Errors.Any())
             {
                 return;
             }
 
             try
             {
-                foreach (var error in errors)
+                foreach (var error in messages.Errors)
                 {
                     Tracer.TraceError(error);
                 }
-                foreach (var message in messages)
+                foreach (var message in messages.Messages)
                 {
                     Tracer.WriteLine(message);
                 }
             }
             catch
             {
-                MessageBox.Show("Loader errors:\n" + string.Join("\n", errors));
+                MessageBox.Show("Loader errors:\n" + string.Join("\n", messages.Errors));
             }
         }
 
+        [NotNull]
         [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFrom")]
-        private void FillCatalog([NotNull] Dispatcher dispatcher)
+        private LoaderMessages FillCatalog()
         {
             var compositionContainer = _compositionHost.Container;
 
@@ -186,7 +193,7 @@
 
             var path = Path.GetDirectoryName(thisAssembly.Location);
 
-            var messages = new List<string>();
+            var messages = new LoaderMessages();
 
             //var allLocalAssemblyFileNames = Directory.EnumerateFiles(path, @"*.dll");
             //var allLocalAssemblyNames = new HashSet<string>(allLocalAssemblyFileNames.Select(Path.GetFileNameWithoutExtension));
@@ -199,32 +206,29 @@
             //    .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
             //    .ToList();
 
-            var errors = new List<string>();
-
-            foreach (var file in Directory.EnumerateFiles(path, @"ResXManager.*.dll"))
+            foreach (var file in Directory.EnumerateFiles(path, @"*.dll"))
             {
                 try
                 {
                     var assembly = Assembly.LoadFrom(file);
-                    messages.Add(string.Format(CultureInfo.CurrentCulture, "Loaded assembly '{0}' from {1}.", assembly.FullName, assembly.CodeBase));
+                    messages.Messages.Add(string.Format(CultureInfo.CurrentCulture, "Loaded assembly '{0}' from {1}.", assembly.FullName, assembly.CodeBase));
                     _compositionHost.AddCatalog(new AssemblyCatalog(assembly));
                 }
                 catch (ReflectionTypeLoadException ex)
                 {
                     // ReSharper disable once AssignNullToNotNullAttribute
                     // ReSharper disable once PossibleNullReferenceException
-                    errors.Add("Assembly: " + Path.GetFileName(file) + " => " + string.Join("\n", ex.LoaderExceptions.Select(l => l.Message + ": " + (l.InnerException?.Message ?? string.Empty))));
+                    messages.Errors.Add("Assembly: " + Path.GetFileName(file) + " => " + string.Join("\n", ex.LoaderExceptions.Select(l => l.Message + ": " + (l.InnerException?.Message ?? string.Empty))));
                 }
                 catch (Exception ex)
                 {
-                    errors.Add("Assembly: " + Path.GetFileName(file) + " => " + ex.Message);
+                    messages.Errors.Add("Assembly: " + Path.GetFileName(file) + " => " + ex.Message);
                 }
             }
 
             _compositionHostLoaded.Set();
 
-            dispatcher.BeginInvoke(() => ShowLoaderMessages(errors, messages));
-            dispatcher.BeginInvoke(() => ErrorProvider.Register(compositionContainer));
+            return messages;
         }
 
         [NotNull]
@@ -529,6 +533,14 @@
         private void ReloadSolution()
         {
             CompositionHost.GetExportedValue<ResourceViewModel>().Reload();
+        }
+
+        private class LoaderMessages
+        {
+            [NotNull, ItemNotNull]
+            public IList<string> Messages { get; } = new List<string>();
+            [NotNull, ItemNotNull]
+            public IList<string> Errors { get; } = new List<string>();
         }
     }
 }

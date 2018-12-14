@@ -74,7 +74,7 @@
                         container.Child = (UIElement)XamlReader.Load(stream);
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     // just go with the english default
                 }

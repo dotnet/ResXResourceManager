@@ -24,7 +24,7 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
-    using Settings = tomenglertde.ResXManager.Model.Properties.Settings;
+    using Settings = Model.Properties.Settings;
 
     [VisualCompositionExport(RegionId.Content, Sequence = 2)]
     internal class TranslationsViewModel : ObservableObject
