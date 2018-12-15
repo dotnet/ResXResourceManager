@@ -94,7 +94,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations">
+    <PackageReference Include="JetBrains.Annotations" PrivateAssets="All">
       <Version>2018.2.1</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.Desktop">
