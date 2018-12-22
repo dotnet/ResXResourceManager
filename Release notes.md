@@ -1,4 +1,7 @@
-﻿1.30
+﻿1.31
+- #196: Finalize VS2019 support, drop VS2013 support (no longer compatible)
+
+1.30
 - #189: fix typo in datetime pattern
 - #194: Exceeding Excels's limits should abort when calling ExportExcell
 - #196: Support for Visual Studio 2019
