@@ -1,4 +1,7 @@
-﻿1.31
+﻿1.32
+- #199: Sometimes no desigern code is generated.
+
+1.31
 - #196: Finalize VS2019 support, drop VS2013 support (no longer compatible)
 
 1.30
