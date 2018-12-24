@@ -277,6 +277,11 @@
             _documentEvents = events.DocumentEvents;
             _documentEvents.DocumentOpened += DocumentEvents_DocumentOpened;
             _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
+
+            if (Dte.Solution != null)
+            {
+                Solution_Opened();
+            }
         }
 
         [NotNull]
