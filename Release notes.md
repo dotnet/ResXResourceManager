@@ -1,4 +1,7 @@
-﻿1.32
+﻿1.33
+- #200: fix conflicting assembly loading.
+
+1.32
 - #199: Sometimes no desigern code is generated.
 
 1.31

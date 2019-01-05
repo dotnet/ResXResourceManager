@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="43b35fe0-1f30-48de-887a-68256474202a" Version="1.32.0.0" Language="en-US" Publisher="tom-englert.de" />
+        <Identity Id="43b35fe0-1f30-48de-887a-68256474202a" Version="1.33.0.0" Language="en-US" Publisher="tom-englert.de" />
         <DisplayName>ResXManager</DisplayName>
         <Description xml:space="preserve">The most popular tool to localize and manage all kind of applications with resx-based resources. Shows all resources of a solution and let's you edit the strings and their localizations in a well-arranged data grid.</Description>
         <MoreInfo>https://github.com/tom-englert/ResXResourceManager</MoreInfo>
