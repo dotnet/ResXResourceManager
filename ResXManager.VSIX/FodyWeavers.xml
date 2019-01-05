@@ -3,5 +3,4 @@
   <AutoProperties />
   <Throttle />
   <PropertyChanged />
-  <LoadAssembliesOnStartup IncludeAssemblies="System.Windows.Interactivity|Microsoft.Expression.Interactions|DataGridExtensions" />
 </Weavers>

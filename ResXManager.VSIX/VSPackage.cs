@@ -206,7 +206,7 @@
             //    .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
             //    .ToList();
 
-            foreach (var file in Directory.EnumerateFiles(path, @"*.dll"))
+            foreach (var file in Directory.EnumerateFiles(path, @"ResXManager.*.dll"))
             {
                 try
                 {

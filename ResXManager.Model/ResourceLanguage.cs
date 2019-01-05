@@ -731,8 +731,7 @@
                             entry.Add(new XText("  "), valueElement, new XText("\n  "));
                         }
 
-                        var textNode = valueElement.FirstNode as XText;
-                        if (textNode == null)
+                        if (!(valueElement.FirstNode is XText textNode))
                         {
                             textNode = new XText(value);
                             valueElement.Add(textNode);
@@ -756,9 +755,7 @@
                     throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileValueAttributeMissingError, _owner.FileName));
                 }
 
-                var textNode = valueElement.FirstNode as XText;
-
-                return textNode == null ? string.Empty : textNode.Value;
+                return !(valueElement.FirstNode is XText textNode) ? string.Empty : textNode.Value;
             }
 
             [CanBeNull]
@@ -770,9 +767,7 @@
                 if (valueElement == null)
                     return string.Empty;
 
-                var textNode = valueElement.FirstNode as XText;
-
-                return textNode == null ? string.Empty : textNode.Value;
+                return !(valueElement.FirstNode is XText textNode) ? string.Empty : textNode.Value;
             }
 
             [NotNull]
