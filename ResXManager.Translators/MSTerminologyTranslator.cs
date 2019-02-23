@@ -2,8 +2,8 @@
 {
     using System;
     using System.ComponentModel.Composition;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.Linq;
     using System.ServiceModel;
 
     using JetBrains.Annotations;
@@ -11,6 +11,7 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Translators.Microsoft.TerminologyService;
 
+    using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
     [Export(typeof(ITranslator))]
@@ -32,16 +33,18 @@
         {
             using (var client = new TerminologyClient(_binding, _endpoint))
             {
-                var translationSources = new TranslationSources() {TranslationSource.UiStrings};
+                var translationSources = new TranslationSources { TranslationSource.UiStrings };
+
                 foreach (var item in translationSession.Items)
                 {
                     if (translationSession.IsCanceled)
                         break;
 
-                    Contract.Assume(item != null);
-
                     var targetCulture = item.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage;
-                    if (targetCulture.IsNeutralCulture) targetCulture = CultureInfo.CreateSpecificCulture(targetCulture.Name);
+                    if (targetCulture.IsNeutralCulture)
+                    {
+                        targetCulture = CultureInfo.CreateSpecificCulture(targetCulture.Name);
+                    }
 
                     try
                     {
@@ -51,19 +54,14 @@
 
                         if (response != null)
                         {
+                            var matches = response
+                                .SelectMany(match => match?.Translations?.Select(trans => new TranslationMatch(this, trans?.TranslatedText, match.ConfidenceLevel / 100.0)))
+                                .Where(m => m?.TranslatedText != null)
+                                .Distinct(TranslationMatch.TextComparer);
+
                             translationSession.Dispatcher.BeginInvoke(() =>
                             {
-                                Contract.Requires(item != null);
-                                Contract.Requires(response != null);
-
-                                foreach (var match in response)
-                                {
-                                    Contract.Assume(match != null);
-                                    foreach (var trans in match.Translations)
-                                    {
-                                        item.Results.Add(new TranslationMatch(this, trans.TranslatedText, match.ConfidenceLevel / 100.0));
-                                    }
-                                }
+                                item.Results.AddRange(matches);
                             });
                         }
                     }

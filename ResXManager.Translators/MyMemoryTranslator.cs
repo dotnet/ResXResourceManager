@@ -34,8 +34,6 @@
         [ItemNotNull]
         private static IList<ICredentialItem> GetCredentials()
         {
-            Contract.Ensures(Contract.Result<IList<ICredentialItem>>() != null);
-
             return new ICredentialItem[] { new CredentialItem("Key", "Key") };
         }
 
@@ -44,14 +42,8 @@
         [CanBeNull]
         public string SerializedKey
         {
-            get
-            {
-                return SaveCredentials ? Credentials[0]?.Value : null;
-            }
-            set
-            {
-                Credentials[0].Value = value;
-            }
+            get => SaveCredentials ? Credentials[0].Value : null;
+            set => Credentials[0].Value = value;
         }
 
         [ContractVerification(false)]
@@ -75,7 +67,7 @@
 
                     translationSession.Dispatcher.BeginInvoke(() =>
                     {
-                        if (result.Matches != null)
+                        if (result?.Matches != null)
                         {
                             foreach (var match in result.Matches)
                             {
@@ -88,7 +80,7 @@
                         }
                         else
                         {
-                            var translation = result.ResponseData.TranslatedText;
+                            var translation = result?.ResponseData?.TranslatedText;
                             if (!string.IsNullOrEmpty(translation))
                                 translationItem.Results.Add(new TranslationMatch(this, translation, result.ResponseData.Match.GetValueOrDefault()));
                         }
@@ -105,10 +97,6 @@
         [CanBeNull]
         private static Response TranslateText([NotNull] string input, [CanBeNull] string key, [NotNull] CultureInfo sourceLanguage, [NotNull] CultureInfo targetLanguage)
         {
-            Contract.Requires(input != null);
-            Contract.Requires(sourceLanguage != null);
-            Contract.Requires(targetLanguage != null);
-
             var rawInput = RemoveKeyboardShortcutIndicators(input);
 
             var url = string.Format(CultureInfo.InvariantCulture,

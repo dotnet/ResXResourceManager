@@ -1,28 +1,32 @@
 namespace tomenglertde.ResXManager.Translators
 {
+    using System.Collections;
+    using System.Collections.Generic;
+
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
 
+    using TomsToolbox.Core;
+
     public class TranslationMatch : ITranslationMatch
     {
-        [CanBeNull]
-        private readonly ITranslator _translator;
-        [CanBeNull]
-        private readonly string _translatedTranslatedText;
-        private readonly double _rating;
-
-        public TranslationMatch([CanBeNull] ITranslator translator, [CanBeNull] string translatedTranslatedText, double rating)
+        public TranslationMatch([CanBeNull] ITranslator translator, [CanBeNull] string translatedText, double rating)
         {
-            _translator = translator;
-            _translatedTranslatedText = translatedTranslatedText;
-            _rating = rating;
+            Translator = translator;
+            TranslatedText = translatedText?.Trim().Trim('\0');
+            Rating = rating;
         }
 
-        public string TranslatedText => _translatedTranslatedText;
+        [CanBeNull]
+        public string TranslatedText { get; }
 
-        public ITranslator Translator => _translator;
+        [CanBeNull]
+        public ITranslator Translator { get; }
 
-        public double Rating => _rating;
+        public double Rating { get; }
+
+        [NotNull]
+        public static readonly IEqualityComparer<TranslationMatch> TextComparer = new DelegateEqualityComparer<TranslationMatch>(m => m?.TranslatedText);
     }
 }
