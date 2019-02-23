@@ -210,7 +210,7 @@ Wollen Sie trotzdem einen neuen Eintrag hinzufügen?</value>
     <value>Löschen (Entf)</value>
   </data>
   <data name="DeleteToolTip" xml:space="preserve">
-    <value>Markierte Zeilen löschen (Entf)</value>
+    <value>Markierte Einträge löschen (Entf)</value>
   </data>
   <data name="DetectCodeReferences_Header" xml:space="preserve">
     <value>Referenzen im Quellcode erkennen</value>

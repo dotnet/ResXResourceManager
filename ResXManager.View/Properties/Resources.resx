@@ -194,7 +194,7 @@ Do you want to add a new entry anyway?</value>
     <value>Cut the selected rows?</value>
   </data>
   <data name="ConfirmDeleteItems" xml:space="preserve">
-    <value>Delete the selected rows?</value>
+    <value>Delete the selected items?</value>
   </data>
   <data name="Copy" xml:space="preserve">
     <value>Copy (Ctrl+C)</value>
@@ -215,7 +215,7 @@ Do you want to add a new entry anyway?</value>
     <value>Delete (Del)</value>
   </data>
   <data name="DeleteToolTip" xml:space="preserve">
-    <value>Delete selected rows (Del)</value>
+    <value>Delete selected items (Del)</value>
   </data>
   <data name="DetectCodeReferences_Header" xml:space="preserve">
     <value>Detect Code References</value>

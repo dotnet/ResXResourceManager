@@ -362,7 +362,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Delete the selected rows?.
+        ///   Looks up a localized string similar to Delete the selected items?.
         /// </summary>
         [NotNull]
         public static string ConfirmDeleteItems {
@@ -439,7 +439,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Delete selected rows (Del).
+        ///   Looks up a localized string similar to Delete selected items (Del).
         /// </summary>
         [NotNull]
         public static string DeleteToolTip {
@@ -1305,7 +1305,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         ConfirmCutItems,
         /// <summary>
-        ///   Looks up a localized string similar to Delete the selected rows?.
+        ///   Looks up a localized string similar to Delete the selected items?.
         /// </summary>
         ConfirmDeleteItems,
         /// <summary>
@@ -1333,7 +1333,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         Delete,
         /// <summary>
-        ///   Looks up a localized string similar to Delete selected rows (Del).
+        ///   Looks up a localized string similar to Delete selected items (Del).
         /// </summary>
         DeleteToolTip,
         /// <summary>
