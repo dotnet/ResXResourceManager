@@ -1,4 +1,8 @@
-﻿1.33
+﻿1.34
+- #204: Delete messages must not refer to rows, could be also columns
+- #202: Trim invalid characters from translations.
+
+1.33
 - #200: fix conflicting assembly loading.
 
 1.32
