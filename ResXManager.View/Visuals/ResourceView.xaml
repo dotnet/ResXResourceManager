@@ -668,14 +668,14 @@
                                  CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                  CommandParameter="{Binding ElementName=DataGrid}" />
     <toms:CommandRoutingBehavior CommandSource="view:IsInvariantCommand"
-                                 CommandTarget="{Binding ToggleInvariantCommand}"
+                                 CommandTarget="{Binding ToggleInvariantCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                  IsChecked="{Binding Path=SelectedItem.IsInvariant, Mode=OneWay, ElementName=DataGrid}" />
     <toms:CommandRoutingBehavior CommandSource="view:IsItemInvariantCommand"
-                                 CommandTarget="{Binding ToggleItemInvariantCommand}"
+                                 CommandTarget="{Binding ToggleItemInvariantCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                  CommandParameter="{Binding ElementName=DataGrid}"
                                  IsChecked="{Binding Path=(tools:ColumnManager.SelectedCells), Mode=OneWay, ElementName=DataGrid, Converter={x:Static converters:IsCellSelectionInvariantConverter.Default}}" />
     <toms:CommandRoutingBehavior CommandSource="view:ToggleCellSelectionCommand"
-                                 CommandTarget="{Binding ToggleCellSelectionCommand}"
+                                 CommandTarget="{Binding ToggleCellSelectionCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                  IsChecked="{Binding IsCellSelectionEnabled, Mode=OneWay, Source={x:Static properties:Settings.Default}}" />
   </i:Interaction.Behaviors>
 

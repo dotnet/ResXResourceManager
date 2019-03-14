@@ -177,7 +177,7 @@
     <value>{0} is not a valid RESX resource file: Not all entries have a value attribute.</value>
   </data>
   <data name="LanguageNotDefinedError" xml:space="preserve">
-    <value>Language is not defined: {0}</value>
+    <value>Language is not defined: "{0}"</value>
   </data>
   <data name="Neutral" xml:space="preserve">
     <value>Neutral</value>

@@ -62,7 +62,7 @@
             var cultureKey = CultureKey.Parse(culture);
 
             if (!_languages.TryGetValue(cultureKey, out var language))
-                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.LanguageNotDefinedError, cultureKey.Culture));
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.LanguageNotDefinedError, cultureKey.Culture?.DisplayName ?? Resources.Neutral));
 
             if (!_setter(language, value))
                 return false;

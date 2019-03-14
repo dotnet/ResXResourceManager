@@ -131,7 +131,7 @@ Report issues: https://github.com/tom-englert/ResXResourceManager/issues
 Support the project by adding a short review: https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details</value>
   </data>
   <data name="ProjectHasNoResourceFile" xml:space="preserve">
-    <value>The project has no resource file for the language {0}.
+    <value>The project has no resource file for the language "{0}".
 
 Do you want to add the resource file to the project?</value>
   </data>

@@ -172,7 +172,7 @@
     <value>{0} 不是有效的 RESX 资源文件：并非所有条目都具有值属性。</value>
   </data>
   <data name="LanguageNotDefinedError" xml:space="preserve">
-    <value>未定义语言：{0}</value>
+    <value>未定义语言："{0}"</value>
   </data>
   <data name="Neutral" xml:space="preserve">
     <value>中立</value>

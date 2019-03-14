@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -128,7 +128,7 @@
 翻译自 https://github.com/yinyue200</value>
   </data>
   <data name="ProjectHasNoResourceFile" xml:space="preserve">
-    <value>该项目没有语言 {0} 的资源文件。
+    <value>该项目没有语言 "{0}" 的资源文件。
 
 要创建资源文件吗？
 在独立版本中，文件不会自动添加到 Visual Studio 项目中。</value>

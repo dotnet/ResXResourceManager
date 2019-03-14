@@ -110,7 +110,7 @@ Fehler melden:  https://github.com/tom-englert/ResXResourceManager/issues
 Projekt unterstützen: Schreiben sie ein kurzes Review auf https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details</value>
   </data>
   <data name="ProjectHasNoResourceFile">
-    <value>Das Projekt hat keine Ressourcedatei für die Sprache {0}.
+    <value>Das Projekt hat keine Ressourcedatei für die Sprache "{0}".
 
 Möchten sie eine neue Ressourcedatei hinzufügen?</value>
   </data>

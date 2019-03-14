@@ -194,7 +194,7 @@
     <value>在 ResX Manager 中打开</value>
   </data>
   <data name="ProjectHasNoResourceFile" xml:space="preserve">
-    <value>该项目没有该语言的资源文件 {0}。
+    <value>该项目没有该语言的资源文件 "{0}"。
 
 要将资源文件添加到项目中吗？</value>
   </data>

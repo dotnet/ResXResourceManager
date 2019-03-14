@@ -293,7 +293,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Language is not defined: {0}.
+        ///   Looks up a localized string similar to Language is not defined: "{0}".
         /// </summary>
         [NotNull]
         public static string LanguageNotDefinedError {
@@ -472,7 +472,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         /// </summary>
         KeyAlreadyExists,
         /// <summary>
-        ///   Looks up a localized string similar to Language is not defined: {0}.
+        ///   Looks up a localized string similar to Language is not defined: "{0}".
         /// </summary>
         LanguageNotDefinedError,
         /// <summary>

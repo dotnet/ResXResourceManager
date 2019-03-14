@@ -173,7 +173,7 @@
     <value>{0} ist keine gültige Ressourcedatei: Nicht alle Einträge haben ein 'value' - Attribute.</value>
   </data>
   <data name="LanguageNotDefinedError">
-    <value>Die Sprache {0} ist nicht definiert.</value>
+    <value>Die Sprache "{0}" ist nicht definiert.</value>
   </data>
   <data name="Neutral">
     <value>Neutral</value>
