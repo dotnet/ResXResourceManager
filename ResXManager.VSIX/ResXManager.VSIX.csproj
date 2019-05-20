@@ -34,7 +34,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>..\CodeContracts.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,7 +42,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>..\CodeContracts.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <PropertyGroup>
@@ -284,6 +282,9 @@
     </PackageReference>
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="All">
       <Version>2018.2.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
+      <Version>2.9.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Shell.14.0">
       <Version>14.3.25407</Version>
