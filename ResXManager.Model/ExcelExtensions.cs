@@ -152,7 +152,7 @@
 
                 var firstSheet = sheets.OfType<Sheet>().FirstOrDefault();
                 if (firstSheet == null)
-                    return new EntryChange[0];
+                    return Array.Empty<EntryChange>();
 
                 var firstRow = firstSheet.GetRows(workbookPart).FirstOrDefault();
 

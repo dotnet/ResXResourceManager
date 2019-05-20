@@ -72,7 +72,7 @@
         }
 
         [NotNull, ItemNotNull]
-        public ICollection<CultureKey> AllTargetCultures { get; private set; } = new CultureKey[0];
+        public ICollection<CultureKey> AllTargetCultures { get; private set; } = Array.Empty<CultureKey>();
 
         [UsedImplicitly] // PropertyChanged.Fody
         private void OnAllTargetCulturesChanged()
@@ -86,7 +86,7 @@
         public ICollection<CultureKey> SelectedTargetCultures { get; }
 
         [NotNull, ItemNotNull]
-        public ICollection<ITranslationItem> Items { get; private set; } = new ITranslationItem[0];
+        public ICollection<ITranslationItem> Items { get; private set; } = Array.Empty<ITranslationItem>();
 
         [NotNull, ItemNotNull]
         public ICollection<ITranslationItem> SelectedItems { get; } = new ObservableCollection<ITranslationItem>();
@@ -114,7 +114,7 @@
             if ((SourceCulture == null) || !_resourceManager.Cultures.Contains(SourceCulture))
                 SourceCulture = _resourceManager.Cultures.FirstOrDefault();
 
-            Items = new TranslationItem[0];
+            Items = Array.Empty<TranslationItem>();
         }
 
         private void Stop()
@@ -166,7 +166,7 @@
 
             if (sourceCulture == null)
             {
-                Items = new TranslationItem[0];
+                Items = Array.Empty<TranslationItem>();
                 return;
             }
 

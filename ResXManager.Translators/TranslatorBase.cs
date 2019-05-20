@@ -40,7 +40,7 @@ namespace tomenglertde.ResXManager.Translators
             Id = id;
             DisplayName = displayName;
             Uri = uri;
-            Credentials = credentials ?? new ICredentialItem[0];
+            Credentials = credentials ?? Array.Empty<ICredentialItem>();
         }
 
         public string Id { get; }

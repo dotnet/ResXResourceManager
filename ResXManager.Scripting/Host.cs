@@ -80,7 +80,7 @@
             var resourceScope = new ResourceScope(
                 entries ?? ResourceManager.TableEntries,
                 languages ?? ResourceManager.Cultures,
-                comments ?? new object[0]);
+                comments ?? Array.Empty<object>());
 
             ResourceManager.ExportExcelFile(filePath, resourceScope, exportMode);
         }

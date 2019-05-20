@@ -193,7 +193,7 @@
             public bool Success { get; }
 
             [NotNull, ItemNotNull]
-            public IList<string> Segments { get; } = new string[0];
+            public IList<string> Segments { get; } = Array.Empty<string>();
         }
 
         private class FileInfo
@@ -327,7 +327,7 @@
                 // Ignore any file errors here
             }
 
-            return new string[0];
+            return Array.Empty<string>();
         }
     }
 }

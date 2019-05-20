@@ -236,7 +236,7 @@
             {
                 var folder = Folder;
                 if (string.IsNullOrEmpty(folder))
-                    return new ProjectFile[0];
+                    return Array.Empty<ProjectFile>();
 
                 using (_performanceTracer.Start("Enumerate source files"))
                 {

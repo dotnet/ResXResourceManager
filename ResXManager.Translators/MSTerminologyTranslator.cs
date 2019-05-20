@@ -25,7 +25,7 @@
         private static readonly Uri _uri = new Uri("https://www.microsoft.com/en-us/language/default.aspx");
 
         public MSTerminologyTranslator()
-            : base("MSTerm", "MS Terminology", _uri, new ICredentialItem[0])
+            : base("MSTerm", "MS Terminology", _uri, Array.Empty<ICredentialItem>())
         {
         }
 

@@ -71,7 +71,7 @@
                 var hr = monitorSelection.GetCurrentSelection(out hierarchyPtr, out var itemId, out var multiItemSelect, out selectionContainerPtr);
 
                 if (ErrorHandler.Failed(hr))
-                    return new VSITEMSELECTION[0];
+                    return Array.Empty<VSITEMSELECTION>();
 
                 if ((itemId == VSConstants.VSITEMID_SELECTION) && (multiItemSelect != null))
                 {
@@ -82,7 +82,7 @@
                 }
 
                 if ((hierarchyPtr == IntPtr.Zero) || (itemId == VSConstants.VSITEMID_ROOT))
-                    return new VSITEMSELECTION[0];
+                    return Array.Empty<VSITEMSELECTION>();
 
                 return new[]
                 {

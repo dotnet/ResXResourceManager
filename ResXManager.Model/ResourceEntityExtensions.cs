@@ -205,7 +205,7 @@
         public static ICollection<EntryChange> ImportTable([NotNull] this ResourceEntity entity, [NotNull][ItemNotNull] ICollection<string> fixedColumnHeaders, [NotNull][ItemNotNull] IList<IList<string>> table)
         {
             if (!table.Any())
-                return new EntryChange[0];
+                return Array.Empty<EntryChange>();
 
             var headerColumns = GetHeaderColumns(table, fixedColumnHeaders);
 

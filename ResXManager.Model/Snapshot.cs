@@ -46,7 +46,7 @@
             }
             else
             {
-                var entitySnapshots = JsonConvert.DeserializeObject<ICollection<EntitySnapshot>>(snapshot) ?? new EntitySnapshot[0];
+                var entitySnapshots = JsonConvert.DeserializeObject<ICollection<EntitySnapshot>>(snapshot) ?? Array.Empty<EntitySnapshot>();
                 resourceEntities.Load(entitySnapshots);
             }
         }
@@ -61,11 +61,11 @@
         {
             resourceEntities.ForEach(entity =>
             {
-                var entrySnapshots = entitySnapshots.Where(snapshot => Equals(entity, snapshot)).Select(s => s.Entries).FirstOrDefault() ?? new EntrySnapshot[0];
+                var entrySnapshots = entitySnapshots.Where(snapshot => Equals(entity, snapshot)).Select(s => s.Entries).FirstOrDefault() ?? Array.Empty<EntrySnapshot>();
 
                 entity.Entries.ForEach(entry =>
                 {
-                    var data = entrySnapshots.Where(s => string.Equals(entry.Key, s.Key)).Select(s => s.Data).FirstOrDefault() ?? new DataSnapshot[0];
+                    var data = entrySnapshots.Where(s => string.Equals(entry.Key, s.Key)).Select(s => s.Data).FirstOrDefault() ?? Array.Empty<DataSnapshot>();
 
                     entry.Snapshot = data.ToDictionary(item => new CultureKey(item.Language), item => new ResourceData { Text = item.Text, Comment = item.Comment });
                 });

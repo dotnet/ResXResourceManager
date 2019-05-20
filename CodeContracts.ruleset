@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Code Contracts Rules" Description=" All rules except those conflicting with CodeContracts" ToolsVersion="15.0">
+<RuleSet Name="Code Contracts Rules" Description="All rules except those conflicting with CodeContracts" ToolsVersion="15.0">
   <Include Path="allrules.ruleset" Action="Error" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1004" Action="None" />
