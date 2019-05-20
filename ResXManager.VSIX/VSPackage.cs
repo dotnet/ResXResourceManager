@@ -340,7 +340,9 @@
                 return;
 
             // if we open the window the first time, make sure it does not select all entities by default.
-            Settings.Default.AreAllFilesSelected = false;
+            var settings = Settings.Default;
+            settings.AreAllFilesSelected = false;
+            settings.ResourceFilter = string.Empty;
 
             var selectedEntities = CompositionHost.GetExportedValue<ResourceViewModel>().SelectedEntities;
             selectedEntities.Clear();
@@ -355,7 +357,6 @@
                 return;
 
             menuCommand.Text = Resources.OpenInResXManager;
-
             menuCommand.Visible = GetSelectedResourceEntities() != null;
         }
 
