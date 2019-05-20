@@ -1,4 +1,8 @@
-﻿1.34
+﻿1.35
+- #209: Show proper error message when a language is not defined.
+- #224: Error when opening from solution explorer when filter was previously applied.
+
+1.34
 - #204: Delete messages must not refer to rows, could be also columns
 - #202: Trim invalid characters from translations.
 
