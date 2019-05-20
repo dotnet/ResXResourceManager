@@ -1515,7 +1515,7 @@ namespace tomenglertde.ResXManager.View.Properties {
     [AttributeUsage(AttributeTargets.All, AllowMultiple=false)]
     public sealed class LocalizedDescriptionAttribute : System.ComponentModel.DescriptionAttribute
     {
-        private readonly StringResourceKey _resourceKey;
+        private readonly string _resourceKey;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalizedDescriptionAttribute"/> class.
@@ -1523,7 +1523,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <param name="resourceKey">The resource key of the associated resource.</param>
         public LocalizedDescriptionAttribute(StringResourceKey resourceKey)
         {
-            _resourceKey = resourceKey;
+            _resourceKey = resourceKey.ToString();
         }
 
         /// <summary>
@@ -1533,7 +1533,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         {
             get
             {
-                return Resources.ResourceManager.GetString(_resourceKey.ToString());
+                return Resources.ResourceManager.GetString(_resourceKey);
             }
         }
     }
@@ -1546,7 +1546,7 @@ namespace tomenglertde.ResXManager.View.Properties {
     [AttributeUsage(AttributeTargets.All, AllowMultiple=false)]
     public sealed class LocalizedDisplayNameAttribute : System.ComponentModel.DisplayNameAttribute
     {
-        private readonly StringResourceKey _resourceKey;
+        private readonly string _resourceKey;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalizedDisplayNameAttribute"/> class.
@@ -1554,7 +1554,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// <param name="resourceKey">The resource key of the associated resource.</param>
         public LocalizedDisplayNameAttribute(StringResourceKey resourceKey)
         {
-            _resourceKey = resourceKey;
+            _resourceKey = resourceKey.ToString();
         }
 
         /// <summary>
@@ -1564,7 +1564,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         {
             get
             {
-                return Resources.ResourceManager.GetString(_resourceKey.ToString());
+                return Resources.ResourceManager.GetString(_resourceKey);
             }
         }
     }
@@ -1607,7 +1607,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         // If you get compile errors because you don't use the TomsToolbox.Desktop NuGet package, remove this part in the Resources.Designer.t4 file. 
         // Just search for this text and follow the instructions above.
 
-        private readonly StringResourceKey _resourceKey;
+        private readonly string _resourceKey;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalizedTextAttribute"/> class.
@@ -1617,7 +1617,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         public LocalizedTextAttribute(object key, StringResourceKey resourceKey)
             : base(key)
         {
-            _resourceKey = resourceKey;
+            _resourceKey = resourceKey.ToString();
         }
 
         /// <summary>
@@ -1627,7 +1627,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         {
             get
             {
-                return Resources.ResourceManager.GetString(_resourceKey.ToString());
+                return Resources.ResourceManager.GetString(_resourceKey);
             }
         }
     }
