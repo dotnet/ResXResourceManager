@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Behaviors
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -22,8 +21,8 @@
         [CanBeNull]
         public ToggleButton ToggleButton
         {
-            get { return (ToggleButton)GetValue(ToggleButtonProperty); }
-            set { SetValue(ToggleButtonProperty, value); }
+            get => (ToggleButton)GetValue(ToggleButtonProperty);
+            set => SetValue(ToggleButtonProperty, value);
         }
         /// <summary>
         /// Identifies the ToggleButton dependency property
@@ -40,7 +39,6 @@
         protected override void OnAttached()
         {
             base.OnAttached();
-            Contract.Assume(AssociatedObject != null);
 
             DataGrid.GetAdditionalEvents().ColumnVisibilityChanged += DataGrid_ColumnVisibilityChanged;
         }
@@ -48,20 +46,12 @@
         protected override void OnDetaching()
         {
             base.OnDetaching();
-            Contract.Assume(AssociatedObject != null);
 
             DataGrid.GetAdditionalEvents().ColumnVisibilityChanged -= DataGrid_ColumnVisibilityChanged;
         }
 
-        [CanBeNull]
-        private DataGrid DataGrid
-        {
-            get
-            {
-                Contract.Ensures((AssociatedObject == null) || (Contract.Result<DataGrid>() != null));
-                return AssociatedObject;
-            }
-        }
+        [NotNull]
+        private DataGrid DataGrid => AssociatedObject;
 
         private void ToggleButton_Changed([CanBeNull] ToggleButton oldValue, [CanBeNull] ToggleButton newValue)
         {
@@ -88,7 +78,7 @@
         {
             var dataGrid = DataGrid;
 
-            if ((button == null) || (dataGrid == null))
+            if ((button == null) || (AssociatedObject == null))
                 return;
 
             UpdateErrorsOnlyFilter(button.IsChecked.GetValueOrDefault());
@@ -113,10 +103,10 @@
 
         private void UpdateErrorsOnlyFilter(bool isEnabled)
         {
-            var dataGrid = DataGrid;
-
-            if (dataGrid == null)
+            if (AssociatedObject == null)
                 return;
+
+            var dataGrid = DataGrid;
 
             try
             {
@@ -141,8 +131,6 @@
                 dataGrid.Items.Filter = row =>
                 {
                     var entry = (ResourceTableEntry)row;
-                    Contract.Assume(entry != null);
-
                     var neutralCulture = entry.NeutralLanguage.CultureKey;
 
                     var hasInvariantMismatches = visibleLanguages

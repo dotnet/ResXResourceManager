@@ -3,7 +3,6 @@
     using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
-    using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -24,8 +23,6 @@
         [ImportingConstructor]
         public TranslationsView([NotNull] ExportProvider exportProvider)
         {
-            Contract.Requires(exportProvider != null);
-
             try
             {
                 this.SetExportProvider(exportProvider);

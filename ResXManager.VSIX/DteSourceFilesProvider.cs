@@ -2,10 +2,6 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
-    using System.IO;
     using System.Linq;
 
     using JetBrains.Annotations;
@@ -27,8 +23,6 @@
         [ImportingConstructor]
         public DteSourceFilesProvider([NotNull] ICompositionHost compositionHost)
         {
-            Contract.Requires(compositionHost != null);
-
             _compositionHost = compositionHost;
             _performanceTracer = compositionHost.GetExportedValue<PerformanceTracer>();
             _configuration = compositionHost.GetExportedValue<Configuration>();
@@ -61,22 +55,10 @@
         [NotNull, ItemNotNull]
         private IEnumerable<DteProjectFile> GetProjectFiles()
         {
-            Contract.Ensures(Contract.Result<IEnumerable<DteProjectFile>>() != null);
-
             return Solution.GetProjectFiles();
         }
 
         [NotNull]
         private DteSolution Solution => _compositionHost.GetExportedValue<DteSolution>();
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_compositionHost != null);
-            Contract.Invariant(_performanceTracer != null);
-            Contract.Invariant(_configuration != null);
-        }
     }
 }

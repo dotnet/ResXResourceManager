@@ -93,6 +93,7 @@
                 var executingAssembly = Assembly.GetExecutingAssembly();
                 var folder = Path.GetDirectoryName(executingAssembly.Location);
 
+                // ReSharper disable once AssignNullToNotNullAttribute
                 _tracer.WriteLine(Resources.AssemblyLocation, folder);
                 _tracer.WriteLine(Resources.Version, new AssemblyName(executingAssembly.FullName).Version);
                 _tracer.WriteLine(".NET Framework Version: {0} (https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed)", FrameworkVersion());
@@ -293,7 +294,7 @@
             var service = (IVsQueryEditQuerySave2)GetService(typeof(SVsQueryEditQuerySave));
             if (service != null)
             {
-                if ((0 != service.QueryEditFiles(0, lockedFiles.Length, lockedFiles, null, null, out var editVerdict, out var moreInfo))
+                if ((0 != service.QueryEditFiles(0, lockedFiles.Length, lockedFiles, null, null, out var editVerdict, out _))
                     || (editVerdict != (uint)tagVSQueryEditResult.QER_EditOK))
                 {
                     return false;
@@ -381,11 +382,11 @@
             _tracer.TraceError(e.Text);
         }
 
-        private const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
+        private const string Subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
 
         private static int FrameworkVersion()
         {
-            using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
+            using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(Subkey))
             {
                 return (int?)ndpKey?.GetValue("Release") ?? 0;
             }

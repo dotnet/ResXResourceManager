@@ -3,9 +3,6 @@
     using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel.Composition;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows;
     using System.Windows.Input;
@@ -37,14 +34,9 @@
 
         private void Append([NotNull] string prefix, [NotNull] string value)
         {
-            Contract.Requires(prefix != null);
-            Contract.Requires(value != null);
-
             var lines = value.Split('\n');
 
-            // ReSharper disable once PossibleNullReferenceException
             Lines.Add(DateTime.Now.ToShortTimeString() + "\t" + prefix + lines[0].Trim('\r'));
-            // ReSharper disable once PossibleNullReferenceException
             Lines.AddRange(lines.Skip(1).Select(l => l.Trim('\r')));
         }
 
@@ -66,14 +58,6 @@
         public override string ToString()
         {
             return "Output";
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(Lines != null);
         }
     }
 }

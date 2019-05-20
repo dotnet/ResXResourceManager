@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
 
@@ -22,8 +21,6 @@
         [NotNull, ItemNotNull]
         public IEnumerable<string> ParseExtensions()
         {
-            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-
             if (string.IsNullOrEmpty(Extensions))
                 return Enumerable.Empty<string>();
 
@@ -35,8 +32,6 @@
         [NotNull, ItemNotNull]
         public IEnumerable<string> ParsePatterns()
         {
-            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-
             if (string.IsNullOrEmpty(Patterns))
                 return Enumerable.Empty<string>();
 
@@ -52,7 +47,6 @@
         [NotifyPropertyChangedInvocator, UsedImplicitly]
         private void OnPropertyChanged([NotNull] string propertyName)
         {
-            Contract.Requires(propertyName != null);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 

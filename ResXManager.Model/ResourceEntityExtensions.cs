@@ -38,8 +38,7 @@
             return table;
         }
 
-        [ItemNotNull]
-        [CanBeNull]
+        [NotNull, ItemNotNull]
         private static IEnumerable<string> GetTableLanguageColumnHeaders([NotNull] this CultureKey cultureKey)
         {
             var cultureName = cultureKey.ToString();
@@ -48,12 +47,11 @@
             yield return cultureName;
         }
 
-        [ItemNotNull]
-        [CanBeNull]
+        [NotNull, ItemNotNull]
         private static IEnumerable<string> GetTableDataColumns([NotNull] this ResourceTableEntry entry, [CanBeNull] CultureKey cultureKey)
         {
-            yield return entry.Comments.GetValue(cultureKey);
-            yield return entry.Values.GetValue(cultureKey);
+            yield return entry.Comments.GetValue(cultureKey) ?? string.Empty;
+            yield return entry.Values.GetValue(cultureKey) ?? string.Empty;
         }
 
         /// <summary>
@@ -90,8 +88,7 @@
         /// <returns>
         /// The columns of this line.
         /// </returns>
-        [NotNull]
-        [ItemNotNull]
+        [NotNull, ItemNotNull]
         private static IEnumerable<string> GetTableLine([NotNull] this ResourceTableEntry entry, [NotNull][ItemNotNull] IEnumerable<CultureKey> languages)
         {
             return new[] { entry.Key }.Concat(languages.SelectMany(entry.GetTableDataColumns));

@@ -234,11 +234,13 @@
                 Scope = scope;
             }
 
+            [CanBeNull]
             public IResourceScope Scope
             {
                 get;
             }
 
+            [CanBeNull]
             public string FileName
             {
                 get;

@@ -2,9 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     using JetBrains.Annotations;
@@ -21,9 +18,6 @@
 
         public TranslationSession([CanBeNull] CultureInfo sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull][ItemNotNull] ICollection<ITranslationItem> items)
         {
-            Contract.Requires(neutralResourcesLanguage != null);
-            Contract.Requires(items != null);
-
             SourceLanguage = sourceLanguage ?? neutralResourcesLanguage;
             NeutralResourcesLanguage = neutralResourcesLanguage;
             Items = items;
@@ -55,14 +49,6 @@
         public void Cancel()
         {
             IsCanceled = true;
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_internalMessage != null);
         }
     }
 }

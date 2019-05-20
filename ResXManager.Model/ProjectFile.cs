@@ -1,9 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Xml.Linq;
@@ -29,9 +26,6 @@
         /// <param name="uniqueProjectName">Unique name of the project file.</param>
         public ProjectFile([NotNull] string filePath, [NotNull] string rootFolder, [CanBeNull] string projectName, [CanBeNull] string uniqueProjectName)
         {
-            Contract.Requires(!string.IsNullOrEmpty(filePath));
-            Contract.Requires(rootFolder != null);
-
             FilePath = filePath;
             RelativeFilePath = GetRelativePath(rootFolder, filePath);
             Extension = Path.GetExtension(FilePath);
@@ -66,8 +60,6 @@
         [NotNull]
         public XDocument Load()
         {
-            Contract.Ensures(Contract.Result<XDocument>() != null);
-
             var document = InternalLoad();
 
             _fingerPrint = document.ToString(SaveOptions.DisableFormatting);
@@ -80,8 +72,6 @@
         [NotNull]
         protected virtual XDocument InternalLoad()
         {
-            Contract.Ensures(Contract.Result<XDocument>() != null);
-
             return XDocument.Load(FilePath);
         }
 
@@ -95,8 +85,6 @@
 
         protected virtual void InternalChanged([NotNull] XDocument document, bool willSaveImmediately)
         {
-            Contract.Requires(document != null);
-
             HasChanges = _fingerPrint != document.ToString(SaveOptions.DisableFormatting);
         }
 
@@ -114,8 +102,6 @@
 
         protected virtual void InternalSave([NotNull] XDocument document)
         {
-            Contract.Requires(document != null);
-
             document.Save(FilePath);
         }
 
@@ -148,10 +134,6 @@
         [NotNull]
         private static string GetRelativePath([NotNull] string solutionFolder, [NotNull] string filePath)
         {
-            Contract.Requires(solutionFolder != null);
-            Contract.Requires(filePath != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
             solutionFolder = solutionFolder.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             filePath = filePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 
@@ -161,17 +143,6 @@
             }
 
             return filePath.StartsWith(solutionFolder, StringComparison.OrdinalIgnoreCase) ? filePath.Substring(solutionFolder.Length) : filePath;
-
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(!string.IsNullOrEmpty(FilePath));
-            Contract.Invariant(Extension != null);
-            Contract.Invariant(RelativeFilePath != null);
         }
     }
 }

@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
 
@@ -14,8 +13,6 @@
     {
         public LanguageSelectionBoxViewModel([NotNull][ItemNotNull] IEnumerable<CultureInfo> existingLanguages)
         {
-            Contract.Requires(existingLanguages != null);
-
             Languages = CultureInfo.GetCultures(CultureTypes.AllCultures)
                 .Where(culture => !CultureInfo.InvariantCulture.Equals(culture))
                 .Except(existingLanguages)

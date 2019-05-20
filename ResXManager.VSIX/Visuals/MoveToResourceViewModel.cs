@@ -235,8 +235,10 @@
             Update();
         }
 
-        string IDataErrorInfo.this[string columnName] => GetKeyErrors(columnName);
+        [CanBeNull]
+        string IDataErrorInfo.this[[CanBeNull] string columnName] => GetKeyErrors(columnName);
 
+        [CanBeNull]
         string IDataErrorInfo.Error => null;
     }
 

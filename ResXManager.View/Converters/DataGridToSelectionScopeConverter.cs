@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Windows;
@@ -21,13 +20,13 @@
         public static readonly IValueConverter Default = new DataGridToSelectionScopeConverter();
 
         [NotNull]
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
         {
-            Contract.Ensures(Contract.Result<object>() != null);
             return new DataGridSelectionScope(value as DataGrid);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        [CanBeNull]
+        public object ConvertBack([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
         {
             throw new NotImplementedException();
         }
@@ -86,6 +85,7 @@
             [NotNull]
             public IResourceScope Scope => this;
 
+            [CanBeNull]
             public string FileName => null;
         }
     }

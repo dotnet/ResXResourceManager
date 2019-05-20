@@ -2,9 +2,6 @@
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Runtime.Serialization;
@@ -34,7 +31,7 @@
         /// <returns>
         /// true if this converter can perform the conversion; otherwise, false.
         /// </returns>
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom([CanBeNull] ITypeDescriptorContext context, Type sourceType)
         {
             return sourceType == typeof(string);
         }
@@ -47,7 +44,7 @@
         /// <returns>
         /// true if this converter can perform the conversion; otherwise, false.
         /// </returns>
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        public override bool CanConvertTo([CanBeNull] ITypeDescriptorContext context, Type destinationType)
         {
             return destinationType == typeof(string);
         }
@@ -62,7 +59,8 @@
         /// An <see cref="T:System.Object"/> that represents the converted value.
         /// </returns>
         /// <exception cref="T:System.NotSupportedException">The conversion cannot be performed. </exception>
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        [CanBeNull]
+        public override object ConvertFrom([CanBeNull] ITypeDescriptorContext context, CultureInfo culture, [CanBeNull] object value)
         {
             var stringValue = value as string;
 
@@ -103,10 +101,8 @@
         /// <exception cref="T:System.ArgumentNullException">The <paramref name="destinationType"/> parameter is null. </exception>
         /// <exception cref="T:System.NotSupportedException">The conversion cannot be performed. </exception>
         [NotNull]
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, [NotNull] object value, Type destinationType)
+        public override object ConvertTo([CanBeNull] ITypeDescriptorContext context, [CanBeNull] CultureInfo culture, [NotNull] object value, [CanBeNull] Type destinationType)
         {
-            Contract.Ensures(Contract.Result<object>() != null);
-
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
@@ -122,14 +118,6 @@
 
                 return Encoding.Default.GetString(stream.GetBuffer(), 0, (int)stream.Length);
             }
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_serializer != null);
         }
     }
 }

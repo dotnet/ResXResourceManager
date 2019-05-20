@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Tools
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Controls.Primitives;
     using System.Windows.Threading;
@@ -22,12 +21,10 @@
         [AttachedPropertyBrowsableForType(typeof(TextBoxBase))]
         public static bool GetIsEnabled([NotNull] TextBoxBase obj)
         {
-            Contract.Requires(obj != null);
             return obj.GetValue<bool>(IsEnabledProperty);
         }
         public static void SetIsEnabled([NotNull] TextBoxBase obj, bool value)
         {
-            Contract.Requires(obj != null);
             obj.SetValue(IsEnabledProperty, value);
         }
 

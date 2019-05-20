@@ -4,8 +4,6 @@
     using System.ComponentModel;
     using System.ComponentModel.Composition;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Threading;
     using System.Windows.Threading;
@@ -28,9 +26,6 @@
         [ImportingConstructor]
         public PerformanceTracer([NotNull] ITracer tracer, [NotNull] Configuration configuration)
         {
-            Contract.Requires(tracer != null);
-            Contract.Requires(configuration != null);
-
             _tracer = tracer;
             _configuration = configuration;
         }
@@ -38,8 +33,6 @@
         [CanBeNull]
         public IDisposable Start([Localizable(false)][NotNull] string message)
         {
-            Contract.Requires(message != null);
-
             if (!_configuration.ShowPerformanceTraces)
                 return null;
 
@@ -48,8 +41,6 @@
 
         public void Start([Localizable(false)][NotNull] string message, DispatcherPriority priority)
         {
-            Contract.Requires(message != null);
-
             var tracer = Start(message);
             if (tracer == null)
                 return;
@@ -69,9 +60,6 @@
 
             public Tracer([NotNull] ITracer tracer, int index, [NotNull] string message)
             {
-                Contract.Requires(tracer != null);
-                Contract.Requires(message != null);
-
                 _tracer = tracer;
                 _index = index;
                 _message = message;
@@ -88,25 +76,6 @@
 
                 _stopwatch.Stop();
             }
-
-            [ContractInvariantMethod]
-            [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-            [Conditional("CONTRACTS_FULL")]
-            private void ObjectInvariant()
-            {
-                Contract.Invariant(_tracer != null);
-                Contract.Invariant(_message != null);
-                Contract.Invariant(_stopwatch != null);
-            }
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_tracer != null);
-            Contract.Invariant(_configuration != null);
         }
     }
 }

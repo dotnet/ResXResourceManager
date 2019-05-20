@@ -3,12 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
-    using System.Text.RegularExpressions;
 
     using JetBrains.Annotations;
 
@@ -40,12 +36,10 @@
         [ImportingConstructor]
         public Refactorings([NotNull] ICompositionHost compositionHost)
         {
-            Contract.Requires(compositionHost != null);
-
             _compositionHost = compositionHost;
         }
 
-        public bool CanMoveToResource(EnvDTE.Document document)
+        public bool CanMoveToResource([CanBeNull] EnvDTE.Document document)
         {
             var extension = Path.GetExtension(document?.FullName);
             if (extension == null)
@@ -59,7 +53,6 @@
             if (!configurations.Any())
                 return false;
 
-            Contract.Assume(document != null);
             var selection = GetSelection(document);
             if (selection == null)
                 return false;
@@ -74,7 +67,8 @@
             return s != null;
         }
 
-        public ResourceTableEntry MoveToResource(EnvDTE.Document document)
+        [CanBeNull]
+        public ResourceTableEntry MoveToResource([CanBeNull] EnvDTE.Document document)
         {
             var extension = Path.GetExtension(document?.FullName);
             if (extension == null)
@@ -90,7 +84,6 @@
             if (configuration == null)
                 return null;
 
-            Contract.Assume(document != null);
             var selection = GetSelection(document);
             if (selection == null)
                 return null;
@@ -113,7 +106,6 @@
                 .Where(entity => !entity.IsWinFormsDesignerResource)
                 .ToList();
 
-            // ReSharper disable once PossibleNullReferenceException
             var filter = EntityFilter.BuildFilter(Settings.Default.ResourceFilter);
             if (filter != null)
             {
@@ -140,40 +132,35 @@
 
             var confirmed = ConfirmationDialog.Show(_compositionHost.Container, viewModel, Resources.MoveToResource).GetValueOrDefault();
 
-            if (confirmed && !string.IsNullOrEmpty(viewModel.Key))
+            if (!confirmed || string.IsNullOrEmpty(viewModel.Key))
+                return null;
+
+            ResourceTableEntry entry = null;
+
+            if (!viewModel.ReuseExisiting)
             {
-                ResourceTableEntry entry = null;
+                var entity = _lastUsedEntity = viewModel.SelectedResourceEntity;
+                if (entity == null)
+                    return null;
 
-                if (!viewModel.ReuseExisiting)
-                {
-                    var entity = _lastUsedEntity = viewModel.SelectedResourceEntity;
-                    if (entity == null)
-                        return null;
+                _isLastUsedEntityInSameProject = IsInProject(entity, document);
 
-                    _isLastUsedEntityInSameProject = IsInProject(entity, document);
+                entry = entity.Add(viewModel.Key);
+                if (entry == null)
+                    return null;
 
-                    entry = entity.Add(viewModel.Key);
-                    if (entry == null)
-                        return null;
-
-                    entry.Values[null] = viewModel.Value;
-                    entry.Comment = viewModel.Comment;
-                }
-
-                selection.ReplaceWith(viewModel.Replacement?.Value);
-
-                return entry;
+                entry.Values[null] = viewModel.Value;
+                entry.Comment = viewModel.Comment;
             }
 
-            return null;
+            selection.ReplaceWith(viewModel.Replacement?.Value);
+
+            return entry;
         }
 
         [NotNull, ItemNotNull]
         private static IEnumerable<ResourceEntity> GetResourceEntiesFromProject([NotNull] EnvDTE.Document document, [NotNull][ItemNotNull] IEnumerable<ResourceEntity> entities)
         {
-            Contract.Requires(document != null);
-            Contract.Requires(entities != null);
-
             try
             {
                 var project = document.ProjectItem?.ContainingProject;
@@ -202,8 +189,6 @@
 
         private static bool IsInProject([NotNull] ResourceEntity entity, [CanBeNull] EnvDTE.Project project)
         {
-            Contract.Requires(entity != null);
-
             var projectFile = (DteProjectFile)entity.NeutralProjectFile;
 
             return projectFile?.ProjectItems
@@ -214,8 +199,6 @@
         [CanBeNull]
         private static Selection GetSelection([NotNull] EnvDTE.Document document)
         {
-            Contract.Requires(document != null);
-
             var textDocument = (EnvDTE.TextDocument)document.Object(@"TextDocument");
 
             var topPoint = textDocument?.Selection?.TopPoint;
@@ -235,42 +218,22 @@
         {
             [NotNull]
             private readonly EnvDTE.TextDocument _textDocument;
-            [NotNull]
-            private readonly string _line;
+
             [CanBeNull]
             private readonly EnvDTE.FileCodeModel _codeModel;
 
             public Selection([NotNull] EnvDTE.TextDocument textDocument, [NotNull] string line, [CanBeNull] EnvDTE.FileCodeModel codeModel)
             {
-                Contract.Requires(textDocument != null);
-                Contract.Requires(line != null);
-
                 _textDocument = textDocument;
-                _line = line;
+                Line = line;
                 _codeModel = codeModel;
             }
 
-            [ContractVerification(false)]
             [NotNull]
-            public EnvDTE.VirtualPoint Begin
-            {
-                get
-                {
-                    Contract.Ensures(Contract.Result<EnvDTE.VirtualPoint>() != null);
-                    return _textDocument.Selection.TopPoint;
-                }
-            }
+            public EnvDTE.VirtualPoint Begin => _textDocument.Selection.TopPoint;
 
-            [ContractVerification(false)]
             [NotNull]
-            public EnvDTE.VirtualPoint End
-            {
-                get
-                {
-                    Contract.Ensures(Contract.Result<EnvDTE.VirtualPoint>() != null);
-                    return _textDocument.Selection.BottomPoint;
-                }
-            }
+            public EnvDTE.VirtualPoint End => _textDocument.Selection.BottomPoint;
 
             public bool IsEmpty => Begin.EqualTo(End);
 
@@ -278,14 +241,7 @@
             public string Text => _textDocument.Selection?.Text;
 
             [NotNull]
-            public string Line
-            {
-                get
-                {
-                    Contract.Ensures(Contract.Result<string>() != null);
-                    return _line;
-                }
-            }
+            public string Line { get; }
 
             [CanBeNull]
             public string FunctionName => GetCodeElement(EnvDTE.vsCMElement.vsCMElementFunction)?.Name;
@@ -323,15 +279,6 @@
                     return null;
                 }
             }
-
-            [ContractInvariantMethod]
-            [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-            [Conditional("CONTRACTS_FULL")]
-            private void ObjectInvariant()
-            {
-                Contract.Invariant(_textDocument != null);
-                Contract.Invariant(_line != null);
-            }
         }
 
         private interface IParser
@@ -342,7 +289,8 @@
 
         private class GenericParser : IParser
         {
-            public string LocateString(Selection selection, bool moveSelection)
+            [CanBeNull]
+            public string LocateString([CanBeNull] Selection selection, bool moveSelection)
             {
                 if (selection == null)
                     return null;
@@ -374,7 +322,6 @@
 
                     var startIndex = firstQuote + 1;
                     var length = secondQuote - firstQuote - 1;
-                    Contract.Assume(startIndex + length <= line.Length);
 
                     if (moveSelection)
                     {
@@ -389,14 +336,6 @@
 
                 return null;
             }
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_compositionHost != null);
         }
     }
 }

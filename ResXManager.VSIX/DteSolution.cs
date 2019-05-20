@@ -3,16 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
 
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
 
     [Export]
     internal class DteSolution
@@ -31,9 +27,6 @@
         [ImportingConstructor]
         public DteSolution([NotNull][Import(nameof(VSPackage))] IServiceProvider serviceProvider, [NotNull] ITracer tracer)
         {
-            Contract.Requires(serviceProvider != null);
-            Contract.Requires(tracer != null);
-
             _serviceProvider = serviceProvider;
             _tracer = tracer;
         }
@@ -45,16 +38,12 @@
         [NotNull, ItemNotNull]
         public IEnumerable<DteProjectFile> GetProjectFiles()
         {
-            Contract.Ensures(Contract.Result<IEnumerable<ProjectFile>>() != null);
-
             return _projectFiles ?? (_projectFiles = EnumerateProjectFiles());
         }
 
         [NotNull, ItemNotNull]
         private IEnumerable<DteProjectFile> EnumerateProjectFiles()
         {
-            Contract.Ensures(Contract.Result<IEnumerable<DteProjectFile>>() != null);
-
             var items = new Dictionary<string, DteProjectFile>();
 
             try
@@ -63,8 +52,6 @@
 
                 foreach (var project in GetProjects())
                 {
-                    Contract.Assume(project != null);
-
                     var name = @"<unknown>";
 
                     try
@@ -111,14 +98,13 @@
         {
             get
             {
-                Contract.Ensures(Contract.Result<string>() != null);
-
                 try
                 {
                     return Path.GetDirectoryName(FullName) ?? string.Empty;
                 }
                 catch
                 {
+                    // just go with empty folder...
                 }
 
                 return string.Empty;
@@ -131,8 +117,6 @@
         [CanBeNull]
         public EnvDTE.ProjectItem AddFile([NotNull] string fullName)
         {
-            Contract.Requires(fullName != null);
-
             var solutionItemsProject = GetProjects().FirstOrDefault(IsSolutionItemsFolder) ?? Solution?.AddSolutionFolder(SolutionItemsFolderName);
 
             return solutionItemsProject?.AddFromFile(fullName);
@@ -156,8 +140,6 @@
         [ItemNotNull]
         private IEnumerable<EnvDTE.Project> GetProjects()
         {
-            Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.Project>>() != null);
-
             var solution = Solution;
 
             var projects = solution?.Projects;
@@ -183,8 +165,6 @@
 
         private void GetProjectFiles([CanBeNull] string projectName, [ItemNotNull][CanBeNull] EnvDTE.ProjectItems projectItems, [NotNull] IDictionary<string, DteProjectFile> items)
         {
-            Contract.Requires(items != null);
-
             if (projectItems == null)
                 return;
 
@@ -192,7 +172,7 @@
             {
                 var index = 1;
 
-                // Must use forach here! See https://connect.microsoft.com/VisualStudio/feedback/details/1093318/resource-files-falsely-enumerated-as-part-of-project
+                // Must use foreach here! See https://connect.microsoft.com/VisualStudio/feedback/details/1093318/resource-files-falsely-enumerated-as-part-of-project
                 foreach (var projectItem in projectItems.OfType<EnvDTE.ProjectItem>())
                 {
                     try
@@ -201,7 +181,7 @@
                     }
                     catch
                     {
-                        _tracer.TraceError("Error loading project item #{0} in project {1}.", index, projectName);
+                        _tracer.TraceError("Error loading project item #{0} in project {1}.", index, projectName ?? "unknown");
                     }
 
                     index += 1;
@@ -209,15 +189,12 @@
             }
             catch
             {
-                _tracer.TraceError("Error loading a project item in project {0}.", projectName);
+                _tracer.TraceError("Error loading a project item in project {0}.", projectName ?? "unknown");
             }
         }
 
         private void GetProjectFiles([CanBeNull] string projectName, [NotNull] EnvDTE.ProjectItem projectItem, [NotNull] IDictionary<string, DteProjectFile> items)
         {
-            Contract.Requires(projectItem != null);
-            Contract.Requires(items != null);
-
             if (projectItem.Object is VSLangProj.References) // MPF project (e.g. WiX) references folder, do not traverse...
                 return;
 
@@ -228,13 +205,9 @@
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     var project = projectItem.ContainingProject;
-                    Contract.Assume(project != null);
 
                     if (items.TryGetValue(fileName, out var projectFile))
                     {
-                        Contract.Assume(projectFile != null);
-                        Contract.Assume(project.Name != null);
-
                         projectFile.AddProject(project.Name, projectItem);
                     }
                     else
@@ -255,10 +228,7 @@
         [CanBeNull]
         private string TryGetFileName([NotNull] EnvDTE.ProjectItem projectItem)
         {
-            Contract.Requires(projectItem != null);
-
             var name = projectItem.Name;
-            Contract.Assume(name != null);
 
             try
             {
@@ -281,15 +251,6 @@
             }
 
             return null;
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_serviceProvider != null);
-            Contract.Invariant(_tracer != null);
         }
     }
 }

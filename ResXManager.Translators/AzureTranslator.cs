@@ -3,7 +3,6 @@ namespace tomenglertde.ResXManager.Translators
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
     using System.ServiceModel;
@@ -58,10 +57,9 @@ namespace tomenglertde.ResXManager.Translators
                         var httpRequestProperty = new HttpRequestMessageProperty();
                         httpRequestProperty.Headers.Add("Authorization", token);
                         var operationContext = OperationContext.Current;
-                        Contract.Assume(operationContext != null); // because we are inside OperationContextScope
                         operationContext.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
 
-                        var translateOptions = new TranslateOptions()
+                        var translateOptions = new TranslateOptions
                         {
                             ContentType = "text/plain",
                             IncludeMultipleMTAlternatives = true
@@ -69,11 +67,7 @@ namespace tomenglertde.ResXManager.Translators
 
                         foreach (var languageGroup in translationSession.Items.GroupBy(item => item.TargetCulture))
                         {
-                            Contract.Assume(languageGroup != null);
-
                             var cultureKey = languageGroup.Key;
-                            Contract.Assume(cultureKey != null);
-
                             var targetLanguage = cultureKey.Culture ?? translationSession.NeutralResourcesLanguage;
 
                             using (var itemsEnumerator = languageGroup.GetEnumerator())
@@ -82,6 +76,7 @@ namespace tomenglertde.ResXManager.Translators
                                 {
                                     var sourceItems = itemsEnumerator.Take(10);
                                     var sourceStrings = sourceItems
+                                        // ReSharper disable once PossibleNullReferenceException
                                         .Select(item => item.Source)
                                         .Select(RemoveKeyboardShortcutIndicators)
                                         .ToArray();
@@ -111,45 +106,25 @@ namespace tomenglertde.ResXManager.Translators
         }
 
         [DataMember(Name = "AuthenticationKey")]
-        [ContractVerification(false)]
         [CanBeNull]
         public string SerializedAuthenticationKey
         {
-            get
-            {
-                return SaveCredentials ? Credentials[0].Value : null;
-            }
-            set
-            {
-                Credentials[0].Value = value;
-            }
+            get => SaveCredentials ? Credentials[0].Value : null;
+            set => Credentials[0].Value = value;
         }
 
-        [ContractVerification(false)]
         [CanBeNull]
         private string AuthenticationKey => Credentials[0].Value;
 
         private void ReturnResults([NotNull][ItemNotNull] IEnumerable<ITranslationItem> items, [NotNull][ItemNotNull] IEnumerable<GetTranslationsResponse> responses)
         {
-            Contract.Requires(items != null);
-            Contract.Requires(responses != null);
-
             foreach (var tuple in Enumerate.AsTuples(items, responses))
             {
-                Contract.Assume(tuple != null);
-
                 var response = tuple.Item2;
-                Contract.Assume(response != null);
-
                 var translationItem = tuple.Item1;
-                Contract.Assume(translationItem != null);
-
                 var translations = response.Translations;
-                Contract.Assume(translations != null);
-
                 foreach (var match in translations)
                 {
-                    Contract.Assume(match != null);
                     translationItem.Results.Add(new TranslationMatch(this, match.TranslatedText, match.Rating / 5.0));
                 }
             }
@@ -159,8 +134,6 @@ namespace tomenglertde.ResXManager.Translators
         [ItemNotNull]
         private static IList<ICredentialItem> GetCredentials()
         {
-            Contract.Ensures(Contract.Result<IList<ICredentialItem>>() != null);
-
             return new ICredentialItem[]
             {
                 new CredentialItem("AuthenticationKey", "Key")

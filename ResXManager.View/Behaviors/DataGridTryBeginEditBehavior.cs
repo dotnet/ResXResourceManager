@@ -1,6 +1,5 @@
 ﻿namespace tomenglertde.ResXManager.View.Behaviors
 {
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows.Controls;
     using System.Windows.Interactivity;
@@ -15,7 +14,6 @@
         protected override void OnAttached()
         {
             base.OnAttached();
-            Contract.Assume(AssociatedObject != null);
 
             AssociatedObject.BeginningEdit += DataGrid_BeginningEdit;
         }
@@ -23,18 +21,12 @@
         protected override void OnDetaching()
         {
             base.OnDetaching();
-            Contract.Assume(AssociatedObject != null);
 
             AssociatedObject.BeginningEdit -= DataGrid_BeginningEdit;
         }
 
         private static void DataGrid_BeginningEdit([NotNull] object sender, [NotNull] DataGridBeginningEditEventArgs e)
         {
-            Contract.Requires(sender != null);
-            Contract.Requires(e.Row != null);
-            Contract.Requires(e.Row.Item != null);
-            Contract.Requires(e.Column != null);
-
             var dataGridRow = e.Row;
             var entry = (ResourceTableEntry)dataGridRow.Item;
             var resourceEntity = entry.Container;
@@ -45,8 +37,7 @@
 
             var cultureKey = resourceLanguages.First()?.CultureKey;
 
-            var languageHeader = e.Column.Header as ILanguageColumnHeader;
-            if (languageHeader != null)
+            if (e.Column.Header is ILanguageColumnHeader languageHeader)
             {
                 cultureKey = languageHeader.CultureKey;
             }

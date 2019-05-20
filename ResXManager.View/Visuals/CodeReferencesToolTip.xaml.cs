@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel.Composition.Hosting;
-    using System.Diagnostics.Contracts;
 
     using JetBrains.Annotations;
 
@@ -17,8 +16,6 @@
     {
         public CodeReferencesToolTip([NotNull] ExportProvider exportProvider)
         {
-            Contract.Requires(exportProvider != null);
-
             try
             {
                 this.SetExportProvider(exportProvider);

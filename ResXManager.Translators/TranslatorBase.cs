@@ -2,7 +2,6 @@ namespace tomenglertde.ResXManager.Translators
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Net;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
@@ -19,9 +18,10 @@ namespace tomenglertde.ResXManager.Translators
         [NotNull]
         private static readonly Regex _removeKeyboardShortcutIndicatorsRegex = new Regex(@"[&_](?=[\w\d])", RegexOptions.Compiled);
 
-        [CanBeNull]
-        protected static readonly IWebProxy WebProxy;
+        [NotNull]
+        protected static readonly IWebProxy WebProxy = new WebProxy();
 
+        // ReSharper disable once NotNullMemberIsNotInitialized
         static TranslatorBase()
         {
             try
@@ -31,15 +31,12 @@ namespace tomenglertde.ResXManager.Translators
             }
             catch
             {
-                // ignored
+                // just use default...
             }
         }
 
         protected TranslatorBase([NotNull] string id, [NotNull] string displayName, [CanBeNull] Uri uri, [CanBeNull][ItemNotNull] IList<ICredentialItem> credentials)
         {
-            Contract.Requires(id != null);
-            Contract.Requires(displayName != null);
-
             Id = id;
             DisplayName = displayName;
             Uri = uri;
@@ -50,6 +47,7 @@ namespace tomenglertde.ResXManager.Translators
 
         public string DisplayName { get; }
 
+        [CanBeNull]
         public Uri Uri { get; }
 
         [DataMember]

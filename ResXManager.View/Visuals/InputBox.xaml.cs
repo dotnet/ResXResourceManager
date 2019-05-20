@@ -3,7 +3,6 @@
     using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
-    using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Input;
 
@@ -27,8 +26,6 @@
         [ImportingConstructor]
         public InputBox([NotNull] ExportProvider exportProvider)
         {
-            Contract.Requires(exportProvider != null);
-
             this.SetExportProvider(exportProvider);
 
             InitializeComponent();
@@ -45,8 +42,8 @@
         [CanBeNull]
         public string Prompt
         {
-            get { return (string)GetValue(PromptProperty); }
-            set { SetValue(PromptProperty, value); }
+            get => (string)GetValue(PromptProperty);
+            set => SetValue(PromptProperty, value);
         }
         /// <summary>
         /// Identifies the Prompt dependency property
@@ -61,8 +58,8 @@
         [CanBeNull]
         public string Text
         {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
+            get => (string)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
         }
         /// <summary>
         /// Identifies the Text dependency property
@@ -81,27 +78,20 @@
         /// </summary>
         public bool IsInputValid
         {
-            get { return this.GetValue<bool>(IsInputValidProperty); }
-            set { SetValue(IsInputValidProperty, value); }
+            get => this.GetValue<bool>(IsInputValidProperty);
+            set => SetValue(IsInputValidProperty, value);
         }
 
         /// <summary>
         /// Identifies the IsInputValid dependency property
         /// </summary>
-        [CanBeNull]
+        [NotNull]
         public static readonly DependencyProperty IsInputValidProperty =
             DependencyProperty.Register("IsInputValid", typeof(bool), typeof(InputBox), new FrameworkPropertyMetadata(false));
 
 
         [NotNull]
-        public ICommand CommitCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-                return new DelegateCommand(CanCommit, Commit);
-            }
-        }
+        public ICommand CommitCommand => new DelegateCommand(CanCommit, Commit);
 
         private void Commit()
         {

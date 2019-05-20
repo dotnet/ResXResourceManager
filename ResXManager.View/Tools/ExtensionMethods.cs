@@ -3,7 +3,6 @@ namespace tomenglertde.ResXManager.View.Tools
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Windows;
@@ -23,27 +22,20 @@ namespace tomenglertde.ResXManager.View.Tools
         [CanBeNull]
         public static CultureKey GetCultureKey([NotNull] this DataGridColumn column)
         {
-            Contract.Requires(column != null);
-
             return (column.Header as ILanguageColumnHeader)?.CultureKey;
         }
 
         [CanBeNull]
         public static CultureInfo GetCulture([NotNull] this DataGridColumn column)
         {
-            Contract.Requires(column != null);
-
             return column.GetCultureKey()?.Culture;
         }
 
         public static void SetEditingElementStyle([NotNull] this DataGridBoundColumn column, [CanBeNull] Binding languageBinding, [CanBeNull] Binding flowDirectionBinding)
         {
-            Contract.Requires(column != null);
-
             var textBoxStyle = new Style(typeof(TextBox), column.EditingElementStyle);
             var setters = textBoxStyle.Setters;
 
-            // ReSharper disable AssignNullToNotNullAttribute
             setters.Add(new EventSetter(UIElement.PreviewKeyDownEvent, (KeyEventHandler)EditingElement_PreviewKeyDown));
             setters.Add(new Setter(TextBoxBase.AcceptsReturnProperty, true));
 
@@ -51,7 +43,6 @@ namespace tomenglertde.ResXManager.View.Tools
             setters.Add(new Setter(FrameworkElement.LanguageProperty, languageBinding));
 
             setters.Add(new Setter(FrameworkElement.FlowDirectionProperty, flowDirectionBinding));
-            // ReSharper restore AssignNullToNotNullAttribute
 
             textBoxStyle.Seal();
 
@@ -60,15 +51,11 @@ namespace tomenglertde.ResXManager.View.Tools
 
         public static void SetElementStyle([NotNull] this DataGridBoundColumn column, [CanBeNull] Binding languageBinding, [CanBeNull] Binding flowDirectionBinding)
         {
-            Contract.Requires(column != null);
-
             var elementStyle = new Style(typeof(TextBlock), column.ElementStyle);
             var setters = elementStyle.Setters;
 
-            // ReSharper disable AssignNullToNotNullAttribute
             setters.Add(new Setter(FrameworkElement.LanguageProperty, languageBinding));
             setters.Add(new Setter(FrameworkElement.FlowDirectionProperty, flowDirectionBinding));
-            // ReSharper restore AssignNullToNotNullAttribute
 
             elementStyle.Seal();
             column.ElementStyle = elementStyle;
@@ -76,8 +63,6 @@ namespace tomenglertde.ResXManager.View.Tools
 
         private static void EditingElement_PreviewKeyDown([NotNull] object sender, [NotNull] KeyEventArgs e)
         {
-            Contract.Requires(sender != null);
-
             if (e.Key != Key.Return)
                 return;
 
@@ -98,7 +83,6 @@ namespace tomenglertde.ResXManager.View.Tools
                 if (parent == null)
                     return;
 
-                // ReSharper disable once AssignNullToNotNullAttribute
                 var args = new KeyEventArgs(e.KeyboardDevice, e.InputSource, e.Timestamp, Key.Return)
                 {
                     RoutedEvent = UIElement.KeyDownEvent
@@ -133,8 +117,6 @@ namespace tomenglertde.ResXManager.View.Tools
 
         public static bool IsOfColumnType(this DataGridCellInfo cell, [NotNull] params ColumnType[] columnTypes)
         {
-            Contract.Requires(columnTypes != null);
-
             var cellColumnType = (cell.Column?.Header as ILanguageColumnHeader)?.ColumnType;
 
             return columnTypes.Any(columnType => columnType == cellColumnType);
@@ -143,7 +125,6 @@ namespace tomenglertde.ResXManager.View.Tools
         [NotNull]
         public static IEnumerable<DataGridCellInfo> GetSelectedVisibleCells([NotNull] this DataGrid dataGrid)
         {
-            // ReSharper disable once AssignNullToNotNullAttribute
             return dataGrid.SelectedCells.Where(cell => cell.IsValid && cell.Column?.Visibility == Visibility.Visible);
         }
 

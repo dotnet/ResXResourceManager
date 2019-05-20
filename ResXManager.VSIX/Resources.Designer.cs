@@ -21,7 +21,6 @@
 
 namespace tomenglertde.ResXManager.VSIX {
     using System;
-    using System.Diagnostics.Contracts;
 
     using JetBrains.Annotations;
 
@@ -78,7 +77,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string AssemblyLocation {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("AssemblyLocation", resourceCulture) ?? string.Empty;
             }
         }
@@ -89,7 +87,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string CanNotCreateWindow {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CanNotCreateWindow", resourceCulture) ?? string.Empty;
             }
         }
@@ -100,7 +97,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string CodeGenerator_CommandGroup {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CodeGenerator_CommandGroup", resourceCulture) ?? string.Empty;
             }
         }
@@ -111,7 +107,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string CodeGenerator_CommandInternal {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CodeGenerator_CommandInternal", resourceCulture) ?? string.Empty;
             }
         }
@@ -122,7 +117,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string CodeGenerator_CommandPublic {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CodeGenerator_CommandPublic", resourceCulture) ?? string.Empty;
             }
         }
@@ -133,7 +127,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string CodeGenerator_CommandTextTemplate {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CodeGenerator_CommandTextTemplate", resourceCulture) ?? string.Empty;
             }
         }
@@ -144,7 +137,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string CodeGenerator_Internal {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CodeGenerator_Internal", resourceCulture) ?? string.Empty;
             }
         }
@@ -155,7 +147,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string CodeGenerator_Public {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CodeGenerator_Public", resourceCulture) ?? string.Empty;
             }
         }
@@ -166,7 +157,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string CodeGenerator_TextTemplate {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CodeGenerator_TextTemplate", resourceCulture) ?? string.Empty;
             }
         }
@@ -177,7 +167,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string CodeGenerator_Unkown {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CodeGenerator_Unkown", resourceCulture) ?? string.Empty;
             }
         }
@@ -188,7 +177,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string CodeGenerator_WinForms {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CodeGenerator_WinForms", resourceCulture) ?? string.Empty;
             }
         }
@@ -199,7 +187,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string CodeHeader {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CodeHeader", resourceCulture) ?? string.Empty;
             }
         }
@@ -210,7 +197,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string CommentHeader {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CommentHeader", resourceCulture) ?? string.Empty;
             }
         }
@@ -221,7 +207,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string DuplicateKey {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("DuplicateKey", resourceCulture) ?? string.Empty;
             }
         }
@@ -232,7 +217,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string Error {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Error", resourceCulture) ?? string.Empty;
             }
         }
@@ -243,7 +227,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string ErrorOpenFilesInEditor {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ErrorOpenFilesInEditor", resourceCulture) ?? string.Empty;
             }
         }
@@ -254,7 +237,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string ExtensionLoadingError {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ExtensionLoadingError", resourceCulture) ?? string.Empty;
             }
         }
@@ -265,7 +247,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string IntroMessage {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("IntroMessage", resourceCulture) ?? string.Empty;
             }
         }
@@ -276,7 +257,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string KeyContainsInvalidCharacters {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("KeyContainsInvalidCharacters", resourceCulture) ?? string.Empty;
             }
         }
@@ -287,7 +267,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string KeyHeader {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("KeyHeader", resourceCulture) ?? string.Empty;
             }
         }
@@ -298,7 +277,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string MoveToResource {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("MoveToResource", resourceCulture) ?? string.Empty;
             }
         }
@@ -309,7 +287,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string MoveToResourceEditNewEntry {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("MoveToResourceEditNewEntry", resourceCulture) ?? string.Empty;
             }
         }
@@ -320,7 +297,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string OpenInResXManager {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("OpenInResXManager", resourceCulture) ?? string.Empty;
             }
         }
@@ -331,7 +307,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string ProjectHasNoResourceFile {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ProjectHasNoResourceFile", resourceCulture) ?? string.Empty;
             }
         }
@@ -342,7 +317,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string ProjectHasReadOnlyFiles {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ProjectHasReadOnlyFiles", resourceCulture) ?? string.Empty;
             }
         }
@@ -353,7 +327,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string ResourceHeader {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ResourceHeader", resourceCulture) ?? string.Empty;
             }
         }
@@ -364,7 +337,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string ResourceLoadingError {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ResourceLoadingError", resourceCulture) ?? string.Empty;
             }
         }
@@ -395,7 +367,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string ShowErrorsConfiguration_Header {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ShowErrorsConfiguration_Header", resourceCulture) ?? string.Empty;
             }
         }
@@ -406,7 +377,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string ShowErrorsConfiguration_ShowAs {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ShowErrorsConfiguration_ShowAs", resourceCulture) ?? string.Empty;
             }
         }
@@ -417,7 +387,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string ShowErrorsConfiguration_SwitchHeader {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ShowErrorsConfiguration_SwitchHeader", resourceCulture) ?? string.Empty;
             }
         }
@@ -428,7 +397,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string ShowWhitespaceToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ShowWhitespaceToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -442,7 +410,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string ToolWindowTitle {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ToolWindowTitle", resourceCulture) ?? string.Empty;
             }
         }
@@ -453,7 +420,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string ValueHeader {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ValueHeader", resourceCulture) ?? string.Empty;
             }
         }
@@ -464,7 +430,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string Version {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Version", resourceCulture) ?? string.Empty;
             }
         }
@@ -475,7 +440,6 @@ namespace tomenglertde.ResXManager.VSIX {
         [NotNull]
         public static string Warning {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Warning", resourceCulture) ?? string.Empty;
             }
         }

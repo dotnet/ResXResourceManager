@@ -14,9 +14,10 @@
         [NotNull]
         public static readonly IValueConverter Default = new LanguageColumnFilterConverter();
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        [CanBeNull]
+        public object Convert([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
         {
-            var collectionViewSource = new CollectionViewSource() { Source = value };
+            var collectionViewSource = new CollectionViewSource { Source = value };
             var collectionView = collectionViewSource.View;
             if (collectionView != null)
                 collectionView.Filter = Filter;
@@ -29,7 +30,8 @@
             return ((DataGridColumn)item)?.Header is ILanguageColumnHeader;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        [CanBeNull]
+        public object ConvertBack([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
         {
             throw new NotImplementedException();
         }

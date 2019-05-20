@@ -1,8 +1,5 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     using JetBrains.Annotations;
@@ -19,9 +16,6 @@
 
         protected LanguageColumnHeaderBase([NotNull] Configuration configuration, [NotNull] CultureKey cultureKey)
         {
-            Contract.Requires(configuration != null);
-            Contract.Requires(cultureKey != null);
-
             _configuration = configuration;
             CultureKey = cultureKey;
         }
@@ -31,13 +25,5 @@
         public CultureInfo EffectiveCulture => CultureKey.Culture ?? _configuration.NeutralResourcesLanguage;
 
         public abstract ColumnType ColumnType { get; }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_configuration != null);
-        }
     }
 }

@@ -13,8 +13,8 @@
         [CanBeNull]
         public string FilterText
         {
-            get { return (string)GetValue(FilterTextProperty); }
-            set { SetValue(FilterTextProperty, value); }
+            get => (string)GetValue(FilterTextProperty);
+            set => SetValue(FilterTextProperty, value);
         }
         /// <summary>
         /// Identifies the <see cref="FilterText"/> dependency property
@@ -33,6 +33,7 @@
             listBox.Items.Filter = BuildFilter(value);
         }
 
+        [CanBeNull]
         public static Predicate<object> BuildFilter([CanBeNull] string value)
         {
             value = value?.Trim();

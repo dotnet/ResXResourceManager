@@ -1,10 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
-    using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
 
@@ -22,8 +18,6 @@
 
         public FileFilter([NotNull] Configuration configuration)
         {
-            Contract.Requires(configuration != null);
-
             _extensions = configuration.CodeReferences
                 .Items.SelectMany(item => item.ParseExtensions())
                 .Distinct()
@@ -40,14 +34,6 @@
         public bool IncludeFile(ProjectFile file)
         {
             return _fileExclusionFilter?.IsMatch(file.RelativeFilePath) != true;
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_extensions != null);
         }
     }
 }

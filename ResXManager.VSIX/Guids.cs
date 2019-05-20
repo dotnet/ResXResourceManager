@@ -13,5 +13,5 @@ namespace tomenglertde.ResXManager.VSIX
         public const string guidToolWindowPersistanceString = "79664857-03bf-4bca-aa54-ec998b3328f8";
 
         public static readonly Guid guidResXManager_VSIXCmdSet = new Guid(guidResXManager_VSIXCmdSetString);
-    };
+    }
 }

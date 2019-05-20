@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     using JetBrains.Annotations;
@@ -17,10 +16,6 @@
     {
         public ResourceScope([NotNull] object entries, [NotNull] object languages, [NotNull] object comments)
         {
-            Contract.Requires(entries != null);
-            Contract.Requires(languages != null);
-            Contract.Requires(comments != null);
-
             // ReSharper disable AssignNullToNotNullAttribute
             Entries = entries.PsObjectCast<object>().TryCast().Returning<IEnumerable<ResourceTableEntry>>()
                 .When<IEnumerable>(item => item.PsCast<ResourceTableEntry>().ToArray())
@@ -28,6 +23,7 @@
                 .Result;
 
             if (Entries == null)
+                // ReSharper disable once LocalizableElement
                 throw new ArgumentException("Invalid input", nameof(entries));
 
             Languages = languages.PsObjectCast<object>().TryCast().Returning<IEnumerable<CultureKey>>()
@@ -37,6 +33,7 @@
                 .Result;
 
             if (Languages == null)
+                // ReSharper disable once LocalizableElement
                 throw new ArgumentException("Invalid input", nameof(languages));
 
             Comments = comments.PsObjectCast<object>().TryCast().Returning<IEnumerable<CultureKey>>()
@@ -47,6 +44,7 @@
             // ReSharper restore AssignNullToNotNullAttribute
 
             if (Comments == null)
+                // ReSharper disable once LocalizableElement
                 throw new ArgumentException("Invalid input", nameof(comments));
         }
 
@@ -63,18 +61,12 @@
         [ItemNotNull]
         public static IEnumerable<T> PsCast<T>([NotNull][ItemNotNull] this IEnumerable items)
         {
-            Contract.Requires(items != null);
-            Contract.Ensures(Contract.Result<IEnumerable<T>>() != null);
-
             return items.OfType<object>().Select(PsObjectCast<T>);
         }
 
         [NotNull]
         public static T PsObjectCast<T>([NotNull] this object item)
         {
-            Contract.Requires(item != null);
-            Contract.Ensures(Contract.Result<T>() != null);
-
             var type = item.GetType();
 
             var value = type.Name == "PSObject" ? type.GetProperty("BaseObject")?.GetValue(item) : item;

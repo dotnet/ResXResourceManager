@@ -1,7 +1,5 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
-    using System.Diagnostics.Contracts;
-
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
@@ -13,8 +11,6 @@
         public CommentHeader([NotNull] Configuration configuration, [NotNull] CultureKey cultureKey)
             : base(configuration, cultureKey)
         {
-            Contract.Requires(configuration != null);
-            Contract.Requires(cultureKey != null);
         }
 
         public override ColumnType ColumnType => ColumnType.Comment;

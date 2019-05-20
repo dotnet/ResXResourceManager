@@ -3,9 +3,6 @@
     using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows;
 
@@ -27,16 +24,13 @@
         [ImportingConstructor]
         public AddNewKeyCommand([NotNull] ResourceViewModel resourceViewModel, [NotNull] ExportProvider exportProvider)
         {
-            Contract.Requires(resourceViewModel != null);
-            Contract.Requires(exportProvider != null);
-
             _resourceViewModel = resourceViewModel;
             _exportProvider = exportProvider;
 
             ExecuteCallback = InternalExecute;
         }
 
-        private void InternalExecute(DependencyObject parameter)
+        private void InternalExecute([CanBeNull] DependencyObject parameter)
         {
             if (_resourceViewModel.SelectedEntities.Count() != 1)
             {
@@ -45,7 +39,6 @@
             }
 
             var resourceFile = _resourceViewModel.SelectedEntities.Single();
-            Contract.Assume(resourceFile != null);
 
             if (resourceFile.IsWinFormsDesignerResource)
             {
@@ -57,7 +50,6 @@
                 return;
 
             var application = Application.Current;
-            Contract.Assume(application != null);
 
             var owner = parameter != null ? Window.GetWindow(parameter) : application.MainWindow;
 
@@ -78,9 +70,8 @@
                 return;
 
             var key = inputBox.Text;
-            Contract.Assume(!string.IsNullOrWhiteSpace(key));
+            // ReSharper disable once PossibleNullReferenceException
             key = key.Trim();
-            Contract.Assume(!string.IsNullOrEmpty(key));
 
             try
             {
@@ -90,15 +81,6 @@
             {
                 MessageBox.Show(ex.ToString(), Resources.Title, MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_resourceViewModel != null);
-            Contract.Invariant(_exportProvider != null);
         }
     }
 }

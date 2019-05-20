@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
 
@@ -16,14 +15,9 @@
         [ItemNotNull]
         public static IList<ProjectFile> GetAllSourceFiles([NotNull] this DirectoryInfo solutionFolder, [NotNull] IFileFilter fileFilter)
         {
-            Contract.Requires(solutionFolder != null);
-            Contract.Requires(fileFilter != null);
-            Contract.Ensures(Contract.Result<IList<ProjectFile>>() != null);
-
             var solutionFolderLength = solutionFolder.FullName.Length + 1;
 
             var fileInfos = solutionFolder.EnumerateFiles("*.*", SearchOption.AllDirectories);
-            Contract.Assume(fileInfos != null);
 
             var allProjectFiles = fileInfos
                 .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
@@ -59,7 +53,6 @@
 
                 foreach (var file in directoryFiles)
                 {
-                    Contract.Assume(file != null);
                     file.ProjectName = projectName;
                     file.UniqueProjectName = uniqueProjectName;
                 }
@@ -71,13 +64,9 @@
         [CanBeNull]
         private static FileInfo FindProject([NotNull] DirectoryInfo directory, [NotNull] string solutionFolder)
         {
-            Contract.Requires(directory != null);
-            Contract.Requires(solutionFolder != null);
-
             while ((directory != null) && (directory.FullName.Length >= solutionFolder.Length))
             {
                 var projectFiles = directory.EnumerateFiles(@"*.*proj", SearchOption.TopDirectoryOnly);
-                Contract.Assume(projectFiles != null);
 
                 var project = projectFiles.FirstOrDefault();
                 if (project != null)

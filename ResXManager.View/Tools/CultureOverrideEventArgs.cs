@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Tools
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     using JetBrains.Annotations;
@@ -10,9 +9,6 @@
     {
         public CultureOverrideEventArgs([NotNull] CultureInfo neutralCulture, [CanBeNull] CultureInfo specificCulture)
         {
-            Contract.Requires(neutralCulture != null);
-            Contract.Requires(specificCulture != null);
-
             SpecificCulture = specificCulture;
             NeutralCulture = neutralCulture;
         }

@@ -1,6 +1,5 @@
 ﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
 {
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     using JetBrains.Annotations;
@@ -14,8 +13,6 @@
         public LanguageHeader([NotNull] Configuration configuration, [NotNull] CultureKey cultureKey)
             : base(configuration, cultureKey)
         {
-            Contract.Requires(configuration != null);
-            Contract.Requires(cultureKey != null);
         }
 
         [NotNull]
@@ -23,8 +20,6 @@
         {
             get
             {
-                Contract.Ensures(Contract.Result<string>() != null);
-
                 var cultureInfo = CultureKey.Culture;
 
                 if (cultureInfo == null)

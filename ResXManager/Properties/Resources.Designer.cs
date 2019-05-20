@@ -21,7 +21,6 @@
 
 namespace tomenglertde.ResXManager.Properties {
     using System;
-    using System.Diagnostics.Contracts;
 
     using JetBrains.Annotations;
 
@@ -78,7 +77,6 @@ namespace tomenglertde.ResXManager.Properties {
         [NotNull]
         public static string AssemblyLocation {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("AssemblyLocation", resourceCulture) ?? string.Empty;
             }
         }
@@ -89,7 +87,6 @@ namespace tomenglertde.ResXManager.Properties {
         [NotNull]
         public static string IntroMessage {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("IntroMessage", resourceCulture) ?? string.Empty;
             }
         }
@@ -100,7 +97,6 @@ namespace tomenglertde.ResXManager.Properties {
         [NotNull]
         public static string ProjectHasNoResourceFile {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ProjectHasNoResourceFile", resourceCulture) ?? string.Empty;
             }
         }
@@ -111,7 +107,6 @@ namespace tomenglertde.ResXManager.Properties {
         [NotNull]
         public static string ProjectHasReadOnlyFiles {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ProjectHasReadOnlyFiles", resourceCulture) ?? string.Empty;
             }
         }
@@ -122,7 +117,6 @@ namespace tomenglertde.ResXManager.Properties {
         [NotNull]
         public static string QuerySaveChanges {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("QuerySaveChanges", resourceCulture) ?? string.Empty;
             }
         }
@@ -136,7 +130,6 @@ namespace tomenglertde.ResXManager.Properties {
         [NotNull]
         public static string Version {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Version", resourceCulture) ?? string.Empty;
             }
         }
@@ -147,7 +140,6 @@ namespace tomenglertde.ResXManager.Properties {
         [NotNull]
         public static string WarningUnsavedChanges {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("WarningUnsavedChanges", resourceCulture) ?? string.Empty;
             }
         }

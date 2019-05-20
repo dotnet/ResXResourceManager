@@ -25,8 +25,8 @@
 
         public bool? AreAllFilesSelected
         {
-            get { return (bool?)GetValue(AreAllFilesSelectedProperty); }
-            set { SetValue(AreAllFilesSelectedProperty, value); }
+            get => (bool?)GetValue(AreAllFilesSelectedProperty);
+            set => SetValue(AreAllFilesSelectedProperty, value);
         }
         /// <summary>
         /// Identifies the <see cref="AreAllFilesSelected"/> dependency property

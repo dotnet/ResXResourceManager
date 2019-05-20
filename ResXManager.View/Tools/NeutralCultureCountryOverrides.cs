@@ -2,9 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
 
@@ -31,15 +29,11 @@
         {
         }
 
-        public event EventHandler<CultureOverrideEventArgs> OverrideChanged;
-
         [CanBeNull]
         public CultureInfo this[[NotNull] CultureInfo neutralCulture]
         {
             get
             {
-                Contract.Requires(neutralCulture != null);
-
                 if (!_overrides.TryGetValue(neutralCulture, out var specificCulture))
                 {
                     specificCulture = GetDefaultSpecificCulture(neutralCulture);
@@ -49,9 +43,6 @@
             }
             set
             {
-                Contract.Requires(neutralCulture != null);
-                Contract.Requires(value != null);
-
                 if (Equals(value, GetDefaultSpecificCulture(neutralCulture)))
                 {
                     _overrides.Remove(neutralCulture);
@@ -61,21 +52,13 @@
                     _overrides[neutralCulture] = value;
                 }
 
-                OnOverrideChanged(new CultureOverrideEventArgs(neutralCulture, value));
                 WriteSettings();
             }
-        }
-
-        private void OnOverrideChanged([CanBeNull] CultureOverrideEventArgs e)
-        {
-            OverrideChanged?.Invoke(this, e);
         }
 
         [CanBeNull]
         private static CultureInfo GetDefaultSpecificCulture([NotNull] CultureInfo neutralCulture)
         {
-            Contract.Requires(neutralCulture != null);
-
             var cultureName = neutralCulture.Name;
             var specificCultures = neutralCulture.GetDescendants().ToArray();
 
@@ -95,8 +78,6 @@
         [NotNull]
         private static IEnumerable<KeyValuePair<CultureInfo, CultureInfo>> ReadSettings()
         {
-            Contract.Ensures(Contract.Result<IEnumerable<KeyValuePair<CultureInfo, CultureInfo>>>() != null);
-
             var neutralCultureCountryOverrides = (DefaultOverrides + Settings.Default.NeutralCultureCountyOverrides).Split(',');
 
             foreach (var item in neutralCultureCountryOverrides)
@@ -128,14 +109,6 @@
             var settings = string.Join(",", items);
 
             Settings.Default.NeutralCultureCountyOverrides = settings;
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_overrides != null);
         }
     }
 }

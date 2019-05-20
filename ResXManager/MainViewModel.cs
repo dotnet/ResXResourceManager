@@ -4,9 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.Composition;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -39,12 +36,6 @@
         [ImportingConstructor]
         public MainViewModel([NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, [NotNull] ResourceViewModel resourceViewModel, [NotNull] ITracer tracer, [NotNull] SourceFilesProvider sourceFilesProvider)
         {
-            Contract.Requires(resourceManager != null);
-            Contract.Requires(configuration != null);
-            Contract.Requires(resourceViewModel != null);
-            Contract.Requires(tracer != null);
-            Contract.Requires(sourceFilesProvider != null);
-
             ResourceManager = resourceManager;
             _configuration = configuration;
             _resourceViewModel = resourceViewModel;
@@ -151,8 +142,6 @@
 
         private bool CanEdit([NotNull] ResourceEntity entity, [CanBeNull] CultureKey cultureKey)
         {
-            Contract.Requires(entity != null);
-
             string message;
             var languages = entity.Languages.Where(lang => (cultureKey == null) || cultureKey.Equals(lang.CultureKey)).ToArray();
 
@@ -218,22 +207,7 @@
         [Localizable(false)]
         private static string FormatFileNames([NotNull][ItemNotNull] IEnumerable<string> lockedFiles)
         {
-            Contract.Requires(lockedFiles != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(ResourceManager != null);
-            Contract.Invariant(_tracer != null);
-            Contract.Invariant(SourceFilesProvider != null);
-            Contract.Invariant(_configuration != null);
-            Contract.Invariant(_resourceViewModel != null);
         }
     }
 
@@ -249,9 +223,6 @@
         [ImportingConstructor]
         public SourceFilesProvider([NotNull] Configuration configuration, [NotNull] PerformanceTracer performanceTracer)
         {
-            Contract.Requires(configuration != null);
-            Contract.Requires(performanceTracer != null);
-
             _configuration = configuration;
             _performanceTracer = performanceTracer;
         }
@@ -276,15 +247,6 @@
 
         public void Invalidate()
         {
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_configuration != null);
-            Contract.Invariant(_performanceTracer != null);
         }
     }
 }

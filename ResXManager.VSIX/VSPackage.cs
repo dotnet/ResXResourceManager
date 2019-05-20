@@ -122,7 +122,7 @@
         {
             await base.InitializeAsync(cancellationToken, progress).ConfigureAwait(false);
 
-            var loaderMessages = await System.Threading.Tasks.Task.Run(() => FillCatalog(), cancellationToken).ConfigureAwait(false);
+            var loaderMessages = await System.Threading.Tasks.Task.Run(FillCatalog, cancellationToken).ConfigureAwait(false);
 
             var menuCommandService = await GetServiceAsync(typeof(IMenuCommandService));
 
@@ -206,6 +206,7 @@
             //    .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
             //    .ToList();
 
+            // ReSharper disable once AssignNullToNotNullAttribute
             foreach (var file in Directory.EnumerateFiles(path, @"ResXManager.*.dll"))
             {
                 try
@@ -216,8 +217,6 @@
                 }
                 catch (ReflectionTypeLoadException ex)
                 {
-                    // ReSharper disable once AssignNullToNotNullAttribute
-                    // ReSharper disable once PossibleNullReferenceException
                     messages.Errors.Add("Assembly: " + Path.GetFileName(file) + " => " + string.Join("\n", ex.LoaderExceptions.Select(l => l.Message + ": " + (l.InnerException?.Message ?? string.Empty))));
                 }
                 catch (Exception ex)
@@ -365,6 +364,7 @@
         {
             var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
 
+            // ReSharper disable once AssignNullToNotNullAttribute
             var selection = monitorSelection.GetSelectedProjectItems();
 
             var entities = selection
@@ -408,7 +408,6 @@
             if (entry == null)
                 return;
 
-            // ReSharper disable once PossibleNullReferenceException
             if (!Properties.Settings.Default.MoveToResourceOpenInResXManager)
                 return;
 
@@ -485,7 +484,6 @@
                 // extract some localization information.
                 // => find the resource entity that contains the document and run the custom tool on the neutral project file.
 
-                // ReSharper disable once PossibleNullReferenceException
                 bool Predicate(ResourceEntity e) => e.Languages.Select(lang => lang.ProjectFile)
                     .OfType<DteProjectFile>()
                     .Any(projectFile => projectFile.ProjectItems.Any(p => p.Document == document));

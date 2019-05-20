@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System;
-    using System.Diagnostics.Contracts;
 
     using JetBrains.Annotations;
 
@@ -9,9 +8,6 @@
     {
         public ProjectFileEventArgs([NotNull] ResourceLanguage language, [NotNull] ProjectFile projectFile)
         {
-            Contract.Requires(language != null);
-            Contract.Requires(projectFile != null);
-
             Language = language;
             ProjectFile = projectFile;
         }

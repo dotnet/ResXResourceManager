@@ -102,7 +102,7 @@
       <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Height="16" VerticalAlignment="Top">
         <Decorator Width="14" />
         <CheckBox VerticalAlignment="Center"
-                  IsThreeState="True" IsChecked="{Binding AreAllFilesSelected, ElementName=selectAllBehavior}" Focusable="False"
+                  IsThreeState="True" IsChecked="{Binding AreAllFilesSelected, ElementName=SelectAllBehavior}" Focusable="False"
                   Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
         <Decorator Width="5" />
       </StackPanel>
@@ -172,7 +172,7 @@
       </ListBox.ContextMenu>
       <i:Interaction.Behaviors>
         <behaviors:EntityFilter FilterText="{Binding Text, ElementName=EntityFilter}" />
-        <behaviors:SelectAllBehavior x:Name="selectAllBehavior" />
+        <behaviors:SelectAllBehavior x:Name="SelectAllBehavior" />
       </i:Interaction.Behaviors>
     </ListBox>
 

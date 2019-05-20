@@ -21,7 +21,6 @@
 
 namespace tomenglertde.ResXManager.View.Properties {
     using System;
-    using System.Diagnostics.Contracts;
 
     using JetBrains.Annotations;
 
@@ -78,7 +77,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string AddEntryToWinFormsResourceWarning {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("AddEntryToWinFormsResourceWarning", resourceCulture) ?? string.Empty;
             }
         }
@@ -89,7 +87,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string AddKeyToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("AddKeyToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -100,7 +97,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string AddLanguageToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("AddLanguageToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -111,7 +107,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Authentication {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Authentication", resourceCulture) ?? string.Empty;
             }
         }
@@ -122,7 +117,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string AutoCreateNewLanguageFiles {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("AutoCreateNewLanguageFiles", resourceCulture) ?? string.Empty;
             }
         }
@@ -136,7 +130,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string CaseSensitive {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CaseSensitive", resourceCulture) ?? string.Empty;
             }
         }
@@ -147,7 +140,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string CellSelection {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CellSelection", resourceCulture) ?? string.Empty;
             }
         }
@@ -158,7 +150,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string CellSelectionToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CellSelectionToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -169,7 +160,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ChooseColumnsToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ChooseColumnsToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -180,7 +170,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string CodeReferencesToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CodeReferencesToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -191,7 +180,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string CodeReferencesTooManyDetailsToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CodeReferencesTooManyDetailsToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -202,7 +190,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string CodeReferenceTrackingInProgress {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CodeReferenceTrackingInProgress", resourceCulture) ?? string.Empty;
             }
         }
@@ -213,7 +200,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ColumnHeaderGripperToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ColumnHeaderGripperToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -224,7 +210,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Comment {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Comment", resourceCulture) ?? string.Empty;
             }
         }
@@ -235,7 +220,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string CommentColumnHeader {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CommentColumnHeader", resourceCulture) ?? string.Empty;
             }
         }
@@ -246,7 +230,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string CommentToken {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CommentToken", resourceCulture) ?? string.Empty;
             }
         }
@@ -257,7 +240,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Configuration_DuplicateKeyHandling {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Configuration_DuplicateKeyHandling", resourceCulture) ?? string.Empty;
             }
         }
@@ -268,7 +250,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Configuration_EmptyValueHandling {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Configuration_EmptyValueHandling", resourceCulture) ?? string.Empty;
             }
         }
@@ -279,7 +260,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Configuration_EmptyValueHandlingHeader {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Configuration_EmptyValueHandlingHeader", resourceCulture) ?? string.Empty;
             }
         }
@@ -290,7 +270,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Configuration_ExcelExportModeHeader {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Configuration_ExcelExportModeHeader", resourceCulture) ?? string.Empty;
             }
         }
@@ -301,7 +280,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Configuration_FileCreationHeader {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Configuration_FileCreationHeader", resourceCulture) ?? string.Empty;
             }
         }
@@ -312,7 +290,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Configuration_General {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Configuration_General", resourceCulture) ?? string.Empty;
             }
         }
@@ -323,7 +300,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Configuration_LoadSaveHeader {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Configuration_LoadSaveHeader", resourceCulture) ?? string.Empty;
             }
         }
@@ -334,7 +310,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ConfigurationScopeHeader {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ConfigurationScopeHeader", resourceCulture) ?? string.Empty;
             }
         }
@@ -345,7 +320,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ConfirmAddLanguage {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ConfirmAddLanguage", resourceCulture) ?? string.Empty;
             }
         }
@@ -356,7 +330,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ConfirmCutItems {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ConfirmCutItems", resourceCulture) ?? string.Empty;
             }
         }
@@ -367,7 +340,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ConfirmDeleteItems {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ConfirmDeleteItems", resourceCulture) ?? string.Empty;
             }
         }
@@ -378,7 +350,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Copy {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Copy", resourceCulture) ?? string.Empty;
             }
         }
@@ -389,7 +360,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string CopyToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CopyToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -400,7 +370,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string CreateSnapshot {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CreateSnapshot", resourceCulture) ?? string.Empty;
             }
         }
@@ -411,7 +380,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Cut {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Cut", resourceCulture) ?? string.Empty;
             }
         }
@@ -422,7 +390,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string CutToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("CutToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -433,7 +400,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Delete {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Delete", resourceCulture) ?? string.Empty;
             }
         }
@@ -444,7 +410,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string DeleteToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("DeleteToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -455,7 +420,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string DetectCodeReferences_Header {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("DetectCodeReferences_Header", resourceCulture) ?? string.Empty;
             }
         }
@@ -466,7 +430,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Diagnostics {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Diagnostics", resourceCulture) ?? string.Empty;
             }
         }
@@ -477,7 +440,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string DonateButtonToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("DonateButtonToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -488,7 +450,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string EditDefaultConfigurationNotification {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("EditDefaultConfigurationNotification", resourceCulture) ?? string.Empty;
             }
         }
@@ -499,7 +460,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string EditSolutionConfigurationNotification {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("EditSolutionConfigurationNotification", resourceCulture) ?? string.Empty;
             }
         }
@@ -510,7 +470,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Enabled {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Enabled", resourceCulture) ?? string.Empty;
             }
         }
@@ -521,7 +480,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ErrorAddingNewResourceFile {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ErrorAddingNewResourceFile", resourceCulture) ?? string.Empty;
             }
         }
@@ -532,7 +490,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ExportExcelAll {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ExportExcelAll", resourceCulture) ?? string.Empty;
             }
         }
@@ -543,7 +500,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ExportExcelSelection {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ExportExcelSelection", resourceCulture) ?? string.Empty;
             }
         }
@@ -554,7 +510,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string FileExclusionFilters_Header {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("FileExclusionFilters_Header", resourceCulture) ?? string.Empty;
             }
         }
@@ -565,7 +520,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string FileExtensions {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("FileExtensions", resourceCulture) ?? string.Empty;
             }
         }
@@ -576,7 +530,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string FindCodeReferencesButtonToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("FindCodeReferencesButtonToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -587,7 +540,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string FlatViewToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("FlatViewToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -598,7 +550,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string GroupedViewToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("GroupedViewToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -609,7 +560,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string HelpButtonToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("HelpButtonToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -620,7 +570,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ImportExcel {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ImportExcel", resourceCulture) ?? string.Empty;
             }
         }
@@ -631,7 +580,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ImportNormalizedTableExpected {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ImportNormalizedTableExpected", resourceCulture) ?? string.Empty;
             }
         }
@@ -642,7 +590,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string IndexColumnHeaderToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("IndexColumnHeaderToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -653,7 +600,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string IndexColumnToggleButtonToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("IndexColumnToggleButtonToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -664,7 +610,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string IndexColumnToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("IndexColumnToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -675,7 +620,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Invariant {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Invariant", resourceCulture) ?? string.Empty;
             }
         }
@@ -686,7 +630,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Key {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Key", resourceCulture) ?? string.Empty;
             }
         }
@@ -697,7 +640,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string LanguageConfiguration_Description {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("LanguageConfiguration_Description", resourceCulture) ?? string.Empty;
             }
         }
@@ -708,7 +650,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string LikeButtonToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("LikeButtonToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -719,7 +660,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string LoadSnapshot {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("LoadSnapshot", resourceCulture) ?? string.Empty;
             }
         }
@@ -730,7 +670,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string MultipleSelection {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("MultipleSelection", resourceCulture) ?? string.Empty;
             }
         }
@@ -741,7 +680,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string NeedSingleEntitySelection {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("NeedSingleEntitySelection", resourceCulture) ?? string.Empty;
             }
         }
@@ -752,7 +690,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Neutral {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Neutral", resourceCulture) ?? string.Empty;
             }
         }
@@ -763,7 +700,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string NeutralResourceLanguageHeader {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("NeutralResourceLanguageHeader", resourceCulture) ?? string.Empty;
             }
         }
@@ -774,7 +710,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string NewKeyPrompt {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("NewKeyPrompt", resourceCulture) ?? string.Empty;
             }
         }
@@ -785,7 +720,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string NewLanguageIdPrompt {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("NewLanguageIdPrompt", resourceCulture) ?? string.Empty;
             }
         }
@@ -796,7 +730,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string NoCodeReferencesToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("NoCodeReferencesToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -807,7 +740,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string NoResourceFileForResource {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("NoResourceFileForResource", resourceCulture) ?? string.Empty;
             }
         }
@@ -818,7 +750,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string NoSelection {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("NoSelection", resourceCulture) ?? string.Empty;
             }
         }
@@ -829,7 +760,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string OpenSourceOverlay_Confirmation {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("OpenSourceOverlay_Confirmation", resourceCulture) ?? string.Empty;
             }
         }
@@ -840,7 +770,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string OpenSourceOverlay_Message {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("OpenSourceOverlay_Message", resourceCulture) ?? string.Empty;
             }
         }
@@ -851,7 +780,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Paste {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Paste", resourceCulture) ?? string.Empty;
             }
         }
@@ -862,7 +790,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string PasteFailed {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("PasteFailed", resourceCulture) ?? string.Empty;
             }
         }
@@ -873,7 +800,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string PasteSelectionSizeMismatch {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("PasteSelectionSizeMismatch", resourceCulture) ?? string.Empty;
             }
         }
@@ -884,7 +810,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string PasteToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("PasteToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -895,7 +820,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Patterns {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Patterns", resourceCulture) ?? string.Empty;
             }
         }
@@ -906,7 +830,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string RefreshViewToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("RefreshViewToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -917,7 +840,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string RegularExpression {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("RegularExpression", resourceCulture) ?? string.Empty;
             }
         }
@@ -928,7 +850,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ResourceFilterToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ResourceFilterToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -939,7 +860,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string SaveFilesImmediatelyUponChange {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("SaveFilesImmediatelyUponChange", resourceCulture) ?? string.Empty;
             }
         }
@@ -950,7 +870,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string SelectedTotalToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("SelectedTotalToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -961,7 +880,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ShellTabHeader_Configuration {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ShellTabHeader_Configuration", resourceCulture) ?? string.Empty;
             }
         }
@@ -972,7 +890,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ShellTabHeader_Languages {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ShellTabHeader_Languages", resourceCulture) ?? string.Empty;
             }
         }
@@ -983,7 +900,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ShellTabHeader_Main {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ShellTabHeader_Main", resourceCulture) ?? string.Empty;
             }
         }
@@ -994,7 +910,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ShellTabHeader_Translate {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ShellTabHeader_Translate", resourceCulture) ?? string.Empty;
             }
         }
@@ -1005,7 +920,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ShowOnlyMissingToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ShowOnlyMissingToolTip", resourceCulture) ?? string.Empty;
             }
         }
@@ -1016,7 +930,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string ShowPerformanceTraces {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("ShowPerformanceTraces", resourceCulture) ?? string.Empty;
             }
         }
@@ -1027,7 +940,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string SortAllFilesNow {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("SortAllFilesNow", resourceCulture) ?? string.Empty;
             }
         }
@@ -1038,7 +950,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string SortBy {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("SortBy", resourceCulture) ?? string.Empty;
             }
         }
@@ -1049,7 +960,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string SortNodesByKey {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("SortNodesByKey", resourceCulture) ?? string.Empty;
             }
         }
@@ -1060,7 +970,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string SortNodesByKey_Confirmation {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("SortNodesByKey_Confirmation", resourceCulture) ?? string.Empty;
             }
         }
@@ -1074,7 +983,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Title {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Title", resourceCulture) ?? string.Empty;
             }
         }
@@ -1085,7 +993,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Translations_ApplyAll {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Translations_ApplyAll", resourceCulture) ?? string.Empty;
             }
         }
@@ -1096,7 +1003,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Translations_ApplySelected {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Translations_ApplySelected", resourceCulture) ?? string.Empty;
             }
         }
@@ -1107,7 +1013,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Translations_Restart {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Translations_Restart", resourceCulture) ?? string.Empty;
             }
         }
@@ -1118,7 +1023,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Translations_Source {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Translations_Source", resourceCulture) ?? string.Empty;
             }
         }
@@ -1129,7 +1033,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Translations_Stop {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Translations_Stop", resourceCulture) ?? string.Empty;
             }
         }
@@ -1140,7 +1043,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string Translations_Targets {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("Translations_Targets", resourceCulture) ?? string.Empty;
             }
         }
@@ -1151,7 +1053,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string TranslationsPrefixHeader {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("TranslationsPrefixHeader", resourceCulture) ?? string.Empty;
             }
         }
@@ -1162,7 +1063,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string TranslatorConfiguration_SaveCredentials {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("TranslatorConfiguration_SaveCredentials", resourceCulture) ?? string.Empty;
             }
         }
@@ -1173,7 +1073,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string UnloadSnapshot {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("UnloadSnapshot", resourceCulture) ?? string.Empty;
             }
         }
@@ -1184,7 +1083,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         [NotNull]
         public static string WrapLongLinesToolTip {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("WrapLongLinesToolTip", resourceCulture) ?? string.Empty;
             }
         }

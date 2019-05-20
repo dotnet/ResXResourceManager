@@ -4,9 +4,6 @@
     using System.ComponentModel;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Windows;
@@ -30,8 +27,6 @@
         [ImportingConstructor]
         public LanguageConfigurationView([NotNull] ExportProvider exportProvider)
         {
-            Contract.Requires(exportProvider != null);
-
             try
             {
                 this.SetExportProvider(exportProvider);
@@ -55,19 +50,12 @@
             NeutralCultureCountryOverrides.Default[neutralCulture] = specificCulture;
             ListBox.Items.Refresh();
         }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(ListBox != null);
-        }
     }
 
     public class CultureInfoGroupDescription : GroupDescription
     {
-        public override object GroupNameFromItem(object item, int level, CultureInfo culture)
+        [CanBeNull]
+        public override object GroupNameFromItem([CanBeNull] object item, int level, CultureInfo culture)
         {
             var cultureItem = item as CultureInfo;
 

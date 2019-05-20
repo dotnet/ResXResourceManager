@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Behaviors
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -17,8 +16,8 @@
         [CanBeNull]
         public DataGrid DataGrid
         {
-            get { return (DataGrid)GetValue(DataGridProperty); }
-            set { SetValue(DataGridProperty, value); }
+            get => (DataGrid)GetValue(DataGridProperty);
+            set => SetValue(DataGridProperty, value);
         }
         /// <summary>
         /// Identifies the DataGrid dependency property
@@ -42,20 +41,10 @@
         }
 
         [CanBeNull]
-        private TextBox TextBox
-        {
-            get
-            {
-                Contract.Ensures((AssociatedObject == null) || (Contract.Result<TextBox>() != null));
-
-                return AssociatedObject;
-            }
-        }
+        private TextBox TextBox => AssociatedObject;
 
         private void DataGrid_CurrentCellChanged([NotNull] object sender, [NotNull] EventArgs e)
         {
-            Contract.Requires(sender != null);
-
             var textBox = TextBox;
             if (textBox == null)
                 return;

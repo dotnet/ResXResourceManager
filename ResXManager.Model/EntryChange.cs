@@ -1,8 +1,5 @@
 namespace tomenglertde.ResXManager.Model
 {
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     using JetBrains.Annotations;
@@ -11,8 +8,6 @@ namespace tomenglertde.ResXManager.Model
     {
         public EntryChange([NotNull] ResourceTableEntry entry, [CanBeNull] string text, [CanBeNull] CultureInfo culture, ColumnKind columnKind, [CanBeNull] string originalText)
         {
-            Contract.Requires(entry != null);
-
             Entry = entry;
             Text = text;
             Culture = culture;
@@ -33,13 +28,5 @@ namespace tomenglertde.ResXManager.Model
 
         [CanBeNull]
         public string OriginalText { get; }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(Entry != null);
-        }
     }
 }

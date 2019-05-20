@@ -8,7 +8,7 @@
 
     public class ExcelRange
     {
-        [CanBeNull]
+        [NotNull]
         private static readonly Regex _rangeRegex = new Regex(@"(((?<sheetName>\w+)|('(?<sheetName>.*?)'))!)?\$?(?<startColumn>[A-Z]+)\$?(?<startRow>[0-9]*)(:\$?(?<endColumn>[A-Z]+)\$?(?<endRow>[0-9]*))?");
 
         public ExcelRange([CanBeNull] string definition)

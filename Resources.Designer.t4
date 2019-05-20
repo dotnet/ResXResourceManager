@@ -41,7 +41,6 @@
 
 namespace <#= localNamespace #> {
     using System;
-    using System.Diagnostics.Contracts;
 
     using JetBrains.Annotations;
 
@@ -105,7 +104,6 @@ namespace <#= localNamespace #> {
         [NotNull]
         public static string <#= node.Key #> {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("<#= node.Key #>", resourceCulture) ?? string.Empty;
             }
         }

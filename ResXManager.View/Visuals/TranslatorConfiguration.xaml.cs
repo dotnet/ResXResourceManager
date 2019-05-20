@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -23,8 +22,8 @@
         [CanBeNull]
         public IEnumerable<ITranslator> Translators
         {
-            get { return (IEnumerable<ITranslator>)GetValue(TranslatorsProperty); }
-            set { SetValue(TranslatorsProperty, value); }
+            get => (IEnumerable<ITranslator>)GetValue(TranslatorsProperty);
+            set => SetValue(TranslatorsProperty, value);
         }
         /// <summary>
         /// Identifies the <see cref="Translators"/> dependency property
@@ -35,8 +34,6 @@
 
         private void TabControl_Loaded([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
-            Contract.Requires(sender != null);
-
             var tabControl = (TabControl)sender;
             tabControl.SelectedIndex = 0;
         }

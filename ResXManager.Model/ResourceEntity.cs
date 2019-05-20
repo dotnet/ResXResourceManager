@@ -3,9 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
 
@@ -32,13 +29,6 @@
 
         internal ResourceEntity([NotNull] ResourceManager container, [NotNull] string projectName, [NotNull] string baseName, [NotNull] string directoryName, [NotNull][ItemNotNull] ICollection<ProjectFile> files)
         {
-            Contract.Requires(container != null);
-            Contract.Requires(!string.IsNullOrEmpty(projectName));
-            Contract.Requires(!string.IsNullOrEmpty(baseName));
-            Contract.Requires(!string.IsNullOrEmpty(directoryName));
-            Contract.Requires(files != null);
-            Contract.Requires(files.Any());
-
             Container = container;
             ProjectName = projectName;
             BaseName = baseName;
@@ -57,15 +47,10 @@
             _resourceTableEntries = new ObservableCollection<ResourceTableEntry>(entriesQuery);
 
             Entries = new ReadOnlyObservableCollection<ResourceTableEntry>(_resourceTableEntries);
-
-            Contract.Assume(_languages.Any());
         }
 
         internal bool Update([NotNull, ItemNotNull] ICollection<ProjectFile> files)
         {
-            Contract.Requires(files != null);
-            Contract.Requires(files.Any());
-
             if (!MergeItems(_languages, GetResourceLanguages(files)))
                 return false; // nothing has changed, no need to continue
 
@@ -82,19 +67,14 @@
 
             foreach (var key in keys)
             {
-                Contract.Assume(!string.IsNullOrEmpty(key));
                 var existingEntry = _resourceTableEntries.FirstOrDefault(entry => entry.Key == key);
                 if (existingEntry != null)
                 {
-                    Contract.Assume(_languages.Any());
-
                     existingEntry.Update(index);
                     unmatchedTableEntries.Remove(existingEntry);
                 }
                 else
                 {
-                    Contract.Assume(_languages.Any());
-
                     _resourceTableEntries.Add(new ResourceTableEntry(this, key, index, _languages));
                 }
 
@@ -111,9 +91,6 @@
         [NotNull]
         private static string GetRelativePath([NotNull][ItemNotNull] ICollection<ProjectFile> files)
         {
-            Contract.Requires(files != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
             var uniqueProjectName = files.Select(file => file.UniqueProjectName).FirstOrDefault();
             if (uniqueProjectName == null)
                 return string.Empty;
@@ -193,11 +170,8 @@
         /// <param name="item">The item.</param>
         public void Remove([NotNull] ResourceTableEntry item)
         {
-            Contract.Requires(item != null);
-
             foreach (var language in _languages.Values)
             {
-                Contract.Assume(language != null);
                 language.RemoveKey(item.Key);
             }
 
@@ -211,13 +185,10 @@
         [CanBeNull]
         public ResourceTableEntry Add([NotNull] string key)
         {
-            Contract.Requires(!string.IsNullOrEmpty(key));
-
             if (!_languages.Any() || !_languages.Values.Any())
                 return null;
 
             var firstLanguage = _languages.Values.First();
-            Contract.Assume(firstLanguage != null);
 
             firstLanguage.ForceValue(key, string.Empty); // force an entry in the neutral language resource file.
             var index = Math.Floor(_resourceTableEntries.Select(entry => entry.Index).DefaultIfEmpty().Max()) + 1;
@@ -231,11 +202,8 @@
         /// Adds the language represented by the specified file.
         /// </summary>
         /// <param name="file">The file.</param>
-        /// <param name="duplicateKeyHandling">How to handle duplicate keys.</param>
         public void AddLanguage([NotNull] ProjectFile file)
         {
-            Contract.Requires(file != null);
-
             var cultureKey = file.GetCultureKey(Container.Configuration);
             var resourceLanguage = new ResourceLanguage(this, cultureKey, file);
 
@@ -257,8 +225,6 @@
 
         internal void OnIndexChanged([NotNull] ResourceTableEntry resourceTableEntry)
         {
-            Contract.Requires(resourceTableEntry != null);
-
             var previousEntries = _resourceTableEntries
                 .Where(entry => entry.Index < resourceTableEntry.Index)
                 .Reverse()
@@ -272,16 +238,12 @@
 
             foreach (var language in _languages.Values)
             {
-                Contract.Assume(language != null);
-
                 language.MoveNode(resourceTableEntry, previousEntries);
             }
         }
 
         public void OnItemOrderChanged([NotNull] ResourceLanguage resourceLanguage)
         {
-            Contract.Requires(resourceLanguage != null);
-
             if (resourceLanguage.CultureKey != CultureKey.Neutral)
                 return;
 
@@ -308,11 +270,6 @@
         [NotNull]
         private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages([NotNull][ItemNotNull] IEnumerable<ProjectFile> files)
         {
-            Contract.Requires(files != null);
-            Contract.Requires(files.Any());
-            Contract.Ensures(Contract.Result<IDictionary<CultureKey, ResourceLanguage>>() != null);
-            Contract.Ensures(Contract.Result<IDictionary<CultureKey, ResourceLanguage>>().Any());
-
             var languageQuery =
                 from file in files
                 let cultureKey = file.GetCultureKey(Container.Configuration)
@@ -321,21 +278,17 @@
 
             var languages = languageQuery.ToDictionary(language => language.CultureKey);
 
-            Contract.Assume(languages.Any());
-
             return languages;
         }
 
         private bool MergeItems([NotNull] IDictionary<CultureKey, ResourceLanguage> targets, [NotNull] IDictionary<CultureKey, ResourceLanguage> sources)
         {
-            Contract.Requires(targets != null);
-            Contract.Requires(sources != null);
-
             var removedLanguages = targets.Keys
                 .Except(sources.Keys)
                 .ToArray();
 
             removedLanguages
+                // ReSharper disable once ImplicitlyCapturedClosure
                 .ForEach(key => targets.Remove(key));
 
             var hasChanges = UpdateChangedEntries(targets, sources);
@@ -351,9 +304,6 @@
 
         private bool UpdateChangedEntries([NotNull] IDictionary<CultureKey, ResourceLanguage> targets, [NotNull] IDictionary<CultureKey, ResourceLanguage> sources)
         {
-            Contract.Requires(targets != null);
-            Contract.Requires(sources != null);
-
             var hasChanges = false;
 
             foreach (var targetItem in targets.ToArray())
@@ -379,22 +329,6 @@
             }
 
             return hasChanges;
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(Container != null);
-            Contract.Invariant(_languages != null);
-            Contract.Invariant(_resourceTableEntries != null);
-            Contract.Invariant(Entries != null);
-            Contract.Invariant(!string.IsNullOrEmpty(ProjectName));
-            Contract.Invariant(!string.IsNullOrEmpty(BaseName));
-            Contract.Invariant(!string.IsNullOrEmpty(DirectoryName));
-            Contract.Invariant(DisplayName != null);
-            Contract.Invariant(RelativePath != null);
         }
     }
 }

@@ -4,9 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Runtime.CompilerServices;
@@ -40,7 +38,7 @@
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
 
         // the key actually stored in the file, identical to Key if no error occurred.
-        [CanBeNull]
+        [NotNull]
         private string _storedKey;
 
         // the last validation error
@@ -56,11 +54,6 @@
         /// <param name="languages">The localized values.</param>
         internal ResourceTableEntry([NotNull] ResourceEntity container, [NotNull] string key, double index, [NotNull] IDictionary<CultureKey, ResourceLanguage> languages)
         {
-            Contract.Requires(container != null);
-            Contract.Requires(!string.IsNullOrEmpty(key));
-            Contract.Requires(languages != null);
-            Contract.Requires(languages.Any());
-
             Container = container;
             _storedKey = key;
 
@@ -136,8 +129,6 @@
             if (_storedKey == value)
                 return;
 
-            Contract.Assume(_storedKey != null);
-
             var resourceLanguages = _languages.Values;
 
             if (!resourceLanguages.All(language => language.CanEdit()))
@@ -154,7 +145,6 @@
 
             foreach (var language in resourceLanguages)
             {
-                Contract.Assume(language != null);
                 language.RenameKey(_storedKey, value);
             }
 
@@ -164,13 +154,12 @@
         }
 
         [NotNull]
-        // ReSharper disable once AssignNullToNotNullAttribute
         public ResourceLanguage NeutralLanguage => _languages.First().Value;
 
         /// <summary>
         /// Gets or sets the comment of the neutral language.
         /// </summary>
-        [NotNull]
+        [CanBeNull]
         [DependsOn(nameof(Comments))]
         public string Comment
         {
@@ -233,15 +222,11 @@
 
         private bool GetIsInvariant([NotNull] CultureKey culture)
         {
-            Contract.Requires(culture != null);
-
             return Comments.GetValue(culture)?.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private bool SetIsInvariant([NotNull] CultureKey culture, bool value)
         {
-            Contract.Requires(culture != null);
-
             var comment = Comments.GetValue(culture);
 
             if (value)
@@ -306,22 +291,16 @@
 
         public bool HasStringFormatParameterMismatches([NotNull][ItemNotNull] IEnumerable<object> cultures)
         {
-            Contract.Requires(cultures != null);
-
             return HasStringFormatParameterMismatches(cultures.Select(CultureKey.Parse).Select(lang => Values.GetValue(lang)));
         }
 
         public bool HasSnapshotDifferences([NotNull][ItemNotNull] IEnumerable<object> cultures)
         {
-            Contract.Requires(cultures != null);
-
             return Snapshot != null && cultures.Select(CultureKey.Parse).Any(IsSnapshotDifferent);
         }
 
         private bool IsSnapshotDifferent([NotNull] CultureKey culture)
         {
-            Contract.Requires(culture != null);
-
             if (Snapshot == null)
                 return false;
 
@@ -366,9 +345,6 @@
         [ItemNotNull]
         private ICollection<string> GetValueAnnotations([NotNull] ResourceLanguage language)
         {
-            Contract.Requires(language != null);
-            Contract.Ensures(Contract.Result<ICollection<string>>() != null);
-
             var cultureKey = language.CultureKey;
 
             var value = Values.GetValue(cultureKey);
@@ -379,10 +355,8 @@
                 .ToArray();
         }
 
-        public bool GetError([NotNull] CultureKey culture, out string errorMessage)
+        public bool GetError([NotNull] CultureKey culture, [CanBeNull] out string errorMessage)
         {
-            Contract.Requires(culture != null);
-
             errorMessage = null;
 
             var value = Values.GetValue(culture);
@@ -428,9 +402,6 @@
         [NotNull, ItemNotNull]
         private IEnumerable<string> GetInvariantMismatches([NotNull] CultureKey culture, [CanBeNull] string value)
         {
-            Contract.Requires(culture != null);
-            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-
             if (culture == CultureKey.Neutral)
                 yield break;
 
@@ -444,9 +415,6 @@
         [ItemNotNull]
         private ICollection<string> GetCommentAnnotations([NotNull] ResourceLanguage language)
         {
-            Contract.Requires(language != null);
-            Contract.Ensures(Contract.Result<ICollection<string>>() != null);
-
             return GetSnapshotDifferences(language, Comments.GetValue(language.CultureKey), d => d.Comment)
                 .ToArray();
         }
@@ -454,10 +422,6 @@
         [NotNull, ItemNotNull]
         private IEnumerable<string> GetSnapshotDifferences([NotNull] ResourceLanguage language, [CanBeNull] string current, [NotNull] Func<ResourceData, string> selector)
         {
-            Contract.Requires(language != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-
             var snapshot = Snapshot;
             if (snapshot == null)
                 yield break;
@@ -472,9 +436,6 @@
         [NotNull, ItemNotNull]
         private IEnumerable<string> GetStringFormatParameterMismatchAnnotations([NotNull] ResourceLanguage language)
         {
-            Contract.Requires(language != null);
-            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-
             if (language.IsNeutralLanguage)
                 yield break;
 
@@ -492,15 +453,11 @@
 
         private static bool HasStringFormatParameterMismatches([NotNull][ItemNotNull] params string[] values)
         {
-            Contract.Requires(values != null);
-
             return HasStringFormatParameterMismatches((IEnumerable<string>)values);
         }
 
         private static bool HasStringFormatParameterMismatches([NotNull][ItemNotNull] IEnumerable<string> values)
         {
-            Contract.Requires(values != null);
-
             values = values.Where(value => !string.IsNullOrEmpty(value)).ToArray();
 
             if (!values.Any())
@@ -533,28 +490,10 @@
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        string IDataErrorInfo.this[string columnName] => columnName != nameof(Key) ? null : _keyValidationError;
+        [CanBeNull]
+        string IDataErrorInfo.this[[CanBeNull] string columnName] => columnName != nameof(Key) ? null : _keyValidationError;
 
+        [CanBeNull]
         string IDataErrorInfo.Error => null;
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_duplicateKeyExpression != null);
-            Contract.Invariant(!string.IsNullOrEmpty(Key));
-            Contract.Invariant(Values != null);
-            Contract.Invariant(Comments != null);
-            Contract.Invariant(SnapshotValues != null);
-            Contract.Invariant(SnapshotComments != null);
-            Contract.Invariant(FileExists != null);
-            Contract.Invariant(ValueAnnotations != null);
-            Contract.Invariant(CommentAnnotations != null);
-            Contract.Invariant(NeutralLanguage != null);
-            Contract.Invariant(Container != null);
-            Contract.Invariant(_languages != null);
-            Contract.Invariant(_stringFormatParameterPattern != null);
-        }
     }
 }

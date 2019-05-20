@@ -6,7 +6,7 @@
 
     public static class Appearance
     {
-        [CanBeNull]
+        [NotNull]
         public static readonly DependencyProperty TextFontSizeProperty =
             DependencyProperty.RegisterAttached("TextFontSize", typeof(double), typeof(Appearance), new FrameworkPropertyMetadata(12.0, FrameworkPropertyMetadataOptions.Inherits));
     }

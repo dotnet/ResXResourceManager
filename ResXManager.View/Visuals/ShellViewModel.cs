@@ -2,7 +2,6 @@
 {
     using System.Collections.Specialized;
     using System.ComponentModel.Composition;
-    using System.Diagnostics.Contracts;
     using System.Windows.Threading;
 
     using JetBrains.Annotations;
@@ -26,8 +25,6 @@
         [ImportingConstructor]
         public ShellViewModel([NotNull] ResourceViewModel resourceViewModel)
         {
-            Contract.Requires(resourceViewModel != null);
-
             _resourceViewModel = resourceViewModel;
 
             resourceViewModel.SelectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;

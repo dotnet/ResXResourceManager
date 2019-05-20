@@ -81,7 +81,7 @@
                   <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=NavigateUri}"></Setter>
                 </Style>
               </Decorator.Resources>
-              <StackPanel xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+              <StackPanel>
                 <TextBlock FontWeight="Bold" FontSize="20">This is a community driven Open Source project.</TextBlock>
                 <Decorator Height="10"/>
                 <TextBlock>As such it needs your support to keep it alive and evolving.</TextBlock>

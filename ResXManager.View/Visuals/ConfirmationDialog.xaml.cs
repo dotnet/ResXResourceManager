@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel.Composition.Hosting;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -26,8 +25,6 @@
 
         public static bool? Show([NotNull] ExportProvider exportProvider, [CanBeNull] object content, [CanBeNull] string title)
         {
-            Contract.Requires(exportProvider != null);
-
             var window = new Window
             {
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
@@ -48,14 +45,7 @@
         }
 
         [NotNull]
-        public ICommand CommitCommand
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ICommand>() != null);
-                return new DelegateCommand(CanCommit, Commit);
-            }
-        }
+        public ICommand CommitCommand => new DelegateCommand(CanCommit, Commit);
 
         private void Commit()
         {

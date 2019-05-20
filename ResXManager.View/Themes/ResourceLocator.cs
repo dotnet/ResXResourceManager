@@ -4,9 +4,12 @@
 
     using DataGridExtensions;
 
+    using JetBrains.Annotations;
+
     public class ResourceLocator : IResourceLocator
     {
-        public object FindResource(FrameworkElement target, object resourceKey)
+        [CanBeNull]
+        public object FindResource([CanBeNull] FrameworkElement target, [CanBeNull] object resourceKey)
         {
             var crk = resourceKey as ComponentResourceKey;
 

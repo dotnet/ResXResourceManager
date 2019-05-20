@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
 
@@ -26,13 +25,10 @@
         [NotNull, ItemNotNull]
         public IEnumerable<string> ParseExtensions()
         {
-            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-
             if (string.IsNullOrEmpty(Extensions))
                 return Enumerable.Empty<string>();
 
             return Extensions.Split(',')
-                // ReSharper disable once PossibleNullReferenceException
                 .Select(ext => ext.Trim())
                 .Where(ext => !string.IsNullOrEmpty(ext));
         }
@@ -44,7 +40,6 @@
         [NotifyPropertyChangedInvocator, UsedImplicitly]
         private void OnPropertyChanged([NotNull] string propertyName)
         {
-            Contract.Requires(propertyName != null);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 

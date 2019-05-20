@@ -5,9 +5,6 @@
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel.Composition;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows.Input;
 
@@ -39,11 +36,6 @@
         [ImportingConstructor]
         public TranslationsViewModel([NotNull] TranslatorHost translatorHost, [NotNull] ResourceManager resourceManager, [NotNull] ResourceViewModel resourceViewModel, [NotNull] Configuration configuration)
         {
-            Contract.Requires(translatorHost != null);
-            Contract.Requires(resourceManager != null);
-            Contract.Requires(resourceViewModel != null);
-            Contract.Requires(configuration != null);
-
             _translatorHost = translatorHost;
             _resourceManager = resourceManager;
             _resourceViewModel = resourceViewModel;
@@ -132,14 +124,10 @@
 
         private void Apply([NotNull, ItemNotNull] IEnumerable<ITranslationItem> items)
         {
-            Contract.Requires(items != null);
-
             var prefix = Configuration.EffectiveTranslationPrefix;
 
             foreach (var item in items.Where(item => !string.IsNullOrEmpty(item.Translation)).ToArray())
             {
-                Contract.Assume(item != null);
-
                 if (!item.Apply(prefix))
                     break;
 
@@ -157,8 +145,6 @@
         {
             get
             {
-                Contract.Ensures(Contract.Result<IEnumerable<CultureKey>>() != null);
-
                 return (Settings.Default.TranslationUnselectedTargetCultures ?? string.Empty)
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(c => c.ToCultureKey())
@@ -166,8 +152,6 @@
             }
             set
             {
-                Contract.Requires(value != null);
-
                 Settings.Default.TranslationUnselectedTargetCultures = string.Join(",", value.Select(c => c.ToString(".")));
             }
         }
@@ -198,10 +182,6 @@
         [NotNull, ItemNotNull]
         private static ICollection<ITranslationItem> GetItemsToTranslate([NotNull, ItemNotNull] IEnumerable<ResourceTableEntry> resourceTableEntries, [CanBeNull] CultureKey sourceCulture, [NotNull, ItemNotNull] ICollection<CultureKey> targetCultures, [CanBeNull] string translationPrefix)
         {
-            Contract.Requires(resourceTableEntries != null);
-            Contract.Requires(targetCultures != null);
-            Contract.Ensures(Contract.Result<IEnumerable<ITranslationItem>>() != null);
-
             // #1: all entries that are not invariant and have a valid value in the source culture
             var allEntriesWithSourceValue = resourceTableEntries
                 .Where(entry => !entry.IsInvariant)
@@ -233,8 +213,6 @@
                 .Select(item => new TranslationItem(item.Entry, item.Source, item.TargetCulture))
                 .ToArray();
 
-            Contract.Assume(itemsToTranslate != null);
-
             // #4: apply existing translations
             foreach (var targetCulture in targetCultures)
             {
@@ -248,12 +226,12 @@
                     .Where(item => item.TargetCulture == targetCulture)
                     .ForAll(item =>
                     {
-                        if (itemsWithTranslations.TryGetValue(item.Source, out var translations))
+                        if (!itemsWithTranslations.TryGetValue(item.Source, out var translations))
+                            return;
+
+                        foreach (var translation in translations.GroupBy(t => t.Target))
                         {
-                            foreach (var translation in translations.GroupBy(t => t.Target))
-                            {
-                                item.Results.Add(new TranslationMatch(null, translation.Key, translation.Count()));
-                            }
+                            item.Results.Add(new TranslationMatch(null, translation.Key, translation.Count()));
                         }
                     });
             }
@@ -267,18 +245,5 @@
         }
 
         public override string ToString() => Resources.ShellTabHeader_Translate;
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_translatorHost != null);
-            Contract.Invariant(_resourceManager != null);
-            Contract.Invariant(_resourceViewModel != null);
-            Contract.Invariant(Configuration != null);
-            Contract.Invariant(Items != null);
-            Contract.Invariant(AllTargetCultures != null);
-        }
     }
 }

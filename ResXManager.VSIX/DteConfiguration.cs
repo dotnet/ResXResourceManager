@@ -3,9 +3,6 @@
     using System;
     using System.ComponentModel;
     using System.ComponentModel.Composition;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     using JetBrains.Annotations;
 
@@ -27,9 +24,6 @@
         public DteConfiguration([NotNull] DteSolution solution, [NotNull] ITracer tracer)
             : base(tracer)
         {
-            Contract.Requires(solution != null);
-            Contract.Requires(tracer != null);
-
             _solution = solution;
         }
 
@@ -49,12 +43,13 @@
 
         public override ConfigurationScope Scope => _solution.Globals != null ? ConfigurationScope.Solution : ConfigurationScope.Global;
 
-        protected override T InternalGetValue<T>(T defaultValue, string key)
+        [CanBeNull]
+        protected override T InternalGetValue<T>([CanBeNull] T defaultValue, string key)
         {
             return TryGetValue(GetKey(key), defaultValue, out var value) ? value : base.InternalGetValue(defaultValue, key);
         }
 
-        protected override void InternalSetValue<T>(T value, string key)
+        protected override void InternalSetValue<T>([CanBeNull] T value, string key)
         {
             var globals = _solution.Globals;
 
@@ -87,7 +82,7 @@
             }
             catch
             {
-                // Just return false in case of errors. If there is some garbage in the solution, falback to the default.
+                // Just return false in case of errors. If there is some garbage in the solution, fallback to the default.
             }
 
             return false;
@@ -95,8 +90,6 @@
 
         private void TrySetValue<T>([NotNull] EnvDTE.Globals globals, [CanBeNull] string internalKey, [CanBeNull] T value)
         {
-            Contract.Requires(globals != null);
-
             try
             {
                 globals[internalKey] = ConvertToString(value);
@@ -111,17 +104,7 @@
         [NotNull]
         private static string GetKey([CanBeNull] string propertyName)
         {
-            Contract.Ensures(Contract.Result<string>() != null);
-
             return @"RESX_" + propertyName;
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_solution != null);
         }
     }
 }

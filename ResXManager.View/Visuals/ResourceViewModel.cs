@@ -84,7 +84,6 @@
             {
                 CollectionView collectionView = new ListCollectionView((IList)ResourceTableEntries);
 
-                // ReSharper disable once PossibleNullReferenceException
                 collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Container"));
 
                 return collectionView;
@@ -190,7 +189,6 @@
         }
 
         [NotNull]
-        // ReSharper disable once AssignNullToNotNullAttribute
         private static Settings Settings => Settings.Default;
 
         private void LoadSnapshot([CanBeNull] string fileName)

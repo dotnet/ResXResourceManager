@@ -3,7 +3,6 @@
     using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
-    using System.Diagnostics.Contracts;
 
     using JetBrains.Annotations;
 
@@ -21,8 +20,6 @@
         [ImportingConstructor]
         public MainView([NotNull] ExportProvider exportProvider)
         {
-            Contract.Requires(exportProvider != null);
-
             try
             {
                 this.SetExportProvider(exportProvider);

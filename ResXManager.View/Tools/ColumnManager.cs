@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Windows;
@@ -62,11 +61,6 @@
 
         public static void SetupColumns([NotNull] this DataGrid dataGrid, [NotNull] ResourceManager resourceManager, [NotNull] ResourceViewModel resourceViewModel, [NotNull] Configuration configuration)
         {
-            Contract.Requires(dataGrid != null);
-            Contract.Requires(resourceManager != null);
-            Contract.Requires(resourceViewModel != null);
-            Contract.Requires(configuration != null);
-
             var dataGridEvents = dataGrid.GetAdditionalEvents();
 
             dataGridEvents.ColumnVisibilityChanged -= DataGrid_ColumnVisibilityChanged;
@@ -88,27 +82,23 @@
 
             IEnumerable<CultureKey> cultureKeys = resourceManager.Cultures;
 
-            var disconnectedColumns = languageColumns.Where(col => cultureKeys.All(cultureKey => !Equals(col.GetCultureKey(), cultureKey)));
+            var disconnectedColumns = languageColumns.Where(col => cultureKeys.All(cultureKey => !Equals(col?.GetCultureKey(), cultureKey)));
 
             foreach (var column in disconnectedColumns)
             {
                 columns.Remove(column);
             }
 
-            var addedcultureKeys = cultureKeys.Where(cultureKey => languageColumns.All(col => !Equals(col.GetCultureKey(), cultureKey)));
+            var addedCultureKeys = cultureKeys.Where(cultureKey => languageColumns.All(col => !Equals(col?.GetCultureKey(), cultureKey)));
 
-            foreach (var cultureKey in addedcultureKeys)
+            foreach (var cultureKey in addedCultureKeys)
             {
-                Contract.Assume(cultureKey != null);
                 dataGrid.AddLanguageColumn(configuration, cultureKey);
             }
         }
 
         public static void CreateNewLanguageColumn([NotNull] this DataGrid dataGrid, [NotNull] Configuration configuration, [CanBeNull] CultureInfo culture)
         {
-            Contract.Requires(dataGrid != null);
-            Contract.Requires(configuration != null);
-
             var cultureKey = new CultureKey(culture);
 
             dataGrid.AddLanguageColumn(configuration, cultureKey);
@@ -121,8 +111,6 @@
         [NotNull]
         private static DataGridTextColumn CreateKeyColumn()
         {
-            Contract.Ensures(Contract.Result<DataGridTextColumn>() != null);
-
             return new DataGridTextColumn
             {
                 Header = new ColumnHeader(Resources.Key, ColumnType.Key),
@@ -135,8 +123,6 @@
         [NotNull]
         private static DataGridTextColumn CreateIndexColumn([CanBeNull] ResourceViewModel resourceViewModel, [CanBeNull] Configuration configuration)
         {
-            Contract.Ensures(Contract.Result<DataGridTextColumn>() != null);
-
             var elementStyle = new Style(typeof(TextBlock))
             {
                 Setters =
@@ -181,8 +167,6 @@
         [NotNull]
         private static Image CreateCodeReferencesImage()
         {
-            Contract.Ensures(Contract.Result<Image>() != null);
-
             return new Image
             {
                 Source = _codeReferencesImage,
@@ -193,9 +177,6 @@
         [NotNull]
         private static DataGridColumn CreateCodeReferencesColumn([NotNull] FrameworkElement dataGrid)
         {
-            Contract.Requires(dataGrid != null);
-            Contract.Ensures(Contract.Result<DataGridColumn>() != null);
-
             var elementStyle = new Style(typeof(TextBlock))
             {
                 Setters =
@@ -264,12 +245,7 @@
 
         private static void AddLanguageColumn([NotNull] this DataGrid dataGrid, [NotNull] Configuration configuration, [NotNull] CultureKey cultureKey)
         {
-            Contract.Requires(dataGrid != null);
-            Contract.Requires(configuration != null);
-            Contract.Requires(cultureKey != null);
-
             var columns = dataGrid.Columns;
-
             var key = cultureKey.ToString(NeutralCultureKeyString);
 
             var culture = cultureKey.Culture;
@@ -343,10 +319,6 @@
 
         private static void AddLanguageColumn([NotNull][ItemNotNull] this ICollection<DataGridColumn> columns, [NotNull] DataGridBoundColumn column, [NotNull] Binding languageBinding, [CanBeNull] Binding flowDirectionBinding)
         {
-            Contract.Requires(columns != null);
-            Contract.Requires(languageBinding != null);
-            Contract.Requires(column != null);
-
             column.SetElementStyle(languageBinding, flowDirectionBinding);
             column.SetEditingElementStyle(languageBinding, flowDirectionBinding);
             columns.Add(column);
@@ -354,12 +326,10 @@
 
         private static void DataGrid_ColumnVisibilityChanged([NotNull] object sender, [NotNull] EventArgs e)
         {
-            Contract.Requires(sender != null);
-
             var dataGrid = (DataGrid)sender;
 
-            VisibleCommentColumns = UpdateColumnSettings<CommentHeader>(VisibleCommentColumns, dataGrid, col => col.Visibility == Visibility.Visible);
-            HiddenLanguageColumns = UpdateColumnSettings<LanguageHeader>(HiddenLanguageColumns, dataGrid, col => col.Visibility != Visibility.Visible);
+            VisibleCommentColumns = UpdateColumnSettings<CommentHeader>(VisibleCommentColumns, dataGrid, col => col?.Visibility == Visibility.Visible);
+            HiddenLanguageColumns = UpdateColumnSettings<LanguageHeader>(HiddenLanguageColumns, dataGrid, col => col?.Visibility != Visibility.Visible);
         }
 
         [NotNull]
@@ -367,15 +337,10 @@
         private static IEnumerable<string> UpdateColumnSettings<T>([NotNull][ItemNotNull] IEnumerable<string> current, [NotNull] DataGrid dataGrid, [NotNull] Func<DataGridColumn, bool> includePredicate)
             where T : LanguageColumnHeaderBase
         {
-            Contract.Requires(current != null);
-            Contract.Requires(dataGrid != null);
-            Contract.Requires(includePredicate != null);
-            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-
-            Func<DataGridColumn, bool> excludePredicate = col => !includePredicate(col);
+            bool ExcludePredicate(DataGridColumn col) => !includePredicate(col);
 
             return current.Concat(GetColumnKeys<T>(dataGrid, includePredicate))
-                .Except(GetColumnKeys<T>(dataGrid, excludePredicate))
+                .Except(GetColumnKeys<T>(dataGrid, ExcludePredicate))
                 .Distinct();
         }
 
@@ -384,13 +349,9 @@
         private static IEnumerable<string> GetColumnKeys<T>([NotNull] DataGrid dataGrid, [NotNull] Func<DataGridColumn, bool> predicate)
             where T : LanguageColumnHeaderBase
         {
-            Contract.Requires(dataGrid != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-
             return dataGrid.Columns
                 .Where(predicate)
-                .Select(col => col.Header)
+                .Select(col => col?.Header)
                 .OfType<T>()
                 .Select(hdr => hdr.CultureKey.ToString(NeutralCultureKeyString));
         }
@@ -399,36 +360,16 @@
         [ItemNotNull]
         private static IEnumerable<string> VisibleCommentColumns
         {
-            get
-            {
-                Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-
-                return (Settings.Default.VisibleCommentColumns ?? string.Empty).Split(',');
-            }
-            set
-            {
-                Contract.Requires(value != null);
-
-                Settings.Default.VisibleCommentColumns = string.Join(",", value);
-            }
+            get => (Settings.Default.VisibleCommentColumns ?? string.Empty).Split(',');
+            set => Settings.Default.VisibleCommentColumns = string.Join(",", value);
         }
 
         [NotNull]
         [ItemNotNull]
         private static IEnumerable<string> HiddenLanguageColumns
         {
-            get
-            {
-                Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-
-                return (Settings.Default.HiddenLanguageColumns ?? string.Empty).Split(',');
-            }
-            set
-            {
-                Contract.Requires(value != null);
-
-                Settings.Default.HiddenLanguageColumns = string.Join(",", value);
-            }
+            get => (Settings.Default.HiddenLanguageColumns ?? string.Empty).Split(',');
+            set => Settings.Default.HiddenLanguageColumns = string.Join(",", value);
         }
 
         private static void DataGrid_CurrentCellChanged([NotNull] object sender, [NotNull] EventArgs eventArgs)
@@ -458,14 +399,13 @@
             public static readonly IValueConverter Default = new IsRightToLeftToFlowDirectionConverter();
 
             [NotNull]
-            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            public object Convert([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
             {
-                Contract.Ensures(Contract.Result<object>() != null);
-
                 return true.Equals(value) ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
             }
 
-            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            [CanBeNull]
+            public object ConvertBack([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
             {
                 throw new NotImplementedException();
             }

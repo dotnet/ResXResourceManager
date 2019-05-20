@@ -5,8 +5,6 @@
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Windows;
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
@@ -30,14 +28,11 @@
         [NotNull]
         private readonly ITracer _tracer;
         private Size _lastKnownSize;
-        private Vector _laskKnownLocation;
+        private Vector _lastKnownLocation;
 
         [ImportingConstructor]
         public MainWindow([NotNull] ExportProvider exportProvider, [NotNull] ITracer tracer)
         {
-            Contract.Requires(exportProvider != null);
-            Contract.Requires(tracer != null);
-
             _tracer = tracer;
 
             try
@@ -81,7 +76,6 @@
 
             var resourceManager = this.GetExportProvider().GetExportedValue<ResourceManager>();
 
-            // ReSharper disable once PossibleNullReferenceException
             if (!resourceManager.HasChanges)
                 return;
 
@@ -113,19 +107,16 @@
         {
             base.OnClosed(e);
 
-            Settings.StartupLocation = _laskKnownLocation;
+            Settings.StartupLocation = _lastKnownLocation;
             Settings.StartupSize = _lastKnownSize;
         }
 
         [NotNull]
-        // ReSharper disable once AssignNullToNotNullAttribute
         private static Settings Settings => Settings.Default;
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
             base.OnRenderSizeChanged(sizeInfo);
-
-            Contract.Assume(sizeInfo != null);
 
             if (WindowState == WindowState.Normal)
                 _lastKnownSize = sizeInfo.NewSize;
@@ -136,7 +127,7 @@
             base.OnLocationChanged(e);
 
             if (WindowState == WindowState.Normal)
-                _laskKnownLocation = new Vector(Left, Top);
+                _lastKnownLocation = new Vector(Left, Top);
         }
 
         private static void Navigate_Click([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -165,14 +156,6 @@
             }
 
             Process.Start(url);
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_tracer != null);
         }
     }
 }

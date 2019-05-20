@@ -1,7 +1,5 @@
 namespace tomenglertde.ResXManager.Translators
 {
-    using System.Diagnostics.Contracts;
-
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
@@ -12,9 +10,6 @@ namespace tomenglertde.ResXManager.Translators
     {
         public CredentialItem([NotNull] string key, [NotNull] string description)
         {
-            Contract.Requires(key != null);
-            Contract.Requires(description != null);
-
             Key = key;
             Description = description;
         }

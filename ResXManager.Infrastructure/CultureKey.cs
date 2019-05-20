@@ -1,12 +1,9 @@
 ﻿namespace tomenglertde.ResXManager.Infrastructure
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     using JetBrains.Annotations;
-
-    using TomsToolbox.Core;
 
     /// <summary>
     /// A class encapsulating a <see cref="CultureInfo"/>, usable as a key to a dictionary to allow also indexing a <c>null</c> <see cref="CultureInfo"/>.
@@ -37,9 +34,6 @@
         [NotNull]
         public string ToString([NotNull] string neutralCultureKey)
         {
-            Contract.Requires(neutralCultureKey != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
             return Culture != null ? "." + Culture.Name : neutralCultureKey;
         }
 
@@ -61,7 +55,7 @@
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals([CanBeNull] object obj)
         {
             return Equals(obj as CultureKey);
         }
@@ -71,7 +65,7 @@
         /// </summary>
         /// <param name="other">The <see cref="CultureKey"/> to compare with this instance.</param>
         /// <returns><c>true</c> if the specified <see cref="CultureKey"/> is equal to this instance; otherwise, <c>false</c>.</returns>
-        public bool Equals(CultureKey other)
+        public bool Equals([CanBeNull] CultureKey other)
         {
             return InternalEquals(this, other);
         }
@@ -107,7 +101,7 @@
         /// Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
         /// </summary>
         /// <param name="other">An object to compare with this instance.</param>
-        public int CompareTo(CultureKey other)
+        public int CompareTo([CanBeNull] CultureKey other)
         {
             return Compare(this, other);
         }
@@ -119,7 +113,7 @@
         /// <returns>
         /// A value that indicates the relative order of the objects being compared. The return value has these meanings: Value Meaning Less than zero This instance precedes <paramref name="obj" /> in the sort order. Zero This instance occurs in the same position in the sort order as <paramref name="obj" />. Greater than zero This instance follows <paramref name="obj" /> in the sort order.
         /// </returns>
-        public int CompareTo(object obj)
+        public int CompareTo([CanBeNull] object obj)
         {
             return Compare(this, obj as CultureKey);
         }
@@ -170,28 +164,29 @@
         [NotNull]
         public static implicit operator CultureKey([CanBeNull] CultureInfo culture)
         {
-            Contract.Ensures(Contract.Result<CultureKey>() != null);
-
             return new CultureKey(culture);
         }
 
         [NotNull]
         public static CultureKey Parse([CanBeNull] object item)
         {
-            Contract.Ensures(Contract.Result<CultureKey>() != null);
-
             if (item == null)
                 return new CultureKey(string.Empty);
 
-            var cultureKey = item.TryCast().Returning<CultureKey>()
-                .When<string>(value => new CultureKey(value))
-                .When<CultureInfo>(value => new CultureKey(value))
-                .When<CultureKey>(value => value)
-                .ElseThrow("Unable to cast object to culture key: " + item);
+            switch (item)
+            {
+                case string stringValue:
+                    return new CultureKey(stringValue);
 
-            Contract.Assume(cultureKey != null);
+                case CultureInfo cultureInfo:
+                    return new CultureKey(cultureInfo);
 
-            return cultureKey;
+                case CultureKey cultureKey:
+                    return cultureKey;
+
+                default:
+                    throw new InvalidOperationException("Unable to cast object to culture key: " + item);
+            }
         }
     }
 }

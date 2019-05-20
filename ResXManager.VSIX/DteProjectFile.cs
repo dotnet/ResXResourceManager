@@ -2,9 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
@@ -36,10 +33,6 @@
         public DteProjectFile([NotNull] DteSolution solution, [NotNull] string filePath, [CanBeNull] string projectName, [CanBeNull] string uniqueProjectName, [NotNull] EnvDTE.ProjectItem projectItem)
             : base(filePath, solution.SolutionFolder, projectName, uniqueProjectName)
         {
-            Contract.Requires(solution != null);
-            Contract.Requires(!string.IsNullOrEmpty(filePath));
-            Contract.Requires(projectItem != null);
-
             _solution = solution;
             _projectItems.Add(projectItem);
         }
@@ -48,22 +41,10 @@
         /// Gets the project items.
         /// </summary>
         [NotNull, ItemNotNull]
-        public IList<EnvDTE.ProjectItem> ProjectItems
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IList<EnvDTE.ProjectItem>>() != null);
-                Contract.Ensures(Contract.Result<IList<EnvDTE.ProjectItem>>().Count > 0);
-
-                return _projectItems;
-            }
-        }
+        public IList<EnvDTE.ProjectItem> ProjectItems => _projectItems;
 
         public void AddProject([NotNull] string projectName, [NotNull] EnvDTE.ProjectItem projectItem)
         {
-            Contract.Requires(projectName != null);
-            Contract.Requires(projectItem != null);
-
             _projectItems.Add(projectItem);
             ProjectName += @", " + projectName;
         }
@@ -144,10 +125,7 @@
         {
             get
             {
-                Contract.Ensures(Contract.Result<EnvDTE.ProjectItem>() != null);
-
                 var item = ProjectItems.First();
-                Contract.Assume(item != null);
                 return item;
             }
         }
@@ -225,7 +203,6 @@
             {
                 foreach (var projectItem in ProjectItems)
                 {
-                    Contract.Assume(projectItem != null);
                     var containingProject = projectItem.ContainingProject;
 
                     if ((containingProject == null) || (containingProject.Kind != ItemKind.CSharpProject))
@@ -251,8 +228,6 @@
 
         private static bool IsTextTemplate([NotNull] EnvDTE.ProjectItem item)
         {
-            Contract.Requires(item != null);
-
             var name = item.Name;
 
             return (name != null) && name.EndsWith(@".tt", StringComparison.OrdinalIgnoreCase);
@@ -260,8 +235,6 @@
 
         private void SetTextTemplateCodeGenerator([NotNull] EnvDTE.ProjectItem projectItem)
         {
-            Contract.Requires(projectItem != null);
-
             projectItem.SetCustomTool(null);
 
             const string t4FileName = "Resources.Designer.t4";
@@ -294,24 +267,12 @@
 
         private static void SetCustomToolCodeGenerator([NotNull] EnvDTE.ProjectItem projectItem, CodeGenerator value)
         {
-            Contract.Requires(projectItem != null);
-
             projectItem.Children()
                 .Where(IsTextTemplate)
                 .ToArray()
                 .ForEach(i => i.Delete());
 
             projectItem.SetCustomTool(value.ToString());
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_solution != null);
-            Contract.Invariant(_projectItems != null);
-            Contract.Invariant(_projectItems.Count > 0);
         }
     }
 }

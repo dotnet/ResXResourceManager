@@ -12,13 +12,14 @@
         [NotNull]
         public static readonly IValueConverter Default = new CultureToXmlLanguageConverter();
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        [CanBeNull]
+        public object Convert([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
         {
-            var source = value as CultureInfo;
-            return source != null ? XmlLanguage.GetLanguage(source.IetfLanguageTag) : null;
+            return value is CultureInfo source ? XmlLanguage.GetLanguage(source.IetfLanguageTag) : null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        [CanBeNull]
+        public object ConvertBack([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
         {
             throw new NotImplementedException();
         }

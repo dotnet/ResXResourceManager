@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -14,15 +13,15 @@
         public static readonly IValueConverter Default = new CultureToImageConverter();
 
         [NotNull]
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
         {
-            Contract.Ensures(Contract.Result<object>() != null);
             var imageSource = CultureToImageSourceConverter.Convert(value as CultureInfo);
 
             return new Image { Source = imageSource };
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        [CanBeNull]
+        public object ConvertBack([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
         {
             throw new NotImplementedException();
         }

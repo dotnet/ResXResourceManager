@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
 
@@ -17,9 +16,6 @@
         [NotNull]
         public static string CreateSnapshot([NotNull][ItemNotNull] this ICollection<ResourceEntity> resourceEntities)
         {
-            Contract.Requires(resourceEntities != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
             var entitySnapshots = resourceEntities.Select(
                 entity => new EntitySnapshot
                 {
@@ -57,17 +53,12 @@
 
         private static void UnloadSnapshot([NotNull][ItemNotNull] IEnumerable<ResourceEntity> resourceEntities)
         {
-            Contract.Requires(resourceEntities != null);
-
             resourceEntities.SelectMany(entitiy => entitiy.Entries)
                 .ForEach(entry => entry.Snapshot = null);
         }
 
         private static void Load([NotNull][ItemNotNull] this IEnumerable<ResourceEntity> resourceEntities, [NotNull][ItemNotNull] IEnumerable<EntitySnapshot> entitySnapshots)
         {
-            Contract.Requires(resourceEntities != null);
-            Contract.Requires(entitySnapshots != null);
-
             resourceEntities.ForEach(entity =>
             {
                 var entrySnapshots = entitySnapshots.Where(snapshot => Equals(entity, snapshot)).Select(s => s.Entries).FirstOrDefault() ?? new EntrySnapshot[0];
@@ -83,9 +74,6 @@
 
         private static bool Equals([NotNull] ResourceEntity entity, [NotNull] EntitySnapshot snapshot)
         {
-            Contract.Requires(entity != null);
-            Contract.Requires(snapshot != null);
-
             return string.Equals(entity.ProjectName, snapshot.ProjectName, StringComparison.OrdinalIgnoreCase)
                    && string.Equals(entity.UniqueName, snapshot.UniqueName, StringComparison.OrdinalIgnoreCase);
         }

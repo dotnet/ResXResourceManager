@@ -3,9 +3,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     using JetBrains.Annotations;
@@ -28,10 +25,6 @@
 
         public ResourceTableValues([NotNull] IDictionary<CultureKey, ResourceLanguage> languages, [NotNull] Func<ResourceLanguage, T> getter, [NotNull] Func<ResourceLanguage, T, bool> setter)
         {
-            Contract.Requires(languages != null);
-            Contract.Requires(getter != null);
-            Contract.Requires(setter != null);
-
             _languages = languages;
             _getter = getter;
             _setter = setter;
@@ -50,9 +43,7 @@
             var cultureKey = CultureKey.Parse(culture);
 
             if (!_languages.TryGetValue(cultureKey, out var language))
-                return default(T);
-
-            Contract.Assume(language != null);
+                return default;
 
             return _getter(language);
         }
@@ -86,16 +77,6 @@
         private void OnValueChanged()
         {
             ValueChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_languages != null);
-            Contract.Invariant(_getter != null);
-            Contract.Invariant(_setter != null);
         }
     }
 }

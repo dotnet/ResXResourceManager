@@ -3,7 +3,6 @@
     using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
-    using System.ComponentModel.Composition.Primitives;
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Threading;
@@ -67,12 +66,12 @@
         {
             this.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {
-                if (Content == null)
-                {
-                    var exportProvider = this.GetExportProvider();
+                if (Content != null)
+                    return;
 
-                    exportProvider.TraceXamlLoaderError(null);
-                }
+                var exportProvider = this.GetExportProvider();
+
+                exportProvider.TraceXamlLoaderError(null);
             });
         }
     }

@@ -4,9 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -25,87 +23,71 @@
         private readonly ICompositionHost _compositionHost = new CompositionHost();
         [NotNull]
         private readonly SourceFilesProvider _sourceFilesProvider;
-        [NotNull]
-        private readonly ResourceManager _resourceManager;
-        [NotNull]
-        private readonly Configuration _configuration;
 
         public Host()
         {
             var assembly = GetType().Assembly;
             var folder = Path.GetDirectoryName(assembly.Location);
-            Contract.Assume(!string.IsNullOrEmpty(folder));
 
+            // ReSharper disable once AssignNullToNotNullAttribute
             _compositionHost.AddCatalog(new DirectoryCatalog(folder, "*.dll"));
 
             _sourceFilesProvider = _compositionHost.GetExportedValue<SourceFilesProvider>();
-            _resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
-            _resourceManager.BeginEditing += ResourceManager_BeginEditing;
+            ResourceManager = _compositionHost.GetExportedValue<ResourceManager>();
+            ResourceManager.BeginEditing += ResourceManager_BeginEditing;
 
-            _configuration = _compositionHost.GetExportedValue<Configuration>();
+            Configuration = _compositionHost.GetExportedValue<Configuration>();
         }
 
         [NotNull]
-        public ResourceManager ResourceManager => _resourceManager;
+        public ResourceManager ResourceManager { get; }
 
         public void Load([CanBeNull] string folder, [CanBeNull] string exclusionFilter = @"Migrations\\\d{15}")
         {
             _sourceFilesProvider.Folder = folder;
             _sourceFilesProvider.ExclusionFilter = exclusionFilter;
 
-            _resourceManager.Reload();
+            ResourceManager.Reload();
         }
 
         public void Save()
         {
-            _resourceManager.Save();
+            ResourceManager.Save();
         }
 
         public void ExportExcel([NotNull] string filePath)
         {
-            Contract.Requires(filePath != null);
-
             ExportExcel(filePath, null);
         }
 
         public void ExportExcel([NotNull] string filePath, [CanBeNull] object entries)
         {
-            Contract.Requires(filePath != null);
-
             ExportExcel(filePath, entries as IEnumerable<object>, null);
         }
 
         public void ExportExcel([NotNull] string filePath, [CanBeNull] object entries, [CanBeNull] object languages)
         {
-            Contract.Requires(filePath != null);
-
             ExportExcel(filePath, entries, languages, null);
         }
 
         public void ExportExcel([NotNull] string filePath, [CanBeNull] object entries, [CanBeNull] object languages, [CanBeNull] object comments)
         {
-            Contract.Requires(filePath != null);
-
             ExportExcel(filePath, entries, languages, comments, ExcelExportMode.SingleSheet);
         }
 
         public void ExportExcel([NotNull] string filePath, [CanBeNull] object entries, [CanBeNull] object languages, [CanBeNull] object comments, ExcelExportMode exportMode)
         {
-            Contract.Requires(filePath != null);
-
             var resourceScope = new ResourceScope(
-                entries ?? _resourceManager.TableEntries,
-                languages ?? _resourceManager.Cultures,
+                entries ?? ResourceManager.TableEntries,
+                languages ?? ResourceManager.Cultures,
                 comments ?? new object[0]);
 
-            _resourceManager.ExportExcelFile(filePath, resourceScope, exportMode);
+            ResourceManager.ExportExcelFile(filePath, resourceScope, exportMode);
         }
 
         public void ImportExcel([NotNull] string filePath)
         {
-            Contract.Requires(filePath != null);
-
-            var changes = _resourceManager.ImportExcelFile(filePath);
+            var changes = ResourceManager.ImportExcelFile(filePath);
 
             changes.Apply();
         }
@@ -113,14 +95,12 @@
         [NotNull]
         public string CreateSnapshot()
         {
-            Contract.Ensures(Contract.Result<string>() != null);
-
-            return _resourceManager.CreateSnapshot();
+            return ResourceManager.CreateSnapshot();
         }
 
         public void LoadSnapshot([CanBeNull] string value)
         {
-            _resourceManager.LoadSnapshot(value);
+            ResourceManager.LoadSnapshot(value);
         }
 
         public void Dispose()
@@ -138,8 +118,6 @@
 
         private bool CanEdit([NotNull] ResourceEntity entity, [CanBeNull] CultureKey cultureKey)
         {
-            Contract.Requires(entity != null);
-
             if (cultureKey == null)
                 return true;
 
@@ -178,18 +156,7 @@
         }
 
         [NotNull]
-        public Configuration Configuration => _configuration;
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_compositionHost != null);
-            Contract.Invariant(_sourceFilesProvider != null);
-            Contract.Invariant(_resourceManager != null);
-            Contract.Invariant(_configuration != null);
-        }
+        public Configuration Configuration { get; }
     }
 
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]

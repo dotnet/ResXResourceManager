@@ -4,9 +4,6 @@ namespace tomenglertde.ResXManager.View.Visuals
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows.Data;
 
@@ -19,14 +16,11 @@ namespace tomenglertde.ResXManager.View.Visuals
 
     public class TranslationItem : ObservableObject, ITranslationItem
     {
-        [NotNull]
-        private readonly CultureKey _targetCulture;
         [NotNull, ItemNotNull]
         private readonly ObservableCollection<ITranslationMatch> _results = new ObservableCollection<ITranslationMatch>();
         [NotNull]
         private readonly ResourceTableEntry _entry;
-        [NotNull]
-        private readonly string _source;
+
         [ItemNotNull]
         [CanBeNull]
         private ICollectionView _orderedResults;
@@ -35,20 +29,18 @@ namespace tomenglertde.ResXManager.View.Visuals
 
         public TranslationItem([NotNull] ResourceTableEntry entry, [NotNull] string source, [NotNull] CultureKey targetCulture)
         {
-            Contract.Requires(entry != null);
-            Contract.Requires(source != null);
-            Contract.Requires(targetCulture != null);
-
             _entry = entry;
-            _source = source;
+            Source = source;
 
-            _targetCulture = targetCulture;
+            TargetCulture = targetCulture;
             _results.CollectionChanged += (_, __) => OnPropertyChanged(() => Translation);
         }
 
-        public string Source => _source;
+        [NotNull]
+        public string Source { get; }
 
-        public CultureKey TargetCulture => _targetCulture;
+        [NotNull]
+        public CultureKey TargetCulture { get; }
 
         public IList<ITranslationMatch> Results => _results;
 
@@ -62,38 +54,24 @@ namespace tomenglertde.ResXManager.View.Visuals
             set => _translation = value;
         }
 
-        public bool Apply(string prefix)
+        public bool Apply([CanBeNull] string prefix)
         {
-            if (!_entry.CanEdit(_targetCulture))
+            if (!_entry.CanEdit(TargetCulture))
                 return false;
 
-            return _entry.Values.SetValue(_targetCulture, prefix + Translation);
+            return _entry.Values.SetValue(TargetCulture, prefix + Translation);
         }
 
         [NotNull]
         [ItemNotNull]
         private static ICollectionView CreateOrderedResults([NotNull][ItemNotNull] IList results)
         {
-            Contract.Requires(results != null);
-            Contract.Ensures(Contract.Result<ICollectionView>() != null);
-
             var orderedResults = new ListCollectionView(results);
 
             orderedResults.SortDescriptions.Add(new SortDescription("Rating", ListSortDirection.Descending));
             orderedResults.SortDescriptions.Add(new SortDescription("Translator.DisplayName", ListSortDirection.Ascending));
 
             return orderedResults;
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_targetCulture != null);
-            Contract.Invariant(_results != null);
-            Contract.Invariant(_entry != null);
-            Contract.Invariant(_source != null);
         }
     }
 }

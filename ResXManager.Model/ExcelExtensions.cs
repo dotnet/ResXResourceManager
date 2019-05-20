@@ -91,6 +91,7 @@
             {
                 workbookPart
                     .AddNewPart<WorksheetPart>(item.Id)
+                    // ReSharper disable once AssignNullToNotNullAttribute
                     .Worksheet = new Worksheet()
                         .AppendItem(item.GetDataRows(scope).Aggregate(new SheetData(), dataAppender.AppendRow))
                         .Protect();
@@ -120,6 +121,7 @@
 
             workbookPart
                 .AddNewPart<WorksheetPart>(sheet.Id)
+                // ReSharper disable once AssignNullToNotNullAttribute
                 .Worksheet = new Worksheet()
                     .AppendItem(sheetData)
                     .Protect();
@@ -127,6 +129,7 @@
 
         private static Worksheet Protect(this Worksheet worksheet)
         {
+            // ReSharper disable once AssignNullToNotNullAttribute
             return worksheet.AppendItem(new SheetProtection { Sheet = true, Objects = true, Scenarios = true, FormatColumns = false, FormatRows = false, Sort = false, AutoFilter = false });
         }
 
@@ -172,10 +175,9 @@
         [NotNull, ItemNotNull]
         private static IEnumerable<EntryChange> ImportSingleSheet([NotNull] ResourceManager resourceManager, [CanBeNull, ItemNotNull] IList<IList<string>> data)
         {
-            if (data == null)
+            var firstRow = data?.FirstOrDefault();
+            if (firstRow == null)
                 yield break;
-
-            var firstRow = data.FirstOrDefault();
 
             var headerRow = (IList<string>)firstRow.Skip(2).ToArray();
 
@@ -380,10 +382,9 @@
 
         }
 
+        [CanBeNull]
         private static string GetTextFromTextElement([NotNull] OpenXmlElement cell)
         {
-            // ReSharper disable AssignNullToNotNullAttribute
-            // ReSharper disable PossibleNullReferenceException
             return cell.ChildElements
                        .OfType<Text>()
                        .Select(item => item.Text)
@@ -396,8 +397,6 @@
                        .OfType<Run>()
                        .Select(item => item.Text.Text)
                        .Aggregate(default(string), (a, b) => a + b);
-            // ReSharper restore AssignNullToNotNullAttribute
-            // ReSharper restore PossibleNullReferenceException
         }
 
         [NotNull]
@@ -445,10 +444,10 @@
         private static IEnumerable<string> GetLanguageDataColumns([NotNull] this ResourceTableEntry entry, [NotNull] CultureKey language, [CanBeNull] IResourceScope scope)
         {
             if ((scope == null) || scope.Comments.Contains(language))
-                yield return entry.Comments.GetValue(language);
+                yield return entry.Comments.GetValue(language) ?? string.Empty;
 
             if ((scope == null) || scope.Languages.Contains(language))
-                yield return entry.Values.GetValue(language);
+                yield return entry.Values.GetValue(language) ?? string.Empty;
         }
 
         /// <summary>

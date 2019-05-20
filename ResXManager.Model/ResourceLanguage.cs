@@ -3,9 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -47,14 +44,10 @@
 
         [NotNull]
         // ReSharper disable once AssignNullToNotNullAttribute
-        private XElement _documentRoot => _document.Root;
+        private XElement DocumentRoot => _document.Root;
 
         [NotNull]
-        private readonly ProjectFile _file;
-        [NotNull]
         private IDictionary<string, Node> _nodes = new Dictionary<string, Node>();
-        [NotNull]
-        private readonly CultureKey _cultureKey;
 
         [NotNull]
         private readonly XName _dataNodeName;
@@ -62,8 +55,7 @@
         private readonly XName _valueNodeName;
         [NotNull]
         private readonly XName _commentNodeName;
-        [NotNull]
-        private readonly ResourceEntity _container;
+
         [NotNull]
         private readonly IConfiguration _configuration;
 
@@ -79,13 +71,9 @@
         /// </exception>
         internal ResourceLanguage([NotNull] ResourceEntity container, [NotNull] CultureKey cultureKey, [NotNull] ProjectFile file)
         {
-            Contract.Requires(container != null);
-            Contract.Requires(cultureKey != null);
-            Contract.Requires(file != null);
-
-            _container = container;
-            _cultureKey = cultureKey;
-            _file = file;
+            Container = container;
+            CultureKey = cultureKey;
+            ProjectFile = file;
             _configuration = container.Container.Configuration;
 
             try
@@ -97,10 +85,10 @@
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileError, file.FilePath), ex);
             }
 
-            if (_documentRoot == null)
+            if (DocumentRoot == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileError, file.FilePath));
 
-            var defaultNamespace = _documentRoot.GetDefaultNamespace();
+            var defaultNamespace = DocumentRoot.GetDefaultNamespace();
 
             _dataNodeName = defaultNamespace.GetName(@"data");
             _valueNodeName = defaultNamespace.GetName(@"value");
@@ -111,7 +99,7 @@
 
         private void UpdateNodes()
         {
-            var data = _documentRoot.Elements(_dataNodeName);
+            var data = DocumentRoot.Elements(_dataNodeName);
 
             var elements = data
                 .Where(IsStringType)
@@ -126,7 +114,7 @@
             else
             {
                 if (elements.Any(item => string.IsNullOrEmpty(item.Key)))
-                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.EmptyKeysError, _file.FilePath));
+                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.EmptyKeysError, ProjectFile.FilePath));
             }
 
             try
@@ -136,7 +124,7 @@
             catch (ArgumentException ex)
             {
                 var duplicateKeys = string.Join(@", ", elements.GroupBy(item => item.Key).Where(group => group.Count() > 1).Select(group => Quote + group.Key + Quote));
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.DuplicateKeyError, _file.FilePath, duplicateKeys), ex);
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.DuplicateKeyError, ProjectFile.FilePath, duplicateKeys), ex);
             }
         }
 
@@ -144,7 +132,7 @@
         /// Gets the culture of this language.
         /// </summary>
         [CanBeNull]
-        public CultureInfo Culture => _cultureKey.Culture;
+        public CultureInfo Culture => CultureKey.Culture;
 
         /// <summary>
         /// Gets the display name of this language.
@@ -155,17 +143,8 @@
         /// <summary>
         /// Gets all the resource keys defined in this language.
         /// </summary>
-        [NotNull, ItemNotNull, ContractVerification(false)]
-        public IEnumerable<string> ResourceKeys
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-                Contract.Ensures(Contract.ForAll(Contract.Result<IEnumerable<string>>(), item => item != null));
-
-                return _nodes.Keys;
-            }
-        }
+        [NotNull, ItemNotNull]
+        public IEnumerable<string> ResourceKeys => _nodes.Keys;
 
         public bool HasChanges
         {
@@ -174,62 +153,28 @@
                 if (_hasUncommittedChanges)
                     CommitChanges();
 
-                return _file.HasChanges;
+                return ProjectFile.HasChanges;
             }
         }
 
         public bool IsSaving { get; private set; }
 
         [NotNull]
-        public string FileName
-        {
-            get
-            {
-                Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
-
-                return _file.FilePath;
-            }
-        }
+        public string FileName => ProjectFile.FilePath;
 
         [NotNull]
-        public ProjectFile ProjectFile
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ProjectFile>() != null);
-
-                return _file;
-            }
-        }
+        public ProjectFile ProjectFile { get; }
 
         public bool IsNeutralLanguage => Container.Languages.FirstOrDefault() == this;
 
         [NotNull]
-        public CultureKey CultureKey
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<CultureKey>() != null);
-
-                return _cultureKey;
-            }
-        }
+        public CultureKey CultureKey { get; }
 
         [NotNull]
-        public ResourceEntity Container
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ResourceEntity>() != null);
-
-                return _container;
-            }
-        }
+        public ResourceEntity Container { get; }
 
         private static bool IsStringType([NotNull] XElement entry)
         {
-            Contract.Requires(entry != null);
-
             var typeAttribute = entry.Attribute(_typeAttributeName);
 
             if (typeAttribute != null)
@@ -245,22 +190,16 @@
         [CanBeNull]
         internal string GetValue([NotNull] string key)
         {
-            Contract.Requires(key != null);
-
             return !_nodes.TryGetValue(key, out var node) ? null : node?.Text;
         }
 
         internal bool SetValue([NotNull] string key, [CanBeNull] string value)
         {
-            Contract.Requires(key != null);
-
             return GetValue(key) == value || SetNodeData(key, node => node.Text = value);
         }
 
         public void ForceValue([NotNull] string key, [CanBeNull] string value)
         {
-            Contract.Requires(key != null);
-
             SetNodeData(key, node => node.Text = value);
         }
 
@@ -281,7 +220,7 @@
         {
             _hasUncommittedChanges = false;
 
-            _file.Changed(_document, _configuration.SaveFilesImmediatelyUponChange);
+            ProjectFile.Changed(_document, _configuration.SaveFilesImmediatelyUponChange);
 
             Container.Container.OnLanguageChanged(this);
         }
@@ -302,9 +241,9 @@
             {
                 IsSaving = true;
 
-                _file.Save(_document);
+                ProjectFile.Save(_document);
 
-                Container.Container.OnProjectFileSaved(this, _file);
+                Container.Container.OnProjectFileSaved(this, ProjectFile);
             }
             finally
             {
@@ -320,7 +259,7 @@
             UpdateNodes();
             Container.OnItemOrderChanged(this);
 
-            _file.Changed(_document, true);
+            ProjectFile.Changed(_document, true);
 
             Save();
         }
@@ -335,12 +274,12 @@
             var comparer = new DelegateComparer<string>((left, right) => string.Compare(left, right, stringComparison));
             string GetName(XElement node) => node.Attribute(_nameAttributeName)?.Value.TrimStart('>') ?? string.Empty;
 
-            var nodes = _documentRoot
+            var nodes = DocumentRoot
                 .Elements(_dataNodeName)
                 .ToArray();
 
             var sortedNodes = nodes
-                .OrderBy(node => GetName(node), comparer)
+                .OrderBy(GetName, comparer)
                 .ToArray();
 
             var hasContentChanged = SortNodes(nodes, sortedNodes);
@@ -357,7 +296,7 @@
             }
             else
             {
-                _documentRoot.Add(newNode);
+                DocumentRoot.Add(newNode);
             }
 
             return true;
@@ -365,21 +304,17 @@
 
         private bool SortNodes([NotNull, ItemNotNull] XElement[] nodes, [NotNull, ItemNotNull] XElement[] sortedNodes)
         {
-            Contract.Requires(nodes != null);
-            Contract.Requires(sortedNodes != null);
-
             if (nodes.SequenceEqual(sortedNodes))
                 return false;
 
             foreach (var item in nodes)
             {
-                Contract.Assume(item != null);
                 item.Remove();
             }
 
             foreach (var item in sortedNodes)
             {
-                _documentRoot.Add(item);
+                DocumentRoot.Add(item);
             }
 
             return true;
@@ -388,8 +323,6 @@
         [CanBeNull]
         internal string GetComment([NotNull] string key)
         {
-            Contract.Requires(key != null);
-
             if (!_nodes.TryGetValue(key, out var node) || (node == null))
                 return null;
 
@@ -398,8 +331,6 @@
 
         internal bool SetComment([NotNull] string key, [CanBeNull] string value)
         {
-            Contract.Requires(key != null);
-
             if (GetComment(key) == value)
                 return true;
 
@@ -408,9 +339,6 @@
 
         private bool SetNodeData([NotNull] string key, [NotNull] Action<Node> updateCallback)
         {
-            Contract.Requires(key != null);
-            Contract.Requires(updateCallback != null);
-
             if (!CanEdit())
                 return false;
 
@@ -437,7 +365,7 @@
             }
             catch (Exception ex)
             {
-                var message = string.Format(CultureInfo.CurrentCulture, Resources.FileSaveError, _file.FilePath, ex.Message);
+                var message = string.Format(CultureInfo.CurrentCulture, Resources.FileSaveError, ProjectFile.FilePath, ex.Message);
                 throw new IOException(message, ex);
             }
         }
@@ -445,9 +373,6 @@
         [NotNull]
         private Node CreateNode([NotNull] string key)
         {
-            Contract.Requires(key != null);
-            Contract.Ensures(Contract.Result<Node>() != null);
-
             var content = new XElement(_valueNodeName);
             content.Add(new XText(string.Empty));
 
@@ -462,7 +387,7 @@
             }
             else
             {
-                _documentRoot.Add(entry);
+                DocumentRoot.Add(entry);
             }
 
             UpdateNodes();
@@ -474,9 +399,6 @@
 
         internal bool RenameKey([NotNull] string oldKey, [NotNull] string newKey)
         {
-            Contract.Requires(oldKey != null);
-            Contract.Requires(!string.IsNullOrEmpty(newKey));
-
             if (!CanEdit())
                 return false;
 
@@ -496,8 +418,6 @@
 
         internal bool RemoveKey([NotNull] string key)
         {
-            Contract.Requires(key != null);
-
             if (!CanEdit())
                 return false;
 
@@ -516,23 +436,18 @@
             }
             catch (Exception ex)
             {
-                var message = string.Format(CultureInfo.CurrentCulture, Resources.FileSaveError, _file.FilePath, ex.Message);
+                var message = string.Format(CultureInfo.CurrentCulture, Resources.FileSaveError, ProjectFile.FilePath, ex.Message);
                 throw new IOException(message, ex);
             }
         }
 
         internal bool KeyExists([NotNull] string key)
         {
-            Contract.Requires(key != null);
-
             return _nodes.ContainsKey(key);
         }
 
         internal void MoveNode([NotNull] ResourceTableEntry resourceTableEntry, [NotNull][ItemNotNull] IEnumerable<ResourceTableEntry> previousEntries)
         {
-            Contract.Requires(resourceTableEntry != null);
-            Contract.Requires(previousEntries != null);
-
             if (!CanEdit())
                 return;
 
@@ -555,18 +470,13 @@
             OnChanged();
         }
 
-        [ContractVerification(false)]
         internal bool IsContentEqual([NotNull] ResourceLanguage other)
         {
-            Contract.Requires(other != null);
-
             return _document.ToString(SaveOptions.DisableFormatting) == other._document.ToString(SaveOptions.DisableFormatting);
         }
 
         private static void MakeKeysValid([NotNull][ItemNotNull] ICollection<Node> elements)
         {
-            Contract.Requires(elements != null);
-
             RenameEmptyKeys(elements);
 
             RenameDuplicates(elements);
@@ -574,14 +484,11 @@
 
         private static void RenameDuplicates([NotNull, ItemNotNull] ICollection<Node> elements)
         {
-            Contract.Requires(elements != null);
-
             var itemsWithDuplicateKeys = elements.GroupBy(item => item.Key)
                 .Where(group => group.Count() > 1);
 
             foreach (var duplicates in itemsWithDuplicateKeys)
             {
-                Contract.Assume(duplicates != null);
                 var index = 1;
 
                 duplicates.Skip(1).ForEach(item => item.Key = GenerateUniqueKey(elements, item, "Duplicate", ref index));
@@ -590,8 +497,6 @@
 
         private static void RenameEmptyKeys([NotNull, ItemNotNull] ICollection<Node> elements)
         {
-            Contract.Requires(elements != null);
-
             var itemsWithEmptyKeys = elements.Where(item => string.IsNullOrEmpty(item.Key));
 
             var index = 1;
@@ -602,10 +507,6 @@
         [NotNull]
         private static string GenerateUniqueKey([NotNull][ItemNotNull] ICollection<Node> elements, [NotNull] Node item, [CanBeNull] string text, ref int index)
         {
-            Contract.Requires(elements != null);
-            Contract.Requires(item != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
             var key = item.Key;
             string newKey;
 
@@ -628,8 +529,7 @@
         {
             [NotNull]
             private readonly ResourceLanguage _owner;
-            [NotNull]
-            private readonly XElement _element;
+
             [CanBeNull]
             private string _text;
             [CanBeNull]
@@ -637,49 +537,24 @@
 
             public Node([NotNull] ResourceLanguage owner, [NotNull] XElement element)
             {
-                Contract.Requires(owner != null);
-                Contract.Requires(element != null);
-                Contract.Requires(owner._commentNodeName != null);
-
-                _element = element;
+                Element = element;
                 _owner = owner;
             }
 
             [NotNull]
-            public XElement Element
-            {
-                get
-                {
-                    Contract.Ensures(Contract.Result<XElement>() != null);
-
-                    return _element;
-                }
-            }
+            public XElement Element { get; }
 
             [NotNull]
             public string Key
             {
-                get
-                {
-                    Contract.Ensures(Contract.Result<string>() != null);
-
-                    return GetNameAttribute(_element).Value;
-                }
-                set
-                {
-                    Contract.Requires(value != null);
-
-                    GetNameAttribute(_element).Value = value;
-                }
+                get => GetNameAttribute(Element).Value;
+                set => GetNameAttribute(Element).Value = value;
             }
 
             [CanBeNull]
             public string Text
             {
-                get
-                {
-                    return _text ?? (_text = LoadText());
-                }
+                get => _text ?? (_text = LoadText());
                 set
                 {
                     _text = value ?? string.Empty;
@@ -704,10 +579,7 @@
             [CanBeNull]
             public string Comment
             {
-                get
-                {
-                    return _comment ?? (_comment = LoadComment());
-                }
+                get => _comment ?? (_comment = LoadComment());
                 set
                 {
                     _comment = value ?? string.Empty;
@@ -718,10 +590,7 @@
 
                     if (string.IsNullOrWhiteSpace(value))
                     {
-                        if (valueElement != null)
-                        {
-                            valueElement.Remove();
-                        }
+                        valueElement?.Remove();
                     }
                     else
                     {
@@ -773,9 +642,6 @@
             [NotNull]
             private XAttribute GetNameAttribute([NotNull] XElement entry)
             {
-                Contract.Requires(entry != null);
-                Contract.Ensures(Contract.Result<XAttribute>() != null);
-
                 var nameAttribute = entry.Attribute(_nameAttributeName);
                 if (nameAttribute == null)
                 {
@@ -784,34 +650,6 @@
 
                 return nameAttribute;
             }
-
-            [ContractInvariantMethod]
-            [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-            [Conditional("CONTRACTS_FULL")]
-            private void ObjectInvariant()
-            {
-                Contract.Invariant(_element != null);
-                Contract.Invariant(_owner != null);
-                Contract.Invariant(_owner._commentNodeName != null);
-            }
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_document != null);
-            Contract.Invariant(_documentRoot != null);
-            Contract.Invariant(_file != null);
-            Contract.Invariant(_nodes != null);
-            Contract.Invariant(_cultureKey != null);
-            Contract.Invariant(_dataNodeName != null);
-            Contract.Invariant(_valueNodeName != null);
-            Contract.Invariant(_commentNodeName != null);
-            Contract.Invariant(_container != null);
-            Contract.Invariant(Quote != null);
-            Contract.Invariant(WinFormsMemberNamePrefix != null);
         }
     }
 }

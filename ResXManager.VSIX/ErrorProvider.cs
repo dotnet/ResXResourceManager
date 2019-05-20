@@ -70,7 +70,6 @@
             if (e.Action != NotifyCollectionChangedAction.Remove)
                 return;
 
-            // ReSharper disable once AssignNullToNotNullAttribute
             foreach (var removed in e.OldItems.OfType<ResourceTableEntry>())
             {
                 var task = _tasks.OfType<ResourceErrorTask>().FirstOrDefault(t => t.Entry == removed);
@@ -140,7 +139,7 @@
             }
         }
 
-        private void Task_Navigate([NotNull] object sender, EventArgs e)
+        private void Task_Navigate(object sender, EventArgs e)
         {
             var task = (ResourceErrorTask)sender;
             var entry = task.Entry;
@@ -172,6 +171,7 @@
                 Entry = entry;
             }
 
+            [CanBeNull]
             public ResourceTableEntry Entry { get; }
         }
     }

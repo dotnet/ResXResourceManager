@@ -3,9 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Net;
@@ -38,7 +36,6 @@
         }
 
         [DataMember(Name = "Key")]
-        [ContractVerification(false)]
         [CanBeNull]
         public string SerializedKey
         {
@@ -46,9 +43,8 @@
             set => Credentials[0].Value = value;
         }
 
-        [ContractVerification(false)]
         [CanBeNull]
-        private string Key => Credentials[0]?.Value;
+        private string Key => Credentials[0].Value;
 
         public override void Translate(ITranslationSession translationSession)
         {
@@ -58,7 +54,6 @@
                     break;
 
                 var translationItem = item;
-                Contract.Assume(translationItem != null);
 
                 try
                 {
@@ -113,7 +108,8 @@
             using (var webResponse = webRequest.GetResponse())
             {
                 var responseStream = webResponse.GetResponseStream();
-                Contract.Assume(responseStream != null);
+                if (responseStream == null)
+                    return null;
 
                 using (var reader = new StreamReader(responseStream, Encoding.UTF8))
                 {
@@ -192,13 +188,6 @@
             }
 
 
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
         }
     }
 }

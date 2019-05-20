@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Runtime.InteropServices;
@@ -39,8 +38,6 @@
         [CanBeNull]
         public static XDocument TryGetContent([NotNull] this EnvDTE.ProjectItem projectItem)
         {
-            Contract.Requires(projectItem != null);
-
             try
             {
                 return !projectItem.IsOpen ? null : TryGetContent(projectItem.TryGetDocument());
@@ -53,8 +50,6 @@
 
         public static bool GetIsOpen([NotNull] this EnvDTE.ProjectItem projectItem)
         {
-            Contract.Requires(projectItem != null);
-
             try
             {
                 return projectItem.IsOpen;
@@ -68,9 +63,6 @@
         [NotNull]
         public static ICollection<VSITEMSELECTION> GetSelectedProjectItems([NotNull] this IVsMonitorSelection monitorSelection)
         {
-            Contract.Requires(monitorSelection != null);
-            Contract.Ensures(Contract.Result<ICollection<VSITEMSELECTION>>() != null);
-
             var hierarchyPtr = IntPtr.Zero;
             var selectionContainerPtr = IntPtr.Zero;
 
@@ -83,7 +75,7 @@
 
                 if ((itemId == VSConstants.VSITEMID_SELECTION) && (multiItemSelect != null))
                 {
-                    multiItemSelect.GetSelectionInfo(out var cItems, out var info);
+                    multiItemSelect.GetSelectionInfo(out var cItems, out _);
                     var items = new VSITEMSELECTION[cItems];
                     multiItemSelect.GetSelectedItems(0, cItems, items);
                     return items;
@@ -133,7 +125,6 @@
         }
 
         [CanBeNull]
-        [ContractVerification(false)]
         private static XDocument TryGetContent([CanBeNull] EnvDTE.Document document)
         {
             try
@@ -151,14 +142,10 @@
 
         public static bool TrySetContent([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] XDocument value)
         {
-            Contract.Requires(projectItem != null);
-            Contract.Requires(value != null);
-
             return projectItem.IsOpen && TrySetContent(projectItem.TryGetDocument(), value);
         }
 
-        [ContractVerification(false)]
-        private static bool TrySetContent([CanBeNull] EnvDTE.Document document, [CanBeNull] XDocument value)
+        private static bool TrySetContent([CanBeNull] EnvDTE.Document document, [NotNull] XDocument value)
         {
             try
             {
@@ -194,24 +181,18 @@
         [NotNull, ItemNotNull]
         public static IEnumerable<EnvDTE.ProjectItem> Children([CanBeNull] this EnvDTE.ProjectItem projectItem)
         {
-            Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.ProjectItem>>() != null);
-
             return projectItem?.TryGetProjectItems() ?? Enumerable.Empty<EnvDTE.ProjectItem>();
         }
 
         [NotNull, ItemNotNull]
         public static IEnumerable<EnvDTE.ProjectItem> Descendants([CanBeNull] this EnvDTE.ProjectItem projectItem)
         {
-            Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.ProjectItem>>() != null);
-
             return projectItem?.TryGetProjectItems()?.SelectMany(p => p.DescendantsAndSelf()) ?? Enumerable.Empty<EnvDTE.ProjectItem>();
         }
 
         [NotNull, ItemNotNull]
         public static IEnumerable<EnvDTE.ProjectItem> DescendantsAndSelf([CanBeNull] this EnvDTE.ProjectItem projectItem)
         {
-            Contract.Ensures(Contract.Result<IEnumerable<EnvDTE.ProjectItem>>() != null);
-
             if (projectItem == null)
                 yield break;
 
@@ -225,9 +206,6 @@
 
         public static void SetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName, [CanBeNull] object value)
         {
-            Contract.Requires(projectItem != null);
-            Contract.Requires(propertyName != null);
-
             var item = projectItem.Properties?.Item(propertyName);
             if (item != null)
                 item.Value = value;
@@ -236,9 +214,6 @@
         [CanBeNull]
         public static object GetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName)
         {
-            Contract.Requires(projectItem != null);
-            Contract.Requires(propertyName != null);
-
             try
             {
                 return projectItem.Properties?.OfType<EnvDTE.Property>()
@@ -255,8 +230,6 @@
 
         public static void RunCustomTool([NotNull] this EnvDTE.ProjectItem projectItem)
         {
-            Contract.Requires(projectItem != null);
-
             try
             {
                 var vsProjectItem = projectItem.Object as VSLangProj.VSProjectItem;
@@ -271,24 +244,18 @@
 
         public static void SetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem, [CanBeNull] string value)
         {
-            Contract.Requires(projectItem != null);
-
             SetProperty(projectItem, @"CustomTool", value);
         }
 
         [CanBeNull]
         public static string GetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem)
         {
-            Contract.Requires(projectItem != null);
-
             return GetProperty(projectItem, @"CustomTool") as string;
         }
 
         [CanBeNull]
         public static EnvDTE.ProjectItem AddFromFile([NotNull] this EnvDTE.ProjectItem projectItem, [CanBeNull] string fileName)
         {
-            Contract.Requires(projectItem != null);
-
             try
             {
                 return projectItem.ProjectItems?.AddFromFile(fileName);
@@ -302,8 +269,6 @@
         [CanBeNull]
         public static EnvDTE.ProjectItem AddFromFile([NotNull] this EnvDTE.Project project, [CanBeNull] string fileName)
         {
-            Contract.Requires(project != null);
-
             try
             {
                 return project.ProjectItems?.AddFromFile(fileName);
@@ -317,9 +282,6 @@
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public static void SetFontSize([NotNull] this EnvDTE.DTE dte, [NotNull] DependencyObject view)
         {
-            Contract.Requires(dte != null);
-            Contract.Requires(view != null);
-
             const string CATEGORY_FONTS_AND_COLORS = "FontsAndColors";
             const string PAGE_TEXT_EDITOR = "TextEditor";
             const string PROPERTY_FONT_SIZE = "FontSize";
@@ -345,8 +307,6 @@
         [CanBeNull]
         public static string TryGetFileName([NotNull] this EnvDTE.ProjectItem projectItem)
         {
-            Contract.Requires(projectItem != null);
-
             try
             {
                 if (string.Equals(projectItem.Kind, ItemKind.PhysicalFile, StringComparison.OrdinalIgnoreCase))

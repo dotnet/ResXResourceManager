@@ -5,9 +5,6 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.ComponentModel.Composition;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -23,7 +20,7 @@
     using TomsToolbox.ObservableCollections;
 
     /// <summary>
-    /// Represents all resources found in a folder and its's sub folders.
+    /// Represents all resources found in a folder and it's sub folders.
     /// </summary>
     [Export]
     [AddINotifyPropertyChangedInterface]
@@ -47,8 +44,6 @@
         [ImportingConstructor]
         private ResourceManager([NotNull] ISourceFilesProvider sourceFilesProvider, [NotNull] IConfiguration configuration)
         {
-            Contract.Requires(sourceFilesProvider != null);
-            Contract.Requires(configuration != null);
             Configuration = configuration;
 
             _sourceFilesProvider = sourceFilesProvider;
@@ -59,11 +54,8 @@
         /// Loads all resources from the specified project files.
         /// </summary>
         /// <param name="allSourceFiles">All resource x files.</param>
-        /// <param name="duplicateKeyHandling">The duplicate key handling mode.</param>
-        private bool Load([NotNull][ItemNotNull] IList<ProjectFile> allSourceFiles)
+        private bool Load([NotNull, ItemNotNull] IList<ProjectFile> allSourceFiles)
         {
-            Contract.Requires(allSourceFiles != null);
-
             var resourceFilesByDirectory = allSourceFiles
                 .Where(file => file.IsResourceFile())
                 .GroupBy(file => file.GetBaseDirectory());
@@ -89,22 +81,19 @@
         /// <summary>
         /// Gets the loaded resource entities.
         /// </summary>
-        [ItemNotNull]
-        [NotNull]
+        [NotNull, ItemNotNull]
         public ObservableCollection<ResourceEntity> ResourceEntities { get; } = new ObservableCollection<ResourceEntity>();
 
         /// <summary>
         /// Gets the table entries of all entities.
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
+        [NotNull, ItemNotNull]
         public IObservableCollection<ResourceTableEntry> TableEntries { get; }
 
         /// <summary>
         /// Gets the cultures of all entities.
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
+        [NotNull, ItemNotNull]
         public ObservableCollection<CultureKey> Cultures { get; } = new ObservableCollection<CultureKey>();
 
         /// <summary>
@@ -133,8 +122,6 @@
 
         public bool Reload([NotNull][ItemNotNull] IList<ProjectFile> sourceFiles)
         {
-            Contract.Requires(sourceFiles != null);
-
             var args = new CancelEventArgs();
             Reloading?.Invoke(this, args);
             if (args.Cancel)
@@ -145,8 +132,6 @@
 
         public bool CanEdit([NotNull] ResourceEntity resourceEntity, [CanBeNull] CultureKey cultureKey)
         {
-            Contract.Requires(resourceEntity != null);
-
             var eventHandler = BeginEditing;
 
             if (eventHandler == null)
@@ -166,8 +151,6 @@
 
         private bool InternalLoad([NotNull][ItemNotNull] IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory)
         {
-            Contract.Requires(resourceFilesByDirectory != null);
-
             if (!LoadEntities(resourceFilesByDirectory))
                 return false; // nothing has changed, no need to continue
 
@@ -190,35 +173,25 @@
 
         private bool LoadEntities([NotNull][ItemNotNull] IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory)
         {
-            Contract.Requires(fileNamesByDirectory != null);
-
             var hasChanged = false;
 
             var unmatchedEntities = ResourceEntities.ToList();
 
             foreach (var directory in fileNamesByDirectory)
             {
-                Contract.Assume(directory != null);
-
                 var directoryName = directory.Key;
-                Contract.Assume(!string.IsNullOrEmpty(directoryName));
-
                 var filesByBaseName = directory.GroupBy(file => file.GetBaseName(), StringComparer.OrdinalIgnoreCase);
 
                 foreach (var files in filesByBaseName)
                 {
-                    if ((files == null) || !files.Any())
+                    if (!files.Any())
                         continue;
 
                     var baseName = files.Key;
-                    Contract.Assume(!string.IsNullOrEmpty(baseName));
-
                     var filesByProject = files.GroupBy(file => file.ProjectName);
 
                     foreach (var item in filesByProject)
                     {
-                        Contract.Assume(item != null);
-
                         var projectName = item.Key;
                         var projectFiles = item.ToArray();
 
@@ -252,8 +225,6 @@
 
         internal void LanguageAdded([NotNull] CultureKey cultureKey)
         {
-            Contract.Requires(cultureKey != null);
-
             if (!Cultures.Contains(cultureKey))
             {
                 Cultures.Add(cultureKey);
@@ -262,20 +233,15 @@
 
         internal void OnLanguageChanged([NotNull] ResourceLanguage language)
         {
-            Contract.Requires(language != null);
-
             LanguageChanged?.Invoke(this, new LanguageEventArgs(language));
         }
 
         internal void OnProjectFileSaved([NotNull] ResourceLanguage language, [NotNull] ProjectFile projectFile)
         {
-            Contract.Requires(language != null);
-            Contract.Requires(projectFile != null);
-
             ProjectFileSaved?.Invoke(this, new ProjectFileEventArgs(language, projectFile));
         }
 
-        public static bool IsValidLanguageName(string languageName)
+        public static bool IsValidLanguageName([CanBeNull] string languageName)
         {
             if (string.IsNullOrEmpty(languageName))
                 return false;
@@ -287,8 +253,6 @@
         [ItemNotNull]
         private static string[] GetSortedCultureNames()
         {
-            Contract.Ensures(Contract.Result<string[]>() != null);
-
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
 
             var pseudoLocales = new[] { "qps-ploc", "qps-ploca", "qps-plocm", "qps-Latn-x-sh" };
@@ -308,8 +272,6 @@
         [ItemNotNull]
         private static CultureInfo[] GetSpecificCultures()
         {
-            Contract.Ensures(Contract.Result<CultureInfo[]>() != null);
-
             var specificCultures = CultureInfo.GetCultures(CultureTypes.AllCultures)
                 .Where(c => c.GetAncestors().Any())
                 .OrderBy(c => c.DisplayName)
@@ -328,21 +290,7 @@
         [NotNull]
         public string CreateSnapshot()
         {
-            Contract.Ensures(Contract.Result<string>() != null);
-
             return _snapshot = ResourceEntities.CreateSnapshot();
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(ResourceEntities != null);
-            Contract.Invariant(Cultures != null);
-            Contract.Invariant(_sourceFilesProvider != null);
-            Contract.Invariant(TableEntries != null);
-            Contract.Invariant(_sortedCultureNames != null);
         }
     }
 }

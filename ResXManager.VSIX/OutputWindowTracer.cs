@@ -1,9 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.VSIX
 {
     using System;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     using JetBrains.Annotations;
 
@@ -21,7 +18,6 @@
 
         public OutputWindowTracer([NotNull]IServiceProvider serviceProvider)
         {
-            Contract.Requires(serviceProvider != null);
             _serviceProvider = serviceProvider;
         }
 
@@ -55,14 +51,5 @@
         {
             LogMessageToOutputWindow(value + Environment.NewLine);
         }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_serviceProvider != null);
-        }
-
     }
 }

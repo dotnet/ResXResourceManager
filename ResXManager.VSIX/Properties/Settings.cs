@@ -11,11 +11,6 @@
 
     public sealed partial class Settings
     {
-        [NotNull]
-        private readonly ObservableIndexer<string, int> _moveToResourcePreferedReplacementPatternIndex = new ObservableIndexer<string, int>(_ => 0);
-        [NotNull]
-        private readonly ObservableIndexer<string, int> _moveToResourcePreferedKeyPatternIndex = new ObservableIndexer<string, int>(_ => 0);
-
         static Settings()
         {
             Default.PropertyChanged += (sender, _) => ((Settings)sender).Save();
@@ -26,7 +21,7 @@
             try
             {
                 var values = JsonConvert.DeserializeObject<KeyValuePair<string, int>[]>(MoveToResourcePreferedReplacementPatterns);
-                values?.ForEach(value => _moveToResourcePreferedReplacementPatternIndex[value.Key] = value.Value);
+                values?.ForEach(value => MoveToResourcePreferedReplacementPatternIndex[value.Key] = value.Value);
             }
             catch
             {
@@ -36,34 +31,34 @@
             try
             {
                 var values = JsonConvert.DeserializeObject<KeyValuePair<string, int>[]>(MoveToResourcePreferedKeyPatterns);
-                values?.ForEach(value => _moveToResourcePreferedKeyPatternIndex[value.Key] = value.Value);
+                values?.ForEach(value => MoveToResourcePreferedKeyPatternIndex[value.Key] = value.Value);
             }
             catch
             {
                 // invalid source, go with default...
             }
 
-            _moveToResourcePreferedReplacementPatternIndex.CollectionChanged += (_, __) => MoveToResource_PreferedReplacementPatternIndex_Changed();
-            _moveToResourcePreferedReplacementPatternIndex.PropertyChanged += (_, __) => MoveToResource_PreferedReplacementPatternIndex_Changed();
+            MoveToResourcePreferedReplacementPatternIndex.CollectionChanged += (_, __) => MoveToResource_PreferedReplacementPatternIndex_Changed();
+            MoveToResourcePreferedReplacementPatternIndex.PropertyChanged += (_, __) => MoveToResource_PreferedReplacementPatternIndex_Changed();
 
-            _moveToResourcePreferedKeyPatternIndex.CollectionChanged += (_, __) => MoveToResource_PreferedKeyPatternIndex_Changed();
-            _moveToResourcePreferedKeyPatternIndex.PropertyChanged += (_, __) => MoveToResource_PreferedKeyPatternIndex_Changed();
+            MoveToResourcePreferedKeyPatternIndex.CollectionChanged += (_, __) => MoveToResource_PreferedKeyPatternIndex_Changed();
+            MoveToResourcePreferedKeyPatternIndex.PropertyChanged += (_, __) => MoveToResource_PreferedKeyPatternIndex_Changed();
         }
 
         [NotNull]
-        public ObservableIndexer<string, int> MoveToResourcePreferedReplacementPatternIndex => _moveToResourcePreferedReplacementPatternIndex;
+        public ObservableIndexer<string, int> MoveToResourcePreferedReplacementPatternIndex { get; } = new ObservableIndexer<string, int>(_ => 0);
 
         [NotNull]
-        public ObservableIndexer<string, int> MoveToResourcePreferedKeyPatternIndex => _moveToResourcePreferedKeyPatternIndex;
+        public ObservableIndexer<string, int> MoveToResourcePreferedKeyPatternIndex { get; } = new ObservableIndexer<string, int>(_ => 0);
 
         private void MoveToResource_PreferedReplacementPatternIndex_Changed()
         {
-            MoveToResourcePreferedReplacementPatterns = JsonConvert.SerializeObject(_moveToResourcePreferedReplacementPatternIndex);
+            MoveToResourcePreferedReplacementPatterns = JsonConvert.SerializeObject(MoveToResourcePreferedReplacementPatternIndex);
         }
 
         private void MoveToResource_PreferedKeyPatternIndex_Changed()
         {
-            MoveToResourcePreferedKeyPatterns = JsonConvert.SerializeObject(_moveToResourcePreferedKeyPatternIndex);
+            MoveToResourcePreferedKeyPatterns = JsonConvert.SerializeObject(MoveToResourcePreferedKeyPatternIndex);
         }
     }
 }

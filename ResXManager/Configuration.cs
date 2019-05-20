@@ -1,8 +1,6 @@
 ﻿namespace tomenglertde.ResXManager
 {
     using System.ComponentModel.Composition;
-    using System.Diagnostics.Contracts;
-
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
@@ -16,7 +14,6 @@
         public StandaloneConfiguration([NotNull] ITracer tracer)
             : base(tracer)
         {
-            Contract.Requires(tracer != null);
         }
 
         public override bool IsScopeSupported => false;

@@ -3,9 +3,6 @@
     using System;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Windows;
 
@@ -27,10 +24,8 @@
         private readonly ITracer _tracer;
 
         [ImportingConstructor]
-        public ConfigurationEditorView([CanBeNull] ExportProvider exportProvider, [NotNull] ITracer tracer)
+        public ConfigurationEditorView([NotNull] ExportProvider exportProvider, [NotNull] ITracer tracer)
         {
-            Contract.Requires(tracer != null);
-
             _tracer = tracer;
 
             try
@@ -63,14 +58,6 @@
             {
                 e.Cancel = true;
             }
-        }
-
-        [ContractInvariantMethod]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for code contracts.")]
-        [Conditional("CONTRACTS_FULL")]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_tracer != null);
         }
     }
 }

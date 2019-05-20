@@ -41,7 +41,6 @@
 
 namespace <#= localNamespace #> {
     using System;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -102,7 +101,6 @@ namespace <#= localNamespace #> {
 <# InsertRemarks(node.Comment); #>
         public static string <#= node.Key #> {
             get {
-                Contract.Ensures(Contract.Result<string>() != null);
                 return ResourceManager.GetString("<#= node.Key #>", resourceCulture) ?? string.Empty;
             }
         }
