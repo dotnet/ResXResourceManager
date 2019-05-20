@@ -65,7 +65,7 @@
 
                 entity.Entries.ForEach(entry =>
                 {
-                    var data = entrySnapshots.Where(s => string.Equals(entry.Key, s.Key)).Select(s => s.Data).FirstOrDefault() ?? Array.Empty<DataSnapshot>();
+                    var data = entrySnapshots.Where(s => string.Equals(entry.Key, s.Key, StringComparison.Ordinal)).Select(s => s.Data).FirstOrDefault() ?? Array.Empty<DataSnapshot>();
 
                     entry.Snapshot = data.ToDictionary(item => new CultureKey(item.Language), item => new ResourceData { Text = item.Text, Comment = item.Comment });
                 });

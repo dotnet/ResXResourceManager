@@ -30,7 +30,9 @@
         }
 
         [CanBeNull]
+#pragma warning disable CA1043 // Use Integral Or String Argument For Indexers
         public CultureInfo this[[NotNull] CultureInfo neutralCulture]
+#pragma warning restore CA1043 // Use Integral Or String Argument For Indexers
         {
             get
             {

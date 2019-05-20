@@ -159,7 +159,6 @@
         public Configuration Configuration { get; }
     }
 
-    [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
     [Export(typeof(IConfiguration))]
     [Export(typeof(Configuration))]
     public class Configuration : IConfiguration

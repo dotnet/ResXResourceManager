@@ -162,7 +162,9 @@
         #endregion
 
         [NotNull]
+#pragma warning disable CA2225 // Operator overloads have named alternates
         public static implicit operator CultureKey([CanBeNull] CultureInfo culture)
+#pragma warning restore CA2225 // Operator overloads have named alternates
         {
             return new CultureKey(culture);
         }

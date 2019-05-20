@@ -310,7 +310,7 @@
             var snapshotComment = Snapshot.GetValueOrDefault(culture)?.Comment ?? string.Empty;
             var currentComment = Comments.GetValue(culture) ?? string.Empty;
 
-            return !string.Equals(snapshotValue, currentValue) || !string.Equals(snapshotComment, currentComment);
+            return !string.Equals(snapshotValue, currentValue, StringComparison.Ordinal) || !string.Equals(snapshotComment, currentComment, StringComparison.Ordinal);
         }
 
         private void Values_ValueChanged([CanBeNull] object sender, [CanBeNull] EventArgs e)
@@ -427,7 +427,7 @@
                 yield break;
 
             var snapshotValue = snapshot.GetValueOrDefault(language.CultureKey).Maybe().Return(selector) ?? string.Empty;
-            if (snapshotValue.Equals(current ?? string.Empty))
+            if (snapshotValue.Equals(current ?? string.Empty, StringComparison.Ordinal))
                 yield break;
 
             yield return string.Format(CultureInfo.CurrentCulture, Resources.SnapshotAnnotation, snapshotValue);

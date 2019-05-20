@@ -36,7 +36,7 @@
         [CanBeNull]
         private string ApiKey => Credentials[0].Value;
 
-        public override void Translate(ITranslationSession translationSession)
+        public override async void Translate(ITranslationSession translationSession)
         {
             if (string.IsNullOrEmpty(ApiKey))
             {
@@ -75,25 +75,28 @@
                             "model", "base",
                             "key", ApiKey });
 
-                        // Call the Google API
-                        // ReSharper disable once AssignNullToNotNullAttribute
-                        var responseTask = GetHttpResponse("https://translation.googleapis.com/language/translate/v2", null, parameters, JsonConverter<TranslationRootObject>);
-
-                        // Handle successful run
-                        responseTask.ContinueWith(t =>
+                        try
                         {
-                            translationSession.Dispatcher.BeginInvoke(() =>
+
+                            // Call the Google API
+                            // ReSharper disable once AssignNullToNotNullAttribute
+                            var response = await GetHttpResponse("https://translation.googleapis.com/language/translate/v2", null, parameters, JsonConverter<TranslationRootObject>).ConfigureAwait(false);
+
+                            await translationSession.Dispatcher.BeginInvoke(() =>
                             {
-                                foreach (var tuple in sourceItems.Zip(t.Result.Data.Translations,
+                                foreach (var tuple in sourceItems.Zip(response.Data.Translations,
                                     (a, b) => new Tuple<ITranslationItem, string>(a, b.TranslatedText)))
                                 {
                                     tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2, 1.0));
                                 }
                             });
-                        }, TaskContinuationOptions.OnlyOnRanToCompletion);
 
-                        // Handle exception in run
-                        responseTask.ContinueWith(t => { translationSession.AddMessage(DisplayName + ": " + t.Exception?.InnerException?.Message); loop = false; }, TaskContinuationOptions.OnlyOnFaulted);
+                        }
+                        catch (Exception ex)
+                        {
+                            translationSession.AddMessage(DisplayName + ": " + ex.InnerException?.Message);
+                            loop = false;
+                        }
                     }
                 }
             }
@@ -125,7 +128,7 @@
                 }
 
                 Debug.WriteLine("Google URL: " + url);
-                using (var stream = await c.GetStreamAsync(url))
+                using (var stream = await c.GetStreamAsync(new Uri(url)).ConfigureAwait(false))
                 {
                     return conv(stream);
                 }

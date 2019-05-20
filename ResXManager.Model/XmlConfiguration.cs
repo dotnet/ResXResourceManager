@@ -81,7 +81,7 @@
                 }
             }
 
-            if ((@namespace == null) || !DefaultNamespace.Equals(@namespace.NamespaceName))
+            if ((@namespace == null) || !DefaultNamespace.Equals(@namespace.NamespaceName, StringComparison.Ordinal))
             {
                 @namespace = XNamespace.Get(DefaultNamespace);
                 root = new XElement(XName.Get("Values", @namespace.NamespaceName));
@@ -107,7 +107,7 @@
         {
             return _root.DescendantsAndSelf(_valueName)
                 .Select(node => new { Node = node, KeyAttribute = node.Attribute(_keyName) })
-                .Where(item => (item.KeyAttribute != null) && key.Equals(item.KeyAttribute.Value))
+                .Where(item => (item.KeyAttribute != null) && key.Equals(item.KeyAttribute.Value, StringComparison.Ordinal))
                 .Select(item => item.Node.FirstNode as XText)
                 .Where(node => node != null)
                 .Select(node => node.Value)
@@ -122,7 +122,7 @@
         public void SetValue([NotNull] string key, [CanBeNull] string value)
         {
             var valueNode = _root.Descendants(_valueName)
-                .FirstOrDefault(node => string.Equals(key, node.Attribute(_keyName)?.Value));
+                .FirstOrDefault(node => string.Equals(key, node.Attribute(_keyName)?.Value, StringComparison.Ordinal));
 
             if (value == null)
             {

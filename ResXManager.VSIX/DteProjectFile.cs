@@ -239,7 +239,7 @@
 
             const string t4FileName = "Resources.Designer.t4";
 
-            if (!_solution.GetProjectFiles().Any(file => file.RelativeFilePath.Equals(t4FileName)))
+            if (!_solution.GetProjectFiles().Any(file => file.RelativeFilePath.Equals(t4FileName, StringComparison.OrdinalIgnoreCase)))
             {
                 var fullName = Path.Combine(_solution.SolutionFolder, t4FileName);
                 File.WriteAllBytes(fullName, Resources.Resources_Designer_t4);

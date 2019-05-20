@@ -285,7 +285,7 @@
             }
             catch
             {
-                return new Tuple<string, EnvDTE.Window>[0];
+                return Array.Empty<Tuple<string, EnvDTE.Window>>();
             }
         }
 

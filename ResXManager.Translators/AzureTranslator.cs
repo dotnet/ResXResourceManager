@@ -39,7 +39,7 @@ namespace tomenglertde.ResXManager.Translators
                     return;
                 }
 
-                var token = await AzureAuthentication.GetBearerAccessTokenAsync(authenticationKey);
+                var token = await AzureAuthentication.GetBearerAccessTokenAsync(authenticationKey).ConfigureAwait(false);
 
                 var binding = new BasicHttpBinding();
                 var endpointAddress = new EndpointAddress("http://api.microsofttranslator.com/V2/soap.svc");

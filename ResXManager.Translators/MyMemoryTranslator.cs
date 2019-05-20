@@ -102,7 +102,7 @@
             if (!string.IsNullOrEmpty(key))
                 url += string.Format(CultureInfo.InvariantCulture, "&key={0}", HttpUtility.UrlEncode(key));
 
-            var webRequest = (HttpWebRequest)WebRequest.Create(url);
+            var webRequest = (HttpWebRequest)WebRequest.Create(new Uri(url));
             webRequest.Proxy = WebProxy;
 
             using (var webResponse = webRequest.GetResponse())

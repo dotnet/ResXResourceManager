@@ -32,7 +32,6 @@
         DuplicateKeyHandling DuplicateKeyHandling { get; }
     }
 
-    [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces", Justification = "Works fine with this")]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized", Justification = "value provided by AutoProperties")]
     public abstract class Configuration : ConfigurationBase, IConfiguration
     {

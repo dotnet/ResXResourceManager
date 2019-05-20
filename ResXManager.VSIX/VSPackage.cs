@@ -124,7 +124,7 @@
 
             var loaderMessages = await System.Threading.Tasks.Task.Run(FillCatalog, cancellationToken).ConfigureAwait(false);
 
-            var menuCommandService = await GetServiceAsync(typeof(IMenuCommandService));
+            var menuCommandService = await GetServiceAsync(typeof(IMenuCommandService)).ConfigureAwait(false);
 
             await JoinableTaskFactory.SwitchToMainThreadAsync();
 
@@ -394,7 +394,7 @@
         {
             return entity.Languages.Select(lang => lang.ProjectFile)
                 .OfType<DteProjectFile>()
-                .Any(projectFile => string.Equals(projectFile.ParentItem?.TryGetFileName(), fileName) && projectFile.IsWinFormsDesignerResource);
+                .Any(projectFile => string.Equals(projectFile.ParentItem?.TryGetFileName(), fileName, StringComparison.OrdinalIgnoreCase) && projectFile.IsWinFormsDesignerResource);
         }
 
         private static bool ContainsFile([NotNull] ResourceEntity entity, [CanBeNull] string fileName)

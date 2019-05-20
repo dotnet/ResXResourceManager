@@ -19,21 +19,7 @@ namespace tomenglertde.ResXManager.Translators
         private static readonly Regex _removeKeyboardShortcutIndicatorsRegex = new Regex(@"[&_](?=[\w\d])", RegexOptions.Compiled);
 
         [NotNull]
-        protected static readonly IWebProxy WebProxy = new WebProxy();
-
-        // ReSharper disable once NotNullMemberIsNotInitialized
-        static TranslatorBase()
-        {
-            try
-            {
-                WebProxy = WebRequest.DefaultWebProxy ?? new WebProxy();
-                WebProxy.Credentials = CredentialCache.DefaultNetworkCredentials;
-            }
-            catch
-            {
-                // just use default...
-            }
-        }
+        protected static readonly IWebProxy WebProxy = TryGetDefaultProxy();
 
         protected TranslatorBase([NotNull] string id, [NotNull] string displayName, [CanBeNull] Uri uri, [CanBeNull][ItemNotNull] IList<ICredentialItem> credentials)
         {
@@ -64,6 +50,20 @@ namespace tomenglertde.ResXManager.Translators
         protected static string RemoveKeyboardShortcutIndicators([NotNull] string value)
         {
             return _removeKeyboardShortcutIndicatorsRegex.Replace(value, string.Empty);
+        }
+
+        private static IWebProxy TryGetDefaultProxy()
+        {
+            try
+            {
+                var webProxy = WebRequest.DefaultWebProxy ?? new WebProxy();
+                webProxy.Credentials = CredentialCache.DefaultNetworkCredentials;
+                return webProxy;
+            }
+            catch
+            {
+                return new WebProxy();
+            }
         }
     }
 }

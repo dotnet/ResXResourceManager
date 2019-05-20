@@ -29,11 +29,11 @@
                 request.Content = new StringContent(string.Empty);
                 request.Headers?.TryAddWithoutValidation(OcpApimSubscriptionKeyHeader, authenticationKey);
 
-                var response = await client.SendAsync(request);
+                var response = await client.SendAsync(request).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
-                var token = await response.Content.ReadAsStringAsync();
+                var token = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 return token;
             }
@@ -47,7 +47,7 @@
         [ItemNotNull]
         public static async Task<string> GetBearerAccessTokenAsync([CanBeNull] string authenticationKey)
         {
-            return "Bearer " + await GetAccessTokenAsync(authenticationKey);
+            return "Bearer " + await GetAccessTokenAsync(authenticationKey).ConfigureAwait(false);
         }
     }
 }

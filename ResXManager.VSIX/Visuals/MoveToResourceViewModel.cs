@@ -110,7 +110,7 @@
             if (ReuseExisiting)
                 return null;
 
-            if (!string.Equals(propertyName, nameof(Key)))
+            if (!string.Equals(propertyName, nameof(Key), StringComparison.Ordinal))
                 return null;
 
             var key = Key;
