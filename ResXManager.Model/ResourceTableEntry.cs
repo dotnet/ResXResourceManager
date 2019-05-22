@@ -479,7 +479,16 @@
             return _stringFormatParameterPattern
                 .Matches(value)
                 .Cast<Match>()
-                .Aggregate(0L, (a, match) => a | (1L << int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture)));
+                .Aggregate(0L, (a, match) => a | ParseMatch(match));
+        }
+
+        private static long ParseMatch(Match match)
+        {
+            // the '\d' regex also matches non-latin numbers, must use int.TryPase...
+            if (!int.TryParse(match.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value))
+                return 0;
+
+            return 1L << value;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
