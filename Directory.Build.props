@@ -4,4 +4,11 @@
     <LangVersion>latest</LangVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
+
+  <Target Name="BypassFodyVSVersionCheck" BeforeTargets="FodyTarget">
+    <PropertyGroup>
+      <MsBuildMajorVersion>16</MsBuildMajorVersion>
+    </PropertyGroup>
+  </Target>
+
 </Project>
