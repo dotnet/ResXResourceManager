@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Translators
+﻿    namespace tomenglertde.ResXManager.Translators
 {
     using System;
     using System.Collections.Generic;
@@ -31,6 +31,14 @@
         public GoogleTranslator()
             : base("Google", "Google", _uri, _credentialItems)
         {
+        }
+
+        [DataMember(Name = "ApiKey")]
+        [CanBeNull]
+        public string SerializedApiKey
+        {
+            get => SaveCredentials ? Credentials[0].Value : null;
+            set => Credentials[0].Value = value;
         }
 
         [CanBeNull]
