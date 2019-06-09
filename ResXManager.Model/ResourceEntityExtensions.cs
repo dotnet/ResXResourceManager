@@ -207,6 +207,8 @@
             if (!table.Any())
                 return Array.Empty<EntryChange>();
 
+            table = table.NormalizeTable();
+
             var headerColumns = GetHeaderColumns(table, fixedColumnHeaders);
 
             var fixedColumnHeadersCount = fixedColumnHeaders.Count;
@@ -245,6 +247,41 @@
             VerifyCultures(entity, changes.Select(c => c.Culture).Distinct());
 
             return changes;
+        }
+
+        private static IList<IList<string>> NormalizeTable(this IList<IList<string>> table)
+        {
+            if (!table.Any())
+                return table;
+
+            var columnSizes = table
+                .Select(row => row.Count - row.Reverse().TakeWhile(string.IsNullOrWhiteSpace).Count())
+                .ToArray();
+
+            var columns = columnSizes.Max();
+
+            var normalized = table
+                .Select(row => NormalizeRow(row, columns))
+                .ToArray();
+
+            return normalized;
+        }
+
+        private static IList<string> NormalizeRow(IList<string> row, int expected)
+        {
+            var current = row.Count;
+
+            if (current > expected)
+                return row
+                    .Take(expected)
+                    .ToArray();
+
+            if (current < expected)
+                return row
+                    .Concat(Enumerable.Repeat(string.Empty, expected - current))
+                    .ToArray();
+
+            return row;
         }
 
         [NotNull]
