@@ -11,7 +11,7 @@ and hundreds of [5 star reviews](https://marketplace.visualstudio.com/items?item
 This is a community driven Open Source project. 
 As such it needs your support to keep it alive and evolving. 
 The best way to contribute is to help [fixing bugs, or adding new features](https://github.com/tom-englert/ResXResourceManager/issues).
-However, if you cannot help with coding, consider to [donate a small amount](https://opencollective.com/resxresourcemanager) to ensure <span>ResX&nbsp;Resource&nbsp;Manager</span> will continue to be a great project that can help you in your daily work.
+However, if you cannot help with coding, consider to [donate a small amount](wiki/Donate) to ensure <span>ResX&nbsp;Resource&nbsp;Manager</span> will continue to be a great project that can help you in your daily work.
 
 ---
 
