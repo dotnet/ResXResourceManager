@@ -1,4 +1,8 @@
-﻿1.35
+﻿1.36
+- #227: Hindi numeral in format specifier crashes Visual Studio
+- #228: Google API key not remembered across restarts
+
+1.35
 - #209: Show proper error message when a language is not defined.
 - #224: Error when opening from solution explorer when filter was previously applied.
 
