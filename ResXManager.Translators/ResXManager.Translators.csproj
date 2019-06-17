@@ -75,6 +75,7 @@
       <Link>Version.cs</Link>
     </Compile>
     <Compile Include="AzureAuthentication.cs" />
+    <Compile Include="AzureTranslationResponse.cs" />
     <Compile Include="AzureTranslator.cs" />
     <Compile Include="CredentialItem.cs" />
     <Compile Include="MSTerminologyTranslator.cs" />
