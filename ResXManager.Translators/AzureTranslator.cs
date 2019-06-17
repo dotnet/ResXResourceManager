@@ -1,18 +1,19 @@
 namespace tomenglertde.ResXManager.Translators
 {
+    using JetBrains.Annotations;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
+    using System.IO;
     using System.Linq;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
     using System.Runtime.Serialization;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-
-    using JetBrains.Annotations;
-
+    using System.Text;
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Translators.BingServiceReference;
-
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
@@ -41,63 +42,59 @@ namespace tomenglertde.ResXManager.Translators
 
                 var token = await AzureAuthentication.GetBearerAccessTokenAsync(authenticationKey).ConfigureAwait(false);
 
-                var binding = new BasicHttpBinding();
-                var endpointAddress = new EndpointAddress("http://api.microsofttranslator.com/V2/soap.svc");
-
-                using (var client = new LanguageServiceClient(binding, endpointAddress))
+                var translateOptions = new TranslateOptions
                 {
-                    var innerChannel = client.InnerChannel;
-                    // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                    if (innerChannel == null)
-                        // ReSharper disable once HeuristicUnreachableCode
-                        return;
+                    ContentType = "text/plain",
+                    IncludeMultipleMTAlternatives = true
+                };
 
-                    using (new OperationContextScope(innerChannel))
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+
+                    foreach (var languageGroup in translationSession.Items.GroupBy(item => item.TargetCulture))
                     {
-                        var httpRequestProperty = new HttpRequestMessageProperty();
-                        httpRequestProperty.Headers.Add("Authorization", token);
-                        var operationContext = OperationContext.Current;
-                        operationContext.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
+                        var cultureKey = languageGroup.Key;
+                        var targetLanguage = cultureKey.Culture ?? translationSession.NeutralResourcesLanguage;
+                        var uri = new Uri($"https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={translationSession.SourceLanguage.IetfLanguageTag}&to={targetLanguage.IetfLanguageTag}");
 
-                        var translateOptions = new TranslateOptions
+                        using (var itemsEnumerator = languageGroup.GetEnumerator())
                         {
-                            ContentType = "text/plain",
-                            IncludeMultipleMTAlternatives = true
-                        };
-
-                        foreach (var languageGroup in translationSession.Items.GroupBy(item => item.TargetCulture))
-                        {
-                            var cultureKey = languageGroup.Key;
-                            var targetLanguage = cultureKey.Culture ?? translationSession.NeutralResourcesLanguage;
-
-                            using (var itemsEnumerator = languageGroup.GetEnumerator())
+                            while (true)
                             {
-                                while (true)
+                                var sourceItems = itemsEnumerator.Take(10);
+                                var sourceStrings = sourceItems
+                                    // ReSharper disable once PossibleNullReferenceException
+                                    .Select(item => item.Source)
+                                    .Select(RemoveKeyboardShortcutIndicators)
+                                    .ToArray();
+
+                                if (!sourceStrings.Any())
+                                    break;
+
+                                var response = await client.PostAsync(uri, CreateRequestContent(sourceStrings)).ConfigureAwait(false);
+
+                                if (response.IsSuccessStatusCode)
                                 {
-                                    var sourceItems = itemsEnumerator.Take(10);
-                                    var sourceStrings = sourceItems
-                                        // ReSharper disable once PossibleNullReferenceException
-                                        .Select(item => item.Source)
-                                        .Select(RemoveKeyboardShortcutIndicators)
-                                        .ToArray();
+                                    var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-                                    if (!sourceStrings.Any())
-                                        break;
-
-                                    var response = client.GetTranslationsArray("", sourceStrings, translationSession.SourceLanguage.IetfLanguageTag, targetLanguage.IetfLanguageTag, 5, translateOptions);
-                                    if (response != null)
+                                    using (var reader = new StreamReader(stream, Encoding.UTF8))
                                     {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed => just push out results, no need to wait.
-                                        translationSession.Dispatcher.BeginInvoke(() => ReturnResults(sourceItems, response));
-                                    }
+                                        var translations = JsonConvert.DeserializeObject<List<AzureTranslationResponse>>(reader.ReadToEnd());
 
-                                    if (translationSession.IsCanceled)
-                                        break;
+                                        await translationSession.Dispatcher.BeginInvoke(() => ReturnResults(sourceItems, translations));
+                                    }
+                                }
+                                else
+                                {
+                                    var errorMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                    translationSession.AddMessage("Azure translator reported a problem: " + errorMessage);
                                 }
                             }
                         }
                     }
                 }
+
             }
             catch (Exception ex)
             {
@@ -116,7 +113,7 @@ namespace tomenglertde.ResXManager.Translators
         [CanBeNull]
         private string AuthenticationKey => Credentials[0].Value;
 
-        private void ReturnResults([NotNull][ItemNotNull] IEnumerable<ITranslationItem> items, [NotNull][ItemNotNull] IEnumerable<GetTranslationsResponse> responses)
+        private void ReturnResults([NotNull][ItemNotNull] IEnumerable<ITranslationItem> items, [NotNull][ItemNotNull] IEnumerable<AzureTranslationResponse> responses)
         {
             foreach (var tuple in Enumerate.AsTuples(items, responses))
             {
@@ -125,7 +122,7 @@ namespace tomenglertde.ResXManager.Translators
                 var translations = response.Translations;
                 foreach (var match in translations)
                 {
-                    translationItem.Results.Add(new TranslationMatch(this, match.TranslatedText, match.Rating / 5.0));
+                    translationItem.Results.Add(new TranslationMatch(this, match.Text, 5.0));
                 }
             }
         }
@@ -138,6 +135,21 @@ namespace tomenglertde.ResXManager.Translators
             {
                 new CredentialItem("AuthenticationKey", "Key")
             };
+        }
+
+        private HttpContent CreateRequestContent(IEnumerable<string> texts)
+        {
+            var payload = texts.Select(text => new { Text = text }).ToArray();
+
+            var serialized = JsonConvert.SerializeObject(payload);
+
+            var serializedBytes = Encoding.UTF8.GetBytes(serialized);
+
+            var byteContent = new ByteArrayContent(serializedBytes);
+
+            byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            return byteContent;
         }
     }
 }
