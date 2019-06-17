@@ -90,6 +90,8 @@ namespace tomenglertde.ResXManager.Translators
                                     var errorMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                                     translationSession.AddMessage("Azure translator reported a problem: " + errorMessage);
                                 }
+                                if (translationSession.IsCanceled)
+                                    break;
                             }
                         }
                     }
