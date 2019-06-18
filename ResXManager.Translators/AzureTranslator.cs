@@ -1,6 +1,5 @@
 namespace tomenglertde.ResXManager.Translators
 {
-    using JetBrains.Annotations;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
@@ -9,11 +8,12 @@ namespace tomenglertde.ResXManager.Translators
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Runtime.Serialization;
-    using System.ServiceModel;
-    using System.ServiceModel.Channels;
     using System.Text;
+
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Translators.BingServiceReference;
+
     using TomsToolbox.Core;
     using TomsToolbox.Desktop;
 
@@ -41,12 +41,6 @@ namespace tomenglertde.ResXManager.Translators
                 }
 
                 var token = await AzureAuthentication.GetBearerAccessTokenAsync(authenticationKey).ConfigureAwait(false);
-
-                var translateOptions = new TranslateOptions
-                {
-                    ContentType = "text/plain",
-                    IncludeMultipleMTAlternatives = true
-                };
 
                 using (var client = new HttpClient())
                 {
@@ -81,8 +75,11 @@ namespace tomenglertde.ResXManager.Translators
                                     using (var reader = new StreamReader(stream, Encoding.UTF8))
                                     {
                                         var translations = JsonConvert.DeserializeObject<List<AzureTranslationResponse>>(reader.ReadToEnd());
-
-                                        await translationSession.Dispatcher.BeginInvoke(() => ReturnResults(sourceItems, translations));
+                                        if (translations != null)
+                                        {
+#pragma warning disable CS4014 // Because this call is not awaited ... => just push out results, no need to wait.
+                                            translationSession.Dispatcher.BeginInvoke(() => ReturnResults(sourceItems, translations));
+                                        }
                                     }
                                 }
                                 else
