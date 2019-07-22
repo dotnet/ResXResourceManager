@@ -20,7 +20,7 @@ All available languages are displayed side by side in columns, to make it easy t
 
 Suitable for any .Net application; WPF is supported if you use the x:Static markup extension to access the ResX - resources.
 
-Available as VS2012-2017 extension and as standalone executable to support VS2010 and older or users without Visual Studio at all.
+Available as VS2012-2019 extension and as standalone executable to support VS2010 and older or users without Visual Studio at all.
 A scipting module is available as well, so you can easily automate resource tasks, e.g. export untranslated string during build.
 
 All versions can be downladed from the [releases](../../releases) page.
