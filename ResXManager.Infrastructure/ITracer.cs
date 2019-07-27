@@ -3,14 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.ComponentModel.Composition.Hosting;
     using System.Globalization;
     using System.IO;
     using System.Linq;
 
     using JetBrains.Annotations;
 
-    using TomsToolbox.Desktop.Composition;
+    using TomsToolbox.Composition;
 
     public interface ITracer
     {
@@ -42,33 +41,22 @@
         }
 
         [StringFormatMethod("format")]
-        public static void TraceError([NotNull] this ExportProvider exportProvider, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
+        public static void TraceError([NotNull] this IExportProvider exportProvider, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
         {
             exportProvider.GetExportedValue<ITracer>().TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
-        [StringFormatMethod("format")]
-        public static void TraceError([NotNull] this ICompositionHost exportProvider, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
-        {
-            exportProvider.GetExportedValue<ITracer>().TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
-        }
-
-        public static void TraceError([NotNull] this ExportProvider exportProvider, [Localizable(false)][NotNull] string message)
+        public static void TraceError([NotNull] this IExportProvider exportProvider, [Localizable(false)][NotNull] string message)
         {
             exportProvider.GetExportedValue<ITracer>().TraceError(message);
         }
 
-        public static void TraceError([NotNull] this ICompositionHost exportProvider, [Localizable(false)][NotNull] string message)
-        {
-            exportProvider.GetExportedValue<ITracer>().TraceError(message);
-        }
-
-        public static void WriteLine([NotNull] this ExportProvider exportProvider, [Localizable(false)] [NotNull] string message)
+        public static void WriteLine([NotNull] this IExportProvider exportProvider, [Localizable(false)] [NotNull] string message)
         {
             exportProvider.GetExportedValue<ITracer>().WriteLine(message);
         }
 
-        public static void TraceXamlLoaderError([NotNull] this ExportProvider exportProvider, [CanBeNull] Exception ex)
+        public static void TraceXamlLoaderError([NotNull] this IExportProvider exportProvider, [CanBeNull] Exception ex)
         {
             var exception = ex?.Message;
 

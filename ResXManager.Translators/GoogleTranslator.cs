@@ -17,8 +17,8 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
+    using TomsToolbox.Wpf;
 
     [Export(typeof(ITranslator))]
     public class GoogleTranslator : TranslatorBase

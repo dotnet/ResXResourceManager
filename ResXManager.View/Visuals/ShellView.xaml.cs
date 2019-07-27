@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using System.Globalization;
     using System.IO;
     using System.Text;
@@ -15,8 +14,10 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
+    using TomsToolbox.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.Composition.Mef;
 
     /// <summary>
     /// Interaction logic for ShellView.xaml
@@ -27,7 +28,7 @@
     public partial class ShellView
     {
         [ImportingConstructor]
-        public ShellView([NotNull] ExportProvider exportProvider)
+        public ShellView([NotNull] IExportProvider exportProvider)
         {
             try
             {

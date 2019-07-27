@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace tomenglertde.ResXManager.Translators
+﻿namespace tomenglertde.ResXManager.Translators
 {
+    using System.Collections.Generic;
+
     public class AzureTranslationResponse
     {
         public List<Translation> Translations { get; set; }

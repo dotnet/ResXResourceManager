@@ -7,8 +7,8 @@
 
     using Throttle;
 
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
+    using TomsToolbox.Wpf;
 
     /// <summary>
     /// Runs a project items custom tool only once, even if it gets triggered multiple times during change.

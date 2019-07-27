@@ -14,7 +14,7 @@
     using tomenglertde.ResXManager.View.Visuals;
     using tomenglertde.ResXManager.VSIX.Visuals;
 
-    using TomsToolbox.Desktop.Composition;
+    using TomsToolbox.Composition;
 
     public interface IRefactorings
     {
@@ -28,15 +28,15 @@
     internal class Refactorings : IRefactorings
     {
         [NotNull]
-        private readonly ICompositionHost _compositionHost;
+        private readonly IExportProvider _exportProvider;
         [CanBeNull]
         private ResourceEntity _lastUsedEntity;
         private bool _isLastUsedEntityInSameProject;
 
         [ImportingConstructor]
-        public Refactorings([NotNull] ICompositionHost compositionHost)
+        public Refactorings([NotNull] IExportProvider exportProvider)
         {
-            _compositionHost = compositionHost;
+            _exportProvider = exportProvider;
         }
 
         public bool CanMoveToResource([CanBeNull] EnvDTE.Document document)
@@ -45,7 +45,7 @@
             if (extension == null)
                 return false;
 
-            var configuration = _compositionHost.GetExportedValue<DteConfiguration>();
+            var configuration = _exportProvider.GetExportedValue<DteConfiguration>();
 
             var configurations = configuration.MoveToResources.Items
                 .Where(item => item.ParseExtensions().Contains(extension, StringComparer.OrdinalIgnoreCase));
@@ -76,7 +76,7 @@
 
             var fileName = Path.GetFileNameWithoutExtension(document.FullName);
 
-            var configurationItems = _compositionHost.GetExportedValue<DteConfiguration>().MoveToResources.Items;
+            var configurationItems = _exportProvider.GetExportedValue<DteConfiguration>().MoveToResources.Items;
 
             var configuration = configurationItems
                 .FirstOrDefault(item => item.ParseExtensions().Contains(extension, StringComparer.OrdinalIgnoreCase));
@@ -96,11 +96,11 @@
 
             var patterns = configuration.ParsePatterns().ToArray();
 
-            var resourceViewModel = _compositionHost.GetExportedValue<ResourceViewModel>();
+            var resourceViewModel = _exportProvider.GetExportedValue<ResourceViewModel>();
 
             resourceViewModel.Reload();
 
-            var resourceManager = _compositionHost.GetExportedValue<ResourceManager>();
+            var resourceManager = _exportProvider.GetExportedValue<ResourceManager>();
 
             var entities = resourceManager.ResourceEntities
                 .Where(entity => !entity.IsWinFormsDesignerResource)
@@ -130,7 +130,7 @@
 
             var viewModel = new MoveToResourceViewModel(patterns, entities, text, extension, selection.ClassName, selection.FunctionName, fileName);
 
-            var confirmed = ConfirmationDialog.Show(_compositionHost.Container, viewModel, Resources.MoveToResource).GetValueOrDefault();
+            var confirmed = ConfirmationDialog.Show(_exportProvider, viewModel, Resources.MoveToResource).GetValueOrDefault();
 
             if (!confirmed || string.IsNullOrEmpty(viewModel.Key))
                 return null;

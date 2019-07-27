@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using System.IO;
     using System.Windows;
 
@@ -10,7 +9,9 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
+    using TomsToolbox.Composition;
     using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.Composition.Mef;
     using TomsToolbox.Wpf.Converters;
 
     /// <summary>
@@ -24,7 +25,7 @@
         private readonly ITracer _tracer;
 
         [ImportingConstructor]
-        public ConfigurationEditorView([NotNull] ExportProvider exportProvider, [NotNull] ITracer tracer)
+        public ConfigurationEditorView([NotNull] IExportProvider exportProvider, [NotNull] ITracer tracer)
         {
             _tracer = tracer;
 

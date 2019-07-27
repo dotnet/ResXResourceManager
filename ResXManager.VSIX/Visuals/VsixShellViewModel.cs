@@ -9,13 +9,12 @@
 
     using JetBrains.Annotations;
 
+    using Throttle;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Visuals;
 
-    using Throttle;
-
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
 
     [Export]

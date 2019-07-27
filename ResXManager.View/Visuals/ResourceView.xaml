@@ -19,6 +19,7 @@
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              xmlns:effects="clr-namespace:TomsToolbox.Wpf.Styles.Effects;assembly=TomsToolbox.Wpf.Styles"
              xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
+             xmlns:composition="urn:TomsToolbox.Composition"
              x:Name="LayoutRoot"
              d:DataContext="{d:DesignInstance visuals:ResourceViewModel}">
   <UserControl.Resources>
@@ -65,7 +66,7 @@
 
     <Style TargetType="Image" x:Key="ImageStyle">
       <Style.Triggers>
-        <DataTrigger Binding="{Binding IsDarkTheme, Source={toms:Import infrastructure:ThemeManager}}" Value="True">
+        <DataTrigger Binding="{Binding IsDarkTheme, Source={composition:Import themes:ThemeManager}}" Value="True">
           <Setter Property="Effect" Value="{StaticResource InvertGrayEffect}" />
         </DataTrigger>
       </Style.Triggers>
@@ -80,8 +81,8 @@
   </UserControl.Resources>
 
   <UserControl.InputBindings>
-    <KeyBinding Key="N" Modifiers="Control" Command="{toms:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}" />
-    <KeyBinding Key="Insert" Modifiers="Shift" Command="{toms:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}" />
+    <KeyBinding Key="N" Modifiers="Control" Command="{composition:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}" />
+    <KeyBinding Key="Insert" Modifiers="Shift" Command="{composition:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}" />
   </UserControl.InputBindings>
 
   <Grid FocusManager.FocusedElement="{Binding ElementName=DataGrid}">
@@ -136,7 +137,7 @@
             <Decorator Width="5" />
             <ContentControl Focusable="False">
               <i:Interaction.Behaviors>
-                <toms:ContentControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListItemDecorator}" CompositionContext="{Binding}" />
+                <composition:ContentControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListItemDecorator}" CompositionContext="{Binding}" />
               </i:Interaction.Behaviors>
             </ContentControl>
           </StackPanel>
@@ -164,9 +165,9 @@
         </GroupStyle>
       </ListBox.GroupStyle>
       <ListBox.ContextMenu>
-        <ContextMenu Style="{DynamicResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}">
+        <ContextMenu Style="{DynamicResource {x:Static composition:ResourceKeys.CompositeContextMenuStyle}}">
           <i:Interaction.Behaviors>
-            <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListContextMenu}" />
+            <composition:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListContextMenu}" />
           </i:Interaction.Behaviors>
         </ContextMenu>
       </ListBox.ContextMenu>
@@ -277,7 +278,7 @@
           </Button>
           <Button ToolTip="{x:Static properties:Resources.AddKeyToolTip}"
                   Style="{StaticResource ToolbarCommandButtonStyle}"
-                  Command="{toms:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}">
+                  Command="{composition:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}">
             <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/add.png" />
           </Button>
           <Separator />
@@ -459,7 +460,7 @@
                            Source="{Binding Path=EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
                   </Grid>
                   <Decorator x:Name="padding" DockPanel.Dock="Left" Width="4" />
-                  <TextBlock Text="{Binding Path=DisplayName}" TextTrimming="CharacterEllipsis" Style="{StaticResource {ComponentResourceKey TypeInTargetAssembly=toms:ResourceKeys, ResourceId={x:Static toms:ResourceKeys.AutoToolTipTextBoxStyleKeyName}}}" />
+                  <TextBlock Text="{Binding Path=DisplayName}" TextTrimming="CharacterEllipsis" Style="{StaticResource {x:Static toms:ResourceKeys.AutoToolTipTextBoxStyle}}" />
                 </DockPanel>
               </DataTemplate>
 
@@ -508,8 +509,8 @@
 
             <DataGrid.InputBindings>
               <KeyBinding Key="Delete" Command="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
-              <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}"/>
-              <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}"/>
+              <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
+              <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
               <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
               <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
             </DataGrid.InputBindings>
@@ -521,11 +522,11 @@
                   <VirtualizingStackPanel.ContextMenu>
                     <ContextMenu>
                       <ContextMenu.Style>
-                        <Style TargetType="ContextMenu" BasedOn="{StaticResource {x:Static styles:ResourceKeys.CompositeContextMenuStyle}}">
-                          <Setter Property="toms:VisualComposition.RegionId" Value="{x:Static infrastructure:RegionId.ResourceTableContextMenu}" />
+                        <Style TargetType="ContextMenu" BasedOn="{StaticResource {x:Static composition:ResourceKeys.CompositeContextMenuStyle}}">
+                          <Setter Property="composition:VisualComposition.RegionId" Value="{x:Static infrastructure:RegionId.ResourceTableContextMenu}" />
                           <Style.Triggers>
                             <DataTrigger Binding="{Binding IsCellSelectionEnabled, Source={x:Static properties:Settings.Default}}" Value="True">
-                              <Setter Property="toms:VisualComposition.RegionId" Value="{x:Static infrastructure:RegionId.ResourceTableItemContextMenu}" />
+                              <Setter Property="composition:VisualComposition.RegionId" Value="{x:Static infrastructure:RegionId.ResourceTableItemContextMenu}" />
                             </DataTrigger>
                           </Style.Triggers>
                         </Style>
@@ -655,28 +656,28 @@
   </Grid>
 
   <i:Interaction.Behaviors>
-    <toms:CommandRoutingBehavior CommandSource="view:DeleteCommand"
-                                 CommandTarget="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}"
-                                 CommandParameter="{Binding ElementName=DataGrid}" />
-    <toms:CommandRoutingBehavior CommandSource="view:CutCommand"
-                                 CommandTarget="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" 
-                                 CommandParameter="{Binding ElementName=DataGrid}"/>
-    <toms:CommandRoutingBehavior CommandSource="view:CopyCommand"
-                                 CommandTarget="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
-                                 CommandParameter="{Binding ElementName=DataGrid}" />
-    <toms:CommandRoutingBehavior CommandSource="view:PasteCommand"
-                                 CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
-                                 CommandParameter="{Binding ElementName=DataGrid}" />
-    <toms:CommandRoutingBehavior CommandSource="view:IsInvariantCommand"
-                                 CommandTarget="{Binding ToggleInvariantCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
-                                 IsChecked="{Binding Path=SelectedItem.IsInvariant, Mode=OneWay, ElementName=DataGrid}" />
-    <toms:CommandRoutingBehavior CommandSource="view:IsItemInvariantCommand"
-                                 CommandTarget="{Binding ToggleItemInvariantCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
-                                 CommandParameter="{Binding ElementName=DataGrid}"
-                                 IsChecked="{Binding Path=(tools:ColumnManager.SelectedCells), Mode=OneWay, ElementName=DataGrid, Converter={x:Static converters:IsCellSelectionInvariantConverter.Default}}" />
-    <toms:CommandRoutingBehavior CommandSource="view:ToggleCellSelectionCommand"
-                                 CommandTarget="{Binding ToggleCellSelectionCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
-                                 IsChecked="{Binding IsCellSelectionEnabled, Mode=OneWay, Source={x:Static properties:Settings.Default}}" />
+    <composition:CommandRoutingBehavior CommandSource="view:DeleteCommand"
+                                        CommandTarget="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}"
+                                        CommandParameter="{Binding ElementName=DataGrid}" />
+    <composition:CommandRoutingBehavior CommandSource="view:CutCommand"
+                                        CommandTarget="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}"
+                                        CommandParameter="{Binding ElementName=DataGrid}" />
+    <composition:CommandRoutingBehavior CommandSource="view:CopyCommand"
+                                        CommandTarget="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
+                                        CommandParameter="{Binding ElementName=DataGrid}" />
+    <composition:CommandRoutingBehavior CommandSource="view:PasteCommand"
+                                        CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
+                                        CommandParameter="{Binding ElementName=DataGrid}" />
+    <composition:CommandRoutingBehavior CommandSource="view:IsInvariantCommand"
+                                        CommandTarget="{Binding ToggleInvariantCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
+                                        IsChecked="{Binding Path=SelectedItem.IsInvariant, Mode=OneWay, ElementName=DataGrid}" />
+    <composition:CommandRoutingBehavior CommandSource="view:IsItemInvariantCommand"
+                                        CommandTarget="{Binding ToggleItemInvariantCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
+                                        CommandParameter="{Binding ElementName=DataGrid}"
+                                        IsChecked="{Binding Path=(tools:ColumnManager.SelectedCells), Mode=OneWay, ElementName=DataGrid, Converter={x:Static converters:IsCellSelectionInvariantConverter.Default}}" />
+    <composition:CommandRoutingBehavior CommandSource="view:ToggleCellSelectionCommand"
+                                        CommandTarget="{Binding ToggleCellSelectionCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
+                                        IsChecked="{Binding IsCellSelectionEnabled, Mode=OneWay, Source={x:Static properties:Settings.Default}}" />
   </i:Interaction.Behaviors>
 
   <i:Interaction.Triggers>

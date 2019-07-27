@@ -6,7 +6,7 @@ namespace tomenglertde.ResXManager.Translators
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Core;
+    using TomsToolbox.Essentials;
 
     public class TranslationMatch : ITranslationMatch
     {

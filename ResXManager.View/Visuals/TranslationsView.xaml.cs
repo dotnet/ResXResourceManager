@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -10,8 +9,10 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
+    using TomsToolbox.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.Composition.Mef;
 
     /// <summary>
     /// Interaction logic for Translations.xaml
@@ -21,7 +22,7 @@
     public partial class TranslationsView
     {
         [ImportingConstructor]
-        public TranslationsView([NotNull] ExportProvider exportProvider)
+        public TranslationsView([NotNull] IExportProvider exportProvider)
         {
             try
             {

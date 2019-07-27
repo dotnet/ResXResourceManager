@@ -27,10 +27,10 @@
     using tomenglertde.ResXManager.View.Visuals;
     using tomenglertde.ResXManager.VSIX.Visuals;
 
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop.Composition;
+    using TomsToolbox.Composition;
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.XamlExtensions;
+    using TomsToolbox.Wpf.Composition.XamlExtensions;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
@@ -45,7 +45,7 @@
         private readonly Configuration _configuration;
 
         [NotNull]
-        private readonly ICompositionHost _compositionHost;
+        private readonly IExportProvider _exportProvider;
 
         [NotNull]
         private readonly ContentControl _contentWrapper = new ContentControl
@@ -68,13 +68,13 @@
             BitmapResourceID = 301;
             BitmapIndex = 1;
 
-            var compositionHost = VSPackage.Instance.CompositionHost;
-            _tracer = compositionHost.GetExportedValue<ITracer>();
-            _configuration = compositionHost.GetExportedValue<Configuration>();
+            var exportProvider = VSPackage.Instance.ExportProvider;
+            _tracer = exportProvider.GetExportedValue<ITracer>();
+            _configuration = exportProvider.GetExportedValue<Configuration>();
 
-            compositionHost.GetExportedValue<ResourceManager>().BeginEditing += ResourceManager_BeginEditing;
+            exportProvider.GetExportedValue<ResourceManager>().BeginEditing += ResourceManager_BeginEditing;
 
-            _compositionHost = compositionHost;
+            _exportProvider = exportProvider;
 
             VisualComposition.Error += VisualComposition_Error;
             _contentWrapper.Loaded += ContentWrapper_Loaded;
@@ -120,9 +120,9 @@
         {
             try
             {
-                _compositionHost.GetExportedValue<ResourceViewModel>().Reload();
+                _exportProvider.GetExportedValue<ResourceViewModel>().Reload();
 
-                var view = _compositionHost.GetExportedValue<VsixShellView>();
+                var view = _exportProvider.GetExportedValue<VsixShellView>();
 
                 _contentWrapper.Content = view;
 
@@ -356,7 +356,7 @@
                 var projectName = containingProject.Name;
                 if (projectFile == null)
                 {
-                    projectFile = new DteProjectFile(_compositionHost.GetExportedValue<DteSolution>(), languageFileName, projectName, containingProject.UniqueName, projectItem);
+                    projectFile = new DteProjectFile(_exportProvider.GetExportedValue<DteSolution>(), languageFileName, projectName, containingProject.UniqueName, projectItem);
                 }
                 else
                 {

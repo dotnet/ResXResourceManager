@@ -9,7 +9,7 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Core;
+    using TomsToolbox.Essentials;
 
     public static class Snapshot
     {

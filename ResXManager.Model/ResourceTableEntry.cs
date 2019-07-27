@@ -17,13 +17,13 @@
 
     using PropertyChanged;
 
+    using Throttle;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
 
-    using Throttle;
-
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
+    using TomsToolbox.Wpf;
 
     /// <summary>
     /// Represents one entry in the resource table.
@@ -350,7 +350,7 @@
             var value = Values.GetValue(cultureKey);
 
             return GetStringFormatParameterMismatchAnnotations(language)
-                .Concat(GetSnapshotDifferences(language, value, d => d.Text))
+                .Concat(GetSnapshotDifferences(language, value, d => d?.Text))
                 .Concat(GetInvariantMismatches(cultureKey, value))
                 .ToArray();
         }
@@ -415,7 +415,7 @@
         [ItemNotNull]
         private ICollection<string> GetCommentAnnotations([NotNull] ResourceLanguage language)
         {
-            return GetSnapshotDifferences(language, Comments.GetValue(language.CultureKey), d => d.Comment)
+            return GetSnapshotDifferences(language, Comments.GetValue(language.CultureKey), d => d?.Comment)
                 .ToArray();
         }
 
@@ -426,7 +426,9 @@
             if (snapshot == null)
                 yield break;
 
-            var snapshotValue = snapshot.GetValueOrDefault(language.CultureKey).Maybe().Return(selector) ?? string.Empty;
+            var snapshotData = snapshot.GetValueOrDefault(language.CultureKey);
+
+            var snapshotValue = selector(snapshotData) ?? string.Empty;
             if (snapshotValue.Equals(current ?? string.Empty, StringComparison.Ordinal))
                 yield break;
 

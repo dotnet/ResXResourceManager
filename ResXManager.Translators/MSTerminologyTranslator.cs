@@ -11,8 +11,8 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Translators.Microsoft.TerminologyService;
 
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
+    using TomsToolbox.Wpf;
 
     [Export(typeof(ITranslator))]
     public class MSTerminologyTranslator : TranslatorBase

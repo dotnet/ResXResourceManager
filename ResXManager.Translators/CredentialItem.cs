@@ -1,12 +1,12 @@
 namespace tomenglertde.ResXManager.Translators
 {
+    using System.ComponentModel;
+
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Desktop;
-
-    public class CredentialItem : ObservableObject, ICredentialItem
+    public class CredentialItem : INotifyPropertyChanged, ICredentialItem
     {
         public CredentialItem([NotNull] string key, [NotNull] string description)
         {
@@ -19,5 +19,7 @@ namespace tomenglertde.ResXManager.Translators
         public string Description { get; }
 
         public string Value { get; set; }
+        
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -10,42 +10,13 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
-    using TomsToolbox.Core;
-
     internal class ResourceScope : IResourceScope
     {
         public ResourceScope([NotNull] object entries, [NotNull] object languages, [NotNull] object comments)
         {
-            // ReSharper disable AssignNullToNotNullAttribute
-            Entries = entries.PsObjectCast<object>().TryCast().Returning<IEnumerable<ResourceTableEntry>>()
-                .When<IEnumerable>(item => item.PsCast<ResourceTableEntry>().ToArray())
-                .When<object>(item => new[] { item.PsObjectCast<ResourceTableEntry>() })
-                .Result;
-
-            if (Entries == null)
-                // ReSharper disable once LocalizableElement
-                throw new ArgumentException("Invalid input", nameof(entries));
-
-            Languages = languages.PsObjectCast<object>().TryCast().Returning<IEnumerable<CultureKey>>()
-                .When<string>(item => new[] { CultureKey.Parse(item) })
-                .When<IEnumerable>(item => item.PsCast<object>().Select(CultureKey.Parse).ToArray())
-                .When<object>(item => new[] { CultureKey.Parse(item.PsObjectCast<object>()) })
-                .Result;
-
-            if (Languages == null)
-                // ReSharper disable once LocalizableElement
-                throw new ArgumentException("Invalid input", nameof(languages));
-
-            Comments = comments.PsObjectCast<object>().TryCast().Returning<IEnumerable<CultureKey>>()
-                .When<string>(item => new[] { CultureKey.Parse(item) })
-                .When<IEnumerable>(item => item.PsCast<object>().Select(CultureKey.Parse).ToArray())
-                .When<object>(item => new[] { CultureKey.Parse(item.PsObjectCast<object>()) })
-                .Result;
-            // ReSharper restore AssignNullToNotNullAttribute
-
-            if (Comments == null)
-                // ReSharper disable once LocalizableElement
-                throw new ArgumentException("Invalid input", nameof(comments));
+            Entries = CastResourceTableEntries(entries);
+            Languages = CastLanguages(languages);
+            Comments = CastLanguages(comments);
         }
 
         public IEnumerable<ResourceTableEntry> Entries { get; }
@@ -53,6 +24,43 @@
         public IEnumerable<CultureKey> Languages { get; }
 
         public IEnumerable<CultureKey> Comments { get; }
+
+        private static IEnumerable<CultureKey> CastLanguages(object languages)
+        {
+            IEnumerable<CultureKey> resourceLanguages = null;
+
+            switch (languages.PsObjectCast<object>())
+            {
+                case string str:
+                    resourceLanguages = new[] {CultureKey.Parse(str)};
+                    break;
+                case IEnumerable enumerable:
+                    resourceLanguages = enumerable.PsCast<object>().Select(CultureKey.Parse).ToArray();
+                    break;
+                case object obj:
+                    resourceLanguages = new[] {CultureKey.Parse(obj.PsObjectCast<object>())};
+                    break;
+            }
+
+            return resourceLanguages;
+        }
+
+        private static IEnumerable<ResourceTableEntry> CastResourceTableEntries(object entries)
+        {
+            IEnumerable<ResourceTableEntry> resourceTableEntries = null;
+
+            switch (entries.PsObjectCast<object>())
+            {
+                case IEnumerable enumerable:
+                    resourceTableEntries = enumerable.PsCast<ResourceTableEntry>().ToArray();
+                    break;
+                case object obj:
+                    resourceTableEntries = new[] {obj.PsObjectCast<ResourceTableEntry>()};
+                    break;
+            }
+
+            return resourceTableEntries;
+        }
     }
 
     internal static class ExtensionMethods

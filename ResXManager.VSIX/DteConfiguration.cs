@@ -8,6 +8,8 @@
 
     using Microsoft.VisualStudio.Shell;
 
+    using PropertyChanged;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 

@@ -2,15 +2,17 @@
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Globalization;
+    using System.Windows.Threading;
 
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf;
 
-    public class TranslationSession : ObservableObject, ITranslationSession
+    public class TranslationSession : INotifyPropertyChanged, ITranslationSession
     {
         [NotNull]
         [ItemNotNull]
@@ -24,6 +26,8 @@
 
             Messages = new ReadOnlyObservableCollection<string>(_internalMessage);
         }
+
+        public Dispatcher Dispatcher { get; } = Dispatcher.CurrentDispatcher;
 
         public CultureInfo SourceLanguage { get; }
 
@@ -50,5 +54,8 @@
         {
             IsCanceled = true;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged
+            ;
     }
 }

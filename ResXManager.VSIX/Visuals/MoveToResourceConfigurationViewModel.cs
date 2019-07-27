@@ -6,7 +6,7 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.Composition.Mef;
 
     [LocalizedDisplayName(StringResourceKey.MoveToResource)]
     [VisualCompositionExport(RegionId.Configuration)]

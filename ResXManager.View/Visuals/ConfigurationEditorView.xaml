@@ -14,6 +14,7 @@
              xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
+             xmlns:composition="urn:TomsToolbox.Composition"
              d:DataContext="{d:DesignInstance visuals:ConfigurationEditorViewModel}">
   <UserControl.Resources>
 
@@ -149,13 +150,13 @@
                  ItemContainerStyle="{StaticResource EmumSelectorItemContainerStyle}" />
       </GroupBox>
 
-      <Decorator Height="5"/>
+      <Decorator Height="5" />
 
       <GroupBox Header="{x:Static properties:Resources.Configuration_EmptyValueHandlingHeader}" Style="{StaticResource GroupStyle}">
-          <CheckBox Margin="10"
-                    Style="{StaticResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
-                    Content="{x:Static properties:Resources.Configuration_EmptyValueHandling}"
-                    IsChecked="{Binding Configuration.RemoveEmptyEntries}"/>
+        <CheckBox Margin="10"
+                  Style="{StaticResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
+                  Content="{x:Static properties:Resources.Configuration_EmptyValueHandling}"
+                  IsChecked="{Binding Configuration.RemoveEmptyEntries}" />
       </GroupBox>
 
       <Decorator Height="5" />
@@ -209,7 +210,7 @@
           </DataTemplate>
         </ItemsControl.ItemTemplate>
         <i:Interaction.Behaviors>
-          <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.Configuration}" />
+          <composition:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.Configuration}" />
         </i:Interaction.Behaviors>
       </ItemsControl>
 

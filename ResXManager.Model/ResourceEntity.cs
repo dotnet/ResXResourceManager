@@ -12,7 +12,7 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Core;
+    using TomsToolbox.Essentials;
 
     /// <summary>
     /// Represents a logical resource file, e.g. "Resources".

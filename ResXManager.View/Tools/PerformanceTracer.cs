@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿namespace tomenglertde.ResXManager.View.Tools
 {
     using System;
     using System.ComponentModel;
@@ -11,8 +11,9 @@
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
+    using tomenglertde.ResXManager.Model;
 
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf;
 
     [Export]
     public class PerformanceTracer

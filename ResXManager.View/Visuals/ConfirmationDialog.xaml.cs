@@ -1,7 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System;
-    using System.ComponentModel.Composition.Hosting;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -10,6 +9,7 @@
 
     using JetBrains.Annotations;
 
+    using TomsToolbox.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
@@ -23,7 +23,7 @@
             InitializeComponent();
         }
 
-        public static bool? Show([NotNull] ExportProvider exportProvider, [CanBeNull] object content, [CanBeNull] string title)
+        public static bool? Show([NotNull] IExportProvider exportProvider, [CanBeNull] object content, [CanBeNull] string title)
         {
             var window = new Window
             {

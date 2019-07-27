@@ -9,12 +9,12 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Properties;
-
     using Throttle;
 
-    using TomsToolbox.Desktop;
+    using tomenglertde.ResXManager.View.Properties;
+    using tomenglertde.ResXManager.View.Tools;
+
+    using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
     public class SelectAllBehavior : Behavior<ListBox>

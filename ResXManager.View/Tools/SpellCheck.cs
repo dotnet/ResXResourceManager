@@ -9,8 +9,7 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 

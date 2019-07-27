@@ -1,12 +1,12 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System;
-    using System.ComponentModel.Composition.Hosting;
 
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
 
+    using TomsToolbox.Composition;
     using TomsToolbox.Wpf.Composition;
 
     /// <summary>
@@ -14,7 +14,7 @@
     /// </summary>
     public partial class CodeReferencesToolTip
     {
-        public CodeReferencesToolTip([NotNull] ExportProvider exportProvider)
+        public CodeReferencesToolTip([NotNull] IExportProvider exportProvider)
         {
             try
             {

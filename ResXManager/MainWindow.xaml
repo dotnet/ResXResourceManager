@@ -5,6 +5,7 @@
         xmlns:toms="urn:TomsToolbox"
         xmlns:infrastructure="urn:ResXManager.Infrastructure"
         xmlns:styles="urn:TomsToolbox.Wpf.Styles"
+        xmlns:composition="urn:TomsToolbox.Composition"
         Title="ResX Resource Manager" Height="800" Width="1000"
         Style="{DynamicResource {x:Static styles:ResourceKeys.WindowStyle}}"
-        toms:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Main}" />
+        composition:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Main}" />

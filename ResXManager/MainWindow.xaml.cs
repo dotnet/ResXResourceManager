@@ -3,7 +3,6 @@
     using System;
     using System.ComponentModel;
     using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
     using System.Windows;
     using System.Windows.Controls.Primitives;
@@ -15,6 +14,7 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Properties;
 
+    using TomsToolbox.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
@@ -31,7 +31,7 @@
         private Vector _lastKnownLocation;
 
         [ImportingConstructor]
-        public MainWindow([NotNull] ExportProvider exportProvider, [NotNull] ITracer tracer)
+        public MainWindow([NotNull] IExportProvider exportProvider, [NotNull] ITracer tracer)
         {
             _tracer = tracer;
 

@@ -3,6 +3,7 @@ namespace tomenglertde.ResXManager.Translators
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Net.Http;
@@ -14,8 +15,8 @@ namespace tomenglertde.ResXManager.Translators
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
+    using TomsToolbox.Wpf;
 
     [Export(typeof(ITranslator))]
     public class AzureTranslator : TranslatorBase
@@ -141,6 +142,8 @@ namespace tomenglertde.ResXManager.Translators
             var payload = texts.Select(text => new { Text = text }).ToArray();
 
             var serialized = JsonConvert.SerializeObject(payload);
+
+            Debug.Assert(serialized != null, nameof(serialized) + " != null");
 
             var serializedBytes = Encoding.UTF8.GetBytes(serialized);
 

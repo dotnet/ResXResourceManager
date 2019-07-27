@@ -11,8 +11,8 @@
 
     using tomenglertde.ResXManager.Model;
 
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
+    using TomsToolbox.Wpf;
 
     internal class DteProjectFile : ProjectFile
     {

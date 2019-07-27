@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Threading;
@@ -10,7 +9,9 @@
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
+    using tomenglertde.ResXManager.View.Themes;
 
+    using TomsToolbox.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
@@ -25,7 +26,7 @@
         private readonly ThemeManager _themeManager;
 
         [ImportingConstructor]
-        public VsixShellView([NotNull] ExportProvider exportProvider, [NotNull] ThemeManager themeManager, VsixShellViewModel viewModel)
+        public VsixShellView([NotNull] IExportProvider exportProvider, [NotNull] ThemeManager themeManager, VsixShellViewModel viewModel)
         {
             _themeManager = themeManager;
 

@@ -17,18 +17,17 @@
 
     using JetBrains.Annotations;
 
+    using Throttle;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.ColumnHeaders;
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Tools;
 
-    using Throttle;
-
-    using TomsToolbox.Desktop;
     using TomsToolbox.ObservableCollections;
     using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.Composition.Mef;
 
     [Export]
     [VisualCompositionExport(RegionId.Content, Sequence = 1)]

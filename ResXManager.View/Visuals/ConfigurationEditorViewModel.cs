@@ -10,10 +10,9 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
 
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.Composition.Mef;
 
     [VisualCompositionExport(RegionId.Content, Sequence = 3)]
     internal class ConfigurationEditorViewModel : ObservableObject

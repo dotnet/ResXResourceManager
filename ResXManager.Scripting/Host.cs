@@ -14,13 +14,10 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Model.Properties;
 
-    using TomsToolbox.Desktop.Composition;
-
     public sealed class Host : IDisposable
     {
-        [NotNull]
-        private readonly ICompositionHost _compositionHost = new CompositionHost();
-        [NotNull]
+        private readonly AggregateCatalog _compositionCatalog;
+        private readonly CompositionContainer _compositionContainer;
         private readonly SourceFilesProvider _sourceFilesProvider;
 
         public Host()
@@ -28,14 +25,19 @@
             var assembly = GetType().Assembly;
             var folder = Path.GetDirectoryName(assembly.Location);
 
-            // ReSharper disable once AssignNullToNotNullAttribute
-            _compositionHost.AddCatalog(new DirectoryCatalog(folder, "*.dll"));
+            _compositionCatalog = new AggregateCatalog();
+            _compositionContainer = new CompositionContainer(_compositionCatalog, true);
+            //_exportProvider = new ExportProviderAdapter(_compositionContainer);
+            //_compositionContainer.ComposeExportedValue(_exportProvider);
 
-            _sourceFilesProvider = _compositionHost.GetExportedValue<SourceFilesProvider>();
-            ResourceManager = _compositionHost.GetExportedValue<ResourceManager>();
+            // ReSharper disable once AssignNullToNotNullAttribute
+            _compositionCatalog.Catalogs.Add(new DirectoryCatalog(folder, "*.dll"));
+
+            _sourceFilesProvider = _compositionContainer.GetExportedValue<SourceFilesProvider>();
+            ResourceManager = _compositionContainer.GetExportedValue<ResourceManager>();
             ResourceManager.BeginEditing += ResourceManager_BeginEditing;
 
-            Configuration = _compositionHost.GetExportedValue<Configuration>();
+            Configuration = _compositionContainer.GetExportedValue<Configuration>();
         }
 
         [NotNull]
@@ -104,7 +106,8 @@
 
         public void Dispose()
         {
-            _compositionHost.Dispose();
+            _compositionCatalog.Dispose();
+            _compositionContainer.Dispose();
         }
 
         private void ResourceManager_BeginEditing([NotNull] object sender, [NotNull] ResourceBeginEditingEventArgs e)

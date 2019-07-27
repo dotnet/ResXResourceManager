@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager
 {
     using System;
+    using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.IO;
     using System.Reflection;
@@ -10,22 +11,28 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Desktop.Composition;
+    using TomsToolbox.Composition;
     using TomsToolbox.Wpf.Composition;
-    using TomsToolbox.Wpf.XamlExtensions;
+    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.XamlExtensions;
 
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public sealed partial class App : IDisposable
     {
-        [NotNull]
-        private readonly ICompositionHost _compositionHost = new CompositionHost();
+        private readonly AggregateCatalog _compositionCatalog;
+        private readonly CompositionContainer _compositionContainer;
+        private readonly IExportProvider _exportProvider;
 
 #if DEBUG
         public App()
         {
             System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("de-DE");
+
+            _compositionCatalog = new AggregateCatalog();
+            _compositionContainer = new CompositionContainer(_compositionCatalog, true);
+            _exportProvider = new ExportProviderAdapter(_compositionContainer);
         }
 #endif
 
@@ -36,13 +43,15 @@
             var assembly = GetType().Assembly;
             var folder = Path.GetDirectoryName(assembly.Location);
 
-            _compositionHost.AddCatalog(assembly);
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
             // ReSharper disable once AssignNullToNotNullAttribute
-            _compositionHost.AddCatalog(new DirectoryCatalog(folder, "*.dll"));
+            _compositionCatalog.Catalogs.Add(new DirectoryCatalog(folder, "*.dll"));
 
-            Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_compositionHost.Container));
+            _compositionContainer.ComposeExportedValue(_exportProvider);
 
-            var tracer = _compositionHost.GetExportedValue<ITracer>();
+            Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_exportProvider));
+
+            var tracer = _exportProvider.GetExportedValue<ITracer>();
             tracer.WriteLine("Started");
 
             tracer.WriteLine(ResXManager.Properties.Resources.IntroMessage);
@@ -51,7 +60,7 @@
 
             VisualComposition.Error += (_, args) => tracer.TraceError(args.Text);
 
-            MainWindow = _compositionHost.GetExportedValue<MainWindow>();
+            MainWindow = _exportProvider.GetExportedValue<MainWindow>();
             MainWindow.Show();
         }
 
@@ -64,7 +73,8 @@
 
         public void Dispose()
         {
-            _compositionHost.Dispose();
+            _compositionCatalog.Dispose();
+            _compositionContainer.Dispose();
         }
     }
 }

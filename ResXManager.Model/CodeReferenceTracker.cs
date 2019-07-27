@@ -13,7 +13,7 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Core;
+    using TomsToolbox.Essentials;
 
     using ThreadState = System.Threading.ThreadState;
 

@@ -6,7 +6,7 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Core;
+    using TomsToolbox.Essentials;
     using TomsToolbox.ObservableCollections;
 
     public sealed partial class Settings

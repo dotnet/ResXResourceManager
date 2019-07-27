@@ -10,8 +10,7 @@
 
     using tomenglertde.ResXManager.View.Properties;
 
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
 
     public class NeutralCultureCountryOverrides
     {

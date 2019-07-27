@@ -2,6 +2,7 @@ namespace tomenglertde.ResXManager.Translators
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Net;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
@@ -10,10 +11,8 @@ namespace tomenglertde.ResXManager.Translators
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Desktop;
-
     [DataContract]
-    public abstract class TranslatorBase : ObservableObject, ITranslator
+    public abstract class TranslatorBase : INotifyPropertyChanged, ITranslator
     {
         [NotNull]
         private static readonly Regex _removeKeyboardShortcutIndicatorsRegex = new Regex(@"[&_](?=[\w\d])", RegexOptions.Compiled);
@@ -65,5 +64,7 @@ namespace tomenglertde.ResXManager.Translators
                 return new WebProxy();
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager
 {
     using System.ComponentModel.Composition;
+
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;

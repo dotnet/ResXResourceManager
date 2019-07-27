@@ -12,7 +12,7 @@ namespace tomenglertde.ResXManager.View.Visuals
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf;
 
     public class TranslationItem : ObservableObject, ITranslationItem
     {

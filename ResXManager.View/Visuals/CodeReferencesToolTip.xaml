@@ -7,12 +7,13 @@
          xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
          xmlns:toms="urn:TomsToolbox"
          xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
+         xmlns:composition="urn:TomsToolbox.Composition"
          d:DataContext="{d:DesignInstance model:ResourceTableEntry}">
   <ToolTip.Template>
     <ControlTemplate TargetType="Control">
       <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
         <Grid Margin="{TemplateBinding Padding}">
-          <Grid DataContext="{toms:Import model:CodeReferenceTracker}" d:DataContext="{d:DesignInstance model:CodeReferenceTracker}">
+          <Grid DataContext="{composition:Import model:CodeReferenceTracker}" d:DataContext="{d:DesignInstance model:CodeReferenceTracker}">
             <ProgressBar x:Name="Progress" Maximum="100" BorderThickness="0" Background="Transparent" Visibility="Collapsed"
                          Value="{Binding Path=Progress, Mode=OneWay}" />
             <TextBlock x:Name="Text" MaxWidth="300" TextWrapping="Wrap" />
@@ -71,7 +72,7 @@
           <Setter TargetName="Text" Property="Text" Value="{x:Static properties:Resources.NoCodeReferencesToolTip}" />
         </DataTrigger>
         <DataTrigger Binding="{Binding CodeReferences}" Value="{x:Null}">
-          <Setter TargetName="Text" Property="Text" Value="{Binding Path=Progress, Source={toms:Import model:CodeReferenceTracker}, StringFormat={x:Static properties:Resources.CodeReferenceTrackingInProgress}}" />
+          <Setter TargetName="Text" Property="Text" Value="{Binding Path=Progress, Source={composition:Import model:CodeReferenceTracker}, StringFormat={x:Static properties:Resources.CodeReferenceTrackingInProgress}}" />
           <Setter TargetName="Progress" Property="Visibility" Value="Visible" />
         </DataTrigger>
         <MultiDataTrigger>

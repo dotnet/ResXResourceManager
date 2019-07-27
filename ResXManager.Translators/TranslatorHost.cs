@@ -6,12 +6,12 @@
 
     using JetBrains.Annotations;
 
+    using Throttle;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Translators.Properties;
 
-    using Throttle;
-
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf;
 
     [Export]
     public class TranslatorHost

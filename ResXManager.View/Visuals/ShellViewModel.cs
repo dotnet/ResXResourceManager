@@ -6,14 +6,13 @@
 
     using JetBrains.Annotations;
 
+    using Throttle;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
 
-    using Throttle;
-
-    using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.Composition.Mef;
 
     [Export]
     [VisualCompositionExport(RegionId.Shell)]

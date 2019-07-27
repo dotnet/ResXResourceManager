@@ -7,7 +7,7 @@
 
     using JetBrains.Annotations;
 
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf;
 
     /// <summary>
     /// Represents a file associated with a project.

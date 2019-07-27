@@ -22,17 +22,19 @@
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
+    using Throttle;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Properties;
+    using tomenglertde.ResXManager.View.Tools;
     using tomenglertde.ResXManager.View.Visuals;
     using tomenglertde.ResXManager.VSIX.Visuals;
 
-    using Throttle;
-
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
-    using TomsToolbox.Desktop.Composition;
+    using TomsToolbox.Composition;
+    using TomsToolbox.Essentials;
+    using TomsToolbox.Wpf;
+    using TomsToolbox.Wpf.Composition.Mef;
 
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -50,12 +52,11 @@
     [ProvideAutoLoad(UIContextGuids.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
     public sealed class VSPackage : AsyncPackage
     {
-        [NotNull]
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
-        [NotNull]
-        private readonly ICompositionHost _compositionHost = new CompositionHost();
-        [NotNull]
-        private readonly ManualResetEvent _compositionHostLoaded = new ManualResetEvent(false);
+        private readonly ManualResetEvent _exportProviderLoaded = new ManualResetEvent(false);
+        private readonly AggregateCatalog _compositionCatalog;
+        private readonly CompositionContainer _compositionContainer;
+        private readonly IExportProvider _exportProvider;
 
         [CanBeNull]
         private EnvDTE.SolutionEvents _solutionEvents;
@@ -77,6 +78,11 @@
         {
             _instance = this;
             Tracer = new OutputWindowTracer(this);
+
+            _compositionCatalog = new AggregateCatalog();
+            _compositionContainer = new CompositionContainer(_compositionCatalog, true);
+            _exportProvider = new ExportProviderAdapter(_compositionContainer);
+            _compositionContainer.ComposeExportedValue(_exportProvider);
         }
 
         [NotNull]
@@ -92,13 +98,13 @@
         }
 
         [NotNull]
-        public ICompositionHost CompositionHost
+        public IExportProvider ExportProvider
         {
             get
             {
                 var stopwatch = Stopwatch.StartNew();
 
-                _compositionHostLoaded.WaitOne();
+                _exportProviderLoaded.WaitOne();
 
                 stopwatch.Stop();
 
@@ -107,7 +113,7 @@
                     Tracer.WriteLine("Init: " + stopwatch.ElapsedMilliseconds + " ms");
                 }
 
-                return _compositionHost;
+                return _exportProvider;
             }
         }
 
@@ -130,7 +136,7 @@
 
             ShowLoaderMessages(loaderMessages);
 
-            ErrorProvider.Register(_compositionHost.Container);
+            ErrorProvider.Register(_exportProvider);
 
             ConnectEvents();
 
@@ -153,7 +159,8 @@
             base.Dispose(disposing);
 
             _customToolRunner.Dispose();
-            CompositionHost.Dispose();
+            _compositionCatalog.Dispose();
+            _compositionContainer.Dispose();
         }
 
         private void ShowLoaderMessages([NotNull] LoaderMessages messages)
@@ -184,10 +191,8 @@
         [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFrom")]
         private LoaderMessages FillCatalog()
         {
-            var compositionContainer = _compositionHost.Container;
-
-            compositionContainer.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
-            compositionContainer.ComposeExportedValue(Tracer);
+            _compositionContainer.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
+            _compositionContainer.ComposeExportedValue(Tracer);
 
             var thisAssembly = GetType().Assembly;
 
@@ -213,7 +218,7 @@
                 {
                     var assembly = Assembly.LoadFrom(file);
                     messages.Messages.Add(string.Format(CultureInfo.CurrentCulture, "Loaded assembly '{0}' from {1}.", assembly.FullName, assembly.CodeBase));
-                    _compositionHost.AddCatalog(new AssemblyCatalog(assembly));
+                    _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
                 }
                 catch (ReflectionTypeLoadException ex)
                 {
@@ -225,7 +230,7 @@
                 }
             }
 
-            _compositionHostLoaded.Set();
+            _exportProviderLoaded.Set();
 
             return messages;
         }
@@ -343,7 +348,7 @@
             settings.AreAllFilesSelected = false;
             settings.ResourceFilter = string.Empty;
 
-            var selectedEntities = CompositionHost.GetExportedValue<ResourceViewModel>().SelectedEntities;
+            var selectedEntities = ExportProvider.GetExportedValue<ResourceViewModel>().SelectedEntities;
             selectedEntities.Clear();
             selectedEntities.AddRange(selectedResourceEntities);
 
@@ -383,7 +388,7 @@
             if (string.IsNullOrEmpty(fileName))
                 return Enumerable.Empty<ResourceEntity>();
 
-            var resourceEntities = CompositionHost.GetExportedValue<ResourceManager>().ResourceEntities;
+            var resourceEntities = ExportProvider.GetExportedValue<ResourceManager>().ResourceEntities;
 
             return resourceEntities
                 .Where(entity => ContainsFile(entity, fileName) || ContainsChildOfWinFormsDesignerItem(entity, fileName))
@@ -404,14 +409,14 @@
 
         private void MoveToResource([CanBeNull] object sender, [CanBeNull] EventArgs e)
         {
-            var entry = CompositionHost.GetExportedValue<IRefactorings>().MoveToResource(Dte.ActiveDocument);
+            var entry = ExportProvider.GetExportedValue<IRefactorings>().MoveToResource(Dte.ActiveDocument);
             if (entry == null)
                 return;
 
             if (!Properties.Settings.Default.MoveToResourceOpenInResXManager)
                 return;
 
-            CompositionHost.GetExportedValue<VsixShellViewModel>().SelectEntry(entry);
+            ExportProvider.GetExportedValue<VsixShellViewModel>().SelectEntry(entry);
         }
 
         private void TextEditorContextMenuCommand_BeforeQueryStatus([CanBeNull] object sender, [CanBeNull] EventArgs e)
@@ -419,10 +424,10 @@
             if (!(sender is OleMenuCommand menuCommand))
                 return;
 
-            using (CompositionHost.GetExportedValue<PerformanceTracer>().Start("Can move to resource"))
+            using (ExportProvider.GetExportedValue<PerformanceTracer>().Start("Can move to resource"))
             {
                 menuCommand.Text = Resources.MoveToResource;
-                menuCommand.Visible = CompositionHost.GetExportedValue<IRefactorings>().CanMoveToResource(Dte.ActiveDocument);
+                menuCommand.Visible = ExportProvider.GetExportedValue<IRefactorings>().CanMoveToResource(Dte.ActiveDocument);
             }
         }
 
@@ -432,7 +437,7 @@
             {
                 ReloadSolution();
 
-                var resourceManager = CompositionHost.GetExportedValue<ResourceManager>();
+                var resourceManager = ExportProvider.GetExportedValue<ResourceManager>();
 
                 resourceManager.ProjectFileSaved -= ResourceManager_ProjectFileSaved;
                 resourceManager.ProjectFileSaved += ResourceManager_ProjectFileSaved;
@@ -475,7 +480,7 @@
                 if (!AffectsResourceFile(document))
                     return;
 
-                var resourceManager = CompositionHost.GetExportedValue<ResourceManager>();
+                var resourceManager = ExportProvider.GetExportedValue<ResourceManager>();
                 if (resourceManager.IsSaving)
                     return;
 
@@ -530,13 +535,13 @@
         [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Background)]
         private void Invalidate()
         {
-            CompositionHost.GetExportedValue<ISourceFilesProvider>().Invalidate();
+            ExportProvider.GetExportedValue<ISourceFilesProvider>().Invalidate();
         }
 
         [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.ContextIdle)]
         private void ReloadSolution()
         {
-            CompositionHost.GetExportedValue<ResourceViewModel>().Reload();
+            ExportProvider.GetExportedValue<ResourceViewModel>().Reload();
         }
 
         private class LoaderMessages

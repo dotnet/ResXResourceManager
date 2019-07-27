@@ -15,13 +15,12 @@
     using tomenglertde.ResXManager.Translators;
     using tomenglertde.ResXManager.View.Properties;
 
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
     using TomsToolbox.ObservableCollections;
     using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.Composition.Mef;
 
-    using Settings = Model.Properties.Settings;
+    using Settings = tomenglertde.ResXManager.Model.Properties.Settings;
 
     [VisualCompositionExport(RegionId.Content, Sequence = 2)]
     internal class TranslationsViewModel : ObservableObject

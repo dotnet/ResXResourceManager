@@ -17,11 +17,11 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.Properties;
+    using tomenglertde.ResXManager.View.Tools;
     using tomenglertde.ResXManager.View.Visuals;
 
-    using TomsToolbox.Desktop;
     using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.Composition.Mef;
 
     [VisualCompositionExport(RegionId.Main)]
     internal class MainViewModel : ObservableObject

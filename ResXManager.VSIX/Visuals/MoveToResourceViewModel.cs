@@ -16,13 +16,13 @@
 
     using PropertyChanged;
 
+    using Throttle;
+
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.VSIX.Properties;
 
-    using Throttle;
-
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
+    using TomsToolbox.Wpf;
 
     internal sealed class MoveToResourceViewModel : INotifyPropertyChanged, IDataErrorInfo
     {

@@ -7,25 +7,26 @@
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Model;
+    using tomenglertde.ResXManager.View.Tools;
 
-    using TomsToolbox.Desktop.Composition;
+    using TomsToolbox.Composition;
 
     [Export(typeof(ISourceFilesProvider))]
     internal class DteSourceFilesProvider : ISourceFilesProvider
     {
         [NotNull]
-        private readonly ICompositionHost _compositionHost;
+        private readonly IExportProvider _exportProvider;
         [NotNull]
         private readonly PerformanceTracer _performanceTracer;
         [NotNull]
         private readonly Configuration _configuration;
 
         [ImportingConstructor]
-        public DteSourceFilesProvider([NotNull] ICompositionHost compositionHost)
+        public DteSourceFilesProvider([NotNull] IExportProvider exportProvider)
         {
-            _compositionHost = compositionHost;
-            _performanceTracer = compositionHost.GetExportedValue<PerformanceTracer>();
-            _configuration = compositionHost.GetExportedValue<Configuration>();
+            _exportProvider = exportProvider;
+            _performanceTracer = exportProvider.GetExportedValue<PerformanceTracer>();
+            _configuration = exportProvider.GetExportedValue<Configuration>();
         }
 
         public IList<ProjectFile> SourceFiles
@@ -59,6 +60,6 @@
         }
 
         [NotNull]
-        private DteSolution Solution => _compositionHost.GetExportedValue<DteSolution>();
+        private DteSolution Solution => _exportProvider.GetExportedValue<DteSolution>();
     }
 }

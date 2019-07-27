@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -18,8 +17,10 @@
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Tools;
 
+    using TomsToolbox.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.Composition.Mef;
     using TomsToolbox.Wpf.Converters;
 
     /// <summary>
@@ -39,7 +40,7 @@
         private readonly ITracer _tracer;
 
         [ImportingConstructor]
-        public ResourceView([NotNull] ExportProvider exportProvider)
+        public ResourceView([NotNull] IExportProvider exportProvider)
         {
             _resourceManager = exportProvider.GetExportedValue<ResourceManager>();
             _resourceViewModel = exportProvider.GetExportedValue<ResourceViewModel>();
@@ -83,11 +84,11 @@
 
         private void AddLanguage_Click([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
-            var exisitingCultures = _resourceManager.Cultures
+            var existingCultures = _resourceManager.Cultures
                 .Select(c => c.Culture)
                 .Where(c => c != null);
 
-            var languageSelection = new LanguageSelectionBoxViewModel(exisitingCultures);
+            var languageSelection = new LanguageSelectionBoxViewModel(existingCultures);
 
             if (!ConfirmationDialog.Show(this.GetExportProvider(), languageSelection, Properties.Resources.Title).GetValueOrDefault())
                 return;

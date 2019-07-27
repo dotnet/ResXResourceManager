@@ -84,6 +84,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.Designer.tt</DependentUpon>
     </Compile>
+    <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="Themes\ResourceKeys.cs" />
     <Compile Include="Themes\ResourceLocator.cs" />
     <Compile Include="Tools\AddNewKeyCommand.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Tools\ColumnManager.cs" />
     <Compile Include="Tools\CultureOverrideEventArgs.cs" />
     <Compile Include="Tools\NeutralCultureCountryOverrides.cs" />
+    <Compile Include="Tools\PerformanceTracer.cs" />
     <Compile Include="Tools\Spellcheck.cs" />
     <Compile Include="Visuals\CodeReferencesToolTip.xaml.cs">
       <DependentUpon>CodeReferencesToolTip.xaml</DependentUpon>
@@ -500,19 +502,19 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all">
-      <Version>1.21.0</Version>
+      <Version>1.22.0</Version>
     </PackageReference>
     <PackageReference Include="DataGridExtensions">
       <Version>1.0.41</Version>
     </PackageReference>
     <PackageReference Include="Fody" PrivateAssets="all">
-      <Version>5.0.6</Version>
+      <Version>5.1.1</Version>
     </PackageReference>
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all">
-      <Version>2019.1.1</Version>
+      <Version>2019.1.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
-      <Version>2.9.2</Version>
+      <Version>2.9.4-beta1.final</Version>
     </PackageReference>
     <PackageReference Include="MicrosoftExpressionInteractions">
       <Version>3.0.40218</Version>
@@ -523,8 +525,14 @@
     <PackageReference Include="Throttle.Fody" PrivateAssets="All">
       <Version>1.4.0</Version>
     </PackageReference>
+    <PackageReference Include="TomsToolbox.Wpf.Composition.Mef">
+      <Version>2.0.0.3-beta1</Version>
+    </PackageReference>
+    <PackageReference Include="TomsToolbox.Wpf.Composition.Styles">
+      <Version>2.0.0.3-beta1</Version>
+    </PackageReference>
     <PackageReference Include="TomsToolbox.Wpf.Styles">
-      <Version>1.0.75</Version>
+      <Version>2.0.0.3-beta1</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

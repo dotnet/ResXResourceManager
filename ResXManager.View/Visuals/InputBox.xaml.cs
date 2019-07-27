@@ -2,14 +2,13 @@
 {
     using System;
     using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using System.Windows;
     using System.Windows.Input;
 
     using JetBrains.Annotations;
 
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Composition;
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 
@@ -24,7 +23,7 @@
         /// Initializes a new instance of the <see cref="InputBox"/> class.
         /// </summary>
         [ImportingConstructor]
-        public InputBox([NotNull] ExportProvider exportProvider)
+        public InputBox([NotNull] IExportProvider exportProvider)
         {
             this.SetExportProvider(exportProvider);
 

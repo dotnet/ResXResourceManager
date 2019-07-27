@@ -5,8 +5,9 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.View.Properties;
 
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.Composition.Mef;
 
     [Export]
     [VisualCompositionExport(RegionId.ResourceTableContextMenu, RegionId.ResourceTableItemContextMenu)]

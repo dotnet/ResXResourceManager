@@ -2,13 +2,14 @@
 {
     using System;
     using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
 
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
 
+    using TomsToolbox.Composition;
     using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.Composition.Mef;
 
     /// <summary>
     /// Interaction logic for MoveToResourceConfigurationView.xaml
@@ -18,7 +19,7 @@
     public partial class MoveToResourceConfigurationView
     {
         [ImportingConstructor]
-        public MoveToResourceConfigurationView([NotNull] ExportProvider exportProvider)
+        public MoveToResourceConfigurationView([NotNull] IExportProvider exportProvider)
         {
             try
             {

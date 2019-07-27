@@ -12,13 +12,13 @@
 
     using JetBrains.Annotations;
 
+    using Throttle;
+
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.Model.Properties;
 
-    using Throttle;
-
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
+    using TomsToolbox.Wpf;
 
     /// <summary>
     /// Represents a set of localized resources.

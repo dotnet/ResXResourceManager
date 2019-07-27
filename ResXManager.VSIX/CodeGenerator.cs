@@ -1,6 +1,6 @@
 namespace tomenglertde.ResXManager.VSIX
 {
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
 
     public enum CodeGenerator
     {

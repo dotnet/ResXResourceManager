@@ -11,7 +11,7 @@
 
     using tomenglertde.ResXManager.View.Tools;
 
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
 
     public class CultureToImageSourceConverter : IValueConverter
     {

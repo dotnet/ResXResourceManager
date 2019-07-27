@@ -8,6 +8,7 @@
              xmlns:toms="urn:TomsToolbox"
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:composition="urn:TomsToolbox.Composition"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
              d:DataContext="{d:DesignInstance visuals:ShellViewModel}">
   <UserControl.Style>
@@ -32,7 +33,7 @@
         </DataTemplate>
       </TabControl.ItemTemplate>
       <i:Interaction.Behaviors>
-        <toms:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.Content}" />
+        <composition:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.Content}" />
       </i:Interaction.Behaviors>
     </TabControl>
     <Button x:Name="DonateButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5,0"
@@ -78,31 +79,30 @@
                   <Setter Property="FontSize" Value="16" />
                 </Style>
                 <Style TargetType="Hyperlink">
-                  <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=NavigateUri}"></Setter>
+                  <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=NavigateUri}" />
                 </Style>
               </Decorator.Resources>
               <StackPanel>
                 <TextBlock FontWeight="Bold" FontSize="20">This is a community driven Open Source project.</TextBlock>
-                <Decorator Height="10"/>
+                <Decorator Height="10" />
                 <TextBlock>As such it needs your support to keep it alive and evolving.</TextBlock>
-                <Decorator Height="10"/>
+                <Decorator Height="10" />
                 <TextBlock>The best way to contribute is to help <Hyperlink NavigateUri="https://github.com/tom-englert/ResXResourceManager/issues">fixing bugs, or adding new features.</Hyperlink></TextBlock>
-                <Decorator Height="10"/>
+                <Decorator Height="10" />
                 <TextBlock>However, if you cannot help with coding, consider to <Hyperlink NavigateUri="https://github.com/tom-englert/ResXResourceManager/wiki/Donate">donate a small amount</Hyperlink> to ensure ResX Resource Manager will continue to be a great project that can help you in your daily work.</TextBlock>
-                <Decorator Height="10"/>
+                <Decorator Height="10" />
                 <TextBlock>Your ResXManager team.</TextBlock>
               </StackPanel>
             </Decorator>
             <Decorator Height="20" />
             <CheckBox Content="{x:Static properties:Resources.OpenSourceOverlay_Confirmation}"
-                    HorizontalAlignment="Left"
-                    IsChecked="{Binding IsOpenSourceMessageConfirmed, Source={x:Static properties:Settings.Default}}" />
+                      HorizontalAlignment="Left"
+                      IsChecked="{Binding IsOpenSourceMessageConfirmed, Source={x:Static properties:Settings.Default}}" />
           </StackPanel>
-          <Path Width="12" Height="12" Data="M2,2 L10,10 M10,2 L2,10" 
-                HorizontalAlignment="Right" VerticalAlignment="Top" 
+          <Path Width="12" Height="12" Data="M2,2 L10,10 M10,2 L2,10"
+                HorizontalAlignment="Right" VerticalAlignment="Top"
                 StrokeThickness="3" Opacity=".5"
-                Stroke="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                />
+                Stroke="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
         </Grid>
       </Border>
     </Grid>

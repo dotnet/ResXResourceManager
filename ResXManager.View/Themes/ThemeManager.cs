@@ -1,8 +1,8 @@
-﻿namespace tomenglertde.ResXManager.Infrastructure
+﻿namespace tomenglertde.ResXManager.View.Themes
 {
     using System.ComponentModel.Composition;
 
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf;
 
     [Export]
     public class ThemeManager : ObservableObject

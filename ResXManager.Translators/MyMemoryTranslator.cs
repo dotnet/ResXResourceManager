@@ -15,7 +15,7 @@
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Wpf;
 
     [Export(typeof(ITranslator))]
     public class MyMemoryTranslator : TranslatorBase

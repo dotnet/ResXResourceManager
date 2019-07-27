@@ -6,20 +6,22 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
 
     using AutoProperties;
 
     using JetBrains.Annotations;
 
+    using PropertyChanged;
+
     using tomenglertde.ResXManager.Infrastructure;
 
-    using TomsToolbox.Core;
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Essentials;
 
     /// <summary>
     /// Handle global persistence.
     /// </summary>
-    public abstract class ConfigurationBase : ObservableObject
+    public abstract class ConfigurationBase : INotifyPropertyChanged
     {
         private const string FileName = "Configuration.xml";
 
@@ -30,7 +32,7 @@
         [NotNull]
         private readonly XmlConfiguration _configuration;
         [NotNull]
-        private readonly Dictionary<string, object> _chachedObjects = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _cachedObjects = new Dictionary<string, object>();
 
         protected ConfigurationBase([NotNull] ITracer tracer)
         {
@@ -76,7 +78,7 @@
                 return GetValue(GetDefaultValue<T>(propertyInfo), key);
             }
 
-            if (_chachedObjects.TryGetValue(key, out var item))
+            if (_cachedObjects.TryGetValue(key, out var item))
             {
                 return (T)item;
             }
@@ -91,7 +93,7 @@
                 SetValue((T)sender, key);
             };
 
-            _chachedObjects.Add(key, value);
+            _cachedObjects.Add(key, value);
 
             return value;
         }
@@ -188,6 +190,14 @@
             }
 
             return default;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

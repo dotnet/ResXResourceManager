@@ -3,7 +3,6 @@
     using System;
     using System.ComponentModel;
     using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using System.Globalization;
     using System.Linq;
     using System.Windows;
@@ -14,8 +13,10 @@
     using tomenglertde.ResXManager.Infrastructure;
     using tomenglertde.ResXManager.View.Tools;
 
-    using TomsToolbox.Desktop;
+    using TomsToolbox.Composition;
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf.Composition;
+    using TomsToolbox.Wpf.Composition.Mef;
 
     /// <summary>
     /// Interaction logic for LanguageConfigurationView.xaml
@@ -25,7 +26,7 @@
     public partial class LanguageConfigurationView
     {
         [ImportingConstructor]
-        public LanguageConfigurationView([NotNull] ExportProvider exportProvider)
+        public LanguageConfigurationView([NotNull] IExportProvider exportProvider)
         {
             try
             {

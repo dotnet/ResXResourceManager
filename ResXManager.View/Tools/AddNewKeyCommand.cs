@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using System.Linq;
     using System.Windows;
 
@@ -11,6 +10,7 @@
     using tomenglertde.ResXManager.View.Properties;
     using tomenglertde.ResXManager.View.Visuals;
 
+    using TomsToolbox.Composition;
     using TomsToolbox.Wpf;
 
     [Export]
@@ -19,10 +19,10 @@
         [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
         [NotNull]
-        private readonly ExportProvider _exportProvider;
+        private readonly IExportProvider _exportProvider;
 
         [ImportingConstructor]
-        public AddNewKeyCommand([NotNull] ResourceViewModel resourceViewModel, [NotNull] ExportProvider exportProvider)
+        public AddNewKeyCommand([NotNull] ResourceViewModel resourceViewModel, [NotNull] IExportProvider exportProvider)
         {
             _resourceViewModel = resourceViewModel;
             _exportProvider = exportProvider;

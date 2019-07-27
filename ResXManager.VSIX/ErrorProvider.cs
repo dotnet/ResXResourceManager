@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Specialized;
     using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
     using System.Linq;
 
@@ -16,6 +15,8 @@
 
     using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.VSIX.Visuals;
+
+    using TomsToolbox.Composition;
 
     [Export]
     internal sealed class ErrorProvider : IDisposable
@@ -81,7 +82,7 @@
             }
         }
 
-        public static void Register([NotNull] ExportProvider exportProvider)
+        public static void Register([NotNull] IExportProvider exportProvider)
         {
             try
             {

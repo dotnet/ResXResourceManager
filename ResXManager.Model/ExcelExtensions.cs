@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -655,9 +654,7 @@
 
     namespace GeneratedCode
     {
-        using DocumentFormat.OpenXml.Packaging;
-        using DocumentFormat.OpenXml.Spreadsheet;
-        using DocumentFormat.OpenXml;
+        using System.Diagnostics.CodeAnalysis;
 
         // Generated from an empty document using the OpenXML SDK Productivity Tool
         [SuppressMessage("ReSharper", "All")]
