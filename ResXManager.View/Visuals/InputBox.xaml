@@ -3,12 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:styles="urn:TomsToolbox.Wpf.Styles"
         xmlns:toms="urn:TomsToolbox"
+        xmlns:composition="urn:TomsToolbox.Composition"
         ShowInTaskbar="False"
         SizeToContent="WidthAndHeight"
         ResizeMode="NoResize"
         WindowStyle="SingleBorderWindow"
         FocusManager.FocusedElement="{Binding ElementName=TextBox}"
-        Style="{DynamicResource {x:Static styles:ResourceKeys.WindowStyle}}"
+        Style="{DynamicResource {x:Static composition:ResourceKeys.WindowStyle}}"
         Icon="pack://application:,,,/ResXManager.View;component/16x16.png"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
   <StackPanel Width="400">

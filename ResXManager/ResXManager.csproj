@@ -265,10 +265,10 @@
       <Version>3.0.1</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.Wpf.Composition.Mef">
-      <Version>2.0.0.3-beta1</Version>
+      <Version>2.0.0.3-beta3</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.Wpf.Styles">
-      <Version>2.0.0.3-beta1</Version>
+      <Version>2.0.0.3-beta3</Version>
     </PackageReference>
     <PackageReference Include="WindowsAPICodePack-Shell" PrivateAssets="All">
       <Version>1.1.1</Version>

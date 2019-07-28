@@ -38,7 +38,7 @@
 
             window.SetExportProvider(exportProvider);
             window.Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(exportProvider));
-            window.SetResourceReference(StyleProperty, TomsToolbox.Wpf.Styles.ResourceKeys.WindowStyle);
+            window.SetResourceReference(StyleProperty, TomsToolbox.Wpf.Composition.Styles.ResourceKeys.WindowStyle);
             window.Content = new ConfirmationDialog { Content = content };
 
             return window.ShowDialog();
