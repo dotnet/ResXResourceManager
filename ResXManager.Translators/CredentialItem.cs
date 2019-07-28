@@ -6,7 +6,7 @@ namespace tomenglertde.ResXManager.Translators
 
     using tomenglertde.ResXManager.Infrastructure;
 
-    public class CredentialItem : INotifyPropertyChanged, ICredentialItem
+    public class CredentialItem : ICredentialItem
     {
         public CredentialItem([NotNull] string key, [NotNull] string description)
         {
@@ -20,6 +20,7 @@ namespace tomenglertde.ResXManager.Translators
 
         public string Value { get; set; }
         
+        [UsedImplicitly]
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

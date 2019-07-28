@@ -12,7 +12,7 @@ namespace tomenglertde.ResXManager.Translators
     using tomenglertde.ResXManager.Infrastructure;
 
     [DataContract]
-    public abstract class TranslatorBase : INotifyPropertyChanged, ITranslator
+    public abstract class TranslatorBase : ITranslator
     {
         [NotNull]
         private static readonly Regex _removeKeyboardShortcutIndicatorsRegex = new Regex(@"[&_](?=[\w\d])", RegexOptions.Compiled);
@@ -65,6 +65,7 @@ namespace tomenglertde.ResXManager.Translators
             }
         }
 
+        [UsedImplicitly]
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

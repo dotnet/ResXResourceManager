@@ -12,8 +12,6 @@
 
     using JetBrains.Annotations;
 
-    using PropertyChanged;
-
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;

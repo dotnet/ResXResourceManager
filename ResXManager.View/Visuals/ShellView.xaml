@@ -5,7 +5,6 @@
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
-             xmlns:toms="urn:TomsToolbox"
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:composition="urn:TomsToolbox.Composition"
