@@ -66,6 +66,7 @@
 
     <Style TargetType="Image" x:Key="ImageStyle">
       <Style.Triggers>
+        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
         <DataTrigger Binding="{Binding IsDarkTheme, Source={composition:Import themes:ThemeManager}}" Value="True">
           <Setter Property="Effect" Value="{StaticResource InvertGrayEffect}" />
         </DataTrigger>
@@ -360,6 +361,7 @@
                             IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}"
                             Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
                   <Decorator DockPanel.Dock="Left" Width="2" />
+                  <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                   <Image DockPanel.Dock="Left"
                          Source="{Binding Path=Header.EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}, FallbackValue={x:Null}}" />
                   <Decorator DockPanel.Dock="Left" Width="2" />
@@ -370,6 +372,7 @@
             </ListBox.ItemTemplate>
             <ListBox.ItemContainerStyle>
               <Style TargetType="ListBoxItem">
+                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                 <Setter Property="IsSelected" Value="{Binding Path=Visibility, Converter={x:Static toms:VisibilityToBooleanConverter.Default}}" />
                 <Setter Property="Template">
                   <Setter.Value>
@@ -544,6 +547,7 @@
               <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Static styles:ResourceKeys.DataGridRowStyle}}">
                 <Setter Property="MaxHeight" Value="100" />
                 <Style.Triggers>
+                  <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                   <DataTrigger Binding="{Binding IsDuplicateKey}" Value="True">
                     <Setter Property="Background" Value="{StaticResource HighlightBrush}" />
                   </DataTrigger>
@@ -569,7 +573,7 @@
                 </Setter>
 
                 <Style.Triggers>
-
+                  <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                   <DataTrigger Binding="{Binding Path=(tools:ColumnManager.CellAnnotations).Count, RelativeSource={RelativeSource Mode=Self}, FallbackValue=0}" Value="0">
                     <Setter Property="Background" Value="{x:Null}" />
                     <Setter Property="ToolTip" Value="{x:Null}" />
@@ -615,6 +619,7 @@
                   <Trigger Property="IsSelected" Value="True">
                     <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
                   </Trigger>
+                  <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                 </Style.Triggers>
               </Style>
             </DataGrid.CellStyle>
@@ -668,6 +673,7 @@
     <composition:CommandRoutingBehavior CommandSource="view:PasteCommand"
                                         CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                         CommandParameter="{Binding ElementName=DataGrid}" />
+    <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
     <composition:CommandRoutingBehavior CommandSource="view:IsInvariantCommand"
                                         CommandTarget="{Binding ToggleInvariantCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                         IsChecked="{Binding Path=SelectedItem.IsInvariant, Mode=OneWay, ElementName=DataGrid}" />

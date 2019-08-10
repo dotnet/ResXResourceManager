@@ -73,6 +73,7 @@
             <DataGridTextColumn Width="2*" Binding="{Binding Source}" IsReadOnly="True">
               <DataGridTextColumn.ElementStyle>
                 <Style TargetType="TextBlock">
+                  <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                   <Setter Property="ToolTip" Value="{Binding Entry.Key}" />
                 </Style>
               </DataGridTextColumn.ElementStyle>

@@ -40,6 +40,14 @@
         public static readonly DependencyProperty ResourceFileExistsProperty =
             DependencyProperty.RegisterAttached("ResourceFileExists", typeof(bool), typeof(ColumnManager), new FrameworkPropertyMetadata(true));
 
+        public static ICollection<string> GetCellAnnotations(DependencyObject element)
+        {
+            return (ICollection<string>)element.GetValue(CellAnnotationsProperty);
+        }
+        public static void SetCellAnnotations(DependencyObject element, ICollection<string> value)
+        {
+            element.SetValue(CellAnnotationsProperty, value);
+        }
         /// <summary>
         /// Identifies the CellAnnotations attached property
         /// </summary>

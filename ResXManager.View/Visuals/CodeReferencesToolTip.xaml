@@ -72,6 +72,7 @@
           <Setter TargetName="Text" Property="Text" Value="{x:Static properties:Resources.NoCodeReferencesToolTip}" />
         </DataTrigger>
         <DataTrigger Binding="{Binding CodeReferences}" Value="{x:Null}">
+          <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
           <Setter TargetName="Text" Property="Text" Value="{Binding Path=Progress, Source={composition:Import model:CodeReferenceTracker}, StringFormat={x:Static properties:Resources.CodeReferenceTrackingInProgress}}" />
           <Setter TargetName="Progress" Property="Visibility" Value="Visible" />
         </DataTrigger>
