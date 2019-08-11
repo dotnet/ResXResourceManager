@@ -233,12 +233,12 @@
   <ItemGroup>
     <PublishFile Include="Properties\Resources.Designer.tt">
       <Visible>False</Visible>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
@@ -255,9 +255,6 @@
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all">
       <Version>2019.1.3</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
-      <Version>2.9.4-beta1.final</Version>
-    </PackageReference>
     <PackageReference Include="MicrosoftExpressionInteractions">
       <Version>3.0.40218</Version>
     </PackageReference>
@@ -265,10 +262,10 @@
       <Version>3.0.1</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.Wpf.Composition.Mef">
-      <Version>2.0.0.3-beta3</Version>
+      <Version>2.0.0.3-beta5</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.Wpf.Styles">
-      <Version>2.0.0.3-beta3</Version>
+      <Version>2.0.0.3-beta5</Version>
     </PackageReference>
     <PackageReference Include="WindowsAPICodePack-Shell" PrivateAssets="All">
       <Version>1.1.1</Version>

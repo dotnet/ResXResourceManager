@@ -94,9 +94,6 @@
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all">
       <Version>2019.1.3</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
-      <Version>2.9.4-beta1.final</Version>
-    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release' ">
