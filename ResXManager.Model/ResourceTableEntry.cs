@@ -4,10 +4,12 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Text;
     using System.Text.RegularExpressions;
     using System.Windows.Threading;
 
@@ -31,6 +33,8 @@
     public sealed class ResourceTableEntry : INotifyPropertyChanged, IDataErrorInfo
     {
         private const string InvariantKey = "@Invariant";
+        private const string MutedRulePattern = @"@MutedRule\(([a-zA-Z]+)\)";
+        private const RegexOptions MutedRulePatternOptions = RegexOptions.CultureInvariant;
 
         [NotNull]
         private readonly Regex _duplicateKeyExpression = new Regex(@"_Duplicate\[\d+\]$");
@@ -44,6 +48,12 @@
         // the last validation error
         [CanBeNull]
         private string _keyValidationError;
+
+        /// <summary>
+        /// A reference to the rules that are enabled in the configuration.
+        /// </summary>
+        [NotNull]
+        private ResourceTableEntryRules Rules => Container.Container.Configuration.Rules;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceTableEntry" /> class.
@@ -77,6 +87,7 @@
             CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
 
             IsItemInvariant = new ResourceTableValues<bool>(_languages, lang => GetIsInvariant(lang.CultureKey), (lang, value) => SetIsInvariant(lang.CultureKey, value));
+            CommentMutedRules = new ResourceTableValues<ISet<string>>(_languages, lang => GetMutedRules(lang.CultureKey), (lang, value) => SetMutedRules(lang.CultureKey, value));
         }
 
         private void ResetTableValues()
@@ -205,9 +216,69 @@
         [ItemNotNull]
         public ResourceTableValues<ICollection<string>> CommentAnnotations { get; private set; }
 
+        [DependsOn(nameof(Comment))]
         [NotNull]
         [ItemNotNull]
         public ICollection<CultureKey> Languages => _languages.Keys;
+
+        [NotNull]
+        [ItemNotNull]
+        public ResourceTableValues<ISet<string>> CommentMutedRules { get; private set; }
+
+        [NotNull]
+        [ItemNotNull]
+        public ISet<string> MutedRules
+        {
+            get => GetMutedRules(CultureKey.Neutral);
+            set => SetMutedRules(CultureKey.Neutral, value);
+        }
+
+        [NotNull]
+        [ItemNotNull]
+        private ISet<string> GetMutedRules([NotNull] CultureKey culture)
+        {
+            var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var comment = Comments.GetValue(culture);
+            if (string.IsNullOrWhiteSpace(comment)) return result;
+
+            var mutedRules = Regex.Matches(comment, MutedRulePattern, MutedRulePatternOptions).Cast<Match>().Where(m => m.Success).Select(m => m.Groups[1].Value);
+            result.UnionWith(mutedRules);
+            return result;
+        }
+
+        private bool SetMutedRules([NotNull] CultureKey culture, [NotNull][ItemNotNull] IEnumerable<string> value)
+        {
+            var comment = Comments.GetValue(culture);
+            var commentBuilder = new StringBuilder(comment ?? "");
+            var valueSet = new HashSet<string>(value, StringComparer.OrdinalIgnoreCase);
+
+            if (!string.IsNullOrWhiteSpace(comment))
+            {
+                // Existing comment. We may need to strip old muting values.
+                var matches = Regex.Matches(comment, MutedRulePattern, MutedRulePatternOptions);
+                for (var i = matches.Count - 1; i >= 0; i--)
+                {
+                    var match = matches[i];
+                    if (!match.Success) continue;
+
+                    if (!valueSet.Remove(match.Groups[1].Value))
+                        commentBuilder.Remove(match.Index, match.Length);
+                }
+            }
+
+            foreach (var rule in valueSet)
+            {
+                commentBuilder.Append("@MutedRule(").Append(rule).Append(")");
+            }
+
+            var newComment = commentBuilder.ToString();
+            if (string.Equals(comment, newComment, StringComparison.Ordinal))
+                return false;
+
+            Comments.SetValue(culture, newComment);
+            Refresh();
+            return true;
+        }
 
         [NotNull]
         [ItemNotNull]
@@ -349,7 +420,7 @@
 
             var value = Values.GetValue(cultureKey);
 
-            return GetStringFormatParameterMismatchAnnotations(language)
+            return GetRuleAnnotations(language)
                 .Concat(GetSnapshotDifferences(language, value, d => d?.Text))
                 .Concat(GetInvariantMismatches(cultureKey, value))
                 .ToArray();
@@ -386,11 +457,10 @@
                 if (string.IsNullOrEmpty(neutralValue))
                     return false;
 
-                if (HasStringFormatParameterMismatches(neutralValue, value))
-                {
-                    errorMessage = GetErrorPrefix(culture) + Resources.ResourceTableEntry_Error_StringFormatParameterMismatch;
-                    return true;
-                }
+                if (Rules.CheckRules(MutedRules, out var ruleMessages, neutralValue, value)) return false;
+
+                errorMessage = GetErrorPrefix(culture) + string.Join(" ", ruleMessages);
+                return true;
             }
 
             return false;
@@ -436,7 +506,7 @@
         }
 
         [NotNull, ItemNotNull]
-        private IEnumerable<string> GetStringFormatParameterMismatchAnnotations([NotNull] ResourceLanguage language)
+        private IEnumerable<string> GetRuleAnnotations([NotNull] ResourceLanguage language)
         {
             if (language.IsNeutralLanguage)
                 yield break;
@@ -449,48 +519,11 @@
             if (string.IsNullOrEmpty(neutralValue))
                 yield break;
 
-            if (HasStringFormatParameterMismatches(neutralValue, value))
-                yield return Resources.ResourceTableEntry_Error_StringFormatParameterMismatch;
-        }
+            if (Rules.CheckRules(MutedRules, out var ruleMessages, neutralValue, value))
+                yield break;
 
-        private static bool HasStringFormatParameterMismatches([NotNull][ItemNotNull] params string[] values)
-        {
-            return HasStringFormatParameterMismatches((IEnumerable<string>)values);
-        }
-
-        private static bool HasStringFormatParameterMismatches([NotNull][ItemNotNull] IEnumerable<string> values)
-        {
-            values = values.Where(value => !string.IsNullOrEmpty(value)).ToArray();
-
-            if (!values.Any())
-                return false;
-
-            return values.Select(GetStringFormatFlags)
-                .Distinct()
-                .Count() > 1;
-        }
-
-        [NotNull]
-        private static readonly Regex _stringFormatParameterPattern = new Regex(@"\{(\d+)(,\d+)?(:\S+)?\}");
-
-        private static long GetStringFormatFlags([CanBeNull] string value)
-        {
-            if (string.IsNullOrEmpty(value))
-                return 0;
-
-            return _stringFormatParameterPattern
-                .Matches(value)
-                .Cast<Match>()
-                .Aggregate(0L, (a, match) => a | ParseMatch(match));
-        }
-
-        private static long ParseMatch(Match match)
-        {
-            // the '\d' regex also matches non-latin numbers, must use int.TryPase...
-            if (!int.TryParse(match.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value))
-                return 0;
-
-            return 1L << value;
+            foreach (var message in ruleMessages)
+                yield return message;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

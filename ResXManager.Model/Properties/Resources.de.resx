@@ -199,4 +199,70 @@
   <data name="ExcelExport_PlainTextTabDelimited" xml:space="preserve">
     <value>Nur Text, Tabulator getrennt</value>
   </data>
+  <data name="ResourceTableEntryRuleStringFormat_Name" xml:space="preserve">
+    <value>Passende String Format Parameter</value>
+  </data>
+  <data name="ResourceTableEntryRuleStringFormat_Description" xml:space="preserve">
+    <value>Diese Regel überprüft ob alle Übersetzungen die gleichen Parameter für String Format enthalten.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Name" xml:space="preserve">
+    <value>Zeichensetzung am Anfang</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Description" xml:space="preserve">
+    <value>Diese Regel überprüft ob die Zeichensetzung am Anfang des Eintrages in jeder Übersetzung gleich ist.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Name" xml:space="preserve">
+    <value>Zeichensetzung am Ende</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Description" xml:space="preserve">
+    <value>Diese Regel überprüft ob die Zeichensetzung am Ende des Eintrages in jeder Übersetzung gleich ist.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Name" xml:space="preserve">
+    <value>Leerzeichen am Anfang</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Description" xml:space="preserve">
+    <value>Diese Regel überprüft ob die Leerzeichen am Anfang des Eintrages in jeder Übersetzung gleich ist.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Name" xml:space="preserve">
+    <value>Leerzeichen am Ende</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Description" xml:space="preserve">
+    <value>Diese Regel überprüft ob die Leerzeichen am Ende des Eintrages in jeder Übersetzung gleich ist.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Error_Intro" xml:space="preserve">
+    <value>Die Leerzeichen am Anfang des Eintrages stimmen nicht überein.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Error_NoWhiteSpaceExpected" xml:space="preserve">
+    <value>Am Anfang des Eintrages wurden keine Leerzeichen erwartet.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Error_WhiteSpaceSeqExpected" xml:space="preserve">
+    <value>Die erwartete Folge von Leerzeichen ist: {0}</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Error_WhiteSpaceSeqExpected" xml:space="preserve">
+    <value>Die erwartete Folge von Leerzeichen ist: {0}</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Error_Intro" xml:space="preserve">
+    <value>Die Leerzeichen am Ende des Eintrages stimmen nicht überein.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Error_NoWhiteSpaceExpected" xml:space="preserve">
+    <value>Am Ende des Eintrages wurden keine Leerzeichen erwartet.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Error_Intro" xml:space="preserve">
+    <value>Die Zeichensetzung am Anfang des Eintrages stimmen nicht überein.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Error_NoPunctuationExpected" xml:space="preserve">
+    <value>Am Anfang des Eintrages wurden keine Satzzeichen erwartet.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Error_PunctuationSeqExpected" xml:space="preserve">
+    <value>Der erwartete Folge von Satzzeichen ist: {0}</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected" xml:space="preserve">
+    <value>Der erwartete Folge von Satzzeichen ist: {0}</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Error_Intro" xml:space="preserve">
+    <value>Die Zeichensetzung am Ende des Eintrages stimmen nicht überein.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected" xml:space="preserve">
+    <value>Am Ende des Eintrages wurden keine Satzzeichen erwartet.</value>
+  </data>
 </root>

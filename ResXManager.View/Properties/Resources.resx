@@ -440,4 +440,7 @@ Your ResXManager team.
   <data name="OpenSourceOverlay_Confirmation" xml:space="preserve">
     <value>Got it - do not show this notification again.</value>
   </data>
+  <data name="Configuration_Rules" xml:space="preserve">
+    <value>Rules for translations</value>
+  </data>
 </root>

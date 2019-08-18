@@ -332,6 +332,226 @@ namespace tomenglertde.ResXManager.Model.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to This rule verifies that the punctuation of the ent....
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRulePunctuationLead_Description {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRulePunctuationLead_Description", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The punctuation at the start of the messages doesn....
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRulePunctuationLead_Error_Intro {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRulePunctuationLead_Error_Intro", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No punctuation was expected at the start of the me....
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRulePunctuationLead_Error_NoPunctuationExpected {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRulePunctuationLead_Error_NoPunctuationExpected", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The expected leading punctuation sequence is: {0}.
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRulePunctuationLead_Error_PunctuationSeqExpected {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRulePunctuationLead_Error_PunctuationSeqExpected", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Leading punctuation.
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRulePunctuationLead_Name {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRulePunctuationLead_Name", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This rule verifies the punctuation at the end of t....
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRulePunctuationTail_Description {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRulePunctuationTail_Description", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The punctuation at the end of the messages doesn't....
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRulePunctuationTail_Error_Intro {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRulePunctuationTail_Error_Intro", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No punctuation was expected at the end of the mess....
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The expected trailing punctuation sequence is: {0}.
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Trailing punctuation.
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRulePunctuationTail_Name {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRulePunctuationTail_Name", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This rule verifies that the string format paramete....
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRuleStringFormat_Description {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRuleStringFormat_Description", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Matching string format parameters.
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRuleStringFormat_Name {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRuleStringFormat_Name", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This rule verifies that the whitespaces at the sta....
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRuleWhiteSpaceLead_Description {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceLead_Description", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The whitespaces at the start of the sequence don't....
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRuleWhiteSpaceLead_Error_Intro {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceLead_Error_Intro", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No whitespaces are expected at the start of the se....
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRuleWhiteSpaceLead_Error_NoWhiteSpaceExpected {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceLead_Error_NoWhiteSpaceExpected", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The expected whitespace sequence is: {0}.
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRuleWhiteSpaceLead_Error_WhiteSpaceSeqExpected {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceLead_Error_WhiteSpaceSeqExpected", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Leading whitespace.
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRuleWhiteSpaceLead_Name {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceLead_Name", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This rule verifies that the trailing whitespaces o....
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRuleWhiteSpaceTail_Description {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceTail_Description", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The whitespaces at the end of the sequence don't m....
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRuleWhiteSpaceTail_Error_Intro {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceTail_Error_Intro", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No whitespaces are expected at the end of the sequ....
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRuleWhiteSpaceTail_Error_NoWhiteSpaceExpected {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceTail_Error_NoWhiteSpaceExpected", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The expected whitespace sequence is: {0}.
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRuleWhiteSpaceTail_Error_WhiteSpaceSeqExpected {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceTail_Error_WhiteSpaceSeqExpected", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Trailing whitespace.
+        /// </summary>
+        [NotNull]
+        public static string ResourceTableEntryRuleWhiteSpaceTail_Name {
+            get {
+                return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceTail_Name", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Snapshot: "{0}".
         /// </summary>
         [NotNull]
@@ -466,6 +686,94 @@ namespace tomenglertde.ResXManager.Model.Properties {
         ///   Looks up a localized string similar to Warning: This item contains string format paramete....
         /// </summary>
         ResourceTableEntry_Error_StringFormatParameterMismatch,
+        /// <summary>
+        ///   Looks up a localized string similar to This rule verifies that the punctuation of the ent....
+        /// </summary>
+        ResourceTableEntryRulePunctuationLead_Description,
+        /// <summary>
+        ///   Looks up a localized string similar to The punctuation at the start of the messages doesn....
+        /// </summary>
+        ResourceTableEntryRulePunctuationLead_Error_Intro,
+        /// <summary>
+        ///   Looks up a localized string similar to No punctuation was expected at the start of the me....
+        /// </summary>
+        ResourceTableEntryRulePunctuationLead_Error_NoPunctuationExpected,
+        /// <summary>
+        ///   Looks up a localized string similar to The expected leading punctuation sequence is: {0}.
+        /// </summary>
+        ResourceTableEntryRulePunctuationLead_Error_PunctuationSeqExpected,
+        /// <summary>
+        ///   Looks up a localized string similar to Leading punctuation.
+        /// </summary>
+        ResourceTableEntryRulePunctuationLead_Name,
+        /// <summary>
+        ///   Looks up a localized string similar to This rule verifies the punctuation at the end of t....
+        /// </summary>
+        ResourceTableEntryRulePunctuationTail_Description,
+        /// <summary>
+        ///   Looks up a localized string similar to The punctuation at the end of the messages doesn't....
+        /// </summary>
+        ResourceTableEntryRulePunctuationTail_Error_Intro,
+        /// <summary>
+        ///   Looks up a localized string similar to No punctuation was expected at the end of the mess....
+        /// </summary>
+        ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected,
+        /// <summary>
+        ///   Looks up a localized string similar to The expected trailing punctuation sequence is: {0}.
+        /// </summary>
+        ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected,
+        /// <summary>
+        ///   Looks up a localized string similar to Trailing punctuation.
+        /// </summary>
+        ResourceTableEntryRulePunctuationTail_Name,
+        /// <summary>
+        ///   Looks up a localized string similar to This rule verifies that the string format paramete....
+        /// </summary>
+        ResourceTableEntryRuleStringFormat_Description,
+        /// <summary>
+        ///   Looks up a localized string similar to Matching string format parameters.
+        /// </summary>
+        ResourceTableEntryRuleStringFormat_Name,
+        /// <summary>
+        ///   Looks up a localized string similar to This rule verifies that the whitespaces at the sta....
+        /// </summary>
+        ResourceTableEntryRuleWhiteSpaceLead_Description,
+        /// <summary>
+        ///   Looks up a localized string similar to The whitespaces at the start of the sequence don't....
+        /// </summary>
+        ResourceTableEntryRuleWhiteSpaceLead_Error_Intro,
+        /// <summary>
+        ///   Looks up a localized string similar to No whitespaces are expected at the start of the se....
+        /// </summary>
+        ResourceTableEntryRuleWhiteSpaceLead_Error_NoWhiteSpaceExpected,
+        /// <summary>
+        ///   Looks up a localized string similar to The expected whitespace sequence is: {0}.
+        /// </summary>
+        ResourceTableEntryRuleWhiteSpaceLead_Error_WhiteSpaceSeqExpected,
+        /// <summary>
+        ///   Looks up a localized string similar to Leading whitespace.
+        /// </summary>
+        ResourceTableEntryRuleWhiteSpaceLead_Name,
+        /// <summary>
+        ///   Looks up a localized string similar to This rule verifies that the trailing whitespaces o....
+        /// </summary>
+        ResourceTableEntryRuleWhiteSpaceTail_Description,
+        /// <summary>
+        ///   Looks up a localized string similar to The whitespaces at the end of the sequence don't m....
+        /// </summary>
+        ResourceTableEntryRuleWhiteSpaceTail_Error_Intro,
+        /// <summary>
+        ///   Looks up a localized string similar to No whitespaces are expected at the end of the sequ....
+        /// </summary>
+        ResourceTableEntryRuleWhiteSpaceTail_Error_NoWhiteSpaceExpected,
+        /// <summary>
+        ///   Looks up a localized string similar to The expected whitespace sequence is: {0}.
+        /// </summary>
+        ResourceTableEntryRuleWhiteSpaceTail_Error_WhiteSpaceSeqExpected,
+        /// <summary>
+        ///   Looks up a localized string similar to Trailing whitespace.
+        /// </summary>
+        ResourceTableEntryRuleWhiteSpaceTail_Name,
         /// <summary>
         ///   Looks up a localized string similar to Snapshot: "{0}".
         /// </summary>

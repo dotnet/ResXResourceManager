@@ -131,12 +131,10 @@
   <data name="EmptyKeysError" xml:space="preserve">
     <value>Empty keys in '{0}'</value>
   </data>
-  <!-- ReSharper disable ResxNotResolved -->
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="EmptyResxTemplate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>EmptyResxTemplate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <!-- ReSharper restore ResxNotResolved -->
   <data name="ExcelExport_MultipleSheets" xml:space="preserve">
     <value>Multiple sheets</value>
   </data>
@@ -208,5 +206,71 @@
   </data>
   <data name="ExcelExport_PlainTextTabDelimited" xml:space="preserve">
     <value>Plain text, tab delimited</value>
+  </data>
+  <data name="ResourceTableEntryRuleStringFormat_Name" xml:space="preserve">
+    <value>Matching string format parameters</value>
+  </data>
+  <data name="ResourceTableEntryRuleStringFormat_Description" xml:space="preserve">
+    <value>This rule verifies that the string format parameters match in all translations of a item.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Name" xml:space="preserve">
+    <value>Leading punctuation</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Description" xml:space="preserve">
+    <value>This rule verifies that the punctuation of the entry matches between all translations.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Name" xml:space="preserve">
+    <value>Trailing punctuation</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Description" xml:space="preserve">
+    <value>This rule verifies the punctuation at the end of the message.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Name" xml:space="preserve">
+    <value>Leading whitespace</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Description" xml:space="preserve">
+    <value>This rule verifies that the whitespaces at the start of the messages match.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Error_Intro" xml:space="preserve">
+    <value>The whitespaces at the start of the sequence don't match up.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Error_NoWhiteSpaceExpected" xml:space="preserve">
+    <value>No whitespaces are expected at the start of the sequence.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Error_WhiteSpaceSeqExpected" xml:space="preserve">
+    <value>The expected whitespace sequence is: {0}</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Name" xml:space="preserve">
+    <value>Trailing whitespace</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Description" xml:space="preserve">
+    <value>This rule verifies that the trailing whitespaces of the messages match.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Error_Intro" xml:space="preserve">
+    <value>The whitespaces at the end of the sequence don't match up.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Error_NoWhiteSpaceExpected" xml:space="preserve">
+    <value>No whitespaces are expected at the end of the sequence.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Error_WhiteSpaceSeqExpected" xml:space="preserve">
+    <value>The expected whitespace sequence is: {0}</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Error_Intro" xml:space="preserve">
+    <value>The punctuation at the start of the messages doesn't match up.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Error_NoPunctuationExpected" xml:space="preserve">
+    <value>No punctuation was expected at the start of the message.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Error_PunctuationSeqExpected" xml:space="preserve">
+    <value>The expected leading punctuation sequence is: {0}</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Error_Intro" xml:space="preserve">
+    <value>The punctuation at the end of the messages doesn't match up.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected" xml:space="preserve">
+    <value>No punctuation was expected at the end of the message.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected" xml:space="preserve">
+    <value>The expected trailing punctuation sequence is: {0}</value>
   </data>
 </root>

@@ -30,6 +30,9 @@
         StringComparison? EffectiveResXSortingComparison { get; }
 
         DuplicateKeyHandling DuplicateKeyHandling { get; }
+
+        [NotNull]
+        ResourceTableEntryRules Rules { get; }
     }
 
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized", Justification = "value provided by AutoProperties")]
@@ -85,6 +88,10 @@
 
         [DefaultValue(default(DuplicateKeyHandling))]
         public DuplicateKeyHandling DuplicateKeyHandling { get; set; }
+
+        [UsedImplicitly]
+        [DefaultValue(ResourceTableEntryRules.Default)]
+        public ResourceTableEntryRules Rules { get; }
 
         [DefaultValue(false)]
         public bool ShowPerformanceTraces { get; set; }

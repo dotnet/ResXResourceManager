@@ -82,6 +82,8 @@
     <Compile Include="IExportParameters.cs" />
     <Compile Include="ImportException.cs" />
     <Compile Include="IFileFilter.cs" />
+    <Compile Include="IResourceTableEntryRuleConfig.cs" />
+    <Compile Include="IResourceTableEntryRule.cs" />
     <Compile Include="ISourceFilesProvider.cs" />
     <Compile Include="ItemTrackingCollectionHost.cs" />
     <Compile Include="JsonSerializerTypeConverter.cs" />
@@ -110,6 +112,14 @@
     <Compile Include="ResourceLanguage.cs" />
     <Compile Include="ResourceManager.cs" />
     <Compile Include="ResourceTableEntryEventArgs.cs" />
+    <Compile Include="ResourceTableEntryRulePunctuationLead.cs" />
+    <Compile Include="ResourceTableEntryRulePunctuationTail.cs" />
+    <Compile Include="ResourceTableEntryRules.cs" />
+    <Compile Include="ResourceTableEntryRuleStringFormat.cs" />
+    <Compile Include="ResourceTableEntryRulePunctuation.cs" />
+    <Compile Include="ResourceTableEntryRuleWhiteSpace.cs" />
+    <Compile Include="ResourceTableEntryRuleWhiteSpaceTail.cs" />
+    <Compile Include="ResourceTableEntryRuleWhiteSpaceLead.cs" />
     <Compile Include="ResourceTableValues.cs" />
     <Compile Include="ResourceBeginEditingEventArgs.cs" />
     <Compile Include="Snapshot.cs" />

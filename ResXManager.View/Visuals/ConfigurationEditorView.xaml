@@ -47,6 +47,21 @@
       </Setter>
     </Style>
 
+    <Style TargetType="{x:Type ListViewItem}" x:Key="RulesSelectorItemContainerStyle">
+      <Setter Property="Focusable" Value="False" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="{x:Type ListViewItem}">
+            <CheckBox Margin="0,2" IsChecked="{Binding Content.IsEnabled, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                      Content="{TemplateBinding Content, Converter={converters:ResourceTableEntryRuleToStringConverter}, ConverterParameter=Name}"
+                      ToolTip="{TemplateBinding Content, Converter={converters:ResourceTableEntryRuleToStringConverter}, ConverterParameter=Description}"
+                      Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
+                      Focusable="True" />
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
     <themes:ResourceLocator x:Key="ResourceLocator" />
 
   </UserControl.Resources>
@@ -148,6 +163,15 @@
                  ItemsSource="{Binding Source={x:Type model:DuplicateKeyHandling}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
                  SelectedItem="{Binding Configuration.DuplicateKeyHandling}"
                  ItemContainerStyle="{StaticResource EmumSelectorItemContainerStyle}" />
+      </GroupBox>
+
+      <Decorator Height="5" />
+
+      <GroupBox Header="{x:Static properties:Resources.Configuration_Rules}" Style="{StaticResource GroupStyle}">
+        <ListView Margin="10" BorderThickness="0" Background="Transparent" SelectionMode="Multiple"
+                  ItemsSource="{Binding Rules}"
+                  ItemContainerStyle="{StaticResource RulesSelectorItemContainerStyle}">
+        </ListView>
       </GroupBox>
 
       <Decorator Height="5" />

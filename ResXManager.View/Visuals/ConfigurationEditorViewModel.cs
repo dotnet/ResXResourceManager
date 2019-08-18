@@ -1,5 +1,6 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
+    using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.Linq;
     using System.Windows.Input;
@@ -29,6 +30,10 @@
 
         [NotNull]
         public Configuration Configuration { get; }
+
+        [NotNull]
+        [ItemNotNull]
+        public IReadOnlyList<IResourceTableEntryRuleConfig> Rules => Configuration.Rules.ConfigurableRules;
 
         [NotNull]
         public ICommand SortNodesByKeyCommand => new DelegateCommand(SortNodesByKey);
