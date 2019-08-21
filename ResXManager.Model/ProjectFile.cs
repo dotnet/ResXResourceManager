@@ -3,6 +3,8 @@
     using System;
     using System.IO;
     using System.Linq;
+    using System.Text;
+    using System.Xml;
     using System.Xml.Linq;
 
     using JetBrains.Annotations;
@@ -16,6 +18,8 @@
     {
         [CanBeNull]
         private string _fingerPrint;
+
+        private readonly XmlWriterSettings _xmlWriterSettings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectFile" /> class.
@@ -32,6 +36,12 @@
 
             ProjectName = projectName;
             UniqueProjectName = uniqueProjectName;
+            _xmlWriterSettings = new XmlWriterSettings
+            {
+                // The false means, do not emit the BOM.
+                Encoding = new UTF8Encoding(false),
+                Indent = true
+            };
         }
 
         /// <summary>
@@ -102,7 +112,10 @@
 
         protected virtual void InternalSave([NotNull] XDocument document)
         {
-            document.Save(FilePath);
+            using (XmlWriter w = XmlWriter.Create(FilePath, _xmlWriterSettings))
+            {
+                document.Save(w);
+            }
         }
 
         /// <summary>
@@ -145,4 +158,3 @@
             return filePath.StartsWith(solutionFolder, StringComparison.OrdinalIgnoreCase) ? filePath.Substring(solutionFolder.Length) : filePath;
         }
     }
-}
