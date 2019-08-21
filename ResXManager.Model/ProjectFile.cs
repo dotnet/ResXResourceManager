@@ -16,8 +16,7 @@
     /// </summary>
     public class ProjectFile : ObservableObject
     {
-        [CanBeNull]
-        private string _fingerPrint;
+        [CanBeNull] private string _fingerPrint;
 
         private readonly XmlWriterSettings _xmlWriterSettings;
 
@@ -135,8 +134,12 @@
                         return true;
                     }
                 }
-                catch (IOException) { }
-                catch (UnauthorizedAccessException) { }
+                catch (IOException)
+                {
+                }
+                catch (UnauthorizedAccessException)
+                {
+                }
 
                 return false;
             }
@@ -158,3 +161,4 @@
             return filePath.StartsWith(solutionFolder, StringComparison.OrdinalIgnoreCase) ? filePath.Substring(solutionFolder.Length) : filePath;
         }
     }
+}
