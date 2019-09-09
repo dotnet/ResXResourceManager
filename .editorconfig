@@ -1,0 +1,13 @@
+[*]
+indent_style = space
+trim_trailing_whitespace = true
+
+[*.cs]
+indent_size = 4
+
+[*.xaml]
+indent_size = 2
+
+[*.xml]
+indent_size = 2
+
