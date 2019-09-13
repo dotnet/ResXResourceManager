@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="1000"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
@@ -11,6 +10,7 @@
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
+             xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
              x:Name="UserControl"
              d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
   <UserControl.Resources>
@@ -148,9 +148,9 @@
                       <Popup IsOpen="{Binding Path=IsChecked, ElementName=TargetCulturesButton, Mode=OneWay}"
                              StaysOpen="False"
                              Placement="Bottom" PlacementTarget="{Binding ElementName=TargetCulturesButton}">
-                        <i:Interaction.Behaviors>
+                        <Interactions:Interaction.Behaviors>
                           <toms:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=TargetCulturesButton}" />
-                        </i:Interaction.Behaviors>
+                        </Interactions:Interaction.Behaviors>
                         <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
                           <ListBox ItemsSource="{Binding AllTargetCultures}"
                                    Style="{DynamicResource {x:Static styles:ResourceKeys.ListBoxStyle}}"
@@ -223,9 +223,9 @@
       <toms:LoadingIndicator IsActive="{Binding TranslationSession.IsActive}" Header="Translating..." d:IsHidden="True" />
     </Grid>
   </DockPanel>
-  <i:Interaction.Triggers>
-    <i:EventTrigger EventName="Loaded">
-      <i:InvokeCommandAction Command="{Binding StartCommand}" />
-    </i:EventTrigger>
-  </i:Interaction.Triggers>
+  <Interactions:Interaction.Triggers>
+    <Interactions:EventTrigger EventName="Loaded">
+      <Interactions:InvokeCommandAction Command="{Binding StartCommand}" />
+    </Interactions:EventTrigger>
+  </Interactions:Interaction.Triggers>
 </UserControl>

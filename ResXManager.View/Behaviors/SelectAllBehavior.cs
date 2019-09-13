@@ -4,10 +4,11 @@
     using System.Collections.Specialized;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Interactivity;
     using System.Windows.Threading;
 
     using JetBrains.Annotations;
+
+    using Microsoft.Xaml.Behaviors;
 
     using Throttle;
 

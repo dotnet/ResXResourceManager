@@ -4,9 +4,10 @@
     using System.Text.RegularExpressions;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Interactivity;
 
     using JetBrains.Annotations;
+
+    using Microsoft.Xaml.Behaviors;
 
     public class EntityFilter : Behavior<ListBox>
     {

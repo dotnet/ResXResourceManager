@@ -9,6 +9,7 @@
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:vsix="clr-namespace:tomenglertde.ResXManager.VSIX"
+             xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
              d:DataContext="{d:DesignInstance visuals:VsixShellViewModel}"
              Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
              Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
@@ -17,7 +18,7 @@
     <ResourceDictionary Source="/ResXManager.VSIX;component/Resources/VSColorScheme.xaml" />
   </UserControl.Resources>
 
-  <i:Interaction.Behaviors>
+  <Interactions:Interaction.Behaviors>
     <composition:ContentControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.Shell}" />
     <composition:CommandRoutingBehavior CommandSource="{x:Type vsix:ResXFileCodeGeneratorCommand}"
                                         CommandTarget="{Binding SetCodeProviderCommand}"
@@ -32,5 +33,5 @@
                                         CommandParameter="{x:Static vsix:CodeGenerator.TextTemplate}"
                                         IsChecked="{Binding SelectedCodeGenerators, Converter={x:Static toms:BinaryOperationConverter.Equality}, ConverterParameter={x:Static vsix:CodeGenerator.TextTemplate}}" />
 
-  </i:Interaction.Behaviors>
+  </Interactions:Interaction.Behaviors>
 </UserControl>

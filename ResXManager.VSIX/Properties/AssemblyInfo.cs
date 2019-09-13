@@ -17,6 +17,5 @@ using Microsoft.VisualStudio.Shell;
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\TomsToolbox.Wpf.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\TomsToolbox.Wpf.Styles.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\TomsToolbox.Wpf.Composition.Styles.dll")]
-[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.Windows.Interactivity.dll")]
-[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.Expression.Interactions.dll")]
+[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.Xaml.Behaviors.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\DataGridExtensions.dll")]

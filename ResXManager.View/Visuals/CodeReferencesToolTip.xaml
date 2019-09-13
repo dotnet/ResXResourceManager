@@ -4,10 +4,10 @@
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
          xmlns:model="urn:ResXManager.Model"
          xmlns:system="clr-namespace:System;assembly=mscorlib"
-         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
          xmlns:toms="urn:TomsToolbox"
          xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
          xmlns:composition="urn:TomsToolbox.Composition"
+         xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
          d:DataContext="{d:DesignInstance model:ResourceTableEntry}">
   <ToolTip.Template>
     <ControlTemplate TargetType="Control">
@@ -60,12 +60,12 @@
             </ItemsControl.ItemTemplate>
           </ItemsControl>
         </Grid>
-        <i:Interaction.Triggers>
+        <Interactions:Interaction.Triggers>
           <toms:TimerTrigger Interval="00:00:01">
             <toms:UpdatePropertyAction TargetName="Text" Property="{x:Static TextBlock.TextProperty}" />
             <toms:UpdatePropertyAction TargetName="Progress" Property="{x:Static ProgressBar.ValueProperty}" />
           </toms:TimerTrigger>
-        </i:Interaction.Triggers>
+        </Interactions:Interaction.Triggers>
       </Border>
       <ControlTemplate.Triggers>
         <DataTrigger Binding="{Binding ElementName=ItemsControl, Path=Items.Count}" Value="0">
