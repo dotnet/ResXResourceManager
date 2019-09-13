@@ -174,23 +174,10 @@
             return GetCustomTypeConverter(type) ?? TypeDescriptor.GetConverter(type);
         }
 
+        [CanBeNull]
         private static TypeConverter GetCustomTypeConverter([NotNull] ICustomAttributeProvider item)
         {
-            /*
-             * Workaround: a copy of the identical method from TomsToolbox.Essentials.
-             * Calling the original method fails when running in VS!
-             */
-
-            /*
             return item.GetCustomTypeConverter();
-            /*/
-            return item
-                .GetCustomAttributes<TypeConverterAttribute>(false)
-                .Select(attr => Type.GetType(attr.ConverterTypeName))
-                .Where(type => (type != null) && typeof(TypeConverter).IsAssignableFrom(type))
-                .Select(type => (TypeConverter)Activator.CreateInstance(type))
-                .FirstOrDefault();
-            //*/
         }
 
         [CanBeNull]

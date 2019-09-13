@@ -7,7 +7,6 @@
              xmlns:composition="urn:TomsToolbox.Composition"
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:vsix="clr-namespace:tomenglertde.ResXManager.VSIX"
              xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
              d:DataContext="{d:DesignInstance visuals:VsixShellViewModel}"
