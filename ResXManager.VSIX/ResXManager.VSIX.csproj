@@ -203,11 +203,11 @@
     </Content>
     <Resource Include="Assets\WinForms.png" />
     <None Include="FodyWeavers.xml" />
-    <Content Include="Resources.Designer.tt">
+    <None Include="Resources.Designer.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Content>
+    </None>
     <None Include="Resources\Resources.Designer.tt">
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </None>

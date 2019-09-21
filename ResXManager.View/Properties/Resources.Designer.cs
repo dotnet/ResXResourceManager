@@ -1570,7 +1570,7 @@ namespace tomenglertde.ResXManager.View.Properties {
     }
 
     /// <summary>
-    /// Specifies a localized display name for an object.
+    /// Specifies a localized category for an object.
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

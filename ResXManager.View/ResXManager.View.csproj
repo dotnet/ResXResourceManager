@@ -494,11 +494,11 @@
     <Resource Include="..\16x16.png">
       <Link>16x16.png</Link>
     </Resource>
-    <Content Include="Properties\Resources.Designer.tt">
+    <None Include="Properties\Resources.Designer.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all">
