@@ -4,10 +4,11 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
-    using System.Windows.Interactivity;
     using System.Windows.Markup;
 
     using JetBrains.Annotations;
+
+    using Microsoft.Xaml.Behaviors;
 
     using tomenglertde.ResXManager.View.ColumnHeaders;
 

@@ -171,7 +171,13 @@
         [NotNull]
         private static TypeConverter GetTypeConverter([NotNull] Type type)
         {
-            return type.GetCustomTypeConverter() ?? TypeDescriptor.GetConverter(type);
+            return GetCustomTypeConverter(type) ?? TypeDescriptor.GetConverter(type);
+        }
+
+        [CanBeNull]
+        private static TypeConverter GetCustomTypeConverter([NotNull] ICustomAttributeProvider item)
+        {
+            return item.GetCustomTypeConverter();
         }
 
         [CanBeNull]

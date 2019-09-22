@@ -6,8 +6,8 @@
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:composition="urn:TomsToolbox.Composition"
+             xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
              d:DataContext="{d:DesignInstance visuals:ShellViewModel}">
   <UserControl.Style>
@@ -31,9 +31,9 @@
           <TextBlock Text="{Binding}" />
         </DataTemplate>
       </TabControl.ItemTemplate>
-      <i:Interaction.Behaviors>
+      <Interactions:Interaction.Behaviors>
         <composition:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.Content}" />
-      </i:Interaction.Behaviors>
+      </Interactions:Interaction.Behaviors>
     </TabControl>
     <Button x:Name="DonateButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5,0"
             Background="Transparent" BorderBrush="Transparent"

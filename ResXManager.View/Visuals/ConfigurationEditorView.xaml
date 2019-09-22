@@ -5,7 +5,6 @@
              xmlns:model="urn:ResXManager.Model"
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
              xmlns:toms="urn:TomsToolbox"
@@ -15,6 +14,7 @@
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              xmlns:composition="urn:TomsToolbox.Composition"
+             xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
              d:DataContext="{d:DesignInstance visuals:ConfigurationEditorViewModel}">
   <UserControl.Resources>
 
@@ -181,9 +181,9 @@
             <DataGridCheckBoxColumn Header="{x:Static properties:Resources.CaseSensitive}" Binding="{Binding IsCaseSensitive}" Width="*" />
             <DataGridTextColumn Header="{x:Static properties:Resources.CommentToken}" Binding="{Binding SingleLineComment}" Width="2*" />
           </DataGrid.Columns>
-          <i:Interaction.Behaviors>
+          <Interactions:Interaction.Behaviors>
             <dgx:ExtendedStarSizeBehavior ResourceLocator="{StaticResource ResourceLocator}" />
-          </i:Interaction.Behaviors>
+          </Interactions:Interaction.Behaviors>
         </DataGrid>
       </GroupBox>
 
@@ -209,9 +209,9 @@
             </StackPanel>
           </DataTemplate>
         </ItemsControl.ItemTemplate>
-        <i:Interaction.Behaviors>
+        <Interactions:Interaction.Behaviors>
           <composition:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.Configuration}" />
-        </i:Interaction.Behaviors>
+        </Interactions:Interaction.Behaviors>
       </ItemsControl>
 
     </StackPanel>

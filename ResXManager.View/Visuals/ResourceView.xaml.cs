@@ -56,7 +56,7 @@
 
                 InitializeComponent();
 
-                DataGrid.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
+                DataGrid?.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
             }
             catch (Exception ex)
             {
@@ -79,7 +79,7 @@
 
         private void ResourceManager_Loaded([NotNull] object sender, [NotNull] EventArgs e)
         {
-            DataGrid.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
+            DataGrid?.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
         }
 
         private void AddLanguage_Click([NotNull] object sender, [NotNull] RoutedEventArgs e)
