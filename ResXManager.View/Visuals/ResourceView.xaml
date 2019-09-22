@@ -95,23 +95,23 @@
     </Grid.ColumnDefinitions>
 
     <Grid.RowDefinitions>
-      <RowDefinition Height="26" MinHeight="26" />
+      <RowDefinition Height="28" MinHeight="28" />
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
-    <DockPanel Margin="5,3" VerticalAlignment="Top" Grid.Column="0" Grid.Row="0">
-      <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Height="16" VerticalAlignment="Top">
-        <Decorator Width="14" />
+    <DockPanel Margin="4,4,0,0" VerticalAlignment="Top" Grid.Column="0" Grid.Row="0" Height="24">
+      <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Height="16" VerticalAlignment="Stretch">
+        <Decorator Width="16" />
         <CheckBox VerticalAlignment="Center"
                   IsThreeState="True" IsChecked="{Binding AreAllFilesSelected, ElementName=SelectAllBehavior}" Focusable="False"
                   Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
-        <Decorator Width="5" />
+        <Decorator Width="4" />
       </StackPanel>
       <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
         <DockPanel>
           <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-            <Decorator Width="3" />
+            <Decorator Width="4" />
             <Path Data="M0,0 L10,0 6,4 6,9 4,9 4,4 Z" Fill="Gray"
                   VerticalAlignment="Center" HorizontalAlignment="Right" Margin="2,0" />
           </StackPanel>
@@ -121,9 +121,9 @@
       </Border>
     </DockPanel>
 
-    <ListBox x:Name="ListBox" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Margin="5,3,0,5"
+    <ListBox x:Name="ListBox" Grid.Column="0" Grid.Row="2" Grid.RowSpan="2" Margin="4,0,0,4"
              ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
-             Padding="5,0" BorderThickness="0" SelectionMode="Extended"
+             Padding="5,0" BorderThickness="1" SelectionMode="Extended"
              toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}"
              VirtualizingPanel.IsVirtualizingWhenGrouping="True"
              Style="{DynamicResource {x:Static styles:ResourceKeys.ListBoxStyle}}">
@@ -178,12 +178,12 @@
       </i:Interaction.Behaviors>
     </ListBox>
 
-    <GridSplitter Grid.Column="1" Grid.Row="2" Width="3" HorizontalAlignment="Left"
+    <GridSplitter Grid.Column="1" Grid.Row="2" Width="4" HorizontalAlignment="Left"
                   VerticalAlignment="Stretch" Style="{DynamicResource {x:Static styles:ResourceKeys.GridSplitterStyle}}" />
 
-    <GridSplitter Grid.Column="2" Grid.Row="1" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{DynamicResource {x:Static styles:ResourceKeys.GridSplitterStyle}}" />
+    <GridSplitter Grid.Column="2" Grid.Row="1" Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{DynamicResource {x:Static styles:ResourceKeys.GridSplitterStyle}}" />
 
-    <DockPanel Grid.Column="2" Grid.Row="0">
+    <DockPanel Grid.Column="2" Grid.Row="0" Margin="0,4,4,0">
       <ToolBarTray DockPanel.Dock="Left" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}">
         <ToolBar x:Name="ToolBar" Background="Transparent" KeyboardNavigation.TabNavigation="Continue">
           <ToolBar.Template>
@@ -195,7 +195,7 @@
                   <DockPanel KeyboardNavigation.TabIndex="1" KeyboardNavigation.TabNavigation="Local">
                     <ContentPresenter x:Name="ToolBarHeader" ContentSource="Header" HorizontalAlignment="Center"
                                       VerticalAlignment="Center" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
-                    <ToolBarPanel x:Name="PART_ToolBarPanel" IsItemsHost="true" Margin="2" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                    <ToolBarPanel x:Name="PART_ToolBarPanel" IsItemsHost="true" Margin="0" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
                   </DockPanel>
                 </Border>
               </Grid>
@@ -388,7 +388,7 @@
       </Popup>
       <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=TextBox}" WhiteSpaceOpacity="0.4" WhiteSpaces="All">
         <TextBox x:Name="TextBox" AcceptsReturn="True" AcceptsTab="True" tools:Spellcheck.IsEnabled="True"
-                 TextWrapping="Wrap" IsTabStop="False" BorderThickness="0" Margin="1" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}">
+                 TextWrapping="Wrap" IsTabStop="False" BorderThickness="0" Margin="4,0,0,0" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}">
           <i:Interaction.Behaviors>
             <toms:ZoomFontSizeOnMouseWheelBehavior />
             <behaviors:SynchronizeTextBoxWithDataGridCellBehavior DataGrid="{Binding ElementName=DataGrid}" />
@@ -397,9 +397,10 @@
       </toms:TextBoxVisibleWhiteSpaceDecorator>
     </DockPanel>
 
-    <Border Grid.Column="2" Grid.Row="2" BorderThickness="1,1,0,0" BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
+    <Border Grid.Column="2" Grid.Row="2" BorderThickness="1" Margin="0,0,4,4"
+            BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
       <DockPanel>
-        <Border DockPanel.Dock="Bottom" BorderThickness="0,0.7,0,0" BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
+        <Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
           <DockPanel DockPanel.Dock="Bottom" Background="{Binding Background, ElementName=DataGrid}">
             <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" ToolTip="{x:Static properties:Resources.SelectedTotalToolTip}">
               <Run Text="{Binding SelectedTableEntries.Count, Mode=OneWay}" /><Run Text="/" /><Run Text="{Binding ResourceTableEntryCount, Mode=OneWay}" /><Run Text="  " />
