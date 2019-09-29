@@ -90,14 +90,14 @@
 
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="240" MinWidth="120" />
-      <ColumnDefinition Width="5" />
+      <ColumnDefinition Width="4" />
       <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>
 
     <Grid Grid.Column="0">
       <Grid.RowDefinitions>
         <RowDefinition Height="24" MinHeight="24" />
-        <RowDefinition Height="5" />
+        <RowDefinition Height="4" />
         <RowDefinition Height="*" />
       </Grid.RowDefinitions>
       <DockPanel Grid.Row="0">
@@ -132,11 +132,11 @@
           <DataTemplate DataType="model:ResourceEntity">
             <StackPanel ToolTip="{Binding Path=DirectoryName, Mode=OneWay}" HorizontalAlignment="Left" Orientation="Horizontal">
               <CheckBox IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Focusable="False" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center" />
-              <Decorator Width="5" />
+              <Decorator Width="4" />
               <TextBlock Background="Transparent" VerticalAlignment="Center">
                 <Run Text="{Binding Path=RelativePath, Mode=OneWay}" /><Run Text="{Binding Path=BaseName, Mode=OneWay}" />
               </TextBlock>
-              <Decorator Width="5" />
+              <Decorator Width="4" />
               <ContentControl Focusable="False">
                 <Interactions:Interaction.Behaviors>
                   <composition:ContentControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListItemDecorator}" CompositionContext="{Binding}" />
@@ -180,13 +180,13 @@
       </ListBox>
     </Grid>
 
-    <GridSplitter Grid.Column="1" Grid.Row="2" Width="5" HorizontalAlignment="Left"
+    <GridSplitter Grid.Column="1" Grid.Row="2" Width="4" HorizontalAlignment="Left"
                   VerticalAlignment="Stretch" Style="{DynamicResource {x:Static styles:ResourceKeys.GridSplitterStyle}}" />
 
     <Grid Grid.Column="2">
       <Grid.RowDefinitions>
         <RowDefinition Height="24" MinHeight="24" />
-        <RowDefinition Height="5" />
+        <RowDefinition Height="4" />
         <RowDefinition Height="*" />
       </Grid.RowDefinitions>
 
@@ -405,7 +405,7 @@
         </toms:TextBoxVisibleWhiteSpaceDecorator>
       </DockPanel>
 
-      <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{DynamicResource {x:Static styles:ResourceKeys.GridSplitterStyle}}" />
+      <GridSplitter Grid.Row="1" Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{DynamicResource {x:Static styles:ResourceKeys.GridSplitterStyle}}" />
 
       <Border Grid.Row="2" BorderThickness="1"
               BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
@@ -433,7 +433,7 @@
                 </Control.Resources>
                 <Control.Template>
                   <ControlTemplate>
-                    <ContentControl x:Name="footerContent" Foreground="Gray" Margin="5" Focusable="False">
+                    <ContentControl x:Name="footerContent" Foreground="Gray" Margin="4" Focusable="False">
                       <TextBlock Text="{x:Static properties:Resources.MultipleSelection}" />
                     </ContentControl>
                     <ControlTemplate.Triggers>
@@ -499,7 +499,7 @@
                           <ControlTemplate TargetType="{x:Type GroupItem}">
                             <StackPanel Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" d:DataContext="{d:DesignInstance GroupItem}">
                               <ContentControl>
-                                <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Margin="5" />
+                                <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Margin="4" />
                                 <Interactions:Interaction.Triggers>
                                   <Interactions:EventTrigger EventName="MouseDoubleClick">
                                     <Interactions:EventTrigger.Actions>
