@@ -233,12 +233,12 @@
   <ItemGroup>
     <PublishFile Include="Properties\Resources.Designer.tt">
       <Visible>False</Visible>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
@@ -259,10 +259,10 @@
       <Version>3.1.3</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.Wpf.Composition.Mef">
-      <Version>2.0.0.3-beta8</Version>
+      <Version>2.0.0.3-beta9</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.Wpf.Styles">
-      <Version>2.0.0.3-beta8</Version>
+      <Version>2.0.0.3-beta9</Version>
     </PackageReference>
     <PackageReference Include="WindowsAPICodePack-Shell" PrivateAssets="All">
       <Version>1.1.1</Version>

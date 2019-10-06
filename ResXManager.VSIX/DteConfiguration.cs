@@ -70,7 +70,7 @@
             return TryGetValue(_solution.Globals, key, ref value);
         }
 
-        private static bool TryGetValue<T>([CanBeNull] EnvDTE.Globals globals, [CanBeNull] string key, [CanBeNull] ref T value)
+        private bool TryGetValue<T>([CanBeNull] EnvDTE.Globals globals, [CanBeNull] string key, [CanBeNull] ref T value)
         {
             try
             {

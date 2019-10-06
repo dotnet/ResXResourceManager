@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
+    using System.Text;
 
     using AutoProperties;
 
@@ -140,7 +141,7 @@
         }
 
         [CanBeNull]
-        protected static T ConvertFromString<T>([CanBeNull] string value, [CanBeNull] T defaultValue)
+        protected T ConvertFromString<T>([CanBeNull] string value, [CanBeNull] T defaultValue)
         {
             try
             {
@@ -159,7 +160,7 @@
         }
 
         [CanBeNull]
-        protected static string ConvertToString<T>([CanBeNull] T value)
+        protected string ConvertToString<T>([CanBeNull] T value)
         {
             if (ReferenceEquals(value, null))
                 return null;
@@ -169,33 +170,48 @@
         }
 
         [NotNull]
-        private static TypeConverter GetTypeConverter([NotNull] Type type)
+        private TypeConverter GetTypeConverter([NotNull] Type type)
         {
             return GetCustomTypeConverter(type) ?? TypeDescriptor.GetConverter(type);
         }
 
         [CanBeNull]
-        private static TypeConverter GetCustomTypeConverter([NotNull] ICustomAttributeProvider item)
+        private TypeConverter GetCustomTypeConverter([NotNull] ICustomAttributeProvider item)
         {
             /*
              * Workaround: a copy of the identical method from TomsToolbox.Essentials.
              * Calling the original method fails when running in VS!
              */
 
-            /*
-            return item.GetCustomTypeConverter();
-            /*/
-            return item
+            var a = item.GetCustomTypeConverter(out var log1);
+
+            var logBuilder = new StringBuilder();
+
+            var b = item
                 .GetCustomAttributes<TypeConverterAttribute>(false)
-                .Select(attr => Type.GetType(attr.ConverterTypeName))
-                .Where(type => (type != null) && typeof(TypeConverter).IsAssignableFrom(type))
+                .ToList().Intercept(i => logBuilder.AppendLine($"# of TypeConverterAttributes: {i?.Count}"))
+                .Select(attr => attr.ConverterTypeName)
+                .ToList().Intercept(i => logBuilder.AppendLine($"Type names: {string.Join("; ", i)}"))
+                .Select(Type.GetType)
+                .Where(type => (type != null))
+                .ToList().Intercept(i => logBuilder.AppendLine($"Types: {string.Join("; ", i)}"))
+                .Where(type => typeof(TypeConverter).IsAssignableFrom(type))
+                .ToList().Intercept(i => logBuilder.AppendLine($"Type converters: {string.Join("; ", i)}"))
                 .Select(type => (TypeConverter)Activator.CreateInstance(type))
                 .FirstOrDefault();
-            //*/
+
+            var log2 = logBuilder.ToString();
+
+            if (a?.GetType() != b?.GetType())
+            {
+                Tracer.TraceWarning("GetCustomTypeConverter: \r\n- " + log1 + "\r\n -" + log2);
+            }
+
+            return b;
         }
 
         [CanBeNull]
-        private static T GetDefaultValue<T>([CanBeNull] MemberInfo propertyInfo)
+        private T GetDefaultValue<T>([CanBeNull] MemberInfo propertyInfo)
         {
             var defaultValueAttribute = propertyInfo?.GetCustomAttributes<DefaultValueAttribute>().Select(attr => attr?.Value).FirstOrDefault();
 
