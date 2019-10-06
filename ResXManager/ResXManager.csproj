@@ -231,7 +231,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <PublishFile Include="Properties\Resources.Designer.tt">
+    <PublishFile Include="ILMerge">
       <Visible>False</Visible>
       <PublishState>Exclude</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -239,7 +239,47 @@
       </Group>
       <TargetPath>
       </TargetPath>
-      <FileType>File</FileType>
+      <FileType>Assembly</FileType>
+    </PublishFile>
+    <PublishFile Include="JetBrains.Annotations">
+      <Visible>False</Visible>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <FileType>Assembly</FileType>
+    </PublishFile>
+    <PublishFile Include="Microsoft.WindowsAPICodePack">
+      <Visible>False</Visible>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <FileType>Assembly</FileType>
+    </PublishFile>
+    <PublishFile Include="Microsoft.WindowsAPICodePack.Shell">
+      <Visible>False</Visible>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <FileType>Assembly</FileType>
+    </PublishFile>
+    <PublishFile Include="PropertyChanged">
+      <Visible>False</Visible>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <FileType>Assembly</FileType>
     </PublishFile>
   </ItemGroup>
   <ItemGroup>
