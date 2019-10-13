@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Visuals
 {
     using System;
+    using System.ComponentModel;
     using System.ComponentModel.Composition;
     using System.Globalization;
     using System.IO;
@@ -57,6 +58,7 @@
                 InitializeComponent();
 
                 DataGrid?.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
+                DataGrid?.Items.SortDescriptions.Add(new SortDescription(DataGrid?.Columns[0].SortMemberPath , ListSortDirection.Ascending));
             }
             catch (Exception ex)
             {
