@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Globalization;
     using System.Linq;
     using System.Windows;
@@ -124,6 +125,7 @@
                 Binding = new Binding(nameof(ResourceTableEntry.Key)) { ValidatesOnDataErrors = true },
                 Width = 200,
                 CanUserReorder = false,
+                SortDirection = ListSortDirection.Ascending
             };
         }
 
