@@ -141,7 +141,7 @@
         }
 
         [CanBeNull]
-        protected T ConvertFromString<T>([CanBeNull] string value, [CanBeNull] T defaultValue)
+        protected static T ConvertFromString<T>([CanBeNull] string value, [CanBeNull] T defaultValue)
         {
             try
             {
@@ -160,7 +160,7 @@
         }
 
         [CanBeNull]
-        protected string ConvertToString<T>([CanBeNull] T value)
+        protected static string ConvertToString<T>([CanBeNull] T value)
         {
             if (ReferenceEquals(value, null))
                 return null;
@@ -170,44 +170,25 @@
         }
 
         [NotNull]
-        private TypeConverter GetTypeConverter([NotNull] Type type)
+        private static TypeConverter GetTypeConverter([NotNull] Type type)
         {
             return GetCustomTypeConverter(type) ?? TypeDescriptor.GetConverter(type);
         }
 
         [CanBeNull]
-        private TypeConverter GetCustomTypeConverter([NotNull] ICustomAttributeProvider item)
+        private static TypeConverter GetCustomTypeConverter([NotNull] ICustomAttributeProvider item)
         {
             /*
              * Workaround: a copy of the identical method from TomsToolbox.Essentials.
-             * Calling the original method fails when running in VS!
+             * Calling the original method fails when running in VS, because it can't dynamically load the assembly with the serializer types.
              */
-
-            var a = item.GetCustomTypeConverter(out var log1);
-
-            var logBuilder = new StringBuilder();
-
-            var b = item
+            return item
                 .GetCustomAttributes<TypeConverterAttribute>(false)
-                .ToList().Intercept(i => logBuilder.AppendLine($"# of TypeConverterAttributes: {i?.Count}"))
                 .Select(attr => attr.ConverterTypeName)
-                .ToList().Intercept(i => logBuilder.AppendLine($"Type names: {string.Join("; ", i)}"))
-                .Select(Type.GetType)
-                .Where(type => (type != null))
-                .ToList().Intercept(i => logBuilder.AppendLine($"Types: {string.Join("; ", i)}"))
+                .Select(typeName => Type.GetType(typeName, true))
                 .Where(type => typeof(TypeConverter).IsAssignableFrom(type))
-                .ToList().Intercept(i => logBuilder.AppendLine($"Type converters: {string.Join("; ", i)}"))
                 .Select(type => (TypeConverter)Activator.CreateInstance(type))
                 .FirstOrDefault();
-
-            var log2 = logBuilder.ToString();
-
-            if (a?.GetType() != b?.GetType())
-            {
-                Tracer.TraceWarning("GetCustomTypeConverter: \r\n- " + log1 + "\r\n -" + log2);
-            }
-
-            return b;
         }
 
         [CanBeNull]
