@@ -102,7 +102,7 @@
                         }
                         catch (Exception ex)
                         {
-                            translationSession.AddMessage(DisplayName + ": " + ex.InnerException?.Message);
+                            translationSession.AddMessage(DisplayName + ": " + (ex.InnerException?.Message ?? ex.Message));
                             loop = false;
                         }
                     }
