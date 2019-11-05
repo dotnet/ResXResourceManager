@@ -53,8 +53,8 @@
         <Setter.Value>
           <ControlTemplate TargetType="{x:Type ListViewItem}">
             <CheckBox Margin="0,2" IsChecked="{Binding Content.IsEnabled, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                      Content="{TemplateBinding Content, Converter={converters:ResourceTableEntryRuleToStringConverter}, ConverterParameter=Name}"
-                      ToolTip="{TemplateBinding Content, Converter={converters:ResourceTableEntryRuleToStringConverter}, ConverterParameter=Description}"
+                      Content="{TemplateBinding Content, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
+                      ToolTip="{TemplateBinding Content, Converter={x:Static toms:ObjectToDescriptionConverter.Default}}"
                       Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
                       Focusable="True" />
           </ControlTemplate>

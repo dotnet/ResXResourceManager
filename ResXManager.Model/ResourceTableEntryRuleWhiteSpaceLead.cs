@@ -3,14 +3,14 @@
     using System.Collections.Generic;
 
     using tomenglertde.ResXManager.Model.Properties;
-
+    
+    [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleWhiteSpaceLead_Name)]
+    [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleWhiteSpaceLead_Description)]
     internal sealed class ResourceTableEntryRuleWhiteSpaceLead : ResourceTableEntryRuleWhiteSpace
     {
         internal const string WhiteSpaceLead = "whiteSpaceLead";
 
         public override string RuleId => WhiteSpaceLead;
-        public override string Name => Resources.ResourceTableEntryRuleWhiteSpaceLead_Name;
-        public override string Description => Resources.ResourceTableEntryRuleWhiteSpaceLead_Description;
 
         protected override IEnumerable<char> GetCharIterator(string value) => value;
 

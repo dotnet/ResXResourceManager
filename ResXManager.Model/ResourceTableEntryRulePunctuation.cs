@@ -18,12 +18,6 @@
         /// <inheritdoc />
         public abstract string RuleId { get; }
 
-        /// <inheritdoc />
-        public abstract string Name { get; }
-
-        /// <inheritdoc />
-        public abstract string Description { get; }
-
         public bool CompliesToRule(IEnumerable<string> values, out string message)
         {
             string reference = null;

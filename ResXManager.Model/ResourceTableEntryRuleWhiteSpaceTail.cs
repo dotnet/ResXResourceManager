@@ -4,14 +4,14 @@
     using System.Linq;
 
     using tomenglertde.ResXManager.Model.Properties;
-
+    
+    [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleWhiteSpaceTail_Name)]
+    [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleWhiteSpaceTail_Description)]
     internal sealed class ResourceTableEntryRuleWhiteSpaceTail : ResourceTableEntryRuleWhiteSpace
     {
         internal const string WhiteSpaceTail = "whiteSpaceTail";
 
         public override string RuleId => WhiteSpaceTail;
-        public override string Name => Resources.ResourceTableEntryRuleWhiteSpaceTail_Name;
-        public override string Description => Resources.ResourceTableEntryRuleWhiteSpaceTail_Description;
 
         protected override IEnumerable<char> GetCharIterator(string value) => value.Reverse();
 

@@ -3,14 +3,14 @@
     using System.Collections.Generic;
 
     using tomenglertde.ResXManager.Model.Properties;
-
+    
+    [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRulePunctuationLead_Name)]
+    [LocalizedDescription(StringResourceKey.ResourceTableEntryRulePunctuationLead_Description)]
     internal sealed class ResourceTableEntryRulePunctuationLead : ResourceTableEntryRulePunctuation
     {
         internal const string PunctuationLead = "punctuationLead";
 
         public override string RuleId => PunctuationLead;
-        public override string Name => Resources.ResourceTableEntryRulePunctuationLead_Name;
-        public override string Description => Resources.ResourceTableEntryRulePunctuationLead_Description;
 
         protected override IEnumerable<char> GetCharIterator(string value) => value;
 

@@ -1,6 +1,5 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
-    using System.Collections.Generic;
     using System.ComponentModel;
 
     using JetBrains.Annotations;
@@ -21,19 +20,5 @@
         /// </summary>
         [NotNull]
         string RuleId { get; }
-
-        /// <summary>
-        /// The human readable name of the rule.
-        /// </summary>
-        [NotNull]
-        [Localizable(true)]
-        string Name { get; }
-
-        /// <summary>
-        /// The human readable description of the rule.
-        /// </summary>
-        [NotNull]
-        [Localizable(true)]
-        string Description { get; }
     }
 }

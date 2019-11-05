@@ -5,14 +5,14 @@
     using System.Linq;
 
     using tomenglertde.ResXManager.Model.Properties;
-
+    
+    [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRulePunctuationTail_Name)]
+    [LocalizedDescription(StringResourceKey.ResourceTableEntryRulePunctuationTail_Description)]
     internal sealed class ResourceTableEntryRulePunctuationTail : ResourceTableEntryRulePunctuation
     {
         internal const string PunctuationTail = "punctuationTail";
 
         public override string RuleId => PunctuationTail;
-        public override string Name => Resources.ResourceTableEntryRulePunctuationTail_Name;
-        public override string Description => Resources.ResourceTableEntryRulePunctuationTail_Description;
 
         protected override IEnumerable<char> GetCharIterator(string value) => value.Reverse();
 

@@ -10,7 +10,9 @@
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Model.Properties;
-
+    
+    [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleStringFormat_Name)]
+    [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleStringFormat_Description)]
     internal sealed class ResourceTableEntryRuleStringFormat : IResourceTableEntryRule
     {
         internal const string StringFormat = "stringFormat";
@@ -22,12 +24,6 @@
 
         /// <inheritdoc />
         public string RuleId => StringFormat;
-
-        /// <inheritdoc />
-        public string Name => Resources.ResourceTableEntryRuleStringFormat_Name;
-
-        /// <inheritdoc />
-        public string Description => Resources.ResourceTableEntryRuleStringFormat_Description;
 
         public bool CompliesToRule(IEnumerable<string> values, out string message)
         {
