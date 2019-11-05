@@ -360,9 +360,9 @@
             OnCommentsChanged();
         }
 
-        public bool HasStringFormatParameterMismatches([NotNull][ItemNotNull] IEnumerable<object> cultures)
+        public bool HasRulesMismatches([NotNull][ItemNotNull] IEnumerable<object> cultures)
         {
-            return HasStringFormatParameterMismatches(cultures.Select(CultureKey.Parse).Select(lang => Values.GetValue(lang)));
+            return Rules.CompliesToRules(MutedRules, cultures.Select(CultureKey.Parse).Select(lang => Values.GetValue(lang)), out _);
         }
 
         public bool HasSnapshotDifferences([NotNull][ItemNotNull] IEnumerable<object> cultures)
