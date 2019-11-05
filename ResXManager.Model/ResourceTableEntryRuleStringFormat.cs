@@ -29,7 +29,7 @@
         /// <inheritdoc />
         public string Description => Resources.ResourceTableEntryRuleStringFormat_Description;
 
-        public bool CheckRule(IEnumerable<string> values, out string message)
+        public bool CompliesToRule(IEnumerable<string> values, out string message)
         {
             if (CheckRule(values))
             {

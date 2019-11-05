@@ -457,7 +457,7 @@
                 if (string.IsNullOrEmpty(neutralValue))
                     return false;
 
-                if (Rules.CheckRules(MutedRules, out var ruleMessages, neutralValue, value)) return false;
+                if (Rules.CompliesToRules(MutedRules, out var ruleMessages, neutralValue, value)) return false;
 
                 errorMessage = GetErrorPrefix(culture) + string.Join(" ", ruleMessages);
                 return true;
@@ -519,7 +519,7 @@
             if (string.IsNullOrEmpty(neutralValue))
                 yield break;
 
-            if (Rules.CheckRules(MutedRules, out var ruleMessages, neutralValue, value))
+            if (Rules.CompliesToRules(MutedRules, out var ruleMessages, neutralValue, value))
                 yield break;
 
             foreach (var message in ruleMessages)

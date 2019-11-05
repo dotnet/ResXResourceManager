@@ -25,7 +25,7 @@
         /// <inheritdoc />
         public abstract string Description { get; }
 
-        public bool CheckRule(IEnumerable<string> values, out string message)
+        public bool CompliesToRule(IEnumerable<string> values, out string message)
         {
             string reference = null;
             foreach (var value in values.Select(GetCharIterator))

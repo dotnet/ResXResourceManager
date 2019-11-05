@@ -82,23 +82,23 @@
             return builder.ToReadOnlyCollection();
         }
 
-        internal bool CheckRules([NotNull][ItemNotNull] ICollection<string> mutedRules, out IList<string> messages, [NotNull][ItemNotNull] params string[] values) =>
-            CheckRules(mutedRules, values, out messages);
+        internal bool CompliesToRules([NotNull][ItemNotNull] ICollection<string> mutedRules, out IList<string> messages, [NotNull][ItemNotNull] params string[] values) =>
+            CompliesToRules(mutedRules, values, out messages);
 
-        internal bool CheckRules([NotNull][ItemNotNull] ICollection<string> mutedRules, [NotNull][ItemNotNull] IEnumerable<string> values, out IList<string> messages)
+        internal bool CompliesToRules([NotNull][ItemNotNull] ICollection<string> mutedRules, [NotNull][ItemNotNull] IEnumerable<string> values, out IList<string> messages)
         {
             switch (values)
             {
                 case ICollection<string> _:
-                    return CheckRulesInternal(mutedRules, values, out messages);
+                    return CompliesToRulesInternal(mutedRules, values, out messages);
                 case IReadOnlyCollection<string> _:
-                    return CheckRulesInternal(mutedRules, values, out messages);
+                    return CompliesToRulesInternal(mutedRules, values, out messages);
                 default:
-                    return CheckRulesInternal(mutedRules, values.ToArray(), out messages);
+                    return CompliesToRulesInternal(mutedRules, values.ToArray(), out messages);
             }
         }
 
-        private bool CheckRulesInternal([NotNull][ItemNotNull] ICollection<string> mutedRules, [NotNull][ItemNotNull] IEnumerable<string> values, out IList<string> messages)
+        private bool CompliesToRulesInternal([NotNull][ItemNotNull] ICollection<string> mutedRules, [NotNull][ItemNotNull] IEnumerable<string> values, out IList<string> messages)
         {
             Debug.Assert(values is ICollection<string> || values is IReadOnlyCollection<string>);
 
@@ -107,7 +107,7 @@
             {
                 // values is a buffered list, despite being stored in a IEnumerable
                 // ReSharper disable once PossibleMultipleEnumeration
-                if (rule.CheckRule(values, out var message)) continue;
+                if (rule.CompliesToRule(values, out var message)) continue;
                 Debug.Assert(!string.IsNullOrEmpty(message));
                 result.Add(message);
             }

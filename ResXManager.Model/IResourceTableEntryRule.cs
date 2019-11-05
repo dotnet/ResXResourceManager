@@ -22,7 +22,7 @@
         /// <returns>
         /// <see langword="true"/> in case the values passed the check; otherwise <see langword="false"/>
         /// </returns>
-        bool CheckRule([NotNull][ItemNotNull] IEnumerable<string> values,
+        bool CompliesToRule([NotNull][ItemNotNull] IEnumerable<string> values,
             [CanBeNull][Localizable(true)] out string message);
     }
 }
