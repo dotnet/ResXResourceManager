@@ -13,11 +13,7 @@
         public override string Name => Resources.ResourceTableEntryRuleWhiteSpaceTail_Name;
         public override string Description => Resources.ResourceTableEntryRuleWhiteSpaceTail_Description;
 
-        protected override IEnumerable<char> GetCharIterator(string value)
-        {
-            for (var i = value.Length - 1; i >= 0; i--)
-                yield return value[i];
-        }
+        protected override IEnumerable<char> GetCharIterator(string value) => value.Reverse();
 
         protected override string GetErrorMessage(IEnumerable<string> reference)
         {
