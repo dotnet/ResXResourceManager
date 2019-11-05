@@ -432,6 +432,6 @@ Ihr ResXManager-Team.
 &lt;/StackPanel&gt;</value>
   </data>
   <data name="Configuration_Rules" xml:space="preserve">
-    <value>Regeln für Übersetzungen</value>
+    <value>Gültigkeitskontrolle der Übersetzungen</value>
   </data>
 </root>
