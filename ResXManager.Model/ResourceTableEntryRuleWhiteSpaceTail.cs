@@ -3,6 +3,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using JetBrains.Annotations;
+
     using tomenglertde.ResXManager.Model.Properties;
     
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleWhiteSpaceTail_Name)]
@@ -13,7 +15,7 @@
 
         public override string RuleId => WhiteSpaceTail;
 
-        protected override IEnumerable<char> GetCharIterator(string value) => value.Reverse();
+        protected override IEnumerable<char> GetCharIterator([CanBeNull] string value) => value?.Reverse() ?? Enumerable.Empty<char>();
 
         protected override string GetErrorMessage(IEnumerable<string> reference)
         {

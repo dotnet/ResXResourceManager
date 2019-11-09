@@ -26,6 +26,8 @@
         [CanBeNull]
         public CultureInfo Culture { get; }
 
+        public bool IsNeutral => Culture == null;
+
         public override string ToString()
         {
             return ToString(string.Empty);

@@ -32,7 +32,7 @@
       <Setter Property="Focusable" Value="False" />
     </Style>
 
-    <Style x:Key="EmumSelectorItemContainerStyle" TargetType="ListBoxItem">
+    <Style x:Key="EnumSelectorItemContainerStyle" TargetType="ListBoxItem">
       <Setter Property="Focusable" Value="False" />
       <Setter Property="Template">
         <Setter.Value>
@@ -153,7 +153,7 @@
         <ListBox Margin="10" BorderThickness="0" Background="Transparent"
                  ItemsSource="{Binding Source={x:Type model:ExcelExportMode}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
                  SelectedItem="{Binding Configuration.ExcelExportMode}"
-                 ItemContainerStyle="{StaticResource EmumSelectorItemContainerStyle}" />
+                 ItemContainerStyle="{StaticResource EnumSelectorItemContainerStyle}" />
       </GroupBox>
 
       <Decorator Height="5" />
@@ -162,14 +162,14 @@
         <ListBox Margin="10" BorderThickness="0" Background="Transparent"
                  ItemsSource="{Binding Source={x:Type model:DuplicateKeyHandling}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
                  SelectedItem="{Binding Configuration.DuplicateKeyHandling}"
-                 ItemContainerStyle="{StaticResource EmumSelectorItemContainerStyle}" />
+                 ItemContainerStyle="{StaticResource EnumSelectorItemContainerStyle}" />
       </GroupBox>
 
       <Decorator Height="5" />
 
       <GroupBox Header="{x:Static properties:Resources.Configuration_Rules}" Style="{StaticResource GroupStyle}">
         <ListView Margin="10" BorderThickness="0" Background="Transparent" SelectionMode="Multiple"
-                  ItemsSource="{Binding Rules}"
+                  ItemsSource="{Binding Configuration.Rules.ConfigurableRules}"
                   ItemContainerStyle="{StaticResource RulesSelectorItemContainerStyle}">
         </ListView>
       </GroupBox>

@@ -11,31 +11,20 @@
 
     internal abstract class ResourceTableEntryRuleWhiteSpace : IResourceTableEntryRule
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         /// <inheritdoc />
         public bool IsEnabled { get; set; }
 
         /// <inheritdoc />
         public abstract string RuleId { get; }
 
-        public bool CompliesToRule(IEnumerable<string> values, out string message)
+        public bool CompliesToRule([CanBeNull] string neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string> values, [CanBeNull] out string message)
         {
-            string reference = null;
-            foreach (var value in values.Select(GetCharIterator))
+            var reference = GetWhiteSpaceSequence(neutralValue).ToArray();
+
+            if (values.Select(GetWhiteSpaceSequence).Any(value => !reference.SequenceEqual(value)))
             {
-                if (reference is null)
-                {
-                    StringBuilder sb = null;
-                    foreach (var c in GetWhiteSpaceSequence(value))
-                        (sb ?? (sb = new StringBuilder())).Append(c);
-                    reference = sb?.ToString() ?? string.Empty;
-                }
-                else if (!reference.SequenceEqual(GetWhiteSpaceSequence(value)))
-                {
-                    message = GetErrorMessage(reference.Select(GetWhiteSpaceName));
-                    return false;
-                }
+                message = GetErrorMessage(reference.Select(GetWhiteSpaceName));
+                return false;
             }
 
             message = null;
@@ -43,15 +32,16 @@
         }
 
         [NotNull]
-        protected abstract IEnumerable<char> GetCharIterator([NotNull] string value);
+        protected abstract IEnumerable<char> GetCharIterator([CanBeNull] string value);
 
         [NotNull]
         protected abstract string GetErrorMessage([NotNull][ItemNotNull] IEnumerable<string> reference);
 
         [NotNull]
-        private static IEnumerable<char> GetWhiteSpaceSequence([NotNull] IEnumerable<char> value) =>
-            value.TakeWhile(char.IsWhiteSpace);
-
+        private IEnumerable<char> GetWhiteSpaceSequence([CanBeNull] string value)
+        {
+            return GetCharIterator(value).TakeWhile(char.IsWhiteSpace);
+        }
 
         [NotNull]
         private static string GetWhiteSpaceName(char wsChar)
@@ -96,5 +86,7 @@
                 default: return string.Format(CultureInfo.InvariantCulture, "0x{0:X4}", (int)wsChar);
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

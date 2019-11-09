@@ -1,6 +1,9 @@
 ﻿namespace tomenglertde.ResXManager.Model
 {
     using System.Collections.Generic;
+    using System.Linq;
+
+    using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Model.Properties;
     
@@ -12,7 +15,7 @@
 
         public override string RuleId => WhiteSpaceLead;
 
-        protected override IEnumerable<char> GetCharIterator(string value) => value;
+        protected override IEnumerable<char> GetCharIterator([CanBeNull] string value) => value ?? Enumerable.Empty<char>();
 
         protected override string GetErrorMessage(IEnumerable<string> reference)
         {

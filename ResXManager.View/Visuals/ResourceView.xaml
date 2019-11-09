@@ -180,7 +180,7 @@
       </ListBox>
     </Grid>
 
-    <GridSplitter Grid.Column="1" Grid.Row="2" Width="4" HorizontalAlignment="Left"
+    <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Left"
                   VerticalAlignment="Stretch" Style="{DynamicResource {x:Static styles:ResourceKeys.GridSplitterStyle}}" />
 
     <Grid Grid.Column="2">

@@ -10,7 +10,7 @@
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Model.Properties;
-    
+
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleStringFormat_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleStringFormat_Description)]
     internal sealed class ResourceTableEntryRuleStringFormat : IResourceTableEntryRule
@@ -25,9 +25,9 @@
         /// <inheritdoc />
         public string RuleId => StringFormat;
 
-        public bool CompliesToRule(IEnumerable<string> values, out string message)
+        public bool CompliesToRule([CanBeNull] string neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string> values, [CanBeNull] out string message)
         {
-            if (CheckRule(values))
+            if (CompliesToRule(neutralValue, values))
             {
                 message = null;
                 return true;
@@ -37,11 +37,13 @@
             return false;
         }
 
-        private static bool CheckRule([NotNull][ItemNotNull] IEnumerable<string> values) =>
-            values.Where(value => !string.IsNullOrEmpty(value))
-                .Select(GetStringFormatFlags)
-                .Distinct()
-                .Count() <= 1;
+        private static bool CompliesToRule([CanBeNull] string neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string> values)
+        {
+            return new[] { neutralValue }.Concat(values.Where(value => !string.IsNullOrEmpty(value)))
+                       .Select(GetStringFormatFlags)
+                       .Distinct()
+                       .Count() <= 1;
+        }
 
         private static long GetStringFormatFlags([CanBeNull] string value)
         {

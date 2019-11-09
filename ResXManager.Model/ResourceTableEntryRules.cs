@@ -2,11 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
 
     using JetBrains.Annotations;
@@ -27,28 +24,15 @@
 
         [CanBeNull]
         [ItemNotNull]
-        private ReadOnlyCollection<IResourceTableEntryRule> _rules;
+        private IReadOnlyCollection<IResourceTableEntryRule> _rules;
 
         [NotNull]
         [ItemNotNull]
-        private ReadOnlyCollection<IResourceTableEntryRule> Rules
-        {
-            get
-            {
-                var result = _rules;
-                if (result != null) return result;
-
-                result = BuildRuleCollection();
-                foreach (var rule in result)
-                    rule.PropertyChanged += (sender, args) => OnChanged();
-
-                return (_rules = result);
-            }
-        }
+        private IReadOnlyCollection<IResourceTableEntryRule> Rules => _rules ?? (_rules = BuildRuleCollection());
 
         [NotNull]
         [ItemNotNull]
-        public IReadOnlyList<IResourceTableEntryRuleConfig> ConfigurableRules => Rules;
+        public IReadOnlyCollection<IResourceTableEntryRuleConfig> ConfigurableRules => Rules;
 
         [NotNull]
         [ItemNotNull]
@@ -60,59 +44,52 @@
             {
                 var valueSet = new HashSet<string>(value, StringComparer.OrdinalIgnoreCase);
                 foreach (var rule in Rules)
+                {
                     rule.IsEnabled = valueSet.Contains(rule.RuleId);
+                }
             }
         }
 
-        private static ReadOnlyCollection<IResourceTableEntryRule> BuildRuleCollection()
+        private IReadOnlyCollection<IResourceTableEntryRule> BuildRuleCollection()
         {
-            var builder = new ReadOnlyCollectionBuilder<IResourceTableEntryRule>
+            var rules = new List<IResourceTableEntryRule>
             {
-                new ResourceTableEntryRulePunctuationLead(),
-                new ResourceTableEntryRulePunctuationTail(),
                 new ResourceTableEntryRuleStringFormat(),
                 new ResourceTableEntryRuleWhiteSpaceLead(),
-                new ResourceTableEntryRuleWhiteSpaceTail()
+                new ResourceTableEntryRuleWhiteSpaceTail(),
+                new ResourceTableEntryRulePunctuationLead(),
+                new ResourceTableEntryRulePunctuationTail(),
             };
 
             // Init default values
-            foreach (var rule in builder)
-                rule.IsEnabled = true;
-
-            return builder.ToReadOnlyCollection();
-        }
-
-        internal bool CompliesToRules([NotNull][ItemNotNull] ICollection<string> mutedRules, out IList<string> messages, [NotNull][ItemNotNull] params string[] values) =>
-            CompliesToRules(mutedRules, values, out messages);
-
-        internal bool CompliesToRules([NotNull][ItemNotNull] ICollection<string> mutedRules, [NotNull][ItemNotNull] IEnumerable<string> values, out IList<string> messages)
-        {
-            switch (values)
+            foreach (var rule in rules)
             {
-                case ICollection<string> _:
-                    return CompliesToRulesInternal(mutedRules, values, out messages);
-                case IReadOnlyCollection<string> _:
-                    return CompliesToRulesInternal(mutedRules, values, out messages);
-                default:
-                    return CompliesToRulesInternal(mutedRules, values.ToArray(), out messages);
+                rule.IsEnabled = true;
+                rule.PropertyChanged += (sender, args) => OnChanged();
             }
+
+            return rules.AsReadOnly();
         }
 
-        private bool CompliesToRulesInternal([NotNull][ItemNotNull] ICollection<string> mutedRules, [NotNull][ItemNotNull] IEnumerable<string> values, out IList<string> messages)
+        internal bool CompliesToRules([NotNull] [ItemNotNull] ICollection<string> mutedRules, string reference, string value, out IList<string> messages)
         {
-            Debug.Assert(values is ICollection<string> || values is IReadOnlyCollection<string>);
+            return CompliesToRules(mutedRules, reference, new[] { value }, out messages);
+        }
 
+        internal bool CompliesToRules([NotNull][ItemNotNull] ICollection<string> mutedRules, [CanBeNull] string reference, [NotNull, ItemCanBeNull] ICollection<string> values, out IList<string> messages)
+        {
             var result = new List<string>();
+
             foreach (var rule in Rules.Where(r => r.IsEnabled && !mutedRules.Contains(r.RuleId)))
             {
-                // values is a buffered list, despite being stored in a IEnumerable
-                // ReSharper disable once PossibleMultipleEnumeration
-                if (rule.CompliesToRule(values, out var message)) continue;
-                Debug.Assert(!string.IsNullOrEmpty(message));
+                if (rule.CompliesToRule(reference, values, out var message))
+                    continue;
+
                 result.Add(message);
             }
 
             messages = result;
+
             return result.Count == 0;
         }
 

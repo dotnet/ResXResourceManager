@@ -10,31 +10,20 @@
 
     internal abstract class ResourceTableEntryRulePunctuation : IResourceTableEntryRule
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         /// <inheritdoc />
         public bool IsEnabled { get; set; }
 
         /// <inheritdoc />
         public abstract string RuleId { get; }
 
-        public bool CompliesToRule(IEnumerable<string> values, out string message)
+        public bool CompliesToRule([CanBeNull] string neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string> values, [CanBeNull] out string message)
         {
-            string reference = null;
-            foreach (var value in values.Select(NormalizeUnicode).Select(GetCharIterator))
+            var reference = GetPunctuationSequence(neutralValue).ToArray();
+
+            if (values.Select(GetPunctuationSequence).Any(value => !reference.SequenceEqual(value)))
             {
-                if (reference is null)
-                {
-                    StringBuilder sb = null;
-                    foreach (var c in GetPunctuationSequence(value))
-                        (sb ?? (sb = new StringBuilder())).Append(c);
-                    reference = sb?.ToString() ?? string.Empty;
-                }
-                else if (!reference.SequenceEqual(GetPunctuationSequence(value)))
-                {
-                    message = GetErrorMessage(reference);
-                    return false;
-                }
+                message = GetErrorMessage(new string(reference));
+                return false;
             }
 
             message = null;
@@ -48,12 +37,13 @@
         protected abstract string GetErrorMessage([NotNull] string reference);
 
         [NotNull]
-        private static string NormalizeUnicode([NotNull] string value) => value.Normalize();
+        private static string NormalizeUnicode([CanBeNull] string value) => value?.Normalize() ?? string.Empty;
 
         [NotNull]
-        private static IEnumerable<char> GetPunctuationSequence([NotNull] IEnumerable<char> value)
+        private IEnumerable<char> GetPunctuationSequence([CanBeNull] string value)
         {
-            return value.SkipWhile(char.IsWhiteSpace).
+            return GetCharIterator(NormalizeUnicode(value))
+                .SkipWhile(char.IsWhiteSpace).
                 TakeWhile(IsPunctuation).
                 Select(NormalizePunctuation);
         }
@@ -101,5 +91,7 @@
                     return false;
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
