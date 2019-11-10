@@ -8,7 +8,6 @@
     using System.Globalization;
     using System.Linq;
     using System.Runtime.CompilerServices;
-    using System.Text;
     using System.Text.RegularExpressions;
     using System.Windows.Threading;
 
@@ -32,10 +31,7 @@
     public sealed class ResourceTableEntry : INotifyPropertyChanged, IDataErrorInfo
     {
         private const string InvariantKey = "@Invariant";
-        private const string MutedRulePattern = @"@MutedRule\(([a-zA-Z]+)\)";
 
-        [NotNull]
-        private static readonly Regex _mutatedRuleExpression = new Regex(MutedRulePattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
         [NotNull]
         private static readonly Regex _duplicateKeyExpression = new Regex(@"_Duplicate\[\d+\]$");
         [NotNull]
@@ -48,6 +44,9 @@
         // the last validation error
         [CanBeNull]
         private string _keyValidationError;
+
+        [CanBeNull]
+        private ISet<string> _mutedRuleIds;
 
         /// <summary>
         /// A reference to the rules that are enabled in the configuration.
@@ -222,62 +221,31 @@
 
         [NotNull]
         [ItemNotNull]
-        private ISet<string> MutedRules
+        private ISet<string> MutedRuleIds
         {
-            get => GetMutedRules(CultureKey.Neutral);
-            set => SetMutedRules(CultureKey.Neutral, value);
+            get => _mutedRuleIds ?? (_mutedRuleIds = new HashSet<string>(GetMutedRuleIds(CultureKey.Neutral), StringComparer.OrdinalIgnoreCase));
+            set => SetMutedRuleIds(CultureKey.Neutral, value);
         }
 
         [NotNull]
         [ItemNotNull]
-        private ISet<string> GetMutedRules([NotNull] CultureKey culture)
+        private IEnumerable<string> GetMutedRuleIds([NotNull] CultureKey culture)
         {
             var comment = Comments.GetValue(culture);
 
-            if (string.IsNullOrWhiteSpace(comment))
-                return new HashSet<string>();
-
-            var rules = _mutatedRuleExpression
-                .Matches(comment)
-                .Cast<Match>()
-                .Where(m => m.Success)
-                .Select(m => m.Groups[1].Value);
-
-            return new HashSet<string>(rules, StringComparer.OrdinalIgnoreCase);
+            return ResourceTableEntryRules.GetMutedRuleIds(comment);
         }
 
-        private bool SetMutedRules([NotNull] CultureKey culture, [NotNull][ItemNotNull] IEnumerable<string> value)
+        private void SetMutedRuleIds([NotNull] CultureKey culture, [NotNull, ItemNotNull] ISet<string> mutedRuleIds)
         {
             var comment = Comments.GetValue(culture);
-            var commentBuilder = new StringBuilder(comment ?? string.Empty);
-            var valueSet = new HashSet<string>(value, StringComparer.OrdinalIgnoreCase);
 
-            if (!string.IsNullOrWhiteSpace(comment))
-            {
-                // Existing comment. We may need to strip old muting values.
-                var matches = _mutatedRuleExpression.Matches(comment);
-                for (var i = matches.Count - 1; i >= 0; i--)
-                {
-                    var match = matches[i];
-                    if (!match.Success) continue;
+            var newComment = ResourceTableEntryRules.SetMutedRuleIds(comment, mutedRuleIds);
 
-                    if (!valueSet.Remove(match.Groups[1].Value))
-                        commentBuilder.Remove(match.Index, match.Length);
-                }
-            }
+            if (!Comments.SetValue(culture, newComment))
+                return;
 
-            foreach (var rule in valueSet)
-            {
-                commentBuilder.Append("@MutedRule(").Append(rule).Append(")");
-            }
-
-            var newComment = commentBuilder.ToString();
-            if (string.Equals(comment, newComment, StringComparison.Ordinal))
-                return false;
-
-            Comments.SetValue(culture, newComment);
             Refresh();
-            return true;
         }
 
         [NotNull]
@@ -369,7 +337,7 @@
                 .ToList()
                 .AsReadOnly();
 
-            return !Rules.CompliesToRules(MutedRules, neutralValue, values, out _);
+            return !Rules.CompliesToRules(MutedRuleIds, neutralValue, values, out _);
         }
 
         public bool HasSnapshotDifferences([NotNull][ItemNotNull] IEnumerable<object> cultures)
@@ -406,6 +374,9 @@
 
         private void Comments_ValueChanged([CanBeNull] object sender, [CanBeNull] EventArgs e)
         {
+            // just clear and re-fetch upon next usage
+            _mutedRuleIds = null;
+
             OnCommentsChanged();
         }
 
@@ -464,7 +435,8 @@
                 if (string.IsNullOrEmpty(neutralValue))
                     return false;
 
-                if (Rules.CompliesToRules(MutedRules, neutralValue, value, out var ruleMessages)) return false;
+                if (Rules.CompliesToRules(MutedRuleIds, neutralValue, value, out var ruleMessages))
+                    return false;
 
                 errorMessage = GetErrorPrefix(culture) + string.Join(" ", ruleMessages);
                 return true;
@@ -526,7 +498,7 @@
             if (string.IsNullOrEmpty(neutralValue))
                 yield break;
 
-            if (Rules.CompliesToRules(MutedRules, neutralValue, value, out var ruleMessages))
+            if (Rules.CompliesToRules(MutedRuleIds, neutralValue, value, out var ruleMessages))
                 yield break;
 
             foreach (var message in ruleMessages)
