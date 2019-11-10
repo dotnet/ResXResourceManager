@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -31,20 +32,30 @@
         [ItemNotNull]
         private IReadOnlyCollection<IResourceTableEntryRule> _rules;
 
+        [CanBeNull]
+        private IDictionary<string, IResourceTableEntryRuleConfig> _configurableRules;
+
         [NotNull]
         [ItemNotNull]
         private IReadOnlyCollection<IResourceTableEntryRule> Rules => _rules ?? (_rules = BuildRuleCollection());
 
         [NotNull]
-        [ItemNotNull]
-        public IReadOnlyCollection<IResourceTableEntryRuleConfig> ConfigurableRules => Rules;
+        public IDictionary<string, IResourceTableEntryRuleConfig> ConfigurableRules => _configurableRules ?? (_configurableRules = new ReadOnlyDictionary<string, IResourceTableEntryRuleConfig>(Rules.Cast<IResourceTableEntryRuleConfig>().ToDictionary(rule => rule.RuleId)));
+
+        public bool IsEnabled([CanBeNull] string ruleId)
+        {
+            if (string.IsNullOrEmpty(ruleId))
+                return false;
+
+            return ConfigurableRules.GetValueOrDefault(ruleId)?.IsEnabled ?? false;
+        }
 
         [NotNull]
         [ItemNotNull]
         [DataMember(Name = "EnabledRules")]
         public IEnumerable<string> EnabledRuleIds
         {
-            get => ConfigurableRules.Where(r => r.IsEnabled).Select(r => r.RuleId);
+            get => Rules.Where(r => r.IsEnabled).Select(r => r.RuleId);
             set
             {
                 var valueSet = new HashSet<string>(value, StringComparer.OrdinalIgnoreCase);

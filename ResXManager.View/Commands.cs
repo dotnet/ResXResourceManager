@@ -1,6 +1,5 @@
 ﻿namespace tomenglertde.ResXManager.View
 {
-    using System.ComponentModel;
     using System.ComponentModel.Composition;
 
     using tomenglertde.ResXManager.Infrastructure;
@@ -83,31 +82,31 @@
 
     [Export]
     [VisualCompositionExport(ConsistencyChecksCommand.Region, Sequence = 2)]
-    [Model.Properties.LocalizedDisplayName(Model.Properties.StringResourceKey.ResourceTableEntryRulePunctuationLead_Name)]
-    [Text(IsCheckableKey, "True")]
-    public class ToggleConsistencyCheckPunctuationLeadCommand : CommandSourceFactory
-    {
-    }
-    [Export]
-    [VisualCompositionExport(ConsistencyChecksCommand.Region, Sequence = 3)]
-    [Model.Properties.LocalizedDisplayName(Model.Properties.StringResourceKey.ResourceTableEntryRulePunctuationTail_Name)]
-    [Text(IsCheckableKey, "True")]
-    public class ToggleConsistencyCheckPunctuationTailCommand : CommandSourceFactory
-    {
-    }
-
-    [Export]
-    [VisualCompositionExport(ConsistencyChecksCommand.Region, Sequence = 4)]
     [Model.Properties.LocalizedDisplayName(Model.Properties.StringResourceKey.ResourceTableEntryRuleWhiteSpaceLead_Name)]
     [Text(IsCheckableKey, "True")]
     public class ToggleConsistencyCheckWhiteSpaceLeadCommand : CommandSourceFactory
     {
     }
     [Export]
-    [VisualCompositionExport(ConsistencyChecksCommand.Region, Sequence = 5)]
+    [VisualCompositionExport(ConsistencyChecksCommand.Region, Sequence = 3)]
     [Model.Properties.LocalizedDisplayName(Model.Properties.StringResourceKey.ResourceTableEntryRuleWhiteSpaceTail_Name)]
     [Text(IsCheckableKey, "True")]
     public class ToggleConsistencyCheckWhiteSpaceTailCommand : CommandSourceFactory
+    {
+    }
+
+    [Export]
+    [VisualCompositionExport(ConsistencyChecksCommand.Region, Sequence = 4)]
+    [Model.Properties.LocalizedDisplayName(Model.Properties.StringResourceKey.ResourceTableEntryRulePunctuationLead_Name)]
+    [Text(IsCheckableKey, "True")]
+    public class ToggleConsistencyCheckPunctuationLeadCommand : CommandSourceFactory
+    {
+    }
+    [Export]
+    [VisualCompositionExport(ConsistencyChecksCommand.Region, Sequence = 5)]
+    [Model.Properties.LocalizedDisplayName(Model.Properties.StringResourceKey.ResourceTableEntryRulePunctuationTail_Name)]
+    [Text(IsCheckableKey, "True")]
+    public class ToggleConsistencyCheckPunctuationTailCommand : CommandSourceFactory
     {
     }
 

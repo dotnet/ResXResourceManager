@@ -688,7 +688,7 @@
     <composition:CommandRoutingBehavior CommandSource="view:PasteCommand"
                                         CommandTarget="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                         CommandParameter="{Binding ElementName=DataGrid}" />
-    <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
     <composition:CommandRoutingBehavior CommandSource="view:IsInvariantCommand"
                                         CommandTarget="{Binding ToggleInvariantCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                         IsChecked="{Binding Path=SelectedItem.IsInvariant, Mode=OneWay, ElementName=DataGrid}" />
@@ -719,6 +719,7 @@
                                         CommandTarget="{Binding ToggleConsistencyCheckCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                         CommandParameter="{x:Static model:ResourceTableEntryRuleWhiteSpaceTail.Id}"
                                         IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[WhiteSpaceTail], Mode=OneWay, ElementName=DataGrid}"/>
+    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
   </Interactions:Interaction.Behaviors>
 
   <Interactions:Interaction.Triggers>

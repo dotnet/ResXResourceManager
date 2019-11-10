@@ -48,11 +48,15 @@
         [CanBeNull]
         private ISet<string> _mutedRuleIds;
 
+        [NotNull]
+        private IConfiguration Configuration => Container.Container.Configuration;
+
         /// <summary>
         /// A reference to the rules that are enabled in the configuration.
         /// </summary>
         [NotNull]
-        private ResourceTableEntryRules Rules => Container.Container.Configuration.Rules;
+        private ResourceTableEntryRules Rules => Configuration.Rules;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceTableEntry" /> class.
@@ -244,7 +248,7 @@
 
         private bool GetIsRuleEnabled([CanBeNull] string ruleId)
         {
-            return !MutedRuleIds.Contains(ruleId);
+            return !MutedRuleIds.Contains(ruleId) && Rules.IsEnabled(ruleId);
         }
 
         private void SetIsRuleEnabled([CanBeNull] string ruleId, bool value)

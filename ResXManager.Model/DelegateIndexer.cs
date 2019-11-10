@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace tomenglertde.ResXManager.Model
+﻿namespace tomenglertde.ResXManager.Model
 {
+    using System;
+
     using JetBrains.Annotations;
 
     public class DelegateIndexer<TKey, TValue>

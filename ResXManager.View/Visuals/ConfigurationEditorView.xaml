@@ -52,6 +52,7 @@
       <Setter Property="Template">
         <Setter.Value>
           <ControlTemplate TargetType="{x:Type ListViewItem}">
+            <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
             <CheckBox Margin="0,2" IsChecked="{Binding Content.IsEnabled, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                       Content="{TemplateBinding Content, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
                       ToolTip="{TemplateBinding Content, Converter={x:Static toms:ObjectToDescriptionConverter.Default}}"
@@ -169,7 +170,7 @@
 
       <GroupBox Header="{x:Static properties:Resources.Configuration_Rules}" Style="{StaticResource GroupStyle}">
         <ListView Margin="10" BorderThickness="0" Background="Transparent" SelectionMode="Multiple"
-                  ItemsSource="{Binding Configuration.Rules.ConfigurableRules}"
+                  ItemsSource="{Binding Configuration.Rules.ConfigurableRules.Values}"
                   ItemContainerStyle="{StaticResource RulesSelectorItemContainerStyle}">
         </ListView>
       </GroupBox>
