@@ -49,7 +49,7 @@
     [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Invariant)]
     [Text(IsCheckableKey, "True")]
-    [Text(GroupNameKey, "Edit")]
+    [Text(GroupNameKey, "Validation")]
     public class IsInvariantCommand : CommandSourceFactory
     {
     }
@@ -58,7 +58,7 @@
     [VisualCompositionExport(RegionId.ResourceTableItemContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Invariant)]
     [Text(IsCheckableKey, "True")]
-    [Text(GroupNameKey, "Edit")]
+    [Text(GroupNameKey, "Validation")]
     public class IsItemInvariantCommand : CommandSourceFactory
     {
     }
@@ -67,6 +67,7 @@
     [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Configuration_Rules)]
     [Text(SubRegionIdKey, Region)]
+    [Text(GroupNameKey, "Validation")]
     public class ConsistencyChecksCommand : CommandSourceFactory
     {
         public const string Region = "ConsistencyChecks";
