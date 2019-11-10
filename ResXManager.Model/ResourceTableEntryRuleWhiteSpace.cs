@@ -8,7 +8,7 @@
 
     using JetBrains.Annotations;
 
-    internal abstract class ResourceTableEntryRuleWhiteSpace : IResourceTableEntryRule
+    public abstract class ResourceTableEntryRuleWhiteSpace : IResourceTableEntryRule
     {
         /// <inheritdoc />
         public bool IsEnabled { get; set; }

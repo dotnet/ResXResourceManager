@@ -6,11 +6,11 @@
     
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRulePunctuationLead_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRulePunctuationLead_Description)]
-    internal sealed class ResourceTableEntryRulePunctuationLead : ResourceTableEntryRulePunctuation
+    public sealed class ResourceTableEntryRulePunctuationLead : ResourceTableEntryRulePunctuation
     {
-        internal const string PunctuationLead = "punctuationLead";
+        public const string Id = "PunctuationLead";
 
-        public override string RuleId => PunctuationLead;
+        public override string RuleId => Id;
 
         protected override IEnumerable<char> GetCharIterator(string value) => value;
 

@@ -305,7 +305,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Rules for translations.
+        ///   Looks up a localized string similar to Consistency checks.
         /// </summary>
         [NotNull]
         public static string Configuration_Rules {
@@ -1201,7 +1201,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         Configuration_LoadSaveHeader,
         /// <summary>
-        ///   Looks up a localized string similar to Rules for translations.
+        ///   Looks up a localized string similar to Consistency checks.
         /// </summary>
         Configuration_Rules,
         /// <summary>
@@ -1610,7 +1610,7 @@ namespace tomenglertde.ResXManager.View.Properties {
     }
 
     /// <summary>
-    /// Specifies a localized category for an object.
+    /// Specifies a localized display name for an object.
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("ResXResourceManager", "1.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

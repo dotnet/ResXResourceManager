@@ -20,11 +20,11 @@
         private const string MutedRuleFormat = @"@MutedRule({0})";
 
         public const string Default = @"{""EnabledRules"": [
-""" + ResourceTableEntryRulePunctuationLead.PunctuationLead + @""",
-""" + ResourceTableEntryRulePunctuationTail.PunctuationTail + @""",
-""" + ResourceTableEntryRuleStringFormat.StringFormat + @""",
-""" + ResourceTableEntryRuleWhiteSpaceLead.WhiteSpaceLead + @""",
-""" + ResourceTableEntryRuleWhiteSpaceTail.WhiteSpaceTail + @"""
+""" + ResourceTableEntryRulePunctuationLead.Id + @""",
+""" + ResourceTableEntryRulePunctuationTail.Id + @""",
+""" + ResourceTableEntryRuleStringFormat.Id + @""",
+""" + ResourceTableEntryRuleWhiteSpaceLead.Id + @""",
+""" + ResourceTableEntryRuleWhiteSpaceTail.Id + @"""
 ]}";
 
         [CanBeNull]

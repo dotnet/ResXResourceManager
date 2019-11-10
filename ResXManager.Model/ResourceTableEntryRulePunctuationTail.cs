@@ -8,11 +8,11 @@
     
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRulePunctuationTail_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRulePunctuationTail_Description)]
-    internal sealed class ResourceTableEntryRulePunctuationTail : ResourceTableEntryRulePunctuation
+    public sealed class ResourceTableEntryRulePunctuationTail : ResourceTableEntryRulePunctuation
     {
-        internal const string PunctuationTail = "punctuationTail";
+        public const string Id = "PunctuationTail";
 
-        public override string RuleId => PunctuationTail;
+        public override string RuleId => Id;
 
         protected override IEnumerable<char> GetCharIterator(string value) => value.Reverse();
 

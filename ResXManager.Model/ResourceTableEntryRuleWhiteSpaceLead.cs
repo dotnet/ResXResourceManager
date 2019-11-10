@@ -9,11 +9,11 @@
     
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleWhiteSpaceLead_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleWhiteSpaceLead_Description)]
-    internal sealed class ResourceTableEntryRuleWhiteSpaceLead : ResourceTableEntryRuleWhiteSpace
+    public sealed class ResourceTableEntryRuleWhiteSpaceLead : ResourceTableEntryRuleWhiteSpace
     {
-        internal const string WhiteSpaceLead = "whiteSpaceLead";
+        public const string Id = "WhiteSpaceLead";
 
-        public override string RuleId => WhiteSpaceLead;
+        public override string RuleId => Id;
 
         protected override IEnumerable<char> GetCharIterator([CanBeNull] string value) => value ?? Enumerable.Empty<char>();
 

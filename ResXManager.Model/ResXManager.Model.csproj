@@ -82,6 +82,7 @@
     <Compile Include="IExportParameters.cs" />
     <Compile Include="ImportException.cs" />
     <Compile Include="IFileFilter.cs" />
+    <Compile Include="DelegateIndexer.cs" />
     <Compile Include="IResourceTableEntryRuleConfig.cs" />
     <Compile Include="IResourceTableEntryRule.cs" />
     <Compile Include="ISourceFilesProvider.cs" />

@@ -120,6 +120,31 @@
         public static ICommand ToggleItemInvariantCommand => new DelegateCommand<DataGrid>(CanToggleItemInvariant, ToggleItemInvariant);
 
         [NotNull]
+        public ICommand ToggleConsistencyCheckCommand => new DelegateCommand<string>(_ => SelectedTableEntries.Any(), ToggleConsistencyCheck);
+
+        private void ToggleConsistencyCheck(string ruleId)
+        {
+            var items = SelectedTableEntries.ToArray();
+
+            if (!items.Any())
+                return;
+
+            var first = items.First();
+            if (first == null)
+                return;
+
+            var newValue = !first.IsRuleEnabled[ruleId];
+
+            foreach (var item in items)
+            {
+                if (!item.CanEdit(item.NeutralLanguage.CultureKey))
+                    return;
+
+                item.IsRuleEnabled[ruleId] = newValue;
+            }
+        }
+
+        [NotNull]
         public ICommand ReloadCommand => new DelegateCommand(ForceReload);
 
         [NotNull]

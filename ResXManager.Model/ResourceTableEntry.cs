@@ -86,6 +86,8 @@
             CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
 
             IsItemInvariant = new ResourceTableValues<bool>(_languages, lang => GetIsInvariant(lang.CultureKey), (lang, value) => SetIsInvariant(lang.CultureKey, value));
+
+            IsRuleEnabled = new DelegateIndexer<string, bool>(GetIsRuleEnabled, SetIsRuleEnabled);
         }
 
         private void ResetTableValues()
@@ -219,13 +221,16 @@
         [ItemNotNull]
         public ICollection<CultureKey> Languages => _languages.Keys;
 
+        [DependsOn(nameof(Comment))]
+        [NotNull]
+        public DelegateIndexer<string, bool> IsRuleEnabled { get; }
+
         // TODO: maybe rules should be mutable per language, like Invariant?
         [NotNull]
         [ItemNotNull]
         private ISet<string> MutedRuleIds
         {
             get => _mutedRuleIds ?? (_mutedRuleIds = new HashSet<string>(GetMutedRuleIds(CultureKey.Neutral), StringComparer.OrdinalIgnoreCase));
-            set => SetMutedRuleIds(CultureKey.Neutral, value);
         }
 
         [NotNull]
@@ -235,6 +240,30 @@
             var comment = Comments.GetValue(culture);
 
             return ResourceTableEntryRules.GetMutedRuleIds(comment);
+        }
+
+        private bool GetIsRuleEnabled([CanBeNull] string ruleId)
+        {
+            return !MutedRuleIds.Contains(ruleId);
+        }
+
+        private void SetIsRuleEnabled([CanBeNull] string ruleId, bool value)
+        {
+            if (ruleId == null)
+                return;
+
+            var ids = new HashSet<string>(MutedRuleIds, StringComparer.OrdinalIgnoreCase);
+
+            if (value)
+            {
+                ids.Remove(ruleId);
+            }
+            else
+            {
+                ids.Add(ruleId);
+            }
+
+            SetMutedRuleIds(CultureKey.Neutral, ids);
         }
 
         private void SetMutedRuleIds([NotNull] CultureKey culture, [NotNull, ItemNotNull] ISet<string> mutedRuleIds)
@@ -389,6 +418,7 @@
             OnPropertyChanged(nameof(IsInvariant));
             OnPropertyChanged(nameof(IsItemInvariant));
             OnPropertyChanged(nameof(CommentAnnotations));
+            OnPropertyChanged(nameof(IsRuleEnabled));
         }
 
         [NotNull]

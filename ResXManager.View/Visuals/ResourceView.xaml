@@ -699,6 +699,26 @@
     <composition:CommandRoutingBehavior CommandSource="view:ToggleCellSelectionCommand"
                                         CommandTarget="{Binding ToggleCellSelectionCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                         IsChecked="{Binding IsCellSelectionEnabled, Mode=OneWay, Source={x:Static properties:Settings.Default}}" />
+    <composition:CommandRoutingBehavior CommandSource="view:ToggleConsistencyCheckStringFormatCommand"
+                                        CommandTarget="{Binding ToggleConsistencyCheckCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
+                                        CommandParameter="{x:Static model:ResourceTableEntryRuleStringFormat.Id}"
+                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[StringFormat], Mode=OneWay, ElementName=DataGrid}"/>
+    <composition:CommandRoutingBehavior CommandSource="view:ToggleConsistencyCheckPunctuationLeadCommand"
+                                        CommandTarget="{Binding ToggleConsistencyCheckCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
+                                        CommandParameter="{x:Static model:ResourceTableEntryRulePunctuationLead.Id}"
+                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[PunctuationLead], Mode=OneWay, ElementName=DataGrid}"/>
+    <composition:CommandRoutingBehavior CommandSource="view:ToggleConsistencyCheckPunctuationTailCommand"
+                                        CommandTarget="{Binding ToggleConsistencyCheckCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
+                                        CommandParameter="{x:Static model:ResourceTableEntryRulePunctuationTail.Id}"
+                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[PunctuationTail], Mode=OneWay, ElementName=DataGrid}"/>
+    <composition:CommandRoutingBehavior CommandSource="view:ToggleConsistencyCheckWhiteSpaceLeadCommand"
+                                        CommandTarget="{Binding ToggleConsistencyCheckCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
+                                        CommandParameter="{x:Static model:ResourceTableEntryRuleWhiteSpaceLead.Id}"
+                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[WhiteSpaceLead], Mode=OneWay, ElementName=DataGrid}"/>
+    <composition:CommandRoutingBehavior CommandSource="view:ToggleConsistencyCheckWhiteSpaceTailCommand"
+                                        CommandTarget="{Binding ToggleConsistencyCheckCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
+                                        CommandParameter="{x:Static model:ResourceTableEntryRuleWhiteSpaceTail.Id}"
+                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[WhiteSpaceTail], Mode=OneWay, ElementName=DataGrid}"/>
   </Interactions:Interaction.Behaviors>
 
   <Interactions:Interaction.Triggers>

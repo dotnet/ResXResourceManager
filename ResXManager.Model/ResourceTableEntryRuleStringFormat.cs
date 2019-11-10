@@ -13,17 +13,16 @@
 
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleStringFormat_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleStringFormat_Description)]
-    internal sealed class ResourceTableEntryRuleStringFormat : IResourceTableEntryRule
+    public sealed class ResourceTableEntryRuleStringFormat : IResourceTableEntryRule
     {
-        internal const string StringFormat = "stringFormat";
+        public const string Id = "StringFormat";
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <inheritdoc />
         public bool IsEnabled { get; set; }
 
-        /// <inheritdoc />
-        public string RuleId => StringFormat;
+        public string RuleId => Id;
 
         public bool CompliesToRule([CanBeNull] string neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string> values, [CanBeNull] out string message)
         {

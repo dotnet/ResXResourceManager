@@ -441,6 +441,6 @@ Your ResXManager team.
     <value>Got it - do not show this notification again.</value>
   </data>
   <data name="Configuration_Rules" xml:space="preserve">
-    <value>Validations of translations</value>
+    <value>Consistency checks</value>
   </data>
 </root>

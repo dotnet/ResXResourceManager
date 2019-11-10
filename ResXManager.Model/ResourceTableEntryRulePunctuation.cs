@@ -7,7 +7,7 @@
 
     using JetBrains.Annotations;
 
-    internal abstract class ResourceTableEntryRulePunctuation : IResourceTableEntryRule
+    public abstract class ResourceTableEntryRulePunctuation : IResourceTableEntryRule
     {
         /// <inheritdoc />
         public bool IsEnabled { get; set; }
