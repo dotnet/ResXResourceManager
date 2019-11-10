@@ -219,6 +219,7 @@
         [ItemNotNull]
         public ICollection<CultureKey> Languages => _languages.Keys;
 
+        // TODO: maybe rules should be mutable per language, like Invariant?
         [NotNull]
         [ItemNotNull]
         private ISet<string> MutedRuleIds
