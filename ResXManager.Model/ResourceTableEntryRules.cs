@@ -108,7 +108,8 @@
         [NotNull]
         private static readonly Regex _mutatedRuleExpression = new Regex(MutedRulePattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
-        internal static IEnumerable<string> GetMutedRuleIdsFromComment([CanBeNull] string comment)
+        [NotNull]
+        internal static IEnumerable<string> GetMutedRuleIds([CanBeNull] string comment)
         {
             if (string.IsNullOrWhiteSpace(comment))
                 return Enumerable.Empty<string>();
@@ -122,7 +123,8 @@
             return rules;
         }
 
-        internal static string UpdateMutedRuleIdsInComment([CanBeNull] string comment, ISet<string> mutedRuleIds)
+        [NotNull]
+        internal static string SetMutedRuleIds([CanBeNull] string comment, [NotNull] ISet<string> mutedRuleIds)
         {
             var commentBuilder = new StringBuilder(comment ?? string.Empty);
 
