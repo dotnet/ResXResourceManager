@@ -21,7 +21,7 @@
         private const string MutedRuleFormat = @"@MutedRule({0})";
 
         [NotNull]
-        private static readonly Regex _mutatedRuleExpression = new Regex(MutedRulePattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        private static readonly Regex _mutedRuleExpression = new Regex(MutedRulePattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         public const string Default = @"{""EnabledRules"": [
 """ + ResourceTableEntryRulePunctuationLead.Id + @""",
@@ -125,7 +125,7 @@
             if (string.IsNullOrWhiteSpace(comment))
                 return Enumerable.Empty<string>();
 
-            var rules = _mutatedRuleExpression
+            var rules = _mutedRuleExpression
                 .Matches(comment)
                 .Cast<Match>()
                 .Where(match => match.Success)
@@ -142,7 +142,7 @@
             if (!string.IsNullOrWhiteSpace(comment))
             {
                 // Existing comment. We may need to strip old muting values.
-                var matches = _mutatedRuleExpression.Matches(comment)
+                var matches = _mutedRuleExpression.Matches(comment)
                     .Cast<Match>()
                     .Where(match => match.Success)
                     .Reverse();
