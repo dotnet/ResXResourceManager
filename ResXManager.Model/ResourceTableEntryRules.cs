@@ -20,6 +20,9 @@
         private const string MutedRulePattern = @"@MutedRule\(([a-zA-Z]+)\)";
         private const string MutedRuleFormat = @"@MutedRule({0})";
 
+        [NotNull]
+        private static readonly Regex _mutatedRuleExpression = new Regex(MutedRulePattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
         public const string Default = @"{""EnabledRules"": [
 """ + ResourceTableEntryRulePunctuationLead.Id + @""",
 """ + ResourceTableEntryRulePunctuationTail.Id + @""",
@@ -115,9 +118,6 @@
         {
             Changed?.Invoke(this, EventArgs.Empty);
         }
-
-        [NotNull]
-        private static readonly Regex _mutatedRuleExpression = new Regex(MutedRulePattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         [NotNull]
         internal static IEnumerable<string> GetMutedRuleIds([CanBeNull] string comment)

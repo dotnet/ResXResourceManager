@@ -47,22 +47,6 @@
       </Setter>
     </Style>
 
-    <Style TargetType="{x:Type ListViewItem}" x:Key="RulesSelectorItemContainerStyle">
-      <Setter Property="Focusable" Value="False" />
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="{x:Type ListViewItem}">
-            <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-            <CheckBox Margin="0,2" IsChecked="{Binding Content.IsEnabled, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                      Content="{TemplateBinding Content, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
-                      ToolTip="{TemplateBinding Content, Converter={x:Static toms:ObjectToDescriptionConverter.Default}}"
-                      Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
-                      Focusable="True" />
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
-
     <themes:ResourceLocator x:Key="ResourceLocator" />
 
   </UserControl.Resources>
@@ -169,10 +153,17 @@
       <Decorator Height="5" />
 
       <GroupBox Header="{x:Static properties:Resources.Configuration_Rules}" Style="{StaticResource GroupStyle}">
-        <ListView Margin="10" BorderThickness="0" Background="Transparent" SelectionMode="Multiple"
-                  ItemsSource="{Binding Configuration.Rules.ConfigurableRules.Values}"
-                  ItemContainerStyle="{StaticResource RulesSelectorItemContainerStyle}">
-        </ListView>
+        <ItemsControl Margin="10" BorderThickness="0" Background="Transparent"
+                  ItemsSource="{Binding Configuration.Rules.ConfigurableRules.Values}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type model:IResourceTableEntryRuleConfig}">
+              <CheckBox Margin="0,2" IsChecked="{Binding IsEnabled, Mode=TwoWay}"
+                        Content="{Binding Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
+                        ToolTip="{Binding Converter={x:Static toms:ObjectToDescriptionConverter.Default}}"
+                        Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
       </GroupBox>
 
       <Decorator Height="5" />

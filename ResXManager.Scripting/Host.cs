@@ -173,7 +173,6 @@
 
         public DuplicateKeyHandling DuplicateKeyHandling { get; set; }
 
-        /// <inheritdoc />
         public ResourceTableEntryRules Rules { get; } = new ResourceTableEntryRules();
 
         public bool RemoveEmptyEntries { get; set; }
