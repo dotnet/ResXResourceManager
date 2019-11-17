@@ -138,22 +138,22 @@
     <value>删除选定的行？</value>
   </data>
   <data name="CellSelection" xml:space="preserve">
-    <value>单元格选择 </value>
+    <value>单元格选择</value>
   </data>
   <data name="CellSelectionToolTip" xml:space="preserve">
     <value>允许选择单个单元格来复制/粘贴内容。</value>
   </data>
   <data name="ChooseColumnsToolTip" xml:space="preserve">
-    <value>选择列 </value>
+    <value>选择列</value>
   </data>
   <data name="CodeReferencesToolTip" xml:space="preserve">
-    <value>在代码文件中找到的引用的数量。此数字仅做参考</value>
+    <value>在代码文件中找到的引用的数量。此数字仅做参考。</value>
   </data>
   <data name="CodeReferencesTooManyDetailsToolTip" xml:space="preserve">
-    <value>要显示详细信息的引用太多！</value>
+    <value>要显示详细信息的引用太多。</value>
   </data>
   <data name="CodeReferenceTrackingInProgress" xml:space="preserve">
-    <value>代码引用检测正在进行 （{0} %）。 </value>
+    <value>代码引用检测正在进行 （{0} %）</value>
   </data>
   <data name="Comment" xml:space="preserve">
     <value>注释</value>
@@ -189,16 +189,16 @@
     <value>诊断</value>
   </data>
   <data name="DonateButtonToolTip" xml:space="preserve">
-    <value>支持开源社区。 </value>
+    <value>支持开源社区</value>
   </data>
   <data name="EditSolutionConfigurationNotification" xml:space="preserve">
-    <value>您正在编辑特定于活动解决方案的配置，如果要编辑默认配置，只需关闭解决方案。 </value>
+    <value>您正在编辑特定于活动解决方案的配置，如果要编辑默认配置，只需关闭解决方案。</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>已启用</value>
   </data>
   <data name="ErrorAddingNewResourceFile" xml:space="preserve">
-    <value>添加新资源文件"{0}"时出现错误。 </value>
+    <value>添加新资源文件"{0}"时出现错误</value>
   </data>
   <data name="ExportExcelAll" xml:space="preserve">
     <value>导出全部</value>
@@ -210,7 +210,7 @@
     <value>文件扩展名</value>
   </data>
   <data name="FindCodeReferencesButtonToolTip" xml:space="preserve">
-    <value>检测代码引用。 </value>
+    <value>检测代码引用。</value>
   </data>
   <data name="FlatViewToolTip" xml:space="preserve">
     <value>扁平视图</value>
@@ -312,7 +312,7 @@
     <value>没有选择。</value>
   </data>
   <data name="NoResourceFileForResource" xml:space="preserve">
-    <value>没有匹配的资源文件</value>
+    <value>没有匹配的资源文件。</value>
   </data>
   <data name="NoCodeReferencesToolTip" xml:space="preserve">
     <value>该算法没有找到代码引用。 然而，仍可能会存在对此字符串的间接引用。</value>
@@ -345,7 +345,7 @@
     <value>导入</value>
   </data>
   <data name="ImportNormalizedTableExpected" xml:space="preserve">
-    <value>要求一个标准化的表</value>
+    <value>要求一个标准化的表。</value>
   </data>
   <data name="IndexColumnHeaderToolTip" xml:space="preserve">
     <value>资源文件中条目的索引。</value>
@@ -354,7 +354,7 @@
     <value>显示索引列</value>
   </data>
   <data name="IndexColumnToolTip" xml:space="preserve">
-    <value>资源文件中条目的索引。  Use fractional values to reorder the entries</value>
+    <value>资源文件中条目的索引。Use fractional values to reorder the entries.</value>
   </data>
   <data name="Invariant" xml:space="preserve">
     <value>不变</value>
@@ -415,7 +415,7 @@
     <value>空白资源值处理</value>
   </data>
   <data name="OpenSourceOverlay_Confirmation" xml:space="preserve">
-    <value>知道了 - 不要再显示此通知</value>
+    <value>知道了 - 不要再显示此通知。</value>
   </data>
   <data name="OpenSourceOverlay_Message" xml:space="preserve">
     <value>&lt;StackPanel xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"&gt;

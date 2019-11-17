@@ -123,7 +123,7 @@
 </value>
   </data>
   <data name="DuplicateKeyHandling_Fail" xml:space="preserve">
-    <value>Eine Fehlermeldung anzeigen und die Datei nicht laden.</value>
+    <value>Eine Fehlermeldung anzeigen und die Datei nicht laden</value>
   </data>
   <data name="DuplicateKeyHandling_Rename" xml:space="preserve">
     <value>Doppelte/leere Schlüssel umbenennen ("_Duplicate[#]"/"_Empty[#]" anhängen)</value>

@@ -119,7 +119,8 @@
   </resheader>
   <data name="DuplicateKeyError" xml:space="preserve">
     <value>“{0}”中的重复键：
-{1}</value>
+{1}
+</value>
   </data>
   <data name="DuplicateKeyHandling_Fail" xml:space="preserve">
     <value>显示错误消息，不加载该资源</value>
@@ -138,14 +139,15 @@
   </data>
   <data name="FileSaveError" xml:space="preserve">
     <value>保存文件“{0}”时出错：
-{1}</value>
+{1}
+</value>
 
   </data>
   <data name="ImportColumnMismatchError" xml:space="preserve">
-    <value>预期至少三个列。 </value>
+    <value>预期至少三个列。</value>
   </data>
   <data name="ImportDuplicateLanguageError" xml:space="preserve">
-    <value>头部中有重复的语言。 </value>
+    <value>头部中有重复的语言。</value>
   </data>
   <data name="ImportFailedError" xml:space="preserve">
     <value>导入失败，没有内容被导入。</value>
@@ -154,7 +156,7 @@
     <value>导入部分失败，仅部分列被导入。</value>
   </data>
   <data name="ImportHeaderMismatchError" xml:space="preserve">
-    <value>预期的标准头。 </value>
+    <value>预期的标准头。</value>
   </data>
   <data name="ImportLanguageNotEditable" xml:space="preserve">
     <value>不能编辑语言"{0}"。已中止操作。</value>
@@ -172,7 +174,7 @@
     <value>{0} 不是有效的 RESX 资源文件：并非所有条目都具有值属性。</value>
   </data>
   <data name="LanguageNotDefinedError" xml:space="preserve">
-    <value>未定义语言："{0}"</value>
+    <value>未定义语言："{0}"。</value>
   </data>
   <data name="Neutral" xml:space="preserve">
     <value>中立</value>

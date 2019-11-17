@@ -396,7 +396,7 @@ Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
     <value>Ziele:</value>
   </data>
   <data name="TranslationsPrefixHeader" xml:space="preserve">
-    <value>Präfix vor übersetztem Text: </value>
+    <value>Präfix vor übersetztem Text:</value>
   </data>
   <data name="TranslatorConfiguration_SaveCredentials" xml:space="preserve">
     <value>Anmeldeinformationen speichern (Anmeldeinformationen werden als Klartext in Ihrem lokalen Profil gespeichert!)</value>

@@ -153,10 +153,10 @@
     <value>Duplicate language in header.</value>
   </data>
   <data name="ImportFailedError" xml:space="preserve">
-    <value>Import failed. Nothing has been imported!</value>
+    <value>Import failed. Nothing has been imported.</value>
   </data>
   <data name="ImportFailedPartiallyError" xml:space="preserve">
-    <value>Import failed partially. Some columns have been already imported, but not all!</value>
+    <value>Import failed partially. Some columns have been already imported, but not all.</value>
   </data>
   <data name="ImportHeaderMismatchError" xml:space="preserve">
     <value>Standard header expected.</value>
@@ -177,7 +177,7 @@
     <value>{0} is not a valid RESX resource file: Not all entries have a value attribute.</value>
   </data>
   <data name="LanguageNotDefinedError" xml:space="preserve">
-    <value>Language is not defined: "{0}"</value>
+    <value>Language is not defined: "{0}".</value>
   </data>
   <data name="Neutral" xml:space="preserve">
     <value>Neutral</value>

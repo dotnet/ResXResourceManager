@@ -148,13 +148,13 @@ Do you want to add a new entry anyway?</value>
     <value>Choose columns</value>
   </data>
   <data name="CodeReferencesToolTip" xml:space="preserve">
-    <value>The number of references found in code files. This is only a hint for possible usages, see documentation for more details!</value>
+    <value>The number of references found in code files. This is only a hint for possible usages, see documentation for more details.</value>
   </data>
   <data name="CodeReferencesTooManyDetailsToolTip" xml:space="preserve">
-    <value>Too many references to show details!</value>
+    <value>Too many references to show details.</value>
   </data>
   <data name="CodeReferenceTrackingInProgress" xml:space="preserve">
-    <value>Code reference detection is still in progress ({0} %).</value>
+    <value>Code reference detection is still in progress ({0} %)</value>
   </data>
   <data name="ColumnHeaderGripperToolTip" xml:space="preserve">
     <value>+Ctrl =&gt; Apply star sizes to right columns
@@ -236,7 +236,7 @@ Do you want to add a new entry anyway?</value>
     <value>Enabled</value>
   </data>
   <data name="ErrorAddingNewResourceFile" xml:space="preserve">
-    <value>Error adding the new resource file '{0}'.</value>
+    <value>Error adding the new resource file '{0}'</value>
   </data>
   <data name="ExportExcelAll" xml:space="preserve">
     <value>Export all</value>
@@ -402,7 +402,8 @@ Use e.g. ".* - (?!Migrations)" to hide EF migrations.</value>
     <value>Targets:</value>
   </data>
   <data name="TranslationsPrefixHeader" xml:space="preserve">
-    <value>Prefix translations with </value>
+    <value>Prefix translations with</value>
+    <comment>@MutedRule(PunctuationTail)</comment>
   </data>
   <data name="TranslatorConfiguration_SaveCredentials" xml:space="preserve">
     <value>Save credentials (Credentials will be stored as clear text in your local profile!)</value>
