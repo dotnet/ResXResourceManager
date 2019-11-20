@@ -200,4 +200,70 @@
   <data name="ExcelExport_PlainTextTabDelimited" xml:space="preserve">
     <value>纯文本，制表符分隔</value>
   </data>
+  <data name="ResourceTableEntryRuleStringFormat_Name" xml:space="preserve">
+    <value>匹配字符串格式参数</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Name" xml:space="preserve">
+    <value>首标点</value>
+  </data>
+  <data name="ResourceTableEntryRuleStringFormat_Description" xml:space="preserve">
+    <value>此规则验证字符串格式参数在项目的所有翻译中是否匹配。</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Description" xml:space="preserve">
+    <value>此规则验证条目的标点在所有翻译之间都匹配。</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Description" xml:space="preserve">
+    <value>此规则验证条目末尾的标点符号。</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Name" xml:space="preserve">
+    <value>尾标点</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Name" xml:space="preserve">
+    <value>起始空白</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Description" xml:space="preserve">
+    <value>此规则验证条目开头的空白是否匹配。</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Error_Intro" xml:space="preserve">
+    <value>序列开头的空白不匹配。</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Error_NoWhiteSpaceExpected" xml:space="preserve">
+    <value>在序列开始处不应有空白。</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Error_WhiteSpaceSeqExpected" xml:space="preserve">
+    <value>预期的空白序列为：{0}</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Name" xml:space="preserve">
+    <value>尾空白</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Description" xml:space="preserve">
+    <value>此规则验证条目的尾空白是否匹配。</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Error_Intro" xml:space="preserve">
+    <value>序列末尾的空白不匹配。</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Error_NoWhiteSpaceExpected" xml:space="preserve">
+    <value>序列末尾不应有空白。</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Error_WhiteSpaceSeqExpected" xml:space="preserve">
+    <value>预期的空白序列为：{0}</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Error_Intro" xml:space="preserve">
+    <value>条目开头的标点符号不匹配。</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Error_NoPunctuationExpected" xml:space="preserve">
+    <value>条目开头不应出现标点符号。</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Error_PunctuationSeqExpected" xml:space="preserve">
+    <value>预期的首标点序列为：{0}</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Error_Intro" xml:space="preserve">
+    <value>条目末尾的标点符号不匹配。</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected" xml:space="preserve">
+    <value>条目末尾不应出现标点符号。</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected" xml:space="preserve">
+    <value>预期的尾标点序列为：{0}</value>
+  </data>
 </root>

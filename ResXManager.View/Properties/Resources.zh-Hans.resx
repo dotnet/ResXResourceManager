@@ -432,4 +432,7 @@ ResXManager 团队
 &lt;/TextBlock&gt;
 &lt;/StackPanel&gt;</value>
   </data>
+  <data name="Configuration_Rules" xml:space="preserve">
+    <value>一致性检查</value>
+  </data>
 </root>
