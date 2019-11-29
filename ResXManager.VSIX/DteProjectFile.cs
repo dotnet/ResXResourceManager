@@ -158,7 +158,8 @@
                     var parent = projectItems?.Parent as EnvDTE.ProjectItem;
                     var subType = parent?.GetProperty(@"SubType") as string;
 
-                    return (subType == @"Form") || (subType == @"UserControl");
+                    // https://microsoft.public.de.german.entwickler.dotnet.vstudio.narkive.com/nL9BqJlj/aus-subtype-form-wird-subtype-component
+                    return (subType == @"Form") || (subType == @"UserControl") || (subType == @"Component");
                 }
                 catch (ExternalException)
                 {
