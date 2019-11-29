@@ -7,8 +7,8 @@
 
   <DataTemplate DataType="ContentControl" x:Key="{x:Static themes:ResourceKeys.MenuItemDropDownDataTemplate}">
     <StackPanel Orientation="Horizontal" Background="Transparent">
-      <ContentPresenter Content="{Binding Header, RelativeSource={RelativeSource FindAncestor, AncestorType=MenuItem}}" />
-      <Decorator Width="2" />
+      <ContentPresenter Width="16" Height="16" Content="{Binding Header, RelativeSource={RelativeSource FindAncestor, AncestorType=MenuItem}}" />
+      <Decorator Width="4" />
       <Path x:Name="Path" Data="M 0 0 L 3.5 4 L 7 0 Z" Fill="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" VerticalAlignment="Center" />
     </StackPanel>
     <DataTemplate.Triggers>
