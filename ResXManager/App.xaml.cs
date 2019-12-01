@@ -25,16 +25,16 @@
         private readonly CompositionContainer _compositionContainer;
         private readonly IExportProvider _exportProvider;
 
-#if DEBUG
         public App()
         {
+#if DEBUG
             System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("de-DE");
+#endif
 
             _compositionCatalog = new AggregateCatalog();
             _compositionContainer = new CompositionContainer(_compositionCatalog, true);
             _exportProvider = new ExportProviderAdapter(_compositionContainer);
         }
-#endif
 
         protected override void OnStartup([NotNull] StartupEventArgs e)
         {
