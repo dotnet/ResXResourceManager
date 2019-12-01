@@ -1,4 +1,12 @@
-﻿1.36
+﻿1.37
+- #203: Empty trailing header columns raises exception
+- #205: Updated to Azure Translations V3
+- #229: Sort by key when opening
+- #236: Additional fixed checks for the translation terms
+- #257: Selection of wrong .resx file when project contains custom controls
+- #146: Icon overlay on tool bar
+
+1.36
 - #227: Hindi numeral in format specifier crashes Visual Studio
 - #228: Google API key not remembered across restarts
 
