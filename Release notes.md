@@ -1,4 +1,7 @@
-﻿1.37
+﻿1.38
+- Fix context menu style
+
+1.37
 - #203: Empty trailing header columns raises exception
 - #205: Updated to Azure Translations V3
 - #229: Sort by key when opening
