@@ -130,7 +130,7 @@
 
             var viewModel = new MoveToResourceViewModel(patterns, entities, text, extension, selection.ClassName, selection.FunctionName, fileName);
 
-            var confirmed = ConfirmationDialog.Show(_exportProvider, viewModel, Resources.MoveToResource).GetValueOrDefault();
+            var confirmed = ConfirmationDialog.Show(_exportProvider, viewModel, Resources.MoveToResource, null).GetValueOrDefault();
 
             if (!confirmed || string.IsNullOrEmpty(viewModel.Key))
                 return null;

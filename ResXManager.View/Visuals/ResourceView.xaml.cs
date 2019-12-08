@@ -90,7 +90,9 @@
 
             var languageSelection = new LanguageSelectionBoxViewModel(existingCultures);
 
-            if (!ConfirmationDialog.Show(this.GetExportProvider(), languageSelection, Properties.Resources.Title).GetValueOrDefault())
+            var window = Window.GetWindow(this);
+
+            if (!ConfirmationDialog.Show(this.GetExportProvider(), languageSelection, Properties.Resources.Title, window).GetValueOrDefault())
                 return;
 
             WaitCursor.Start(this);

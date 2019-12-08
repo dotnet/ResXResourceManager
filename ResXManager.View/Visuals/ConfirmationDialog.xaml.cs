@@ -23,12 +23,12 @@
             InitializeComponent();
         }
 
-        public static bool? Show([NotNull] IExportProvider exportProvider, [CanBeNull] object content, [CanBeNull] string title)
+        public static bool? Show([NotNull] IExportProvider exportProvider, [CanBeNull] object content, [CanBeNull] string title, [CanBeNull] Window owner)
         {
             var window = new Window
             {
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current?.MainWindow,
+                Owner = owner ?? Application.Current?.MainWindow,
                 Title = title,
                 ResizeMode = ResizeMode.NoResize,
                 WindowStyle = WindowStyle.SingleBorderWindow,
