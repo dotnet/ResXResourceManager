@@ -7,7 +7,7 @@
         <MoreInfo>https://github.com/tom-englert/ResXResourceManager</MoreInfo>
         <License>License</License>
         <GettingStartedGuide>https://github.com/tom-englert/ResXResourceManager/wiki</GettingStartedGuide>
-        <ReleaseNotes>Release notes.md</ReleaseNotes>
+        <ReleaseNotes>https://github.com/tom-englert/ResXResourceManager/blob/master/Release%20notes.md</ReleaseNotes>
         <Icon>32x32.png</Icon>
         <PreviewImage>200x200.png</PreviewImage>
         <Tags>WPF, WinForms, resx, resources, Editor, localization, Productivity, Visual Studio, internationalization, string, resource</Tags>
