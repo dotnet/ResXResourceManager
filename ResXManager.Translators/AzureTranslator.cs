@@ -122,7 +122,7 @@ namespace tomenglertde.ResXManager.Translators
                 var translations = response.Translations;
                 foreach (var match in translations)
                 {
-                    translationItem.Results.Add(new TranslationMatch(this, match.Text, 5.0));
+                    translationItem.Results.Add(new TranslationMatch(this, match.Text, 1.0));
                 }
             }
         }
