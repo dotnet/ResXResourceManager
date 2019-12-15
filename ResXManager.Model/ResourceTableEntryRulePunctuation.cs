@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
@@ -79,11 +80,13 @@
         /// <returns></returns>
         private static bool IsPunctuation(char value)
         {
+            const string excluded = "\"\\&_";
+
             // ReSharper disable once SwitchStatementMissingSomeCases
             switch (char.GetUnicodeCategory(value))
             {
                 case UnicodeCategory.OtherPunctuation:
-                    return value != '"' && value != '\'';
+                    return !excluded.Contains(value);
                 case UnicodeCategory.DashPunctuation:
                     return true;
                 default:
