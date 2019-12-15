@@ -11,20 +11,15 @@
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
-             x:Name="UserControl"
+             xmlns:composition="urn:TomsToolbox.Composition"
              d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
   <UserControl.Resources>
     <DataTemplate DataType="{x:Type infrastructure:CultureKey}">
       <DockPanel>
-        <Image DockPanel.Dock="Left" x:Name="image" Stretch="None" Source="{Binding Path=Culture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
-        <Decorator x:Name="padding" DockPanel.Dock="Left" Width="4" />
-        <TextBlock Text="{Binding Path=Culture.DisplayName, FallbackValue=Neutral}" TextTrimming="CharacterEllipsis" />
+        <Image DockPanel.Dock="Left" Stretch="None" Source="{Binding Path=Culture, Converter={composition:Import converters:CultureToImageSourceConverter}}" />
+        <Decorator DockPanel.Dock="Left" Width="4" />
+        <TextBlock Text="{Binding Path=Culture, Converter={composition:Import converters:CultureToDisplayNameConverter}}" TextTrimming="CharacterEllipsis" />
       </DockPanel>
-      <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding Culture}" Value="{x:Null}">
-          <Setter TargetName="image" Property="Source" Value="{Binding Path=DataContext.Configuration.NeutralResourcesLanguage, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
-        </DataTrigger>
-      </DataTemplate.Triggers>
     </DataTemplate>
   </UserControl.Resources>
   <DockPanel Margin="10" Grid.IsSharedSizeScope="True">
@@ -92,9 +87,9 @@
               <DataGridTemplateColumn.CellTemplate>
                 <DataTemplate DataType="{x:Type visuals:TranslationItem}">
                   <Grid>
-                    <Image Stretch="None" Source="{Binding Path=TargetCulture.Culture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" HorizontalAlignment="Center">
+                    <Image Stretch="None" Source="{Binding Path=TargetCulture.Culture, Converter={composition:Import converters:CultureToImageSourceConverter}}" HorizontalAlignment="Center">
                       <Image.ToolTip>
-                        <TextBlock Text="{Binding Path=TargetCulture.Culture.DisplayName, FallbackValue=Neutral}" />
+                        <TextBlock Text="{Binding Path=TargetCulture.Culture, Converter={composition:Import converters:CultureToDisplayNameConverter}}" />
                       </Image.ToolTip>
                     </Image>
                   </Grid>
@@ -121,7 +116,7 @@
                       <Decorator Width="5" />
                       <ToggleButton x:Name="TargetCulturesButton" Style="{DynamicResource {x:Static styles:ResourceKeys.ToggleButtonStyle}}">
                         <ToggleButton.Resources>
-                          <CollectionViewSource x:Key="SelectedTargetCulturesSource" Source="{Binding  SelectedTargetCultures}">
+                          <CollectionViewSource x:Key="SelectedTargetCulturesSource" Source="{Binding SelectedTargetCultures}">
                             <CollectionViewSource.SortDescriptions>
                               <componentModel:SortDescription PropertyName="." />
                             </CollectionViewSource.SortDescriptions>
@@ -135,12 +130,7 @@
                           </ItemsControl.ItemsPanel>
                           <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="infrastructure:CultureKey">
-                              <Image x:Name="image" Source="{Binding Culture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" Stretch="None" Margin="2,4" />
-                              <DataTemplate.Triggers>
-                                <DataTrigger Binding="{Binding Culture}" Value="{x:Null}">
-                                  <Setter TargetName="image" Property="Source" Value="{Binding Path=DataContext.Configuration.NeutralResourcesLanguage, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
-                                </DataTrigger>
-                              </DataTemplate.Triggers>
+                              <Image Source="{Binding Culture, Converter={composition:Import converters:CultureToImageSourceConverter}}" Stretch="None" Margin="2,4" />
                             </DataTemplate>
                           </ItemsControl.ItemTemplate>
                         </ItemsControl>
@@ -163,18 +153,12 @@
                                             IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}"
                                             Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
                                   <Decorator DockPanel.Dock="Left" Width="3" />
-                                  <Image x:Name="image" DockPanel.Dock="Left"
-                                         Source="{Binding Culture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+                                  <Image DockPanel.Dock="Left"
+                                         Source="{Binding Culture, Converter={composition:Import converters:CultureToImageSourceConverter}}" />
                                   <Decorator DockPanel.Dock="Left" Width="3" />
                                   <Decorator DockPanel.Dock="Right" Width="3" />
-                                  <ContentPresenter x:Name="content" Content="{Binding Culture.DisplayName}" VerticalAlignment="Center" />
+                                  <ContentPresenter Content="{Binding Culture, Converter={composition:Import converters:CultureToDisplayNameConverter}}" VerticalAlignment="Center" />
                                 </DockPanel>
-                                <DataTemplate.Triggers>
-                                  <DataTrigger Binding="{Binding Culture}" Value="{x:Null}">
-                                    <Setter TargetName="image" Property="Source" Value="{Binding Path=DataContext.Configuration.NeutralResourcesLanguage, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
-                                    <Setter TargetName="content" Property="Content" Value="{Binding Path=DataContext.Configuration.NeutralResourcesLanguage.DisplayName, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" />
-                                  </DataTrigger>
-                                </DataTemplate.Triggers>
                               </DataTemplate>
                             </ListBox.ItemTemplate>
                             <ListBox.ItemContainerStyle>

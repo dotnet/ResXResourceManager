@@ -8,13 +8,14 @@
              xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
+             xmlns:composition="urn:TomsToolbox.Composition"
              d:DataContext="{d:DesignInstance visuals:LanguageConfigurationViewModel}">
   <UserControl.Resources>
 
     <ControlTemplate x:Key="LanguageControlTemplate">
       <StackPanel Orientation="Horizontal" Margin="0,2" d:DataContext="{d:DesignInstance globalization:CultureInfo}">
         <Decorator Width="2" />
-        <Image Width="16" Height="16" Source="{Binding Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+        <Image Width="16" Height="16" Source="{Binding Converter={composition:Import converters:CultureToImageSourceConverter}}" />
         <Decorator Width="5" />
         <TextBlock Text="{Binding Name}" FontWeight="Bold" />
         <Decorator Width="5" />

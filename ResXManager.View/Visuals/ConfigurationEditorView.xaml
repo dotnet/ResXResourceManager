@@ -83,7 +83,7 @@
               <ComboBox.ItemTemplate>
                 <DataTemplate DataType="globalization:CultureInfo">
                   <StackPanel Orientation="Horizontal">
-                    <Image Stretch="None" Source="{Binding Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+                    <Image Stretch="None" Source="{Binding Converter={composition:Import converters:CultureToImageSourceConverter}}" />
                     <Decorator Width="5" />
                     <TextBlock Text="{Binding Path=DisplayName}" VerticalAlignment="Center" />
                   </StackPanel>

@@ -78,6 +78,7 @@
     <Compile Include="Behaviors\SynchronizeTextBoxWithDataGridCellBehavior.cs" />
     <Compile Include="ColumnHeaders\LanguageColumnHeaderBase.cs" />
     <Compile Include="Commands.cs" />
+    <Compile Include="Converters\CultureToDisplayNameConverter.cs" />
     <Compile Include="Converters\IsCellSelectionInvariantConverter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -98,7 +99,6 @@
       <DependentUpon>CodeReferencesToolTip.xaml</DependentUpon>
     </Compile>
     <Compile Include="ColumnHeaders\CommentHeader.cs" />
-    <Compile Include="Converters\CultureToImageConverter.cs" />
     <Compile Include="Converters\CultureToImageSourceConverter.cs" />
     <Compile Include="Converters\DataGridToSelectionScopeConverter.cs" />
     <Compile Include="ColumnHeaders\IColumnHeader.cs" />

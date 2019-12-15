@@ -7,6 +7,7 @@
              xmlns:converters="clr-namespace:tomenglertde.ResXManager.View.Converters"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
+             xmlns:composition="urn:TomsToolbox.Composition"
              FocusManager.FocusedElement="{Binding ElementName=ComboBox}"
              d:DataContext="{d:DesignInstance visuals:LanguageSelectionBoxViewModel}">
   <StackPanel Margin="10,20" Width="300">
@@ -20,7 +21,7 @@
       <ComboBox.ItemTemplate>
         <DataTemplate>
           <StackPanel Orientation="Horizontal">
-            <Image Source="{Binding Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+            <Image Source="{Binding Converter={composition:Import converters:CultureToImageSourceConverter}}" />
             <Decorator Width="10" />
             <TextBlock Text="{Binding}" FontWeight="Bold" />
             <Decorator Width="10" />

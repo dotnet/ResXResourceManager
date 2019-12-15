@@ -31,7 +31,6 @@
 
             try
             {
-
                 this.SetExportProvider(exportProvider);
 
                 InitializeComponent();

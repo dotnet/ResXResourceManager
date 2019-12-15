@@ -370,7 +370,7 @@
                     <Decorator DockPanel.Dock="Left" Width="2" />
                     <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                     <Image DockPanel.Dock="Left"
-                           Source="{Binding Path=Header.EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}, FallbackValue={x:Null}}" />
+                           Source="{Binding Path=Header.EffectiveCulture, Converter={composition:Import converters:CultureToImageSourceConverter}, FallbackValue={x:Null}}" />
                     <Decorator DockPanel.Dock="Left" Width="2" />
                     <Decorator DockPanel.Dock="Right" Width="3" />
                     <ContentPresenter Content="{Binding Path=Header}" VerticalAlignment="Center" />
@@ -472,7 +472,7 @@
                   <DockPanel>
                     <Grid DockPanel.Dock="Left" Background="Transparent">
                       <Image x:Name="image" Stretch="None"
-                             Source="{Binding Path=EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+                             Source="{Binding Path=EffectiveCulture, Converter={composition:Import converters:CultureToImageSourceConverter}}" />
                     </Grid>
                     <Decorator x:Name="padding" DockPanel.Dock="Left" Width="4" />
                     <TextBlock Text="{Binding Path=DisplayName}" TextTrimming="CharacterEllipsis" Style="{StaticResource {x:Static toms:ResourceKeys.AutoToolTipTextBoxStyle}}" />
@@ -485,7 +485,7 @@
                     <InlineUIContainer>
                       <Grid>
                         <Image x:Name="image" Stretch="None" Margin="1,2,1,-2"
-                               Source="{Binding Path=EffectiveCulture, Converter={x:Static converters:CultureToImageSourceConverter.Default}}" />
+                               Source="{Binding Path=EffectiveCulture, Converter={composition:Import converters:CultureToImageSourceConverter}}" />
                       </Grid>
                     </InlineUIContainer>
                     <Run Text=")" />

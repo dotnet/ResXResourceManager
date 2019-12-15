@@ -1,6 +1,7 @@
 ﻿namespace tomenglertde.ResXManager.View.Converters
 {
     using System;
+    using System.ComponentModel.Composition;
     using System.Globalization;
     using System.Linq;
     using System.Windows.Data;
@@ -9,14 +10,16 @@
 
     using JetBrains.Annotations;
 
+    using tomenglertde.ResXManager.Model;
     using tomenglertde.ResXManager.View.Tools;
 
     using TomsToolbox.Essentials;
 
+    [Export]
     public class CultureToImageSourceConverter : IValueConverter
     {
         [NotNull]
-        public static readonly IValueConverter Default = new CultureToImageSourceConverter();
+        private readonly Configuration _configuration;
 
         [NotNull, ItemNotNull]
         private static readonly string[] _existingFlags =
@@ -35,6 +38,12 @@
             "vi", "vn", "vu", "wf", "ws", "ye", "yt", "za", "zm", "zw"
         };
 
+        [ImportingConstructor]
+        public CultureToImageSourceConverter([NotNull] Configuration configuration)
+        {
+            _configuration = configuration;
+        }
+
         /// <summary>
         /// Converts a value.
         /// </summary>
@@ -49,10 +58,12 @@
         }
 
         [CanBeNull]
-        internal static ImageSource Convert([CanBeNull] CultureInfo culture)
+        internal ImageSource Convert([CanBeNull] CultureInfo culture)
         {
             if (culture == null)
-                return null;
+            {
+                culture = _configuration.NeutralResourcesLanguage;
+            }
 
             var cultureName = culture.Name;
 
