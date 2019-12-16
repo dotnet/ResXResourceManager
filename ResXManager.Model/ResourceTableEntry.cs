@@ -368,6 +368,7 @@
             var values = cultures.Select(CultureKey.Parse)
                 .Where(lang => !lang.IsNeutral)
                 .Select(lang => Values.GetValue(lang))
+                .Where(value => !string.IsNullOrEmpty(value))
                 .ToList()
                 .AsReadOnly();
 
