@@ -55,6 +55,7 @@
     {
         public const string Default = @"{""Items"":[
 {""Expression"":""\\W($File.$Key)\\W"",""Extensions"":"".cs,.xaml,.cshtml"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
+{""Expression"":""\\W($File.$Key)\\W"",""Extensions"":"".vbhtml"",""IsCaseSensitive"":false,""SingleLineComment"":null},
 {""Expression"":""ResourceManager.GetString\\(\""($Key)\""\\)"",""Extensions"":"".cs"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
 {""Expression"":""typeof\\((\\w+\\.)*($File)\\).+\""($Key)\""|\""($Key)\"".+typeof\\((\\w+\\.)*($File)\\)"",""Extensions"":"".cs"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
 {""Expression"":""\\W($Key)\\W"",""Extensions"":"".vb"",""IsCaseSensitive"":false,""SingleLineComment"":""'""},
