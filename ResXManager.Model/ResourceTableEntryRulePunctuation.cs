@@ -79,7 +79,8 @@
         /// <returns></returns>
         private static bool IsPunctuation(char value)
         {
-            const string excluded = "'#\"\\&_";
+            // exclude quotes, special chars (\#), hot-key prefixes (&_), language specifics with no common equivalent (¡¿).
+            const string excluded = "'\"\\#&_¡¿";
 
             // ReSharper disable once SwitchStatementMissingSomeCases
             switch (char.GetUnicodeCategory(value))
