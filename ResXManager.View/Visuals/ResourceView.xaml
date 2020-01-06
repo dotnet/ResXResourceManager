@@ -15,7 +15,6 @@
              xmlns:visuals="clr-namespace:tomenglertde.ResXManager.View.Visuals"
              xmlns:view="clr-namespace:tomenglertde.ResXManager.View"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
-             xmlns:effects="clr-namespace:TomsToolbox.Wpf.Styles.Effects;assembly=TomsToolbox.Wpf.Styles"
              xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
              xmlns:composition="urn:TomsToolbox.Composition"
              xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
@@ -62,7 +61,7 @@
 
     <dgx:RegexContentFilterFactory x:Key="RegexContentFilterFactory" />
 
-    <effects:InvertGrayEffect x:Key="InvertGrayEffect" />
+    <styles:InvertGrayEffect x:Key="InvertGrayEffect" />
 
     <Style TargetType="Image" x:Key="ImageStyle">
       <Style.Triggers>

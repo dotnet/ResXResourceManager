@@ -10,6 +10,7 @@
     using JetBrains.Annotations;
 
     using TomsToolbox.Composition;
+    using TomsToolbox.Essentials;
 
     public interface ITracer
     {
@@ -58,10 +59,10 @@
 
         public static void TraceXamlLoaderError([NotNull] this IExportProvider exportProvider, [CanBeNull] Exception ex)
         {
-            var exception = ex?.Message;
+            var exceptions = ex?.ExceptionChain().Select(e => e.Message);
 
-            if (exception != null)
-                exportProvider.TraceError(exception);
+            if (exceptions != null)
+                exportProvider.TraceError(string.Join("\n ---> ", exceptions));
 
             var path = Path.GetDirectoryName(typeof(ITracer).Assembly.Location);
 
