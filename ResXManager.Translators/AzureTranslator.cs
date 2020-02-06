@@ -75,8 +75,12 @@ namespace tomenglertde.ResXManager.Translators
                                 for (int i = 0; !finished && i < 10; i++)
                                 {
                                     ITranslationItem item = itemsEnumerator.Current;
-                                    if (item == null)
+                                    if (item == null || item.Source.Length > MaxChars)
                                     {
+                                        if (item.Source.Length > MaxChars)
+                                        {
+                                            translationSession.AddMessage($"Resource length exceeds Azure's {MaxChars}-character limit");
+                                        }
                                         finished = !itemsEnumerator.MoveNext();
                                         continue;
                                     }

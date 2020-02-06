@@ -46,7 +46,7 @@ namespace tomenglertde.ResXManager.Translators
         public virtual bool MustIdentifyHtml => false;
 
         [DataMember]
-        public bool AutoDetectHtml { get; set; } = false;
+        public bool AutoDetectHtml { get; set; }
 
         public abstract void Translate(ITranslationSession translationSession);
 
