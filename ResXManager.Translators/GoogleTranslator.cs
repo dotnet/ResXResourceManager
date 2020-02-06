@@ -80,7 +80,7 @@
                             "target", GoogleLangCode(targetCulture),
                             "format", "text",
                             "source", GoogleLangCode(translationSession.SourceLanguage),
-                            "model", "base",
+                            "model", "nmt",
                             "key", ApiKey });
 
                         try
