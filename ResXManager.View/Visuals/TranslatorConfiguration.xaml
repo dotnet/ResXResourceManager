@@ -32,6 +32,9 @@
               </Button.Template>
             </Button>
           </DockPanel>
+          <StackPanel x:Name="AutoDetectHtmlStackPanel" Margin="10,5,10,0">
+            <CheckBox Content="{x:Static properties:Resources.AutoDetectHtml}" IsChecked="{Binding AutoDetectHtml}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+          </StackPanel>
           <Decorator Height="5" />
           <GroupBox x:Name="AuthenticationGroup" Header="{x:Static properties:Resources.Authentication}"
                     Grid.IsSharedSizeScope="True" Style="{DynamicResource {x:Static styles:ResourceKeys.GroupBoxStyle}}">
@@ -59,6 +62,9 @@
         <DataTemplate.Triggers>
           <DataTrigger Binding="{Binding Credentials.Count, FallbackValue=0}" Value="0">
             <Setter TargetName="AuthenticationGroup" Property="Visibility" Value="Collapsed" />
+          </DataTrigger>
+          <DataTrigger Binding="{Binding MustIdentifyHtml, FallbackValue=false}" Value="false">
+            <Setter TargetName="AutoDetectHtmlStackPanel" Property="Visibility" Value="Collapsed" />
           </DataTrigger>
         </DataTemplate.Triggers>
       </DataTemplate>

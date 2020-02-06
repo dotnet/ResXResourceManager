@@ -435,4 +435,7 @@ ResXManager 团队
   <data name="Configuration_Rules" xml:space="preserve">
     <value>一致性检查</value>
   </data>
+  <data name="AutoDetectHtml" xml:space="preserve">
+    <value>自动检测 HTML</value>
+  </data>
 </root>

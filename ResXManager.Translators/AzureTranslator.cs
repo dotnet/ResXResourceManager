@@ -24,10 +24,15 @@ namespace tomenglertde.ResXManager.Translators
         [NotNull]
         private static readonly Uri _uri = new Uri("https://www.microsoft.com/en-us/translator/");
 
+        // Azure has a 5000-character translation limit across all Texts in a single request
+        private const int MaxChars = 5000;
+
         public AzureTranslator()
             : base("Azure", "Azure", _uri, GetCredentials())
         {
         }
+
+        public override bool MustIdentifyHtml => true;
 
         public override async void Translate(ITranslationSession translationSession)
         {
@@ -51,21 +56,60 @@ namespace tomenglertde.ResXManager.Translators
                     {
                         var cultureKey = languageGroup.Key;
                         var targetLanguage = cultureKey.Culture ?? translationSession.NeutralResourcesLanguage;
-                        var uri = new Uri($"https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={translationSession.SourceLanguage.IetfLanguageTag}&to={targetLanguage.IetfLanguageTag}");
-
+                        
                         using (var itemsEnumerator = languageGroup.GetEnumerator())
                         {
-                            while (true)
+                            if (!itemsEnumerator.MoveNext())
                             {
-                                var sourceItems = itemsEnumerator.Take(10);
-                                var sourceStrings = sourceItems
-                                    // ReSharper disable once PossibleNullReferenceException
-                                    .Select(item => item.Source)
-                                    .Select(RemoveKeyboardShortcutIndicators)
-                                    .ToArray();
+                                break;
+                            }
+
+                            bool finished = false;
+                            while (!finished)
+                            {
+                                int characterCount = 0;
+                                List<ITranslationItem> sourceItems = new List<ITranslationItem>();
+                                List<string> sourceStrings = new List<string>();
+                                bool? html = null;
+                                
+                                for (int i = 0; !finished && i < 10; i++)
+                                {
+                                    ITranslationItem item = itemsEnumerator.Current;
+                                    if (item == null)
+                                    {
+                                        finished = !itemsEnumerator.MoveNext();
+                                        continue;
+                                    }
+
+                                    if (characterCount + item.Source.Length > MaxChars)
+                                    {
+                                        break;
+                                    }
+
+                                    if (AutoDetectHtml)
+                                    {
+                                        bool itemIsHtml = item.Source.ContainsHtml();
+                                        // Don't mix HTML and non-HTML in the same call, as the parameter
+                                        // is on the URL and applies to all Texts.
+                                        if (html.HasValue && html.Value != itemIsHtml)
+                                        {
+                                            break;
+                                        }
+
+                                        html = itemIsHtml;
+                                    }
+
+                                    sourceItems.Add(item);
+                                    characterCount += item.Source.Length;
+                                    sourceStrings.Add(RemoveKeyboardShortcutIndicators(item.Source));
+                                    finished = !itemsEnumerator.MoveNext();
+                                }
 
                                 if (!sourceStrings.Any())
                                     break;
+
+                                string textType = AutoDetectHtml && html.HasValue && html.Value ? "html" : "plain";
+                                var uri = new Uri($"https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={translationSession.SourceLanguage.IetfLanguageTag}&to={targetLanguage.IetfLanguageTag}&textType={textType}");
 
                                 var response = await client.PostAsync(uri, CreateRequestContent(sourceStrings)).ConfigureAwait(false);
 

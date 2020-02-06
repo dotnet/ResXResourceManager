@@ -122,6 +122,16 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Automatically detect HTML.
+        /// </summary>
+        [NotNull]
+        public static string AutoDetectHtml {
+            get {
+                return ResourceManager.GetString("AutoDetectHtml", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Case Sens..
         /// </summary>
         /// <remarks>
@@ -175,7 +185,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Too many references to show details!.
+        ///   Looks up a localized string similar to Too many references to show details..
         /// </summary>
         [NotNull]
         public static string CodeReferencesTooManyDetailsToolTip {
@@ -485,7 +495,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Error adding the new resource file '{0}'..
+        ///   Looks up a localized string similar to Error adding the new resource file '{0}'.
         /// </summary>
         [NotNull]
         public static string ErrorAddingNewResourceFile {
@@ -1058,8 +1068,11 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Prefix translations with .
+        ///   Looks up a localized string similar to Prefix translations with.
         /// </summary>
+        /// <remarks>
+        /// @MutedRule(PunctuationTail)
+        /// </remarks>
         [NotNull]
         public static string TranslationsPrefixHeader {
             get {
@@ -1126,6 +1139,10 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         AutoCreateNewLanguageFiles,
         /// <summary>
+        ///   Looks up a localized string similar to Automatically detect HTML.
+        /// </summary>
+        AutoDetectHtml,
+        /// <summary>
         ///   Looks up a localized string similar to Case Sens..
         /// </summary>
         /// <remarks>
@@ -1149,7 +1166,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         CodeReferencesToolTip,
         /// <summary>
-        ///   Looks up a localized string similar to Too many references to show details!.
+        ///   Looks up a localized string similar to Too many references to show details..
         /// </summary>
         CodeReferencesTooManyDetailsToolTip,
         /// <summary>
@@ -1273,7 +1290,7 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         Enabled,
         /// <summary>
-        ///   Looks up a localized string similar to Error adding the new resource file '{0}'..
+        ///   Looks up a localized string similar to Error adding the new resource file '{0}'.
         /// </summary>
         ErrorAddingNewResourceFile,
         /// <summary>
@@ -1504,8 +1521,11 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         Translations_Targets,
         /// <summary>
-        ///   Looks up a localized string similar to Prefix translations with .
+        ///   Looks up a localized string similar to Prefix translations with.
         /// </summary>
+        /// <remarks>
+        /// @MutedRule(PunctuationTail)
+        /// </remarks>
         TranslationsPrefixHeader,
         /// <summary>
         ///   Looks up a localized string similar to Save credentials (Credentials will be stored as cl....
