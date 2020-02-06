@@ -2,7 +2,10 @@
 {
     using System;
     using System.Globalization;
+    using System.Linq;
     using System.Text.RegularExpressions;
+
+    using HtmlAgilityPack;
 
     using JetBrains.Annotations;
 
@@ -71,6 +74,18 @@
             return null;
         }
 
+        /// <summary>
+        /// Tests whether the string contains HTML
+        /// </summary>
+        /// <returns>
+        /// True if the contains HTML; otherwise false
+        /// </returns>
+        public static bool ContainsHtml(this string text)
+        {
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(text);
+            return !doc.DocumentNode.Descendants().All(n => n.NodeType == HtmlNodeType.Text);
+        }
 
     }
 }

@@ -43,6 +43,11 @@ namespace tomenglertde.ResXManager.Translators
 
         public IList<ICredentialItem> Credentials { get; }
 
+        public virtual bool MustIdentifyHtml => false;
+
+        [DataMember]
+        public bool AutoDetectHtml { get; set; } = false;
+
         public abstract void Translate(ITranslationSession translationSession);
 
         [NotNull]

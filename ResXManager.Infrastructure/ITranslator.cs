@@ -25,5 +25,9 @@
 
         [NotNull, ItemNotNull]
         IList<ICredentialItem> Credentials { get; }
+
+        bool MustIdentifyHtml { get; }
+
+        bool AutoDetectHtml { get; }
     }
 }
