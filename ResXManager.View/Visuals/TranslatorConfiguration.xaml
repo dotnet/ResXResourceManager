@@ -17,9 +17,13 @@
     <TabControl.ContentTemplate>
       <DataTemplate DataType="infrastructure:ITranslator">
         <StackPanel Margin="5">
-          <DockPanel Margin="10,0">
+          <DockPanel Margin="8,0">
             <CheckBox DockPanel.Dock="Left" Content="{x:Static properties:Resources.Enabled}" IsChecked="{Binding IsEnabled}" VerticalAlignment="Bottom" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
             <Decorator DockPanel.Dock="Left" Width="20" />
+            <StackPanel x:Name="AutoDetectHtmlPanel" DockPanel.Dock="Left" Orientation="Horizontal">
+              <CheckBox Content="{x:Static properties:Resources.AutoDetectHtml}" IsChecked="{Binding AutoDetectHtml}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+              <Decorator Width="20" />
+            </StackPanel>
             <Button Tag="{Binding Uri, Mode=OneWay}" HorizontalAlignment="Right">
               <Button.Template>
                 <ControlTemplate>
@@ -32,10 +36,7 @@
               </Button.Template>
             </Button>
           </DockPanel>
-          <StackPanel x:Name="AutoDetectHtmlStackPanel" Margin="10,5,10,0">
-            <CheckBox Content="{x:Static properties:Resources.AutoDetectHtml}" IsChecked="{Binding AutoDetectHtml}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
-          </StackPanel>
-          <Decorator Height="5" />
+          <Decorator Height="4" />
           <GroupBox x:Name="AuthenticationGroup" Header="{x:Static properties:Resources.Authentication}"
                     Grid.IsSharedSizeScope="True" Style="{DynamicResource {x:Static styles:ResourceKeys.GroupBoxStyle}}">
             <StackPanel>
@@ -61,10 +62,10 @@
         </StackPanel>
         <DataTemplate.Triggers>
           <DataTrigger Binding="{Binding Credentials.Count, FallbackValue=0}" Value="0">
-            <Setter TargetName="AuthenticationGroup" Property="Visibility" Value="Collapsed" />
+            <Setter TargetName="AuthenticationGroup" Property="Visibility" Value="Hidden" />
           </DataTrigger>
-          <DataTrigger Binding="{Binding MustIdentifyHtml, FallbackValue=false}" Value="false">
-            <Setter TargetName="AutoDetectHtmlStackPanel" Property="Visibility" Value="Collapsed" />
+          <DataTrigger Binding="{Binding SupportsHtml, FallbackValue=false}" Value="false">
+            <Setter TargetName="AutoDetectHtmlPanel" Property="Visibility" Value="Collapsed" />
           </DataTrigger>
         </DataTemplate.Triggers>
       </DataTemplate>

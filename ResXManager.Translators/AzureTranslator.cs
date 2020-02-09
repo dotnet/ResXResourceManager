@@ -32,7 +32,7 @@ namespace tomenglertde.ResXManager.Translators
         {
         }
 
-        public override bool MustIdentifyHtml => true;
+        public override bool SupportsHtml => true;
 
         public override async void Translate(ITranslationSession translationSession)
         {

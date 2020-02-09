@@ -43,7 +43,7 @@ namespace tomenglertde.ResXManager.Translators
 
         public IList<ICredentialItem> Credentials { get; }
 
-        public virtual bool MustIdentifyHtml => false;
+        public virtual bool SupportsHtml => false;
 
         [DataMember]
         public bool AutoDetectHtml { get; set; }
