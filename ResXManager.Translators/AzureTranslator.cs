@@ -52,67 +52,29 @@ namespace tomenglertde.ResXManager.Translators
                 {
                     client.DefaultRequestHeaders.Add("Authorization", token);
 
-                    foreach (var languageGroup in translationSession.Items.GroupBy(item => item.TargetCulture))
+                    var itemsByLanguage = translationSession.Items.GroupBy(item => item.TargetCulture);
+
+                    foreach (var languageGroup in itemsByLanguage)
                     {
                         var cultureKey = languageGroup.Key;
                         var targetLanguage = cultureKey.Culture ?? translationSession.NeutralResourcesLanguage;
-                        
-                        using (var itemsEnumerator = languageGroup.GetEnumerator())
+
+                        var itemsByTextType = languageGroup.GroupBy(GetTextType);
+
+                        foreach (var textTypeGroup in itemsByTextType)
                         {
-                            if (!itemsEnumerator.MoveNext())
+                            var textType = textTypeGroup.Key;
+
+                            foreach (var sourceItems in SplitIntoChunks(translationSession, textTypeGroup))
                             {
-                                break;
-                            }
-
-                            bool finished = false;
-                            while (!finished)
-                            {
-                                int characterCount = 0;
-                                List<ITranslationItem> sourceItems = new List<ITranslationItem>();
-                                List<string> sourceStrings = new List<string>();
-                                bool? html = null;
-                                
-                                for (int i = 0; !finished && i < 10; i++)
-                                {
-                                    ITranslationItem item = itemsEnumerator.Current;
-                                    if (item == null || item.Source.Length > MaxChars)
-                                    {
-                                        if (item.Source.Length > MaxChars)
-                                        {
-                                            translationSession.AddMessage($"Resource length exceeds Azure's {MaxChars}-character limit");
-                                        }
-                                        finished = !itemsEnumerator.MoveNext();
-                                        continue;
-                                    }
-
-                                    if (characterCount + item.Source.Length > MaxChars)
-                                    {
-                                        break;
-                                    }
-
-                                    if (AutoDetectHtml)
-                                    {
-                                        bool itemIsHtml = item.Source.ContainsHtml();
-                                        // Don't mix HTML and non-HTML in the same call, as the parameter
-                                        // is on the URL and applies to all Texts.
-                                        if (html.HasValue && html.Value != itemIsHtml)
-                                        {
-                                            break;
-                                        }
-
-                                        html = itemIsHtml;
-                                    }
-
-                                    sourceItems.Add(item);
-                                    characterCount += item.Source.Length;
-                                    sourceStrings.Add(RemoveKeyboardShortcutIndicators(item.Source));
-                                    finished = !itemsEnumerator.MoveNext();
-                                }
-
-                                if (!sourceStrings.Any())
+                                if (!sourceItems.Any())
                                     break;
 
-                                string textType = AutoDetectHtml && html.HasValue && html.Value ? "html" : "plain";
+                                var sourceStrings = sourceItems
+                                    .Select(item => item.Source)
+                                    .Select(RemoveKeyboardShortcutIndicators)
+                                    .ToList();
+
                                 var uri = new Uri($"https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={translationSession.SourceLanguage.IetfLanguageTag}&to={targetLanguage.IetfLanguageTag}&textType={textType}");
 
                                 var response = await client.PostAsync(uri, CreateRequestContent(sourceStrings)).ConfigureAwait(false);
@@ -136,13 +98,13 @@ namespace tomenglertde.ResXManager.Translators
                                     var errorMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                                     translationSession.AddMessage("Azure translator reported a problem: " + errorMessage);
                                 }
+
                                 if (translationSession.IsCanceled)
                                     break;
                             }
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -200,6 +162,41 @@ namespace tomenglertde.ResXManager.Translators
             byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
             return byteContent;
+        }
+
+        private string GetTextType(ITranslationItem item)
+        {
+            return AutoDetectHtml && item.Source.ContainsHtml() ? "html" : "plain";
+        }
+
+        [ItemNotNull]
+        private IEnumerable<ICollection<ITranslationItem>> SplitIntoChunks(ITranslationSession translationSession, IEnumerable<ITranslationItem> items)
+        {
+            var chunk = new List<ITranslationItem>();
+            var chunkLength = 0;
+
+            foreach (var item in items)
+            {
+                var textLength = item.Source.Length;
+
+                if (textLength > MaxChars)
+                {
+                    translationSession.AddMessage($"Resource length exceeds Azure's {MaxChars}-character limit: {item.Source.Substring(0, 20)}...");
+                    continue;
+                }
+
+                if ((chunkLength + textLength) > MaxChars)
+                {
+                    yield return chunk;
+                    chunk = new List<ITranslationItem>();
+                    chunkLength = 0;
+                }
+
+                chunk.Add(item);
+                chunkLength += textLength;
+            }
+
+            yield return chunk;
         }
     }
 }
