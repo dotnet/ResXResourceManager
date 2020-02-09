@@ -25,7 +25,8 @@ namespace tomenglertde.ResXManager.Translators
         private static readonly Uri _uri = new Uri("https://www.microsoft.com/en-us/translator/");
 
         // Azure has a 5000-character translation limit across all Texts in a single request
-        private const int MaxChars = 5000;
+        private const int MaxCharsPerApiCall = 5000;
+        private const int MaxItemsPerApiCall = 100;
 
         public AzureTranslator()
             : base("Azure", "Azure", _uri, GetCredentials())
@@ -173,27 +174,27 @@ namespace tomenglertde.ResXManager.Translators
         private IEnumerable<ICollection<ITranslationItem>> SplitIntoChunks(ITranslationSession translationSession, IEnumerable<ITranslationItem> items)
         {
             var chunk = new List<ITranslationItem>();
-            var chunkLength = 0;
+            var chunkTextLength = 0;
 
             foreach (var item in items)
             {
                 var textLength = item.Source.Length;
 
-                if (textLength > MaxChars)
+                if (textLength > MaxCharsPerApiCall)
                 {
-                    translationSession.AddMessage($"Resource length exceeds Azure's {MaxChars}-character limit: {item.Source.Substring(0, 20)}...");
+                    translationSession.AddMessage($"Resource length exceeds Azure's {MaxCharsPerApiCall}-character limit: {item.Source.Substring(0, 20)}...");
                     continue;
                 }
 
-                if ((chunkLength + textLength) > MaxChars)
+                if ((chunk.Count == MaxItemsPerApiCall) || ((chunkTextLength + textLength) > MaxCharsPerApiCall))
                 {
                     yield return chunk;
                     chunk = new List<ITranslationItem>();
-                    chunkLength = 0;
+                    chunkTextLength = 0;
                 }
 
                 chunk.Add(item);
-                chunkLength += textLength;
+                chunkTextLength += textLength;
             }
 
             yield return chunk;
