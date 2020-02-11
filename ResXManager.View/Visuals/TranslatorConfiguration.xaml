@@ -24,6 +24,12 @@
               <CheckBox Content="{x:Static properties:Resources.AutoDetectHtml}" IsChecked="{Binding AutoDetectHtml}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
               <Decorator Width="20" />
             </StackPanel>
+            <StackPanel x:Name="MaxCharactersPerMinutePanel" DockPanel.Dock="Left" Orientation="Horizontal">
+              <Label Content="{x:Static properties:Resources.MaxCharactersPerMinute}" />
+              <Decorator Width="5" />
+              <TextBox Text="{Binding MaxCharactersPerMinute}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}"></TextBox>
+              <Decorator Width="20" />
+            </StackPanel>
             <Button Tag="{Binding Uri, Mode=OneWay}" HorizontalAlignment="Right">
               <Button.Template>
                 <ControlTemplate>
@@ -66,6 +72,9 @@
           </DataTrigger>
           <DataTrigger Binding="{Binding SupportsHtml, FallbackValue=false}" Value="false">
             <Setter TargetName="AutoDetectHtmlPanel" Property="Visibility" Value="Collapsed" />
+          </DataTrigger>
+          <DataTrigger Binding="{Binding HasCharacterRateLimit, FallbackValue=false}" Value="false">
+            <Setter TargetName="MaxCharactersPerMinutePanel" Property="Visibility" Value="Collapsed" />
           </DataTrigger>
         </DataTemplate.Triggers>
       </DataTemplate>

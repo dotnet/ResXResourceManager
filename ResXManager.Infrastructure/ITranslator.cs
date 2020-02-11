@@ -29,5 +29,9 @@
         bool SupportsHtml { get; }
 
         bool AutoDetectHtml { get; }
+
+        bool HasCharacterRateLimit { get; }
+
+        int MaxCharactersPerMinute { get; }
     }
 }
