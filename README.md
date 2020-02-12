@@ -21,9 +21,9 @@ All available languages are displayed side by side in columns, to make it easy t
 Suitable for any .Net application; WPF is supported if you use the x:Static markup extension to access the ResX - resources.
 
 Available as VS2015-2019 extension and as standalone executable to support VS2013 and older or users without Visual Studio at all.
-A scipting module is available as well, so you can easily automate resource tasks, e.g. export untranslated string during build.
+A scripting module is available as well, so you can easily automate resource tasks, e.g. export untranslated string during build.
 
-All versions can be downladed from the [releases](../../releases) page.
+All versions can be downloaded from the [releases](../../releases) page.
 
 The Visual Studio Extension is also available at the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager), or by searching for RESX in the Visual Studio extension manager.
 The latest build of the Visual Studio Extension is available at the [Open VsixGallery](http://vsixgallery.com/extension/43b35fe0-1f30-48de-887a-68256474202a)

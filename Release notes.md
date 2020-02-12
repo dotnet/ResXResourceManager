@@ -25,14 +25,14 @@
 - #200: fix conflicting assembly loading.
 
 1.32
-- #199: Sometimes no desigern code is generated.
+- #199: Sometimes no designer code is generated.
 
 1.31
 - #196: Finalize VS2019 support, drop VS2013 support (no longer compatible)
 
 1.30
 - #189: fix typo in datetime pattern
-- #194: Exceeding Excels's limits should abort when calling ExportExcell
+- #194: Exceeding Excel's limits should abort when calling ExportExcel
 - #196: Support for Visual Studio 2019
 - #193: reduce noise of messages in the output window
 
@@ -180,7 +180,7 @@
 - Improve handling of resources with empty keys.
 
 1.0.0.95:
-- WI4778: Support for csthml / Move to ressource.
+- WI4778: Support for csthml / Move to resource.
 - WI4779: Sort resx on save only works in standalone, but not in VS Extension.
 - Index column does not show up.
 - Index column does not refresh when sort resx on save changes index.
@@ -232,14 +232,14 @@
 - WI4736: ToolWindow fails to load if other extensions using different versions of DataGridExtensions are installed.
 
 1.0.0.82:
-- Use .Net 4.5x to make use of "VirtualizingWhenGrouping" to speed up the grouped view whith large projects.
+- Use .Net 4.5x to make use of "VirtualizingWhenGrouping" to speed up the grouped view with large projects.
 - Bypass legacy SCM support when files are not read only.
 - Fix block copy of cells when columns have been reordered.
 - Double click on group header selects only the group.
 
 1.0.0.81:
 - WI4716: Fix: Spell check is always disabled in Win7
-- Refresh of model is running too ofthen.
+- Refresh of model is running too often.
 - Add color schemed styles for windows.
 - WI4711: Shield packages against crashes when VS installation is broken.
 
@@ -254,24 +254,24 @@
 1.0.0.79:
 - WI1146: UI follows VS color themes.
 - WI4712: Error messages in output window when loading MPF (e.g. wix installer) projects
-- WI4709, 4717: Allways enable the add key button and show a hint if it's not possible to add one now.
+- WI4709, 4717: Always enable the add key button and show a hint if it's not possible to add one now.
 - WI4715: Excel export: Preserve leading whitespace.
 - WI4711: Avoid crash when VS is unable to create the view.
 
 1.0.0.78:
 - "Move to Resource": many small improvements.
-- WI4707: New resource values are not saved / lost if  Visual Localizer is installed.
+- WI4707: New resource values are not saved / lost if Visual Localizer is installed.
 - WI4706: Crash when starting elevated as different user.
 - WI4703: Excel import from multiple sheet export is broken.
 
 1.0.0.77:
 - WI4704: Unable to run extension (when there are broken items in the project)
-- WI4668: VS Crashes when showing lines with warnings (changing the filter while there are uncomitted changes in the data grid)
+- WI4668: VS Crashes when showing lines with warnings (changing the filter while there are uncommitted changes in the data grid)
 
 1.0.0.76:
 - WI4693: Automatically referencing System.ComponentModel.DataAnnotations.
-- WI4698: Changes in  designer delete resources => disable "add" for WinForms designer resources.
-- WI4699: Use  an invariant sortable name as default file name for snapshots.
+- WI4698: Changes in designer delete resources => disable "add" for WinForms designer resources.
+- WI4699: Use an invariant sortable name as default file name for snapshots.
 - WI4700: Open ResxManager to specific form resource.
 - WI4701: Crashes VS 2015 on click Configuration tab.
 - WI4702: Can't install your extension in new VS"15"Preview.
@@ -283,9 +283,9 @@
 - Fix missing synchronization of main table.
 
 1.0.0.73:
-- WI4694: Fix load time degration.
+- WI4694: Fix load time degradation.
 - WI4694: Bing Credentials not saving.
-- WI4669: "Move to resource" feature addeed.
+- WI4669: "Move to resource" feature added.
 
 1.0.0.72:
 - Speed up refresh of the grid
@@ -421,14 +421,14 @@
 
 1.0.0.44:
 - WI1334: Delete is deleting too much. (after changing the key, an item stays selected without selection being visible)
-- WI1329: Crash when adding new resource file (try to avoid unnecesary refresh while adding new resource file)
+- WI1329: Crash when adding new resource file (try to avoid unnecessary refresh while adding new resource file)
 
 1.0.0.43:
 - WI1327: ArgumentException when starting VS (occurred when ResXManager window is open but no solution is loaded)
 
 1.0.0.42:
 - WI1325: Empty cell does not remove "data" tag in code behind. => Empty nodes are removed, except for the neutral language.
-- WI1319: Can not add new keys in V1.0.0.41 => Restored input dialog for new keys, since inline editing conflicts with filtering.
+- WI1319: Cannot add new keys in V1.0.0.41 => Restored input dialog for new keys, since inline editing conflicts with filtering.
 - WI1320: List of unused Resources: Support for Web projects. => Web projects and attribute references are supported.
 
 1.0.0.41:
@@ -473,7 +473,7 @@
 
 1.0.0.33
 - WI1228: Resource File Names are Case Sensitive
-- WI1188: Feature Request - Height Adjustable Rows (Excel like editing filed on the top)
+- WI1188: Feature Request - Height Adjustable Rows (Excel likes editing filed on the top)
 
 1.0.0.32
 - WI1206: Exporting error
