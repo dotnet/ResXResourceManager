@@ -224,7 +224,11 @@ namespace tomenglertde.ResXManager.Translators
                 if (totalCharacterCount + tuple.Item2 > MaxCharactersPerMinute)
                 {
                     DateTime nextCallTime = tuple.Item1.AddMinutes(1);
-                    await Task.Delay((int) Math.Ceiling((nextCallTime - DateTime.Now).TotalMilliseconds));
+                    var millisecondsToDelay = (int) Math.Ceiling((nextCallTime - DateTime.Now).TotalMilliseconds);
+                    if (millisecondsToDelay > 0)
+                    {
+                        await Task.Delay(millisecondsToDelay);
+                    }
                     break;
                 }
 
