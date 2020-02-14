@@ -43,16 +43,6 @@ namespace tomenglertde.ResXManager.Translators
 
         public IList<ICredentialItem> Credentials { get; }
 
-        public virtual bool SupportsHtml => false;
-
-        [DataMember]
-        public bool AutoDetectHtml { get; set; }
-
-        public virtual bool HasCharacterRateLimit => false;
-
-        [DataMember]
-        public int MaxCharactersPerMinute { get; set; }
-
         public abstract void Translate(ITranslationSession translationSession);
 
         [NotNull]

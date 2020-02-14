@@ -35,9 +35,11 @@ namespace tomenglertde.ResXManager.Translators
             MaxCharactersPerMinute = 33300;
         }
 
-        public override bool SupportsHtml => true;
+        [DataMember]
+        public bool AutoDetectHtml { get; set; }
 
-        public override bool HasCharacterRateLimit => true;
+        [DataMember]
+        public int MaxCharactersPerMinute { get; set; }
 
         public override async void Translate(ITranslationSession translationSession)
         {

@@ -25,13 +25,5 @@
 
         [NotNull, ItemNotNull]
         IList<ICredentialItem> Credentials { get; }
-
-        bool SupportsHtml { get; }
-
-        bool AutoDetectHtml { get; }
-
-        bool HasCharacterRateLimit { get; }
-
-        int MaxCharactersPerMinute { get; }
     }
 }

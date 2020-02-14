@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using System.ServiceModel;
+    using System.Windows.Controls;
 
     using JetBrains.Annotations;
 
@@ -13,6 +14,12 @@
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
+    using TomsToolbox.Wpf.Composition.Mef;
+
+    [DataTemplate(typeof(MSTerminologyTranslator))]
+    public class MSTerminologyTranslatorConfiguration : Decorator
+    {
+    }
 
     [Export(typeof(ITranslator))]
     public class MSTerminologyTranslator : TranslatorBase

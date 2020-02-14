@@ -10,12 +10,19 @@
     using System.Runtime.Serialization;
     using System.Text;
     using System.Web;
+    using System.Windows.Controls;
 
     using JetBrains.Annotations;
 
     using tomenglertde.ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf;
+    using TomsToolbox.Wpf.Composition.Mef;
+
+    [DataTemplate(typeof(MyMemoryTranslator))]
+    public class MyMemoryTranslatorConfiguration : Decorator
+    {
+    }
 
     [Export(typeof(ITranslator))]
     public class MyMemoryTranslator : TranslatorBase
