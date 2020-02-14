@@ -122,16 +122,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Automatically detect HTML.
-        /// </summary>
-        [NotNull]
-        public static string AutoDetectHtml {
-            get {
-                return ResourceManager.GetString("AutoDetectHtml", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Case Sens..
         /// </summary>
         /// <remarks>
@@ -685,16 +675,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Max characters per minute.
-        /// </summary>
-        [NotNull]
-        public static string MaxCharactersPerMinute {
-            get {
-                return ResourceManager.GetString("MaxCharactersPerMinute", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Multiple selection..
         /// </summary>
         [NotNull]
@@ -1149,10 +1129,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         /// </summary>
         AutoCreateNewLanguageFiles,
         /// <summary>
-        ///   Looks up a localized string similar to Automatically detect HTML.
-        /// </summary>
-        AutoDetectHtml,
-        /// <summary>
         ///   Looks up a localized string similar to Case Sens..
         /// </summary>
         /// <remarks>
@@ -1375,10 +1351,6 @@ namespace tomenglertde.ResXManager.View.Properties {
         ///   Looks up a localized string similar to Load Snapshot.
         /// </summary>
         LoadSnapshot,
-        /// <summary>
-        ///   Looks up a localized string similar to Max characters per minute.
-        /// </summary>
-        MaxCharactersPerMinute,
         /// <summary>
         ///   Looks up a localized string similar to Multiple selection..
         /// </summary>

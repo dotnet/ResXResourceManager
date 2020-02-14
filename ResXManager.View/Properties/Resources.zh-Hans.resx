@@ -435,10 +435,4 @@ ResXManager 团队
   <data name="Configuration_Rules" xml:space="preserve">
     <value>一致性检查</value>
   </data>
-  <data name="AutoDetectHtml" xml:space="preserve">
-    <value>自动检测 HTML</value>
-  </data>
-  <data name="MaxCharactersPerMinute" xml:space="preserve">
-    <value>每分钟最大字符数</value>
-  </data>
 </root>

@@ -12,6 +12,7 @@
     using System.Runtime.Serialization;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Windows.Controls;
 
     using JetBrains.Annotations;
 
@@ -19,6 +20,12 @@
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
+    using TomsToolbox.Wpf.Composition.Mef;
+
+    [DataTemplate(typeof(GoogleTranslator))]
+    public class GoogleTranslatorConfiguration : Decorator
+    {
+    }
 
     [Export(typeof(ITranslator))]
     public class GoogleTranslator : TranslatorBase

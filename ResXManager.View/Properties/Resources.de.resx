@@ -434,10 +434,4 @@ Ihr ResXManager-Team.
   <data name="Configuration_Rules" xml:space="preserve">
     <value>Konzistenzchecks</value>
   </data>
-  <data name="AutoDetectHtml" xml:space="preserve">
-    <value>Html automatisch erkennen</value>
-  </data>
-  <data name="MaxCharactersPerMinute" xml:space="preserve">
-    <value>Max. Zeichen pro Minute</value>
-  </data>
 </root>
