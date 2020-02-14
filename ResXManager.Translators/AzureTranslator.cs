@@ -32,14 +32,13 @@ namespace tomenglertde.ResXManager.Translators
         public AzureTranslator()
             : base("Azure", "Azure", _uri, GetCredentials())
         {
-            MaxCharactersPerMinute = 33300;
         }
 
         [DataMember]
-        public bool AutoDetectHtml { get; set; }
+        public bool AutoDetectHtml { get; set; } = true;
 
         [DataMember]
-        public int MaxCharactersPerMinute { get; set; }
+        public int MaxCharactersPerMinute { get; set; } = 33300;
 
         public override async void Translate(ITranslationSession translationSession)
         {
