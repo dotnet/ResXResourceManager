@@ -58,7 +58,7 @@ namespace tomenglertde.ResXManager.Translators
                 {
                     client.DefaultRequestHeaders.Add("Authorization", token);
 
-                    var characterCountsThisMinute = new List<Tuple<DateTime, int>>();
+                    var throttle = new Throttle(MaxCharactersPerMinute);
 
                     var itemsByLanguage = translationSession.Items.GroupBy(item => item.TargetCulture);
 
@@ -83,7 +83,7 @@ namespace tomenglertde.ResXManager.Translators
                                     .Select(RemoveKeyboardShortcutIndicators)
                                     .ToList();
 
-                                await Throttle(characterCountsThisMinute, sourceItems);
+                                await throttle.Tick(sourceItems);
 
                                 var uri = new Uri($"https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={translationSession.SourceLanguage.IetfLanguageTag}&to={targetLanguage.IetfLanguageTag}&textType={textType}");
 
@@ -209,34 +209,45 @@ namespace tomenglertde.ResXManager.Translators
             yield return chunk;
         }
 
-        private async Task Throttle(List<Tuple<DateTime, int>> characterCountsThisMinute,
-            ICollection<ITranslationItem> sourceItems)
+        private class Throttle
         {
-            var newCharacterCount = sourceItems.Sum(item => item.Source.Length);
+            private readonly int _maxCharactersPerMinute;
+            private readonly List<Tuple<DateTime, int>> _characterCountsThisMinute = new List<Tuple<DateTime, int>>();
 
-            var threshold = DateTime.Now.Subtract(TimeSpan.FromMinutes(1));
-
-            characterCountsThisMinute.RemoveAll(t => t.Item1 < threshold);
-            var totalCharacterCount = newCharacterCount;
-
-            for (var i = characterCountsThisMinute.Count - 1; i >= 0; i--)
+            public Throttle(int maxCharactersPerMinute)
             {
-                var tuple = characterCountsThisMinute[i];
-                if (totalCharacterCount + tuple.Item2 > MaxCharactersPerMinute)
-                {
-                    DateTime nextCallTime = tuple.Item1.AddMinutes(1);
-                    var millisecondsToDelay = (int) Math.Ceiling((nextCallTime - DateTime.Now).TotalMilliseconds);
-                    if (millisecondsToDelay > 0)
-                    {
-                        await Task.Delay(millisecondsToDelay);
-                    }
-                    break;
-                }
-
-                totalCharacterCount += tuple.Item2;
+                _maxCharactersPerMinute = maxCharactersPerMinute;
             }
 
-            characterCountsThisMinute.Add(new Tuple<DateTime, int>(DateTime.Now, newCharacterCount));
+            public async Task Tick(ICollection<ITranslationItem> sourceItems)
+            {
+                var newCharacterCount = sourceItems.Sum(item => item.Source.Length);
+
+                var threshold = DateTime.Now.Subtract(TimeSpan.FromMinutes(1));
+
+                _characterCountsThisMinute.RemoveAll(t => t.Item1 < threshold);
+                var totalCharacterCount = newCharacterCount;
+
+                for (var i = _characterCountsThisMinute.Count - 1; i >= 0; i--)
+                {
+                    var tuple = _characterCountsThisMinute[i];
+                    if (totalCharacterCount + tuple.Item2 > _maxCharactersPerMinute)
+                    {
+                        var nextCallTime = tuple.Item1.AddMinutes(1);
+                        var millisecondsToDelay = (int) Math.Ceiling((nextCallTime - DateTime.Now).TotalMilliseconds);
+                        if (millisecondsToDelay > 0)
+                        {
+                            await Task.Delay(millisecondsToDelay);
+                        }
+
+                        break;
+                    }
+
+                    totalCharacterCount += tuple.Item2;
+                }
+
+                _characterCountsThisMinute.Add(new Tuple<DateTime, int>(DateTime.Now, newCharacterCount));
+            }
         }
     }
 }
