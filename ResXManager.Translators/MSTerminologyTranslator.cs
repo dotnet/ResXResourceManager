@@ -36,7 +36,7 @@
         {
         }
 
-        public override void Translate(ITranslationSession translationSession)
+        public override async void Translate(ITranslationSession translationSession)
         {
             using (var client = new TerminologyClient(_binding, _endpoint))
             {
@@ -55,9 +55,11 @@
 
                     try
                     {
-                        var response = client.GetTranslations(item.Source, translationSession.SourceLanguage.Name,
+                        var response = await client.GetTranslationsAsync(
+                            item.Source, translationSession.SourceLanguage.Name,
                             targetCulture.Name, SearchStringComparison.CaseInsensitive, SearchOperator.Contains,
-                            translationSources, false, 5, false, null);
+                            translationSources, false, 5, false, null)
+                            .ConfigureAwait(false);
 
                         if (response != null)
                         {
@@ -66,10 +68,8 @@
                                 .Where(m => m?.TranslatedText != null)
                                 .Distinct(TranslationMatch.TextComparer);
 
-                            translationSession.Dispatcher.BeginInvoke(() =>
-                            {
-                                item.Results.AddRange(matches);
-                            });
+#pragma warning disable CS4014 // Because this call is not awaited ... => just push out results, no need to wait.
+                            translationSession.Dispatcher.BeginInvoke(() => item.Results.AddRange(matches));
                         }
                     }
                     catch (Exception ex)

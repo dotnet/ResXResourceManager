@@ -1,40 +1,47 @@
 ﻿namespace tomenglertde.ResXManager.Infrastructure
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Threading;
     using System.Windows.Threading;
 
     using JetBrains.Annotations;
 
-    public interface ITranslationSession
+    public interface ITranslationSession : IDisposable
     {
         bool IsActive { get; }
 
         bool IsCanceled { get; }
 
-        bool IsComplete { get; set; }
+        bool IsComplete { get; }
 
-        [NotNull]
+        CancellationToken CancellationToken { get; }
+
+        void Cancel();
+
         [ItemNotNull]
         ICollection<ITranslationItem> Items { get; }
 
-        [NotNull]
         [ItemNotNull]
         IList<string> Messages { get; }
 
-        [NotNull]
         CultureInfo NeutralResourcesLanguage { get; }
 
         int Progress { get; set; }
 
-        [NotNull]
         CultureInfo SourceLanguage { get; }
 
-        [NotNull]
         Dispatcher Dispatcher { get; }
 
         void AddMessage([NotNull] string text);
+    }
 
-        void Cancel();
+    public static class SessionExtensionMethods
+    {
+        public static bool IsRunning(this ITranslationSession session)
+        {
+            return session.IsActive && !session.IsCanceled;
+        }
     }
 }

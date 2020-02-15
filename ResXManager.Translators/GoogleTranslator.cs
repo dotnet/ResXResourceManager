@@ -11,6 +11,7 @@
     using System.Net.Http;
     using System.Runtime.Serialization;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Controls;
 
@@ -68,12 +69,11 @@
 
                 using (var itemsEnumerator = languageGroup.GetEnumerator())
                 {
-                    var loop = true;
-                    while (loop)
+                    while (true)
                     {
                         var sourceItems = itemsEnumerator.Take(10);
                         if (translationSession.IsCanceled || !sourceItems.Any())
-                            break;
+                            return;
 
                         // Build out list of parameters
                         var parameters = new List<string>(30);
@@ -92,12 +92,15 @@
 
                         try
                         {
-
                             // Call the Google API
                             // ReSharper disable once AssignNullToNotNullAttribute
-                            var response = await GetHttpResponse("https://translation.googleapis.com/language/translate/v2", null, parameters, JsonConverter<TranslationRootObject>).ConfigureAwait(false);
+                            var response = await GetHttpResponse<TranslationRootObject>(
+                                "https://translation.googleapis.com/language/translate/v2",
+                                parameters,
+                                translationSession.CancellationToken).ConfigureAwait(false);
 
-                            await translationSession.Dispatcher.BeginInvoke(() =>
+#pragma warning disable CS4014 // Because this call is not awaited ... => just push out results, no need to wait.
+                            translationSession.Dispatcher.BeginInvoke(() =>
                             {
                                 foreach (var tuple in sourceItems.Zip(response.Data.Translations,
                                     (a, b) => new Tuple<ITranslationItem, string>(a, b.TranslatedText)))
@@ -110,7 +113,7 @@
                         catch (Exception ex)
                         {
                             translationSession.AddMessage(DisplayName + ": " + (ex.InnerException?.Message ?? ex.Message));
-                            loop = false;
+                            return;
                         }
                     }
                 }
@@ -132,20 +135,18 @@
             return iso1;
         }
 
-        private static async Task<T> GetHttpResponse<T>(string baseUrl, string authHeader, [NotNull] ICollection<string> parameters, Func<Stream, T> conv)
+        private static async Task<T> GetHttpResponse<T>(string baseUrl, ICollection<string> parameters, CancellationToken cancellationToken)
         {
             var url = BuildUrl(baseUrl, parameters);
-            using (var c = new HttpClient())
-            {
-                if (!string.IsNullOrWhiteSpace(authHeader))
-                {
-                    c.DefaultRequestHeaders.Add("Authorization", authHeader);
-                }
 
+            using (var httpClient = new HttpClient())
+            {
                 Debug.WriteLine("Google URL: " + url);
-                using (var stream = await c.GetStreamAsync(new Uri(url)).ConfigureAwait(false))
+                var response = await httpClient.GetAsync(new Uri(url), cancellationToken).ConfigureAwait(false);
+
+                using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
                 {
-                    return conv(stream);
+                    return JsonConverter<T>(stream);
                 }
             }
         }

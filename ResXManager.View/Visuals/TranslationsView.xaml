@@ -209,7 +209,7 @@
   </DockPanel>
   <Interactions:Interaction.Triggers>
     <Interactions:EventTrigger EventName="Loaded">
-      <Interactions:InvokeCommandAction Command="{Binding StartCommand}" />
+      <Interactions:InvokeCommandAction Command="{Binding InitCommand}" />
     </Interactions:EventTrigger>
   </Interactions:Interaction.Triggers>
 </UserControl>

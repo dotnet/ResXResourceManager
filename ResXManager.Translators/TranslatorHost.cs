@@ -1,8 +1,12 @@
 ﻿namespace tomenglertde.ResXManager.Translators
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
+    using System.Globalization;
+    using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
 
     using JetBrains.Annotations;
 
@@ -14,9 +18,12 @@
     using TomsToolbox.Wpf;
 
     [Export]
-    public class TranslatorHost
+    public class TranslatorHost : IDisposable
     {
         private readonly ITranslator[] _translators;
+
+        [CanBeNull]
+        private ITranslationSession _activeSession;
 
         [ImportingConstructor]
         public TranslatorHost([ImportMany] ITranslator[] translators)
@@ -33,39 +40,30 @@
 
         public IEnumerable<ITranslator> Translators => _translators;
 
-        public void Translate([NotNull] ITranslationSession translationSession)
+        [CanBeNull]
+        public ITranslationSession ActiveSession => _activeSession;
+
+        public void StartSession([CanBeNull] CultureInfo sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull][ItemNotNull] ICollection<ITranslationItem> items)
         {
-            var translatorCounter = 0;
+            var session = new TranslationSession(sourceLanguage, neutralResourcesLanguage, items);
+            Interlocked.Exchange(ref _activeSession, session)?.Dispose();
 
-            foreach (var translator in Translators)
+            Task.Run(() =>
             {
-                var local = translator;
-                if (!local.IsEnabled)
-                    continue;
-
-                Interlocked.Increment(ref translatorCounter);
-
-                ThreadPool.QueueUserWorkItem(_ =>
+                try
                 {
-                    try
-                    {
-                        local.Translate(translationSession);
-                    }
-                    finally
-                    {
-                        // ReSharper disable once AccessToModifiedClosure
-                        if (Interlocked.Decrement(ref translatorCounter) == 0)
-                        {
-                            translationSession.IsComplete = true;
-                        }
-                    }
-                });
-            }
+                    var translatorTasks = Translators
+                        .Where(t => t.IsEnabled)
+                        .Select(t => Task.Run(() => { t.Translate(session); }))
+                        .ToArray();
 
-            if (translatorCounter == 0)
-            {
-                translationSession.IsComplete = true;
-            }
+                    Task.WaitAll(translatorTasks);
+                }
+                finally
+                {
+                    session.Dispose();
+                }
+            });
         }
 
         [Throttled(typeof(Throttle), 1000)]
@@ -129,6 +127,11 @@
                     credential.PropertyChanged += (_, __) => SaveConfiguration();
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            ActiveSession?.Dispose();
         }
     }
 }

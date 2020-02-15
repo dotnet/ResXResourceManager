@@ -7,8 +7,11 @@
     using System.Globalization;
     using System.IO;
     using System.Net;
+    using System.Net.Http;
     using System.Runtime.Serialization;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Web;
     using System.Windows.Controls;
 
@@ -53,51 +56,56 @@
         [CanBeNull]
         private string Key => Credentials[0].Value;
 
-        public override void Translate(ITranslationSession translationSession)
+        public override async void Translate(ITranslationSession translationSession)
         {
-            foreach (var item in translationSession.Items)
+            using (var client = new HttpClient())
             {
-                if (translationSession.IsCanceled)
-                    break;
 
-                var translationItem = item;
-
-                try
+                foreach (var item in translationSession.Items)
                 {
-                    var targetCulture = translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage;
-                    var result = TranslateText(translationItem.Source, Key, translationSession.SourceLanguage, targetCulture);
+                    if (translationSession.IsCanceled)
+                        break;
 
-                    translationSession.Dispatcher.BeginInvoke(() =>
+                    var translationItem = item;
+
+                    try
                     {
-                        if (result?.Matches != null)
-                        {
-                            foreach (var match in result.Matches)
-                            {
-                                var translation = match.Translation;
-                                if (string.IsNullOrEmpty(translation))
-                                    continue;
+                        var targetCulture = translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage;
+                        var result = await TranslateTextAsync(client, translationItem.Source, Key, translationSession.SourceLanguage, targetCulture, translationSession.CancellationToken);
 
-                                translationItem.Results.Add(new TranslationMatch(this, translation, match.Match.GetValueOrDefault() * match.Quality.GetValueOrDefault() / 100.0));
-                            }
-                        }
-                        else
+#pragma warning disable CS4014 // Because this call is not awaited ... => just push out results, no need to wait.
+                        translationSession.Dispatcher.BeginInvoke(() =>
                         {
-                            var translation = result?.ResponseData?.TranslatedText;
-                            if (!string.IsNullOrEmpty(translation))
-                                translationItem.Results.Add(new TranslationMatch(this, translation, result.ResponseData.Match.GetValueOrDefault()));
-                        }
-                    });
-                }
-                catch (Exception ex)
-                {
-                    translationSession.AddMessage(DisplayName + ": " + ex.Message);
-                    break;
+                            if (result?.Matches != null)
+                            {
+                                foreach (var match in result.Matches)
+                                {
+                                    var translation = match.Translation;
+                                    if (string.IsNullOrEmpty(translation))
+                                        continue;
+
+                                    translationItem.Results.Add(new TranslationMatch(this, translation, match.Match.GetValueOrDefault() * match.Quality.GetValueOrDefault() / 100.0));
+                                }
+                            }
+                            else
+                            {
+                                var translation = result?.ResponseData?.TranslatedText;
+                                if (!string.IsNullOrEmpty(translation))
+                                    translationItem.Results.Add(new TranslationMatch(this, translation, result.ResponseData.Match.GetValueOrDefault()));
+                            }
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        translationSession.AddMessage(DisplayName + ": " + ex.Message);
+                        break;
+                    }
                 }
             }
         }
 
-        [CanBeNull]
-        private static Response TranslateText([NotNull] string input, [CanBeNull] string key, [NotNull] CultureInfo sourceLanguage, [NotNull] CultureInfo targetLanguage)
+        [NotNull, ItemCanBeNull]
+        private static async Task<Response> TranslateTextAsync(HttpClient client, [NotNull] string input, [CanBeNull] string key, [NotNull] CultureInfo sourceLanguage, [NotNull] CultureInfo targetLanguage, CancellationToken cancellationToken)
         {
             var rawInput = RemoveKeyboardShortcutIndicators(input);
 
@@ -109,20 +117,12 @@
             if (!string.IsNullOrEmpty(key))
                 url += string.Format(CultureInfo.InvariantCulture, "&key={0}", HttpUtility.UrlEncode(key));
 
-            var webRequest = (HttpWebRequest)WebRequest.Create(new Uri(url));
-            webRequest.Proxy = WebProxy;
+            var response = await client.GetAsync(url, cancellationToken);
 
-            using (var webResponse = webRequest.GetResponse())
+            using (var reader = new StreamReader(await response.Content.ReadAsStreamAsync(), Encoding.UTF8))
             {
-                var responseStream = webResponse.GetResponseStream();
-                if (responseStream == null)
-                    return null;
-
-                using (var reader = new StreamReader(responseStream, Encoding.UTF8))
-                {
-                    var json = reader.ReadToEnd();
-                    return JsonConvert.DeserializeObject<Response>(json);
-                }
+                var json = reader.ReadToEnd();
+                return JsonConvert.DeserializeObject<Response>(json);
             }
         }
 
@@ -193,8 +193,6 @@
                 get;
                 set;
             }
-
-
         }
     }
 }

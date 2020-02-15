@@ -10,6 +10,7 @@ namespace tomenglertde.ResXManager.Translators
     using System.Net.Http.Headers;
     using System.Runtime.Serialization;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using JetBrains.Annotations;
@@ -52,13 +53,13 @@ namespace tomenglertde.ResXManager.Translators
                     return;
                 }
 
-                var token = await AzureAuthentication.GetBearerAccessTokenAsync(authenticationKey).ConfigureAwait(false);
+                var token = await AzureAuthentication.GetBearerAccessTokenAsync(authenticationKey, translationSession.CancellationToken).ConfigureAwait(false);
 
                 using (var client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Add("Authorization", token);
 
-                    var throttle = new Throttle(MaxCharactersPerMinute);
+                    var throttle = new Throttle(MaxCharactersPerMinute, translationSession.CancellationToken);
 
                     var itemsByLanguage = translationSession.Items.GroupBy(item => item.TargetCulture);
 
@@ -85,9 +86,12 @@ namespace tomenglertde.ResXManager.Translators
 
                                 await throttle.Tick(sourceItems);
 
+                                if (translationSession.IsCanceled)
+                                    return;
+
                                 var uri = new Uri($"https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={translationSession.SourceLanguage.IetfLanguageTag}&to={targetLanguage.IetfLanguageTag}&textType={textType}");
 
-                                var response = await client.PostAsync(uri, CreateRequestContent(sourceStrings)).ConfigureAwait(false);
+                                var response = await client.PostAsync(uri, CreateRequestContent(sourceStrings), translationSession.CancellationToken).ConfigureAwait(false);
 
                                 if (response.IsSuccessStatusCode)
                                 {
@@ -108,9 +112,6 @@ namespace tomenglertde.ResXManager.Translators
                                     var errorMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                                     translationSession.AddMessage("Azure translator reported a problem: " + errorMessage);
                                 }
-
-                                if (translationSession.IsCanceled)
-                                    break;
                             }
                         }
                     }
@@ -212,11 +213,13 @@ namespace tomenglertde.ResXManager.Translators
         private class Throttle
         {
             private readonly int _maxCharactersPerMinute;
-            private readonly List<Tuple<DateTime, int>> _characterCountsThisMinute = new List<Tuple<DateTime, int>>();
+            private readonly CancellationToken _cancellationToken;
+            private readonly List<Tuple<DateTime, int>> _characterCounts = new List<Tuple<DateTime, int>>();
 
-            public Throttle(int maxCharactersPerMinute)
+            public Throttle(int maxCharactersPerMinute, CancellationToken cancellationToken)
             {
                 _maxCharactersPerMinute = maxCharactersPerMinute;
+                _cancellationToken = cancellationToken;
             }
 
             public async Task Tick(ICollection<ITranslationItem> sourceItems)
@@ -225,19 +228,20 @@ namespace tomenglertde.ResXManager.Translators
 
                 var threshold = DateTime.Now.Subtract(TimeSpan.FromMinutes(1));
 
-                _characterCountsThisMinute.RemoveAll(t => t.Item1 < threshold);
+                _characterCounts.RemoveAll(t => t.Item1 < threshold);
+
                 var totalCharacterCount = newCharacterCount;
 
-                for (var i = _characterCountsThisMinute.Count - 1; i >= 0; i--)
+                for (var i = _characterCounts.Count - 1; i >= 0; i--)
                 {
-                    var tuple = _characterCountsThisMinute[i];
+                    var tuple = _characterCounts[i];
                     if (totalCharacterCount + tuple.Item2 > _maxCharactersPerMinute)
                     {
                         var nextCallTime = tuple.Item1.AddMinutes(1);
                         var millisecondsToDelay = (int) Math.Ceiling((nextCallTime - DateTime.Now).TotalMilliseconds);
                         if (millisecondsToDelay > 0)
                         {
-                            await Task.Delay(millisecondsToDelay);
+                            await Task.Delay(millisecondsToDelay, _cancellationToken);
                         }
 
                         break;
@@ -246,7 +250,7 @@ namespace tomenglertde.ResXManager.Translators
                     totalCharacterCount += tuple.Item2;
                 }
 
-                _characterCountsThisMinute.Add(new Tuple<DateTime, int>(DateTime.Now, newCharacterCount));
+                _characterCounts.Add(new Tuple<DateTime, int>(DateTime.Now, newCharacterCount));
             }
         }
     }

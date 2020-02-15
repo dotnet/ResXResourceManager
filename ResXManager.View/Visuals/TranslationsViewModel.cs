@@ -90,14 +90,11 @@
         [NotNull, ItemNotNull]
         public ICollection<ITranslationItem> SelectedItems { get; } = new ObservableCollection<ITranslationItem>();
 
-        [CanBeNull]
-        public ITranslationSession TranslationSession { get; set; }
+        [NotNull]
+        public ICommand InitCommand => new DelegateCommand(() => _translatorHost.ActiveSession == null, () => UpdateTargetList());
 
         [NotNull]
-        public ICommand StartCommand => new DelegateCommand(() => TranslationSession == null, UpdateTargetList);
-
-        [NotNull]
-        public ICommand RestartCommand => new DelegateCommand(() => SourceCulture != null, UpdateTargetList);
+        public ICommand RestartCommand => new DelegateCommand(() => SourceCulture != null, UpdateTargetListAndRestart);
 
         [NotNull]
         public ICommand ApplyAllCommand => new DelegateCommand(() => IsSessionComplete && Items.Any(), () => Apply(Items));
@@ -118,7 +115,7 @@
 
         private void Stop()
         {
-            TranslationSession?.Cancel();
+            _translatorHost.ActiveSession?.Cancel();
         }
 
         private void Apply([NotNull, ItemNotNull] IEnumerable<ITranslationItem> items)
@@ -134,9 +131,9 @@
             }
         }
 
-        private bool IsSessionComplete => TranslationSession != null && TranslationSession.IsComplete;
+        private bool IsSessionComplete => _translatorHost.ActiveSession?.IsComplete == true;
 
-        private bool IsSessionRunning => TranslationSession != null && !TranslationSession.IsComplete && !TranslationSession.IsCanceled;
+        private bool IsSessionRunning => _translatorHost.ActiveSession?.IsRunning() == true;
 
         [NotNull]
         [ItemNotNull]
@@ -155,27 +152,34 @@
             }
         }
 
-        private void UpdateTargetList()
+        [CanBeNull]
+        private ICollection<ITranslationItem> UpdateTargetList()
         {
-            TranslationSession?.Cancel();
-
             SelectedItems.Clear();
 
             var sourceCulture = SourceCulture;
-
             if (sourceCulture == null)
             {
                 Items = Array.Empty<TranslationItem>();
-                return;
+                return null;
             }
 
             var itemsToTranslate = GetItemsToTranslate(_resourceViewModel.ResourceTableEntries, sourceCulture, SelectedTargetCultures, Configuration.EffectiveTranslationPrefix);
 
             Items = new ObservableCollection<ITranslationItem>(itemsToTranslate);
 
-            TranslationSession = new TranslationSession(sourceCulture.Culture, Configuration.NeutralResourcesLanguage, itemsToTranslate);
+            return itemsToTranslate;
+        }
 
-            _translatorHost.Translate(TranslationSession);
+        private void UpdateTargetListAndRestart()
+        {
+            var itemsToTranslate = UpdateTargetList();
+
+            var sourceCulture = SourceCulture;
+            if (sourceCulture == null || itemsToTranslate == null)
+                return;
+
+            _translatorHost.StartSession(sourceCulture.Culture, Configuration.NeutralResourcesLanguage, itemsToTranslate);
         }
 
         [NotNull, ItemNotNull]

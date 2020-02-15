@@ -2,6 +2,7 @@
 {
     using System;
     using System.Net.Http;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using JetBrains.Annotations;
@@ -17,9 +18,10 @@
         /// Gets a token for the specified subscription.
         /// </summary>
         /// <param name="authenticationKey">Subscription secret key.</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>The encoded JWT token.</returns>
         [NotNull, ItemCanBeNull]
-        private static async Task<string> GetAccessTokenAsync([CanBeNull] string authenticationKey)
+        private static async Task<string> GetAccessTokenAsync([CanBeNull] string authenticationKey, CancellationToken cancellationToken)
         {
             using (var client = new HttpClient())
             using (var request = new HttpRequestMessage())
@@ -29,7 +31,7 @@
                 request.Content = new StringContent(string.Empty);
                 request.Headers?.TryAddWithoutValidation(OcpApimSubscriptionKeyHeader, authenticationKey);
 
-                var response = await client.SendAsync(request).ConfigureAwait(false);
+                var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
@@ -43,11 +45,12 @@
         /// Gets a token for the specified subscription. The token is prefixed with "Bearer ".
         /// </summary>
         /// <param name="authenticationKey">Subscription secret key.</param>
+        /// <param name="translationSessionCancellationToken"></param>
         /// <returns>The encoded JWT token, prefixed with "Bearer ".</returns>
         [ItemNotNull]
-        public static async Task<string> GetBearerAccessTokenAsync([CanBeNull] string authenticationKey)
+        public static async Task<string> GetBearerAccessTokenAsync([CanBeNull] string authenticationKey, CancellationToken cancellationToken)
         {
-            return "Bearer " + await GetAccessTokenAsync(authenticationKey).ConfigureAwait(false);
+            return "Bearer " + await GetAccessTokenAsync(authenticationKey, cancellationToken).ConfigureAwait(false);
         }
     }
 }
