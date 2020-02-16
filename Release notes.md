@@ -1,4 +1,14 @@
-﻿1.38
+﻿1.39
+- Fix #265: Add new language dialog always opens in center of VS
+- Fix: AzureTranslator rating should be 1.0
+- Fix #270: exclude keyboard shortcut prefixes from punctuation checks
+- Fix #273: neutral language image missing in some places
+- Fix #279: Code reference detection defaults for vb razor
+- Fix #283: ignore language specific punctuation in Resource warnings
+- #293: Auto-detect HTML for properly setting textType parameter in AzureTranslator
+- Optionally start a PowerShell script after saving (Standalone only)
+
+1.38
 - Fix context menu style
 
 1.37
