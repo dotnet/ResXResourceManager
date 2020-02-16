@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows.Threading;
     using System.Xml;
     using System.Xml.Linq;
@@ -18,7 +19,6 @@
     using ResXManager.Model.Properties;
 
     using TomsToolbox.Essentials;
-    using TomsToolbox.Wpf;
 
     /// <summary>
     /// Represents a set of localized resources.
@@ -210,7 +210,7 @@
             DeferredCommitChanges();
         }
 
-        [Throttled(typeof(DispatcherThrottle))]
+        [Throttled(typeof(SynchronizationContextThrottle))]
         private void DeferredCommitChanges()
         {
             CommitChanges();
@@ -392,7 +392,7 @@
 
             UpdateNodes();
 
-            Dispatcher.CurrentDispatcher.BeginInvoke(() => Container.OnItemOrderChanged(this));
+            new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext()).StartNew(() => Container.OnItemOrderChanged(this));
 
             return _nodes[key];
         }

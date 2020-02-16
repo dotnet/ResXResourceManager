@@ -23,7 +23,6 @@
     using ResXManager.Model.Properties;
 
     using TomsToolbox.Essentials;
-    using TomsToolbox.Wpf;
 
     /// <summary>
     /// Represents one entry in the resource table.
@@ -394,7 +393,7 @@
             OnValuesChanged();
         }
 
-        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Input)]
+        [Throttled(typeof(SynchronizationContextThrottle))]
         private void OnValuesChanged()
         {
             OnPropertyChanged(nameof(Values));
@@ -410,7 +409,7 @@
             OnCommentsChanged();
         }
 
-        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Input)]
+        [Throttled(typeof(SynchronizationContextThrottle))]
         private void OnCommentsChanged()
         {
             OnPropertyChanged(nameof(Comment));

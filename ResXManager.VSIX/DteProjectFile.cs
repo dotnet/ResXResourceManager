@@ -5,6 +5,8 @@
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using System.Threading.Tasks;
+    using System.Windows.Threading;
     using System.Xml.Linq;
 
     using JetBrains.Annotations;
@@ -12,7 +14,6 @@
     using ResXManager.Model;
 
     using TomsToolbox.Essentials;
-    using TomsToolbox.Wpf;
 
     internal class DteProjectFile : ProjectFile
     {
@@ -263,7 +264,7 @@
 
             item.SetProperty(@"BuildAction", 0);
 
-            Dispatcher.BeginInvoke(() => item.RunCustomTool());
+            new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext()).StartNew(() => item.RunCustomTool());
         }
 
         private static void SetCustomToolCodeGenerator([NotNull] EnvDTE.ProjectItem projectItem, CodeGenerator value)
