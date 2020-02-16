@@ -1,65 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6AF977DB-2C9F-4D9C-8C2D-CFDDF7E022FC}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ResXManager.Model</RootNamespace>
-    <AssemblyName>ResXManager.Model</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>..\CodeContracts.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>..\CodeContracts.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TargetFramework>net462</TargetFramework>
     <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
     <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -69,113 +22,36 @@
     <Compile Include="..\Version.cs">
       <Link>Version.cs</Link>
     </Compile>
-    <Compile Include="CodeReferenceConfiguration.cs" />
-    <Compile Include="ColumnKind.cs" />
-    <Compile Include="Configuration.cs" />
-    <Compile Include="ConfigurationScope.cs" />
-    <Compile Include="EntryChange.cs" />
-    <Compile Include="ExcelExtensions.cs" />
-    <Compile Include="ExcelRange.cs" />
-    <Compile Include="CodeReferenceTracker.cs" />
-    <Compile Include="GlobalExtensions.cs" />
-    <Compile Include="ConfigurationBase.cs" />
-    <Compile Include="IExportParameters.cs" />
-    <Compile Include="ImportException.cs" />
-    <Compile Include="IFileFilter.cs" />
-    <Compile Include="DelegateIndexer.cs" />
-    <Compile Include="IResourceTableEntryRuleConfig.cs" />
-    <Compile Include="IResourceTableEntryRule.cs" />
-    <Compile Include="ISourceFilesProvider.cs" />
-    <Compile Include="ItemTrackingCollectionHost.cs" />
-    <Compile Include="JsonSerializerTypeConverter.cs" />
-    <Compile Include="LanguageEventArgs.cs" />
-    <Compile Include="ProjectFileEventArgs.cs" />
-    <Compile Include="ProjectFileExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProjectFile.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
+    <None Include="..\Key.snk">
+      <Link>Key.snk</Link>
+    </None>
+    <Compile Update="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.Designer.tt</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="ResourceData.cs" />
-    <Compile Include="ResourceEntityExtensions.cs" />
-    <Compile Include="ResourceManagerExtensions.cs" />
-    <Compile Include="IResourceScope.cs" />
-    <Compile Include="ResourceTableEntry.cs" />
-    <Compile Include="ResourceEntity.cs" />
-    <Compile Include="ResourceLanguage.cs" />
-    <Compile Include="ResourceManager.cs" />
-    <Compile Include="ResourceTableEntryEventArgs.cs" />
-    <Compile Include="ResourceTableEntryRulePunctuationLead.cs" />
-    <Compile Include="ResourceTableEntryRulePunctuationTail.cs" />
-    <Compile Include="ResourceTableEntryRules.cs" />
-    <Compile Include="ResourceTableEntryRuleStringFormat.cs" />
-    <Compile Include="ResourceTableEntryRulePunctuation.cs" />
-    <Compile Include="ResourceTableEntryRuleWhiteSpace.cs" />
-    <Compile Include="ResourceTableEntryRuleWhiteSpaceTail.cs" />
-    <Compile Include="ResourceTableEntryRuleWhiteSpaceLead.cs" />
-    <Compile Include="ResourceTableValues.cs" />
-    <Compile Include="ResourceBeginEditingEventArgs.cs" />
-    <Compile Include="Snapshot.cs" />
-    <Compile Include="FileFilter.cs" />
-    <Compile Include="TextExtensions.cs" />
-    <Compile Include="XmlConfiguration.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\CodeContracts.ruleset">
-      <Link>CodeContracts.ruleset</Link>
-    </None>
-    <None Include="..\Key.snk">
-      <Link>Key.snk</Link>
-    </None>
-    <None Include="Properties\Settings.settings">
-      <Generator>PublicSettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
-      <Link>CustomDictionary.xml</Link>
-    </CodeAnalysisDictionary>
-  </ItemGroup>
-  <ItemGroup>
-    <SplashScreen Include="..\ResourceManager.ico">
-      <Link>ResourceManager.ico</Link>
-    </SplashScreen>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.de.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.zh-Hans.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ResXManager.Infrastructure\ResXManager.Infrastructure.csproj">
-      <Project>{A20586DF-CBE9-4A6F-807C-10960D13E848}</Project>
-      <Name>ResXManager.Infrastructure</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Properties\EmptyResxTemplate.txt" />
-    <None Include="FodyWeavers.xml" />
-    <None Include="Properties\Resources.Designer.tt">
+    <None Update="Properties\Resources.Designer.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <DependentUpon>Resources.resx</DependentUpon>
     </None>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <None Update="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Remove="Properties\EmptyResxTemplate.txt" />
+    <Resource Include="Properties\EmptyResxTemplate.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ResXManager.Infrastructure\ResXManager.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all">
@@ -203,12 +79,4 @@
       <Version>2.0.0.4-beta03</Version>
     </PackageReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
