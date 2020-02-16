@@ -56,7 +56,7 @@
         [CanBeNull]
         private string Key => Credentials[0].Value;
 
-        public override async void Translate(ITranslationSession translationSession)
+        public override async Task Translate(ITranslationSession translationSession)
         {
             using (var client = new HttpClient())
             {

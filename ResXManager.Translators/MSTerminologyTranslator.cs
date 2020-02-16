@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using System.ServiceModel;
+    using System.Threading.Tasks;
     using System.Windows.Controls;
 
     using JetBrains.Annotations;
@@ -36,7 +37,7 @@
         {
         }
 
-        public override async void Translate(ITranslationSession translationSession)
+        public override async Task Translate(ITranslationSession translationSession)
         {
             using (var client = new TerminologyClient(_binding, _endpoint))
             {

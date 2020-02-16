@@ -54,7 +54,7 @@
                 {
                     var translatorTasks = Translators
                         .Where(t => t.IsEnabled)
-                        .Select(t => Task.Run(() => { t.Translate(session); }))
+                        .Select(t => t.Translate(session))
                         .ToArray();
 
                     Task.WaitAll(translatorTasks);

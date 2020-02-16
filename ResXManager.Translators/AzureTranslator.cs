@@ -41,7 +41,7 @@ namespace ResXManager.Translators
         [DataMember]
         public int MaxCharactersPerMinute { get; set; } = 33300;
 
-        public override async void Translate(ITranslationSession translationSession)
+        public override async Task Translate(ITranslationSession translationSession)
         {
             try
             {

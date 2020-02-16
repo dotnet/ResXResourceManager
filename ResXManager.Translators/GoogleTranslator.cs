@@ -52,7 +52,7 @@
         [CanBeNull]
         private string ApiKey => Credentials[0].Value;
 
-        public override async void Translate(ITranslationSession translationSession)
+        public override async Task Translate(ITranslationSession translationSession)
         {
             if (string.IsNullOrEmpty(ApiKey))
             {

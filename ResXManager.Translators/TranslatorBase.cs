@@ -6,6 +6,7 @@ namespace ResXManager.Translators
     using System.Net;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
 
     using JetBrains.Annotations;
 
@@ -43,7 +44,7 @@ namespace ResXManager.Translators
 
         public IList<ICredentialItem> Credentials { get; }
 
-        public abstract void Translate(ITranslationSession translationSession);
+        public abstract Task Translate(ITranslationSession translationSession);
 
         [NotNull]
         protected static string RemoveKeyboardShortcutIndicators([NotNull] string value)
