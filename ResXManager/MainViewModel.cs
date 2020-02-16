@@ -8,6 +8,7 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
 
@@ -27,12 +28,10 @@
     [VisualCompositionExport(RegionId.Main)]
     internal class MainViewModel : ObservableObject
     {
-        [NotNull]
         private readonly ITracer _tracer;
-        [NotNull]
         private readonly Configuration _configuration;
-        [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
+        private readonly PowerShellProcessor _powerShell;
 
         [ImportingConstructor]
         public MainViewModel([NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, [NotNull] ResourceViewModel resourceViewModel, [NotNull] ITracer tracer, [NotNull] SourceFilesProvider sourceFilesProvider)
@@ -41,6 +40,7 @@
             _configuration = configuration;
             _resourceViewModel = resourceViewModel;
             _tracer = tracer;
+            _powerShell = new PowerShellProcessor(tracer);
             SourceFilesProvider = sourceFilesProvider;
 
             resourceManager.BeginEditing += ResourceManager_BeginEditing;
@@ -68,25 +68,17 @@
             }
         }
 
-        private void ResourceManager_ProjectFileSaved(object sender, ProjectFileEventArgs e)
+        private async void ResourceManager_ProjectFileSaved(object sender, ProjectFileEventArgs e)
         {
-            var folder = SourceFilesProvider.Folder;
-            if (string.IsNullOrEmpty(folder))
+            var solutionFolder = SourceFilesProvider.Folder;
+            if (string.IsNullOrEmpty(solutionFolder))
                 return;
 
-            var scriptFile = Path.Combine(folder, "Resources.ps1");
+            var scriptFile = Path.Combine(solutionFolder, "Resources.ps1");
             if (!File.Exists(scriptFile))
                 return;
 
-            var startInfo = new ProcessStartInfo()
-            {
-                FileName = @"PowerShell.exe",
-                Arguments = $@"-NoProfile -ExecutionPolicy Bypass -file ""{scriptFile}"" -solutionDir ""{folder}"" -resourceFile ""{e.ProjectFile.FilePath}"" -resourceLanguage ""{e.Language.Culture}""",
-                CreateNoWindow = true,
-                WorkingDirectory = typeof(Scripting.Host).Assembly.Location
-            };
-
-            Process.Start(startInfo);
+            await _powerShell.Run(solutionFolder, scriptFile);
         }
 
         [NotNull]
@@ -231,6 +223,103 @@
         private static string FormatFileNames([NotNull][ItemNotNull] IEnumerable<string> lockedFiles)
         {
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
+        }
+
+        private class PowerShellProcessor
+        {
+            private readonly ITracer _tracer;
+
+            [CanBeNull]
+            private readonly string _powerShellPath = FindInPath("PowerShell.exe");
+
+            private bool _isConverting;
+            private bool _isConversionRequestPending;
+
+            // ReSharper disable once AssignNullToNotNullAttribute
+            private readonly string _workingDirectory = Path.GetDirectoryName(typeof(Scripting.Host).Assembly.Location);
+
+            public PowerShellProcessor(ITracer tracer)
+            {
+                _tracer = tracer;
+            }
+
+            public async Task Run(string solutionFolder, string scriptFile)
+            {
+                if (_powerShellPath == null)
+                    return;
+
+                if (_isConverting)
+                {
+                    _isConversionRequestPending = true;
+                    return;
+                }
+
+                _isConverting = true;
+
+                while (true)
+                {
+                    try
+                    {
+                        await Task.Run(async () =>
+                        {
+                            var startInfo = new ProcessStartInfo()
+                            {
+                                FileName = _powerShellPath,
+                                Arguments = $@"-NoProfile -ExecutionPolicy Bypass -file ""{scriptFile}"" -solutionDir ""{solutionFolder}""",
+                                CreateNoWindow = true,
+                                WorkingDirectory = _workingDirectory,
+                                UseShellExecute = false,
+                                RedirectStandardError = true,
+                                RedirectStandardOutput = true
+                            };
+
+                            var process = Process.Start(startInfo);
+                            if (process == null)
+                                return;
+
+                            if (!process.WaitForExit(10000))
+                            {
+                                process.Kill();
+                            }
+                            else
+                            {
+                                var errors = await process.StandardError.ReadToEndAsync();
+                                if (!string.IsNullOrEmpty(errors))
+                                {
+                                    _tracer.TraceError("PowerShell: " + errors);
+                                }
+
+                                var value = await process.StandardOutput.ReadToEndAsync();
+                                if (!string.IsNullOrEmpty(value))
+                                {
+                                    _tracer.WriteLine("PowerShell: " + value);
+                                }
+                            }
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        _tracer.TraceError(ex.ToString());
+                    }
+
+                    if (!_isConversionRequestPending)
+                    {
+                        _isConverting = false;
+                        return;
+                    }
+
+                    _isConversionRequestPending = false;
+                }
+            }
+
+            [CanBeNull]
+            private static string FindInPath(string fileName)
+            {
+                return Environment.GetEnvironmentVariable("PATH")?
+                    .Split(';')
+                    .Select(item => Path.Combine(item.Trim(), fileName))
+                    .FirstOrDefault(File.Exists);
+            }
         }
     }
 

@@ -57,7 +57,6 @@
         [NotNull]
         private ResourceTableEntryRules Rules => Configuration.Rules;
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceTableEntry" /> class.
         /// </summary>
@@ -130,11 +129,9 @@
         /// <summary>
         /// Gets the key of the resource.
         /// </summary>
-        [NotNull]
+        [NotNull, OnChangedMethod(nameof(OnKeyChanged))]
         // ReSharper disable once MemberCanBePrivate.Global => Implicit bound to data grid.
         public string Key { get; set; } = string.Empty;
-
-        [UsedImplicitly] // PropertyChanged.Fody
         private void OnKeyChanged()
         {
             _keyValidationError = null;
@@ -325,8 +322,12 @@
         [CanBeNull]
         public ReadOnlyCollection<CodeReference> CodeReferences { get; internal set; }
 
-        [UsedImplicitly]
+        [UsedImplicitly, OnChangedMethod(nameof(OnIndexChanged))]
         public double Index { get; set; }
+        private void OnIndexChanged()
+        {
+            Container.OnIndexChanged(this);
+        }
 
         /// <summary>
         /// Updates the index to it's actual value only, without trying to adjust the file content.
@@ -339,12 +340,6 @@
 
             Index.SetBackingField(value);
             OnPropertyChanged(nameof(Index));
-        }
-
-        [UsedImplicitly] // PropertyChanged.Fody
-        private void OnIndexChanged()
-        {
-            Container.OnIndexChanged(this);
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
