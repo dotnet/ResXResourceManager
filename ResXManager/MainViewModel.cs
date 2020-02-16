@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.Composition;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -44,6 +45,7 @@
 
             resourceManager.BeginEditing += ResourceManager_BeginEditing;
             resourceManager.Reloading += ResourceManager_Reloading;
+            resourceManager.ProjectFileSaved += ResourceManager_ProjectFileSaved;
 
             try
             {
@@ -64,6 +66,27 @@
                 _tracer.TraceError(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void ResourceManager_ProjectFileSaved(object sender, ProjectFileEventArgs e)
+        {
+            var folder = SourceFilesProvider.Folder;
+            if (string.IsNullOrEmpty(folder))
+                return;
+
+            var scriptFile = Path.Combine(folder, "Resources.ps1");
+            if (!File.Exists(scriptFile))
+                return;
+
+            var startInfo = new ProcessStartInfo()
+            {
+                FileName = @"PowerShell.exe",
+                Arguments = $@"-NoProfile -ExecutionPolicy Bypass -file ""{scriptFile}"" -solutionDir ""{folder}"" -resourceFile ""{e.ProjectFile.FilePath}"" -resourceLanguage ""{e.Language.Culture}""",
+                CreateNoWindow = true,
+                WorkingDirectory = typeof(Scripting.Host).Assembly.Location
+            };
+
+            Process.Start(startInfo);
         }
 
         [NotNull]

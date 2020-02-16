@@ -27,11 +27,9 @@
 
             _compositionCatalog = new AggregateCatalog();
             _compositionContainer = new CompositionContainer(_compositionCatalog, true);
-            //_exportProvider = new ExportProviderAdapter(_compositionContainer);
-            //_compositionContainer.ComposeExportedValue(_exportProvider);
-
-            // ReSharper disable once AssignNullToNotNullAttribute
-            _compositionCatalog.Catalogs.Add(new DirectoryCatalog(folder, "*.dll"));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Infrastructure.ITracer).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Model.GlobalExtensions).Assembly));
 
             _sourceFilesProvider = _compositionContainer.GetExportedValue<SourceFilesProvider>();
             ResourceManager = _compositionContainer.GetExportedValue<ResourceManager>();

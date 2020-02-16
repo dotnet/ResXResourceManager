@@ -44,8 +44,10 @@
             var folder = Path.GetDirectoryName(assembly.Location);
 
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
-            // ReSharper disable once AssignNullToNotNullAttribute
-            _compositionCatalog.Catalogs.Add(new DirectoryCatalog(folder, "*.dll"));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Infrastructure.ITracer).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Model.GlobalExtensions).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Translators.AzureTranslator).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.View.Appearance).Assembly));
 
             _compositionContainer.ComposeExportedValue(_exportProvider);
 
