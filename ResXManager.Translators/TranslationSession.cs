@@ -18,8 +18,9 @@
 
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        public TranslationSession([CanBeNull] CultureInfo sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull][ItemNotNull] ICollection<ITranslationItem> items)
+        public TranslationSession(TaskFactory mainThread, [CanBeNull] CultureInfo sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull][ItemNotNull] ICollection<ITranslationItem> items)
         {
+            MainThread = mainThread;
             SourceLanguage = sourceLanguage ?? neutralResourcesLanguage;
             NeutralResourcesLanguage = neutralResourcesLanguage;
             Items = items;
@@ -27,7 +28,7 @@
             Messages = new ReadOnlyObservableCollection<string>(_internalMessage);
         }
 
-        public TaskFactory MainThread { get; } = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
+        public TaskFactory MainThread { get; }
 
         public CultureInfo SourceLanguage { get; }
 
@@ -49,7 +50,13 @@
 
         public async void AddMessage(string text)
         {
-            await MainThread.StartNew(() => _internalMessage.Add(text), CancellationToken);
+            try
+            {
+                await MainThread.StartNew(() => _internalMessage.Add(text), CancellationToken);
+            }
+            catch (TaskCanceledException)
+            {
+            }
         }
 
         public void Cancel()

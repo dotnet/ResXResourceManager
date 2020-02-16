@@ -21,6 +21,7 @@
     public class TranslatorHost : IDisposable
     {
         private readonly ITranslator[] _translators;
+        private readonly TaskFactory _mainThread = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
 
         [CanBeNull]
         private ITranslationSession _activeSession;
@@ -38,6 +39,8 @@
             RegisterChangeEvents(translators);
         }
 
+        public event EventHandler<EventArgs> SessionStateChanged;
+
         public IEnumerable<ITranslator> Translators => _translators;
 
         [CanBeNull]
@@ -45,11 +48,13 @@
 
         public void StartSession([CanBeNull] CultureInfo sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull][ItemNotNull] ICollection<ITranslationItem> items)
         {
-            var session = new TranslationSession(sourceLanguage, neutralResourcesLanguage, items);
-            Interlocked.Exchange(ref _activeSession, session)?.Dispose();
-
             Task.Run(() =>
             {
+                var session = new TranslationSession(_mainThread, sourceLanguage, neutralResourcesLanguage, items);
+                Interlocked.Exchange(ref _activeSession, session)?.Dispose();
+
+                SessionStateChanged?.Invoke(this, EventArgs.Empty);
+
                 try
                 {
                     var translatorTasks = Translators
@@ -62,6 +67,7 @@
                 finally
                 {
                     session.Dispose();
+                    SessionStateChanged?.Invoke(this, EventArgs.Empty);
                 }
             });
         }

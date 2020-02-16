@@ -10,6 +10,8 @@
 
     using JetBrains.Annotations;
 
+    using PropertyChanged;
+
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.Translators;
@@ -26,7 +28,8 @@
     internal class TranslationsViewModel : ObservableObject
     {
         [NotNull]
-        private readonly TranslatorHost _translatorHost;
+        public TranslatorHost TranslatorHost { get; }
+
         [NotNull]
         private readonly ResourceManager _resourceManager;
         [NotNull]
@@ -35,7 +38,7 @@
         [ImportingConstructor]
         public TranslationsViewModel([NotNull] TranslatorHost translatorHost, [NotNull] ResourceManager resourceManager, [NotNull] ResourceViewModel resourceViewModel, [NotNull] Configuration configuration)
         {
-            _translatorHost = translatorHost;
+            TranslatorHost = translatorHost;
             _resourceManager = resourceManager;
             _resourceViewModel = resourceViewModel;
 
@@ -48,6 +51,12 @@
             var selectedTargetCultures = new ObservableCollection<CultureKey>();
             selectedTargetCultures.CollectionChanged += SelectedTargetCultures_CollectionChanged;
             SelectedTargetCultures = selectedTargetCultures;
+
+            TranslatorHost.SessionStateChanged += (_, __) => Dispatcher.BeginInvoke(() =>
+            {
+                OnPropertyChanged(nameof(TranslatorHost));
+                CommandManager.InvalidateRequerySuggested();
+            });
         }
 
         [NotNull, ItemNotNull]
@@ -56,13 +65,8 @@
         [NotNull]
         public Configuration Configuration { get; }
 
-        [NotNull, ItemNotNull]
-        public IEnumerable<ITranslator> Translators => _translatorHost.Translators;
-
-        [CanBeNull]
+        [CanBeNull, OnChangedMethod(nameof(OnSourceCultureChanged))]
         public CultureKey SourceCulture { get; set; }
-
-        [UsedImplicitly] // PropertyChanged.Fody
         private void OnSourceCultureChanged()
         {
             AllTargetCultures = _resourceManager
@@ -70,10 +74,8 @@
                 .ObservableWhere(key => key != SourceCulture);
         }
 
-        [NotNull, ItemNotNull]
+        [NotNull, ItemNotNull, OnChangedMethod(nameof(OnAllTargetCulturesChanged))]
         public ICollection<CultureKey> AllTargetCultures { get; private set; } = Array.Empty<CultureKey>();
-
-        [UsedImplicitly] // PropertyChanged.Fody
         private void OnAllTargetCulturesChanged()
         {
             var selectedCultures = AllTargetCultures.Except(UnselectedTargetCultures).OrderBy(c => c).ToArray();
@@ -91,16 +93,19 @@
         public ICollection<ITranslationItem> SelectedItems { get; } = new ObservableCollection<ITranslationItem>();
 
         [NotNull]
-        public ICommand InitCommand => new DelegateCommand(() => _translatorHost.ActiveSession == null, () => UpdateTargetList());
+        public ICommand InitCommand => new DelegateCommand(() => !HasTranslationResults, UpdateTargetList);
 
         [NotNull]
-        public ICommand RestartCommand => new DelegateCommand(() => SourceCulture != null, UpdateTargetListAndRestart);
+        public ICommand StartCommand => new DelegateCommand(() => SourceCulture != null && Items.Any() && !HasTranslationResults, StartSession);
 
         [NotNull]
-        public ICommand ApplyAllCommand => new DelegateCommand(() => IsSessionComplete && Items.Any(), () => Apply(Items));
+        public ICommand DiscardCommand => new DelegateCommand(() => IsSessionComplete && HasTranslationResults, UpdateTargetList);
 
         [NotNull]
-        public ICommand ApplySelectedCommand => new DelegateCommand(() => IsSessionComplete && SelectedItems.Any(), () => Apply(SelectedItems));
+        public ICommand ApplyAllCommand => new DelegateCommand(() => IsSessionComplete && Items.Any(item => item.Results.Any()), () => Apply(Items));
+
+        [NotNull]
+        public ICommand ApplySelectedCommand => new DelegateCommand(() => IsSessionComplete && SelectedItems.Any(item => item.Results.Any()), () => Apply(SelectedItems));
 
         [NotNull]
         public ICommand StopCommand => new DelegateCommand(() => IsSessionRunning, Stop);
@@ -115,7 +120,7 @@
 
         private void Stop()
         {
-            _translatorHost.ActiveSession?.Cancel();
+            TranslatorHost.ActiveSession?.Cancel();
         }
 
         private void Apply([NotNull, ItemNotNull] IEnumerable<ITranslationItem> items)
@@ -131,9 +136,11 @@
             }
         }
 
-        private bool IsSessionComplete => _translatorHost.ActiveSession?.IsComplete == true;
+        private bool IsSessionComplete => TranslatorHost.ActiveSession?.IsComplete == true;
 
-        private bool IsSessionRunning => _translatorHost.ActiveSession?.IsRunning() == true;
+        private bool IsSessionRunning => TranslatorHost.ActiveSession?.IsActive == true;
+
+        private bool HasTranslationResults => Items.Any(item => item.Results.Any(r => r.Translator != null));
 
         [NotNull]
         [ItemNotNull]
@@ -152,8 +159,7 @@
             }
         }
 
-        [CanBeNull]
-        private ICollection<ITranslationItem> UpdateTargetList()
+        private void UpdateTargetList()
         {
             SelectedItems.Clear();
 
@@ -161,25 +167,23 @@
             if (sourceCulture == null)
             {
                 Items = Array.Empty<TranslationItem>();
-                return null;
+                return;
             }
 
             var itemsToTranslate = GetItemsToTranslate(_resourceViewModel.ResourceTableEntries, sourceCulture, SelectedTargetCultures, Configuration.EffectiveTranslationPrefix);
 
             Items = new ObservableCollection<ITranslationItem>(itemsToTranslate);
-
-            return itemsToTranslate;
         }
 
-        private void UpdateTargetListAndRestart()
+        private void StartSession()
         {
-            var itemsToTranslate = UpdateTargetList();
-
             var sourceCulture = SourceCulture;
-            if (sourceCulture == null || itemsToTranslate == null)
+            if (sourceCulture == null)
                 return;
 
-            _translatorHost.StartSession(sourceCulture.Culture, Configuration.NeutralResourcesLanguage, itemsToTranslate);
+            var itemsToTranslate = Items.ToList();
+
+            TranslatorHost.StartSession(sourceCulture.Culture, Configuration.NeutralResourcesLanguage, itemsToTranslate);
         }
 
         [NotNull, ItemNotNull]
@@ -244,6 +248,7 @@
 
         private void SelectedTargetCultures_CollectionChanged([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
         {
+            UpdateTargetList();
             Dispatcher.BeginInvoke(() => UnselectedTargetCultures = AllTargetCultures.Concat(UnselectedTargetCultures).Distinct().Except(SelectedTargetCultures));
         }
 

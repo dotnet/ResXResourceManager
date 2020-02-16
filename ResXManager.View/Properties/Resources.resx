@@ -389,8 +389,8 @@ Use e.g. ".* - (?!Migrations)" to hide EF migrations.</value>
   <data name="Translations_ApplySelected" xml:space="preserve">
     <value>Apply Selected</value>
   </data>
-  <data name="Translations_Restart" xml:space="preserve">
-    <value>Restart</value>
+  <data name="Translations_Start" xml:space="preserve">
+    <value>Start</value>
   </data>
   <data name="Translations_Source" xml:space="preserve">
     <value>Source:</value>
@@ -443,5 +443,8 @@ Your ResXManager team.
   </data>
   <data name="Configuration_Rules" xml:space="preserve">
     <value>Consistency checks</value>
+  </data>
+  <data name="Translations_Discard" xml:space="preserve">
+    <value>Discard</value>
   </data>
 </root>

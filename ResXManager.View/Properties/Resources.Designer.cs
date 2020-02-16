@@ -1018,12 +1018,12 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Restart.
+        ///   Looks up a localized string similar to Discard.
         /// </summary>
         [NotNull]
-        public static string Translations_Restart {
+        public static string Translations_Discard {
             get {
-                return ResourceManager.GetString("Translations_Restart", resourceCulture) ?? string.Empty;
+                return ResourceManager.GetString("Translations_Discard", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -1034,6 +1034,16 @@ namespace ResXManager.View.Properties {
         public static string Translations_Source {
             get {
                 return ResourceManager.GetString("Translations_Source", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        [NotNull]
+        public static string Translations_Start {
+            get {
+                return ResourceManager.GetString("Translations_Start", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -1491,13 +1501,17 @@ namespace ResXManager.View.Properties {
         /// </summary>
         Translations_ApplySelected,
         /// <summary>
-        ///   Looks up a localized string similar to Restart.
+        ///   Looks up a localized string similar to Discard.
         /// </summary>
-        Translations_Restart,
+        Translations_Discard,
         /// <summary>
         ///   Looks up a localized string similar to Source:.
         /// </summary>
         Translations_Source,
+        /// <summary>
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        Translations_Start,
         /// <summary>
         ///   Looks up a localized string similar to Stop.
         /// </summary>

@@ -383,8 +383,8 @@ Z.B. ".* - (?!Migrations)" um EF Migrationsdateien auszublenden.</value>
   <data name="Translations_ApplySelected" xml:space="preserve">
     <value>Ausgewählte anwenden</value>
   </data>
-  <data name="Translations_Restart" xml:space="preserve">
-    <value>Neu starten</value>
+  <data name="Translations_Start" xml:space="preserve">
+    <value>Start</value>
   </data>
   <data name="Translations_Source" xml:space="preserve">
     <value>Quelle:</value>
@@ -433,5 +433,8 @@ Ihr ResXManager-Team.
   </data>
   <data name="Configuration_Rules" xml:space="preserve">
     <value>Konzistenzchecks</value>
+  </data>
+  <data name="Translations_Discard" xml:space="preserve">
+    <value>Verwerfen</value>
   </data>
 </root>

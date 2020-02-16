@@ -236,9 +236,6 @@
   <data name="Translations_Source" xml:space="preserve">
     <value>源：</value>
   </data>
-  <data name="Translations_Restart" xml:space="preserve">
-    <value>重启</value>
-  </data>
   <data name="Translations_ApplySelected" xml:space="preserve">
     <value>应用选择</value>
   </data>
@@ -434,5 +431,11 @@ ResXManager 团队
   </data>
   <data name="Configuration_Rules" xml:space="preserve">
     <value>一致性检查</value>
+  </data>
+  <data name="Translations_Start" xml:space="preserve">
+    <value>开始</value>
+  </data>
+  <data name="Translations_Discard" xml:space="preserve">
+    <value>丢弃</value>
   </data>
 </root>

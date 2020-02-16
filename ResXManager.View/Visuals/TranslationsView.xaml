@@ -40,25 +40,30 @@
         <Button Command="{Binding ApplySelectedCommand}">
           <ContentControl Content="{x:Static properties:Resources.Translations_ApplySelected}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
-        <Button Command="{Binding RestartCommand}">
-          <ContentControl Content="{x:Static properties:Resources.Translations_Restart}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+        <Button Command="{Binding DiscardCommand}">
+          <ContentControl Content="{x:Static properties:Resources.Translations_Discard}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
         </Button>
-        <Button Command="{Binding StopCommand}">
-          <ContentControl Content="{x:Static properties:Resources.Translations_Stop}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
-        </Button>
+        <Grid>
+          <Button Command="{Binding StartCommand}">
+            <ContentControl Content="{x:Static properties:Resources.Translations_Start}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          </Button>
+          <Button Command="{Binding StopCommand}" Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Converter={x:Static toms:BooleanToVisibilityConverter.Default}}">
+            <ContentControl Content="{x:Static properties:Resources.Translations_Stop}" Style="{StaticResource {x:Static toms:ResourceKeys.SharedWidthContainerStyle}}" HorizontalContentAlignment="Center" />
+          </Button>
+        </Grid>
       </StackPanel>
       <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="100" HorizontalScrollBarVisibility="Auto">
-        <ItemsControl ItemsSource="{Binding TranslationSession.Messages}" Margin="5" Focusable="False" />
+        <ItemsControl ItemsSource="{Binding TranslatorHost.ActiveSession.Messages}" Margin="5" Focusable="False" />
       </ScrollViewer>
     </DockPanel>
     <Decorator Height="10" DockPanel.Dock="Bottom" />
     <Grid>
       <DockPanel>
-        <visuals:TranslatorConfiguration DockPanel.Dock="Top" IsEnabled="{Binding TranslationSession.IsComplete}" Translators="{Binding Translators}" />
+        <visuals:TranslatorConfiguration DockPanel.Dock="Top" IsEnabled="{Binding TranslatorHost.ActiveSession.IsComplete}" Translators="{Binding TranslatorHost.Translators}" />
         <Decorator Height="10" DockPanel.Dock="Top" />
         <DataGrid ItemsSource="{Binding Items}" Style="{DynamicResource {x:Static styles:ResourceKeys.DataGridStyle}}"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
-                  IsEnabled="{Binding TranslationSession.IsComplete}" toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedItems}">
+                  IsEnabled="{Binding TranslatorHost.ActiveSession.IsComplete}" toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedItems}">
           <DataGrid.RowHeaderTemplate>
             <DataTemplate DataType="DataGridRowHeader">
               <CheckBox Style="{StaticResource {x:Static toms:ResourceKeys.DataGridRowCheckBoxStyle}}" />
@@ -204,7 +209,7 @@
           </DataGrid.Columns>
         </DataGrid>
       </DockPanel>
-      <toms:LoadingIndicator IsActive="{Binding TranslationSession.IsActive}" Header="Translating..." d:IsHidden="True" />
+      <toms:LoadingIndicator IsActive="{Binding TranslatorHost.ActiveSession.IsActive}" Header="Translating..." d:IsHidden="True" />
     </Grid>
   </DockPanel>
   <Interactions:Interaction.Triggers>

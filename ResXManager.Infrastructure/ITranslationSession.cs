@@ -36,12 +36,4 @@
 
         void AddMessage([NotNull] string text);
     }
-
-    public static class SessionExtensionMethods
-    {
-        public static bool IsRunning(this ITranslationSession session)
-        {
-            return session.IsActive && !session.IsCanceled;
-        }
-    }
 }
