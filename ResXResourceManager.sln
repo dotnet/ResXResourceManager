@@ -40,6 +40,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{632FD1
 		Assets\DetectCodeReferences.png = Assets\DetectCodeReferences.png
 		Assets\DetectCodeReferencesConfig.png = Assets\DetectCodeReferencesConfig.png
 		Assets\Invariant.png = Assets\Invariant.png
+		Assets\Resources.ps1 = Assets\Resources.ps1
 		Assets\ShowOnlyErrors.png = Assets\ShowOnlyErrors.png
 		Assets\Snapshots.png = Assets\Snapshots.png
 		Assets\Translations.png = Assets\Translations.png
