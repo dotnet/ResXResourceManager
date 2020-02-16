@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Infrastructure
+﻿namespace ResXManager.Infrastructure
 {
     public static class RegionId
     {

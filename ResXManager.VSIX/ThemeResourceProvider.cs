@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.VSIX
+﻿namespace ResXManager.VSIX
 {
     using System.ComponentModel.Composition;
     using System.Windows;

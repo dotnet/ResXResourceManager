@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Visuals
+﻿namespace ResXManager.View.Visuals
 {
     using System;
     using System.ComponentModel.Composition;

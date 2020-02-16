@@ -7,8 +7,8 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
 
     internal class ResourceScope : IResourceScope
     {

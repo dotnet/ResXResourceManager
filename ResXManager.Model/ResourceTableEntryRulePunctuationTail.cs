@@ -1,10 +1,10 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿namespace ResXManager.Model
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    using tomenglertde.ResXManager.Model.Properties;
+    using ResXManager.Model.Properties;
     
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRulePunctuationTail_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRulePunctuationTail_Description)]

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace tomenglertde.ResXManager.Translators.Properties {
+namespace ResXManager.Translators.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

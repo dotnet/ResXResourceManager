@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿namespace ResXManager.Model
 {
     using System;
     using System.Collections.Generic;
@@ -13,7 +13,7 @@
 
     using PropertyChanged;
 
-    using tomenglertde.ResXManager.Infrastructure;
+    using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.ObservableCollections;

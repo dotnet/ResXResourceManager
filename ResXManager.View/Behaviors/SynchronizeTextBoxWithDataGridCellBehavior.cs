@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Behaviors
+﻿namespace ResXManager.View.Behaviors
 {
     using System;
     using System.Windows;
@@ -10,7 +10,7 @@
 
     using Microsoft.Xaml.Behaviors;
 
-    using tomenglertde.ResXManager.View.ColumnHeaders;
+    using ResXManager.View.ColumnHeaders;
 
     public class SynchronizeTextBoxWithDataGridCellBehavior : Behavior<TextBox>
     {

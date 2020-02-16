@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.VSIX
+﻿namespace ResXManager.VSIX
 {
     using System;
     using System.ComponentModel;
@@ -8,8 +8,8 @@
 
     using Microsoft.VisualStudio.Shell;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
 
     [Export(typeof(IConfiguration))]
     [Export(typeof(Configuration))]

@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View
+﻿namespace ResXManager.View
 {
     using System.Windows;
 

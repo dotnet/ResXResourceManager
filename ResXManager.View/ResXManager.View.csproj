@@ -7,7 +7,7 @@
     <ProjectGuid>{32935FC5-1F28-419C-B67F-12D2014F8A8B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>tomenglertde.ResXManager.View</RootNamespace>
+    <RootNamespace>ResXManager.View</RootNamespace>
     <AssemblyName>ResXManager.View</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

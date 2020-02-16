@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Translators.Properties
+﻿namespace ResXManager.Translators.Properties
 {
     internal sealed partial class Settings
     {

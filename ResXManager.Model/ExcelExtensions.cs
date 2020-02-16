@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿namespace ResXManager.Model
 {
     using System;
     using System.Collections.Generic;
@@ -12,8 +12,8 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model.Properties;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model.Properties;
 
     public enum ExcelExportMode
     {

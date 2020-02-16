@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Tools
+﻿namespace ResXManager.View.Tools
 {
     using System;
     using System.Windows;
@@ -7,7 +7,7 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
+    using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
@@ -28,7 +28,7 @@
         }
 #pragma warning disable CA1200 // Avoid using cref tags with a prefix
         /// <summary>
-        /// Identifies the <see cref="P:tomenglertde.ResXManager.View.Tools.Spellcheck.IsEnabled"/> attached property
+        /// Identifies the <see cref="P:ResXManager.View.Tools.Spellcheck.IsEnabled"/> attached property
         /// </summary>
         /// <AttachedPropertyComments>
         /// <summary>

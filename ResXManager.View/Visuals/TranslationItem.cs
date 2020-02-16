@@ -1,4 +1,4 @@
-namespace tomenglertde.ResXManager.View.Visuals
+namespace ResXManager.View.Visuals
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -9,8 +9,8 @@ namespace tomenglertde.ResXManager.View.Visuals
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
 
     using TomsToolbox.Wpf;
 

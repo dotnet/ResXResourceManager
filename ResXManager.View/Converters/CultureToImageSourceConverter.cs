@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Converters
+﻿namespace ResXManager.View.Converters
 {
     using System;
     using System.ComponentModel.Composition;
@@ -10,8 +10,8 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Tools;
+    using ResXManager.Model;
+    using ResXManager.View.Tools;
 
     using TomsToolbox.Essentials;
 

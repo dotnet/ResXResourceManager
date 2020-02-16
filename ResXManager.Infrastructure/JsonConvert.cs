@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Infrastructure
+﻿namespace ResXManager.Infrastructure
 {
     using JetBrains.Annotations;
 

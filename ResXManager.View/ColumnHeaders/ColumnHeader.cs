@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
+﻿namespace ResXManager.View.ColumnHeaders
 {
     using System.Windows.Controls;
 

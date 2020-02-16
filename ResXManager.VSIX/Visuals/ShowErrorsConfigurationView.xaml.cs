@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.VSIX.Visuals
+﻿namespace ResXManager.VSIX.Visuals
 {
     using TomsToolbox.Wpf.Composition.Mef;
 

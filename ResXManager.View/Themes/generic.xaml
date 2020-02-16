@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
-                    xmlns:themes="clr-namespace:tomenglertde.ResXManager.View.Themes"
-                    xmlns:properties="clr-namespace:tomenglertde.ResXManager.View.Properties"
+                    xmlns:themes="clr-namespace:ResXManager.View.Themes"
+                    xmlns:properties="clr-namespace:ResXManager.View.Properties"
                     xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors">
 
   <DataTemplate DataType="ContentControl" x:Key="{x:Static themes:ResourceKeys.MenuItemDropDownDataTemplate}">

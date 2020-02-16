@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.VSIX
+﻿namespace ResXManager.VSIX
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,7 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Model;
+    using ResXManager.Model;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;

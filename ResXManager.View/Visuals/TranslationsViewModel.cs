@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Visuals
+﻿namespace ResXManager.View.Visuals
 {
     using System;
     using System.Collections.Generic;
@@ -10,17 +10,17 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.Translators;
-    using tomenglertde.ResXManager.View.Properties;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
+    using ResXManager.Translators;
+    using ResXManager.View.Properties;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.ObservableCollections;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.Mef;
 
-    using Settings = tomenglertde.ResXManager.Model.Properties.Settings;
+    using Settings = ResXManager.Model.Properties.Settings;
 
     [VisualCompositionExport(RegionId.Content, Sequence = 2)]
     internal class TranslationsViewModel : ObservableObject

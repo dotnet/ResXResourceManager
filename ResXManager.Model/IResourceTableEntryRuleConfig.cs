@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿namespace ResXManager.Model
 {
     using System.ComponentModel;
 

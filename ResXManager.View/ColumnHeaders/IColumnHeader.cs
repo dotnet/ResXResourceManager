@@ -1,10 +1,10 @@
-﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
+﻿namespace ResXManager.View.ColumnHeaders
 {
     using System.Globalization;
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
+    using ResXManager.Infrastructure;
 
     public enum ColumnType
     {

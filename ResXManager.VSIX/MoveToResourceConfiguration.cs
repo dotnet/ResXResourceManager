@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.VSIX
+﻿namespace ResXManager.VSIX
 {
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -7,7 +7,7 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Model;
+    using ResXManager.Model;
 
     [DataContract]
     public sealed class MoveToResourceConfigurationItem : INotifyPropertyChanged

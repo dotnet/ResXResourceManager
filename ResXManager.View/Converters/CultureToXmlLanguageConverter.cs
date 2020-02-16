@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Converters
+﻿namespace ResXManager.View.Converters
 {
     using System;
     using System.Globalization;

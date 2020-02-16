@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Properties
+﻿namespace ResXManager.View.Properties
 {
     public sealed partial class Settings
     {

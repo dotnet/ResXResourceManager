@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Behaviors
+﻿namespace ResXManager.View.Behaviors
 {
     using System;
     using System.Collections.Specialized;
@@ -12,8 +12,8 @@
 
     using Throttle;
 
-    using tomenglertde.ResXManager.View.Properties;
-    using tomenglertde.ResXManager.View.Tools;
+    using ResXManager.View.Properties;
+    using ResXManager.View.Tools;
 
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;

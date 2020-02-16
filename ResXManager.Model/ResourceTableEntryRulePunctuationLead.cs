@@ -1,8 +1,8 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿namespace ResXManager.Model
 {
     using System.Collections.Generic;
 
-    using tomenglertde.ResXManager.Model.Properties;
+    using ResXManager.Model.Properties;
     
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRulePunctuationLead_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRulePunctuationLead_Description)]

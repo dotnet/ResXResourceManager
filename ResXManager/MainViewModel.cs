@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager
+﻿namespace ResXManager
 {
     using System;
     using System.Collections.Generic;
@@ -14,11 +14,11 @@
 
     using Microsoft.WindowsAPICodePack.Dialogs;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.Properties;
-    using tomenglertde.ResXManager.View.Tools;
-    using tomenglertde.ResXManager.View.Visuals;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
+    using ResXManager.Properties;
+    using ResXManager.View.Tools;
+    using ResXManager.View.Visuals;
 
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.Mef;

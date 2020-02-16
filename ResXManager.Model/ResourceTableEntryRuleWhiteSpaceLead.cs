@@ -1,11 +1,11 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿namespace ResXManager.Model
 {
     using System.Collections.Generic;
     using System.Linq;
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Model.Properties;
+    using ResXManager.Model.Properties;
     
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleWhiteSpaceLead_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleWhiteSpaceLead_Description)]

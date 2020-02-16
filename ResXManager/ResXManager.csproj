@@ -7,7 +7,7 @@
     <ProjectGuid>{40BE4188-6658-4DAC-B44E-DE4B7D0EE3A2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>tomenglertde.ResXManager</RootNamespace>
+    <RootNamespace>ResXManager</RootNamespace>
     <AssemblyName>ResXManager</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

@@ -15,11 +15,11 @@ using System.Windows.Markup;
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
 
 [assembly: XmlnsPrefix("urn:ResXManager.View", "view")]
-[assembly: XmlnsDefinition("urn:ResXManager.View", "tomenglertde.ResXManager.View")]
-[assembly: XmlnsDefinition("urn:ResXManager.View", "tomenglertde.ResXManager.View.Properties")]
-[assembly: XmlnsDefinition("urn:ResXManager.View", "tomenglertde.ResXManager.View.Behaviors")]
-[assembly: XmlnsDefinition("urn:ResXManager.View", "tomenglertde.ResXManager.View.ColumnHeaders")]
-[assembly: XmlnsDefinition("urn:ResXManager.View", "tomenglertde.ResXManager.View.Converters")]
-[assembly: XmlnsDefinition("urn:ResXManager.View", "tomenglertde.ResXManager.View.Visuals")]
+[assembly: XmlnsDefinition("urn:ResXManager.View", "ResXManager.View")]
+[assembly: XmlnsDefinition("urn:ResXManager.View", "ResXManager.View.Properties")]
+[assembly: XmlnsDefinition("urn:ResXManager.View", "ResXManager.View.Behaviors")]
+[assembly: XmlnsDefinition("urn:ResXManager.View", "ResXManager.View.ColumnHeaders")]
+[assembly: XmlnsDefinition("urn:ResXManager.View", "ResXManager.View.Converters")]
+[assembly: XmlnsDefinition("urn:ResXManager.View", "ResXManager.View.Visuals")]
 
 

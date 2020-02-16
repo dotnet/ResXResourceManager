@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿namespace ResXManager.Model
 {
     using System;
     using System.Collections;
@@ -7,8 +7,8 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model.Properties;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model.Properties;
 
     /// <summary>
     /// An indexer that maps the language to the localized string for a resource table entry with the specified resource key; 

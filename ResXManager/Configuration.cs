@@ -1,11 +1,11 @@
-﻿namespace tomenglertde.ResXManager
+﻿namespace ResXManager
 {
     using System.ComponentModel.Composition;
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
 
     [Export(typeof(IConfiguration))]
     [Export(typeof(Configuration))]

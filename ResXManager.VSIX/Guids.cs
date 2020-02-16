@@ -2,7 +2,7 @@
 // MUST match guids.h
 
 // ReSharper disable InconsistentNaming
-namespace tomenglertde.ResXManager.VSIX
+namespace ResXManager.VSIX
 {
     using System;
 

@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.VSIX
+﻿namespace ResXManager.VSIX
 {
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
@@ -6,8 +6,8 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Tools;
+    using ResXManager.Model;
+    using ResXManager.View.Tools;
 
     using TomsToolbox.Composition;
 

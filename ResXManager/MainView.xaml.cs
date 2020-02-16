@@ -1,11 +1,11 @@
-﻿namespace tomenglertde.ResXManager
+﻿namespace ResXManager
 {
     using System;
     using System.ComponentModel.Composition;
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
+    using ResXManager.Infrastructure;
 
     using TomsToolbox.Composition;
     using TomsToolbox.Wpf.Composition;

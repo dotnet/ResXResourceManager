@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.VSIX
+﻿namespace ResXManager.VSIX
 {
     using System;
 
@@ -7,7 +7,7 @@
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
 
-    using tomenglertde.ResXManager.Infrastructure;
+    using ResXManager.Infrastructure;
 
     public class OutputWindowTracer : ITracer
     {

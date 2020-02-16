@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.VSIX.Visuals
+﻿namespace ResXManager.VSIX.Visuals
 {
     using System;
     using System.ComponentModel.Composition;
@@ -8,8 +8,8 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.View.Themes;
+    using ResXManager.Infrastructure;
+    using ResXManager.View.Themes;
 
     using TomsToolbox.Composition;
     using TomsToolbox.Wpf;

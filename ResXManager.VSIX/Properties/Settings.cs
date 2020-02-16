@@ -1,10 +1,10 @@
-﻿namespace tomenglertde.ResXManager.VSIX.Properties
+﻿namespace ResXManager.VSIX.Properties
 {
     using System.Collections.Generic;
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
+    using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.ObservableCollections;

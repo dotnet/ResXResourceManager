@@ -19,7 +19,7 @@
 //  
 //------------------------------------------------------------------------------
 
-namespace tomenglertde.ResXManager.Model.Properties {
+namespace ResXManager.Model.Properties {
     using System;
 
     using JetBrains.Annotations;
@@ -49,7 +49,7 @@ namespace tomenglertde.ResXManager.Model.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("tomenglertde.ResXManager.Model.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ResXManager.Model.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

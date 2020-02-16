@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿namespace ResXManager.Model
 {
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -9,7 +9,7 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Model.Properties;
+    using ResXManager.Model.Properties;
 
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleStringFormat_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleStringFormat_Description)]

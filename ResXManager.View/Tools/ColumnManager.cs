@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Tools
+﻿namespace ResXManager.View.Tools
 {
     using System;
     using System.Collections.Generic;
@@ -14,12 +14,12 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.ColumnHeaders;
-    using tomenglertde.ResXManager.View.Converters;
-    using tomenglertde.ResXManager.View.Properties;
-    using tomenglertde.ResXManager.View.Visuals;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
+    using ResXManager.View.ColumnHeaders;
+    using ResXManager.View.Converters;
+    using ResXManager.View.Properties;
+    using ResXManager.View.Visuals;
 
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;

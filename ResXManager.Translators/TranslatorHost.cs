@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Translators
+﻿namespace ResXManager.Translators
 {
     using System;
     using System.Collections.Generic;
@@ -12,8 +12,8 @@
 
     using Throttle;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Translators.Properties;
+    using ResXManager.Infrastructure;
+    using ResXManager.Translators.Properties;
 
     using TomsToolbox.Wpf;
 

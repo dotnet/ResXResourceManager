@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Converters
+﻿namespace ResXManager.View.Converters
 {
     using System;
     using System.Globalization;
@@ -7,7 +7,7 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.View.ColumnHeaders;
+    using ResXManager.View.ColumnHeaders;
 
     public class LanguageColumnFilterConverter : IValueConverter
     {

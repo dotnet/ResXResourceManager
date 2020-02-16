@@ -7,7 +7,7 @@
     <ProjectGuid>{41E0911D-7C82-4B4F-B905-BF0B549BC9C4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>tomenglertde.ResXManager.VSIX</RootNamespace>
+    <RootNamespace>ResXManager.VSIX</RootNamespace>
     <AssemblyName>ResXManager.VSIX</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

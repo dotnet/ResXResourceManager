@@ -2,7 +2,7 @@
 // MUST match PkgCmdID.h
 
 // ReSharper disable InconsistentNaming
-namespace tomenglertde.ResXManager.VSIX
+namespace ResXManager.VSIX
 {
     internal static class PkgCmdIdList
     {

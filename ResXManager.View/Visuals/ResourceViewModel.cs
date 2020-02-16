@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Visuals
+﻿namespace ResXManager.View.Visuals
 {
     using System;
     using System.Collections;
@@ -19,11 +19,11 @@
 
     using Throttle;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.ColumnHeaders;
-    using tomenglertde.ResXManager.View.Properties;
-    using tomenglertde.ResXManager.View.Tools;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
+    using ResXManager.View.ColumnHeaders;
+    using ResXManager.View.Properties;
+    using ResXManager.View.Tools;
 
     using TomsToolbox.ObservableCollections;
     using TomsToolbox.Wpf;

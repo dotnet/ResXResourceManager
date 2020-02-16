@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Translators
+﻿namespace ResXManager.Translators
 {
     using TomsToolbox.Wpf.Composition.Mef;
 

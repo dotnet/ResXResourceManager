@@ -1,12 +1,12 @@
-﻿namespace tomenglertde.ResXManager.View.ColumnHeaders
+﻿namespace ResXManager.View.ColumnHeaders
 {
     using System.Globalization;
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Properties;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
+    using ResXManager.View.Properties;
 
     public class LanguageHeader : LanguageColumnHeaderBase
     {

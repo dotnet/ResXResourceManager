@@ -1,9 +1,9 @@
-﻿namespace tomenglertde.ResXManager.View
+﻿namespace ResXManager.View
 {
     using System.ComponentModel.Composition;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.View.Properties;
+    using ResXManager.Infrastructure;
+    using ResXManager.View.Properties;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf.Composition;

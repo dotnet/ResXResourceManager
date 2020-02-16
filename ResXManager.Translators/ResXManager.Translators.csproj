@@ -7,7 +7,7 @@
     <ProjectGuid>{D8B0B04F-4273-45DB-AE2D-5A91C89E1225}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>tomenglertde.ResXManager.Translators</RootNamespace>
+    <RootNamespace>ResXManager.Translators</RootNamespace>
     <AssemblyName>ResXManager.Translators</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

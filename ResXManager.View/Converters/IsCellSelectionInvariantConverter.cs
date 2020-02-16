@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Converters
+﻿namespace ResXManager.View.Converters
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,7 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.View.Tools;
+    using ResXManager.View.Tools;
 
     public sealed class IsCellSelectionInvariantConverter : IValueConverter
     {

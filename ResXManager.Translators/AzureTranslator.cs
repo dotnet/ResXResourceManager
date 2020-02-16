@@ -1,4 +1,4 @@
-namespace tomenglertde.ResXManager.Translators
+namespace ResXManager.Translators
 {
     using System;
     using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace tomenglertde.ResXManager.Translators
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
+    using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;

@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Behaviors
+﻿namespace ResXManager.View.Behaviors
 {
     using System.Linq;
     using System.Windows.Controls;
@@ -7,8 +7,8 @@
 
     using Microsoft.Xaml.Behaviors;
 
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.ColumnHeaders;
+    using ResXManager.Model;
+    using ResXManager.View.ColumnHeaders;
 
     public class DataGridTryBeginEditBehavior : Behavior<DataGrid>
     {

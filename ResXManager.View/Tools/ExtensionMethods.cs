@@ -1,4 +1,4 @@
-namespace tomenglertde.ResXManager.View.Tools
+namespace ResXManager.View.Tools
 {
     using System;
     using System.Collections.Generic;
@@ -13,9 +13,9 @@ namespace tomenglertde.ResXManager.View.Tools
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.ColumnHeaders;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
+    using ResXManager.View.ColumnHeaders;
 
     public static class ExtensionMethods
     {

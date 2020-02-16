@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="tomenglertde.ResXManager.VSIX.Visuals.CodeGeneratorView"
+﻿<UserControl x:Class="ResXManager.VSIX.Visuals.CodeGeneratorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
              xmlns:toms="urn:TomsToolbox"
              xmlns:model="urn:ResXManager.Model"
-             xmlns:vsix="clr-namespace:tomenglertde.ResXManager.VSIX"
+             xmlns:vsix="clr-namespace:ResXManager.VSIX"
              d:DataContext="{d:DesignInstance model:ResourceEntity}">
   <UserControl.Resources>
     <toms:CompositeConverter x:Key="ObjectToIconConverter">

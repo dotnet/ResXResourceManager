@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Converters
+﻿namespace ResXManager.View.Converters
 {
     using System;
     using System.ComponentModel.Composition;
@@ -7,7 +7,7 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Model;
+    using ResXManager.Model;
 
     [Export]
     public class CultureToDisplayNameConverter : IValueConverter

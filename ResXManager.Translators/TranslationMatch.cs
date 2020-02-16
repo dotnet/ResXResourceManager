@@ -1,10 +1,10 @@
-namespace tomenglertde.ResXManager.Translators
+namespace ResXManager.Translators
 {
     using System.Collections.Generic;
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
+    using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
 

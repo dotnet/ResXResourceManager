@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.VSIX
+﻿namespace ResXManager.VSIX
 {
     using System;
     using System.Collections.Generic;
@@ -24,12 +24,12 @@
 
     using Throttle;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Properties;
-    using tomenglertde.ResXManager.View.Tools;
-    using tomenglertde.ResXManager.View.Visuals;
-    using tomenglertde.ResXManager.VSIX.Visuals;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
+    using ResXManager.View.Properties;
+    using ResXManager.View.Tools;
+    using ResXManager.View.Visuals;
+    using ResXManager.VSIX.Visuals;
 
     using TomsToolbox.Composition;
     using TomsToolbox.Essentials;

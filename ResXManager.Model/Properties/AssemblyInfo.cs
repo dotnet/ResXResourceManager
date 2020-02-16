@@ -12,7 +12,7 @@ using System.Windows.Markup;
 [assembly: CLSCompliant(false)]
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
 
-[assembly: XmlnsDefinition("urn:ResXManager.Model", "tomenglertde.ResXManager.Model")]
-[assembly: XmlnsDefinition("urn:ResXManager.Model", "tomenglertde.ResXManager.Model.Properties")]
+[assembly: XmlnsDefinition("urn:ResXManager.Model", "ResXManager.Model")]
+[assembly: XmlnsDefinition("urn:ResXManager.Model", "ResXManager.Model.Properties")]
 
 

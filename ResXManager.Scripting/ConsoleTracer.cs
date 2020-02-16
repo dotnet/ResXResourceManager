@@ -3,7 +3,7 @@ namespace ResXManager.Scripting
     using System;
     using System.ComponentModel.Composition;
 
-    using tomenglertde.ResXManager.Infrastructure;
+    using ResXManager.Infrastructure;
 
     [Export(typeof(ITracer))]
     internal class ConsoleTracer : ITracer

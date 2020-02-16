@@ -10,9 +10,9 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.Model.Properties;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
+    using ResXManager.Model.Properties;
 
     public sealed class Host : IDisposable
     {

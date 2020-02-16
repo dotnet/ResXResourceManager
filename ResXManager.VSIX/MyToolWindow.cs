@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.VSIX
+﻿namespace ResXManager.VSIX
 {
     using System;
     using System.Collections.Generic;
@@ -22,10 +22,10 @@
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.Win32;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.Visuals;
-    using tomenglertde.ResXManager.VSIX.Visuals;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
+    using ResXManager.View.Visuals;
+    using ResXManager.VSIX.Visuals;
 
     using TomsToolbox.Composition;
     using TomsToolbox.Essentials;

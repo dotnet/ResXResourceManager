@@ -1,7 +1,7 @@
-﻿namespace tomenglertde.ResXManager.View.Visuals
+﻿namespace ResXManager.View.Visuals
 {
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.View.Properties;
+    using ResXManager.Infrastructure;
+    using ResXManager.View.Properties;
 
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.Mef;

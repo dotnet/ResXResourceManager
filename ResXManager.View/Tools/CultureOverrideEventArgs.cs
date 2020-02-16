@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Tools
+﻿namespace ResXManager.View.Tools
 {
     using System;
     using System.Globalization;

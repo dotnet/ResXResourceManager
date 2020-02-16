@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Visuals
+﻿namespace ResXManager.View.Visuals
 {
     using System.Collections.Specialized;
     using System.ComponentModel.Composition;
@@ -8,8 +8,8 @@
 
     using Throttle;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
 
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.Mef;

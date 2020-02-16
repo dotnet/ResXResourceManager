@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="tomenglertde.ResXManager.VSIX.Visuals.MoveToResourceConfigurationView"
+﻿<UserControl x:Class="ResXManager.VSIX.Visuals.MoveToResourceConfigurationView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="200"
-             xmlns:local="clr-namespace:tomenglertde.ResXManager.VSIX.Visuals"
+             xmlns:local="clr-namespace:ResXManager.VSIX.Visuals"
              xmlns:view="urn:ResXManager.View"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              d:DataContext="{d:DesignInstance local:MoveToResourceConfigurationViewModel}">

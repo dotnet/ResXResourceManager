@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Behaviors
+﻿namespace ResXManager.View.Behaviors
 {
     using System;
     using System.Text.RegularExpressions;

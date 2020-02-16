@@ -1,10 +1,10 @@
-﻿namespace tomenglertde.ResXManager.VSIX.Visuals
+﻿namespace ResXManager.VSIX.Visuals
 {
     using System.ComponentModel.Composition;
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
+    using ResXManager.Infrastructure;
 
     using TomsToolbox.Wpf.Composition.Mef;
 

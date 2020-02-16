@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Tools
+﻿namespace ResXManager.View.Tools
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +8,7 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.View.Properties;
+    using ResXManager.View.Properties;
 
     using TomsToolbox.Essentials;
 

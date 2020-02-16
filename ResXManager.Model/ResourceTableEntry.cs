@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿namespace ResXManager.Model
 {
     using System;
     using System.Collections.Generic;
@@ -19,8 +19,8 @@
 
     using Throttle;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model.Properties;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model.Properties;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;

@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Visuals
+﻿namespace ResXManager.View.Visuals
 {
     using System.Collections.Generic;
     using System.Windows;
@@ -6,7 +6,7 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
+    using ResXManager.Infrastructure;
 
     /// <summary>
     ///     Interaction logic for TranslatorConfiguration.xaml

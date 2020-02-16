@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Converters
+﻿namespace ResXManager.View.Converters
 {
     using System;
     using System.Collections.Generic;
@@ -10,9 +10,9 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.View.ColumnHeaders;
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
+    using ResXManager.View.ColumnHeaders;
 
     public class DataGridToSelectionScopeConverter : IValueConverter
     {

@@ -1,10 +1,10 @@
-﻿namespace tomenglertde.ResXManager.Model
+﻿namespace ResXManager.Model
 {
     using System.ComponentModel;
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
+    using ResXManager.Infrastructure;
 
     /// <summary>
     /// Provides data for the <see cref="ResourceManager.BeginEditing"/> event.

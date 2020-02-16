@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.VSIX.Visuals
+﻿namespace ResXManager.VSIX.Visuals
 {
     using System;
     using System.Collections.Generic;
@@ -18,8 +18,8 @@
 
     using Throttle;
 
-    using tomenglertde.ResXManager.Model;
-    using tomenglertde.ResXManager.VSIX.Properties;
+    using ResXManager.Model;
+    using ResXManager.VSIX.Properties;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;

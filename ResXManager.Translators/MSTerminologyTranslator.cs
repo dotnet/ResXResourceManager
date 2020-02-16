@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.Translators
+﻿namespace ResXManager.Translators
 {
     using System;
     using System.ComponentModel.Composition;
@@ -9,8 +9,8 @@
 
     using JetBrains.Annotations;
 
-    using tomenglertde.ResXManager.Infrastructure;
-    using tomenglertde.ResXManager.Translators.Microsoft.TerminologyService;
+    using ResXManager.Infrastructure;
+    using ResXManager.Translators.Microsoft.TerminologyService;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;

@@ -1,4 +1,4 @@
-﻿namespace tomenglertde.ResXManager.View.Themes
+﻿namespace ResXManager.View.Themes
 {
     using System.Windows;
 
