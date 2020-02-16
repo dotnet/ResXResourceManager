@@ -99,8 +99,7 @@
                                 parameters,
                                 translationSession.CancellationToken).ConfigureAwait(false);
 
-#pragma warning disable CS4014 // Because this call is not awaited ... => just push out results, no need to wait.
-                            translationSession.Dispatcher.BeginInvoke(() =>
+                            await translationSession.MainThread.StartNew(() =>
                             {
                                 foreach (var tuple in sourceItems.Zip(response.Data.Translations,
                                     (a, b) => new Tuple<ITranslationItem, string>(a, b.TranslatedText)))

@@ -102,8 +102,7 @@ namespace ResXManager.Translators
                                         var translations = JsonConvert.DeserializeObject<List<AzureTranslationResponse>>(reader.ReadToEnd());
                                         if (translations != null)
                                         {
-#pragma warning disable CS4014 // Because this call is not awaited ... => just push out results, no need to wait.
-                                            translationSession.Dispatcher.BeginInvoke(() => ReturnResults(sourceItems, translations));
+                                            await translationSession.MainThread.StartNew(() => ReturnResults(sourceItems, translations));
                                         }
                                     }
                                 }

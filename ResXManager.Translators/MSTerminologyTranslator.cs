@@ -70,7 +70,7 @@
                                 .Distinct(TranslationMatch.TextComparer);
 
 #pragma warning disable CS4014 // Because this call is not awaited ... => just push out results, no need to wait.
-                            translationSession.Dispatcher.BeginInvoke(() => item.Results.AddRange(matches));
+                            translationSession.MainThread.StartNew(() => item.Results.AddRange(matches));
                         }
                     }
                     catch (Exception ex)

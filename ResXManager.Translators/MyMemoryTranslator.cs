@@ -73,8 +73,7 @@
                         var targetCulture = translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage;
                         var result = await TranslateTextAsync(client, translationItem.Source, Key, translationSession.SourceLanguage, targetCulture, translationSession.CancellationToken);
 
-#pragma warning disable CS4014 // Because this call is not awaited ... => just push out results, no need to wait.
-                        translationSession.Dispatcher.BeginInvoke(() =>
+                        await translationSession.MainThread.StartNew(() =>
                         {
                             if (result?.Matches != null)
                             {

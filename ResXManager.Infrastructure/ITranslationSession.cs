@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Threading;
-    using System.Windows.Threading;
+    using System.Threading.Tasks;
 
     using JetBrains.Annotations;
 
@@ -32,7 +32,7 @@
 
         CultureInfo SourceLanguage { get; }
 
-        Dispatcher Dispatcher { get; }
+        TaskFactory MainThread { get; }
 
         void AddMessage([NotNull] string text);
     }

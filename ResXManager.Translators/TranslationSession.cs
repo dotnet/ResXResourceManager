@@ -1,20 +1,17 @@
 ﻿namespace ResXManager.Translators
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Globalization;
     using System.Threading;
-    using System.Windows.Threading;
+    using System.Threading.Tasks;
 
     using JetBrains.Annotations;
 
     using ResXManager.Infrastructure;
 
-    using TomsToolbox.Wpf;
-
-    public sealed class TranslationSession : INotifyPropertyChanged, ITranslationSession, IDisposable
+    public sealed class TranslationSession : INotifyPropertyChanged, ITranslationSession
     {
         [ItemNotNull]
         private readonly ObservableCollection<string> _internalMessage = new ObservableCollection<string>();
@@ -30,7 +27,7 @@
             Messages = new ReadOnlyObservableCollection<string>(_internalMessage);
         }
 
-        public Dispatcher Dispatcher { get; } = Dispatcher.CurrentDispatcher;
+        public TaskFactory MainThread { get; } = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
 
         public CultureInfo SourceLanguage { get; }
 
@@ -50,9 +47,9 @@
 
         public IList<string> Messages { get; }
 
-        public void AddMessage(string text)
+        public async void AddMessage(string text)
         {
-            Dispatcher.BeginInvoke(() => _internalMessage.Add(text));
+            await MainThread.StartNew(() => _internalMessage.Add(text), CancellationToken);
         }
 
         public void Cancel()
