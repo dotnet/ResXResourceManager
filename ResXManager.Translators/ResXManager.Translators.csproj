@@ -133,16 +133,16 @@
     <None Include="Service References\Microsoft.TerminologyService\Terminology3.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\Microsoft.TerminologyService\tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Capability.datasource">
+    <None Include="Service References\Microsoft.TerminologyService\ResXManager.Translators.Microsoft.TerminologyService.Capability.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\Microsoft.TerminologyService\tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Languages.datasource">
+    <None Include="Service References\Microsoft.TerminologyService\ResXManager.Translators.Microsoft.TerminologyService.Languages.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\Microsoft.TerminologyService\tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Matches.datasource">
+    <None Include="Service References\Microsoft.TerminologyService\ResXManager.Translators.Microsoft.TerminologyService.Matches.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\Microsoft.TerminologyService\tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Products.datasource">
+    <None Include="Service References\Microsoft.TerminologyService\ResXManager.Translators.Microsoft.TerminologyService.Products.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
   </ItemGroup>

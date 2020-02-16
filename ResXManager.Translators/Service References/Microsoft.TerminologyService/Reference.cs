@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
+namespace ResXManager.Translators.Microsoft.TerminologyService {
     using System.Runtime.Serialization;
     using System;
     
@@ -47,7 +47,7 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.CollectionDataContractAttribute(Name="TranslationSources", Namespace="http://api.terminology.microsoft.com/terminology", ItemName="TranslationSource")]
     [System.SerializableAttribute()]
-    internal class TranslationSources : System.Collections.Generic.List<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.TranslationSource> {
+    internal class TranslationSources : System.Collections.Generic.List<ResXManager.Translators.Microsoft.TerminologyService.TranslationSource> {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
@@ -66,14 +66,14 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Products", Namespace="http://api.terminology.microsoft.com/terminology", ItemName="Product")]
     [System.SerializableAttribute()]
-    internal class Products : System.Collections.Generic.List<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Product> {
+    internal class Products : System.Collections.Generic.List<ResXManager.Translators.Microsoft.TerminologyService.Product> {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Product", Namespace="http://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
-    internal partial class Product : tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.EntityBase {
+    internal partial class Product : ResXManager.Translators.Microsoft.TerminologyService.EntityBase {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int IdField;
@@ -82,7 +82,7 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
         private string NameField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Versions VersionsField;
+        private ResXManager.Translators.Microsoft.TerminologyService.Versions VersionsField;
         
         [System.Runtime.Serialization.DataMemberAttribute()]
         internal int Id {
@@ -111,7 +111,7 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        internal tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Versions Versions {
+        internal ResXManager.Translators.Microsoft.TerminologyService.Versions Versions {
             get {
                 return this.VersionsField;
             }
@@ -128,9 +128,9 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="EntityBase", Namespace="http://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Version))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Language))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Product))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.Version))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.Language))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.Product))]
     internal partial class EntityBase : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
@@ -160,7 +160,7 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Version", Namespace="http://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
-    internal partial class Version : tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.EntityBase {
+    internal partial class Version : ResXManager.Translators.Microsoft.TerminologyService.EntityBase {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int IdField;
@@ -199,7 +199,7 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Language", Namespace="http://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
-    internal partial class Language : tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.EntityBase {
+    internal partial class Language : ResXManager.Translators.Microsoft.TerminologyService.EntityBase {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string CodeField;
@@ -222,14 +222,14 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Versions", Namespace="http://api.terminology.microsoft.com/terminology", ItemName="Version")]
     [System.SerializableAttribute()]
-    internal class Versions : System.Collections.Generic.List<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Version> {
+    internal class Versions : System.Collections.Generic.List<ResXManager.Translators.Microsoft.TerminologyService.Version> {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Matches", Namespace="http://api.terminology.microsoft.com/terminology", ItemName="Match")]
     [System.SerializableAttribute()]
-    internal class Matches : System.Collections.Generic.List<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Match> {
+    internal class Matches : System.Collections.Generic.List<ResXManager.Translators.Microsoft.TerminologyService.Match> {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -260,10 +260,10 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
         private string ProductVersionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Nullable<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.TranslationSource> SourceField;
+        private System.Nullable<ResXManager.Translators.Microsoft.TerminologyService.TranslationSource> SourceField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Translations TranslationsField;
+        private ResXManager.Translators.Microsoft.TerminologyService.Translations TranslationsField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -354,7 +354,7 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        internal System.Nullable<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.TranslationSource> Source {
+        internal System.Nullable<ResXManager.Translators.Microsoft.TerminologyService.TranslationSource> Source {
             get {
                 return this.SourceField;
             }
@@ -367,7 +367,7 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        internal tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Translations Translations {
+        internal ResXManager.Translators.Microsoft.TerminologyService.Translations Translations {
             get {
                 return this.TranslationsField;
             }
@@ -393,7 +393,7 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Translations", Namespace="http://api.terminology.microsoft.com/terminology", ItemName="Translation")]
     [System.SerializableAttribute()]
-    internal class Translations : System.Collections.Generic.List<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Translation> {
+    internal class Translations : System.Collections.Generic.List<ResXManager.Translators.Microsoft.TerminologyService.Translation> {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -461,9 +461,9 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="BaseFault", Namespace="http://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.MissingParameter))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.InvalidParameters))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Unexpected))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.MissingParameter))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.InvalidParameters))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.Unexpected))]
     internal partial class BaseFault : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
@@ -509,7 +509,7 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="MissingParameter", Namespace="http://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
-    internal partial class MissingParameter : tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.BaseFault {
+    internal partial class MissingParameter : ResXManager.Translators.Microsoft.TerminologyService.BaseFault {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ParameterNameField;
@@ -532,14 +532,14 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="InvalidParameters", Namespace="http://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
-    internal partial class InvalidParameters : tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.BaseFault {
+    internal partial class InvalidParameters : ResXManager.Translators.Microsoft.TerminologyService.BaseFault {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Unexpected", Namespace="http://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
-    internal partial class Unexpected : tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.BaseFault {
+    internal partial class Unexpected : ResXManager.Translators.Microsoft.TerminologyService.BaseFault {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int ErrorCodeField;
@@ -562,7 +562,7 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Languages", Namespace="http://api.terminology.microsoft.com/terminology", ItemName="Language")]
     [System.SerializableAttribute()]
-    internal class Languages : System.Collections.Generic.List<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Language> {
+    internal class Languages : System.Collections.Generic.List<ResXManager.Translators.Microsoft.TerminologyService.Language> {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -648,52 +648,52 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslations", ReplyAction="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslationsRespo" +
             "nse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Unexpected), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslationsUnexp" +
+        [System.ServiceModel.FaultContractAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.Unexpected), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslationsUnexp" +
             "ectedFault", Name="Unexpected")]
-        [System.ServiceModel.FaultContractAttribute(typeof(tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.MissingParameter), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslationsMissi" +
+        [System.ServiceModel.FaultContractAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.MissingParameter), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslationsMissi" +
             "ngParameterFault", Name="MissingParameter")]
-        [System.ServiceModel.FaultContractAttribute(typeof(tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.InvalidParameters), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslationsInval" +
+        [System.ServiceModel.FaultContractAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.InvalidParameters), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslationsInval" +
             "idParametersFault", Name="InvalidParameters")]
-        tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Matches GetTranslations(string text, string from, string to, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.SearchStringComparison sensitivity, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.SearchOperator searchOperator, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.TranslationSources sources, System.Nullable<bool> unique, int maxTranslations, bool includeDefinitions, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Products products);
+        ResXManager.Translators.Microsoft.TerminologyService.Matches GetTranslations(string text, string from, string to, ResXManager.Translators.Microsoft.TerminologyService.SearchStringComparison sensitivity, ResXManager.Translators.Microsoft.TerminologyService.SearchOperator searchOperator, ResXManager.Translators.Microsoft.TerminologyService.TranslationSources sources, System.Nullable<bool> unique, int maxTranslations, bool includeDefinitions, ResXManager.Translators.Microsoft.TerminologyService.Products products);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslations", ReplyAction="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslationsRespo" +
             "nse")]
-        System.Threading.Tasks.Task<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Matches> GetTranslationsAsync(string text, string from, string to, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.SearchStringComparison sensitivity, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.SearchOperator searchOperator, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.TranslationSources sources, System.Nullable<bool> unique, int maxTranslations, bool includeDefinitions, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Products products);
+        System.Threading.Tasks.Task<ResXManager.Translators.Microsoft.TerminologyService.Matches> GetTranslationsAsync(string text, string from, string to, ResXManager.Translators.Microsoft.TerminologyService.SearchStringComparison sensitivity, ResXManager.Translators.Microsoft.TerminologyService.SearchOperator searchOperator, ResXManager.Translators.Microsoft.TerminologyService.TranslationSources sources, System.Nullable<bool> unique, int maxTranslations, bool includeDefinitions, ResXManager.Translators.Microsoft.TerminologyService.Products products);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://api.terminology.microsoft.com/terminology/Terminology/GetLanguages", ReplyAction="http://api.terminology.microsoft.com/terminology/Terminology/GetLanguagesResponse" +
             "")]
-        [System.ServiceModel.FaultContractAttribute(typeof(tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Unexpected), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetLanguagesUnexpect" +
+        [System.ServiceModel.FaultContractAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.Unexpected), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetLanguagesUnexpect" +
             "edFault", Name="Unexpected")]
-        tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Languages GetLanguages();
+        ResXManager.Translators.Microsoft.TerminologyService.Languages GetLanguages();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://api.terminology.microsoft.com/terminology/Terminology/GetLanguages", ReplyAction="http://api.terminology.microsoft.com/terminology/Terminology/GetLanguagesResponse" +
             "")]
-        System.Threading.Tasks.Task<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Languages> GetLanguagesAsync();
+        System.Threading.Tasks.Task<ResXManager.Translators.Microsoft.TerminologyService.Languages> GetLanguagesAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://api.terminology.microsoft.com/terminology/Terminology/GetProducts", ReplyAction="http://api.terminology.microsoft.com/terminology/Terminology/GetProductsResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Unexpected), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetProductsUnexpecte" +
+        [System.ServiceModel.FaultContractAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.Unexpected), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetProductsUnexpecte" +
             "dFault", Name="Unexpected")]
-        tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Products GetProducts();
+        ResXManager.Translators.Microsoft.TerminologyService.Products GetProducts();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://api.terminology.microsoft.com/terminology/Terminology/GetProducts", ReplyAction="http://api.terminology.microsoft.com/terminology/Terminology/GetProductsResponse")]
-        System.Threading.Tasks.Task<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Products> GetProductsAsync();
+        System.Threading.Tasks.Task<ResXManager.Translators.Microsoft.TerminologyService.Products> GetProductsAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://api.terminology.microsoft.com/terminology/Terminology/GetCapability", ReplyAction="http://api.terminology.microsoft.com/terminology/Terminology/GetCapabilityRespons" +
             "e")]
-        tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Capability GetCapability();
+        ResXManager.Translators.Microsoft.TerminologyService.Capability GetCapability();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://api.terminology.microsoft.com/terminology/Terminology/GetCapability", ReplyAction="http://api.terminology.microsoft.com/terminology/Terminology/GetCapabilityRespons" +
             "e")]
-        System.Threading.Tasks.Task<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Capability> GetCapabilityAsync();
+        System.Threading.Tasks.Task<ResXManager.Translators.Microsoft.TerminologyService.Capability> GetCapabilityAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    internal interface TerminologyChannel : tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Terminology, System.ServiceModel.IClientChannel {
+    internal interface TerminologyChannel : ResXManager.Translators.Microsoft.TerminologyService.Terminology, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    internal partial class TerminologyClient : System.ServiceModel.ClientBase<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Terminology>, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Terminology {
+    internal partial class TerminologyClient : System.ServiceModel.ClientBase<ResXManager.Translators.Microsoft.TerminologyService.Terminology>, ResXManager.Translators.Microsoft.TerminologyService.Terminology {
         
         public TerminologyClient() {
         }
@@ -714,35 +714,35 @@ namespace tomenglertde.ResXManager.Translators.Microsoft.TerminologyService {
                 base(binding, remoteAddress) {
         }
         
-        public tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Matches GetTranslations(string text, string from, string to, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.SearchStringComparison sensitivity, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.SearchOperator searchOperator, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.TranslationSources sources, System.Nullable<bool> unique, int maxTranslations, bool includeDefinitions, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Products products) {
+        public ResXManager.Translators.Microsoft.TerminologyService.Matches GetTranslations(string text, string from, string to, ResXManager.Translators.Microsoft.TerminologyService.SearchStringComparison sensitivity, ResXManager.Translators.Microsoft.TerminologyService.SearchOperator searchOperator, ResXManager.Translators.Microsoft.TerminologyService.TranslationSources sources, System.Nullable<bool> unique, int maxTranslations, bool includeDefinitions, ResXManager.Translators.Microsoft.TerminologyService.Products products) {
             return base.Channel.GetTranslations(text, from, to, sensitivity, searchOperator, sources, unique, maxTranslations, includeDefinitions, products);
         }
         
-        public System.Threading.Tasks.Task<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Matches> GetTranslationsAsync(string text, string from, string to, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.SearchStringComparison sensitivity, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.SearchOperator searchOperator, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.TranslationSources sources, System.Nullable<bool> unique, int maxTranslations, bool includeDefinitions, tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Products products) {
+        public System.Threading.Tasks.Task<ResXManager.Translators.Microsoft.TerminologyService.Matches> GetTranslationsAsync(string text, string from, string to, ResXManager.Translators.Microsoft.TerminologyService.SearchStringComparison sensitivity, ResXManager.Translators.Microsoft.TerminologyService.SearchOperator searchOperator, ResXManager.Translators.Microsoft.TerminologyService.TranslationSources sources, System.Nullable<bool> unique, int maxTranslations, bool includeDefinitions, ResXManager.Translators.Microsoft.TerminologyService.Products products) {
             return base.Channel.GetTranslationsAsync(text, from, to, sensitivity, searchOperator, sources, unique, maxTranslations, includeDefinitions, products);
         }
         
-        public tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Languages GetLanguages() {
+        public ResXManager.Translators.Microsoft.TerminologyService.Languages GetLanguages() {
             return base.Channel.GetLanguages();
         }
         
-        public System.Threading.Tasks.Task<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Languages> GetLanguagesAsync() {
+        public System.Threading.Tasks.Task<ResXManager.Translators.Microsoft.TerminologyService.Languages> GetLanguagesAsync() {
             return base.Channel.GetLanguagesAsync();
         }
         
-        public tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Products GetProducts() {
+        public ResXManager.Translators.Microsoft.TerminologyService.Products GetProducts() {
             return base.Channel.GetProducts();
         }
         
-        public System.Threading.Tasks.Task<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Products> GetProductsAsync() {
+        public System.Threading.Tasks.Task<ResXManager.Translators.Microsoft.TerminologyService.Products> GetProductsAsync() {
             return base.Channel.GetProductsAsync();
         }
         
-        public tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Capability GetCapability() {
+        public ResXManager.Translators.Microsoft.TerminologyService.Capability GetCapability() {
             return base.Channel.GetCapability();
         }
         
-        public System.Threading.Tasks.Task<tomenglertde.ResXManager.Translators.Microsoft.TerminologyService.Capability> GetCapabilityAsync() {
+        public System.Threading.Tasks.Task<ResXManager.Translators.Microsoft.TerminologyService.Capability> GetCapabilityAsync() {
             return base.Channel.GetCapabilityAsync();
         }
     }
