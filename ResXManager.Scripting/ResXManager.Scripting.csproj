@@ -101,7 +101,7 @@
       <ZipFiles Include="$(OutDir)*.dll" />
       <ZipFiles Include="$(OutDir)*.ps1" />
     </ItemGroup>
-    <MakeDir Directories="$(SolutionDir)Deploy" />
-    <Exec Command="PowerShell -command Compress-Archive -Path @(ZipFiles, ',') -DestinationPath '$(SolutionDir)Deploy\Scripting.zip' -Force" />
+    <MakeDir Directories="..\Deploy" />
+    <Exec Command="PowerShell -command Compress-Archive -Path @(ZipFiles, ',') -DestinationPath '..\Deploy\Scripting.zip' -Force" />
   </Target>
 </Project>
