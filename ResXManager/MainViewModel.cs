@@ -54,7 +54,7 @@
                 if (string.IsNullOrEmpty(folder))
                     return;
 
-                SourceFilesProvider.Folder = folder;
+                SourceFilesProvider.SolutionFolder = folder;
 
                 if (Directory.Exists(folder))
                 {
@@ -70,7 +70,7 @@
 
         private async void ResourceManager_ProjectFileSaved(object sender, ProjectFileEventArgs e)
         {
-            var solutionFolder = SourceFilesProvider.Folder;
+            var solutionFolder = SourceFilesProvider.SolutionFolder;
             if (string.IsNullOrEmpty(solutionFolder))
                 return;
 
@@ -101,7 +101,7 @@
                     if (dlg.ShowDialog() != CommonFileDialogResult.Ok)
                         return;
 
-                    SourceFilesProvider.Folder = settings.StartupFolder = dlg.FileName;
+                    SourceFilesProvider.SolutionFolder = settings.StartupFolder = dlg.FileName;
 
                     Load();
                     return;
@@ -117,7 +117,7 @@
                 if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                     return;
 
-                SourceFilesProvider.Folder = Settings.Default.StartupFolder = dlg.SelectedPath;
+                SourceFilesProvider.SolutionFolder = Settings.Default.StartupFolder = dlg.SelectedPath;
 
                 Load();
             }
@@ -160,7 +160,7 @@
             string message;
             var languages = entity.Languages.Where(lang => (cultureKey == null) || cultureKey.Equals(lang.CultureKey)).ToArray();
 
-            var rootFolder = SourceFilesProvider.Folder;
+            var rootFolder = SourceFilesProvider.SolutionFolder;
             if (string.IsNullOrEmpty(rootFolder))
                 return false;
 
@@ -260,7 +260,7 @@
                 {
                     try
                     {
-                        await Task.Run(async () =>
+                        await Task.Run(() =>
                         {
                             var startInfo = new ProcessStartInfo()
                             {
@@ -277,23 +277,28 @@
                             if (process == null)
                                 return;
 
-                            if (!process.WaitForExit(10000))
+                            process.StandardError.ReadToEndAsync().ContinueWith(task =>
                             {
-                                process.Kill();
-                            }
-                            else
-                            {
-                                var errors = await process.StandardError.ReadToEndAsync();
+                                var errors = task.Result;
                                 if (!string.IsNullOrEmpty(errors))
                                 {
                                     _tracer.TraceError("PowerShell: " + errors);
                                 }
+                            });
 
-                                var value = await process.StandardOutput.ReadToEndAsync();
+                            process.StandardOutput.ReadToEndAsync().ContinueWith(task =>
+                            {
+                                var value = task.Result;
                                 if (!string.IsNullOrEmpty(value))
                                 {
                                     _tracer.WriteLine("PowerShell: " + value);
                                 }
+                            });
+
+                            if (!process.WaitForExit(10000))
+                            {
+                                process.Kill();
+                                _tracer.TraceError("Script execution timed out: " + scriptFile);
                             }
                         });
                     }
@@ -340,13 +345,13 @@
         }
 
         [CanBeNull]
-        public string Folder { get; set; }
+        public string SolutionFolder { get; set; }
 
         public IList<ProjectFile> SourceFiles
         {
             get
             {
-                var folder = Folder;
+                var folder = SolutionFolder;
                 if (string.IsNullOrEmpty(folder))
                     return Array.Empty<ProjectFile>();
 

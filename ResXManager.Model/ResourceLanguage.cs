@@ -7,7 +7,6 @@
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Windows.Threading;
     using System.Xml;
     using System.Xml.Linq;
 
@@ -185,6 +184,14 @@
             var mimeTypeAttribute = entry.Attribute(_mimetypeAttributeName);
 
             return mimeTypeAttribute == null;
+        }
+
+        public ICollection<ResourceNode> GetNodes()
+        {
+            return _nodes.Values
+                .Select(node => new ResourceNode(node.Key, node.Text, node.Comment))
+                .ToList()
+                .AsReadOnly();
         }
 
         [CanBeNull]
@@ -392,7 +399,14 @@
 
             UpdateNodes();
 
-            new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext()).StartNew(() => Container.OnItemOrderChanged(this));
+            try
+            {
+                new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext()).StartNew(() => Container.OnItemOrderChanged(this));
+            }
+            catch (InvalidOperationException)
+            {
+                // for scripting deferred notifications are not needed, so if the current thread does not support a synchronization context, just go without.
+            }
 
             return _nodes[key];
         }
@@ -554,7 +568,7 @@
             [CanBeNull]
             public string Text
             {
-                get => _text ?? (_text = LoadText());
+                get => _text ??= LoadText();
                 set
                 {
                     _text = value ?? string.Empty;
@@ -579,7 +593,7 @@
             [CanBeNull]
             public string Comment
             {
-                get => _comment ?? (_comment = LoadComment());
+                get => _comment ??= LoadComment();
                 set
                 {
                     _comment = value ?? string.Empty;

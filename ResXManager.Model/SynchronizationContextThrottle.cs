@@ -1,6 +1,7 @@
 ﻿namespace ResXManager.Model
 {
     using System;
+    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -8,8 +9,8 @@
 
     public class SynchronizationContextThrottle
     {
-        [NotNull]
-        private readonly TaskFactory _taskFactory = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
+        [CanBeNull]
+        private readonly TaskFactory _taskFactory;
         [NotNull]
         private readonly Action _target;
 
@@ -22,6 +23,15 @@
         public SynchronizationContextThrottle([NotNull] Action target)
         {
             _target = target;
+
+            try
+            {
+                _taskFactory = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
+            }
+            catch (InvalidOperationException)
+            {
+                // for scripting deferred notifications are not needed, so if the current thread does not support a synchronization context, just go without.
+            }
         }
 
         /// <summary>
@@ -29,10 +39,14 @@
         /// </summary>
         public void Tick()
         {
+            var taskFactory = _taskFactory;
+            if (taskFactory == null)
+                return;
+
             if (Interlocked.CompareExchange(ref _counter, 1, 0) != 0)
                 return;
 
-            _taskFactory.StartNew(() =>
+            taskFactory.StartNew(() =>
             {
                 _target();
                 Interlocked.Exchange(ref _counter, 0);

@@ -43,7 +43,7 @@
 
         public void Load([CanBeNull] string folder, [CanBeNull] string exclusionFilter = @"Migrations\\\d{15}")
         {
-            _sourceFilesProvider.Folder = folder;
+            _sourceFilesProvider.SolutionFolder = folder;
             _sourceFilesProvider.ExclusionFilter = exclusionFilter;
 
             ResourceManager.Reload();
@@ -121,7 +121,7 @@
             if (cultureKey == null)
                 return true;
 
-            var rootFolder = _sourceFilesProvider.Folder;
+            var rootFolder = _sourceFilesProvider.SolutionFolder;
             if (string.IsNullOrEmpty(rootFolder))
                 return false;
 

@@ -108,6 +108,9 @@
 
         public bool IsSaving => ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.IsSaving);
 
+        [CanBeNull]
+        public string SolutionFolder => _sourceFilesProvider.SolutionFolder;
+
         public void ReloadSnapshot()
         {
             if (!string.IsNullOrEmpty(_snapshot))

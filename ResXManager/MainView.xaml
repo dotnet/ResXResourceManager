@@ -13,7 +13,7 @@
         <MenuItem.Header>
           <TextBlock Margin="3">
             <Run Text="Directory:" TextBlock.FontWeight="Bold" />
-            <Run Text="{Binding SourceFilesProvider.Folder, Mode=OneWay}" />
+            <Run Text="{Binding SourceFilesProvider.SolutionFolder, Mode=OneWay}" />
           </TextBlock>
         </MenuItem.Header>
         <MenuItem Header="Browse" Command="{Binding BrowseCommand}" />

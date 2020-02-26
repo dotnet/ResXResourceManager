@@ -9,6 +9,9 @@
         [NotNull, ItemNotNull]
         IList<ProjectFile> SourceFiles { get; }
 
+        [CanBeNull]
+        string SolutionFolder { get; }
+
         void Invalidate();
     }
 }

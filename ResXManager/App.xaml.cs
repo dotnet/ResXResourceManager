@@ -12,6 +12,7 @@
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Composition;
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Composition.Mef;
     using TomsToolbox.Wpf.Composition.XamlExtensions;
@@ -52,6 +53,8 @@
             _compositionContainer.ComposeExportedValue(_exportProvider);
 
             Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_exportProvider));
+
+            _compositionContainer.GetExportedValues<IService>().ForEach(service => service.Start());
 
             var tracer = _exportProvider.GetExportedValue<ITracer>();
             tracer.WriteLine("Started");

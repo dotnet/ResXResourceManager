@@ -18,7 +18,7 @@ namespace ResXManager.Scripting
         [CanBeNull]
         private Regex _fileExclusionFilter;
         [CanBeNull]
-        public string Folder { get; set; }
+        public string SolutionFolder { get; set; }
         [CanBeNull]
         public string ExclusionFilter { get; set; }
 
@@ -26,7 +26,7 @@ namespace ResXManager.Scripting
         {
             get
             {
-                var folder = Folder;
+                var folder = SolutionFolder;
                 if (string.IsNullOrEmpty(folder))
                     return Array.Empty<ProjectFile>();
 
