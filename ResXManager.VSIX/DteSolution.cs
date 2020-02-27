@@ -9,6 +9,7 @@
     using JetBrains.Annotations;
 
     using ResXManager.Infrastructure;
+    using ResXManager.Model;
 
     [Export]
     internal class DteSolution
@@ -22,10 +23,10 @@
 
         [CanBeNull]
         [ItemNotNull]
-        private IEnumerable<DteProjectFile> _projectFiles;
+        private IEnumerable<ProjectFile> _projectFiles;
 
         [ImportingConstructor]
-        public DteSolution([NotNull][Import(nameof(VSPackage))] IServiceProvider serviceProvider, [NotNull] ITracer tracer)
+        public DteSolution([NotNull][Import(nameof(VsPackage))] IServiceProvider serviceProvider, [NotNull] ITracer tracer)
         {
             _serviceProvider = serviceProvider;
             _tracer = tracer;
@@ -34,15 +35,28 @@
         /// <summary>
         /// Gets all files of all project in the solution.
         /// </summary>
+        /// <param name="fileFilter"></param>
         /// <returns>The files.</returns>
         [NotNull, ItemNotNull]
-        public IEnumerable<DteProjectFile> GetProjectFiles()
+        public IEnumerable<ProjectFile> GetProjectFiles([NotNull] IFileFilter fileFilter)
         {
-            return _projectFiles ?? (_projectFiles = EnumerateProjectFiles());
+            return _projectFiles ??= EnumerateProjectFiles(fileFilter) ?? new DirectoryInfo(SolutionFolder).GetAllSourceFiles(fileFilter);
         }
 
-        [NotNull, ItemNotNull]
-        private IEnumerable<DteProjectFile> EnumerateProjectFiles()
+        [CanBeNull, ItemNotNull]
+        public IEnumerable<ProjectFile> GetCachedProjectFiles()
+        {
+            return _projectFiles;
+        }
+
+        [CanBeNull, ItemNotNull]
+        private IEnumerable<ProjectFile> EnumerateProjectFiles([NotNull] IFileFilter fileFilter)
+        {
+            return EnumerateProjectFiles()?.Where(fileFilter.Matches);
+        }
+
+        [CanBeNull, ItemNotNull]
+        private IEnumerable<ProjectFile> EnumerateProjectFiles()
         {
             var items = new Dictionary<string, DteProjectFile>();
 
@@ -72,7 +86,19 @@
                 _tracer.TraceError("Error loading projects: {0}", ex);
             }
 
-            return items.Values;
+            var files = items.Values;
+            if (!files.Any())
+            {
+                var solutionFolder = SolutionFolder;
+                var fullName = FullName;
+
+                if (!string.IsNullOrEmpty(solutionFolder) && string.Equals(solutionFolder, fullName))
+                {
+                    return null;
+                }
+            }
+
+            return files;
         }
 
         // ReSharper disable once SuspiciousTypeConversion.Global
@@ -100,7 +126,14 @@
             {
                 try
                 {
-                    return Path.GetDirectoryName(FullName) ?? string.Empty;
+                    var fullName = FullName;
+
+                    if (string.IsNullOrEmpty(fullName))
+                        return string.Empty;
+                    if (new DirectoryInfo(fullName).Exists)
+                        return fullName;
+
+                    return Path.GetDirectoryName(fullName) ?? string.Empty;
                 }
                 catch
                 {

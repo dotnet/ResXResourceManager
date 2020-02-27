@@ -189,7 +189,7 @@
 
         private static bool IsInProject([NotNull] ResourceEntity entity, [CanBeNull] EnvDTE.Project project)
         {
-            var projectFile = (DteProjectFile)entity.NeutralProjectFile;
+            var projectFile = entity.NeutralProjectFile as DteProjectFile;
 
             return projectFile?.ProjectItems
                 .Select(item => item.ContainingProject)

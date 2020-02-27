@@ -35,7 +35,7 @@
             {
                 using (_performanceTracer.Start("Enumerate source files"))
                 {
-                    return DteSourceFiles.Cast<ProjectFile>().ToArray();
+                    return DteSourceFiles.ToList().AsReadOnly();
                 }
             }
         }
@@ -46,20 +46,20 @@
         public string SolutionFolder => Solution.SolutionFolder;
 
         [NotNull, ItemNotNull]
-        private IEnumerable<DteProjectFile> DteSourceFiles
+        private IEnumerable<ProjectFile> DteSourceFiles
         {
             get
             {
                 var fileFilter = new FileFilter(_configuration);
 
-                return GetProjectFiles().Where(p => fileFilter.IncludeFile(p) && (p.IsResourceFile() || fileFilter.IsSourceFile(p)));
+                return GetProjectFiles(fileFilter);
             }
         }
 
         [NotNull, ItemNotNull]
-        private IEnumerable<DteProjectFile> GetProjectFiles()
+        private IEnumerable<ProjectFile> GetProjectFiles(IFileFilter fileFilter)
         {
-            return Solution.GetProjectFiles();
+            return Solution.GetProjectFiles(fileFilter);
         }
 
         [NotNull]

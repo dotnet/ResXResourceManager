@@ -21,9 +21,8 @@
 
             var allProjectFiles = fileInfos
                 .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
-                .Where(fileFilter.IncludeFile)
-                .Where(file => file.IsResourceFile() || fileFilter.IsSourceFile(file))
-                .ToArray();
+                .Where(fileFilter.Matches)
+                .ToList();
 
             var fileNamesByDirectory = allProjectFiles.GroupBy(file => file.GetBaseDirectory()).ToArray();
 

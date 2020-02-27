@@ -36,7 +36,7 @@
 
 
         [ImportingConstructor]
-        public ErrorProvider([Import(nameof(VSPackage))][NotNull] IServiceProvider serviceProvider, [NotNull] ResourceManager resourceManager, [NotNull] VsixShellViewModel shellViewModel, [NotNull] DteConfiguration configuration)
+        public ErrorProvider([Import(nameof(VsPackage))][NotNull] IServiceProvider serviceProvider, [NotNull] ResourceManager resourceManager, [NotNull] VsixShellViewModel shellViewModel, [NotNull] DteConfiguration configuration)
         {
             _resourceManager = resourceManager;
             _shellViewModel = shellViewModel;

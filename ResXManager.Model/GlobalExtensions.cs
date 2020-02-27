@@ -18,5 +18,10 @@
 
             return value;
         }
+
+        public static bool Matches(this IFileFilter filter, ProjectFile file)
+        {
+            return filter.IncludeFile(file) && (file.IsResourceFile() || filter.IsSourceFile(file));
+        }
     }
 }

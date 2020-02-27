@@ -20,6 +20,7 @@
         {
             _extensions = configuration.CodeReferences
                 .Items.SelectMany(item => item.ParseExtensions())
+                .Concat(new[] { ".t4" })
                 .Distinct()
                 .ToArray();
 

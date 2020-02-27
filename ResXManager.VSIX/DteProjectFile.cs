@@ -6,7 +6,6 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
-    using System.Windows.Threading;
     using System.Xml.Linq;
 
     using JetBrains.Annotations;
@@ -17,6 +16,8 @@
 
     internal class DteProjectFile : ProjectFile
     {
+        public const string T4FileName = "Resources.Designer.t4";
+
         [NotNull]
         private readonly DteSolution _solution;
         [NotNull]
@@ -239,11 +240,9 @@
         {
             projectItem.SetCustomTool(null);
 
-            const string t4FileName = "Resources.Designer.t4";
-
-            if (!_solution.GetProjectFiles().Any(file => file.RelativeFilePath.Equals(t4FileName, StringComparison.OrdinalIgnoreCase)))
+            if (_solution.GetCachedProjectFiles()?.Any(file => file.RelativeFilePath.Equals(T4FileName, StringComparison.OrdinalIgnoreCase)) != true)
             {
-                var fullName = Path.Combine(_solution.SolutionFolder, t4FileName);
+                var fullName = Path.Combine(_solution.SolutionFolder, T4FileName);
                 File.WriteAllBytes(fullName, Resources.Resources_Designer_t4);
                 _solution.AddFile(fullName);
             }

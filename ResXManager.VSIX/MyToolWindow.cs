@@ -68,7 +68,7 @@
             BitmapResourceID = 301;
             BitmapIndex = 1;
 
-            var exportProvider = VSPackage.Instance.ExportProvider;
+            var exportProvider = VsPackage.Instance.ExportProvider;
             _tracer = exportProvider.GetExportedValue<ITracer>();
             _configuration = exportProvider.GetExportedValue<Configuration>();
 
@@ -348,7 +348,14 @@
         {
             DteProjectFile projectFile = null;
 
-            foreach (var neutralLanguageProjectItem in ((DteProjectFile)neutralLanguage.ProjectFile).ProjectItems)
+            var projectItems = (neutralLanguage.ProjectFile as DteProjectFile)?.ProjectItems;
+            if (projectItems == null)
+            {
+                entity.AddLanguage(new ProjectFile(languageFileName, entity.Container.SolutionFolder ?? string.Empty, entity.ProjectName, null));
+                return;
+            }
+
+            foreach (var neutralLanguageProjectItem in projectItems)
             {
                 var collection = neutralLanguageProjectItem.Collection;
                 var projectItem = collection.AddFromFile(languageFileName);

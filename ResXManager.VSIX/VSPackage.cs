@@ -50,7 +50,7 @@
     [ProvideToolWindow(typeof(MyToolWindow))]
     [Guid(GuidList.guidResXManager_VSIXPkgString)]
     [ProvideAutoLoad(UIContextGuids.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
-    public sealed class VSPackage : AsyncPackage
+    public sealed class VsPackage : AsyncPackage
     {
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
         private readonly ManualResetEvent _exportProviderLoaded = new ManualResetEvent(false);
@@ -72,9 +72,9 @@
         private EnvDTE.ProjectsEvents _projectsEvents;
 
         [CanBeNull]
-        private static VSPackage _instance;
+        private static VsPackage _instance;
 
-        public VSPackage()
+        public VsPackage()
         {
             _instance = this;
             Tracer = new OutputWindowTracer(this);
@@ -86,7 +86,7 @@
         }
 
         [NotNull]
-        public static VSPackage Instance
+        public static VsPackage Instance
         {
             get
             {
@@ -191,7 +191,7 @@
         [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFrom")]
         private LoaderMessages FillCatalog()
         {
-            _compositionContainer.ComposeExportedValue(nameof(VSPackage), (IServiceProvider)this);
+            _compositionContainer.ComposeExportedValue(nameof(VsPackage), (IServiceProvider)this);
             _compositionContainer.ComposeExportedValue(Tracer);
 
             var thisAssembly = GetType().Assembly;
@@ -495,7 +495,7 @@
 
                 var entity = resourceManager.ResourceEntities.FirstOrDefault(Predicate);
 
-                var neutralProjectFile = (DteProjectFile)entity?.NeutralProjectFile;
+                var neutralProjectFile = entity?.NeutralProjectFile as DteProjectFile;
 
                 // VS will run the custom tool on the project item only. Run the custom tool on any of the descendants, too.
                 var projectItems = neutralProjectFile?.ProjectItems.SelectMany(projectItem => projectItem.Descendants());
@@ -510,7 +510,7 @@
         {
             var entity = e.Language.Container;
 
-            var neutralProjectFile = (DteProjectFile)entity.NeutralProjectFile;
+            var neutralProjectFile = entity.NeutralProjectFile as DteProjectFile;
 
             // VS will run the custom tool on the project item only if the document is open => Run the custom tool on any of the descendants, too.
             // VS will not run the custom tool if just the file is saved in background, and no document is open => Run the custom tool on all descendants and self.

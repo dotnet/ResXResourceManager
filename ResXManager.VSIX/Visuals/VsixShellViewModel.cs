@@ -54,7 +54,7 @@
 
         public void SelectEntry([NotNull] ResourceTableEntry entry)
         {
-            VSPackage.Instance.ShowToolWindow();
+            VsPackage.Instance.ShowToolWindow();
 
             Dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
             {

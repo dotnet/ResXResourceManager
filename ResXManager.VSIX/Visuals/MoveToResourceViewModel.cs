@@ -176,7 +176,7 @@
         {
             var entity = ReuseExisiting ? SelectedResourceEntry?.Container : SelectedResourceEntity;
             var key = ReuseExisiting ? SelectedResourceEntry?.Key : Key;
-            var localNamespace = GetLocalNamespace(((DteProjectFile)entity?.NeutralProjectFile)?.DefaultProjectItem);
+            var localNamespace = GetLocalNamespace((entity?.NeutralProjectFile as DteProjectFile)?.DefaultProjectItem);
 
             return pattern.Replace(@"$File", entity?.BaseName)
                 .Replace(@"$Key", key)
