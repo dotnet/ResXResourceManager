@@ -140,6 +140,11 @@
 
             ConnectEvents();
 
+            // start background services
+            _compositionContainer
+                .GetExportedValues<IService>()
+                .ForEach(service => service.Start());
+
             // Add our command handlers for menu (commands must exist in the .vsct file)
             if (!(menuCommandService is IMenuCommandService mcs))
                 return;
