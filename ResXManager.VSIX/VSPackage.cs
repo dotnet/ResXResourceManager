@@ -50,6 +50,7 @@
     [ProvideToolWindow(typeof(MyToolWindow))]
     [Guid(GuidList.guidResXManager_VSIXPkgString)]
     [ProvideAutoLoad(UIContextGuids.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
+    [ProvideAutoLoad(UIContextGuids.NoSolution, PackageAutoLoadFlags.BackgroundLoad)]
     public sealed class VsPackage : AsyncPackage
     {
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
