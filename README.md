@@ -23,12 +23,12 @@ Suitable for any .Net application; WPF is supported if you use the x:Static mark
 Available as VS2015-2019 extension and as standalone executable to support VS2013 and older or users without Visual Studio at all.
 A scripting module is available as well, so you can easily automate resource tasks, e.g. export untranslated string during build.
 
+## Installation
 All versions can be downloaded from the [releases](../../releases) page.
 
 The Visual Studio Extension is also available at the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager), or by searching for RESX in the Visual Studio extension manager.
 The latest build of the Visual Studio Extension is available at the [Open VsixGallery](http://vsixgallery.com/extension/43b35fe0-1f30-48de-887a-68256474202a)
 
-## Installation
 The standalone version can be installed as click-once application [here](https://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/ResXManager.application).
 Check the [Microsoft Docs](https://docs.microsoft.com/en-us/visualstudio/deployment/how-to-configure-the-clickonce-trust-prompt-behavior?view=vs-2015&redirectedfrom=MSDN#to-enable-the-clickonce-trust-prompt-by-using-the-registry-editor) to temporarily enable the ClickOnce Trust Prompt if Windows won't let you run the application because of an "Untrusted Publisher" warning. 
 
