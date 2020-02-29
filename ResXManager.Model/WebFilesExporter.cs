@@ -24,14 +24,15 @@
         {
             _resourceManager = resourceManager;
             _tracer = tracer;
-            _resourceManager.ProjectFileSaved += ResourceManager_ProjectFileSaved;
+            _resourceManager.ProjectFileSaved += (_, __) => Export();
+            _resourceManager.Loaded += (_, __) => Export();
         }
 
         public void Start()
         {
         }
 
-        private void ResourceManager_ProjectFileSaved(object sender, ProjectFileEventArgs e)
+        private void Export()
         {
             try
             {
