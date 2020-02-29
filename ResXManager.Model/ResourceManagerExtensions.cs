@@ -49,6 +49,10 @@
                         uniqueProjectName = fullProjectName.Substring(solutionFolderLength);
                     }
                 }
+                else
+                {
+                    projectName = directory.Name;
+                }
 
                 foreach (var file in directoryFiles)
                 {
