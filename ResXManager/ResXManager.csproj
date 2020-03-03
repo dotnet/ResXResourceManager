@@ -62,6 +62,9 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="Exists('$(USERPROFILE)\tom-englert.de')">
+    <DefineConstants>$(DefineConstants);TEST_L10N</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>

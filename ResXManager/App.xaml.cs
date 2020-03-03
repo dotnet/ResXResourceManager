@@ -28,7 +28,7 @@
 
         public App()
         {
-#if DEBUG
+#if DEBUG && TEST_L10N
             System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("de-DE");
 #endif
 
