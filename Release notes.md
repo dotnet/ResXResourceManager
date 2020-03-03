@@ -7,6 +7,7 @@
 - Fix #283: ignore language specific punctuation in Resource warnings
 - #293: Auto-detect HTML for properly setting textType parameter in AzureTranslator
 - Optionally start a PowerShell script after saving (Standalone only)
+- Optionally generate .ts and .json files to support web apps (s. https://github.com/tom-englert/L10N-Web-Demo) 
 
 1.38
 - Fix context menu style
