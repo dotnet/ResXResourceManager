@@ -81,7 +81,7 @@
                 File.WriteAllText(typeScriptFilePath, typescript.ToString());
 
                 var specificLanguages = _resourceManager.ResourceEntities
-                    .SelectMany(entity => entity.Languages.Skip(1))
+                    .SelectMany(entity => entity.Languages.Skip(config.ExportNeutralJson ? 0 : 1))
                     .GroupBy(lang => lang.CultureKey);
 
                 foreach (var languages in specificLanguages)
@@ -117,6 +117,8 @@
             public string TypeScriptFileDir { get; set; }
             [JsonProperty("jsonFileDir")]
             public string JsonFileDir { get; set; }
+            [JsonProperty("exportNeutralJson")]
+            public bool ExportNeutralJson { get; set; }
         }
     }
 }
