@@ -18,10 +18,18 @@ However, if you cannot help with coding, consider to [donate a small amount](../
 This tool provides central access to all ResX-based string resources in your solution. You can quickly navigate through all resource files and view the content in a well-arranged data grid.
 All available languages are displayed side by side in columns, to make it easy to find untranslated strings or clean up orphaned entries. All strings can be quickly edited in place, untranslated entries will be created on the fly while typing.
 
-Suitable for any .Net application; WPF is supported if you use the x:Static markup extension to access the ResX - resources.
+Suitable for any .Net application; WPF is supported out of the box, just use the x:Static markup extension to access the ResX - resources.
+
+Web applications using Typescript (e.g. Angular) are also supported, see [L10N-Web-Demo](https://github.com/tom-englert/L10N-Web-Demo)
+
+Xamarin apps can be supported using e.g. [XamarinLocalizationSync](https://github.com/maruhe/XamarinLocalizationSync)
 
 Available as VS2015-2019 extension and as standalone executable to support VS2013 and older or users without Visual Studio at all.
 A scripting module is available as well, so you can easily automate resource tasks, e.g. export untranslated string during build.
+
+## Documentation
+
+Can be found in the [Wiki pages](../../wiki).
 
 ## Installation
 All versions can be downloaded from the [releases](../../releases) page.
