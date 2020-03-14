@@ -24,14 +24,14 @@ Web applications using Typescript (e.g. Angular) are also supported, see [L10N-W
 
 Xamarin apps can be supported using e.g. [XamarinLocalizationSync](https://github.com/maruhe/XamarinLocalizationSync)
 
-Available as VS2015-2019 extension and as standalone executable to support VS2013 and older or users without Visual Studio at all.
-A scripting module is available as well, so you can easily automate resource tasks, e.g. export untranslated string during build.
-
 ## Documentation
 
 Can be found in the [Wiki pages](../../wiki).
 
 ## Installation
+ResXResourceManager is available as VS2015-2019 extension and as a standalone executable to support VS2013 and older or users without Visual Studio at all.
+A scripting module is available as well, so you can easily automate resource tasks, e.g. export untranslated string during build.
+
 All versions can be downloaded from the [releases](../../releases) page.
 
 The Visual Studio Extension is also available at the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager), or by searching for RESX in the Visual Studio extension manager.
