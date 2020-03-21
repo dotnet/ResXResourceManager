@@ -1,15 +1,19 @@
 ﻿namespace ResXManager.Model
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     using ResXManager.Infrastructure;
+
+    using TomsToolbox.Essentials;
 
     using JsonConvert = Newtonsoft.Json.JsonConvert;
 
@@ -55,59 +59,91 @@
                 typeScriptFileDir = Directory.CreateDirectory(Path.Combine(solutionFolder, typeScriptFileDir)).FullName;
                 jsonFileDir = Directory.CreateDirectory(Path.Combine(solutionFolder, jsonFileDir)).FullName;
 
-                var neutralLanguages = _resourceManager.ResourceEntities
-                    .Select(entity => entity.Languages.FirstOrDefault())
-                    .Where(lang => lang != null);
+                var typescript = new StringBuilder(TypescriptFileHeader);
+                var jsonObjects = new Dictionary<CultureKey, JObject>();
 
-                var typescript = new StringBuilder();
-
-                foreach (var language in neutralLanguages)
+                foreach (var entity in _resourceManager.ResourceEntities)
                 {
-                    var entityName = language.Container.BaseName;
+                    var formatTemplates = new HashSet<string>();
+
+                    var entityName = entity.BaseName;
+                    var neutralLanguage = entity.Languages.FirstOrDefault();
 
                     typescript.AppendLine($@"export class {entityName} {{");
 
-                    foreach (var node in language.GetNodes())
+                    foreach (var node in neutralLanguage.GetNodes())
                     {
-                        var value = JsonConvert.SerializeObject(node.Text ?? string.Empty);
-                        typescript.AppendLine($@"  {node.Key} = {value};");
+                        AppendTypescript(node, typescript, formatTemplates);
                     }
 
                     typescript.AppendLine(@"}");
                     typescript.AppendLine();
+
+                    foreach (var language in entity.Languages.Skip(config.ExportNeutralJson ? 0 : 1))
+                    {
+                        var node = new JObject();
+
+                        foreach (var resourceNode in language.GetNodes())
+                        {
+                            var key = resourceNode.Key;
+                            if (formatTemplates.Contains(key))
+                            {
+                                key += FormatTemplateSuffix;
+                            }
+
+                            node.Add(key, JToken.FromObject(resourceNode.Text));
+                        }
+
+                        jsonObjects
+                            .ForceValue(language.CultureKey, _ => GenerateJsonObjectWithComment())?
+                            .Add(entityName, node);
+                    }
                 }
 
                 var typeScriptFilePath = Path.Combine(typeScriptFileDir, "resources.ts");
                 File.WriteAllText(typeScriptFilePath, typescript.ToString());
 
-                var specificLanguages = _resourceManager.ResourceEntities
-                    .SelectMany(entity => entity.Languages.Skip(config.ExportNeutralJson ? 0 : 1))
-                    .GroupBy(lang => lang.CultureKey);
-
-                foreach (var languages in specificLanguages)
+                foreach (var jsonObjectEntry in jsonObjects)
                 {
-                    var cultureKey = languages.Key;
-                    var json = new JObject();
+                    var key = jsonObjectEntry.Key;
+                    var value = jsonObjectEntry.Value.ToString();
 
-                    foreach (var language in languages)
-                    {
-                        var entityName = language.Container.BaseName;
-                        var node = new JObject();
-                        foreach (var resourceNode in language.GetNodes())
-                        {
-                            node.Add(resourceNode.Key, JToken.FromObject(resourceNode.Text));
-                        }
-
-                        json.Add(entityName, node);
-                    }
-
-                    var jsonFilePath = Path.Combine(jsonFileDir, $"resources{cultureKey}.json");
-                    File.WriteAllText(jsonFilePath, json.ToString());
+                    var jsonFilePath = Path.Combine(jsonFileDir, $"resources{key}.json");
+                    File.WriteAllText(jsonFilePath, value);
                 }
             }
             catch (Exception ex)
             {
                 _tracer.TraceError(ex.ToString());
+            }
+        }
+
+        private const string FormatTemplateSuffix = @"_TEMPLATE";
+        private static readonly Regex _formatPlaceholderExpression = new Regex(@"\$\{\s*(\w[.\w\d_]*)\s*\}");
+
+        private static void AppendTypescript(ResourceNode node, StringBuilder typescript, HashSet<string> formatTemplates)
+        {
+            var text = node.Text ?? string.Empty;
+            var key = node.Key;
+            var value = JsonConvert.SerializeObject(text);
+
+            var placeholders = _formatPlaceholderExpression.Matches(text)
+                .OfType<Match>()
+                .Select(m => m.Groups[1].Value)
+                .Distinct()
+                .ToList();
+
+            if (placeholders.Any())
+            {
+                formatTemplates.Add(key);
+
+                var args = string.Join(", ", placeholders.Select(item => $@"{item}: string"));
+                typescript.AppendLine($"  private {key}{FormatTemplateSuffix} = {value};");
+                typescript.AppendLine($"  {key} = (args: {{ {args} }}) => {{\r\n    return formatString(this.{key}{FormatTemplateSuffix}, args);\r\n  }}");
+            }
+            else
+            {
+                typescript.AppendLine($@"  {key} = {value};");
             }
         }
 
@@ -120,5 +156,33 @@
             [JsonProperty("exportNeutralJson")]
             public bool ExportNeutralJson { get; set; }
         }
+
+        private static JObject GenerateJsonObjectWithComment()
+        {
+            var value = new JObject();
+            value.Add("_comment", JToken.FromObject("Auto-generated; do not modify!"));
+            return value;
+        }
+
+        private const string TypescriptFileHeader =
+            @"/*
+ * This code was generated by ResXResourceManager.
+ * Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
+ */
+
+/* tslint:disable */
+
+function formatString(template: string, args: any): string {
+  let result = template;
+  Object.entries(args).forEach(entry => {
+    const key = entry[0];
+    const replacement = `${entry[1]}`;
+    const pattern = new RegExp('\\$\\{\\s*' + key + '\\s*\\}', 'gm');
+    result = result.replace(pattern, replacement);
+  });
+  return result;
+}
+
+";
     }
 }
