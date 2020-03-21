@@ -127,11 +127,7 @@
             var key = node.Key;
             var value = JsonConvert.SerializeObject(text);
 
-            var placeholders = _formatPlaceholderExpression.Matches(text)
-                .OfType<Match>()
-                .Select(m => m.Groups[1].Value)
-                .Distinct()
-                .ToList();
+            var placeholders = ExtractPlaceholders(text).ToList();
 
             if (placeholders.Any())
             {
@@ -145,6 +141,16 @@
             {
                 typescript.AppendLine($@"  {key} = {value};");
             }
+        }
+
+        public static IEnumerable<string> ExtractPlaceholders(string text)
+        {
+            var placeholders = _formatPlaceholderExpression.Matches(text)
+                .OfType<Match>()
+                .Select(m => m.Groups[1].Value)
+                .Distinct();
+
+            return placeholders;
         }
 
         private class Configuration

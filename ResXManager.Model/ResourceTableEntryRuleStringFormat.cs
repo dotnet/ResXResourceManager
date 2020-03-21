@@ -38,13 +38,22 @@
 
         private static bool CompliesToRule([CanBeNull] string neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string> values)
         {
-            return new[] { neutralValue }.Concat(values.Where(value => !string.IsNullOrEmpty(value)))
-                       .Select(GetStringFormatFlags)
+            var allValues = new[] {neutralValue}.Concat(values.Where(value => !string.IsNullOrEmpty(value))).ToList();
+
+            var indexedComply = allValues
+                       .Select(GetStringFormatByIndexFlags)
                        .Distinct()
                        .Count() <= 1;
+
+            var namedComply = allValues
+                       .Select(GetStringFormatByPlaceholdersFingerprint)
+                       .Distinct()
+                       .Count() <= 1;
+
+            return indexedComply && namedComply;
         }
 
-        private static long GetStringFormatFlags([CanBeNull] string value)
+        private static long GetStringFormatByIndexFlags([CanBeNull] string value)
         {
             if (string.IsNullOrEmpty(value))
                 return 0;
@@ -56,6 +65,14 @@
                 .Cast<Match>()
                 .Where(m => m.Success)
                 .Aggregate(0L, (a, match) => a | ParseMatch(match));
+        }
+
+        private static string GetStringFormatByPlaceholdersFingerprint([CanBeNull] string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return string.Empty;
+
+            return string.Join("|", WebFilesExporter.ExtractPlaceholders(value).OrderBy(item => item));
         }
 
         private static long ParseMatch(Match match)
