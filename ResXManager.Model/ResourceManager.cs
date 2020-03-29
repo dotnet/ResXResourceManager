@@ -233,6 +233,7 @@
             }
         }
 
+        [SuppressPropertyChangedWarnings]
         internal void OnLanguageChanged([NotNull] ResourceLanguage language)
         {
             LanguageChanged?.Invoke(this, new LanguageEventArgs(language));

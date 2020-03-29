@@ -223,6 +223,7 @@
             return Container.CanEdit(this, cultureKey);
         }
 
+        [SuppressPropertyChangedWarnings]
         internal void OnIndexChanged([NotNull] ResourceTableEntry resourceTableEntry)
         {
             var previousEntries = _resourceTableEntries
@@ -242,6 +243,7 @@
             }
         }
 
+        [SuppressPropertyChangedWarnings]
         public void OnItemOrderChanged([NotNull] ResourceLanguage resourceLanguage)
         {
             if (resourceLanguage.CultureKey != CultureKey.Neutral)
