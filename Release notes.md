@@ -1,4 +1,8 @@
-﻿1.39
+﻿1.40
+- Provide TS-functions for type-safe formatting.
+- Visualize translator activity
+
+1.39
 - Fix #265: Add new language dialog always opens in center of VS
 - Fix: AzureTranslator rating should be 1.0
 - Fix #270: exclude keyboard shortcut prefixes from punctuation checks
