@@ -36,7 +36,7 @@
                 var directory = new DirectoryInfo(directoryPath);
                 var project = FindProject(directory, solutionFolder.FullName);
 
-                var projectName = "<no project>";
+                var projectName = directory.Name;
                 var uniqueProjectName = (string)null;
 
                 if (project != null)
@@ -48,10 +48,6 @@
                     {
                         uniqueProjectName = fullProjectName.Substring(solutionFolderLength);
                     }
-                }
-                else
-                {
-                    projectName = directory.Name;
                 }
 
                 foreach (var file in directoryFiles)

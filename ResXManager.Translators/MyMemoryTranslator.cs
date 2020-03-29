@@ -6,7 +6,6 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
-    using System.Net;
     using System.Net.Http;
     using System.Runtime.Serialization;
     using System.Text;
@@ -19,7 +18,6 @@
 
     using ResXManager.Infrastructure;
 
-    using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.Mef;
 
     [DataTemplate(typeof(MyMemoryTranslator))]

@@ -27,39 +27,33 @@
 
         private static IEnumerable<CultureKey> CastLanguages(object languages)
         {
-            IEnumerable<CultureKey> resourceLanguages = null;
+            var obj = languages.PsObjectCast<object>();
 
-            switch (languages.PsObjectCast<object>())
+            switch (obj)
             {
                 case string str:
-                    resourceLanguages = new[] {CultureKey.Parse(str)};
-                    break;
-                case IEnumerable enumerable:
-                    resourceLanguages = enumerable.PsCast<object>().Select(CultureKey.Parse).ToArray();
-                    break;
-                case object obj:
-                    resourceLanguages = new[] {CultureKey.Parse(obj.PsObjectCast<object>())};
-                    break;
-            }
+                    return new[] { CultureKey.Parse(str) };
 
-            return resourceLanguages;
+                case IEnumerable enumerable:
+                    return enumerable.PsCast<object>().Select(CultureKey.Parse).ToArray();
+
+                default:
+                    return new[] { CultureKey.Parse(obj.PsObjectCast<object>()) };
+            }
         }
 
         private static IEnumerable<ResourceTableEntry> CastResourceTableEntries(object entries)
         {
-            IEnumerable<ResourceTableEntry> resourceTableEntries = null;
+            var obj = entries.PsObjectCast<object>();
 
-            switch (entries.PsObjectCast<object>())
+            switch (obj)
             {
                 case IEnumerable enumerable:
-                    resourceTableEntries = enumerable.PsCast<ResourceTableEntry>().ToArray();
-                    break;
-                case object obj:
-                    resourceTableEntries = new[] {obj.PsObjectCast<ResourceTableEntry>()};
-                    break;
-            }
+                    return enumerable.PsCast<ResourceTableEntry>().ToArray();
 
-            return resourceTableEntries;
+                default:
+                    return new[] { obj.PsObjectCast<ResourceTableEntry>() };
+            }
         }
     }
 

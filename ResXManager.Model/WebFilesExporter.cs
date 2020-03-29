@@ -68,6 +68,8 @@
 
                     var entityName = entity.BaseName;
                     var neutralLanguage = entity.Languages.FirstOrDefault();
+                    if (neutralLanguage == null)
+                        continue;
 
                     typescript.AppendLine($@"export class {entityName} {{");
 

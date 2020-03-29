@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
@@ -20,7 +19,6 @@
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
-    using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.Mef;
 
     [DataTemplate(typeof(GoogleTranslator))]
@@ -140,7 +138,7 @@
 
                 using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
                 {
-                    return JsonConverter<T>(stream);
+                    return JsonConverter<T>(stream) ?? throw new InvalidOperationException("Empty response.");
                 }
             }
         }

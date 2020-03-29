@@ -23,13 +23,14 @@
         public Host()
         {
             var assembly = GetType().Assembly;
-            var folder = Path.GetDirectoryName(assembly.Location);
 
             _compositionCatalog = new AggregateCatalog();
             _compositionContainer = new CompositionContainer(_compositionCatalog, true);
+            // ReSharper disable RedundantNameQualifier
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Infrastructure.ITracer).Assembly));
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Model.GlobalExtensions).Assembly));
+            // ReSharper restore RedundantNameQualifier
 
             _sourceFilesProvider = _compositionContainer.GetExportedValue<SourceFilesProvider>();
             ResourceManager = _compositionContainer.GetExportedValue<ResourceManager>();

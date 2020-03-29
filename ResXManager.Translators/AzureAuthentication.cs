@@ -45,7 +45,7 @@
         /// Gets a token for the specified subscription. The token is prefixed with "Bearer ".
         /// </summary>
         /// <param name="authenticationKey">Subscription secret key.</param>
-        /// <param name="translationSessionCancellationToken"></param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The encoded JWT token, prefixed with "Bearer ".</returns>
         [ItemNotNull]
         public static async Task<string> GetBearerAccessTokenAsync([CanBeNull] string authenticationKey, CancellationToken cancellationToken)

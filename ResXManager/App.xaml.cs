@@ -45,10 +45,12 @@
             var folder = Path.GetDirectoryName(assembly.Location);
 
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
+            // ReSharper disable RedundantNameQualifier
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Infrastructure.ITracer).Assembly));
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Model.GlobalExtensions).Assembly));
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Translators.AzureTranslator).Assembly));
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.View.Appearance).Assembly));
+            // ReSharper restore RedundantNameQualifier
 
             _compositionContainer.ComposeExportedValue(_exportProvider);
 
@@ -60,7 +62,7 @@
             tracer.WriteLine("Started");
 
             tracer.WriteLine(ResXManager.Properties.Resources.IntroMessage);
-            tracer.WriteLine(ResXManager.Properties.Resources.AssemblyLocation, folder);
+            tracer.WriteLine(ResXManager.Properties.Resources.AssemblyLocation, folder ?? "unknown");
             tracer.WriteLine(ResXManager.Properties.Resources.Version, new AssemblyName(assembly.FullName).Version ?? new Version());
 
             VisualComposition.Error += (_, args) => tracer.TraceError(args.Text);

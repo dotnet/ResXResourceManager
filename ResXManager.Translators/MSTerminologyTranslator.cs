@@ -14,7 +14,6 @@
     using ResXManager.Translators.Microsoft.TerminologyService;
 
     using TomsToolbox.Essentials;
-    using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.Mef;
 
     [DataTemplate(typeof(MSTerminologyTranslator))]

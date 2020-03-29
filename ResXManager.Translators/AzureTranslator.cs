@@ -18,7 +18,6 @@ namespace ResXManager.Translators
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
-    using TomsToolbox.Wpf;
 
     [Export(typeof(ITranslator))]
     public class AzureTranslator : TranslatorBase
