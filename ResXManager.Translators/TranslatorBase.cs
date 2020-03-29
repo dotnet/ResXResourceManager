@@ -3,6 +3,7 @@ namespace ResXManager.Translators
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using System.Net;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
@@ -11,6 +12,8 @@ namespace ResXManager.Translators
     using JetBrains.Annotations;
 
     using ResXManager.Infrastructure;
+
+    using TomsToolbox.Essentials;
 
     [DataContract]
     public abstract class TranslatorBase : ITranslator
@@ -39,12 +42,32 @@ namespace ResXManager.Translators
         [DataMember]
         public bool IsEnabled { get; set; } = true;
 
+        public bool IsActive { get; protected set; }
+
         [DataMember]
         public bool SaveCredentials { get; set; }
 
         public IList<ICredentialItem> Credentials { get; }
 
-        public abstract Task Translate(ITranslationSession translationSession);
+        async Task ITranslator.Translate(ITranslationSession translationSession)
+        {
+            try
+            {
+                IsActive = true;
+
+                await Translate(translationSession);
+            }
+            catch (Exception ex)
+            {
+                translationSession.AddMessage(DisplayName + ": " + string.Join(" => ", ex.ExceptionChain().Select(item => item.Message)));
+            }
+            finally
+            {
+                IsActive = false;
+            }
+        }
+
+        protected abstract Task Translate(ITranslationSession translationSession);
 
         [NotNull]
         protected static string RemoveKeyboardShortcutIndicators([NotNull] string value)

@@ -41,84 +41,71 @@ namespace ResXManager.Translators
         [DataMember]
         public int MaxCharactersPerMinute { get; set; } = 33300;
 
-        public override async Task Translate(ITranslationSession translationSession)
+        protected override async Task Translate(ITranslationSession translationSession)
         {
-            try
+            var authenticationKey = AuthenticationKey;
+
+            if (string.IsNullOrEmpty(authenticationKey))
             {
-                var authenticationKey = AuthenticationKey;
+                translationSession.AddMessage("Azure Translator requires subscription secret.");
+                return;
+            }
 
-                if (string.IsNullOrEmpty(authenticationKey))
+            var token = await AzureAuthentication.GetBearerAccessTokenAsync(authenticationKey, translationSession.CancellationToken).ConfigureAwait(false);
+
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Authorization", token);
+
+                var throttle = new Throttle(MaxCharactersPerMinute, translationSession.CancellationToken);
+
+                var itemsByLanguage = translationSession.Items.GroupBy(item => item.TargetCulture);
+
+                foreach (var languageGroup in itemsByLanguage)
                 {
-                    translationSession.AddMessage("Azure Translator requires subscription secret.");
-                    return;
-                }
+                    var cultureKey = languageGroup.Key;
+                    var targetLanguage = cultureKey.Culture ?? translationSession.NeutralResourcesLanguage;
 
-                var token = await AzureAuthentication.GetBearerAccessTokenAsync(authenticationKey, translationSession.CancellationToken).ConfigureAwait(false);
+                    var itemsByTextType = languageGroup.GroupBy(GetTextType);
 
-                using (var client = new HttpClient())
-                {
-                    client.DefaultRequestHeaders.Add("Authorization", token);
-
-                    var throttle = new Throttle(MaxCharactersPerMinute, translationSession.CancellationToken);
-
-                    var itemsByLanguage = translationSession.Items.GroupBy(item => item.TargetCulture);
-
-                    foreach (var languageGroup in itemsByLanguage)
+                    foreach (var textTypeGroup in itemsByTextType)
                     {
-                        var cultureKey = languageGroup.Key;
-                        var targetLanguage = cultureKey.Culture ?? translationSession.NeutralResourcesLanguage;
+                        var textType = textTypeGroup.Key;
 
-                        var itemsByTextType = languageGroup.GroupBy(GetTextType);
-
-                        foreach (var textTypeGroup in itemsByTextType)
+                        foreach (var sourceItems in SplitIntoChunks(translationSession, textTypeGroup))
                         {
-                            var textType = textTypeGroup.Key;
+                            if (!sourceItems.Any())
+                                break;
 
-                            foreach (var sourceItems in SplitIntoChunks(translationSession, textTypeGroup))
+                            var sourceStrings = sourceItems
+                                .Select(item => item.Source)
+                                .Select(RemoveKeyboardShortcutIndicators)
+                                .ToList();
+
+                            await throttle.Tick(sourceItems);
+
+                            if (translationSession.IsCanceled)
+                                return;
+
+                            var uri = new Uri($"https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={translationSession.SourceLanguage.IetfLanguageTag}&to={targetLanguage.IetfLanguageTag}&textType={textType}");
+
+                            var response = await client.PostAsync(uri, CreateRequestContent(sourceStrings), translationSession.CancellationToken).ConfigureAwait(false);
+
+                            response.EnsureSuccessStatusCode();
+
+                            var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+                            using (var reader = new StreamReader(stream, Encoding.UTF8))
                             {
-                                if (!sourceItems.Any())
-                                    break;
-
-                                var sourceStrings = sourceItems
-                                    .Select(item => item.Source)
-                                    .Select(RemoveKeyboardShortcutIndicators)
-                                    .ToList();
-
-                                await throttle.Tick(sourceItems);
-
-                                if (translationSession.IsCanceled)
-                                    return;
-
-                                var uri = new Uri($"https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={translationSession.SourceLanguage.IetfLanguageTag}&to={targetLanguage.IetfLanguageTag}&textType={textType}");
-
-                                var response = await client.PostAsync(uri, CreateRequestContent(sourceStrings), translationSession.CancellationToken).ConfigureAwait(false);
-
-                                if (response.IsSuccessStatusCode)
+                                var translations = JsonConvert.DeserializeObject<List<AzureTranslationResponse>>(reader.ReadToEnd());
+                                if (translations != null)
                                 {
-                                    var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-                                    using (var reader = new StreamReader(stream, Encoding.UTF8))
-                                    {
-                                        var translations = JsonConvert.DeserializeObject<List<AzureTranslationResponse>>(reader.ReadToEnd());
-                                        if (translations != null)
-                                        {
-                                            await translationSession.MainThread.StartNew(() => ReturnResults(sourceItems, translations));
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    var errorMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                                    translationSession.AddMessage("Azure translator reported a problem: " + errorMessage);
+                                    await translationSession.MainThread.StartNew(() => ReturnResults(sourceItems, translations));
                                 }
                             }
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                translationSession.AddMessage("Azure translator reported a problem: " + ex);
             }
         }
 
@@ -237,7 +224,7 @@ namespace ResXManager.Translators
                     if (totalCharacterCount + tuple.Item2 > _maxCharactersPerMinute)
                     {
                         var nextCallTime = tuple.Item1.AddMinutes(1);
-                        var millisecondsToDelay = (int) Math.Ceiling((nextCallTime - DateTime.Now).TotalMilliseconds);
+                        var millisecondsToDelay = (int)Math.Ceiling((nextCallTime - DateTime.Now).TotalMilliseconds);
                         if (millisecondsToDelay > 0)
                         {
                             await Task.Delay(millisecondsToDelay, _cancellationToken);

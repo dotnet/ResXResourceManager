@@ -1,4 +1,4 @@
-﻿    namespace ResXManager.Translators
+﻿namespace ResXManager.Translators
 {
     using System;
     using System.Collections.Generic;
@@ -52,7 +52,7 @@
         [CanBeNull]
         private string ApiKey => Credentials[0].Value;
 
-        public override async Task Translate(ITranslationSession translationSession)
+        protected override async Task Translate(ITranslationSession translationSession)
         {
             if (string.IsNullOrEmpty(ApiKey))
             {
@@ -83,37 +83,31 @@
                             parameters.AddRange(new[] { "q", RemoveKeyboardShortcutIndicators(item.Source) });
                         }
 
-                        parameters.AddRange(new[] {
+                        parameters.AddRange(new[]
+                        {
                             "target", GoogleLangCode(targetCulture),
                             "format", "text",
                             "source", GoogleLangCode(translationSession.SourceLanguage),
                             "model", "nmt",
-                            "key", ApiKey });
+                            "key", ApiKey
+                        });
 
-                        try
+                        // Call the Google API
+                        // ReSharper disable once AssignNullToNotNullAttribute
+                        var response = await GetHttpResponse<TranslationRootObject>(
+                            "https://translation.googleapis.com/language/translate/v2",
+                            parameters,
+                            translationSession.CancellationToken).ConfigureAwait(false);
+
+                        await translationSession.MainThread.StartNew(() =>
                         {
-                            // Call the Google API
-                            // ReSharper disable once AssignNullToNotNullAttribute
-                            var response = await GetHttpResponse<TranslationRootObject>(
-                                "https://translation.googleapis.com/language/translate/v2",
-                                parameters,
-                                translationSession.CancellationToken).ConfigureAwait(false);
-
-                            await translationSession.MainThread.StartNew(() =>
+                            foreach (var tuple in sourceItems.Zip(response.Data.Translations,
+                                (a, b) => new Tuple<ITranslationItem, string>(a, b.TranslatedText)))
                             {
-                                foreach (var tuple in sourceItems.Zip(response.Data.Translations,
-                                    (a, b) => new Tuple<ITranslationItem, string>(a, b.TranslatedText)))
-                                {
-                                    tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2, 1.0));
-                                }
-                            });
+                                tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2, 1.0));
+                            }
+                        });
 
-                        }
-                        catch (Exception ex)
-                        {
-                            translationSession.AddMessage(DisplayName + ": " + (ex.InnerException?.Message ?? ex.Message));
-                            return;
-                        }
                     }
                 }
             }
@@ -126,7 +120,7 @@
             var name = cultureInfo.Name;
 
             if (string.Equals(iso1, "zh", StringComparison.OrdinalIgnoreCase))
-                return new[] {"zh-hant", "zh-cht", "zh-hk", "zh-mo", "zh-tw"}.Contains(name, StringComparer.OrdinalIgnoreCase) ? "zh-TW" : "zh-CN";
+                return new[] { "zh-hant", "zh-cht", "zh-hk", "zh-mo", "zh-tw" }.Contains(name, StringComparer.OrdinalIgnoreCase) ? "zh-TW" : "zh-CN";
 
             if (string.Equals(name, "haw-us", StringComparison.OrdinalIgnoreCase))
                 return "haw";
@@ -140,8 +134,9 @@
 
             using (var httpClient = new HttpClient())
             {
-                Debug.WriteLine("Google URL: " + url);
                 var response = await httpClient.GetAsync(new Uri(url), cancellationToken).ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
 
                 using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
                 {
@@ -179,7 +174,7 @@
         [DataContract]
         private class TranslationRootObject
         {
-            [DataMember(Name="data")]
+            [DataMember(Name = "data")]
             public Data Data { get; set; }
         }
 

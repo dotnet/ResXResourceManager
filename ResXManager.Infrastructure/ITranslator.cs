@@ -20,6 +20,8 @@
 
         bool IsEnabled { get; set; }
 
+        bool IsActive { get; }
+
         bool SaveCredentials { get; set; }
 
         Task Translate([NotNull] ITranslationSession translationSession);

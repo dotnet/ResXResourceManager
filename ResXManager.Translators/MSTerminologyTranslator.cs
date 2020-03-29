@@ -37,7 +37,7 @@
         {
         }
 
-        public override async Task Translate(ITranslationSession translationSession)
+        protected override async Task Translate(ITranslationSession translationSession)
         {
             using (var client = new TerminologyClient(_binding, _endpoint))
             {
@@ -54,29 +54,21 @@
                         targetCulture = CultureInfo.CreateSpecificCulture(targetCulture.Name);
                     }
 
-                    try
-                    {
-                        var response = await client.GetTranslationsAsync(
-                            item.Source, translationSession.SourceLanguage.Name,
-                            targetCulture.Name, SearchStringComparison.CaseInsensitive, SearchOperator.Contains,
-                            translationSources, false, 5, false, null)
-                            .ConfigureAwait(false);
+                    var response = await client.GetTranslationsAsync(
+                        item.Source, translationSession.SourceLanguage.Name,
+                        targetCulture.Name, SearchStringComparison.CaseInsensitive, SearchOperator.Contains,
+                        translationSources, false, 5, false, null)
+                        .ConfigureAwait(false);
 
-                        if (response != null)
-                        {
-                            var matches = response
-                                .SelectMany(match => match?.Translations?.Select(trans => new TranslationMatch(this, trans?.TranslatedText, match.ConfidenceLevel / 100.0)))
-                                .Where(m => m?.TranslatedText != null)
-                                .Distinct(TranslationMatch.TextComparer);
+                    if (response != null)
+                    {
+                        var matches = response
+                            .SelectMany(match => match?.Translations?.Select(trans => new TranslationMatch(this, trans?.TranslatedText, match.ConfidenceLevel / 100.0)))
+                            .Where(m => m?.TranslatedText != null)
+                            .Distinct(TranslationMatch.TextComparer);
 
 #pragma warning disable CS4014 // Because this call is not awaited ... => just push out results, no need to wait.
-                            translationSession.MainThread.StartNew(() => item.Results.AddRange(matches));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        translationSession.AddMessage(DisplayName + ": " + ex.Message);
-                        break;
+                        translationSession.MainThread.StartNew(() => item.Results.AddRange(matches));
                     }
                 }
             }

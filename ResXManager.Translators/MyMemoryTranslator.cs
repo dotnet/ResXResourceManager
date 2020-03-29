@@ -56,7 +56,7 @@
         [CanBeNull]
         private string Key => Credentials[0].Value;
 
-        public override async Task Translate(ITranslationSession translationSession)
+        protected override async Task Translate(ITranslationSession translationSession)
         {
             using (var client = new HttpClient())
             {
@@ -68,37 +68,29 @@
 
                     var translationItem = item;
 
-                    try
-                    {
-                        var targetCulture = translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage;
-                        var result = await TranslateTextAsync(client, translationItem.Source, Key, translationSession.SourceLanguage, targetCulture, translationSession.CancellationToken);
+                    var targetCulture = translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage;
+                    var result = await TranslateTextAsync(client, translationItem.Source, Key, translationSession.SourceLanguage, targetCulture, translationSession.CancellationToken);
 
-                        await translationSession.MainThread.StartNew(() =>
+                    await translationSession.MainThread.StartNew(() =>
+                    {
+                        if (result?.Matches != null)
                         {
-                            if (result?.Matches != null)
+                            foreach (var match in result.Matches)
                             {
-                                foreach (var match in result.Matches)
-                                {
-                                    var translation = match.Translation;
-                                    if (string.IsNullOrEmpty(translation))
-                                        continue;
+                                var translation = match.Translation;
+                                if (string.IsNullOrEmpty(translation))
+                                    continue;
 
-                                    translationItem.Results.Add(new TranslationMatch(this, translation, match.Match.GetValueOrDefault() * match.Quality.GetValueOrDefault() / 100.0));
-                                }
+                                translationItem.Results.Add(new TranslationMatch(this, translation, match.Match.GetValueOrDefault() * match.Quality.GetValueOrDefault() / 100.0));
                             }
-                            else
-                            {
-                                var translation = result?.ResponseData?.TranslatedText;
-                                if (!string.IsNullOrEmpty(translation))
-                                    translationItem.Results.Add(new TranslationMatch(this, translation, result.ResponseData.Match.GetValueOrDefault()));
-                            }
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        translationSession.AddMessage(DisplayName + ": " + ex.Message);
-                        break;
-                    }
+                        }
+                        else
+                        {
+                            var translation = result?.ResponseData?.TranslatedText;
+                            if (!string.IsNullOrEmpty(translation))
+                                translationItem.Results.Add(new TranslationMatch(this, translation, result.ResponseData.Match.GetValueOrDefault()));
+                        }
+                    });
                 }
             }
         }
@@ -117,6 +109,8 @@
                 url += string.Format(CultureInfo.InvariantCulture, "&key={0}", HttpUtility.UrlEncode(key));
 
             var response = await client.GetAsync(url, cancellationToken);
+
+            response.EnsureSuccessStatusCode();
 
             using (var reader = new StreamReader(await response.Content.ReadAsStreamAsync(), Encoding.UTF8))
             {

@@ -7,11 +7,37 @@
              xmlns:properties="clr-namespace:ResXManager.View.Properties"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              xmlns:infrastructure="urn:ResXManager.Infrastructure">
-  <TabControl TabStripPlacement="Left" Loaded="TabControl_Loaded" Style="{DynamicResource {x:Static styles:ResourceKeys.TabControlStyle}}"
+  <TabControl TabStripPlacement="Left" Loaded="TabControl_Loaded"
+              HorizontalContentAlignment="Stretch"
+              Style="{DynamicResource {x:Static styles:ResourceKeys.TabControlStyle}}"
               ItemsSource="{Binding Translators, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}">
     <TabControl.ItemTemplate>
       <DataTemplate>
-        <TextBlock Text="{Binding DisplayName}" Margin="4" />
+        <DockPanel HorizontalAlignment="Stretch">
+          <DockPanel.Resources>
+            <wpf:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" VisibilityWhenBooleanIsFalse="Hidden" />
+            <Storyboard x:Key="RotationStoryboard" RepeatBehavior="Forever">
+              <DoubleAnimation By="360" Storyboard.TargetName="spinner" Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)" />
+            </Storyboard>
+          </DockPanel.Resources>
+          <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsEnabled}" VerticalAlignment="Center" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+          <Rectangle x:Name="spinner"
+                     DockPanel.Dock="Right" VerticalAlignment="Center"
+                     Visibility="{Binding IsActive, Converter={StaticResource BooleanToVisibilityConverter}}"
+                     Width="8" Height="8" 
+                     RenderTransformOrigin="0.5,0.5"
+                     StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}">
+            <Rectangle.RenderTransform>
+              <RotateTransform />
+            </Rectangle.RenderTransform>
+            <Rectangle.Triggers>
+              <EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard Storyboard="{StaticResource RotationStoryboard}" />
+              </EventTrigger>
+            </Rectangle.Triggers>
+          </Rectangle>
+          <TextBlock Text="{Binding DisplayName}" Margin="4" VerticalAlignment="Center"/>
+        </DockPanel>
       </DataTemplate>
     </TabControl.ItemTemplate>
     <TabControl.ContentTemplate>
