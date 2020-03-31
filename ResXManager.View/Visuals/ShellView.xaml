@@ -38,7 +38,7 @@
     <Button x:Name="DonateButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5,0"
             Background="Transparent" BorderBrush="Transparent"
             BorderThickness="0" ToolTip="{x:Static properties:Resources.DonateButtonToolTip}"
-            Tag="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=TQQR8AKGNHELQ">
+            Tag="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=RN8MF9PE9PYEL">
       <Button.Style>
         <Style TargetType="Button">
           <Setter Property="Opacity" Value="0.15" />
