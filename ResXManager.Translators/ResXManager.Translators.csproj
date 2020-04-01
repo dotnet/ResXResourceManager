@@ -83,6 +83,7 @@
       <DependentUpon>AzureTranslatorConfiguration.xaml</DependentUpon>
     </Compile>
     <Compile Include="CredentialItem.cs" />
+    <Compile Include="DeepLTranslator.cs" />
     <Compile Include="MSTerminologyTranslator.cs" />
     <Compile Include="MyMemoryTranslator.cs" />
     <Compile Include="GoogleTranslator.cs" />
