@@ -47,6 +47,9 @@ namespace ResXManager.Translators
         [DataMember]
         public bool SaveCredentials { get; set; }
 
+        [DataMember]
+        public double Ranking { get; set; } = 1.0;
+
         public IList<ICredentialItem> Credentials { get; }
 
         async Task ITranslator.Translate(ITranslationSession translationSession)

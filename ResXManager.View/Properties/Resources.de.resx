@@ -437,4 +437,7 @@ Ihr ResXManager-Team.
   <data name="Translations_Discard" xml:space="preserve">
     <value>Verwerfen</value>
   </data>
+  <data name="Ranking" xml:space="preserve">
+    <value>Rang</value>
+  </data>
 </root>

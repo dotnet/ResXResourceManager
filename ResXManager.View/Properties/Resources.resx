@@ -447,4 +447,7 @@ Your ResXManager team.
   <data name="Translations_Discard" xml:space="preserve">
     <value>Discard</value>
   </data>
+  <data name="Ranking" xml:space="preserve">
+    <value>Ranking:</value>
+  </data>
 </root>

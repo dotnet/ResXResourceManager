@@ -79,14 +79,14 @@
                                 if (string.IsNullOrEmpty(translation))
                                     continue;
 
-                                translationItem.Results.Add(new TranslationMatch(this, translation, match.Match.GetValueOrDefault() * match.Quality.GetValueOrDefault() / 100.0));
+                                translationItem.Results.Add(new TranslationMatch(this, translation, Ranking * match.Match.GetValueOrDefault() * match.Quality.GetValueOrDefault() / 100.0));
                             }
                         }
                         else
                         {
                             var translation = result?.ResponseData?.TranslatedText;
                             if (!string.IsNullOrEmpty(translation))
-                                translationItem.Results.Add(new TranslationMatch(this, translation, result.ResponseData.Match.GetValueOrDefault()));
+                                translationItem.Results.Add(new TranslationMatch(this, translation, Ranking * result.ResponseData.Match.GetValueOrDefault()));
                         }
                     });
                 }

@@ -835,6 +835,16 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Ranking:.
+        /// </summary>
+        [NotNull]
+        public static string Ranking {
+            get {
+                return ResourceManager.GetString("Ranking", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Refresh view.
         /// </summary>
         [NotNull]
@@ -1425,6 +1435,10 @@ namespace ResXManager.View.Properties {
         ///   Looks up a localized string similar to Patterns.
         /// </summary>
         Patterns,
+        /// <summary>
+        ///   Looks up a localized string similar to Ranking:.
+        /// </summary>
+        Ranking,
         /// <summary>
         ///   Looks up a localized string similar to Refresh view.
         /// </summary>

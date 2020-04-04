@@ -99,7 +99,7 @@ namespace ResXManager.Translators
                                 var translations = JsonConvert.DeserializeObject<List<AzureTranslationResponse>>(reader.ReadToEnd());
                                 if (translations != null)
                                 {
-                                    await translationSession.MainThread.StartNew(() => ReturnResults(sourceItems, translations));
+                                    await translationSession.MainThread.StartNew(() => ReturnResults(sourceItems, translations)).ConfigureAwait(false);
                                 }
                             }
                         }
@@ -128,7 +128,7 @@ namespace ResXManager.Translators
                 var translations = response.Translations;
                 foreach (var match in translations)
                 {
-                    translationItem.Results.Add(new TranslationMatch(this, match.Text, 1.0));
+                    translationItem.Results.Add(new TranslationMatch(this, match.Text, Ranking));
                 }
             }
         }

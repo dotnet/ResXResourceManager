@@ -24,6 +24,8 @@
 
         bool SaveCredentials { get; set; }
 
+        double Ranking { get; set; }
+
         Task Translate([NotNull] ITranslationSession translationSession);
 
         [NotNull, ItemNotNull]

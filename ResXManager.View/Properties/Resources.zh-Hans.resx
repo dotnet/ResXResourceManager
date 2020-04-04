@@ -438,4 +438,7 @@ ResXManager 团队
   <data name="Translations_Discard" xml:space="preserve">
     <value>丢弃</value>
   </data>
+  <data name="Ranking" xml:space="preserve">
+    <value>排名</value>
+  </data>
 </root>

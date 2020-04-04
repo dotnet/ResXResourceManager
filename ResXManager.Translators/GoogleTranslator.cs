@@ -102,7 +102,7 @@
                             foreach (var tuple in sourceItems.Zip(response.Data.Translations,
                                 (a, b) => new Tuple<ITranslationItem, string>(a, b.TranslatedText)))
                             {
-                                tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2, 1.0));
+                                tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2, Ranking));
                             }
                         });
 
