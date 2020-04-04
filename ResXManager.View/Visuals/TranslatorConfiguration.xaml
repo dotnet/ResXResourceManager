@@ -46,7 +46,7 @@
           <DockPanel Margin="8,0">
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
               <TextBlock VerticalAlignment="Center">
-                <Run Text="Ranking:" />
+                <Run Text="{x:Static properties:Resources.Ranking}" />
                 <Run Text=" "/>
               </TextBlock>
               <TextBox Width="35" Text="{Binding Ranking, StringFormat=F1}" VerticalAlignment="Center" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}"/>
