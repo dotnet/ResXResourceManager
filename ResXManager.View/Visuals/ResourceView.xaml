@@ -356,40 +356,54 @@
           <Interactions:Interaction.Behaviors>
             <toms:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=ColumnChooserToggleButton}" />
           </Interactions:Interaction.Behaviors>
-          <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-            <ListBox ItemsSource="{Binding Columns, ElementName=DataGrid, Converter={x:Static converters:LanguageColumnFilterConverter.Default}}"
-                     Style="{DynamicResource {x:Static styles:ResourceKeys.ListBoxStyle}}"
-                     SelectionMode="Multiple" KeyboardNavigation.TabNavigation="Once">
-              <ListBox.ItemTemplate>
-                <DataTemplate DataType="DataGridColumn">
-                  <DockPanel Margin="2">
-                    <CheckBox DockPanel.Dock="Left"
+          <Border Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}" Padding="8,4" BorderThickness="1" BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
+            <StackPanel>
+              <CheckBox Content="All languages" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" Margin="2">
+                <Interactions:Interaction.Behaviors>
+                  <behaviors:SelectAllColumnsBehavior ListBox="{Binding ElementName=SelectedColumns}" ColumnType="Language" />
+                </Interactions:Interaction.Behaviors>
+              </CheckBox>
+              <CheckBox Content="All comments" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" Margin="2">
+                <Interactions:Interaction.Behaviors>
+                  <behaviors:SelectAllColumnsBehavior ListBox="{Binding ElementName=SelectedColumns}" ColumnType="Comment" />
+                </Interactions:Interaction.Behaviors>
+              </CheckBox>
+              <Separator />
+              <ListBox x:Name="SelectedColumns" ItemsSource="{Binding Columns, ElementName=DataGrid, Converter={x:Static converters:LanguageColumnFilterConverter.Default}}"
+                       Style="{DynamicResource {x:Static styles:ResourceKeys.ListBoxStyle}}"
+                       SelectionMode="Multiple" KeyboardNavigation.TabNavigation="Once"
+                       Background="Transparent" BorderThickness="0">
+                <ListBox.ItemTemplate>
+                  <DataTemplate DataType="DataGridColumn">
+                    <DockPanel Margin="2">
+                      <CheckBox DockPanel.Dock="Left"
                               IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}"
                               Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
-                    <Decorator DockPanel.Dock="Left" Width="2" />
-                    <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-                    <Image DockPanel.Dock="Left"
+                      <Decorator DockPanel.Dock="Left" Width="2" />
+                      <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                      <Image DockPanel.Dock="Left"
                            Source="{Binding Path=Header.EffectiveCulture, Converter={composition:Import converters:CultureToImageSourceConverter}, FallbackValue={x:Null}}" />
-                    <Decorator DockPanel.Dock="Left" Width="2" />
-                    <Decorator DockPanel.Dock="Right" Width="3" />
-                    <ContentPresenter Content="{Binding Path=Header}" VerticalAlignment="Center" />
-                  </DockPanel>
-                </DataTemplate>
-              </ListBox.ItemTemplate>
-              <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                  <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-                  <Setter Property="IsSelected" Value="{Binding Path=Visibility, Converter={x:Static toms:VisibilityToBooleanConverter.Default}}" />
-                  <Setter Property="Template">
-                    <Setter.Value>
-                      <ControlTemplate TargetType="ListBoxItem">
-                        <ContentPresenter />
-                      </ControlTemplate>
-                    </Setter.Value>
-                  </Setter>
-                </Style>
-              </ListBox.ItemContainerStyle>
-            </ListBox>
+                      <Decorator DockPanel.Dock="Left" Width="2" />
+                      <Decorator DockPanel.Dock="Right" Width="3" />
+                      <ContentPresenter Content="{Binding Path=Header}" VerticalAlignment="Center" />
+                    </DockPanel>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                  <Style TargetType="ListBoxItem">
+                    <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                    <Setter Property="IsSelected" Value="{Binding Path=Visibility, Converter={x:Static toms:VisibilityToBooleanConverter.Default}}" />
+                    <Setter Property="Template">
+                      <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                          <ContentPresenter />
+                        </ControlTemplate>
+                      </Setter.Value>
+                    </Setter>
+                  </Style>
+                </ListBox.ItemContainerStyle>
+              </ListBox>
+            </StackPanel>
           </Border>
         </Popup>
         <Decorator DockPanel.Dock="Left" Width="4" />
