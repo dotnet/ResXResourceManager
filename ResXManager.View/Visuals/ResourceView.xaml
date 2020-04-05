@@ -358,12 +358,12 @@
           </Interactions:Interaction.Behaviors>
           <Border Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}" Padding="8,4" BorderThickness="1" BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
             <StackPanel>
-              <CheckBox Content="All languages" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" Margin="2">
+              <CheckBox Content="{x:Static properties:Resources.AllLanguages}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" Margin="2">
                 <Interactions:Interaction.Behaviors>
                   <behaviors:SelectAllColumnsBehavior ListBox="{Binding ElementName=SelectedColumns}" ColumnType="Language" />
                 </Interactions:Interaction.Behaviors>
               </CheckBox>
-              <CheckBox Content="All comments" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" Margin="2">
+              <CheckBox Content="{x:Static properties:Resources.AllComments}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" Margin="2">
                 <Interactions:Interaction.Behaviors>
                   <behaviors:SelectAllColumnsBehavior ListBox="{Binding ElementName=SelectedColumns}" ColumnType="Comment" />
                 </Interactions:Interaction.Behaviors>

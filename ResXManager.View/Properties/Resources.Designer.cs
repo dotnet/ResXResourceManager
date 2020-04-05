@@ -102,6 +102,26 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to All comments.
+        /// </summary>
+        [NotNull]
+        public static string AllComments {
+            get {
+                return ResourceManager.GetString("AllComments", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to All languages.
+        /// </summary>
+        [NotNull]
+        public static string AllLanguages {
+            get {
+                return ResourceManager.GetString("AllLanguages", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Authentication.
         /// </summary>
         [NotNull]
@@ -1140,6 +1160,14 @@ namespace ResXManager.View.Properties {
         ///   Looks up a localized string similar to Add new language.
         /// </summary>
         AddLanguageToolTip,
+        /// <summary>
+        ///   Looks up a localized string similar to All comments.
+        /// </summary>
+        AllComments,
+        /// <summary>
+        ///   Looks up a localized string similar to All languages.
+        /// </summary>
+        AllLanguages,
         /// <summary>
         ///   Looks up a localized string similar to Authentication.
         /// </summary>

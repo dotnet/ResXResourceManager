@@ -441,4 +441,10 @@ ResXManager 团队
   <data name="Ranking" xml:space="preserve">
     <value>排名</value>
   </data>
+  <data name="AllLanguages" xml:space="preserve">
+    <value>所有语言</value>
+  </data>
+  <data name="AllComments" xml:space="preserve">
+    <value>所有注释</value>
+  </data>
 </root>
