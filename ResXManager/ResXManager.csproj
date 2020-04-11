@@ -346,6 +346,11 @@
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all">
       <Version>2019.1.3</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub">
+      <Version>1.1.0-beta-20204-02</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all">
       <Version>3.2.6</Version>
     </PackageReference>

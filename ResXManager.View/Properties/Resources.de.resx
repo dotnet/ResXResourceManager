@@ -438,7 +438,7 @@ Ihr ResXManager-Team.
     <value>Verwerfen</value>
   </data>
   <data name="Ranking" xml:space="preserve">
-    <value>Rang</value>
+    <value>Rang:</value>
   </data>
   <data name="AllLanguages" xml:space="preserve">
     <value>Alle Sprachen</value>

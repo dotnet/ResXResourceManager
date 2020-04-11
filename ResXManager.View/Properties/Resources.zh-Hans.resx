@@ -439,7 +439,7 @@ ResXManager 团队
     <value>丢弃</value>
   </data>
   <data name="Ranking" xml:space="preserve">
-    <value>排名</value>
+    <value>排名:</value>
   </data>
   <data name="AllLanguages" xml:space="preserve">
     <value>所有语言</value>
