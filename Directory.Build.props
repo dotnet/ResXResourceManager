@@ -3,12 +3,7 @@
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-
-  <Target Name="BypassFodyVSVersionCheck" BeforeTargets="FodyTarget">
-    <PropertyGroup>
-      <MsBuildMajorVersion>16</MsBuildMajorVersion>
-    </PropertyGroup>
-  </Target>
-
 </Project>
