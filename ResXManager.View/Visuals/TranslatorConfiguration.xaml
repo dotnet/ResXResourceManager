@@ -6,7 +6,8 @@
              xmlns:wpf="urn:TomsToolbox"
              xmlns:properties="clr-namespace:ResXManager.View.Properties"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
-             xmlns:infrastructure="urn:ResXManager.Infrastructure">
+             xmlns:infrastructure="urn:ResXManager.Infrastructure"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
   <TabControl TabStripPlacement="Left" Loaded="TabControl_Loaded"
               HorizontalContentAlignment="Stretch"
               Style="{DynamicResource {x:Static styles:ResourceKeys.TabControlStyle}}"
@@ -77,7 +78,11 @@
                           <Run Text="{Binding Description, Mode=OneWay}" /><Run Text=": " />
                         </TextBlock>
                       </wpf:SharedWidthHeaderedContentControl.Header>
-                      <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
+                      <PasswordBox Style="{DynamicResource {x:Static styles:ResourceKeys.PasswordBoxStyle}}">
+                        <i:Interaction.Behaviors>
+                          <wpf:PasswordBoxBindingBehavior Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                        </i:Interaction.Behaviors>
+                      </PasswordBox>
                     </wpf:SharedWidthHeaderedContentControl>
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
