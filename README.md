@@ -24,8 +24,14 @@ Web applications using Typescript (e.g. Angular) are also supported, see [L10N-W
 
 Xamarin apps can be supported using e.g. [XamarinLocalizationSync](https://github.com/maruhe/XamarinLocalizationSync)
 
-## Documentation
+## Code of Conduct
+This project has adopted the code of conduct defined by the Contributor Covenant to clarify expected behavior in our community.
+For more information see the [.NET Foundation Code of Conduct](https://dotnetfoundation.org/code-of-conduct).
 
+## .NET Foundation
+This project is supported by the [.NET Foundation](https://dotnetfoundation.org).
+
+## Documentation
 Can be found in the [Wiki pages](../../wiki).
 
 ## Installation
