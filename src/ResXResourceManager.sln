@@ -59,38 +59,42 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repository", "Repository", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{DFF87A7B-E7F1-4AB2-BDB2-5587BAC30015}"
 	ProjectSection(SolutionItems) = preProject
-		..\Documentation\Automatic Translations_Translations.png = ..\Documentation\Automatic Translations_Translations.png
-		..\Documentation\Automatic-Translations.md = ..\Documentation\Automatic-Translations.md
-		..\Documentation\CellSelection.png = ..\Documentation\CellSelection.png
-		..\Documentation\Configure Visible Columns_ChooseColumns.png = ..\Documentation\Configure Visible Columns_ChooseColumns.png
-		..\Documentation\Configure-Visible-Columns.md = ..\Documentation\Configure-Visible-Columns.md
-		..\Documentation\Copy, Paste, Export and Import_CopyPasteExport.png = ..\Documentation\Copy, Paste, Export and Import_CopyPasteExport.png
-		..\Documentation\Copy,-Paste,-Export-and-Import.md = ..\Documentation\Copy,-Paste,-Export-and-Import.md
-		..\Documentation\CopyPasteContextMenu.png = ..\Documentation\CopyPasteContextMenu.png
-		..\Documentation\Custom-Code-Generator.md = ..\Documentation\Custom-Code-Generator.md
-		..\Documentation\Detect Code References_DetectCodeReferences.png = ..\Documentation\Detect Code References_DetectCodeReferences.png
-		..\Documentation\Detect Code References_DetectCodeReferencesConfig.png = ..\Documentation\Detect Code References_DetectCodeReferencesConfig.png
-		..\Documentation\Detect-Code-References.md = ..\Documentation\Detect-Code-References.md
-		..\Documentation\Documentation_extension.png = ..\Documentation\Documentation_extension.png
-		..\Documentation\Documentation_standalone.png = ..\Documentation\Documentation_standalone.png
-		..\Documentation\Donate.md = ..\Documentation\Donate.md
-		..\Documentation\Home.md = ..\Documentation\Home.md
-		..\Documentation\Home_ChooseColumns.png = ..\Documentation\Home_ChooseColumns.png
-		..\Documentation\Home_extension.png = ..\Documentation\Home_extension.png
-		..\Documentation\Home_standalone.png = ..\Documentation\Home_standalone.png
-		..\Documentation\Installation.md = ..\Documentation\Installation.md
-		..\Documentation\Invariant Strings_Invariant.png = ..\Documentation\Invariant Strings_Invariant.png
-		..\Documentation\Invariant-Strings.md = ..\Documentation\Invariant-Strings.md
-		..\Documentation\Scripting.md = ..\Documentation\Scripting.md
-		..\Documentation\SelectCodeGenerator.png = ..\Documentation\SelectCodeGenerator.png
-		..\Documentation\Snapshots.md = ..\Documentation\Snapshots.md
-		..\Documentation\Snapshots_ShowOnlyErrors.png = ..\Documentation\Snapshots_ShowOnlyErrors.png
-		..\Documentation\Snapshots_Snapshots.png = ..\Documentation\Snapshots_Snapshots.png
-		..\Documentation\Spell-Checker.md = ..\Documentation\Spell-Checker.md
-		..\Documentation\SpellChecker_LanguageSettings.png = ..\Documentation\SpellChecker_LanguageSettings.png
-		..\Documentation\TextTemplateCodeGenerator.png = ..\Documentation\TextTemplateCodeGenerator.png
-		..\Documentation\Troubleshooting.md = ..\Documentation\Troubleshooting.md
-		..\Documentation\Usage.md = ..\Documentation\Usage.md
+		..\Documentation\Readme.md = ..\Documentation\Readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Topics", "Topics", "{E3F92F55-65D9-4D83-83B0-F236D6A7012A}"
+	ProjectSection(SolutionItems) = preProject
+		..\Documentation\Topics\Automatic Translations_Translations.png = ..\Documentation\Topics\Automatic Translations_Translations.png
+		..\Documentation\Topics\Automatic-Translations.md = ..\Documentation\Topics\Automatic-Translations.md
+		..\Documentation\Topics\CellSelection.png = ..\Documentation\Topics\CellSelection.png
+		..\Documentation\Topics\Configure Visible Columns_ChooseColumns.png = ..\Documentation\Topics\Configure Visible Columns_ChooseColumns.png
+		..\Documentation\Topics\Configure-Visible-Columns.md = ..\Documentation\Topics\Configure-Visible-Columns.md
+		..\Documentation\Topics\Copy, Paste, Export and Import_CopyPasteExport.png = ..\Documentation\Topics\Copy, Paste, Export and Import_CopyPasteExport.png
+		..\Documentation\Topics\Copy,-Paste,-Export-and-Import.md = ..\Documentation\Topics\Copy,-Paste,-Export-and-Import.md
+		..\Documentation\Topics\CopyPasteContextMenu.png = ..\Documentation\Topics\CopyPasteContextMenu.png
+		..\Documentation\Topics\Custom-Code-Generator.md = ..\Documentation\Topics\Custom-Code-Generator.md
+		..\Documentation\Topics\Detect Code References_DetectCodeReferences.png = ..\Documentation\Topics\Detect Code References_DetectCodeReferences.png
+		..\Documentation\Topics\Detect Code References_DetectCodeReferencesConfig.png = ..\Documentation\Topics\Detect Code References_DetectCodeReferencesConfig.png
+		..\Documentation\Topics\Detect-Code-References.md = ..\Documentation\Topics\Detect-Code-References.md
+		..\Documentation\Topics\Documentation_extension.png = ..\Documentation\Topics\Documentation_extension.png
+		..\Documentation\Topics\Documentation_standalone.png = ..\Documentation\Topics\Documentation_standalone.png
+		..\Documentation\Topics\Donate.md = ..\Documentation\Topics\Donate.md
+		..\Documentation\Topics\Home_ChooseColumns.png = ..\Documentation\Topics\Home_ChooseColumns.png
+		..\Documentation\Topics\Home_extension.png = ..\Documentation\Topics\Home_extension.png
+		..\Documentation\Topics\Home_standalone.png = ..\Documentation\Topics\Home_standalone.png
+		..\Documentation\Topics\Installation.md = ..\Documentation\Topics\Installation.md
+		..\Documentation\Topics\Invariant Strings_Invariant.png = ..\Documentation\Topics\Invariant Strings_Invariant.png
+		..\Documentation\Topics\Invariant-Strings.md = ..\Documentation\Topics\Invariant-Strings.md
+		..\Documentation\Topics\Scripting.md = ..\Documentation\Topics\Scripting.md
+		..\Documentation\Topics\SelectCodeGenerator.png = ..\Documentation\Topics\SelectCodeGenerator.png
+		..\Documentation\Topics\Snapshots.md = ..\Documentation\Topics\Snapshots.md
+		..\Documentation\Topics\Snapshots_ShowOnlyErrors.png = ..\Documentation\Topics\Snapshots_ShowOnlyErrors.png
+		..\Documentation\Topics\Snapshots_Snapshots.png = ..\Documentation\Topics\Snapshots_Snapshots.png
+		..\Documentation\Topics\Spell-Checker.md = ..\Documentation\Topics\Spell-Checker.md
+		..\Documentation\Topics\SpellChecker_LanguageSettings.png = ..\Documentation\Topics\SpellChecker_LanguageSettings.png
+		..\Documentation\Topics\TextTemplateCodeGenerator.png = ..\Documentation\Topics\TextTemplateCodeGenerator.png
+		..\Documentation\Topics\Troubleshooting.md = ..\Documentation\Topics\Troubleshooting.md
+		..\Documentation\Topics\Usage.md = ..\Documentation\Topics\Usage.md
 	EndProjectSection
 EndProject
 Global
@@ -130,6 +134,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E3F92F55-65D9-4D83-83B0-F236D6A7012A} = {DFF87A7B-E7F1-4AB2-BDB2-5587BAC30015}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {04A160C5-3AA5-4A9E-9D73-A227A07E3EE4}

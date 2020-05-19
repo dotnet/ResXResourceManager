@@ -9,7 +9,7 @@ The most popular tool to manage localization of all kind of applications with re
 This is a community driven Open Source project. 
 As such it needs your support to keep it alive and evolving. 
 The best way to contribute is to help [fixing bugs, or adding new features](https://github.com/tom-englert/ResXResourceManager/issues).
-However, if you cannot help with coding, consider to [donate a small amount](Documentation/Donate.md) to ensure <span>ResX&nbsp;Resource&nbsp;Manager</span> will continue to be a great project that can help you in your daily work.
+However, if you cannot help with coding, consider to [donate a small amount](Documentation/Topics/Donate.md) to ensure <span>ResX&nbsp;Resource&nbsp;Manager</span> will continue to be a great project that can help you in your daily work.
 
 ---
 
@@ -30,7 +30,7 @@ For more information see the [.NET Foundation Code of Conduct](https://dotnetfou
 This project is supported by the [.NET Foundation](https://dotnetfoundation.org).
 
 ## Documentation
-Can be found in the [Documentation folder](Documentation/Home.md).
+Can be found in the [Documentation folder](Documentation/Readme.md).
 
 ## Installation
 ResXResourceManager is available as VS2015-2019 extension and as a standalone executable to support VS2013 and older or users without Visual Studio at all.
