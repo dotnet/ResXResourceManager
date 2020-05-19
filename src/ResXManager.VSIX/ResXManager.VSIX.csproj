@@ -144,7 +144,7 @@
     <None Include="..\Key.snk">
       <Link>Key.snk</Link>
     </None>
-    <Content Include="..\License">
+    <Content Include="..\..\License">
       <Link>License</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -172,7 +172,7 @@
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
-    <Content Include="..\Release notes.md">
+    <Content Include="..\..\Release notes.md">
       <Link>Release notes.md</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
