@@ -423,7 +423,7 @@
 &lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
 最好的贡献方法是帮助 &lt;Hyperlink NavigateUri="https://github.com/dotnet/ResXResourceManager/issues"&gt;修复 BUG 或者加入新功能&lt;/Hyperlink&gt;
 &lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
-如果您不能帮助编写代码，考虑&lt;Hyperlink NavigateUri="https://github.com/dotnet/ResXResourceManager/wiki/Donate"&gt;捐助（Donate）一点小钱&lt;/Hyperlink&gt; 来确保 ResX&amp;#160;Resource&amp;#160;Manager 变得更好以便协助您的开发工作
+如果您不能帮助编写代码，考虑&lt;Hyperlink NavigateUri="https://github.com/dotnet/ResXResourceManager/Documentation/Donate.md"&gt;捐助（Donate）一点小钱&lt;/Hyperlink&gt; 来确保 ResX&amp;#160;Resource&amp;#160;Manager 变得更好以便协助您的开发工作
 &lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
 ResXManager 团队
 &lt;/TextBlock&gt;

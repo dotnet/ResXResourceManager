@@ -1,7 +1,9 @@
 Select a topic to start with:
 
-## [Installation](Installation)
+### [Installation](Installation)
 
-## [Usage](Usage)
+### [Usage](Usage)
 
-## [Donate](Donate)
+### [Troubleshooting](Troubleshooting)
+
+### [Supporting the project](Donate)

@@ -24,14 +24,14 @@ Empty, untranslated entries are marked red, so they are easy to find; you can al
 This project has integrated the [Data Grid Extensions](https://github.com/tom-englert/DataGridExtensions), so you can simply filter columns to search the view for something special to translate or verify.
 
 ### Features
-- [Custom Code Generator](Custom-Code-Generator)
 - [Automatic Translations](Automatic-Translations)
-- [Detect Code References](Detect-Code-References)
-- [Invariant Strings](Invariant-Strings)
 - [Configure Visible Columns](Configure-Visible-Columns)
 - [Copy, Paste, Export and Import](Copy,-Paste,-Export-and-Import)
-- [Snapshots](Snapshots)
+- [Custom Code Generator](Custom-Code-Generator)
+- [Detect Code References](Detect-Code-References)
+- [Invariant Strings](Invariant-Strings)
 - [Scripting](Scripting)
+- [Snapshots](Snapshots)
 - [Spell Checker](Spell-Checker)
 
 **Note**: With the default settings this tool instantly saves the changes as soon as you leave a cell in the data grid. 

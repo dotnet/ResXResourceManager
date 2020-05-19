@@ -99,7 +99,7 @@
                 exportProvider.WriteLine("Duplicate assemblies found: " + string.Join(", ", assembliesByName));
             }
 
-            exportProvider.WriteLine("Please read https://github.com/dotnet/ResXResourceManager/wiki/Fixing-errors before creating an issue.");
+            exportProvider.WriteLine("Please read https://github.com/dotnet/ResXResourceManager/Documentation/Troubleshooting.md before creating an issue.");
         }
     }
 }

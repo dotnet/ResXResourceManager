@@ -332,7 +332,7 @@
 - WI4660: Select & Copy in column mode
 
 1.0.0.66:
-- WI4604, WI4638, WI4642: New snapshot feature allows to filter for changes (https://github.com/tom-englert/ResXResourceManager/wiki/Snapshots)
+- WI4604, WI4638, WI4642: New snapshot feature allows to filter for changes (https://github.com/dotnet/ResXResourceManager/Documentation/Snapshots.md)
 - WI4657: Allow to enter tab characters in the top-right edit field.
 
 1.0.0.65:

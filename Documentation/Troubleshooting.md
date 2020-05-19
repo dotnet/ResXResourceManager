@@ -1,6 +1,9 @@
 ### The extension is always disabled after restarting VS
-The VSIX installer sometimes fails to remove the old version of an extension during update; if the same extension is installed twice, VS disables it.
-Solution: use https://github.com/remcoros/DuplicateExtensionFinder to remove duplicates.
+The VSIX installer sometimes fails to remove the old version of an extension during update; 
+if the same extension is installed twice, VS disables it.
+##### Solutions
+- Close VS and use [DuplicateExtensionFinder](https://github.com/remcoros/DuplicateExtensionFinder) to remove duplicates.
+- Uninstall the extension and restart VS. Repeat until VS does not list the extension any longer. Now install the latest version.
 
 ### The content of the ResxManager window is empty. 
 This may have several root causes

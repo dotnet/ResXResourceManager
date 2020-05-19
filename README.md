@@ -1,17 +1,15 @@
 <img style="float: right;" src="Assets/VS2017%20Launch%20Partner%20Logo%20Small.png">
 
-# ResX Resource Manager ![Badge](https://tom-englert.visualstudio.com/_apis/public/build/definitions/75bf84d2-d359-404a-a712-07c9f693f635/7/badge) [![Backers on Open Collective](https://opencollective.com/ResXResourceManager/backers/badge.svg)](#backers)  [![Sponsors on Open Collective](https://opencollective.com/ResXResourceManager/sponsors/badge.svg)](#sponsors) 
+# ResX Resource Manager [![Build status](https://dev.azure.com/tom-englert/Open%20Source/_apis/build/status/ResXManager)](https://dev.azure.com/tom-englert/Open%20Source/_build/latest?definitionId=7) [![Backers on Open Collective](https://opencollective.com/ResXResourceManager/backers/badge.svg)](#backers)  [![Sponsors on Open Collective](https://opencollective.com/ResXResourceManager/sponsors/badge.svg)](#sponsors) 
 
-The most popular tool to localize and manage all kind of applications with resx-based resources, 
-with more than 800K downloads from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager) 
-and hundreds of [5 star reviews](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details)
+The most popular tool to manage localization of all kind of applications with resx-based resources; one of the highest rated extensions on the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager).
 
 ---
 
 This is a community driven Open Source project. 
 As such it needs your support to keep it alive and evolving. 
 The best way to contribute is to help [fixing bugs, or adding new features](https://github.com/tom-englert/ResXResourceManager/issues).
-However, if you cannot help with coding, consider to [donate a small amount](../../wiki/Donate) to ensure <span>ResX&nbsp;Resource&nbsp;Manager</span> will continue to be a great project that can help you in your daily work.
+However, if you cannot help with coding, consider to [donate a small amount](Documentation/Donate.md) to ensure <span>ResX&nbsp;Resource&nbsp;Manager</span> will continue to be a great project that can help you in your daily work.
 
 ---
 
@@ -32,7 +30,7 @@ For more information see the [.NET Foundation Code of Conduct](https://dotnetfou
 This project is supported by the [.NET Foundation](https://dotnetfoundation.org).
 
 ## Documentation
-Can be found in the [Wiki pages](../../wiki).
+Can be found in the [Documentation folder](Documentation/Home.md).
 
 ## Installation
 ResXResourceManager is available as VS2015-2019 extension and as a standalone executable to support VS2013 and older or users without Visual Studio at all.
