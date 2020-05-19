@@ -4,7 +4,7 @@
 # User-specific files
 *.suo
 *.user
-/.vs
+.vs/
 
 # Build results
 [Dd]ebug/

@@ -6,11 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8FE641FD-9430-4433-88D3-ABDD487E4397}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
-		License = License
-		README.md = README.md
-		Release notes.md = Release notes.md
 		Resources.Designer.t4 = Resources.Designer.t4
 		ResXResourceManager.sln.DotSettings = ResXResourceManager.sln.DotSettings
 		ResXManager.VSIX\source.extension.vsixmanifest = ResXManager.VSIX\source.extension.vsixmanifest
@@ -35,18 +31,30 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.Infrastructure"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{632FD104-D77C-4342-A4C1-2EEFFB8011E5}"
 	ProjectSection(SolutionItems) = preProject
-		Assets\ChooseColumns.png = Assets\ChooseColumns.png
-		Assets\CopyPasteExport.png = Assets\CopyPasteExport.png
-		Assets\DetectCodeReferences.png = Assets\DetectCodeReferences.png
-		Assets\DetectCodeReferencesConfig.png = Assets\DetectCodeReferencesConfig.png
-		Assets\Invariant.png = Assets\Invariant.png
-		Assets\Resources.ps1 = Assets\Resources.ps1
-		Assets\ShowOnlyErrors.png = Assets\ShowOnlyErrors.png
-		Assets\Snapshots.png = Assets\Snapshots.png
-		Assets\Translations.png = Assets\Translations.png
+		..\Assets\ChooseColumns.png = ..\Assets\ChooseColumns.png
+		..\Assets\CopyPasteExport.png = ..\Assets\CopyPasteExport.png
+		..\Assets\DetectCodeReferences.png = ..\Assets\DetectCodeReferences.png
+		..\Assets\DetectCodeReferencesConfig.png = ..\Assets\DetectCodeReferencesConfig.png
+		..\Assets\Invariant.png = ..\Assets\Invariant.png
+		..\Assets\Resources.ps1 = ..\Assets\Resources.ps1
+		..\Assets\ShowOnlyErrors.png = ..\Assets\ShowOnlyErrors.png
+		..\Assets\Snapshots.png = ..\Assets\Snapshots.png
+		..\Assets\StandaloneMainScreen.png = ..\Assets\StandaloneMainScreen.png
+		..\Assets\Translations.png = ..\Assets\Translations.png
+		..\Assets\VisualStudioMainScreen.png = ..\Assets\VisualStudioMainScreen.png
+		..\Assets\VS2017 Launch Partner Logo Small.png = ..\Assets\VS2017 Launch Partner Logo Small.png
+		..\Assets\VS2017 Launch Partner Logo.png = ..\Assets\VS2017 Launch Partner Logo.png
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResXManager.Scripting", "ResXManager.Scripting\ResXManager.Scripting.csproj", "{4C82721F-0FFA-4D91-9C08-70D20115AC6A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repository", "Repository", "{746EC663-0F2D-4CD8-AEB8-27B70907C8CD}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\License = ..\License
+		..\README.md = ..\README.md
+		..\Release notes.md = ..\Release notes.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
