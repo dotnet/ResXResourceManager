@@ -51,9 +51,46 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repository", "Repository", "{746EC663-0F2D-4CD8-AEB8-27B70907C8CD}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
+		..\CODE-OF-CONDUCT.md = ..\CODE-OF-CONDUCT.md
 		..\License = ..\License
 		..\README.md = ..\README.md
 		..\Release notes.md = ..\Release notes.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{DFF87A7B-E7F1-4AB2-BDB2-5587BAC30015}"
+	ProjectSection(SolutionItems) = preProject
+		..\Documentation\Automatic Translations_Translations.png = ..\Documentation\Automatic Translations_Translations.png
+		..\Documentation\Automatic-Translations.md = ..\Documentation\Automatic-Translations.md
+		..\Documentation\CellSelection.png = ..\Documentation\CellSelection.png
+		..\Documentation\Configure Visible Columns_ChooseColumns.png = ..\Documentation\Configure Visible Columns_ChooseColumns.png
+		..\Documentation\Configure-Visible-Columns.md = ..\Documentation\Configure-Visible-Columns.md
+		..\Documentation\Copy, Paste, Export and Import_CopyPasteExport.png = ..\Documentation\Copy, Paste, Export and Import_CopyPasteExport.png
+		..\Documentation\Copy,-Paste,-Export-and-Import.md = ..\Documentation\Copy,-Paste,-Export-and-Import.md
+		..\Documentation\CopyPasteContextMenu.png = ..\Documentation\CopyPasteContextMenu.png
+		..\Documentation\Custom-Code-Generator.md = ..\Documentation\Custom-Code-Generator.md
+		..\Documentation\Detect Code References_DetectCodeReferences.png = ..\Documentation\Detect Code References_DetectCodeReferences.png
+		..\Documentation\Detect Code References_DetectCodeReferencesConfig.png = ..\Documentation\Detect Code References_DetectCodeReferencesConfig.png
+		..\Documentation\Detect-Code-References.md = ..\Documentation\Detect-Code-References.md
+		..\Documentation\Documentation_extension.png = ..\Documentation\Documentation_extension.png
+		..\Documentation\Documentation_standalone.png = ..\Documentation\Documentation_standalone.png
+		..\Documentation\Donate.md = ..\Documentation\Donate.md
+		..\Documentation\Home.md = ..\Documentation\Home.md
+		..\Documentation\Home_ChooseColumns.png = ..\Documentation\Home_ChooseColumns.png
+		..\Documentation\Home_extension.png = ..\Documentation\Home_extension.png
+		..\Documentation\Home_standalone.png = ..\Documentation\Home_standalone.png
+		..\Documentation\Installation.md = ..\Documentation\Installation.md
+		..\Documentation\Invariant Strings_Invariant.png = ..\Documentation\Invariant Strings_Invariant.png
+		..\Documentation\Invariant-Strings.md = ..\Documentation\Invariant-Strings.md
+		..\Documentation\Scripting.md = ..\Documentation\Scripting.md
+		..\Documentation\SelectCodeGenerator.png = ..\Documentation\SelectCodeGenerator.png
+		..\Documentation\Snapshots.md = ..\Documentation\Snapshots.md
+		..\Documentation\Snapshots_ShowOnlyErrors.png = ..\Documentation\Snapshots_ShowOnlyErrors.png
+		..\Documentation\Snapshots_Snapshots.png = ..\Documentation\Snapshots_Snapshots.png
+		..\Documentation\Spell-Checker.md = ..\Documentation\Spell-Checker.md
+		..\Documentation\SpellChecker_LanguageSettings.png = ..\Documentation\SpellChecker_LanguageSettings.png
+		..\Documentation\TextTemplateCodeGenerator.png = ..\Documentation\TextTemplateCodeGenerator.png
+		..\Documentation\Troubleshooting.md = ..\Documentation\Troubleshooting.md
+		..\Documentation\Usage.md = ..\Documentation\Usage.md
 	EndProjectSection
 EndProject
 Global
