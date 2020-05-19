@@ -39,7 +39,7 @@ the shared `Resources.Designer.t4`; usually you wont't make any changes to this 
 
 ---
 
-The [Resources.Designer.t4](https://raw.githubusercontent.com/tom-englert/ResXResourceManager/master/ResXManager.VSIX/Resources/Resources.Designer.t4) file
+The [Resources.Designer.t4](../src/ResXManager.VSIX/Resources/Resources.Designer.t4) file
 contains the logic to read the resource keys and translate them into the designer code. The output is close to 
 what the built-in designer generates, plus some useful extras. But since now you have the source code of the 
 designer under your control, you can add any modifications you like, or remove extra stuff that you don't need.
