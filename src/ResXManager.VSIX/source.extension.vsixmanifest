@@ -4,10 +4,10 @@
         <Identity Id="43b35fe0-1f30-48de-887a-68256474202a" Version="1.40.0.0" Language="en-US" Publisher="tom-englert.de" />
         <DisplayName>ResXManager</DisplayName>
         <Description xml:space="preserve">The most popular tool to localize and manage all kind of applications with resx-based resources. Shows all resources of a solution and let's you edit the strings and their localizations in a well-arranged data grid.</Description>
-        <MoreInfo>https://github.com/tom-englert/ResXResourceManager</MoreInfo>
+        <MoreInfo>https://github.com/dotnet/ResXResourceManager</MoreInfo>
         <License>License</License>
-        <GettingStartedGuide>https://github.com/tom-englert/ResXResourceManager/wiki</GettingStartedGuide>
-        <ReleaseNotes>https://github.com/tom-englert/ResXResourceManager/blob/master/Release%20notes.md</ReleaseNotes>
+        <GettingStartedGuide>https://github.com/dotnet/ResXResourceManager/wiki</GettingStartedGuide>
+        <ReleaseNotes>https://github.com/dotnet/ResXResourceManager/blob/master/Release%20notes.md</ReleaseNotes>
         <Icon>32x32.png</Icon>
         <PreviewImage>200x200.png</PreviewImage>
         <Tags>WPF, WinForms, resx, resources, Editor, localization, Productivity, Visual Studio, internationalization, string, resource</Tags>

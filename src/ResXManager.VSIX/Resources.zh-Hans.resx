@@ -173,8 +173,8 @@
   </data>
   <data name="IntroMessage" xml:space="preserve">
     <value>ResX Resource Manager 已加载
-首页: https://github.com/tom-englert/ResXResourceManager
-报告问题: https://github.com/tom-englert/ResXResourceManager/issues
+首页: https://github.com/dotnet/ResXResourceManager
+报告问题: https://github.com/dotnet/ResXResourceManager/issues
 简短评论一下来支持我们吧: https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details
 翻译自 https://github.com/yinyue200</value>
   </data>

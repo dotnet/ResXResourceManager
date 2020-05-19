@@ -430,9 +430,9 @@ This is a community driven Open Source project.
 &lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
 As such it needs your support to keep it alive and evolving.
 &lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
-The best way to contribute is to help &lt;Hyperlink NavigateUri="https://github.com/tom-englert/ResXResourceManager/issues"&gt;fixing bugs, or adding new features.&lt;/Hyperlink&gt;
+The best way to contribute is to help &lt;Hyperlink NavigateUri="https://github.com/dotnet/ResXResourceManager/issues"&gt;fixing bugs, or adding new features.&lt;/Hyperlink&gt;
 &lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
-However, if you cannot help with coding, consider to &lt;Hyperlink NavigateUri="https://github.com/tom-englert/ResXResourceManager/wiki/Donate"&gt;donate a small amount&lt;/Hyperlink&gt; to ensure ResX&amp;#160;Resource&amp;#160;Manager will continue to be a great project that can help you in your daily work.
+However, if you cannot help with coding, consider to &lt;Hyperlink NavigateUri="https://github.com/dotnet/ResXResourceManager/wiki/Donate"&gt;donate a small amount&lt;/Hyperlink&gt; to ensure ResX&amp;#160;Resource&amp;#160;Manager will continue to be a great project that can help you in your daily work.
 &lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
 Your ResXManager team.
 &lt;/TextBlock&gt;

@@ -26,7 +26,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>https://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/</InstallUrl>
-    <SupportUrl>https://github.com/tom-englert/ResXResourceManager</SupportUrl>
+    <SupportUrl>https://github.com/dotnet/ResXResourceManager</SupportUrl>
     <ProductName>ResX Resource Manager</ProductName>
     <PublisherName>tom-englert.de</PublisherName>
     <ApplicationRevision>0</ApplicationRevision>

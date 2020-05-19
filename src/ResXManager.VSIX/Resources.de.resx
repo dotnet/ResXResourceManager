@@ -105,8 +105,8 @@
   </data>
   <data name="IntroMessage">
     <value>ResX Resource Manager wurde geladen.
-Webseite: https://github.com/tom-englert/ResXResourceManager
-Fehler melden:  https://github.com/tom-englert/ResXResourceManager/issues
+Webseite: https://github.com/dotnet/ResXResourceManager
+Fehler melden:  https://github.com/dotnet/ResXResourceManager/issues
 Projekt unterstützen: Schreiben sie ein kurzes Review auf https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details</value>
   </data>
   <data name="ProjectHasNoResourceFile">

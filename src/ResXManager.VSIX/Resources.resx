@@ -126,8 +126,8 @@
   </data>
   <data name="IntroMessage" xml:space="preserve">
     <value>ResX Resource Manager loaded.
-Home: https://github.com/tom-englert/ResXResourceManager
-Report issues: https://github.com/tom-englert/ResXResourceManager/issues
+Home: https://github.com/dotnet/ResXResourceManager
+Report issues: https://github.com/dotnet/ResXResourceManager/issues
 Support the project by adding a short review: https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details</value>
   </data>
   <data name="ProjectHasNoResourceFile" xml:space="preserve">
