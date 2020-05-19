@@ -17,8 +17,6 @@
     {
         public const string Id = "StringFormat";
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         /// <inheritdoc />
         public bool IsEnabled { get; set; }
 
@@ -83,5 +81,9 @@
             Debug.Fail("Unexpected parsing failure.", $"Regular expression matched {match.Groups[1].Value} as number, but parsing integer failed.");
             return 0;
         }
+
+#pragma warning disable CS0067
+        public event PropertyChangedEventHandler PropertyChanged;
+
     }
 }
