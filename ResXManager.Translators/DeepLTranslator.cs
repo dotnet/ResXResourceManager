@@ -71,7 +71,7 @@
                     {
                         var sourceItems = itemsEnumerator.Take(10);
                         if (translationSession.IsCanceled || !sourceItems.Any())
-                            return;
+                            break;
 
                         // Build out list of parameters
                         var parameters = new List<string>(30);
@@ -81,15 +81,12 @@
                             parameters.AddRange(new[] { "text", RemoveKeyboardShortcutIndicators(item.Source) });
                         }
 
-                        
                         parameters.AddRange(new[]
                         {
                             "target_lang", DeepLLangCode(targetCulture),
                             "source_lang", DeepLLangCode(translationSession.SourceLanguage),
                             "auth_key", ApiKey
                         });
-
-                    
 
                         // Call the DeepL API
                         // ReSharper disable once AssignNullToNotNullAttribute

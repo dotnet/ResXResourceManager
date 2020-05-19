@@ -71,7 +71,7 @@
                     {
                         var sourceItems = itemsEnumerator.Take(10);
                         if (translationSession.IsCanceled || !sourceItems.Any())
-                            return;
+                            break;
 
                         // Build out list of parameters
                         var parameters = new List<string>(30);
