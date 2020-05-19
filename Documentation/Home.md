@@ -1,9 +1,9 @@
 Select a topic to start with:
 
-### [Installation](Installation)
+### [Installation](Installation.md)
 
-### [Usage](Usage)
+### [Usage](Usage.md)
 
-### [Troubleshooting](Troubleshooting)
+### [Troubleshooting](Troubleshooting.md)
 
-### [Supporting the project](Donate)
+### [Supporting the project](Donate.md)
