@@ -1,4 +1,13 @@
-﻿1.40
+﻿1.41
+- #191: Integration of DeepL translation service
+- Fix #272: Allow to specify ranking for each translator.
+- Fix #295: Do not treat invariant empty neutral strings as error.
+- Improve UX of column selector.
+- Fix: empty neutral values should be considered an error if they are not invariant
+- Use a password box for credentials in TranslatorConfiguration
+- Fix #315, Fix #307: Google/DeepL translate only 1 language at the same time
+
+1.40
 - Provide TS-functions for type-safe formatting.
 - Visualize translator activity
 

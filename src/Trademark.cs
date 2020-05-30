@@ -2,5 +2,5 @@ using System.Reflection;
 
 [assembly: AssemblyCompany("tom-englert.de")]
 [assembly: AssemblyProduct("ResXManager")]
-[assembly: AssemblyCopyright("Copyright © tom-englert.de 2012-2020. Distributed under the MIT License.")]
+[assembly: AssemblyCopyright("Copyright (c) .NET Foundation and Contributors.")]
 [assembly: AssemblyTrademark("")]
