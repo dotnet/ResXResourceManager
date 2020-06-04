@@ -51,13 +51,11 @@
                 var config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(configFilePath));
 
                 var typeScriptFileDir = config.TypeScriptFileDir;
-                var jsonFileDir = config.JsonFileDir;
 
-                if (string.IsNullOrEmpty(typeScriptFileDir) || string.IsNullOrEmpty(jsonFileDir))
+                if (string.IsNullOrEmpty(typeScriptFileDir))
                     return;
 
                 typeScriptFileDir = Directory.CreateDirectory(Path.Combine(solutionFolder, typeScriptFileDir)).FullName;
-                jsonFileDir = Directory.CreateDirectory(Path.Combine(solutionFolder, jsonFileDir)).FullName;
 
                 var typescript = new StringBuilder(TypescriptFileHeader);
                 var jsonObjects = new Dictionary<CultureKey, JObject>();
@@ -105,13 +103,19 @@
                 var typeScriptFilePath = Path.Combine(typeScriptFileDir, "resources.ts");
                 File.WriteAllText(typeScriptFilePath, typescript.ToString());
 
-                foreach (var jsonObjectEntry in jsonObjects)
+                var jsonFileDir = config.JsonFileDir;
+                if (!string.IsNullOrEmpty(jsonFileDir))
                 {
-                    var key = jsonObjectEntry.Key;
-                    var value = jsonObjectEntry.Value.ToString();
+                    jsonFileDir = Directory.CreateDirectory(Path.Combine(solutionFolder, jsonFileDir)).FullName;
 
-                    var jsonFilePath = Path.Combine(jsonFileDir, $"resources{key}.json");
-                    File.WriteAllText(jsonFilePath, value);
+                    foreach (var jsonObjectEntry in jsonObjects)
+                    {
+                        var key = jsonObjectEntry.Key;
+                        var value = jsonObjectEntry.Value.ToString();
+
+                        var jsonFilePath = Path.Combine(jsonFileDir, $"resources{key}.json");
+                        File.WriteAllText(jsonFilePath, value);
+                    }
                 }
             }
             catch (Exception ex)
