@@ -6,6 +6,8 @@
     using System.IO;
     using System.Linq;
 
+    using EnvDTE;
+
     using JetBrains.Annotations;
 
     using ResXManager.Model;
@@ -18,10 +20,10 @@
 
     public interface IRefactorings
     {
-        bool CanMoveToResource([CanBeNull] EnvDTE.Document document);
+        bool CanMoveToResource([CanBeNull] Document document);
 
         [CanBeNull]
-        ResourceTableEntry MoveToResource([CanBeNull] EnvDTE.Document document);
+        ResourceTableEntry MoveToResource([CanBeNull] Document document);
     }
 
     [Export(typeof(IRefactorings))]
@@ -39,7 +41,7 @@
             _exportProvider = exportProvider;
         }
 
-        public bool CanMoveToResource([CanBeNull] EnvDTE.Document document)
+        public bool CanMoveToResource([CanBeNull] Document document)
         {
             var extension = Path.GetExtension(document?.FullName);
             if (extension == null)
@@ -68,7 +70,7 @@
         }
 
         [CanBeNull]
-        public ResourceTableEntry MoveToResource([CanBeNull] EnvDTE.Document document)
+        public ResourceTableEntry MoveToResource([CanBeNull] Document document)
         {
             var extension = Path.GetExtension(document?.FullName);
             if (extension == null)
@@ -90,7 +92,7 @@
 
             IParser parser = new GenericParser();
 
-            var text = !selection.IsEmpty ? selection.Text?.Trim('"') : parser.LocateString(selection, true);
+            var text = !selection.IsEmpty ? selection.Text?.Trim('"', '\'', '`') : parser.LocateString(selection, true);
             if (string.IsNullOrEmpty(text))
                 return null;
 
@@ -159,7 +161,7 @@
         }
 
         [NotNull, ItemNotNull]
-        private static IEnumerable<ResourceEntity> GetResourceEntiesFromProject([NotNull] EnvDTE.Document document, [NotNull][ItemNotNull] IEnumerable<ResourceEntity> entities)
+        private static IEnumerable<ResourceEntity> GetResourceEntiesFromProject([NotNull] Document document, [NotNull][ItemNotNull] IEnumerable<ResourceEntity> entities)
         {
             try
             {
@@ -173,7 +175,7 @@
             }
         }
 
-        private static bool IsInProject([NotNull] ResourceEntity entity, [CanBeNull] EnvDTE.Document document)
+        private static bool IsInProject([NotNull] ResourceEntity entity, [CanBeNull] Document document)
         {
             try
             {
@@ -187,7 +189,7 @@
             }
         }
 
-        private static bool IsInProject([NotNull] ResourceEntity entity, [CanBeNull] EnvDTE.Project project)
+        private static bool IsInProject([NotNull] ResourceEntity entity, [CanBeNull] Project project)
         {
             var projectFile = entity.NeutralProjectFile as DteProjectFile;
 
@@ -197,9 +199,9 @@
         }
 
         [CanBeNull]
-        private static Selection GetSelection([NotNull] EnvDTE.Document document)
+        private static Selection GetSelection([NotNull] Document document)
         {
-            var textDocument = (EnvDTE.TextDocument)document.Object(@"TextDocument");
+            var textDocument = (TextDocument)document.Object(@"TextDocument");
 
             var topPoint = textDocument?.Selection?.TopPoint;
             if (topPoint == null)
@@ -217,12 +219,12 @@
         private class Selection
         {
             [NotNull]
-            private readonly EnvDTE.TextDocument _textDocument;
+            private readonly TextDocument _textDocument;
 
             [CanBeNull]
-            private readonly EnvDTE.FileCodeModel _codeModel;
+            private readonly FileCodeModel _codeModel;
 
-            public Selection([NotNull] EnvDTE.TextDocument textDocument, [NotNull] string line, [CanBeNull] EnvDTE.FileCodeModel codeModel)
+            public Selection([NotNull] TextDocument textDocument, [NotNull] string line, [CanBeNull] FileCodeModel codeModel)
             {
                 _textDocument = textDocument;
                 Line = line;
@@ -230,10 +232,10 @@
             }
 
             [NotNull]
-            public EnvDTE.VirtualPoint Begin => _textDocument.Selection.TopPoint;
+            public VirtualPoint Begin => _textDocument.Selection.TopPoint;
 
             [NotNull]
-            public EnvDTE.VirtualPoint End => _textDocument.Selection.BottomPoint;
+            public VirtualPoint End => _textDocument.Selection.BottomPoint;
 
             public bool IsEmpty => Begin.EqualTo(End);
 
@@ -244,10 +246,10 @@
             public string Line { get; }
 
             [CanBeNull]
-            public string FunctionName => GetCodeElement(EnvDTE.vsCMElement.vsCMElementFunction)?.Name;
+            public string FunctionName => GetCodeElement(vsCMElement.vsCMElementFunction)?.Name;
 
             [CanBeNull]
-            public string ClassName => GetCodeElement(EnvDTE.vsCMElement.vsCMElementClass)?.Name;
+            public string ClassName => GetCodeElement(vsCMElement.vsCMElementClass)?.Name;
 
             public void MoveTo(int startColumn, int endColumn)
             {
@@ -262,13 +264,13 @@
             public void ReplaceWith([CanBeNull] string replacement)
             {
                 var selection = _textDocument.Selection;
-                // using "selection.Text = replacement" does not work here, since it will trigger auto-complete, 
+                // using "selection.Text = replacement" does not work here, since it will trigger auto-complete,
                 // and this may add unwanted additional characters, resulting in bad code.
                 selection?.ReplaceText(selection.Text, replacement);
             }
 
             [CanBeNull]
-            private EnvDTE.CodeElement GetCodeElement(EnvDTE.vsCMElement scope)
+            private CodeElement GetCodeElement(vsCMElement scope)
             {
                 try
                 {
@@ -284,57 +286,83 @@
         private interface IParser
         {
             [CanBeNull]
-            string LocateString([CanBeNull] Selection selection, bool moveSelection);
+            string LocateString([CanBeNull] Selection selection, bool expandSelection);
         }
 
         private class GenericParser : IParser
         {
             [CanBeNull]
-            public string LocateString([CanBeNull] Selection selection, bool moveSelection)
+            public string LocateString([CanBeNull] Selection selection, bool expandSelection)
             {
                 if (selection == null)
                     return null;
 
-                var secondQuote = -1;
                 var column = selection.Begin.LineCharOffset - 1;
                 var line = selection.Line;
                 if (string.IsNullOrEmpty(line))
                     return null;
 
-                while (secondQuote < line.Length)
+                if (!expandSelection)
+                    selection = null;
+
+                var locator = new Locator(line, column, selection);
+
+                return locator.Locate(@"""") ?? locator.Locate("'") ?? locator.Locate("`");
+            }
+
+            private class Locator
+            {
+                private readonly string _line;
+                private readonly int _column;
+                [CanBeNull] private readonly Selection _selection;
+
+                public Locator(string line, int column, [CanBeNull] Selection selection)
                 {
-                    var firstQuote = line.IndexOf(@"""", secondQuote + 1, StringComparison.Ordinal);
-                    if (firstQuote == -1)
-                        return null;
-
-                    if (line.Length <= firstQuote + 1)
-                        return null;
-
-                    if (column < firstQuote)
-                        return null;
-
-                    secondQuote = line.IndexOf(@"""", firstQuote + 1, StringComparison.Ordinal);
-                    if (secondQuote == -1)
-                        return null;
-
-                    if (column >= secondQuote)
-                        continue;
-
-                    var startIndex = firstQuote + 1;
-                    var length = secondQuote - firstQuote - 1;
-
-                    if (moveSelection)
-                    {
-                        var startColumn = firstQuote + 1;
-                        var endColumn = secondQuote + 2;
-
-                        selection.MoveTo(startColumn, endColumn);
-                    }
-
-                    return line.Substring(startIndex, length);
+                    _line = line;
+                    _column = column;
+                    _selection = selection;
                 }
 
-                return null;
+                [CanBeNull]
+                public string Locate(string quote)
+                {
+                    var secondQuote = -1;
+
+                    while (secondQuote < _line.Length)
+                    {
+                        var firstQuote = _line.IndexOf(quote, secondQuote + 1, StringComparison.Ordinal);
+                        if (firstQuote == -1)
+                            return null;
+
+                        if (_line.Length <= firstQuote + 1)
+                            return null;
+
+                        if (_column < firstQuote)
+                            return null;
+
+                        secondQuote = _line.IndexOf(quote, firstQuote + 1, StringComparison.Ordinal);
+                        if (secondQuote == -1)
+                            return null;
+
+                        if (_column >= secondQuote)
+                            continue;
+
+                        var startIndex = firstQuote + 1;
+                        var length = secondQuote - firstQuote - 1;
+
+                        if (_selection != null)
+                        {
+                            var startColumn = firstQuote + 1;
+                            var endColumn = secondQuote + 2;
+
+                            _selection.MoveTo(startColumn, endColumn);
+                        }
+
+                        return _line.Substring(startIndex, length);
+                    }
+
+                    return null;
+                }
             }
         }
     }
