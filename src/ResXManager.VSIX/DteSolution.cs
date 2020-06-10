@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
 
@@ -92,7 +93,7 @@
                 var solutionFolder = SolutionFolder;
                 var fullName = FullName;
 
-                if (!string.IsNullOrEmpty(solutionFolder) && string.Equals(solutionFolder, fullName))
+                if (!string.IsNullOrEmpty(solutionFolder) && string.Equals(solutionFolder, fullName, StringComparison.OrdinalIgnoreCase))
                 {
                     return null;
                 }

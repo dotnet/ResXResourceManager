@@ -393,10 +393,9 @@
 
         private static int FrameworkVersion()
         {
-            using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(Subkey))
-            {
-                return (int?)ndpKey?.GetValue("Release") ?? 0;
-            }
+            using var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            using var ndpKey = baseKey.OpenSubKey(Subkey);
+            return (int?)ndpKey?.GetValue("Release") ?? 0;
         }
     }
 }

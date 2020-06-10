@@ -102,7 +102,7 @@
                             {
                                 tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2, Ranking));
                             }
-                        });
+                        }).ConfigureAwait(false);
                     }
                 }
             }
@@ -176,7 +176,7 @@
             }
             return sb.ToString();
 
-            string Enc(string a, string b) => string.Concat(System.Web.HttpUtility.UrlEncode(a), "=", System.Web.HttpUtility.UrlEncode(b));
+            static string Enc(string a, string b) => string.Concat(System.Web.HttpUtility.UrlEncode(a), "=", System.Web.HttpUtility.UrlEncode(b));
         }
     }
 }

@@ -161,7 +161,7 @@
         [CanBeNull]
         protected static string ConvertToString<T>([CanBeNull] T value)
         {
-            if (ReferenceEquals(value, null))
+            if (value == null)
                 return null;
 
             var typeConverter = GetTypeConverter(typeof(T));
@@ -191,7 +191,7 @@
         }
 
         [CanBeNull]
-        private T GetDefaultValue<T>([CanBeNull] MemberInfo propertyInfo)
+        private static T GetDefaultValue<T>([CanBeNull] MemberInfo propertyInfo)
         {
             var defaultValueAttribute = propertyInfo?.GetCustomAttributes<DefaultValueAttribute>().Select(attr => attr?.Value).FirstOrDefault();
 

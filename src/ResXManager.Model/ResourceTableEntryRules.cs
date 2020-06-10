@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Globalization;
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Text;
@@ -40,10 +41,10 @@
 
         [NotNull]
         [ItemNotNull]
-        private IReadOnlyCollection<IResourceTableEntryRule> Rules => _rules ?? (_rules = BuildRuleCollection());
+        private IReadOnlyCollection<IResourceTableEntryRule> Rules => _rules ??= BuildRuleCollection();
 
         [NotNull]
-        public IDictionary<string, IResourceTableEntryRuleConfig> ConfigurableRules => _configurableRules ?? (_configurableRules = new ReadOnlyDictionary<string, IResourceTableEntryRuleConfig>(Rules.Cast<IResourceTableEntryRuleConfig>().ToDictionary(rule => rule.RuleId)));
+        public IDictionary<string, IResourceTableEntryRuleConfig> ConfigurableRules => _configurableRules ??= new ReadOnlyDictionary<string, IResourceTableEntryRuleConfig>(Rules.Cast<IResourceTableEntryRuleConfig>().ToDictionary(rule => rule.RuleId));
 
         public bool IsEnabled([CanBeNull] string ruleId)
         {
@@ -158,7 +159,7 @@
 
             foreach (var rule in mutedRuleIds)
             {
-                commentBuilder.AppendFormat(MutedRuleFormat, rule);
+                commentBuilder.AppendFormat(CultureInfo.InvariantCulture, MutedRuleFormat, rule);
             }
 
             return commentBuilder.ToString();

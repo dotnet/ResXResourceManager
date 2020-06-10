@@ -224,7 +224,9 @@
                 {
                     var assembly = Assembly.LoadFrom(file);
                     messages.Messages.Add(string.Format(CultureInfo.CurrentCulture, "Loaded assembly '{0}' from {1}.", assembly.FullName, assembly.CodeBase));
+#pragma warning disable CA2000 // Dispose objects before losing scope => AggregateCatalog will dispose all
                     _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
+#pragma warning restore CA2000 // Dispose objects before losing scope
                 }
                 catch (ReflectionTypeLoadException ex)
                 {

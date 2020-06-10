@@ -52,7 +52,7 @@
         {
             try
             {
-                await MainThread.StartNew(() => _internalMessage.Add(text), CancellationToken);
+                await MainThread.StartNew(() => _internalMessage.Add(text), CancellationToken).ConfigureAwait(false);
             }
             catch (TaskCanceledException)
             {

@@ -42,7 +42,9 @@
 
         public void Start([Localizable(false)][NotNull] string message, DispatcherPriority priority)
         {
+#pragma warning disable CA2000 // Dispose objects before losing scope => will be disposed deferred
             var tracer = Start(message);
+#pragma warning restore CA2000 // Dispose objects before losing scope
             if (tracer == null)
                 return;
 

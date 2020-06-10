@@ -66,8 +66,7 @@
                             .Where(m => m?.TranslatedText != null)
                             .Distinct(TranslationMatch.TextComparer);
 
-#pragma warning disable CS4014 // Because this call is not awaited ... => just push out results, no need to wait.
-                        translationSession.MainThread.StartNew(() => item.Results.AddRange(matches));
+                        await translationSession.MainThread.StartNew(() => item.Results.AddRange(matches)).ConfigureAwait(false);
                     }
                 }
             }

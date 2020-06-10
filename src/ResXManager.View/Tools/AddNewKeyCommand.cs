@@ -32,7 +32,7 @@
 
         private void InternalExecute([CanBeNull] DependencyObject parameter)
         {
-            if (_resourceViewModel.SelectedEntities.Count() != 1)
+            if (_resourceViewModel.SelectedEntities.Count != 1)
             {
                 MessageBox.Show(Resources.NeedSingleEntitySelection, Resources.Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;

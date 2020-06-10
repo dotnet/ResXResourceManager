@@ -18,7 +18,7 @@
     using TomsToolbox.Wpf;
 
     [Export]
-    public class TranslatorHost : IDisposable
+    public sealed class TranslatorHost : IDisposable
     {
         private readonly ITranslator[] _translators;
         private readonly TaskFactory _mainThread = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());

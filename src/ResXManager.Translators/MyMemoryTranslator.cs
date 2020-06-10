@@ -67,7 +67,7 @@
                     var translationItem = item;
 
                     var targetCulture = translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage;
-                    var result = await TranslateTextAsync(client, translationItem.Source, Key, translationSession.SourceLanguage, targetCulture, translationSession.CancellationToken);
+                    var result = await TranslateTextAsync(client, translationItem.Source, Key, translationSession.SourceLanguage, targetCulture, translationSession.CancellationToken).ConfigureAwait(false);
 
                     await translationSession.MainThread.StartNew(() =>
                     {
@@ -88,7 +88,7 @@
                             if (!string.IsNullOrEmpty(translation))
                                 translationItem.Results.Add(new TranslationMatch(this, translation, Ranking * result.ResponseData.Match.GetValueOrDefault()));
                         }
-                    });
+                    }).ConfigureAwait(false);
                 }
             }
         }
@@ -106,11 +106,11 @@
             if (!string.IsNullOrEmpty(key))
                 url += string.Format(CultureInfo.InvariantCulture, "&key={0}", HttpUtility.UrlEncode(key));
 
-            var response = await client.GetAsync(url, cancellationToken);
+            var response = await client.GetAsync(new Uri(url, UriKind.RelativeOrAbsolute), cancellationToken).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
 
-            using (var reader = new StreamReader(await response.Content.ReadAsStreamAsync(), Encoding.UTF8))
+            using (var reader = new StreamReader(await response.Content.ReadAsStreamAsync().ConfigureAwait(false), Encoding.UTF8))
             {
                 var json = reader.ReadToEnd();
                 return JsonConvert.DeserializeObject<Response>(json);

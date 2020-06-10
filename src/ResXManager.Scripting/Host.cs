@@ -26,10 +26,12 @@
 
             _compositionCatalog = new AggregateCatalog();
             _compositionContainer = new CompositionContainer(_compositionCatalog, true);
+#pragma warning disable CA2000 // Dispose objects before losing scope => AggregateCatalog will dispose all
             // ReSharper disable RedundantNameQualifier
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Infrastructure.ITracer).Assembly));
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Model.GlobalExtensions).Assembly));
+#pragma warning restore CA2000 // Dispose objects before losing scope
             // ReSharper restore RedundantNameQualifier
 
             _sourceFilesProvider = _compositionContainer.GetExportedValue<SourceFilesProvider>();

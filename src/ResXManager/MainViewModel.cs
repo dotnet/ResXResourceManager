@@ -78,7 +78,7 @@
             if (!File.Exists(scriptFile))
                 return;
 
-            await _powerShell.Run(solutionFolder, scriptFile);
+            await _powerShell.Run(solutionFolder, scriptFile).ConfigureAwait(false);
         }
 
         [NotNull]
@@ -300,7 +300,7 @@
                                 process.Kill();
                                 _tracer.TraceError("Script execution timed out: " + scriptFile);
                             }
-                        });
+                        }).ConfigureAwait(false);
                     }
                     catch (Exception ex)
                     {

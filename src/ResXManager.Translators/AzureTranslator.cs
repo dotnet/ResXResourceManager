@@ -46,7 +46,7 @@ namespace ResXManager.Translators
 
             if (string.IsNullOrEmpty(authenticationKey))
             {
-                translationSession.AddMessage("Azure Translator requires subscription secret.");
+                translationSession.AddMessage("Azure Translator requires API key.");
                 return;
             }
 
@@ -81,14 +81,16 @@ namespace ResXManager.Translators
                                 .Select(RemoveKeyboardShortcutIndicators)
                                 .ToList();
 
-                            await throttle.Tick(sourceItems);
+                            await throttle.Tick(sourceItems).ConfigureAwait(false);
 
                             if (translationSession.IsCanceled)
                                 return;
 
                             var uri = new Uri($"https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={translationSession.SourceLanguage.IetfLanguageTag}&to={targetLanguage.IetfLanguageTag}&textType={textType}");
 
-                            var response = await client.PostAsync(uri, CreateRequestContent(sourceStrings), translationSession.CancellationToken).ConfigureAwait(false);
+                            using var content = CreateRequestContent(sourceStrings);
+
+                            var response = await client.PostAsync(uri, content, translationSession.CancellationToken).ConfigureAwait(false);
 
                             response.EnsureSuccessStatusCode();
 
@@ -143,7 +145,7 @@ namespace ResXManager.Translators
             };
         }
 
-        private HttpContent CreateRequestContent(IEnumerable<string> texts)
+        private static HttpContent CreateRequestContent(IEnumerable<string> texts)
         {
             var payload = texts.Select(text => new { Text = text }).ToArray();
 
@@ -166,7 +168,7 @@ namespace ResXManager.Translators
         }
 
         [ItemNotNull]
-        private IEnumerable<ICollection<ITranslationItem>> SplitIntoChunks(ITranslationSession translationSession, IEnumerable<ITranslationItem> items)
+        private static IEnumerable<ICollection<ITranslationItem>> SplitIntoChunks(ITranslationSession translationSession, IEnumerable<ITranslationItem> items)
         {
             var chunk = new List<ITranslationItem>();
             var chunkTextLength = 0;
@@ -226,7 +228,7 @@ namespace ResXManager.Translators
                         var millisecondsToDelay = (int)Math.Ceiling((nextCallTime - DateTime.Now).TotalMilliseconds);
                         if (millisecondsToDelay > 0)
                         {
-                            await Task.Delay(millisecondsToDelay, _cancellationToken);
+                            await Task.Delay(millisecondsToDelay, _cancellationToken).ConfigureAwait(false);
                         }
 
                         break;

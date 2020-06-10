@@ -221,7 +221,7 @@
 
             dataColumnCount = dataColumnHeaders.Length;
 
-            if (dataColumnHeaders.Distinct().Count() != dataColumnHeaders.Count())
+            if (dataColumnHeaders.Distinct().Count() != dataColumnHeaders.Length)
                 throw new ImportException(Resources.ImportDuplicateLanguageError);
 
             var mappings = table.Skip(1)

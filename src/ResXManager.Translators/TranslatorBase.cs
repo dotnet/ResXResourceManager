@@ -58,7 +58,7 @@ namespace ResXManager.Translators
             {
                 IsActive = true;
 
-                await Translate(translationSession);
+                await Translate(translationSession).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
