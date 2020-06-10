@@ -23,13 +23,17 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Fody" PrivateAssets="all">
-      <Version>6.1.1</Version>
+      <Version>6.2.0</Version>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.23</Version>
+      <Version>1.11.24</Version>
     </PackageReference>
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all">
       <Version>2020.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02">
       <PrivateAssets>all</PrivateAssets>
@@ -42,7 +46,7 @@
       <Version>3.2.8</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.Composition">
-      <Version>2.0.0.4-beta05</Version>
+      <Version>2.0.1</Version>
     </PackageReference>
   </ItemGroup>
 </Project>

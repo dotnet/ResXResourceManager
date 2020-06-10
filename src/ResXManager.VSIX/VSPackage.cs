@@ -32,9 +32,9 @@
     using ResXManager.VSIX.Visuals;
 
     using TomsToolbox.Composition;
+    using TomsToolbox.Composition.Mef;
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition.Mef;
 
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.

@@ -331,16 +331,21 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all">
-      <Version>1.24.0</Version>
+      <Version>1.25.0</Version>
     </PackageReference>
     <PackageReference Include="Fody" PrivateAssets="all">
-      <Version>6.1.1</Version>
+      <Version>6.2.0</Version>
     </PackageReference>
     <PackageReference Include="ILMerge.Fody" PrivateAssets="all">
-      <Version>1.12.0</Version>
+      <Version>1.13.0</Version>
     </PackageReference>
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all">
       <Version>2020.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
+      <Version>3.0.0</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.SourceLink.GitHub">
       <Version>1.1.0-beta-20204-02</Version>
@@ -350,11 +355,14 @@
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all">
       <Version>3.2.8</Version>
     </PackageReference>
+    <PackageReference Include="TomsToolbox.Composition.Mef">
+      <Version>2.0.1</Version>
+    </PackageReference>
     <PackageReference Include="TomsToolbox.Wpf.Composition.Mef">
-      <Version>2.0.0.4-beta05</Version>
+      <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.Wpf.Styles">
-      <Version>2.0.0.4-beta05</Version>
+      <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="WindowsAPICodePack-Shell" PrivateAssets="All">
       <Version>1.1.1</Version>

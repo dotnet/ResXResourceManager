@@ -12,9 +12,9 @@
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Composition;
+    using TomsToolbox.Composition.Mef;
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf.Composition;
-    using TomsToolbox.Wpf.Composition.Mef;
     using TomsToolbox.Wpf.Composition.XamlExtensions;
 
     /// <summary>
@@ -44,6 +44,7 @@
             var assembly = GetType().Assembly;
             var folder = Path.GetDirectoryName(assembly.Location);
 
+#pragma warning disable CA2000 // Dispose objects before losing scope => AggregateCatalog will dispose all
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
             // ReSharper disable RedundantNameQualifier
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Infrastructure.ITracer).Assembly));
@@ -51,6 +52,7 @@
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Translators.AzureTranslator).Assembly));
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.View.Appearance).Assembly));
             // ReSharper restore RedundantNameQualifier
+#pragma warning restore CA2000 // Dispose objects before losing scope
 
             _compositionContainer.ComposeExportedValue(_exportProvider);
 
