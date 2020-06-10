@@ -127,6 +127,7 @@
         }
 
         private static async Task<T> GetHttpResponse<T>(string baseUrl, ICollection<string> parameters, CancellationToken cancellationToken)
+            where T : class
         {
             var url = BuildUrl(baseUrl, parameters);
 
@@ -145,6 +146,7 @@
 
         [CanBeNull]
         private static T JsonConverter<T>([NotNull] Stream stream)
+            where T : class
         {
             using (var reader = new StreamReader(stream, Encoding.UTF8))
             {
