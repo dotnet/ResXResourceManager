@@ -194,15 +194,12 @@
         }
 
         [NotNull]
-        [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFrom")]
         private LoaderMessages FillCatalog()
         {
             _compositionContainer.ComposeExportedValue(nameof(VsPackage), (IServiceProvider)this);
             _compositionContainer.ComposeExportedValue(Tracer);
 
-            var thisAssembly = GetType().Assembly;
-
-            var path = Path.GetDirectoryName(thisAssembly.Location);
+            var assembly = GetType().Assembly;
 
             var messages = new LoaderMessages();
 
@@ -217,26 +214,15 @@
             //    .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
             //    .ToList();
 
-            // ReSharper disable once AssignNullToNotNullAttribute
-            foreach (var file in Directory.EnumerateFiles(path, @"ResXManager.*.dll"))
-            {
-                try
-                {
-                    var assembly = Assembly.LoadFrom(file);
-                    messages.Messages.Add(string.Format(CultureInfo.CurrentCulture, "Loaded assembly '{0}' from {1}.", assembly.FullName, assembly.CodeBase));
 #pragma warning disable CA2000 // Dispose objects before losing scope => AggregateCatalog will dispose all
-                    _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
+            // ReSharper disable RedundantNameQualifier
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Infrastructure.ITracer).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Model.GlobalExtensions).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Translators.AzureTranslator).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.View.Appearance).Assembly));
+            // ReSharper restore RedundantNameQualifier
 #pragma warning restore CA2000 // Dispose objects before losing scope
-                }
-                catch (ReflectionTypeLoadException ex)
-                {
-                    messages.Errors.Add("Assembly: " + Path.GetFileName(file) + " => " + string.Join("\n", ex.LoaderExceptions.Select(l => l.Message + ": " + (l.InnerException?.Message ?? string.Empty))));
-                }
-                catch (Exception ex)
-                {
-                    messages.Errors.Add("Assembly: " + Path.GetFileName(file) + " => " + ex.Message);
-                }
-            }
 
             _exportProviderLoaded.Set();
 
