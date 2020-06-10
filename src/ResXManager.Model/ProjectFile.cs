@@ -14,8 +14,7 @@
     /// </summary>
     public class ProjectFile : INotifyPropertyChanged
     {
-        [CanBeNull]
-        private string _fingerPrint;
+        private string? _fingerPrint;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectFile" /> class.
@@ -24,7 +23,7 @@
         /// <param name="rootFolder">The root folder to calculate the relative path from.</param>
         /// <param name="projectName">Name of the project.</param>
         /// <param name="uniqueProjectName">Unique name of the project file.</param>
-        public ProjectFile([NotNull] string filePath, [NotNull] string rootFolder, [CanBeNull] string projectName, [CanBeNull] string uniqueProjectName)
+        public ProjectFile([NotNull] string filePath, [NotNull] string rootFolder, string? projectName, string? uniqueProjectName)
         {
             FilePath = filePath;
             RelativeFilePath = GetRelativePath(rootFolder, filePath);
@@ -46,11 +45,9 @@
         /// <summary>
         /// Gets or sets the name of the project containing the file.
         /// </summary>
-        [CanBeNull]
-        public string ProjectName { get; set; }
+        public string? ProjectName { get; set; }
 
-        [CanBeNull]
-        public string UniqueProjectName { get; set; }
+        public string? UniqueProjectName { get; set; }
 
         [NotNull]
         public string RelativeFilePath { get; }
@@ -75,7 +72,7 @@
             return XDocument.Load(FilePath);
         }
 
-        public void Changed([CanBeNull] XDocument document, bool willSaveImmediately)
+        public void Changed(XDocument? document, bool willSaveImmediately)
         {
             if (document == null)
                 return;
@@ -88,7 +85,7 @@
             HasChanges = _fingerPrint != document.ToString(SaveOptions.DisableFormatting);
         }
 
-        public void Save([CanBeNull] XDocument document)
+        public void Save(XDocument? document)
         {
             if (document == null)
                 return;
@@ -145,10 +142,10 @@
             return filePath.StartsWith(solutionFolder, StringComparison.OrdinalIgnoreCase) ? filePath.Substring(solutionFolder.Length) : filePath;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

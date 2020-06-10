@@ -11,20 +11,19 @@
     public class CultureKey : IComparable<CultureKey>, IEquatable<CultureKey>, IComparable
     {
         [NotNull]
-        public static readonly CultureKey Neutral = new CultureKey((CultureInfo)null);
+        public static readonly CultureKey Neutral = new CultureKey((CultureInfo?)null);
 
-        public CultureKey([CanBeNull] string cultureName)
+        public CultureKey(string? cultureName)
         {
             Culture = cultureName?.ToCulture();
         }
 
-        public CultureKey([CanBeNull] CultureInfo culture)
+        public CultureKey(CultureInfo? culture)
         {
             Culture = culture;
         }
 
-        [CanBeNull]
-        public CultureInfo Culture { get; }
+        public CultureInfo? Culture { get; }
 
         public bool IsNeutral => Culture == null;
 
@@ -57,7 +56,7 @@
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.</returns>
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object? obj)
         {
             return Equals(obj as CultureKey);
         }
@@ -67,12 +66,12 @@
         /// </summary>
         /// <param name="other">The <see cref="CultureKey"/> to compare with this instance.</param>
         /// <returns><c>true</c> if the specified <see cref="CultureKey"/> is equal to this instance; otherwise, <c>false</c>.</returns>
-        public bool Equals([CanBeNull] CultureKey other)
+        public bool Equals(CultureKey? other)
         {
             return InternalEquals(this, other);
         }
 
-        private static bool InternalEquals([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
+        private static bool InternalEquals(CultureKey? left, CultureKey? right)
         {
             if (ReferenceEquals(left, right))
                 return true;
@@ -87,14 +86,14 @@
         /// <summary>
         /// Implements the operator ==.
         /// </summary>
-        public static bool operator ==([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
+        public static bool operator ==(CultureKey? left, CultureKey? right)
         {
             return InternalEquals(left, right);
         }
         /// <summary>
         /// Implements the operator !=.
         /// </summary>
-        public static bool operator !=([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
+        public static bool operator !=(CultureKey? left, CultureKey? right)
         {
             return !InternalEquals(left, right);
         }
@@ -103,7 +102,7 @@
         /// Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
         /// </summary>
         /// <param name="other">An object to compare with this instance.</param>
-        public int CompareTo([CanBeNull] CultureKey other)
+        public int CompareTo(CultureKey? other)
         {
             return Compare(this, other);
         }
@@ -115,12 +114,12 @@
         /// <returns>
         /// A value that indicates the relative order of the objects being compared. The return value has these meanings: Value Meaning Less than zero This instance precedes <paramref name="obj" /> in the sort order. Zero This instance occurs in the same position in the sort order as <paramref name="obj" />. Greater than zero This instance follows <paramref name="obj" /> in the sort order.
         /// </returns>
-        public int CompareTo([CanBeNull] object obj)
+        public int CompareTo(object? obj)
         {
             return Compare(this, obj as CultureKey);
         }
 
-        private static int Compare([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
+        private static int Compare(CultureKey? left, CultureKey? right)
         {
             if (ReferenceEquals(left, right))
                 return 0;
@@ -135,28 +134,28 @@
         /// <summary>
         /// Implements the operator &gt;.
         /// </summary>
-        public static bool operator >([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
+        public static bool operator >(CultureKey? left, CultureKey? right)
         {
             return Compare(left, right) > 0;
         }
         /// <summary>
         /// Implements the operator &lt;.
         /// </summary>
-        public static bool operator <([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
+        public static bool operator <(CultureKey? left, CultureKey? right)
         {
             return Compare(left, right) < 0;
         }
         /// <summary>
         /// Implements the operator &gt;=.
         /// </summary>
-        public static bool operator >=([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
+        public static bool operator >=(CultureKey? left, CultureKey? right)
         {
             return Compare(left, right) >= 0;
         }
         /// <summary>
         /// Implements the operator &lt;=.
         /// </summary>
-        public static bool operator <=([CanBeNull] CultureKey left, [CanBeNull] CultureKey right)
+        public static bool operator <=(CultureKey? left, CultureKey? right)
         {
             return Compare(left, right) <= 0;
         }
@@ -165,14 +164,14 @@
 
         [NotNull]
 #pragma warning disable CA2225 // Operator overloads have named alternates
-        public static implicit operator CultureKey([CanBeNull] CultureInfo culture)
+        public static implicit operator CultureKey(CultureInfo? culture)
 #pragma warning restore CA2225 // Operator overloads have named alternates
         {
             return new CultureKey(culture);
         }
 
         [NotNull]
-        public static CultureKey Parse([CanBeNull] object item)
+        public static CultureKey Parse(object? item)
         {
             if (item == null)
                 return new CultureKey(string.Empty);

@@ -22,4 +22,10 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition("urn:ResXManager.View", "ResXManager.View.Converters")]
 [assembly: XmlnsDefinition("urn:ResXManager.View", "ResXManager.View.Visuals")]
 
+namespace ResXManager.View.Properties
+{
+    public static class AssemblyKey
+    {
+    }
+}
 

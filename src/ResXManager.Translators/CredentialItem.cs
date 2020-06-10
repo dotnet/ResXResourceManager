@@ -18,9 +18,10 @@ namespace ResXManager.Translators
 
         public string Description { get; }
 
+        [CanBeNull]
         public string Value { get; set; }
         
-        [UsedImplicitly]
+        [UsedImplicitly, CanBeNull]
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -46,12 +46,10 @@
 
 #pragma warning disable CA2000 // Dispose objects before losing scope => AggregateCatalog will dispose all
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
-            // ReSharper disable RedundantNameQualifier
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Infrastructure.ITracer).Assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Model.GlobalExtensions).Assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Translators.AzureTranslator).Assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.View.Appearance).Assembly));
-            // ReSharper restore RedundantNameQualifier
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Infrastructure.Properties.AssemblyKey).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Model.Properties.AssemblyKey).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Translators.Properties.AssemblyKey).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(View.Properties.AssemblyKey).Assembly));
 #pragma warning restore CA2000 // Dispose objects before losing scope
 
             _compositionContainer.ComposeExportedValue(_exportProvider);

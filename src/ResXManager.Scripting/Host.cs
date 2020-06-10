@@ -12,7 +12,6 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
-    using ResXManager.Model.Properties;
 
     public sealed class Host : IDisposable
     {
@@ -29,8 +28,8 @@
 #pragma warning disable CA2000 // Dispose objects before losing scope => AggregateCatalog will dispose all
             // ReSharper disable RedundantNameQualifier
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Infrastructure.ITracer).Assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Model.GlobalExtensions).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Infrastructure.Properties.AssemblyKey).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Model.Properties.AssemblyKey).Assembly));
 #pragma warning restore CA2000 // Dispose objects before losing scope
             // ReSharper restore RedundantNameQualifier
 
@@ -150,7 +149,7 @@
                 if (!string.IsNullOrEmpty(directoryName))
                     Directory.CreateDirectory(directoryName);
 
-                File.WriteAllText(languageFileName, Resources.EmptyResxTemplate);
+                File.WriteAllText(languageFileName, Model.Properties.Resources.EmptyResxTemplate);
             }
 
             entity.AddLanguage(new ProjectFile(languageFileName, rootFolder, entity.ProjectName, null));

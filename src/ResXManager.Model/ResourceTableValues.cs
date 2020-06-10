@@ -3,12 +3,15 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
     using JetBrains.Annotations;
 
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
+
+    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
     /// <summary>
     /// An indexer that maps the language to the localized string for a resource table entry with the specified resource key; 
@@ -31,38 +34,38 @@
         }
 
         [CanBeNull]
-        public T this[[CanBeNull] string cultureKey]
+        public T this[string? cultureKey]
         {
             get => GetValue(cultureKey);
             set => SetValue(cultureKey, value);
         }
 
         [CanBeNull]
-        public T GetValue([CanBeNull] object culture)
+        public T GetValue(object? culture)
         {
             var cultureKey = CultureKey.Parse(culture);
 
             if (!_languages.TryGetValue(cultureKey, out var language))
-                return default;
+                return default!;
 
             return _getter(language);
         }
 
-        public bool SetValue([CanBeNull] object culture, [CanBeNull] T value)
+        public bool SetValue(object? culture, [AllowNull] T value)
         {
             var cultureKey = CultureKey.Parse(culture);
 
             if (!_languages.TryGetValue(cultureKey, out var language))
                 throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.LanguageNotDefinedError, cultureKey.Culture?.DisplayName ?? Resources.Neutral));
 
-            if (!_setter(language, value))
+            if (!_setter(language, value!))
                 return false;
 
             OnValueChanged();
             return true;
         }
 
-        public event EventHandler ValueChanged;
+        public event EventHandler? ValueChanged;
 
         public IEnumerator<ResourceLanguage> GetEnumerator()
         {

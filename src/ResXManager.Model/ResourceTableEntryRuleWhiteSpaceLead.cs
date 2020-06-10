@@ -15,7 +15,7 @@
 
         public override string RuleId => Id;
 
-        protected override IEnumerable<char> GetCharIterator([CanBeNull] string value) => value ?? Enumerable.Empty<char>();
+        protected override IEnumerable<char> GetCharIterator(string? value) => value ?? Enumerable.Empty<char>();
 
         protected override string GetErrorMessage(IEnumerable<string> reference)
         {

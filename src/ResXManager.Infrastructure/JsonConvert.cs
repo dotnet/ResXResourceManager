@@ -4,14 +4,13 @@
 
     public static class JsonConvert
     {
-        [CanBeNull]
-        public static string SerializeObject(object value)
+        public static string? SerializeObject(object value)
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(value);
         }
 
-        [CanBeNull]
-        public static T DeserializeObject<T>(string value)
+        public static T? DeserializeObject<T>(string value)
+            where T:class
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(value);
         }

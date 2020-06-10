@@ -19,8 +19,7 @@
         /// The culture, or <c>null</c> if the key name is empty.
         /// </returns>
         /// <exception cref="InvalidOperationException">Error parsing language:  + cultureKeyName</exception>
-        [CanBeNull]
-        public static CultureInfo ToCulture([CanBeNull] this string cultureKeyName)
+        public static CultureInfo? ToCulture(this string? cultureKeyName)
         {
             try
             {
@@ -42,8 +41,7 @@
         /// <returns>
         /// The cultureKey, or <c>null</c> if the culture is invalid.
         /// </returns>
-        [CanBeNull]
-        public static CultureKey ToCultureKey([CanBeNull] this string cultureKeyName)
+        public static CultureKey? ToCultureKey(this string? cultureKeyName)
         {
             try
             {
@@ -58,8 +56,7 @@
             return null;
         }
 
-        [CanBeNull]
-        public static Regex TryCreateRegex([CanBeNull] this string expression)
+        public static Regex? TryCreateRegex(this string? expression)
         {
             try
             {

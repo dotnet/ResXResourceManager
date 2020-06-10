@@ -8,3 +8,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(false)]
+
+namespace ResXManager.Translators.Properties
+{
+    public static class AssemblyKey
+    {
+    }
+}

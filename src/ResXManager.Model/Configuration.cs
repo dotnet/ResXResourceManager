@@ -10,6 +10,9 @@
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
 
+    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
+
+    
     public enum DuplicateKeyHandling
     {
         [LocalizedDisplayName(StringResourceKey.DuplicateKeyHandling_Rename)]
@@ -38,7 +41,9 @@
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized", Justification = "value provided by AutoProperties")]
     public abstract class Configuration : ConfigurationBase, IConfiguration
     {
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         protected Configuration([NotNull] ITracer tracer)
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
             : base(tracer)
         {
         }
@@ -47,8 +52,8 @@
         [DefaultValue(CodeReferenceConfiguration.Default)]
         public CodeReferenceConfiguration CodeReferences { get; }
 
-        [DefaultValue(@"Migrations\\\d{15}"), CanBeNull]
-        public string FileExclusionFilter { get; set; }
+        [DefaultValue(@"Migrations\\\d{15}")]
+        public string? FileExclusionFilter { get; set; }
 
         [DefaultValue(true)]
         public bool SaveFilesImmediatelyUponChange { get; set; }

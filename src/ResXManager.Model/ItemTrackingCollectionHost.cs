@@ -11,17 +11,21 @@
     using TomsToolbox.Essentials;
     using TomsToolbox.ObservableCollections;
 
+    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
+
     [DataContract]
     public abstract class ItemTrackingCollectionHost<T> : INotifyChanged
         where T : class, INotifyPropertyChanged
     {
         [NotNull, ItemNotNull]
         private ObservableCollection<T> _items;
-        [CanBeNull]
-        private ObservablePropertyChangeTracker<T> _changeTracker;
+
+        private ObservablePropertyChangeTracker<T>? _changeTracker;
 
         // ReSharper disable once NotNullMemberIsNotInitialized
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         protected ItemTrackingCollectionHost()
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
             Items = new ObservableCollection<T>();
         }
@@ -43,6 +47,6 @@
             }
         }
 
-        public event EventHandler Changed;
+        public event EventHandler? Changed;
     }
 }

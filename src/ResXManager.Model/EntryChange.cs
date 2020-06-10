@@ -6,7 +6,7 @@ namespace ResXManager.Model
 
     public class EntryChange
     {
-        public EntryChange([NotNull] ResourceTableEntry entry, [CanBeNull] string text, [CanBeNull] CultureInfo culture, ColumnKind columnKind, [CanBeNull] string originalText)
+        public EntryChange([NotNull] ResourceTableEntry entry, string? text, CultureInfo? culture, ColumnKind columnKind, string? originalText)
         {
             Entry = entry;
             Text = text;
@@ -18,15 +18,12 @@ namespace ResXManager.Model
         [NotNull]
         public ResourceTableEntry Entry { get; }
 
-        [CanBeNull]
-        public string Text { get; }
+        public string? Text { get; }
 
-        [CanBeNull]
-        public CultureInfo Culture { get; }
+        public CultureInfo? Culture { get; }
 
         public ColumnKind ColumnKind { get; }
 
-        [CanBeNull]
-        public string OriginalText { get; }
+        public string? OriginalText { get; }
     }
 }

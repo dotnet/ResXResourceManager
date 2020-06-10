@@ -162,17 +162,16 @@
         private class Configuration
         {
             [JsonProperty("typeScriptFileDir")]
-            public string TypeScriptFileDir { get; set; }
+            public string? TypeScriptFileDir { get; set; }
             [JsonProperty("jsonFileDir")]
-            public string JsonFileDir { get; set; }
+            public string? JsonFileDir { get; set; }
             [JsonProperty("exportNeutralJson")]
             public bool ExportNeutralJson { get; set; }
         }
 
         private static JObject GenerateJsonObjectWithComment()
         {
-            var value = new JObject();
-            value.Add("_comment", JToken.FromObject("Auto-generated; do not modify!"));
+            var value = new JObject { { "_comment", JToken.FromObject("Auto-generated; do not modify!") } };
             return value;
         }
 

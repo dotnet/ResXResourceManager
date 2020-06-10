@@ -19,19 +19,20 @@
         private const char TextColumnSeparator = '\t';
 
         [NotNull]
-        public static string ToTextString([NotNull, ItemNotNull] this IList<IList<string>> table, char separator = TextColumnSeparator) 
+        public static string ToTextString([NotNull, ItemCanBeNull] this IList<IList<string?>?> table, char separator = TextColumnSeparator)
         {
+            IList<string?>? row;
 
-            if ((table.Count == 1) && (table[0] != null) && (table[0].Count == 1) && string.IsNullOrWhiteSpace(table[0][0]))
-                return Quote + (table[0][0] ?? string.Empty) + Quote;
+            if ((table.Count == 1) && ((row = table[0]) != null) && (row.Count == 1) && string.IsNullOrWhiteSpace(row[0]))
+                return Quote + (row[0] ?? string.Empty) + Quote;
 
-            return string.Join(Environment.NewLine, table.Select(line => string.Join(separator.ToString(CultureInfo.InvariantCulture), line.Select(cell => Quoted(cell, separator)))));
+            return string.Join(Environment.NewLine, table.Select(line => string.Join(separator.ToString(CultureInfo.InvariantCulture), line?.Select(cell => Quoted(cell, separator)) ?? Enumerable.Empty<string>())));
         }
 
         [NotNull]
-        private static string Quoted([CanBeNull] string value, char separator)
+        private static string Quoted(string? value, char separator)
         {
-            if (string.IsNullOrEmpty(value))
+            if (value == null || string.IsNullOrEmpty(value))
                 return string.Empty;
 
             if (value.Any(IsLineFeed) || value.Contains(separator) || value.StartsWith(Quote, StringComparison.Ordinal))
@@ -42,10 +43,9 @@
             return value;
         }
 
-        [CanBeNull, ItemNotNull]
-        internal static IList<IList<string>> ParseTable([NotNull] this string text, char separator = TextColumnSeparator)
+        [ItemNotNull]
+        internal static IList<IList<string>>? ParseTable([NotNull] this string text, char separator = TextColumnSeparator)
         {
-
             var table = new List<IList<string>>();
 
             using (var reader = new StringReader(text))

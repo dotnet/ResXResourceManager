@@ -69,7 +69,7 @@
         protected ITracer Tracer { get; }
 
         [CanBeNull, GetInterceptor, UsedImplicitly]
-        protected T GetProperty<T>([NotNull] string key, [CanBeNull] PropertyInfo propertyInfo)
+        protected T GetProperty<T>([NotNull] string key, PropertyInfo? propertyInfo)
         {
             if (!typeof(INotifyChanged).IsAssignableFrom(typeof(T)))
             {
@@ -84,7 +84,7 @@
             var value = GetValue(GetDefaultValue<T>(propertyInfo), key);
 
             if (value == null)
-                return default;
+                return default!;
 
             ((INotifyChanged)value).Changed += (sender, e) =>
             {
@@ -140,7 +140,7 @@
         }
 
         [CanBeNull]
-        protected static T ConvertFromString<T>([CanBeNull] string value, [CanBeNull] T defaultValue)
+        protected static T ConvertFromString<T>(string? value, [CanBeNull] T defaultValue)
         {
             try
             {
@@ -158,8 +158,7 @@
             return defaultValue;
         }
 
-        [CanBeNull]
-        protected static string ConvertToString<T>([CanBeNull] T value)
+        protected static string? ConvertToString<T>([CanBeNull] T value)
         {
             if (value == null)
                 return null;
@@ -174,8 +173,7 @@
             return GetCustomTypeConverter(type) ?? TypeDescriptor.GetConverter(type);
         }
 
-        [CanBeNull]
-        private static TypeConverter GetCustomTypeConverter([NotNull] ICustomAttributeProvider item)
+        private static TypeConverter? GetCustomTypeConverter([NotNull] ICustomAttributeProvider item)
         {
             /*
              * Workaround: a copy of the identical method from TomsToolbox.Essentials.
@@ -191,7 +189,7 @@
         }
 
         [CanBeNull]
-        private static T GetDefaultValue<T>([CanBeNull] MemberInfo propertyInfo)
+        private static T GetDefaultValue<T>(MemberInfo? propertyInfo)
         {
             var defaultValueAttribute = propertyInfo?.GetCustomAttributes<DefaultValueAttribute>().Select(attr => attr?.Value).FirstOrDefault();
 
@@ -200,16 +198,16 @@
                 case T defaultValue:
                     return defaultValue;
                 case string stringValue:
-                    return ConvertFromString(stringValue, default(T));
+                    return ConvertFromString(stringValue, default(T)!);
             }
 
-            return default;
+            return default!;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

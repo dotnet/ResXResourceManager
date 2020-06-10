@@ -26,12 +26,12 @@
         /// <summary>
         /// Returns whether this converter can convert an object of the given type to the type of this converter, using the specified context.
         /// </summary>
-        /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
-        /// <param name="sourceType">A <see cref="T:System.Type"/> that represents the type you want to convert from.</param>
+        /// <param name="context">An <see cref="System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
+        /// <param name="sourceType">A <see cref="System.Type"/> that represents the type you want to convert from.</param>
         /// <returns>
         /// true if this converter can perform the conversion; otherwise, false.
         /// </returns>
-        public override bool CanConvertFrom([CanBeNull] ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         {
             return sourceType == typeof(string);
         }
@@ -39,12 +39,12 @@
         /// <summary>
         /// Returns whether this converter can convert the object to the specified type, using the specified context.
         /// </summary>
-        /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
-        /// <param name="destinationType">A <see cref="T:System.Type"/> that represents the type you want to convert to.</param>
+        /// <param name="context">An <see cref="System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
+        /// <param name="destinationType">A <see cref="System.Type"/> that represents the type you want to convert to.</param>
         /// <returns>
         /// true if this converter can perform the conversion; otherwise, false.
         /// </returns>
-        public override bool CanConvertTo([CanBeNull] ITypeDescriptorContext context, Type destinationType)
+        public override bool CanConvertTo(ITypeDescriptorContext? context, Type destinationType)
         {
             return destinationType == typeof(string);
         }
@@ -52,15 +52,14 @@
         /// <summary>
         /// Converts the given object to the type of this converter, using the specified context and culture information.
         /// </summary>
-        /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
-        /// <param name="culture">The <see cref="T:System.Globalization.CultureInfo"/> to use as the current culture.</param>
-        /// <param name="value">The <see cref="T:System.Object"/> to convert.</param>
+        /// <param name="context">An <see cref="System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
+        /// <param name="culture">The <see cref="System.Globalization.CultureInfo"/> to use as the current culture.</param>
+        /// <param name="value">The <see cref="System.Object"/> to convert.</param>
         /// <returns>
-        /// An <see cref="T:System.Object"/> that represents the converted value.
+        /// An <see cref="System.Object"/> that represents the converted value.
         /// </returns>
-        /// <exception cref="T:System.NotSupportedException">The conversion cannot be performed. </exception>
-        [CanBeNull]
-        public override object ConvertFrom([CanBeNull] ITypeDescriptorContext context, CultureInfo culture, [CanBeNull] object value)
+        /// <exception cref="System.NotSupportedException">The conversion cannot be performed. </exception>
+        public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo culture, object? value)
         {
             var stringValue = value as string;
 
@@ -91,17 +90,17 @@
         /// <summary>
         /// Converts the given value object to the specified type, using the specified context and culture information.
         /// </summary>
-        /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
-        /// <param name="culture">A <see cref="T:System.Globalization.CultureInfo"/>. If null is passed, the current culture is assumed.</param>
-        /// <param name="value">The <see cref="T:System.Object"/> to convert.</param>
-        /// <param name="destinationType">The <see cref="T:System.Type"/> to convert the <paramref name="value"/> parameter to.</param>
+        /// <param name="context">An <see cref="System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
+        /// <param name="culture">A <see cref="System.Globalization.CultureInfo"/>. If null is passed, the current culture is assumed.</param>
+        /// <param name="value">The <see cref="System.Object"/> to convert.</param>
+        /// <param name="destinationType">The <see cref="System.Type"/> to convert the <paramref name="value"/> parameter to.</param>
         /// <returns>
-        /// An <see cref="T:System.Object"/> that represents the converted value.
+        /// An <see cref="System.Object"/> that represents the converted value.
         /// </returns>
-        /// <exception cref="T:System.ArgumentNullException">The <paramref name="destinationType"/> parameter is null. </exception>
-        /// <exception cref="T:System.NotSupportedException">The conversion cannot be performed. </exception>
+        /// <exception cref="System.ArgumentNullException">The <paramref name="destinationType"/> parameter is null. </exception>
+        /// <exception cref="System.NotSupportedException">The conversion cannot be performed. </exception>
         [NotNull]
-        public override object ConvertTo([CanBeNull] ITypeDescriptorContext context, [CanBeNull] CultureInfo culture, [NotNull] object value, [CanBeNull] Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, [NotNull] object value, Type? destinationType)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));

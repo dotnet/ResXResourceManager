@@ -15,8 +15,7 @@
         [NotNull]
         string DisplayName { get; }
 
-        [CanBeNull]
-        Uri Uri { get; }
+        Uri? Uri { get; }
 
         bool IsEnabled { get; set; }
 

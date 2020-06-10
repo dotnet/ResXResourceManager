@@ -4,7 +4,7 @@
 
     public class ResourceNode
     {
-        public ResourceNode([NotNull] string key, [CanBeNull] string text, [CanBeNull] string comment)
+        public ResourceNode([NotNull] string key, string? text, string? comment)
         {
             Text = text;
             Comment = comment;
@@ -13,9 +13,7 @@
 
         [NotNull]
         public string Key { get;  }
-        [CanBeNull]
-        public string Text { get;  }
-        [CanBeNull]
-        public string Comment { get; }
+        public string? Text { get;  }
+        public string? Comment { get; }
     }
 }

@@ -12,11 +12,11 @@ namespace ResXManager.Model
         {
         }
 
-        public ImportException([CanBeNull] string message) : base(message)
+        public ImportException(string? message) : base(message)
         {
         }
 
-        public ImportException([CanBeNull] string message, [CanBeNull] Exception inner) : base(message, inner)
+        public ImportException(string? message, Exception? inner) : base(message, inner)
         {
         }
 

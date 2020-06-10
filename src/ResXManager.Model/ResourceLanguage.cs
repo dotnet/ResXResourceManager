@@ -130,8 +130,7 @@
         /// <summary>
         /// Gets the culture of this language.
         /// </summary>
-        [CanBeNull]
-        public CultureInfo Culture => CultureKey.Culture;
+        public CultureInfo? Culture => CultureKey.Culture;
 
         /// <summary>
         /// Gets the display name of this language.
@@ -194,18 +193,17 @@
                 .AsReadOnly();
         }
 
-        [CanBeNull]
-        internal string GetValue([NotNull] string key)
+        internal string? GetValue([NotNull] string key)
         {
             return !_nodes.TryGetValue(key, out var node) ? null : node?.Text;
         }
 
-        internal bool SetValue([NotNull] string key, [CanBeNull] string value)
+        internal bool SetValue([NotNull] string key, string? value)
         {
             return GetValue(key) == value || SetNodeData(key, node => node.Text = value);
         }
 
-        public void ForceValue([NotNull] string key, [CanBeNull] string value)
+        public void ForceValue([NotNull] string key, string? value)
         {
             SetNodeData(key, node => node.Text = value);
         }
@@ -276,7 +274,7 @@
             return SortAndAdd(stringComparison, null);
         }
 
-        private bool SortAndAdd(StringComparison stringComparison, [CanBeNull] XElement newNode)
+        private bool SortAndAdd(StringComparison stringComparison, XElement? newNode)
         {
             var comparer = new DelegateComparer<string>((left, right) => string.Compare(left, right, stringComparison));
             string GetName(XElement node) => node.Attribute(_nameAttributeName)?.Value.TrimStart('>') ?? string.Empty;
@@ -327,8 +325,7 @@
             return true;
         }
 
-        [CanBeNull]
-        internal string GetComment([NotNull] string key)
+        internal string? GetComment([NotNull] string key)
         {
             if (!_nodes.TryGetValue(key, out var node) || (node == null))
                 return null;
@@ -336,7 +333,7 @@
             return node.Comment;
         }
 
-        internal bool SetComment([NotNull] string key, [CanBeNull] string value)
+        internal bool SetComment([NotNull] string key, string? value)
         {
             if (GetComment(key) == value)
                 return true;
@@ -519,7 +516,7 @@
         }
 
         [NotNull]
-        private static string GenerateUniqueKey([NotNull][ItemNotNull] ICollection<Node> elements, [NotNull] Node item, [CanBeNull] string text, ref int index)
+        private static string GenerateUniqueKey([NotNull][ItemNotNull] ICollection<Node> elements, [NotNull] Node item, string? text, ref int index)
         {
             var key = item.Key;
             string newKey;
@@ -544,10 +541,8 @@
             [NotNull]
             private readonly ResourceLanguage _owner;
 
-            [CanBeNull]
-            private string _text;
-            [CanBeNull]
-            private string _comment;
+            private string? _text;
+            private string? _comment;
 
             public Node([NotNull] ResourceLanguage owner, [NotNull] XElement element)
             {
@@ -565,8 +560,7 @@
                 set => GetNameAttribute(Element).Value = value;
             }
 
-            [CanBeNull]
-            public string Text
+            public string? Text
             {
                 get => _text ??= LoadText();
                 set
@@ -590,8 +584,7 @@
                 }
             }
 
-            [CanBeNull]
-            public string Comment
+            public string? Comment
             {
                 get => _comment ??= LoadComment();
                 set
@@ -627,8 +620,7 @@
                 }
             }
 
-            [CanBeNull]
-            private string LoadText()
+            private string? LoadText()
             {
                 var entry = Element;
 
@@ -641,8 +633,7 @@
                 return !(valueElement.FirstNode is XText textNode) ? string.Empty : textNode.Value;
             }
 
-            [CanBeNull]
-            private string LoadComment()
+            private string? LoadComment()
             {
                 var entry = Element;
 

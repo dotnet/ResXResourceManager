@@ -11,7 +11,7 @@
         [NotNull]
         private static readonly Regex _rangeRegex = new Regex(@"(((?<sheetName>\w+)|('(?<sheetName>.*?)'))!)?\$?(?<startColumn>[A-Z]+)\$?(?<startRow>[0-9]*)(:\$?(?<endColumn>[A-Z]+)\$?(?<endRow>[0-9]*))?");
 
-        public ExcelRange([CanBeNull] string definition)
+        public ExcelRange(string? definition)
         {
             if (string.IsNullOrEmpty(definition))
                 return;
@@ -57,7 +57,7 @@
             get;
         }
 
-        private static int ColumnToIndex([CanBeNull] string column)
+        private static int ColumnToIndex(string? column)
         {
             return string.IsNullOrEmpty(column) ? 0 : column.Aggregate(0, (current, c) => current * 26 + (c - 'A' + 1)) - 1;
         }

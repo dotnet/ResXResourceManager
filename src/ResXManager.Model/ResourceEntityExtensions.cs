@@ -48,7 +48,7 @@
         }
 
         [NotNull, ItemNotNull]
-        private static IEnumerable<string> GetTableDataColumns([NotNull] this ResourceTableEntry entry, [CanBeNull] CultureKey cultureKey)
+        private static IEnumerable<string> GetTableDataColumns([NotNull] this ResourceTableEntry entry, CultureKey? cultureKey)
         {
             yield return entry.Comments.GetValue(cultureKey) ?? string.Empty;
             yield return entry.Values.GetValue(cultureKey) ?? string.Empty;
@@ -102,14 +102,12 @@
             return languageName;
         }
 
-        [CanBeNull]
-        private static CultureInfo ExtractCulture([NotNull] this string dataColumnHeader)
+        private static CultureInfo? ExtractCulture([NotNull] this string dataColumnHeader)
         {
             return GetLanguageName(dataColumnHeader).ToCulture();
         }
 
-        [CanBeNull]
-        private static CultureKey ExtractCultureKey([NotNull] this string dataColumnHeader)
+        private static CultureKey? ExtractCultureKey([NotNull] this string dataColumnHeader)
         {
             return GetLanguageName(dataColumnHeader).ToCultureKey();
         }
@@ -119,8 +117,7 @@
             return dataColumnHeader.StartsWith(CommentHeaderPrefix, StringComparison.OrdinalIgnoreCase) ? ColumnKind.Comment : ColumnKind.Text;
         }
 
-        [CanBeNull]
-        private static string GetEntryData([NotNull] this ResourceTableEntry entry, [NotNull] CultureKey culture, ColumnKind columnKind)
+        private static string? GetEntryData([NotNull] this ResourceTableEntry entry, [NotNull] CultureKey culture, ColumnKind columnKind)
         {
             var snapshot = entry.Snapshot;
 
@@ -155,7 +152,7 @@
             }
         }
 
-        private static bool SetEntryData([NotNull] this ResourceTableEntry entry, [CanBeNull] CultureInfo culture, ColumnKind columnKind, [CanBeNull] string text)
+        private static bool SetEntryData([NotNull] this ResourceTableEntry entry, CultureInfo? culture, ColumnKind columnKind, string? text)
         {
             if (!entry.CanEdit(culture))
                 return false;
@@ -237,7 +234,7 @@
                         ColumnKind = dataColumnHeaders[index].GetColumnKind()
                     }))
                 .Where(mapping => mapping.Entry != null)
-                .Select(mapping => new EntryChange(mapping.Entry, mapping.Text, mapping.Culture, mapping.ColumnKind, mapping.Entry.GetEntryData(mapping.Culture, mapping.ColumnKind)))
+                .Select(mapping => new EntryChange(mapping.Entry!, mapping.Text, mapping.Culture, mapping.ColumnKind, mapping.Entry!.GetEntryData(mapping.Culture, mapping.ColumnKind)))
                 .ToArray();
 
             var changes = mappings
@@ -323,7 +320,7 @@
             return headerCultures.All(c => c != null);
         }
 
-        private static void VerifyCultures([NotNull] ResourceEntity entity, [NotNull][ItemNotNull] IEnumerable<CultureInfo> languages)
+        private static void VerifyCultures([NotNull] ResourceEntity entity, [NotNull][ItemNotNull] IEnumerable<CultureInfo?> languages)
         {
             var undefinedLanguages = languages.Where(outer => entity.Languages.All(inner => !Equals(outer, inner.Culture))).ToArray();
 

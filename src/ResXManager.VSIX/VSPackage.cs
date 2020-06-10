@@ -10,7 +10,6 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Threading;
     using System.Windows;
@@ -26,7 +25,6 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
-    using ResXManager.View.Properties;
     using ResXManager.View.Tools;
     using ResXManager.View.Visuals;
     using ResXManager.VSIX.Visuals;
@@ -215,13 +213,11 @@
             //    .ToList();
 
 #pragma warning disable CA2000 // Dispose objects before losing scope => AggregateCatalog will dispose all
-            // ReSharper disable RedundantNameQualifier
             _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Infrastructure.ITracer).Assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Model.GlobalExtensions).Assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.Translators.AzureTranslator).Assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ResXManager.View.Appearance).Assembly));
-            // ReSharper restore RedundantNameQualifier
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Infrastructure.Properties.AssemblyKey).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Model.Properties.AssemblyKey).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Translators.Properties.AssemblyKey).Assembly));
+            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(View.Properties.AssemblyKey).Assembly));
 #pragma warning restore CA2000 // Dispose objects before losing scope
 
             _exportProviderLoaded.Set();
@@ -338,7 +334,7 @@
                 return;
 
             // if we open the window the first time, make sure it does not select all entities by default.
-            var settings = Settings.Default;
+            var settings = View.Properties.Settings.Default;
             settings.AreAllFilesSelected = false;
             settings.ResourceFilter = string.Empty;
 

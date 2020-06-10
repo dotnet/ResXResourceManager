@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -10,6 +11,8 @@
     using JetBrains.Annotations;
 
     using ResXManager.Model.Properties;
+
+    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleStringFormat_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleStringFormat_Description)]
@@ -22,7 +25,7 @@
 
         public string RuleId => Id;
 
-        public bool CompliesToRule([CanBeNull] string neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string> values, [CanBeNull] out string message)
+        public bool CompliesToRule(string? neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
         {
             if (CompliesToRule(neutralValue, values))
             {
@@ -34,7 +37,7 @@
             return false;
         }
 
-        private static bool CompliesToRule([CanBeNull] string neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string> values)
+        private static bool CompliesToRule(string? neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string?> values)
         {
             var allValues = new[] {neutralValue}.Concat(values.Where(value => !string.IsNullOrEmpty(value))).ToList();
 
@@ -51,7 +54,7 @@
             return indexedComply && namedComply;
         }
 
-        private static long GetStringFormatByIndexFlags([CanBeNull] string value)
+        private static long GetStringFormatByIndexFlags(string? value)
         {
             if (string.IsNullOrEmpty(value))
                 return 0;
@@ -65,12 +68,12 @@
                 .Aggregate(0L, (a, match) => a | ParseMatch(match));
         }
 
-        private static string GetStringFormatByPlaceholdersFingerprint([CanBeNull] string value)
+        private static string GetStringFormatByPlaceholdersFingerprint(string? value)
         {
             if (string.IsNullOrEmpty(value))
                 return string.Empty;
 
-            return string.Join("|", WebFilesExporter.ExtractPlaceholders(value).OrderBy(item => item));
+            return string.Join("|", WebFilesExporter.ExtractPlaceholders(value!).OrderBy(item => item));
         }
 
         private static long ParseMatch(Match match)
@@ -83,7 +86,7 @@
         }
 
 #pragma warning disable CS0067
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
     }
 }

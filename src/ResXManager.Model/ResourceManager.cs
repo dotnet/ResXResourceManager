@@ -31,14 +31,13 @@
         [NotNull]
         private readonly ISourceFilesProvider _sourceFilesProvider;
 
-        [CanBeNull]
-        private string _snapshot;
+        private string? _snapshot;
 
-        public event EventHandler<ResourceBeginEditingEventArgs> BeginEditing;
-        public event EventHandler<CancelEventArgs> Reloading;
-        public event EventHandler<EventArgs> Loaded;
-        public event EventHandler<LanguageEventArgs> LanguageChanged;
-        public event EventHandler<ProjectFileEventArgs> ProjectFileSaved;
+        public event EventHandler<ResourceBeginEditingEventArgs>? BeginEditing;
+        public event EventHandler<CancelEventArgs>? Reloading;
+        public event EventHandler<EventArgs>? Loaded;
+        public event EventHandler<LanguageEventArgs>? LanguageChanged;
+        public event EventHandler<ProjectFileEventArgs>? ProjectFileSaved;
 
         [ImportingConstructor]
         private ResourceManager([NotNull] ISourceFilesProvider sourceFilesProvider, [NotNull] IConfiguration configuration)
@@ -108,8 +107,7 @@
 
         public bool IsSaving => ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.IsSaving);
 
-        [CanBeNull]
-        public string SolutionFolder => _sourceFilesProvider.SolutionFolder;
+        public string? SolutionFolder => _sourceFilesProvider.SolutionFolder;
 
         public void ReloadSnapshot()
         {
@@ -132,7 +130,7 @@
             return Load(sourceFiles);
         }
 
-        public bool CanEdit([NotNull] ResourceEntity resourceEntity, [CanBeNull] CultureKey cultureKey)
+        public bool CanEdit([NotNull] ResourceEntity resourceEntity, CultureKey? cultureKey)
         {
             var eventHandler = BeginEditing;
 
@@ -211,7 +209,7 @@
                         }
                         else
                         {
-                            ResourceEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles));
+                            ResourceEntities.Add(new ResourceEntity(this, projectName!, baseName, directoryName, projectFiles));
                             hasChanged = true;
                         }
                     }
@@ -244,7 +242,7 @@
             ProjectFileSaved?.Invoke(this, new ProjectFileEventArgs(language, projectFile));
         }
 
-        public static bool IsValidLanguageName([CanBeNull] string languageName)
+        public static bool IsValidLanguageName(string? languageName)
         {
             if (string.IsNullOrEmpty(languageName))
                 return false;
@@ -283,7 +281,7 @@
             return specificCultures;
         }
 
-        public void LoadSnapshot([CanBeNull] string value)
+        public void LoadSnapshot(string? value)
         {
             ResourceEntities.LoadSnapshot(value);
 

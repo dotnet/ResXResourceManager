@@ -1,18 +1,14 @@
 ﻿namespace ResXManager.Model
 {
-    using JetBrains.Annotations;
-
     public class ResourceData
     {
-        [CanBeNull]
-        public string Text
+        public string? Text
         {
             get;
             set;
         }
 
-        [CanBeNull]
-        public string Comment
+        public string? Comment
         {
             get;
             set;

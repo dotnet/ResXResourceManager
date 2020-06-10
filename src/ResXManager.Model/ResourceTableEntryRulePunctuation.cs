@@ -2,10 +2,13 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
     using JetBrains.Annotations;
+
+    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
     public abstract class ResourceTableEntryRulePunctuation : IResourceTableEntryRule
     {
@@ -15,7 +18,7 @@
         /// <inheritdoc />
         public abstract string RuleId { get; }
 
-        public bool CompliesToRule([CanBeNull] string neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string> values, [CanBeNull] out string message)
+        public bool CompliesToRule(string? neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
         {
             var reference = GetPunctuationSequence(neutralValue).ToArray();
 
@@ -29,17 +32,17 @@
             return true;
         }
 
-        [NotNull]
-        protected abstract IEnumerable<char> GetCharIterator([NotNull] string value);
+        [JetBrains.Annotations.NotNull]
+        protected abstract IEnumerable<char> GetCharIterator([JetBrains.Annotations.NotNull] string value);
 
-        [NotNull]
-        protected abstract string GetErrorMessage([NotNull] string reference);
+        [JetBrains.Annotations.NotNull]
+        protected abstract string GetErrorMessage([JetBrains.Annotations.NotNull] string reference);
 
-        [NotNull]
-        private static string NormalizeUnicode([CanBeNull] string value) => value?.Normalize() ?? string.Empty;
+        [JetBrains.Annotations.NotNull]
+        private static string NormalizeUnicode(string? value) => value?.Normalize() ?? string.Empty;
 
-        [NotNull]
-        private IEnumerable<char> GetPunctuationSequence([CanBeNull] string value)
+        [JetBrains.Annotations.NotNull]
+        private IEnumerable<char> GetPunctuationSequence(string? value)
         {
             return GetCharIterator(NormalizeUnicode(value))
                 .SkipWhile(char.IsWhiteSpace).
@@ -95,6 +98,6 @@
         }
 
 #pragma warning disable CS0067
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

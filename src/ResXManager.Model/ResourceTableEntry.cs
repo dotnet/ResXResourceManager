@@ -23,6 +23,8 @@
 
     using TomsToolbox.Essentials;
 
+    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
+
     /// <summary>
     /// Represents one entry in the resource table.
     /// </summary>
@@ -40,11 +42,9 @@
         private string _storedKey;
 
         // the last validation error
-        [CanBeNull]
-        private string _keyValidationError;
+        private string? _keyValidationError;
 
-        [CanBeNull]
-        private ISet<string> _mutedRuleIds;
+        private ISet<string>? _mutedRuleIds;
 
         [NotNull]
         private IConfiguration Configuration => Container.Container.Configuration;
@@ -72,16 +72,16 @@
 
             _languages = languages;
 
-            Values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(Key), (lang, value) => lang.SetValue(Key, value));
+            Values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(Key)!, (lang, value) => lang.SetValue(Key, value));
             Values.ValueChanged += Values_ValueChanged;
 
-            Comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(Key), (lang, value) => lang.SetComment(Key, value));
+            Comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(Key)!, (lang, value) => lang.SetComment(Key, value));
             Comments.ValueChanged += Comments_ValueChanged;
 
             FileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
 
-            SnapshotValues = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text, (lang, value) => false);
-            SnapshotComments = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment, (lang, value) => false);
+            SnapshotValues = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text!, (lang, value) => false);
+            SnapshotComments = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment!, (lang, value) => false);
 
             ValueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
             CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
@@ -94,17 +94,17 @@
         private void ResetTableValues()
         {
             Values.ValueChanged -= Values_ValueChanged;
-            Values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(Key), (lang, value) => lang.SetValue(Key, value));
+            Values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(Key)!, (lang, value) => lang.SetValue(Key, value));
             Values.ValueChanged += Values_ValueChanged;
 
             Comments.ValueChanged -= Comments_ValueChanged;
-            Comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(Key), (lang, value) => lang.SetComment(Key, value));
+            Comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(Key)!, (lang, value) => lang.SetComment(Key, value));
             Comments.ValueChanged += Comments_ValueChanged;
 
             FileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
 
-            SnapshotValues = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text, (lang, value) => false);
-            SnapshotComments = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment, (lang, value) => false);
+            SnapshotValues = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text!, (lang, value) => false);
+            SnapshotComments = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment!, (lang, value) => false);
 
             ValueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
             CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
@@ -169,9 +169,8 @@
         /// <summary>
         /// Gets or sets the comment of the neutral language.
         /// </summary>
-        [CanBeNull]
         [DependsOn(nameof(Comments))]
-        public string Comment
+        public string? Comment
         {
             get => NeutralLanguage.GetComment(Key) ?? string.Empty;
             set => NeutralLanguage.SetComment(Key, value);
@@ -241,12 +240,12 @@
             return ResourceTableEntryRules.GetMutedRuleIds(comment);
         }
 
-        private bool GetIsRuleEnabled([CanBeNull] string ruleId)
+        private bool GetIsRuleEnabled(string? ruleId)
         {
-            return !MutedRuleIds.Contains(ruleId) && Rules.IsEnabled(ruleId);
+            return !MutedRuleIds.Contains(ruleId!) && Rules.IsEnabled(ruleId);
         }
 
-        private void SetIsRuleEnabled([CanBeNull] string ruleId, bool value)
+        private void SetIsRuleEnabled(string? ruleId, bool value)
         {
             if (ruleId == null)
                 return;
@@ -317,8 +316,7 @@
         public bool IsDuplicateKey => _duplicateKeyExpression.Match(Key).Success;
 
         [ItemNotNull]
-        [CanBeNull]
-        public ReadOnlyCollection<CodeReference> CodeReferences { get; internal set; }
+        public ReadOnlyCollection<CodeReference>? CodeReferences { get; internal set; }
 
         [UsedImplicitly, OnChangedMethod(nameof(OnIndexChanged))]
         public double Index { get; set; }
@@ -341,10 +339,9 @@
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        [CanBeNull]
-        public IDictionary<CultureKey, ResourceData> Snapshot { get; set; }
+        public IDictionary<CultureKey, ResourceData>? Snapshot { get; set; }
 
-        public bool CanEdit([CanBeNull] CultureKey cultureKey)
+        public bool CanEdit(CultureKey? cultureKey)
         {
             return Container.CanEdit(cultureKey);
         }
@@ -365,7 +362,7 @@
                 .ToList()
                 .AsReadOnly();
 
-            return !Rules.CompliesToRules(MutedRuleIds, neutralValue, values, out _);
+            return !Rules.CompliesToRules(MutedRuleIds, neutralValue, (ICollection<string?>)values, out _);
         }
 
         public bool HasSnapshotDifferences([NotNull][ItemNotNull] IEnumerable<object> cultures)
@@ -387,7 +384,7 @@
             return !string.Equals(snapshotValue, currentValue, StringComparison.Ordinal) || !string.Equals(snapshotComment, currentComment, StringComparison.Ordinal);
         }
 
-        private void Values_ValueChanged([CanBeNull] object sender, [CanBeNull] EventArgs e)
+        private void Values_ValueChanged(object? sender, EventArgs e)
         {
             OnValuesChanged();
         }
@@ -400,7 +397,7 @@
             OnPropertyChanged(nameof(ValueAnnotations));
         }
 
-        private void Comments_ValueChanged([CanBeNull] object sender, [CanBeNull] EventArgs e)
+        private void Comments_ValueChanged(object? sender, EventArgs e)
         {
             // just clear and re-fetch upon next usage
             _mutedRuleIds = null;
@@ -433,7 +430,7 @@
                 .ToArray();
         }
 
-        public bool GetError([NotNull] CultureKey culture, [CanBeNull] out string errorMessage)
+        public bool GetError([NotNull] CultureKey culture, out string? errorMessage)
         {
             errorMessage = null;
 
@@ -464,7 +461,7 @@
                 if (string.IsNullOrEmpty(neutralValue))
                     return false;
 
-                if (Rules.CompliesToRules(MutedRuleIds, neutralValue, value, out var ruleMessages))
+                if (Rules.CompliesToRules(MutedRuleIds, neutralValue!, value, out var ruleMessages))
                     return false;
 
                 errorMessage = GetErrorPrefix(culture) + string.Join(" ", ruleMessages);
@@ -478,7 +475,7 @@
         private string GetErrorPrefix([NotNull] CultureKey culture) => string.Format(CultureInfo.CurrentCulture, "{0}{1}: ", Key, culture);
 
         [NotNull, ItemNotNull]
-        private IEnumerable<string> GetInvariantMismatches([NotNull] CultureKey culture, [CanBeNull] string value)
+        private IEnumerable<string> GetInvariantMismatches([NotNull] CultureKey culture, string? value)
         {
             if (culture == CultureKey.Neutral)
                 yield break;
@@ -498,7 +495,7 @@
         }
 
         [NotNull, ItemNotNull]
-        private IEnumerable<string> GetSnapshotDifferences([NotNull] ResourceLanguage language, [CanBeNull] string current, [NotNull] Func<ResourceData, string> selector)
+        private IEnumerable<string> GetSnapshotDifferences([NotNull] ResourceLanguage language, string? current, [NotNull] Func<ResourceData, string?> selector)
         {
             var snapshot = Snapshot;
             if (snapshot == null)
@@ -527,25 +524,23 @@
             if (string.IsNullOrEmpty(neutralValue))
                 yield break;
 
-            if (Rules.CompliesToRules(MutedRuleIds, neutralValue, value, out var ruleMessages))
+            if (Rules.CompliesToRules(MutedRuleIds, neutralValue!, value!, out var ruleMessages))
                 yield break;
 
             foreach (var message in ruleMessages)
                 yield return message;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName][CanBeNull] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        [CanBeNull]
-        string IDataErrorInfo.this[[CanBeNull] string columnName] => columnName != nameof(Key) ? null : _keyValidationError;
+        string? IDataErrorInfo.this[string? columnName] => columnName != nameof(Key) ? null : _keyValidationError;
 
-        [CanBeNull]
-        string IDataErrorInfo.Error => null;
+        string? IDataErrorInfo.Error => null;
     }
 }

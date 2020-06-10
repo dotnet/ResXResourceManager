@@ -147,8 +147,7 @@
         [NotNull]
         public string DirectoryName { get; }
 
-        [CanBeNull]
-        public ProjectFile NeutralProjectFile { get; private set; }
+        public ProjectFile? NeutralProjectFile { get; private set; }
 
         public bool IsWinFormsDesignerResource => NeutralProjectFile?.IsWinFormsDesignerResource ?? false;
 
@@ -182,8 +181,7 @@
         /// Adds an item with the specified key.
         /// </summary>
         /// <param name="key">The key.</param>
-        [CanBeNull]
-        public ResourceTableEntry Add([NotNull] string key)
+        public ResourceTableEntry? Add([NotNull] string key)
         {
             if (!_languages.Any() || !_languages.Values.Any())
                 return null;
@@ -218,7 +216,7 @@
             return DisplayName;
         }
 
-        public bool CanEdit([CanBeNull] CultureKey cultureKey)
+        public bool CanEdit(CultureKey? cultureKey)
         {
             return Container.CanEdit(this, cultureKey);
         }
@@ -262,7 +260,7 @@
             }
         }
 
-        internal bool EqualsAll([CanBeNull] string projectName, [CanBeNull] string baseName, [CanBeNull] string directoryName)
+        internal bool EqualsAll(string? projectName, string? baseName, string? directoryName)
         {
             return string.Equals(projectName, ProjectName, StringComparison.OrdinalIgnoreCase)
                    && string.Equals(baseName, BaseName, StringComparison.OrdinalIgnoreCase)

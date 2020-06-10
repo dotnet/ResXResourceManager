@@ -11,14 +11,13 @@
     /// </summary>
     public class ResourceBeginEditingEventArgs : CancelEventArgs
     {
-        public ResourceBeginEditingEventArgs([NotNull] ResourceEntity entity, [CanBeNull] CultureKey cultureKey)
+        public ResourceBeginEditingEventArgs([NotNull] ResourceEntity entity, CultureKey? cultureKey)
         {
             Entity = entity;
             CultureKey = cultureKey;
         }
 
-        [CanBeNull]
-        public CultureKey CultureKey { get; }
+        public CultureKey? CultureKey { get; }
 
         [NotNull]
         public ResourceEntity Entity { get; }

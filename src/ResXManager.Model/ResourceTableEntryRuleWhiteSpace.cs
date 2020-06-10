@@ -3,10 +3,13 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
     using JetBrains.Annotations;
+
+    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
     public abstract class ResourceTableEntryRuleWhiteSpace : IResourceTableEntryRule
     {
@@ -16,7 +19,7 @@
         /// <inheritdoc />
         public abstract string RuleId { get; }
 
-        public bool CompliesToRule([CanBeNull] string neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string> values, [CanBeNull] out string message)
+        public bool CompliesToRule(string? neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
         {
             var reference = GetWhiteSpaceSequence(neutralValue).ToArray();
 
@@ -31,13 +34,13 @@
         }
 
         [NotNull]
-        protected abstract IEnumerable<char> GetCharIterator([CanBeNull] string value);
+        protected abstract IEnumerable<char> GetCharIterator(string? value);
 
         [NotNull]
         protected abstract string GetErrorMessage([NotNull][ItemNotNull] IEnumerable<string> reference);
 
         [NotNull]
-        private IEnumerable<char> GetWhiteSpaceSequence([CanBeNull] string value)
+        private IEnumerable<char> GetWhiteSpaceSequence(string? value)
         {
             return GetCharIterator(value).TakeWhile(char.IsWhiteSpace);
         }
@@ -87,6 +90,6 @@
         }
 
 #pragma warning disable CS0067
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

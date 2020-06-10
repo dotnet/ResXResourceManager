@@ -1,14 +1,10 @@
 ﻿namespace ResXManager.Infrastructure
 {
-    using JetBrains.Annotations;
-
     public interface ITranslationMatch
     {
-        [CanBeNull]
-        string TranslatedText { get; }
+        string? TranslatedText { get; }
 
-        [CanBeNull]
-        ITranslator Translator { get; }
+        ITranslator? Translator { get; }
 
         double Rating { get; }
     }

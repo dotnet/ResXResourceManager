@@ -21,7 +21,7 @@
 
             var allProjectFiles = fileInfos
                 .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
-                .Where(fileFilter.Matches)
+                .Where(fileFilter.Matches!)
                 .ToList();
 
             var fileNamesByDirectory = allProjectFiles.GroupBy(file => file.GetBaseDirectory()).ToArray();
@@ -37,7 +37,7 @@
                 var project = FindProject(directory, solutionFolder.FullName);
 
                 var projectName = directory.Name;
-                var uniqueProjectName = (string)null;
+                string? uniqueProjectName = null;
 
                 if (project != null)
                 {
@@ -50,7 +50,7 @@
                     }
                 }
 
-                foreach (var file in directoryFiles)
+                foreach (var file in directoryFiles!)
                 {
                     file.ProjectName = projectName;
                     file.UniqueProjectName = uniqueProjectName;
@@ -60,8 +60,7 @@
             return allProjectFiles;
         }
 
-        [CanBeNull]
-        private static FileInfo FindProject([NotNull] DirectoryInfo directory, [NotNull] string solutionFolder)
+        private static FileInfo? FindProject([NotNull] DirectoryInfo directory, [NotNull] string solutionFolder)
         {
             while ((directory != null) && (directory.FullName.Length >= solutionFolder.Length))
             {

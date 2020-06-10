@@ -57,7 +57,7 @@
             exportProvider.GetExportedValue<ITracer>().WriteLine(message);
         }
 
-        public static void TraceXamlLoaderError([NotNull] this IExportProvider exportProvider, [CanBeNull] Exception ex)
+        public static void TraceXamlLoaderError([NotNull] this IExportProvider exportProvider, Exception? ex)
         {
             var exceptions = ex?.ExceptionChain().Select(e => e.Message);
 

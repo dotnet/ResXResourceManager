@@ -16,9 +16,8 @@
         [NotNull]
         CultureKey TargetCulture { get; }
 
-        [CanBeNull]
-        string Translation { get; }
+        string? Translation { get; }
 
-        bool Apply([CanBeNull] string prefix);
+        bool Apply(string? prefix);
     }
 }

@@ -38,7 +38,7 @@
             return JsonConvert.SerializeObject(entitySnapshots) ?? string.Empty;
         }
 
-        public static void LoadSnapshot([NotNull][ItemNotNull] this ICollection<ResourceEntity> resourceEntities, [CanBeNull] string snapshot)
+        public static void LoadSnapshot([NotNull][ItemNotNull] this ICollection<ResourceEntity> resourceEntities, string? snapshot)
         {
             if (string.IsNullOrEmpty(snapshot))
             {
@@ -46,7 +46,7 @@
             }
             else
             {
-                var entitySnapshots = JsonConvert.DeserializeObject<ICollection<EntitySnapshot>>(snapshot) ?? Array.Empty<EntitySnapshot>();
+                var entitySnapshots = JsonConvert.DeserializeObject<ICollection<EntitySnapshot>>(snapshot!) ?? Array.Empty<EntitySnapshot>();
                 resourceEntities.Load(entitySnapshots);
             }
         }
@@ -78,8 +78,7 @@
                    && string.Equals(entity.UniqueName, snapshot.UniqueName, StringComparison.OrdinalIgnoreCase);
         }
 
-        [CanBeNull]
-        private static string NullIfEmpty([CanBeNull] string value)
+        private static string? NullIfEmpty(string? value)
         {
             return string.IsNullOrEmpty(value) ? null : value;
         }
@@ -87,26 +86,23 @@
         [DataContract]
         private class EntitySnapshot
         {
-            [CanBeNull]
             [DataMember]
-            public string ProjectName
+            public string? ProjectName
             {
                 get;
                 set;
             }
 
-            [CanBeNull]
             [DataMember]
-            public string UniqueName
+            public string? UniqueName
             {
                 get;
                 set;
             }
 
-            [CanBeNull]
             [ItemNotNull]
             [DataMember]
-            public ICollection<EntrySnapshot> Entries
+            public ICollection<EntrySnapshot>? Entries
             {
                 get;
                 set;
@@ -116,18 +112,16 @@
         [DataContract]
         private class EntrySnapshot
         {
-            [CanBeNull]
             [DataMember]
-            public string Key
+            public string? Key
             {
                 get;
                 set;
             }
 
-            [CanBeNull]
             [ItemNotNull]
             [DataMember]
-            public ICollection<DataSnapshot> Data
+            public ICollection<DataSnapshot>? Data
             {
                 get;
                 set;
@@ -137,25 +131,22 @@
         [DataContract]
         private class DataSnapshot
         {
-            [CanBeNull]
             [DataMember(Name = "L", EmitDefaultValue = false)]
-            public string Language
+            public string? Language
             {
                 get;
                 set;
             }
 
-            [CanBeNull]
             [DataMember(Name = "C", EmitDefaultValue = false)]
-            public string Comment
+            public string? Comment
             {
                 get;
                 set;
             }
 
-            [CanBeNull]
             [DataMember(Name = "T", EmitDefaultValue = false)]
-            public string Text
+            public string? Text
             {
                 get;
                 set;

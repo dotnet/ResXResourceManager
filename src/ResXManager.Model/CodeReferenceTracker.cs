@@ -20,8 +20,7 @@
     [Export]
     public class CodeReferenceTracker
     {
-        [CanBeNull]
-        private Engine _engine;
+        private Engine? _engine;
 
         private CodeReferenceTracker()
         {
@@ -130,7 +129,7 @@
 
         private class CodeMatch
         {
-            public CodeMatch([NotNull] string line, [NotNull] string key, [CanBeNull] Regex regex, StringComparison stringComparison, [CanBeNull] string singleLineComment)
+            public CodeMatch([NotNull] string line, [NotNull] string key, Regex? regex, StringComparison stringComparison, string? singleLineComment)
             {
                 var keyIndexes = new List<int>();
 
@@ -207,8 +206,7 @@
             [NotNull, ItemNotNull]
             private readonly CodeReferenceConfigurationItem[] _configurations;
             [ItemNotNull]
-            [CanBeNull]
-            private readonly string[] _lines;
+            private readonly string[]? _lines;
 
             public FileInfo([NotNull] ProjectFile projectFile, [NotNull, ItemNotNull] IEnumerable<CodeReferenceConfigurationItem> configurations, [NotNull][ItemNotNull] ICollection<string> keys, ref long visited)
             {
@@ -256,7 +254,7 @@
                     var parameters = _configurations.Select(cfg => new
                     {
                         StringComparison = cfg.IsCaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase,
-                        Regex = !string.IsNullOrEmpty(cfg.Expression) ? new Regex(cfg.Expression.Replace("$Key", key).Replace("$File", baseName)) : null,
+                        Regex = cfg.Expression != null && !string.IsNullOrEmpty(cfg.Expression) ? new Regex(cfg.Expression.Replace("$Key", key).Replace("$File", baseName)) : null,
                         cfg.SingleLineComment
                     }).ToArray();
 
@@ -304,12 +302,10 @@
 
         public int LineNumber { get; }
 
-        [CanBeNull]
-        public ProjectFile ProjectFile { get; }
+        public ProjectFile? ProjectFile { get; }
 
         [ItemNotNull]
-        [CanBeNull]
-        public IList<string> LineSegments { get; }
+        public IList<string>? LineSegments { get; }
     }
 
     internal static class CodeReferenceExtensionMethods

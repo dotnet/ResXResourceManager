@@ -13,6 +13,7 @@
     <Reference Include="System.Xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Nullable.cs" Link="Nullable.cs" />
     <Compile Include="..\Trademark.cs">
       <Link>Trademark.cs</Link>
     </Compile>

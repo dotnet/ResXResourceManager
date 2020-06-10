@@ -57,18 +57,17 @@
         /// </summary>
         /// <param name="tracer">The tracer.</param>
         /// <param name="reader">The reader providing the XML stream.</param>
-        public XmlConfiguration([NotNull] ITracer tracer, [CanBeNull] TextReader reader)
+        public XmlConfiguration([NotNull] ITracer tracer, TextReader? reader)
         {
-            XElement root = null;
-            XNamespace @namespace = null;
-            XDocument document = null;
+            XNamespace? @namespace = null;
+            XDocument? document = null;
 
             if ((reader != null) && (reader.Peek() != -1))
             {
                 try
                 {
                     document = XDocument.Load(reader, LoadOptions.PreserveWhitespace);
-                    root = document.Root;
+                    var root = document.Root;
 
                     if (root != null)
                     {
@@ -84,12 +83,12 @@
             if ((@namespace == null) || !DefaultNamespace.Equals(@namespace.NamespaceName, StringComparison.Ordinal))
             {
                 @namespace = XNamespace.Get(DefaultNamespace);
-                root = new XElement(XName.Get("Values", @namespace.NamespaceName));
+                var root = new XElement(XName.Get("Values", @namespace.NamespaceName));
                 document = new XDocument(root);
             }
 
-            _document = document;
-            _root = root;
+            _document = document ?? new XDocument();
+            _root = _document.Root;
             _keyName = XName.Get("Key");
             _valueName = XName.Get("Value", @namespace.NamespaceName);
         }
@@ -102,16 +101,15 @@
         /// <returns>
         /// The value stored in the XML file, or null if the value does not exist.
         /// </returns>
-        [CanBeNull]
-        public string GetValue([NotNull] string key, [CanBeNull] string defaultValue)
+        public string? GetValue([NotNull] string key, string? defaultValue)
         {
-            return _root.DescendantsAndSelf(_valueName)
+            return _root
+                .DescendantsAndSelf(_valueName)
                 .Select(node => new { Node = node, KeyAttribute = node.Attribute(_keyName) })
                 .Where(item => (item.KeyAttribute != null) && key.Equals(item.KeyAttribute.Value, StringComparison.Ordinal))
                 .Select(item => item.Node.FirstNode as XText)
-                .Where(node => node != null)
-                .Select(node => node.Value)
-                .FirstOrDefault() ?? defaultValue;
+                .Select(node => node!.Value)
+                .FirstOrDefault(value => value != null) ?? defaultValue;
         }
 
         /// <summary>
@@ -119,7 +117,7 @@
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value. If value is null, the node will be deleted from the xml stream.</param>
-        public void SetValue([NotNull] string key, [CanBeNull] string value)
+        public void SetValue([NotNull] string key, string? value)
         {
             var valueNode = _root.Descendants(_valueName)
                 .FirstOrDefault(node => string.Equals(key, node.Attribute(_keyName)?.Value, StringComparison.Ordinal));

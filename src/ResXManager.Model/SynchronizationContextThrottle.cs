@@ -8,8 +8,7 @@
 
     public class SynchronizationContextThrottle
     {
-        [CanBeNull]
-        private readonly TaskFactory _taskFactory;
+        private readonly TaskFactory? _taskFactory;
         [NotNull]
         private readonly Action _target;
 

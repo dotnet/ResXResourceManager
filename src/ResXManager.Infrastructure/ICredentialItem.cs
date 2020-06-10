@@ -12,7 +12,6 @@
         [NotNull]
         string Description { get; }
 
-        [CanBeNull]
-        string Value { get; set; }
+        string? Value { get; set; }
     }
 }

@@ -13,8 +13,7 @@
         [NotNull]
         [ItemNotNull]
         private readonly string[] _extensions;
-        [CanBeNull]
-        private readonly Regex _fileExclusionFilter;
+        private readonly Regex? _fileExclusionFilter;
 
         public FileFilter([NotNull] Configuration configuration)
         {
