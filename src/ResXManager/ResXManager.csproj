@@ -43,6 +43,7 @@
     <ErrorReport>prompt</ErrorReport>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <Optimize>true</Optimize>
@@ -51,6 +52,7 @@
     <ErrorReport>prompt</ErrorReport>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition="Exists('$(USERPROFILE)\tom-englert.de')">
     <DefineConstants>$(DefineConstants);TEST_L10N</DefineConstants>
