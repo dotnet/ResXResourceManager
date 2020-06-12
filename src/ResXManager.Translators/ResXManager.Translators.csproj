@@ -3,8 +3,6 @@
   <PropertyGroup>
     <UseWPF>true</UseWPF>
     <TargetFramework>net462</TargetFramework>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.ServiceModel" />
