@@ -8,7 +8,8 @@
 
     public class SynchronizationContextThrottle
     {
-        private readonly TaskFactory? _taskFactory;
+        public static TaskFactory? TaskFactory { get; set; }
+
         [NotNull]
         private readonly Action _target;
 
@@ -22,14 +23,14 @@
         {
             _target = target;
 
-            try
-            {
-                _taskFactory = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
-            }
-            catch (InvalidOperationException)
-            {
-                // for scripting deferred notifications are not needed, so if the current thread does not support a synchronization context, just go without.
-            }
+            //try
+            //{
+            //    _taskFactory = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
+            //}
+            //catch (InvalidOperationException)
+            //{
+            //    // for scripting deferred notifications are not needed, so if the current thread does not support a synchronization context, just go without.
+            //}
         }
 
         /// <summary>
@@ -37,7 +38,7 @@
         /// </summary>
         public void Tick()
         {
-            var taskFactory = _taskFactory;
+            var taskFactory = TaskFactory;
             if (taskFactory == null)
                 return;
 

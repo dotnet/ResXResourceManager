@@ -48,7 +48,7 @@
             _sourceFilesProvider.SolutionFolder = folder;
             _sourceFilesProvider.ExclusionFilter = exclusionFilter;
 
-            ResourceManager.Reload();
+            var loaded = ResourceManager.ReloadAsync(_sourceFilesProvider.EnumerateSourceFiles(), null).Result;
         }
 
         public void Save()

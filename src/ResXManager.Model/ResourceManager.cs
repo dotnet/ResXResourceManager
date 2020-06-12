@@ -8,6 +8,8 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using JetBrains.Annotations;
 
@@ -48,17 +50,23 @@
             TableEntries = ResourceEntities.ObservableSelectMany(entity => entity.Entries);
         }
 
+        public IList<ProjectFile> AllSourceFiles { get; private set; }
+
         /// <summary>
         /// Loads all resources from the specified project files.
         /// </summary>
         /// <param name="allSourceFiles">All resource x files.</param>
-        private bool Load([NotNull, ItemNotNull] IList<ProjectFile> allSourceFiles)
+        /// <param name="cancellationToken"></param>
+        private async Task<bool> LoadAsync([NotNull] [ItemNotNull] IList<ProjectFile> allSourceFiles, CancellationToken? cancellationToken)
         {
+            AllSourceFiles = allSourceFiles;
+
             var resourceFilesByDirectory = allSourceFiles
                 .Where(file => file.IsResourceFile())
-                .GroupBy(file => file.GetBaseDirectory());
+                .GroupBy(file => file.GetBaseDirectory())
+                .ToList();
 
-            return InternalLoad(resourceFilesByDirectory);
+            return await InternalLoadAsync(resourceFilesByDirectory, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -115,19 +123,14 @@
                 ResourceEntities.LoadSnapshot(_snapshot);
         }
 
-        public bool Reload()
-        {
-            return Reload(_sourceFilesProvider.SourceFiles);
-        }
-
-        public bool Reload([NotNull][ItemNotNull] IList<ProjectFile> sourceFiles)
+        public async Task<bool> ReloadAsync([NotNull][ItemNotNull] IList<ProjectFile> sourceFiles, [CanBeNull] CancellationToken? cancellationToken)
         {
             var args = new CancelEventArgs();
             Reloading?.Invoke(this, args);
             if (args.Cancel)
                 return false;
 
-            return Load(sourceFiles);
+            return await LoadAsync(sourceFiles, cancellationToken).ConfigureAwait(false);
         }
 
         public bool CanEdit([NotNull] ResourceEntity resourceEntity, CultureKey? cultureKey)
@@ -149,9 +152,9 @@
             Loaded?.Invoke(this, EventArgs.Empty);
         }
 
-        private bool InternalLoad([NotNull][ItemNotNull] IEnumerable<IGrouping<string, ProjectFile>> resourceFilesByDirectory)
+        private async Task<bool> InternalLoadAsync([NotNull] [ItemNotNull] ICollection<IGrouping<string, ProjectFile>> resourceFilesByDirectory, CancellationToken? cancellationToken)
         {
-            if (!LoadEntities(resourceFilesByDirectory))
+            if (!await LoadEntitiesAsync(resourceFilesByDirectory, cancellationToken).ConfigureAwait(true))
                 return false; // nothing has changed, no need to continue
 
             if (!string.IsNullOrEmpty(_snapshot))
@@ -171,54 +174,64 @@
             return true;
         }
 
-        private bool LoadEntities([NotNull][ItemNotNull] IEnumerable<IGrouping<string, ProjectFile>> fileNamesByDirectory)
+        private async Task<bool> LoadEntitiesAsync([NotNull] [ItemNotNull] ICollection<IGrouping<string, ProjectFile>> fileNamesByDirectory, CancellationToken? cancellationToken)
         {
-            var hasChanged = false;
+            string GenerateKey(string projectName, string baseName, string directoryName)
+            {
+                return string.Join("|", projectName, baseName, directoryName);
+            }
 
             var unmatchedEntities = ResourceEntities.ToList();
+            var existingEntities = ResourceEntities.ToDictionary(entity => GenerateKey(entity.ProjectName, entity.BaseName, entity.DirectoryName), StringComparer.OrdinalIgnoreCase);
+            var newEntities = new List<ResourceEntity>();
+            var entitiesToUpdate = new List<Tuple<ResourceEntity, ProjectFile[]>>();
 
-            foreach (var directory in fileNamesByDirectory)
+            void Load()
             {
-                var directoryName = directory.Key;
-                var filesByBaseName = directory.GroupBy(file => file.GetBaseName(), StringComparer.OrdinalIgnoreCase);
-
-                foreach (var files in filesByBaseName)
+                foreach (var directory in fileNamesByDirectory)
                 {
-                    if (!files.Any())
-                        continue;
+                    var directoryName = directory.Key;
+                    var filesByBaseName = directory.GroupBy(file => file.GetBaseName(), StringComparer.OrdinalIgnoreCase);
 
-                    var baseName = files.Key;
-                    var filesByProject = files.GroupBy(file => file.ProjectName);
-
-                    foreach (var item in filesByProject)
+                    foreach (var files in filesByBaseName)
                     {
-                        var projectName = item.Key;
-                        var projectFiles = item.ToArray();
-
-                        if (string.IsNullOrEmpty(projectName) || !projectFiles.Any())
+                        if (!files.Any())
                             continue;
 
-                        var existingEntity = ResourceEntities.FirstOrDefault(entity => entity.EqualsAll(projectName, baseName, directoryName));
+                        var baseName = files.Key;
+                        var filesByProject = files.GroupBy(file => file.ProjectName);
 
-                        if (existingEntity != null)
+                        foreach (var item in filesByProject)
                         {
-                            if (existingEntity.Update(projectFiles))
-                                hasChanged = true;
+                            cancellationToken?.ThrowIfCancellationRequested();
 
-                            unmatchedEntities.Remove(existingEntity);
-                        }
-                        else
-                        {
-                            ResourceEntities.Add(new ResourceEntity(this, projectName!, baseName, directoryName, projectFiles));
-                            hasChanged = true;
+                            var projectName = item.Key;
+                            var projectFiles = item.ToArray();
+
+                            if (projectName == null || string.IsNullOrEmpty(projectName) || !projectFiles.Any())
+                                continue;
+
+                            if (existingEntities.TryGetValue(GenerateKey(projectName, baseName, directoryName), out var existingEntity))
+                            {
+                                entitiesToUpdate.Add(new Tuple<ResourceEntity, ProjectFile[]>(existingEntity, projectFiles));
+                                unmatchedEntities.Remove(existingEntity);
+                            }
+                            else
+                            {
+                                newEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles));
+                            }
                         }
                     }
                 }
             }
 
-            ResourceEntities.RemoveRange(unmatchedEntities);
+            await Task.Run(Load).ConfigureAwait(true);
 
-            hasChanged |= unmatchedEntities.Any();
+            ResourceEntities.RemoveRange(unmatchedEntities);
+            ResourceEntities.AddRange(newEntities);
+            var hasChanged = entitiesToUpdate.Aggregate(false, (current, item) => current | item.Item1.Update(item.Item2));
+
+            hasChanged |= unmatchedEntities.Any() || newEntities.Any();
 
             return hasChanged;
         }

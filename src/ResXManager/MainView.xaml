@@ -6,6 +6,7 @@
              xmlns:resXManager="clr-namespace:ResXManager"
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:composition="urn:TomsToolbox.Composition"
+             xmlns:toms="urn:TomsToolbox"
              d:DataContext="{d:DesignInstance resXManager:MainViewModel}">
   <DockPanel>
     <Menu DockPanel.Dock="Top">
@@ -20,6 +21,9 @@
       </MenuItem>
     </Menu>
 
-    <ContentControl composition:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Shell}" />
+    <Grid>
+      <ContentControl composition:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Shell}" />
+      <toms:LoadingIndicator IsActive="{Binding ResourceViewModel.IsLoading}" Header="Loading..." />
+    </Grid>
   </DockPanel>
 </UserControl>

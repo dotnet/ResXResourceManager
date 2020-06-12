@@ -40,7 +40,7 @@
         [NotNull, ItemNotNull]
         public IEnumerable<ProjectFile> GetProjectFiles([NotNull] IFileFilter fileFilter)
         {
-            return _projectFiles ??= EnumerateProjectFiles(fileFilter) ?? new DirectoryInfo(SolutionFolder).GetAllSourceFiles(fileFilter);
+            return _projectFiles ??= EnumerateProjectFiles(fileFilter) ?? new DirectoryInfo(SolutionFolder).GetAllSourceFiles(fileFilter, null);
         }
 
         [ItemNotNull]

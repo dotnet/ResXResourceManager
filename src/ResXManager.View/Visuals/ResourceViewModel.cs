@@ -7,6 +7,8 @@
     using System.ComponentModel.Composition;
     using System.IO;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -44,6 +46,8 @@
         [NotNull]
         private readonly PerformanceTracer _performanceTracer;
 
+        private CancellationTokenSource? _loadingCancellationTokenSource;
+
         [ImportingConstructor]
         public ResourceViewModel([NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, [NotNull] ISourceFilesProvider sourceFilesProvider, [NotNull] CodeReferenceTracker codeReferenceTracker, [NotNull] ITracer tracer, [NotNull] PerformanceTracer performanceTracer)
         {
@@ -74,6 +78,8 @@
 
         [NotNull, ItemNotNull]
         public ObservableCollection<ResourceTableEntry> SelectedTableEntries { get; } = new ObservableCollection<ResourceTableEntry>();
+
+        public bool IsLoading { get; private set; }
 
         [NotNull]
         [ItemNotNull]
@@ -122,7 +128,7 @@
         public ICommand ToggleConsistencyCheckCommand => new DelegateCommand<string>(CanToggleConsistencyCheck, ToggleConsistencyCheck);
 
         [NotNull]
-        public ICommand ReloadCommand => new DelegateCommand(ForceReload);
+        public ICommand ReloadCommand => new DelegateCommand(async () => await ForceReloadAsync().ConfigureAwait(false));
 
         [NotNull]
         public ICommand SaveCommand => new DelegateCommand(() => ResourceManager.HasChanges, () => ResourceManager.Save());
@@ -502,36 +508,58 @@
             changes.Apply();
         }
 
-        private void ForceReload()
+        private async Task ForceReloadAsync()
         {
             _sourceFilesProvider.Invalidate();
-            Reload(true);
+
+            await ReloadAsync(true).ConfigureAwait(false);
         }
 
-        public void Reload()
+        public async Task ReloadAsync()
         {
-            Reload(false);
+            await ReloadAsync(false).ConfigureAwait(false);
         }
 
-        private void Reload(bool forceFindCodeReferences)
+        private async Task ReloadAsync(bool forceFindCodeReferences)
         {
+            _loadingCancellationTokenSource?.Cancel();
+            var cancellationTokenSource = _loadingCancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = cancellationTokenSource.Token;
+
             try
             {
+                IsLoading = true;
+
                 using (_performanceTracer.Start("ResourceManager.Load"))
                 {
-                    var sourceFiles = _sourceFilesProvider.SourceFiles;
+                    var sourceFiles = await _sourceFilesProvider.GetSourceFilesAsync(cancellationToken).ConfigureAwait(true);
+
+                    if (cancellationToken.IsCancellationRequested)
+                        return;
 
                     _codeReferenceTracker.StopFind();
 
-                    if (ResourceManager.Reload(sourceFiles) || forceFindCodeReferences)
+                    if (await ResourceManager.ReloadAsync(sourceFiles, cancellationToken).ConfigureAwait(true) || forceFindCodeReferences)
                     {
                         BeginFindCodeReferences();
                     }
                 }
             }
+            catch (TaskCanceledException)
+            {
+            }
             catch (Exception ex)
             {
                 _tracer.TraceError(ex.ToString());
+            }
+            finally
+            {
+                if (Interlocked.CompareExchange(ref _loadingCancellationTokenSource, null, cancellationTokenSource) == cancellationTokenSource)
+                {
+                    IsLoading = false;
+                }
+
+                cancellationTokenSource.Dispose();
             }
         }
 
@@ -540,7 +568,7 @@
         {
             try
             {
-                BeginFindCodeReferences(_sourceFilesProvider.SourceFiles);
+                BeginFindCodeReferences(ResourceManager.AllSourceFiles);
             }
             catch (Exception ex)
             {

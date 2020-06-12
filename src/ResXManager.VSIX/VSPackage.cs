@@ -389,9 +389,9 @@
             return entity.Languages.Any(lang => lang.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
         }
 
-        private void MoveToResource(object? sender, EventArgs? e)
+        private async void MoveToResource(object? sender, EventArgs? e)
         {
-            var entry = ExportProvider.GetExportedValue<IRefactorings>().MoveToResource(Dte.ActiveDocument);
+            var entry = await ExportProvider.GetExportedValue<IRefactorings>().MoveToResourceAsync(Dte.ActiveDocument).ConfigureAwait(true);
             if (entry == null)
                 return;
 
@@ -521,9 +521,9 @@
         }
 
         [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.ContextIdle)]
-        private void ReloadSolution()
+        private async void ReloadSolution()
         {
-            ExportProvider.GetExportedValue<ResourceViewModel>().Reload();
+            await ExportProvider.GetExportedValue<ResourceViewModel>().ReloadAsync().ConfigureAwait(false);
         }
 
         private class LoaderMessages

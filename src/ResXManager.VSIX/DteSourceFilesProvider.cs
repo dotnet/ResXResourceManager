@@ -3,6 +3,8 @@
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using JetBrains.Annotations;
 
@@ -29,14 +31,11 @@
             _configuration = exportProvider.GetExportedValue<Configuration>();
         }
 
-        public IList<ProjectFile> SourceFiles
+        public async Task<IList<ProjectFile>> GetSourceFilesAsync(CancellationToken? cancellationToken)
         {
-            get
+            using (_performanceTracer.Start("Enumerate source files"))
             {
-                using (_performanceTracer.Start("Enumerate source files"))
-                {
-                    return DteSourceFiles.ToList().AsReadOnly();
-                }
+                return await Task.FromResult(DteSourceFiles.ToList().AsReadOnly()).ConfigureAwait(false);
             }
         }
 

@@ -5,11 +5,13 @@
     using System.ComponentModel.Composition.Hosting;
     using System.IO;
     using System.Reflection;
+    using System.Threading.Tasks;
     using System.Windows;
 
     using JetBrains.Annotations;
 
     using ResXManager.Infrastructure;
+    using ResXManager.Model;
 
     using TomsToolbox.Composition;
     using TomsToolbox.Composition.Mef;
@@ -40,6 +42,8 @@
         protected override void OnStartup([NotNull] StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            SynchronizationContextThrottle.TaskFactory = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
 
             var assembly = GetType().Assembly;
             var folder = Path.GetDirectoryName(assembly.Location);

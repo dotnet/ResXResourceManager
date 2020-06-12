@@ -140,7 +140,6 @@
                 return;
 
             var resourceLanguages = _languages.Values;
-
             if (!resourceLanguages.All(language => language.CanEdit()))
             {
                 _keyValidationError = Resources.NotAllLanguagesAreEditable;

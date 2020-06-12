@@ -3,8 +3,12 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using JetBrains.Annotations;
+
+    using TomsToolbox.Essentials;
 
     /// <summary>
     /// Resource manager specific extension methods.
@@ -13,13 +17,19 @@
     {
         [NotNull]
         [ItemNotNull]
-        public static IList<ProjectFile> GetAllSourceFiles([NotNull] this DirectoryInfo solutionFolder, [NotNull] IFileFilter fileFilter)
+        public static IList<ProjectFile> GetAllSourceFiles([NotNull] this DirectoryInfo solutionFolder, [NotNull] IFileFilter fileFilter, CancellationToken? cancellationToken)
         {
+            void EnumerationShouldContinue()
+            {
+                cancellationToken?.ThrowIfCancellationRequested();
+            }
+
             var solutionFolderLength = solutionFolder.FullName.Length + 1;
 
             var fileInfos = solutionFolder.EnumerateFiles("*.*", SearchOption.AllDirectories);
 
             var allProjectFiles = fileInfos
+                .Select(item => item.Intercept(_ => EnumerationShouldContinue()))
                 .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
                 .Where(fileFilter.Matches!)
                 .ToList();
@@ -28,6 +38,8 @@
 
             foreach (var directoryFiles in fileNamesByDirectory)
             {
+                cancellationToken?.ThrowIfCancellationRequested();
+
                 var directoryPath = directoryFiles?.Key;
 
                 if (string.IsNullOrEmpty(directoryPath))

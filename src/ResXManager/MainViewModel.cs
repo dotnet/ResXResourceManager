@@ -8,6 +8,7 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
@@ -30,16 +31,15 @@
     {
         private readonly ITracer _tracer;
         private readonly Configuration _configuration;
-        private readonly ResourceViewModel _resourceViewModel;
         private readonly PowerShellProcessor _powerShell;
 
         [ImportingConstructor]
         public MainViewModel([NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, [NotNull] ResourceViewModel resourceViewModel, [NotNull] ITracer tracer, [NotNull] SourceFilesProvider sourceFilesProvider)
         {
             ResourceManager = resourceManager;
-            _configuration = configuration;
-            _resourceViewModel = resourceViewModel;
+            ResourceViewModel = resourceViewModel;
             _tracer = tracer;
+            _configuration = configuration;
             _powerShell = new PowerShellProcessor(tracer);
             SourceFilesProvider = sourceFilesProvider;
 
@@ -88,6 +88,9 @@
         public ResourceManager ResourceManager { get; }
 
         [NotNull]
+        public ResourceViewModel ResourceViewModel { get; }
+
+        [NotNull]
         public SourceFilesProvider SourceFilesProvider { get; }
 
         private void Browse()
@@ -123,11 +126,11 @@
             }
         }
 
-        private void Load()
+        private async void Load()
         {
             try
             {
-                _resourceViewModel.Reload();
+                await ResourceViewModel.ReloadAsync().ConfigureAwait(true);
             }
             catch (Exception ex)
             {
@@ -344,18 +347,18 @@
 
         public string? SolutionFolder { get; set; }
 
-        public IList<ProjectFile> SourceFiles
+        public async Task<IList<ProjectFile>> GetSourceFilesAsync(CancellationToken? cancellationToken)
         {
-            get
-            {
-                var folder = SolutionFolder;
-                if (string.IsNullOrEmpty(folder))
-                    return Array.Empty<ProjectFile>();
+            var folder = SolutionFolder;
+            if (string.IsNullOrEmpty(folder))
+                return Array.Empty<ProjectFile>();
 
-                using (_performanceTracer.Start("Enumerate source files"))
-                {
-                    return new DirectoryInfo(folder).GetAllSourceFiles(new FileFilter(_configuration));
-                }
+            using (_performanceTracer.Start("Enumerate source files"))
+            {
+                var fileFilter = new FileFilter(_configuration);
+                var directoryInfo = new DirectoryInfo(folder);
+
+                return await Task.Run(() => directoryInfo.GetAllSourceFiles(fileFilter, cancellationToken), cancellationToken ?? new CancellationToken()).ConfigureAwait(false);
             }
         }
 

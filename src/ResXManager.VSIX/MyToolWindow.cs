@@ -116,11 +116,11 @@
             }
         }
 
-        private void ContentWrapper_Loaded(object sender, RoutedEventArgs e)
+        private async void ContentWrapper_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                _exportProvider.GetExportedValue<ResourceViewModel>().Reload();
+                await _exportProvider.GetExportedValue<ResourceViewModel>().ReloadAsync().ConfigureAwait(true);
 
                 var view = _exportProvider.GetExportedValue<VsixShellView>();
 

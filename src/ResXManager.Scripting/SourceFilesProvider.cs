@@ -5,8 +5,8 @@ namespace ResXManager.Scripting
     using System.ComponentModel.Composition;
     using System.IO;
     using System.Text.RegularExpressions;
-
-    using JetBrains.Annotations;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
@@ -19,18 +19,20 @@ namespace ResXManager.Scripting
         public string? SolutionFolder { get; set; }
         public string? ExclusionFilter { get; set; }
 
-        public IList<ProjectFile> SourceFiles
+        public Task<IList<ProjectFile>> GetSourceFilesAsync(CancellationToken? cancellationToken)
         {
-            get
-            {
-                var folder = SolutionFolder;
-                if (string.IsNullOrEmpty(folder))
-                    return Array.Empty<ProjectFile>();
+            return Task.FromResult(EnumerateSourceFiles());
+        }
 
-                _fileExclusionFilter = ExclusionFilter.TryCreateRegex();
+        public IList<ProjectFile> EnumerateSourceFiles()
+        {
+            var folder = SolutionFolder;
+            if (string.IsNullOrEmpty(folder))
+                return Array.Empty<ProjectFile>();
 
-                return new DirectoryInfo(folder).GetAllSourceFiles(this);
-            }
+            _fileExclusionFilter = ExclusionFilter.TryCreateRegex();
+
+            return new DirectoryInfo(folder).GetAllSourceFiles(this, null);
         }
 
         public void Invalidate()

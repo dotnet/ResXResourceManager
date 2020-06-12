@@ -5,6 +5,7 @@
     using System.ComponentModel.Composition;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using EnvDTE;
 
@@ -22,7 +23,8 @@
     {
         bool CanMoveToResource(Document? document);
 
-        ResourceTableEntry? MoveToResource(Document? document);
+        [NotNull, ItemCanBeNull]
+        Task<ResourceTableEntry?> MoveToResourceAsync(Document? document);
     }
 
     [Export(typeof(IRefactorings))]
@@ -67,7 +69,8 @@
             return s != null;
         }
 
-        public ResourceTableEntry? MoveToResource(Document? document)
+        [NotNull, ItemCanBeNull]
+        public async Task<ResourceTableEntry?> MoveToResourceAsync(Document? document)
         {
             var extension = Path.GetExtension(document?.FullName);
             if (extension == null)
@@ -97,7 +100,7 @@
 
             var resourceViewModel = _exportProvider.GetExportedValue<ResourceViewModel>();
 
-            resourceViewModel.Reload();
+            await resourceViewModel.ReloadAsync().ConfigureAwait(true);
 
             var resourceManager = _exportProvider.GetExportedValue<ResourceManager>();
 
