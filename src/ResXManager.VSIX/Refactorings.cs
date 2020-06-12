@@ -20,10 +20,9 @@
 
     public interface IRefactorings
     {
-        bool CanMoveToResource([CanBeNull] Document document);
+        bool CanMoveToResource(Document? document);
 
-        [CanBeNull]
-        ResourceTableEntry MoveToResource([CanBeNull] Document document);
+        ResourceTableEntry? MoveToResource(Document? document);
     }
 
     [Export(typeof(IRefactorings))]
@@ -31,8 +30,7 @@
     {
         [NotNull]
         private readonly IExportProvider _exportProvider;
-        [CanBeNull]
-        private ResourceEntity _lastUsedEntity;
+        private ResourceEntity? _lastUsedEntity;
         private bool _isLastUsedEntityInSameProject;
 
         [ImportingConstructor]
@@ -41,7 +39,7 @@
             _exportProvider = exportProvider;
         }
 
-        public bool CanMoveToResource([CanBeNull] Document document)
+        public bool CanMoveToResource(Document? document)
         {
             var extension = Path.GetExtension(document?.FullName);
             if (extension == null)
@@ -69,8 +67,7 @@
             return s != null;
         }
 
-        [CanBeNull]
-        public ResourceTableEntry MoveToResource([CanBeNull] Document document)
+        public ResourceTableEntry? MoveToResource(Document? document)
         {
             var extension = Path.GetExtension(document?.FullName);
             if (extension == null)
@@ -175,7 +172,7 @@
             }
         }
 
-        private static bool IsInProject([NotNull] ResourceEntity entity, [CanBeNull] Document document)
+        private static bool IsInProject([NotNull] ResourceEntity entity, Document? document)
         {
             try
             {
@@ -189,7 +186,7 @@
             }
         }
 
-        private static bool IsInProject([NotNull] ResourceEntity entity, [CanBeNull] Project project)
+        private static bool IsInProject([NotNull] ResourceEntity entity, Project? project)
         {
             var projectFile = entity.NeutralProjectFile as DteProjectFile;
 
@@ -198,8 +195,7 @@
                 .Contains(project) ?? false;
         }
 
-        [CanBeNull]
-        private static Selection GetSelection([NotNull] Document document)
+        private static Selection? GetSelection([NotNull] Document document)
         {
             var textDocument = (TextDocument)document.Object(@"TextDocument");
 
@@ -221,10 +217,9 @@
             [NotNull]
             private readonly TextDocument _textDocument;
 
-            [CanBeNull]
-            private readonly FileCodeModel _codeModel;
+            private readonly FileCodeModel? _codeModel;
 
-            public Selection([NotNull] TextDocument textDocument, [NotNull] string line, [CanBeNull] FileCodeModel codeModel)
+            public Selection([NotNull] TextDocument textDocument, [NotNull] string line, FileCodeModel? codeModel)
             {
                 _textDocument = textDocument;
                 Line = line;
@@ -239,17 +234,14 @@
 
             public bool IsEmpty => Begin.EqualTo(End);
 
-            [CanBeNull]
-            public string Text => _textDocument.Selection?.Text;
+            public string? Text => _textDocument.Selection?.Text;
 
             [NotNull]
             public string Line { get; }
 
-            [CanBeNull]
-            public string FunctionName => GetCodeElement(vsCMElement.vsCMElementFunction)?.Name;
+            public string? FunctionName => GetCodeElement(vsCMElement.vsCMElementFunction)?.Name;
 
-            [CanBeNull]
-            public string ClassName => GetCodeElement(vsCMElement.vsCMElementClass)?.Name;
+            public string? ClassName => GetCodeElement(vsCMElement.vsCMElementClass)?.Name;
 
             public void MoveTo(int startColumn, int endColumn)
             {
@@ -261,7 +253,7 @@
                 selection.MoveToLineAndOffset(Begin.Line, endColumn, true);
             }
 
-            public void ReplaceWith([CanBeNull] string replacement)
+            public void ReplaceWith(string? replacement)
             {
                 var selection = _textDocument.Selection;
                 // using "selection.Text = replacement" does not work here, since it will trigger auto-complete,
@@ -269,8 +261,7 @@
                 selection?.ReplaceText(selection.Text, replacement);
             }
 
-            [CanBeNull]
-            private CodeElement GetCodeElement(vsCMElement scope)
+            private CodeElement? GetCodeElement(vsCMElement scope)
             {
                 try
                 {
@@ -285,14 +276,12 @@
 
         private interface IParser
         {
-            [CanBeNull]
-            string LocateString([CanBeNull] Selection selection, bool expandSelection);
+            string? LocateString(Selection? selection, bool expandSelection);
         }
 
         private class GenericParser : IParser
         {
-            [CanBeNull]
-            public string LocateString([CanBeNull] Selection selection, bool expandSelection)
+            public string? LocateString(Selection? selection, bool expandSelection)
             {
                 if (selection == null)
                     return null;
@@ -314,17 +303,16 @@
             {
                 private readonly string _line;
                 private readonly int _column;
-                [CanBeNull] private readonly Selection _selection;
+                private readonly Selection? _selection;
 
-                public Locator(string line, int column, [CanBeNull] Selection selection)
+                public Locator(string line, int column, Selection? selection)
                 {
                     _line = line;
                     _column = column;
                     _selection = selection;
                 }
 
-                [CanBeNull]
-                public string Locate(string quote)
+                public string? Locate(string quote)
                 {
                     var secondQuote = -1;
 

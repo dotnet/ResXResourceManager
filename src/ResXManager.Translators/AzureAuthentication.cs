@@ -21,7 +21,7 @@
         /// <param name="cancellationToken"></param>
         /// <returns>The encoded JWT token.</returns>
         [NotNull, ItemCanBeNull]
-        private static async Task<string> GetAccessTokenAsync([CanBeNull] string authenticationKey, CancellationToken cancellationToken)
+        private static async Task<string?> GetAccessTokenAsync(string? authenticationKey, CancellationToken cancellationToken)
         {
             using (var client = new HttpClient())
             using (var request = new HttpRequestMessage())
@@ -48,7 +48,7 @@
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The encoded JWT token, prefixed with "Bearer ".</returns>
         [ItemNotNull]
-        public static async Task<string> GetBearerAccessTokenAsync([CanBeNull] string authenticationKey, CancellationToken cancellationToken)
+        public static async Task<string> GetBearerAccessTokenAsync(string? authenticationKey, CancellationToken cancellationToken)
         {
             return "Bearer " + await GetAccessTokenAsync(authenticationKey, cancellationToken).ConfigureAwait(false);
         }

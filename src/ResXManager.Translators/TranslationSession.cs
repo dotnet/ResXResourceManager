@@ -18,7 +18,7 @@
 
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        public TranslationSession(TaskFactory mainThread, [CanBeNull] CultureInfo sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull][ItemNotNull] ICollection<ITranslationItem> items)
+        public TranslationSession(TaskFactory mainThread, CultureInfo? sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull][ItemNotNull] ICollection<ITranslationItem> items)
         {
             MainThread = mainThread;
             SourceLanguage = sourceLanguage ?? neutralResourcesLanguage;
@@ -65,7 +65,7 @@
             _cancellationTokenSource.Cancel();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public void Dispose()
         {

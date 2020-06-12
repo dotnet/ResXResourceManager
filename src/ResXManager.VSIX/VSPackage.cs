@@ -57,21 +57,14 @@
         private readonly CompositionContainer _compositionContainer;
         private readonly IExportProvider _exportProvider;
 
-        [CanBeNull]
-        private EnvDTE.SolutionEvents _solutionEvents;
-        [CanBeNull]
-        private EnvDTE.DocumentEvents _documentEvents;
-        [CanBeNull]
-        private EnvDTE.ProjectItemsEvents _projectItemsEvents;
-        [CanBeNull]
-        private EnvDTE.ProjectItemsEvents _solutionItemsEvents;
-        [CanBeNull]
-        private EnvDTE.ProjectItemsEvents _miscFilesEvents;
-        [CanBeNull]
-        private EnvDTE.ProjectsEvents _projectsEvents;
+        private EnvDTE.SolutionEvents? _solutionEvents;
+        private EnvDTE.DocumentEvents? _documentEvents;
+        private EnvDTE.ProjectItemsEvents? _projectItemsEvents;
+        private EnvDTE.ProjectItemsEvents? _solutionItemsEvents;
+        private EnvDTE.ProjectItemsEvents? _miscFilesEvents;
+        private EnvDTE.ProjectsEvents? _projectsEvents;
 
-        [CanBeNull]
-        private static VsPackage _instance;
+        private static VsPackage? _instance;
 
         public VsPackage()
         {
@@ -279,7 +272,7 @@
         }
 
         [NotNull]
-        private static OleMenuCommand CreateMenuCommand([NotNull] IMenuCommandService mcs, int cmdId, [CanBeNull] EventHandler invokeHandler)
+        private static OleMenuCommand CreateMenuCommand([NotNull] IMenuCommandService mcs, int cmdId, EventHandler? invokeHandler)
         {
             var menuCommandId = new CommandID(GuidList.guidResXManager_VSIXCmdSet, cmdId);
             var menuCommand = new OleMenuCommand(invokeHandler, menuCommandId);
@@ -287,13 +280,12 @@
             return menuCommand;
         }
 
-        private void ShowToolWindow([CanBeNull] object sender, [CanBeNull] EventArgs e)
+        private void ShowToolWindow(object? sender, EventArgs? e)
         {
             ShowToolWindow();
         }
 
-        [CanBeNull]
-        private MyToolWindow FindToolWindow()
+        private MyToolWindow? FindToolWindow()
         {
             try
             {
@@ -327,7 +319,7 @@
             }
         }
 
-        private void ShowSelectedResourceFiles([CanBeNull] object sender, [CanBeNull] EventArgs e)
+        private void ShowSelectedResourceFiles(object? sender, EventArgs? e)
         {
             var selectedResourceEntities = GetSelectedResourceEntities()?.Distinct().ToArray();
             if (selectedResourceEntities == null)
@@ -345,7 +337,7 @@
             ShowToolWindow();
         }
 
-        private void SolutionExplorerContextMenuCommand_BeforeQueryStatus([CanBeNull] object sender, [CanBeNull] EventArgs e)
+        private void SolutionExplorerContextMenuCommand_BeforeQueryStatus(object? sender, EventArgs? e)
         {
             if (!(sender is OleMenuCommand menuCommand))
                 return;
@@ -354,8 +346,8 @@
             menuCommand.Visible = GetSelectedResourceEntities() != null;
         }
 
-        [CanBeNull, ItemNotNull]
-        private IEnumerable<ResourceEntity> GetSelectedResourceEntities()
+        [ItemNotNull]
+        private IEnumerable<ResourceEntity>? GetSelectedResourceEntities()
         {
             var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
 
@@ -373,7 +365,7 @@
 
         [NotNull]
         [ItemNotNull]
-        private IEnumerable<ResourceEntity> GetSelectedResourceEntities([CanBeNull] string fileName)
+        private IEnumerable<ResourceEntity> GetSelectedResourceEntities(string? fileName)
         {
             if (string.IsNullOrEmpty(fileName))
                 return Enumerable.Empty<ResourceEntity>();
@@ -385,19 +377,19 @@
                 .ToArray();
         }
 
-        private static bool ContainsChildOfWinFormsDesignerItem([NotNull] ResourceEntity entity, [CanBeNull] string fileName)
+        private static bool ContainsChildOfWinFormsDesignerItem([NotNull] ResourceEntity entity, string? fileName)
         {
             return entity.Languages.Select(lang => lang.ProjectFile)
                 .OfType<DteProjectFile>()
                 .Any(projectFile => string.Equals(projectFile.ParentItem?.TryGetFileName(), fileName, StringComparison.OrdinalIgnoreCase) && projectFile.IsWinFormsDesignerResource);
         }
 
-        private static bool ContainsFile([NotNull] ResourceEntity entity, [CanBeNull] string fileName)
+        private static bool ContainsFile([NotNull] ResourceEntity entity, string? fileName)
         {
             return entity.Languages.Any(lang => lang.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
         }
 
-        private void MoveToResource([CanBeNull] object sender, [CanBeNull] EventArgs e)
+        private void MoveToResource(object? sender, EventArgs? e)
         {
             var entry = ExportProvider.GetExportedValue<IRefactorings>().MoveToResource(Dte.ActiveDocument);
             if (entry == null)
@@ -409,7 +401,7 @@
             ExportProvider.GetExportedValue<VsixShellViewModel>().SelectEntry(entry);
         }
 
-        private void TextEditorContextMenuCommand_BeforeQueryStatus([CanBeNull] object sender, [CanBeNull] EventArgs e)
+        private void TextEditorContextMenuCommand_BeforeQueryStatus(object? sender, EventArgs? e)
         {
             if (!(sender is OleMenuCommand menuCommand))
                 return;
@@ -443,7 +435,7 @@
             }
         }
 
-        private void Solution_ContentChanged([CanBeNull] object item)
+        private void Solution_ContentChanged(object? item)
         {
             //using (PerformanceTracer.Start("DTE event: Solution content changed"))
             {
@@ -452,7 +444,7 @@
             }
         }
 
-        private void DocumentEvents_DocumentOpened([CanBeNull] EnvDTE.Document document)
+        private void DocumentEvents_DocumentOpened(EnvDTE.Document? document)
         {
             //using (PerformanceTracer.Start("DTE event: Document opened"))
             {
@@ -509,7 +501,7 @@
             _customToolRunner.Enqueue(projectItems);
         }
 
-        private static bool AffectsResourceFile([CanBeNull] EnvDTE.Document document)
+        private static bool AffectsResourceFile(EnvDTE.Document? document)
         {
             if (document == null)
                 return false;

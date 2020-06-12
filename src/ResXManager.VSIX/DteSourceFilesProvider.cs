@@ -42,8 +42,7 @@
 
         public void Invalidate() => Solution.Invalidate();
 
-        [CanBeNull]
-        public string SolutionFolder => Solution.SolutionFolder;
+        public string? SolutionFolder => Solution.SolutionFolder;
 
         [NotNull, ItemNotNull]
         private IEnumerable<ProjectFile> DteSourceFiles

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
@@ -21,16 +20,14 @@
         [NotNull]
         private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
         [NotNull]
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly NeutralCultureCountryOverrides Default = new NeutralCultureCountryOverrides();
 
         private NeutralCultureCountryOverrides()
         {
         }
 
-        [CanBeNull]
 #pragma warning disable CA1043 // Use Integral Or String Argument For Indexers
-        public CultureInfo this[[NotNull] CultureInfo neutralCulture]
+        public CultureInfo? this[[NotNull] CultureInfo neutralCulture]
 #pragma warning restore CA1043 // Use Integral Or String Argument For Indexers
         {
             get
@@ -42,6 +39,7 @@
 
                 return specificCulture;
             }
+            [param: System.Diagnostics.CodeAnalysis.DisallowNull]
             set
             {
                 if (Equals(value, GetDefaultSpecificCulture(neutralCulture)))
@@ -50,15 +48,14 @@
                 }
                 else
                 {
-                    _overrides[neutralCulture] = value;
+                    _overrides[neutralCulture] = value!;
                 }
 
                 WriteSettings();
             }
         }
 
-        [CanBeNull]
-        private static CultureInfo GetDefaultSpecificCulture([NotNull] CultureInfo neutralCulture)
+        private static CultureInfo? GetDefaultSpecificCulture([NotNull] CultureInfo neutralCulture)
         {
             var cultureName = neutralCulture.Name;
             var specificCultures = neutralCulture.GetDescendants().ToArray();

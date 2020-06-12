@@ -9,6 +9,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Nullable.cs" Link="Nullable.cs" />
     <Compile Include="..\Trademark.cs">
       <Link>Trademark.cs</Link>
     </Compile>
@@ -40,10 +41,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <None Remove="Assets/*.*"/>
-    <Resource Include="Assets/*.*"/>
-    <None Remove="Flags/*.*"/>
-    <Resource Include="Flags/*.*"/>
+    <None Remove="Assets/*.*" />
+    <Resource Include="Assets/*.*" />
+    <None Remove="Flags/*.*" />
+    <Resource Include="Flags/*.*" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ResXManager.Infrastructure\ResXManager.Infrastructure.csproj" />

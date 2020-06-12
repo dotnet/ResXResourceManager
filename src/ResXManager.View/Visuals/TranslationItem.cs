@@ -22,10 +22,9 @@ namespace ResXManager.View.Visuals
         private readonly ResourceTableEntry _entry;
 
         [ItemNotNull]
-        [CanBeNull]
-        private ICollectionView _orderedResults;
-        [CanBeNull]
-        private string _translation;
+        private ICollectionView? _orderedResults;
+
+        private string? _translation;
 
         public TranslationItem([NotNull] ResourceTableEntry entry, [NotNull] string source, [NotNull] CultureKey targetCulture)
         {
@@ -46,15 +45,15 @@ namespace ResXManager.View.Visuals
 
         [NotNull]
         [ItemNotNull]
-        public ICollectionView OrderedResults => _orderedResults ?? (_orderedResults = CreateOrderedResults(_results));
+        public ICollectionView OrderedResults => _orderedResults ??= CreateOrderedResults(_results);
 
-        public string Translation
+        public string? Translation
         {
             get => _translation ?? _results.OrderByDescending(r => r.Rating).Select(r => r.TranslatedText).FirstOrDefault();
             set => _translation = value;
         }
 
-        public bool Apply([CanBeNull] string prefix)
+        public bool Apply(string? prefix)
         {
             if (!_entry.CanEdit(TargetCulture))
                 return false;

@@ -14,8 +14,7 @@
 
     public class SynchronizeTextBoxWithDataGridCellBehavior : Behavior<TextBox>
     {
-        [CanBeNull]
-        public DataGrid DataGrid
+        public DataGrid? DataGrid
         {
             get => (DataGrid)GetValue(DataGridProperty);
             set => SetValue(DataGridProperty, value);
@@ -27,7 +26,7 @@
         public static readonly DependencyProperty DataGridProperty =
             DependencyProperty.Register("DataGrid", typeof(DataGrid), typeof(SynchronizeTextBoxWithDataGridCellBehavior), new FrameworkPropertyMetadata(null, (sender, e) => ((SynchronizeTextBoxWithDataGridCellBehavior)sender).DataGrid_Changed((DataGrid)e.OldValue, (DataGrid)e.NewValue)));
 
-        private void DataGrid_Changed([CanBeNull] DataGrid oldValue, [CanBeNull] DataGrid newValue)
+        private void DataGrid_Changed(DataGrid? oldValue, DataGrid? newValue)
         {
             if (oldValue != null)
             {
@@ -41,8 +40,7 @@
             }
         }
 
-        [CanBeNull]
-        private TextBox TextBox => AssociatedObject;
+        private TextBox? TextBox => AssociatedObject;
 
         private void DataGrid_CurrentCellChanged([NotNull] object sender, [NotNull] EventArgs e)
         {

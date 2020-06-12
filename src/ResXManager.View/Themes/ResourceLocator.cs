@@ -8,8 +8,7 @@
 
     public class ResourceLocator : IResourceLocator
     {
-        [CanBeNull]
-        public object FindResource([CanBeNull] FrameworkElement target, [CanBeNull] object resourceKey)
+        public object? FindResource(FrameworkElement? target, object? resourceKey)
         {
             var crk = resourceKey as ComponentResourceKey;
 

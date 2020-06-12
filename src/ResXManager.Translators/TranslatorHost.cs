@@ -23,8 +23,7 @@
         private readonly ITranslator[] _translators;
         private readonly TaskFactory _mainThread = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
 
-        [CanBeNull]
-        private ITranslationSession _activeSession;
+        private ITranslationSession? _activeSession;
 
         [ImportingConstructor]
         public TranslatorHost([ImportMany] ITranslator[] translators)
@@ -39,14 +38,13 @@
             RegisterChangeEvents(translators);
         }
 
-        public event EventHandler<EventArgs> SessionStateChanged;
+        public event EventHandler<EventArgs>? SessionStateChanged;
 
         public IEnumerable<ITranslator> Translators => _translators;
 
-        [CanBeNull]
-        public ITranslationSession ActiveSession => _activeSession;
+        public ITranslationSession? ActiveSession => _activeSession;
 
-        public void StartSession([CanBeNull] CultureInfo sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull][ItemNotNull] ICollection<ITranslationItem> items)
+        public void StartSession(CultureInfo? sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull][ItemNotNull] ICollection<ITranslationItem> items)
         {
             Task.Run(() =>
             {
@@ -81,21 +79,21 @@
 
             foreach (var translator in _translators)
             {
-                var json = JsonConvert.SerializeObject(translator);
+                var json = JsonConvert.SerializeObject(translator) ?? string.Empty;
                 values[translator.Id] = json;
             }
 
             settings.Configuration = JsonConvert.SerializeObject(values);
         }
 
-        private static void LoadConfiguration([NotNull][ItemNotNull] ITranslator[] translators, [CanBeNull] string configuration)
+        private static void LoadConfiguration([NotNull][ItemNotNull] ITranslator[] translators, string? configuration)
         {
             if (string.IsNullOrEmpty(configuration))
                 return;
 
             try
             {
-                var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(configuration);
+                var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(configuration ?? string.Empty);
                 if (values == null)
                     return;
 

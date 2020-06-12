@@ -29,7 +29,7 @@
         [NotNull]
         private readonly string _extension;
 
-        public MoveToResourceViewModel([NotNull, ItemNotNull] ICollection<string> patterns, [NotNull][ItemNotNull] ICollection<ResourceEntity> resourceEntities, [NotNull] string text, [NotNull] string extension, [CanBeNull] string className, [CanBeNull] string functionName, [CanBeNull] string fileName)
+        public MoveToResourceViewModel([NotNull, ItemNotNull] ICollection<string> patterns, [NotNull][ItemNotNull] ICollection<ResourceEntity> resourceEntities, [NotNull] string text, [NotNull] string extension, string? className, string? functionName, string? fileName)
         {
             ResourceEntities = resourceEntities;
             SelectedResourceEntity = resourceEntities.FirstOrDefault();
@@ -54,33 +54,27 @@
         public ICollection<ResourceEntity> ResourceEntities { get; }
 
         [Required]
-        [CanBeNull]
-        public ResourceEntity SelectedResourceEntity { get; set; }
+        public ResourceEntity? SelectedResourceEntity { get; set; }
 
-        [CanBeNull]
-        public ResourceTableEntry SelectedResourceEntry { get; set; }
+        public ResourceTableEntry? SelectedResourceEntry { get; set; }
 
         [NotNull, ItemNotNull]
         public ICollection<string> Keys { get; }
 
         [Required(AllowEmptyStrings = false)]
         [DependsOn(nameof(ReuseExisiting), nameof(SelectedResourceEntity))] // must raise a change event for key, key validation is different when these change
-        [CanBeNull]
-        public string Key { get; set; }
+        public string? Key { get; set; }
 
         [NotNull, ItemNotNull]
         public ICollection<Replacement> Replacements { get; }
 
-        [CanBeNull]
         [Required]
-        public Replacement Replacement { get; set; }
+        public Replacement? Replacement { get; set; }
 
-        [CanBeNull]
         [Required(AllowEmptyStrings = false)]
-        public string Value { get; set; }
+        public string? Value { get; set; }
 
-        [CanBeNull]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         public bool ReuseExisiting { get; set; }
 
@@ -104,8 +98,7 @@
             }
         }
 
-        [CanBeNull]
-        private string GetKeyErrors([CanBeNull] string propertyName)
+        private string? GetKeyErrors(string? propertyName)
         {
             if (ReuseExisiting)
                 return null;
@@ -127,13 +120,13 @@
             return null;
         }
 
-        private bool KeyExists([CanBeNull] string value)
+        private bool KeyExists(string? value)
         {
             return SelectedResourceEntity?.Entries.Any(entry => string.Equals(entry.Key, value, StringComparison.OrdinalIgnoreCase)) ?? false;
         }
 
         [NotNull]
-        private static string GetLocalNamespace([CanBeNull] ProjectItem resxItem)
+        private static string GetLocalNamespace(ProjectItem? resxItem)
         {
             try
             {
@@ -184,7 +177,7 @@
         }
 
         [NotNull]
-        private static string CreateKey([NotNull] string text, [CanBeNull] string className, [CanBeNull] string functionName)
+        private static string CreateKey([NotNull] string text, string? className, string? functionName)
         {
             var keyBuilder = new StringBuilder();
 
@@ -229,17 +222,15 @@
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator, UsedImplicitly]
-        private void OnPropertyChanged([CallerMemberName][CanBeNull] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             Update();
         }
 
-        [CanBeNull]
-        string IDataErrorInfo.this[[CanBeNull] string columnName] => GetKeyErrors(columnName);
+        string? IDataErrorInfo.this[string? columnName] => GetKeyErrors(columnName);
 
-        [CanBeNull]
-        string IDataErrorInfo.Error => null;
+        string? IDataErrorInfo.Error => null;
     }
 
     public sealed class Replacement : INotifyPropertyChanged
@@ -255,8 +246,7 @@
             _evaluator = evaluator;
         }
 
-        [CanBeNull]
-        public string Value => _evaluator(_pattern);
+        public string? Value => _evaluator(_pattern);
 
         public event PropertyChangedEventHandler PropertyChanged;
 

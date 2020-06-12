@@ -43,7 +43,7 @@
         [NotNull]
         public ResourceManager ResourceManager { get; }
 
-        public void Load([CanBeNull] string folder, [CanBeNull] string exclusionFilter = @"Migrations\\\d{15}")
+        public void Load(string? folder, string? exclusionFilter = @"Migrations\\\d{15}")
         {
             _sourceFilesProvider.SolutionFolder = folder;
             _sourceFilesProvider.ExclusionFilter = exclusionFilter;
@@ -61,22 +61,22 @@
             ExportExcel(filePath, null);
         }
 
-        public void ExportExcel([NotNull] string filePath, [CanBeNull] object entries)
+        public void ExportExcel([NotNull] string filePath, object? entries)
         {
             ExportExcel(filePath, entries as IEnumerable<object>, null);
         }
 
-        public void ExportExcel([NotNull] string filePath, [CanBeNull] object entries, [CanBeNull] object languages)
+        public void ExportExcel([NotNull] string filePath, object? entries, object? languages)
         {
             ExportExcel(filePath, entries, languages, null);
         }
 
-        public void ExportExcel([NotNull] string filePath, [CanBeNull] object entries, [CanBeNull] object languages, [CanBeNull] object comments)
+        public void ExportExcel([NotNull] string filePath, object? entries, object? languages, object? comments)
         {
             ExportExcel(filePath, entries, languages, comments, ExcelExportMode.SingleSheet);
         }
 
-        public void ExportExcel([NotNull] string filePath, [CanBeNull] object entries, [CanBeNull] object languages, [CanBeNull] object comments, ExcelExportMode exportMode)
+        public void ExportExcel([NotNull] string filePath, object? entries, object? languages, object? comments, ExcelExportMode exportMode)
         {
             var resourceScope = new ResourceScope(
                 entries ?? ResourceManager.TableEntries,
@@ -99,7 +99,7 @@
             return ResourceManager.CreateSnapshot();
         }
 
-        public void LoadSnapshot([CanBeNull] string value)
+        public void LoadSnapshot(string? value)
         {
             ResourceManager.LoadSnapshot(value);
         }
@@ -118,13 +118,13 @@
             }
         }
 
-        private bool CanEdit([NotNull] ResourceEntity entity, [CanBeNull] CultureKey cultureKey)
+        private bool CanEdit([NotNull] ResourceEntity entity, CultureKey? cultureKey)
         {
             if (cultureKey == null)
                 return true;
 
             var rootFolder = _sourceFilesProvider.SolutionFolder;
-            if (string.IsNullOrEmpty(rootFolder))
+            if (rootFolder == null || string.IsNullOrEmpty(rootFolder))
                 return false;
 
             var language = entity.Languages.FirstOrDefault(lang => cultureKey.Equals(lang.CultureKey));

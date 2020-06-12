@@ -55,8 +55,7 @@
 
     public class CultureInfoGroupDescription : GroupDescription
     {
-        [CanBeNull]
-        public override object GroupNameFromItem([CanBeNull] object item, int level, CultureInfo culture)
+        public override object? GroupNameFromItem(object? item, int level, CultureInfo culture)
         {
             var cultureItem = item as CultureInfo;
 

@@ -44,15 +44,13 @@
         }
 
         [DataMember(Name = "Key")]
-        [CanBeNull]
-        public string SerializedKey
+        public string? SerializedKey
         {
             get => SaveCredentials ? Credentials[0].Value : null;
             set => Credentials[0].Value = value;
         }
 
-        [CanBeNull]
-        private string Key => Credentials[0].Value;
+        private string? Key => Credentials[0].Value;
 
         protected override async Task Translate(ITranslationSession translationSession)
         {
@@ -86,7 +84,9 @@
                         {
                             var translation = result?.ResponseData?.TranslatedText;
                             if (!string.IsNullOrEmpty(translation))
-                                translationItem.Results.Add(new TranslationMatch(this, translation, Ranking * result.ResponseData.Match.GetValueOrDefault()));
+                            {
+                                translationItem.Results.Add(new TranslationMatch(this, translation, Ranking * result?.ResponseData?.Match.GetValueOrDefault() ?? 0));
+                            }
                         }
                     }).ConfigureAwait(false);
                 }
@@ -94,7 +94,7 @@
         }
 
         [NotNull, ItemCanBeNull]
-        private static async Task<Response> TranslateTextAsync(HttpClient client, [NotNull] string input, [CanBeNull] string key, [NotNull] CultureInfo sourceLanguage, [NotNull] CultureInfo targetLanguage, CancellationToken cancellationToken)
+        private static async Task<Response?> TranslateTextAsync(HttpClient client, [NotNull] string input, string? key, [NotNull] CultureInfo sourceLanguage, [NotNull] CultureInfo targetLanguage, CancellationToken cancellationToken)
         {
             var rawInput = RemoveKeyboardShortcutIndicators(input);
 
@@ -122,8 +122,7 @@
         private class ResponseData
         {
             [DataMember(Name = "translatedText")]
-            [CanBeNull]
-            public string TranslatedText
+            public string? TranslatedText
             {
                 get;
                 set;
@@ -142,8 +141,7 @@
         private class MatchData
         {
             [DataMember(Name = "translation")]
-            [CanBeNull]
-            public string Translation
+            public string? Translation
             {
                 get;
                 set;
@@ -169,17 +167,15 @@
         private class Response
         {
             [DataMember(Name = "responseData")]
-            [CanBeNull]
-            public ResponseData ResponseData
+            public ResponseData? ResponseData
             {
                 get;
                 set;
             }
 
             [DataMember(Name = "matches")]
-            [CanBeNull]
             [ItemNotNull]
-            public MatchData[] Matches
+            public MatchData[]? Matches
             {
                 get;
                 set;

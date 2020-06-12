@@ -40,15 +40,13 @@
         }
 
         [DataMember(Name = "ApiKey")]
-        [CanBeNull]
-        public string SerializedApiKey
+        public string? SerializedApiKey
         {
             get => SaveCredentials ? Credentials[0].Value : null;
             set => Credentials[0].Value = value;
         }
 
-        [CanBeNull]
-        private string ApiKey => Credentials[0].Value;
+        private string? ApiKey => Credentials[0].Value;
 
         protected override async Task Translate(ITranslationSession translationSession)
         {
@@ -74,7 +72,7 @@
                             break;
 
                         // Build out list of parameters
-                        var parameters = new List<string>(30);
+                        var parameters = new List<string?>(30);
                         foreach (var item in sourceItems)
                         {
                             // ReSharper disable once PossibleNullReferenceException
@@ -98,7 +96,7 @@
                         await translationSession.MainThread.StartNew(() =>
                         {
                             foreach (var tuple in sourceItems.Zip(response.Translations,
-                                (a, b) => new Tuple<ITranslationItem, string>(a, b.Text)))
+                                (a, b) => new Tuple<ITranslationItem, string?>(a, b.Text)))
                             {
                                 tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2, Ranking));
                             }
@@ -115,7 +113,7 @@
             return iso1;
         }
 
-        private static async Task<T> GetHttpResponse<T>(string baseUrl, ICollection<string> parameters, CancellationToken cancellationToken)
+        private static async Task<T> GetHttpResponse<T>(string baseUrl, ICollection<string?> parameters, CancellationToken cancellationToken)
             where T : class
         {
             var url = BuildUrl(baseUrl, parameters);
@@ -133,8 +131,7 @@
             }
         }
 
-        [CanBeNull]
-        private static T JsonConverter<T>([NotNull] Stream stream)
+        private static T? JsonConverter<T>([NotNull] Stream stream)
             where T : class
         {
             using (var reader = new StreamReader(stream, Encoding.UTF8))
@@ -148,7 +145,7 @@
         private class Translation
         {
             [DataMember(Name = "text")]
-            public string Text { get; set; }
+            public string? Text { get; set; }
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Instantiated by the data contract serializer")]
@@ -156,7 +153,7 @@
         private class TranslationRootObject
         {
             [DataMember(Name = "translations")]
-            public List<Translation> Translations { get; set; }
+            public List<Translation>? Translations { get; set; }
         }
 
         /// <summary>Builds the URL from a base, method name, and name/value paired parameters. All parameters are encoded.</summary>
@@ -165,7 +162,7 @@
         /// <returns>Resulting URL.</returns>
         /// <exception cref="System.ArgumentException">There must be an even number of strings supplied for parameters.</exception>
         [NotNull]
-        private static string BuildUrl(string url, [NotNull, ItemNotNull] ICollection<string> pairs)
+        private static string BuildUrl(string url, [NotNull, ItemNotNull] ICollection<string?> pairs)
         {
             if (pairs.Count % 2 != 0)
                 throw new ArgumentException("There must be an even number of strings supplied for parameters.");
@@ -174,11 +171,11 @@
             if (pairs.Count > 0)
             {
                 sb.Append("?");
-                sb.Append(string.Join("&", pairs.Where((s, i) => i % 2 == 0).Zip(pairs.Where((s, i) => i % 2 == 1), Enc)));
+                sb.Append(string.Join("&", pairs.Where((s, i) => i % 2 == 0).Zip(pairs.Where((s, i) => i % 2 == 1), Format)));
             }
             return sb.ToString();
 
-            static string Enc(string a, string b) => string.Concat(System.Web.HttpUtility.UrlEncode(a), "=", System.Web.HttpUtility.UrlEncode(b));
+            static string Format(string? a, string? b) => string.Concat(System.Web.HttpUtility.UrlEncode(a), "=", System.Web.HttpUtility.UrlEncode(b));
         }
     }
 }

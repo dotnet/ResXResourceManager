@@ -63,14 +63,14 @@
             }
         }
 
-        private bool TryGetValue<T>([CanBeNull] string key, [CanBeNull] T defaultValue, [CanBeNull] out T value)
+        private bool TryGetValue<T>(string? key, [CanBeNull] T defaultValue, [CanBeNull] out T value)
         {
             value = defaultValue;
 
             return TryGetValue(_solution.Globals, key, ref value);
         }
 
-        private static bool TryGetValue<T>([CanBeNull] EnvDTE.Globals globals, [CanBeNull] string key, [CanBeNull] ref T value)
+        private static bool TryGetValue<T>(EnvDTE.Globals? globals, string? key, [CanBeNull] ref T value)
         {
             try
             {
@@ -88,7 +88,7 @@
             return false;
         }
 
-        private void TrySetValue<T>([NotNull] EnvDTE.Globals globals, [CanBeNull] string internalKey, [CanBeNull] T value)
+        private void TrySetValue<T>([NotNull] EnvDTE.Globals globals, string? internalKey, [CanBeNull] T value)
         {
             try
             {
@@ -102,7 +102,7 @@
         }
 
         [NotNull]
-        private static string GetKey([CanBeNull] string propertyName)
+        private static string GetKey(string? propertyName)
         {
             return @"RESX_" + propertyName;
         }

@@ -19,8 +19,7 @@
 
     public class ShowErrorsOnlyBehavior : Behavior<DataGrid>
     {
-        [CanBeNull]
-        public ToggleButton ToggleButton
+        public ToggleButton? ToggleButton
         {
             get => (ToggleButton)GetValue(ToggleButtonProperty);
             set => SetValue(ToggleButtonProperty, value);
@@ -54,7 +53,7 @@
         [NotNull]
         private DataGrid DataGrid => AssociatedObject;
 
-        private void ToggleButton_Changed([CanBeNull] ToggleButton oldValue, [CanBeNull] ToggleButton newValue)
+        private void ToggleButton_Changed(ToggleButton? oldValue, ToggleButton? newValue)
         {
             if (oldValue != null)
             {
@@ -75,7 +74,7 @@
             Refresh((ToggleButton)sender);
         }
 
-        private void Refresh([CanBeNull] ToggleButton button)
+        private void Refresh(ToggleButton? button)
         {
             var dataGrid = DataGrid;
 

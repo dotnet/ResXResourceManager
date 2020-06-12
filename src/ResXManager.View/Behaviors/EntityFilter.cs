@@ -11,8 +11,7 @@
 
     public class EntityFilter : Behavior<ListBox>
     {
-        [CanBeNull]
-        public string FilterText
+        public string? FilterText
         {
             get => (string)GetValue(FilterTextProperty);
             set => SetValue(FilterTextProperty, value);
@@ -25,7 +24,7 @@
             DependencyProperty.Register("FilterText", typeof(string), typeof(EntityFilter),
                 new FrameworkPropertyMetadata(null, (sender, e) => ((EntityFilter)sender).FilterText_Changed((string)e.NewValue)));
 
-        private void FilterText_Changed([CanBeNull] string value)
+        private void FilterText_Changed(string? value)
         {
             var listBox = AssociatedObject;
             if (listBox == null)
@@ -34,12 +33,11 @@
             listBox.Items.Filter = BuildFilter(value);
         }
 
-        [CanBeNull]
-        public static Predicate<object> BuildFilter([CanBeNull] string value)
+        public static Predicate<object>? BuildFilter(string? value)
         {
             value = value?.Trim();
 
-            if (string.IsNullOrEmpty(value)) 
+            if (value == null || string.IsNullOrEmpty(value))
                 return null;
 
             try

@@ -7,7 +7,7 @@
 
     public class CultureOverrideEventArgs : EventArgs
     {
-        public CultureOverrideEventArgs([NotNull] CultureInfo neutralCulture, [CanBeNull] CultureInfo specificCulture)
+        public CultureOverrideEventArgs([NotNull] CultureInfo neutralCulture, CultureInfo? specificCulture)
         {
             SpecificCulture = specificCulture;
             NeutralCulture = neutralCulture;
@@ -16,7 +16,6 @@
         [NotNull]
         public CultureInfo NeutralCulture { get; }
 
-        [CanBeNull]
-        public CultureInfo SpecificCulture { get; }
+        public CultureInfo? SpecificCulture { get; }
     }
 }

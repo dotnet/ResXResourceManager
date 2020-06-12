@@ -132,7 +132,7 @@
 
         private static void Navigate_Click([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
-            string url;
+            string? url;
 
             if (e.OriginalSource is FrameworkElement source)
             {
@@ -141,7 +141,7 @@
                     return;
 
                 url = source.Tag as string;
-                if (string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                if (url == null || string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                     return;
             }
             else

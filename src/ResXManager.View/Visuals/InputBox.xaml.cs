@@ -33,13 +33,12 @@
         /// <summary>
         /// A callback to validate the input text.
         /// </summary>
-        public event EventHandler<TextEventArgs> TextChanged;
+        public event EventHandler<TextEventArgs>? TextChanged;
 
         /// <summary>
         /// Gets or sets the prompt to be displayed.
         /// </summary>
-        [CanBeNull]
-        public string Prompt
+        public string? Prompt
         {
             get => (string)GetValue(PromptProperty);
             set => SetValue(PromptProperty, value);
@@ -54,8 +53,7 @@
         /// <summary>
         /// Gets or sets the text that the user has entered.
         /// </summary>
-        [CanBeNull]
-        public string Text
+        public string? Text
         {
             get => (string)GetValue(TextProperty);
             set => SetValue(TextProperty, value);
@@ -67,7 +65,7 @@
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register("Text", typeof(string), typeof(InputBox), new FrameworkPropertyMetadata(null, (sender, e) => ((InputBox)sender).Text_Changed((string)e.NewValue)));
 
-        private void Text_Changed([CanBeNull] string newValue)
+        private void Text_Changed(string? newValue)
         {
             TextChanged?.Invoke(this, new TextEventArgs(newValue ?? string.Empty));
         }

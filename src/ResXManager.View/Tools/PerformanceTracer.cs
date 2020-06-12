@@ -31,8 +31,7 @@
             _configuration = configuration;
         }
 
-        [CanBeNull]
-        public IDisposable Start([Localizable(false)][NotNull] string message)
+        public IDisposable? Start([Localizable(false)][NotNull] string message)
         {
             if (!_configuration.ShowPerformanceTraces)
                 return null;

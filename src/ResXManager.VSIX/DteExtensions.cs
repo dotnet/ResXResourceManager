@@ -18,8 +18,7 @@
 
     internal static class DteExtensions
     {
-        [CanBeNull]
-        public static EnvDTE.Document TryGetDocument([CanBeNull] this EnvDTE.ProjectItem projectItem)
+        public static EnvDTE.Document? TryGetDocument(this EnvDTE.ProjectItem? projectItem)
         {
             try
             {
@@ -35,8 +34,7 @@
             }
         }
 
-        [CanBeNull]
-        public static XDocument TryGetContent([NotNull] this EnvDTE.ProjectItem projectItem)
+        public static XDocument? TryGetContent([NotNull] this EnvDTE.ProjectItem projectItem)
         {
             try
             {
@@ -103,8 +101,7 @@
             }
         }
 
-        [CanBeNull]
-        public static string GetMkDocument(this VSITEMSELECTION selection)
+        public static string? GetMkDocument(this VSITEMSELECTION selection)
         {
             try
             {
@@ -124,8 +121,7 @@
             }
         }
 
-        [CanBeNull]
-        private static XDocument TryGetContent([CanBeNull] EnvDTE.Document document)
+        private static XDocument? TryGetContent(EnvDTE.Document? document)
         {
             try
             {
@@ -145,7 +141,7 @@
             return projectItem.IsOpen && TrySetContent(projectItem.TryGetDocument(), value);
         }
 
-        private static bool TrySetContent([CanBeNull] EnvDTE.Document document, [NotNull] XDocument value)
+        private static bool TrySetContent(EnvDTE.Document? document, [NotNull] XDocument value)
         {
             try
             {
@@ -165,8 +161,8 @@
             }
         }
 
-        [CanBeNull, ItemNotNull]
-        public static IEnumerable<EnvDTE.ProjectItem> TryGetProjectItems([CanBeNull] this EnvDTE.ProjectItem projectItem)
+        [ItemNotNull]
+        public static IEnumerable<EnvDTE.ProjectItem>? TryGetProjectItems(this EnvDTE.ProjectItem? projectItem)
         {
             try
             {
@@ -179,19 +175,19 @@
         }
 
         [NotNull, ItemNotNull]
-        public static IEnumerable<EnvDTE.ProjectItem> Children([CanBeNull] this EnvDTE.ProjectItem projectItem)
+        public static IEnumerable<EnvDTE.ProjectItem> Children(this EnvDTE.ProjectItem? projectItem)
         {
             return projectItem?.TryGetProjectItems() ?? Enumerable.Empty<EnvDTE.ProjectItem>();
         }
 
         [NotNull, ItemNotNull]
-        public static IEnumerable<EnvDTE.ProjectItem> Descendants([CanBeNull] this EnvDTE.ProjectItem projectItem)
+        public static IEnumerable<EnvDTE.ProjectItem> Descendants(this EnvDTE.ProjectItem? projectItem)
         {
             return projectItem?.TryGetProjectItems()?.SelectMany(p => p.DescendantsAndSelf()) ?? Enumerable.Empty<EnvDTE.ProjectItem>();
         }
 
         [NotNull, ItemNotNull]
-        public static IEnumerable<EnvDTE.ProjectItem> DescendantsAndSelf([CanBeNull] this EnvDTE.ProjectItem projectItem)
+        public static IEnumerable<EnvDTE.ProjectItem> DescendantsAndSelf(this EnvDTE.ProjectItem? projectItem)
         {
             if (projectItem == null)
                 yield break;
@@ -204,15 +200,14 @@
             }
         }
 
-        public static void SetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName, [CanBeNull] object value)
+        public static void SetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName, object? value)
         {
             var item = projectItem.Properties?.Item(propertyName);
             if (item != null)
                 item.Value = value;
         }
 
-        [CanBeNull]
-        public static object GetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName)
+        public static object? GetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName)
         {
             try
             {
@@ -242,19 +237,17 @@
             }
         }
 
-        public static void SetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem, [CanBeNull] string value)
+        public static void SetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem, string? value)
         {
             SetProperty(projectItem, @"CustomTool", value);
         }
 
-        [CanBeNull]
-        public static string GetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem)
+        public static string? GetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem)
         {
             return GetProperty(projectItem, @"CustomTool") as string;
         }
 
-        [CanBeNull]
-        public static EnvDTE.ProjectItem AddFromFile([NotNull] this EnvDTE.ProjectItem projectItem, [CanBeNull] string fileName)
+        public static EnvDTE.ProjectItem? AddFromFile([NotNull] this EnvDTE.ProjectItem projectItem, string? fileName)
         {
             try
             {
@@ -266,8 +259,7 @@
             }
         }
 
-        [CanBeNull]
-        public static EnvDTE.ProjectItem AddFromFile([NotNull] this EnvDTE.Project project, [CanBeNull] string fileName)
+        public static EnvDTE.ProjectItem? AddFromFile([NotNull] this EnvDTE.Project project, string? fileName)
         {
             try
             {
@@ -304,8 +296,7 @@
             }
         }
 
-        [CanBeNull]
-        public static string TryGetFileName([NotNull] this EnvDTE.ProjectItem projectItem)
+        public static string? TryGetFileName([NotNull] this EnvDTE.ProjectItem projectItem)
         {
             try
             {

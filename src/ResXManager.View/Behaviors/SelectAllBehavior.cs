@@ -21,8 +21,7 @@
     public class SelectAllBehavior : Behavior<ListBox>
     {
         private bool _isListBoxUpdating;
-        [CanBeNull]
-        private PerformanceTracer _performanceTracer;
+        private PerformanceTracer? _performanceTracer;
 
         public bool? AreAllFilesSelected
         {

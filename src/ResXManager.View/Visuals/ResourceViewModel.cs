@@ -61,7 +61,7 @@
             resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
         }
 
-        internal event EventHandler<ResourceTableEntryEventArgs> ClearFiltersRequest;
+        internal event EventHandler<ResourceTableEntryEventArgs>? ClearFiltersRequest;
 
         [NotNull]
         public ResourceManager ResourceManager { get; }
@@ -89,8 +89,7 @@
             }
         }
 
-        [CanBeNull]
-        public string LoadedSnapshot { get; set; }
+        public string? LoadedSnapshot { get; set; }
 
         [NotNull]
         public static ICommand ToggleCellSelectionCommand => new DelegateCommand(() => Settings.IsCellSelectionEnabled = !Settings.IsCellSelectionEnabled);
@@ -193,7 +192,7 @@
         [NotNull]
         private static Settings Settings => Settings.Default;
 
-        private void LoadSnapshot([CanBeNull] string fileName)
+        private void LoadSnapshot(string? fileName)
         {
             ResourceManager.LoadSnapshot(string.IsNullOrEmpty(fileName) ? null : File.ReadAllText(fileName));
 
@@ -209,18 +208,18 @@
             LoadedSnapshot = fileName;
         }
 
-        private bool CanCut([CanBeNull] DataGrid dataGrid)
+        private bool CanCut(DataGrid? dataGrid)
         {
             return CanCopy(dataGrid) && CanDelete(dataGrid);
         }
 
-        private void CutSelected([CanBeNull] DataGrid dataGrid)
+        private void CutSelected(DataGrid? dataGrid)
         {
             CopySelected(dataGrid);
             DeleteSelected(dataGrid);
         }
 
-        private bool CanCopy([CanBeNull] DataGrid dataGrid)
+        private bool CanCopy(DataGrid? dataGrid)
         {
             if (dataGrid == null)
                 return false;
@@ -239,7 +238,7 @@
             return numberOfDistinctEntries == totalNumberOfEntries;
         }
 
-        private void CopySelected([CanBeNull] DataGrid dataGrid)
+        private void CopySelected(DataGrid? dataGrid)
         {
             if (dataGrid == null)
                 return;
@@ -256,7 +255,7 @@
             }
         }
 
-        private bool CanDelete([CanBeNull] DataGrid dataGrid)
+        private bool CanDelete(DataGrid? dataGrid)
         {
             if (dataGrid == null)
                 return false;
@@ -270,7 +269,7 @@
             return SelectedTableEntries.Any();
         }
 
-        private void DeleteSelected([CanBeNull] DataGrid dataGrid)
+        private void DeleteSelected(DataGrid? dataGrid)
         {
             if (dataGrid == null)
                 return;
@@ -286,7 +285,10 @@
 
                     cellInfo.Column?.OnPastingCellClipboardContent(cellInfo.Item, string.Empty);
 
-                    affectedEntries.Add(cellInfo.Item as ResourceTableEntry);
+                    if (cellInfo.Item is ResourceTableEntry resourceTableEntry)
+                    {
+                        affectedEntries.Add(resourceTableEntry);
+                    }
                 }
 
                 dataGrid.CommitEdit();
@@ -313,7 +315,7 @@
             }
         }
 
-        private bool CanPaste([CanBeNull] DataGrid dataGrid)
+        private bool CanPaste(DataGrid? dataGrid)
         {
             if (dataGrid == null)
                 return false;
@@ -330,7 +332,7 @@
             return SelectedEntities.Count == 1;
         }
 
-        private void Paste([CanBeNull] DataGrid dataGrid)
+        private void Paste(DataGrid? dataGrid)
         {
             if (dataGrid == null)
                 return;
@@ -409,7 +411,7 @@
             }
         }
 
-        private static void ToggleItemInvariant([CanBeNull] DataGrid dataGrid)
+        private static void ToggleItemInvariant(DataGrid? dataGrid)
         {
             if (dataGrid == null)
                 return;
@@ -434,7 +436,7 @@
             }
         }
 
-        private static bool CanToggleItemInvariant([CanBeNull] DataGrid dataGrid)
+        private static bool CanToggleItemInvariant(DataGrid? dataGrid)
         {
             if (dataGrid == null)
                 return false;
@@ -471,7 +473,7 @@
             }
         }
 
-        private static bool CanExportExcel([CanBeNull] IExportParameters param)
+        private static bool CanExportExcel(IExportParameters? param)
         {
             if (param == null)
                 return true; // param will be added by converter when exporting...
@@ -481,18 +483,18 @@
             return (scope == null) || (scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()));
         }
 
-        private void ExportExcel([CanBeNull] IExportParameters param)
+        private void ExportExcel(IExportParameters? param)
         {
             var fileName = param?.FileName;
             if (fileName != null)
             {
-                ResourceManager.ExportExcelFile(fileName, param.Scope, _configuration.ExcelExportMode);
+                ResourceManager.ExportExcelFile(fileName, param!.Scope, _configuration.ExcelExportMode);
             }
         }
 
-        private void ImportExcel([CanBeNull] string fileName)
+        private void ImportExcel(string? fileName)
         {
-            if (string.IsNullOrEmpty(fileName))
+            if (fileName == null || string.IsNullOrEmpty(fileName))
                 return;
 
             var changes = ResourceManager.ImportExcelFile(fileName);

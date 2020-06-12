@@ -22,9 +22,8 @@
         [NotNull]
         private readonly ITracer _tracer;
 
-        [CanBeNull]
         [ItemNotNull]
-        private IEnumerable<ProjectFile> _projectFiles;
+        private IEnumerable<ProjectFile>? _projectFiles;
 
         [ImportingConstructor]
         public DteSolution([NotNull][Import(nameof(VsPackage))] IServiceProvider serviceProvider, [NotNull] ITracer tracer)
@@ -44,20 +43,20 @@
             return _projectFiles ??= EnumerateProjectFiles(fileFilter) ?? new DirectoryInfo(SolutionFolder).GetAllSourceFiles(fileFilter);
         }
 
-        [CanBeNull, ItemNotNull]
-        public IEnumerable<ProjectFile> GetCachedProjectFiles()
+        [ItemNotNull]
+        public IEnumerable<ProjectFile>? GetCachedProjectFiles()
         {
             return _projectFiles;
         }
 
-        [CanBeNull, ItemNotNull]
-        private IEnumerable<ProjectFile> EnumerateProjectFiles([NotNull] IFileFilter fileFilter)
+        [ItemNotNull]
+        private IEnumerable<ProjectFile>? EnumerateProjectFiles([NotNull] IFileFilter fileFilter)
         {
             return EnumerateProjectFiles()?.Where(fileFilter.Matches);
         }
 
-        [CanBeNull, ItemNotNull]
-        private IEnumerable<ProjectFile> EnumerateProjectFiles()
+        [ItemNotNull]
+        private IEnumerable<ProjectFile>? EnumerateProjectFiles()
         {
             var items = new Dictionary<string, DteProjectFile>();
 
@@ -103,14 +102,12 @@
         }
 
         // ReSharper disable once SuspiciousTypeConversion.Global
-        [CanBeNull, ItemNotNull]
-        private EnvDTE80.Solution2 Solution => Dte?.Solution as EnvDTE80.Solution2;
+        [ItemNotNull]
+        private EnvDTE80.Solution2? Solution => Dte?.Solution as EnvDTE80.Solution2;
 
-        [CanBeNull]
-        private EnvDTE80.DTE2 Dte => _serviceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
+        private EnvDTE80.DTE2? Dte => _serviceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
 
-        [CanBeNull]
-        public EnvDTE.Globals Globals
+        public EnvDTE.Globals? Globals
         {
             get
             {
@@ -129,7 +126,7 @@
                 {
                     var fullName = FullName;
 
-                    if (string.IsNullOrEmpty(fullName))
+                    if (fullName == null || string.IsNullOrEmpty(fullName))
                         return string.Empty;
                     if (new DirectoryInfo(fullName).Exists)
                         return fullName;
@@ -145,11 +142,9 @@
             }
         }
 
-        [CanBeNull]
-        public string FullName => Solution?.FullName;
+        public string? FullName => Solution?.FullName;
 
-        [CanBeNull]
-        public EnvDTE.ProjectItem AddFile([NotNull] string fullName)
+        public EnvDTE.ProjectItem? AddFile([NotNull] string fullName)
         {
             var solutionItemsProject = GetProjects().FirstOrDefault(IsSolutionItemsFolder) ?? Solution?.AddSolutionFolder(SolutionItemsFolderName);
 
@@ -161,7 +156,7 @@
             _projectFiles = null;
         }
 
-        private static bool IsSolutionItemsFolder([CanBeNull] EnvDTE.Project project)
+        private static bool IsSolutionItemsFolder(EnvDTE.Project? project)
         {
             if (project == null)
                 return false;
@@ -197,7 +192,7 @@
             }
         }
 
-        private void GetProjectFiles([CanBeNull] string projectName, [ItemNotNull][CanBeNull] EnvDTE.ProjectItems projectItems, [NotNull] IDictionary<string, DteProjectFile> items)
+        private void GetProjectFiles(string? projectName, [ItemNotNull] EnvDTE.ProjectItems? projectItems, [NotNull] IDictionary<string, DteProjectFile> items)
         {
             if (projectItems == null)
                 return;
@@ -227,7 +222,7 @@
             }
         }
 
-        private void GetProjectFiles([CanBeNull] string projectName, [NotNull] EnvDTE.ProjectItem projectItem, [NotNull] IDictionary<string, DteProjectFile> items)
+        private void GetProjectFiles(string? projectName, [NotNull] EnvDTE.ProjectItem projectItem, [NotNull] IDictionary<string, DteProjectFile> items)
         {
             if (projectItem.Object is VSLangProj.References) // MPF project (e.g. WiX) references folder, do not traverse...
                 return;
@@ -259,8 +254,7 @@
             }
         }
 
-        [CanBeNull]
-        private string TryGetFileName([NotNull] EnvDTE.ProjectItem projectItem)
+        private string? TryGetFileName([NotNull] EnvDTE.ProjectItem projectItem)
         {
             var name = projectItem.Name;
 

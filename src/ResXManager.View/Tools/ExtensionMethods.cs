@@ -19,19 +19,17 @@ namespace ResXManager.View.Tools
 
     public static class ExtensionMethods
     {
-        [CanBeNull]
-        public static CultureKey GetCultureKey([NotNull] this DataGridColumn column)
+        public static CultureKey? GetCultureKey([NotNull] this DataGridColumn column)
         {
             return (column.Header as ILanguageColumnHeader)?.CultureKey;
         }
 
-        [CanBeNull]
-        public static CultureInfo GetCulture([NotNull] this DataGridColumn column)
+        public static CultureInfo? GetCulture([NotNull] this DataGridColumn column)
         {
             return column.GetCultureKey()?.Culture;
         }
 
-        public static void SetEditingElementStyle([NotNull] this DataGridBoundColumn column, [CanBeNull] Binding languageBinding, [CanBeNull] Binding flowDirectionBinding)
+        public static void SetEditingElementStyle([NotNull] this DataGridBoundColumn column, Binding? languageBinding, Binding? flowDirectionBinding)
         {
             var textBoxStyle = new Style(typeof(TextBox), column.EditingElementStyle);
             var setters = textBoxStyle.Setters;
@@ -49,7 +47,7 @@ namespace ResXManager.View.Tools
             column.EditingElementStyle = textBoxStyle;
         }
 
-        public static void SetElementStyle([NotNull] this DataGridBoundColumn column, [CanBeNull] Binding languageBinding, [CanBeNull] Binding flowDirectionBinding)
+        public static void SetElementStyle([NotNull] this DataGridBoundColumn column, Binding? languageBinding, Binding? flowDirectionBinding)
         {
             var elementStyle = new Style(typeof(TextBlock), column.ElementStyle);
             var setters = elementStyle.Setters;

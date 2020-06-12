@@ -19,8 +19,7 @@
         }
 
         [ItemNotNull]
-        [CanBeNull]
-        public IEnumerable<ITranslator> Translators
+        public IEnumerable<ITranslator>? Translators
         {
             get => (IEnumerable<ITranslator>)GetValue(TranslatorsProperty);
             set => SetValue(TranslatorsProperty, value);

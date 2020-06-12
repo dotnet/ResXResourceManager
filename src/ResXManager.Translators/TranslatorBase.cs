@@ -24,7 +24,7 @@ namespace ResXManager.Translators
         [NotNull]
         protected static readonly IWebProxy WebProxy = TryGetDefaultProxy();
 
-        protected TranslatorBase([NotNull] string id, [NotNull] string displayName, [CanBeNull] Uri uri, [CanBeNull][ItemNotNull] IList<ICredentialItem> credentials)
+        protected TranslatorBase([NotNull] string id, [NotNull] string displayName, Uri? uri, [ItemNotNull] IList<ICredentialItem>? credentials)
         {
             Id = id;
             DisplayName = displayName;
@@ -36,8 +36,7 @@ namespace ResXManager.Translators
 
         public string DisplayName { get; }
 
-        [CanBeNull]
-        public Uri Uri { get; }
+        public Uri? Uri { get; }
 
         [DataMember]
         public bool IsEnabled { get; set; } = true;
@@ -93,6 +92,6 @@ namespace ResXManager.Translators
         }
 
         [UsedImplicitly]
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

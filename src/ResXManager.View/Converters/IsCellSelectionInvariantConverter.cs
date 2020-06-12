@@ -16,14 +16,12 @@
         [NotNull]
         public static readonly IsCellSelectionInvariantConverter Default = new IsCellSelectionInvariantConverter();
 
-        [CanBeNull]
-        object IValueConverter.Convert([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
+        object? IValueConverter.Convert(object? value, Type? targetType, object? parameter, CultureInfo? culture)
         {
             return (value as IEnumerable<DataGridCellInfo>)?.Any(item => item.IsItemInvariant());
         }
 
-        [CanBeNull]
-        object IValueConverter.ConvertBack([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
+        object? IValueConverter.ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo? culture)
         {
             throw new NotImplementedException();
         }

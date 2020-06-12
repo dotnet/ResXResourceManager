@@ -12,16 +12,16 @@
     [DataContract]
     public sealed class MoveToResourceConfigurationItem : INotifyPropertyChanged
     {
-        [DataMember, CanBeNull]
-        public string Extensions { get; set; }
+        [DataMember]
+        public string? Extensions { get; set; }
 
-        [DataMember, CanBeNull]
-        public string Patterns { get; set; }
+        [DataMember]
+        public string? Patterns { get; set; }
 
         [NotNull, ItemNotNull]
         public IEnumerable<string> ParseExtensions()
         {
-            if (string.IsNullOrEmpty(Extensions))
+            if (Extensions == null || string.IsNullOrEmpty(Extensions))
                 return Enumerable.Empty<string>();
 
             return Extensions.Split(',')
@@ -42,7 +42,7 @@
 
         #region INotifyPropertyChanged implementation
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator, UsedImplicitly]
         private void OnPropertyChanged([NotNull] string propertyName)

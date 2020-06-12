@@ -150,9 +150,9 @@
             }
         }
 
-        private static void Navigate_Click([CanBeNull] object sender, [NotNull] RoutedEventArgs e)
+        private static void Navigate_Click(object? sender, [NotNull] RoutedEventArgs e)
         {
-            string url;
+            string? url;
 
             if (e.OriginalSource is FrameworkElement source)
             {
@@ -161,7 +161,7 @@
                     return;
 
                 url = source.Tag as string;
-                if (string.IsNullOrEmpty(url) || !url.StartsWith(@"http", StringComparison.OrdinalIgnoreCase))
+                if (url?.StartsWith(@"http", StringComparison.OrdinalIgnoreCase) != true)
                     return;
             }
             else
@@ -184,7 +184,7 @@
             Process.Start(url);
         }
 
-        private void ResourceManager_BeginEditing([CanBeNull] object sender, [NotNull] ResourceBeginEditingEventArgs e)
+        private void ResourceManager_BeginEditing(object? sender, [NotNull] ResourceBeginEditingEventArgs e)
         {
             if (!CanEdit(e.Entity, e.CultureKey))
             {
@@ -192,7 +192,7 @@
             }
         }
 
-        private bool CanEdit([NotNull] ResourceEntity entity, [CanBeNull] CultureKey cultureKey)
+        private bool CanEdit([NotNull] ResourceEntity entity, CultureKey? cultureKey)
         {
             var languages = entity.Languages.Where(lang => (cultureKey == null) || cultureKey.Equals(lang.CultureKey)).ToArray();
 
@@ -250,7 +250,7 @@
             return false;
         }
 
-        private static void ActivateWindow([CanBeNull] EnvDTE.Window window)
+        private static void ActivateWindow(EnvDTE.Window? window)
         {
             try
             {
@@ -384,7 +384,7 @@
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
 
-        private void VisualComposition_Error([CanBeNull] object sender, [NotNull] TextEventArgs e)
+        private void VisualComposition_Error(object? sender, [NotNull] TextEventArgs e)
         {
             _tracer.TraceError(e.Text);
         }

@@ -32,7 +32,7 @@
         [NotNull]
         private readonly TaskProvider.TaskCollection _tasks;
 
-        private BuildEvents _buildEvents;
+        private BuildEvents? _buildEvents;
 
 
         [ImportingConstructor]
@@ -172,8 +172,7 @@
                 Entry = entry;
             }
 
-            [CanBeNull]
-            public ResourceTableEntry Entry { get; }
+            public ResourceTableEntry? Entry { get; }
         }
     }
 }

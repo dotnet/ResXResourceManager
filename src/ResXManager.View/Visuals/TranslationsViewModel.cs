@@ -65,8 +65,8 @@
         [NotNull]
         public Configuration Configuration { get; }
 
-        [CanBeNull, OnChangedMethod(nameof(OnSourceCultureChanged))]
-        public CultureKey SourceCulture { get; set; }
+        [OnChangedMethod(nameof(OnSourceCultureChanged))]
+        public CultureKey? SourceCulture { get; set; }
         private void OnSourceCultureChanged()
         {
             AllTargetCultures = _resourceManager
@@ -151,7 +151,7 @@
                 return (Settings.Default.TranslationUnselectedTargetCultures ?? string.Empty)
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(c => c.ToCultureKey())
-                    .Where(c => c != null);
+                    .Where(c => c != null)!;
             }
             set
             {
@@ -187,7 +187,7 @@
         }
 
         [NotNull, ItemNotNull]
-        private static ICollection<ITranslationItem> GetItemsToTranslate([NotNull, ItemNotNull] IEnumerable<ResourceTableEntry> resourceTableEntries, [CanBeNull] CultureKey sourceCulture, [NotNull, ItemNotNull] ICollection<CultureKey> targetCultures, [CanBeNull] string translationPrefix)
+        private static ICollection<ITranslationItem> GetItemsToTranslate([NotNull, ItemNotNull] IEnumerable<ResourceTableEntry> resourceTableEntries, CultureKey? sourceCulture, [NotNull, ItemNotNull] ICollection<CultureKey> targetCultures, string? translationPrefix)
         {
             // #1: all entries that are not invariant and have a valid value in the source culture
             var allEntriesWithSourceValue = resourceTableEntries

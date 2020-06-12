@@ -105,7 +105,7 @@
             }
         }
 
-        public static void CreateNewLanguageColumn([NotNull] this DataGrid dataGrid, [NotNull] Configuration configuration, [CanBeNull] CultureInfo culture)
+        public static void CreateNewLanguageColumn([NotNull] this DataGrid dataGrid, [NotNull] Configuration configuration, CultureInfo? culture)
         {
             var cultureKey = new CultureKey(culture);
 
@@ -130,7 +130,7 @@
         }
 
         [NotNull]
-        private static DataGridTextColumn CreateIndexColumn([CanBeNull] ResourceViewModel resourceViewModel, [CanBeNull] Configuration configuration)
+        private static DataGridTextColumn CreateIndexColumn(ResourceViewModel? resourceViewModel, Configuration? configuration)
         {
             var elementStyle = new Style(typeof(TextBlock))
             {
@@ -326,7 +326,7 @@
             columns.AddLanguageColumn(column, languageBinding, flowDirectionBinding);
         }
 
-        private static void AddLanguageColumn([NotNull][ItemNotNull] this ICollection<DataGridColumn> columns, [NotNull] DataGridBoundColumn column, [NotNull] Binding languageBinding, [CanBeNull] Binding flowDirectionBinding)
+        private static void AddLanguageColumn([NotNull][ItemNotNull] this ICollection<DataGridColumn> columns, [NotNull] DataGridBoundColumn column, [NotNull] Binding languageBinding, Binding? flowDirectionBinding)
         {
             column.SetElementStyle(languageBinding, flowDirectionBinding);
             column.SetEditingElementStyle(languageBinding, flowDirectionBinding);
@@ -391,7 +391,7 @@
             });
         }
 
-        private static void IsCellInvariant_Changed([CanBeNull] DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void IsCellInvariant_Changed(DependencyObject? d, DependencyPropertyChangedEventArgs e)
         {
             var dataGrid = d?.TryFindAncestorOrSelf<DataGrid>();
 
@@ -408,13 +408,12 @@
             public static readonly IValueConverter Default = new IsRightToLeftToFlowDirectionConverter();
 
             [NotNull]
-            public object Convert([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
+            public object Convert(object? value, Type? targetType, object? parameter, CultureInfo? culture)
             {
                 return true.Equals(value) ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
             }
 
-            [CanBeNull]
-            public object ConvertBack([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
+            public object? ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo? culture)
             {
                 throw new NotImplementedException();
             }

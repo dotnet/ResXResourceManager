@@ -30,7 +30,7 @@
             ExecuteCallback = InternalExecute;
         }
 
-        private void InternalExecute([CanBeNull] DependencyObject parameter)
+        private void InternalExecute(DependencyObject? parameter)
         {
             if (_resourceViewModel.SelectedEntities.Count != 1)
             {
@@ -62,15 +62,19 @@
             };
 
             inputBox.TextChanged += (_, args) =>
-                inputBox.IsInputValid = !string.IsNullOrWhiteSpace(args?.Text) 
-                                        && !resourceFile.Entries.Any(entry => entry.Key.Equals(args.Text, StringComparison.OrdinalIgnoreCase))
-                                        && !args.Text.Equals(resourceFile.BaseName, StringComparison.OrdinalIgnoreCase);
+            {
+                var text = args?.Text;
+
+                inputBox.IsInputValid = text != null &&
+                                        !string.IsNullOrWhiteSpace(text)
+                                        && !resourceFile.Entries.Any(entry => entry.Key.Equals(text, StringComparison.OrdinalIgnoreCase))
+                                        && !text.Equals(resourceFile.BaseName, StringComparison.OrdinalIgnoreCase);
+            };
 
             if (inputBox.ShowDialog() != true)
                 return;
 
-            var key = inputBox.Text;
-            // ReSharper disable once PossibleNullReferenceException
+            var key = inputBox.Text ?? string.Empty;
             key = key.Trim();
 
             try

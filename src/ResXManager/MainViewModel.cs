@@ -71,7 +71,7 @@
         private async void ResourceManager_ProjectFileSaved(object sender, ProjectFileEventArgs e)
         {
             var solutionFolder = SourceFilesProvider.SolutionFolder;
-            if (string.IsNullOrEmpty(solutionFolder))
+            if (solutionFolder == null || string.IsNullOrEmpty(solutionFolder))
                 return;
 
             var scriptFile = Path.Combine(solutionFolder, "Resources.ps1");
@@ -155,13 +155,13 @@
             }
         }
 
-        private bool CanEdit([NotNull] ResourceEntity entity, [CanBeNull] CultureKey cultureKey)
+        private bool CanEdit([NotNull] ResourceEntity entity, CultureKey? cultureKey)
         {
             string message;
             var languages = entity.Languages.Where(lang => (cultureKey == null) || cultureKey.Equals(lang.CultureKey)).ToArray();
 
             var rootFolder = SourceFilesProvider.SolutionFolder;
-            if (string.IsNullOrEmpty(rootFolder))
+            if (rootFolder == null || string.IsNullOrEmpty(rootFolder))
                 return false;
 
             if (!languages.Any())
@@ -229,8 +229,7 @@
         {
             private readonly ITracer _tracer;
 
-            [CanBeNull]
-            private readonly string _powerShellPath = FindInPath("PowerShell.exe");
+            private readonly string? _powerShellPath = FindInPath("PowerShell.exe");
 
             private bool _isConverting;
             private bool _isConversionRequestPending;
@@ -317,8 +316,7 @@
                 }
             }
 
-            [CanBeNull]
-            private static string FindInPath(string fileName)
+            private static string? FindInPath(string fileName)
             {
                 return Environment.GetEnvironmentVariable("PATH")?
                     .Split(';')
@@ -344,8 +342,7 @@
             _performanceTracer = performanceTracer;
         }
 
-        [CanBeNull]
-        public string SolutionFolder { get; set; }
+        public string? SolutionFolder { get; set; }
 
         public IList<ProjectFile> SourceFiles
         {

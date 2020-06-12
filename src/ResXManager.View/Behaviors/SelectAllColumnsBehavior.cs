@@ -50,7 +50,7 @@
         public static readonly DependencyProperty ColumnTypeProperty =
             DependencyProperty.Register("ColumnType", typeof(ColumnType), typeof(SelectAllColumnsBehavior), new FrameworkPropertyMetadata(ColumnType.Language));
 
-        private void ListBox_Changed([CanBeNull] ListBox oldValue, [CanBeNull] ListBox newValue)
+        private void ListBox_Changed(ListBox? oldValue, ListBox? newValue)
         {
             if (oldValue != null)
                 oldValue.SelectionChanged -= ListBox_SelectionChanged;

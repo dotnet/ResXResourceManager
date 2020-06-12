@@ -20,23 +20,21 @@
         public static readonly IValueConverter Default = new DataGridToSelectionScopeConverter();
 
         [NotNull]
-        public object Convert([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
+        public object Convert(object? value, Type? targetType, object? parameter, CultureInfo? culture)
         {
             return new DataGridSelectionScope(value as DataGrid);
         }
 
-        [CanBeNull]
-        public object ConvertBack([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter, [CanBeNull] CultureInfo culture)
+        public object? ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo? culture)
         {
             throw new NotImplementedException();
         }
 
         private class DataGridSelectionScope : IResourceScope, IExportParameters
         {
-            [CanBeNull]
-            private readonly DataGrid _dataGrid;
+            private readonly DataGrid? _dataGrid;
 
-            public DataGridSelectionScope([CanBeNull] DataGrid dataGrid)
+            public DataGridSelectionScope(DataGrid? dataGrid)
             {
                 _dataGrid = dataGrid;
             }
@@ -85,8 +83,7 @@
             [NotNull]
             public IResourceScope Scope => this;
 
-            [CanBeNull]
-            public string FileName => null;
+            public string? FileName => null;
         }
     }
 }

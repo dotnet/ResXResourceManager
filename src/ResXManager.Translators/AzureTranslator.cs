@@ -111,15 +111,13 @@ namespace ResXManager.Translators
         }
 
         [DataMember(Name = "AuthenticationKey")]
-        [CanBeNull]
-        public string SerializedAuthenticationKey
+        public string? SerializedAuthenticationKey
         {
             get => SaveCredentials ? Credentials[0].Value : null;
             set => Credentials[0].Value = value;
         }
 
-        [CanBeNull]
-        private string AuthenticationKey => Credentials[0].Value;
+        private string? AuthenticationKey => Credentials[0].Value;
 
         private void ReturnResults([NotNull][ItemNotNull] IEnumerable<ITranslationItem> items, [NotNull][ItemNotNull] IEnumerable<AzureTranslationResponse> responses)
         {
@@ -128,6 +126,9 @@ namespace ResXManager.Translators
                 var response = tuple.Item2;
                 var translationItem = tuple.Item1;
                 var translations = response.Translations;
+                if (translations == null)
+                    continue;
+
                 foreach (var match in translations)
                 {
                     translationItem.Results.Add(new TranslationMatch(this, match.Text, Ranking));

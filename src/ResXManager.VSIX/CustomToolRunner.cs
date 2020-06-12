@@ -19,7 +19,7 @@
         [ItemNotNull]
         private HashSet<EnvDTE.ProjectItem> _projectItems = new HashSet<EnvDTE.ProjectItem>();
 
-        public void Enqueue([ItemNotNull][CanBeNull] IEnumerable<EnvDTE.ProjectItem> projectItems)
+        public void Enqueue([ItemNotNull] IEnumerable<EnvDTE.ProjectItem>? projectItems)
         {
             if (projectItems == null)
                 return;

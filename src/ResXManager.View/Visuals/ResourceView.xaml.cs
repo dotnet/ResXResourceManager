@@ -88,7 +88,7 @@
                 .Select(c => c.Culture)
                 .Where(c => c != null);
 
-            var languageSelection = new LanguageSelectionBoxViewModel(existingCultures);
+            var languageSelection = new LanguageSelectionBoxViewModel(existingCultures!);
 
             var window = Window.GetWindow(this);
 
@@ -231,20 +231,18 @@
 
         private class ExportParameters : IExportParameters
         {
-            public ExportParameters([CanBeNull] string fileName, [CanBeNull] IResourceScope scope)
+            public ExportParameters(string? fileName, IResourceScope? scope)
             {
                 FileName = fileName;
                 Scope = scope;
             }
 
-            [CanBeNull]
-            public IResourceScope Scope
+            public IResourceScope? Scope
             {
                 get;
             }
 
-            [CanBeNull]
-            public string FileName
+            public string? FileName
             {
                 get;
             }

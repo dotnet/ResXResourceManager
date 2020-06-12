@@ -15,12 +15,9 @@ namespace ResXManager.Scripting
     [Export(typeof(ISourceFilesProvider))]
     internal class SourceFilesProvider : ISourceFilesProvider, IFileFilter
     {
-        [CanBeNull]
-        private Regex _fileExclusionFilter;
-        [CanBeNull]
-        public string SolutionFolder { get; set; }
-        [CanBeNull]
-        public string ExclusionFilter { get; set; }
+        private Regex? _fileExclusionFilter;
+        public string? SolutionFolder { get; set; }
+        public string? ExclusionFilter { get; set; }
 
         public IList<ProjectFile> SourceFiles
         {
