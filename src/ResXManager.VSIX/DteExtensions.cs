@@ -125,7 +125,7 @@
         {
             try
             {
-                var textDocument = (EnvDTE.TextDocument)document?.Object(@"TextDocument");
+                var textDocument = document?.Object(@"TextDocument") as EnvDTE.TextDocument;
                 var text = textDocument?.CreateEditPoint().GetText(textDocument.EndPoint);
 
                 return text == null ? null : XDocument.Parse(text);

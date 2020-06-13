@@ -195,9 +195,9 @@
                 .Contains(project) ?? false;
         }
 
-        private static Selection? GetSelection([NotNull] Document document)
+        private static Selection? GetSelection(Document? document)
         {
-            var textDocument = (TextDocument)document.Object(@"TextDocument");
+            var textDocument = (TextDocument?)document?.Object(@"TextDocument");
 
             var topPoint = textDocument?.Selection?.TopPoint;
             if (topPoint == null)

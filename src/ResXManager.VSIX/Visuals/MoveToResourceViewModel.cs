@@ -219,7 +219,7 @@
             return (c == '_') || char.IsLetter(c);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator, UsedImplicitly]
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)

@@ -304,7 +304,7 @@
             {
                 var window = FindToolWindow();
 
-                var windowFrame = (IVsWindowFrame)window?.Frame;
+                var windowFrame = (IVsWindowFrame?)window?.Frame;
                 if (windowFrame == null)
                     throw new NotSupportedException(Resources.CanNotCreateWindow);
 

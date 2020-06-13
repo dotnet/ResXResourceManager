@@ -32,7 +32,7 @@
         [NotNull, ItemNotNull]
         public IEnumerable<string> ParsePatterns()
         {
-            if (string.IsNullOrEmpty(Patterns))
+            if (Patterns == null || string.IsNullOrEmpty(Patterns))
                 return Enumerable.Empty<string>();
 
             return Patterns.Split('|')

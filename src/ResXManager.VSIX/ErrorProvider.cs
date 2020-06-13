@@ -51,11 +51,10 @@
             };
 
             var tasks = _errorListProvider.Tasks;
-            Debug.Assert(tasks != null, nameof(tasks) + " != null");
             _tasks = tasks;
 
             var dte = (EnvDTE80.DTE2)serviceProvider.GetService(typeof(SDTE));
-            var events = (EnvDTE80.Events2)dte?.Events;
+            var events = dte?.Events as EnvDTE80.Events2;
             var buildEvents = events?.BuildEvents;
 
             _buildEvents = buildEvents;
