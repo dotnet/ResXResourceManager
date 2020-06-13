@@ -185,6 +185,7 @@
             var existingEntities = ResourceEntities.ToDictionary(entity => GenerateKey(entity.ProjectName, entity.BaseName, entity.DirectoryName), StringComparer.OrdinalIgnoreCase);
             var newEntities = new List<ResourceEntity>();
             var entitiesToUpdate = new List<Tuple<ResourceEntity, ProjectFile[]>>();
+            var duplicateKeyHandling = Configuration.DuplicateKeyHandling;
 
             void Load()
             {
@@ -218,7 +219,7 @@
                             }
                             else
                             {
-                                newEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles));
+                                newEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles, duplicateKeyHandling));
                             }
                         }
                     }
@@ -229,7 +230,7 @@
 
             ResourceEntities.RemoveRange(unmatchedEntities);
             ResourceEntities.AddRange(newEntities);
-            var hasChanged = entitiesToUpdate.Aggregate(false, (current, item) => current | item.Item1.Update(item.Item2));
+            var hasChanged = entitiesToUpdate.Aggregate(false, (current, item) => current | item.Item1.Update(item.Item2, duplicateKeyHandling));
 
             hasChanged |= unmatchedEntities.Any() || newEntities.Any();
 

@@ -18,16 +18,16 @@
     [VisualCompositionExport(RegionId.Shell)]
     public class ShellViewModel : ObservableObject
     {
-        [NotNull]
-        private readonly ResourceViewModel _resourceViewModel;
-
         [ImportingConstructor]
         public ShellViewModel([NotNull] ResourceViewModel resourceViewModel)
         {
-            _resourceViewModel = resourceViewModel;
+            ResourceViewModel = resourceViewModel;
 
             resourceViewModel.SelectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
         }
+
+        [NotNull]
+        public ResourceViewModel ResourceViewModel { get; }
 
         public bool IsLoading { get; set; }
 
@@ -39,7 +39,7 @@
 
             Dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
             {
-                _resourceViewModel.SelectEntry(entry);
+                ResourceViewModel.SelectEntry(entry);
             });
         }
 

@@ -66,9 +66,11 @@
         /// <param name="container">The containing resource entity.</param>
         /// <param name="cultureKey">The culture key.</param>
         /// <param name="file">The .resx file having all the localization.</param>
-        /// <exception cref="System.InvalidOperationException">
+        /// <param name="duplicateKeyHandling">The duplicate key handling.</param>
+        /// <exception cref="InvalidOperationException">
         /// </exception>
-        internal ResourceLanguage([NotNull] ResourceEntity container, [NotNull] CultureKey cultureKey, [NotNull] ProjectFile file)
+        /// <exception cref="System.InvalidOperationException"></exception>
+        internal ResourceLanguage([NotNull] ResourceEntity container, [NotNull] CultureKey cultureKey, [NotNull] ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
         {
             Container = container;
             CultureKey = cultureKey;
@@ -93,10 +95,10 @@
             _valueNodeName = defaultNamespace.GetName(@"value");
             _commentNodeName = defaultNamespace.GetName(@"comment");
 
-            UpdateNodes();
+            UpdateNodes(duplicateKeyHandling);
         }
 
-        private void UpdateNodes()
+        private void UpdateNodes(DuplicateKeyHandling duplicateKeyHandling)
         {
             var data = DocumentRoot.Elements(_dataNodeName);
 
@@ -106,7 +108,7 @@
                 .Where(item => !item.Key.StartsWith(WinFormsMemberNamePrefix, StringComparison.OrdinalIgnoreCase))
                 .ToArray();
 
-            if (_configuration.DuplicateKeyHandling == DuplicateKeyHandling.Rename)
+            if (duplicateKeyHandling == DuplicateKeyHandling.Rename)
             {
                 MakeKeysValid(elements);
             }
@@ -256,12 +258,12 @@
             }
         }
 
-        public void SortNodes(StringComparison stringComparison)
+        public void SortNodes(StringComparison stringComparison, DuplicateKeyHandling duplicateKeyHandling)
         {
             if (!SortDocument(stringComparison))
                 return;
 
-            UpdateNodes();
+            UpdateNodes(duplicateKeyHandling);
             Container.OnItemOrderChanged(this);
 
             ProjectFile.Changed(_document, true);
@@ -394,7 +396,7 @@
                 DocumentRoot.Add(entry);
             }
 
-            UpdateNodes();
+            UpdateNodes(_configuration.DuplicateKeyHandling);
 
             try
             {

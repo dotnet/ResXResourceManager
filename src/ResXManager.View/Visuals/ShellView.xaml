@@ -8,6 +8,7 @@
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:composition="urn:TomsToolbox.Composition"
              xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:toms="urn:TomsToolbox"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
              d:DataContext="{d:DesignInstance visuals:ShellViewModel}">
   <UserControl.Style>
@@ -105,6 +106,7 @@
         </Grid>
       </Border>
     </Grid>
+    <toms:LoadingIndicator IsActive="{Binding ResourceViewModel.IsLoading}" Header="Loading..." />
   </Grid>
 
 </UserControl>

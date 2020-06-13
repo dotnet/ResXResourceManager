@@ -38,7 +38,7 @@
             ResourceManager.ResourceEntities
                 .SelectMany(entity => entity.Languages)
                 .ToArray()
-                .ForEach(language => language.SortNodes(Configuration.ResXSortingComparison));
+                .ForEach(language => language.SortNodes(Configuration.ResXSortingComparison, Configuration.DuplicateKeyHandling));
         }
 
         public override string ToString()

@@ -148,7 +148,7 @@
             // Create the command for the solution explorer context menu
             CreateMenuCommand(mcs, PkgCmdIdList.cmdidMySolutionExplorerContextMenu, ShowSelectedResourceFiles).BeforeQueryStatus += SolutionExplorerContextMenuCommand_BeforeQueryStatus;
             // Create the command for the text editor context menu
-            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTextEditorContextMenu, MoveToResource).BeforeQueryStatus += TextEditorContextMenuCommand_BeforeQueryStatus;
+            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTextEditorContextMenu, MoveToResourceAsync).BeforeQueryStatus += TextEditorContextMenuCommand_BeforeQueryStatus;
         }
 
         protected override void Dispose(bool disposing)
@@ -389,7 +389,7 @@
             return entity.Languages.Any(lang => lang.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
         }
 
-        private async void MoveToResource(object? sender, EventArgs? e)
+        private async void MoveToResourceAsync(object? sender, EventArgs? e)
         {
             var entry = await ExportProvider.GetExportedValue<IRefactorings>().MoveToResourceAsync(Dte.ActiveDocument).ConfigureAwait(true);
             if (entry == null)
