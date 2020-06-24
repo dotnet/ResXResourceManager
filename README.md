@@ -1,6 +1,9 @@
 [<img src="https://raw.githubusercontent.com/dotnet-foundation/swag/master/logo/dotnetfoundation_v4.svg" alt=".NET Foundation" width=100>](https://dotnetfoundation.org)
 
-# ResX Resource Manager [![Build status](https://dev.azure.com/tom-englert/Open%20Source/_apis/build/status/ResXManager)](https://dev.azure.com/tom-englert/Open%20Source/_build/latest?definitionId=7) [![Backers on Open Collective](https://opencollective.com/ResXResourceManager/backers/badge.svg)](#backers)  [![Sponsors on Open Collective](https://opencollective.com/ResXResourceManager/sponsors/badge.svg)](#sponsors) 
+# ResX Resource Manager 
+[![Build Status](https://dev.azure.com/tom-englert/Open%20Source/_apis/build/status/ResXResourceManager?branchName=master)](https://dev.azure.com/tom-englert/Open%20Source/_build/latest?definitionId=35&branchName=master)
+[![Backers on Open Collective](https://opencollective.com/ResXResourceManager/backers/badge.svg)](#backers)
+[![Sponsors on Open Collective](https://opencollective.com/ResXResourceManager/sponsors/badge.svg)](#sponsors)
 
 The most popular tool to manage localization of all kind of applications with resx-based resources; one of the highest rated extensions on the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager).
 
