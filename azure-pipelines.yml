@@ -1,0 +1,71 @@
+name: $(Build.DefinitionName) $(date:yyyyMMdd)$(rev:.r)
+
+pool:
+  name: Default
+  demands:
+  - DotNetFramework
+  - msbuild
+  - visualstudio
+
+variables:
+  BuildPlatform: 'any cpu'
+  BuildConfiguration: 'release'
+
+steps:
+- task: PowerShell@1
+  displayName: 'Set build version'
+  inputs:
+    scriptType: inlineScript
+    inlineScript: |
+     (new-object Net.WebClient).DownloadString("https://raw.github.com/tom-englert/BuildScripts/master/BuildScripts.ps1") | iex
+     
+     Source-SetBuildVersion "src\version.cs" | Build-AppendVersionToBuildNumber
+     Vsix-SetBuildVersion "src\ResXManager.VSIX\source.extension.vsixmanifest"
+     Project-SetBuildVersion "src\ResXManager\ResXManager.csproj"
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+- task: VSBuild@1
+  displayName: 'Build solution **\*.sln'
+  inputs:
+    vsVersion: 16.0
+    msbuildArgs: '-restore'
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+    createLogFile: true
+
+- task: MSBuild@1
+  displayName: 'Publish ResxManager'
+  inputs:
+    solution: 'src\ResxManager\ResxManager.csproj'
+    platform: AnyCPU
+    configuration: release
+    msbuildArguments: '/target:publish'
+    logProjectEvents: true
+    createLogFile: true
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+  inputs:
+    SourceFolder: '$(build.sourcesdirectory)\src\Deploy'
+    Contents: '*.*'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+    CleanTargetFolder: true
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: Deploy'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+    ArtifactName: Deploy
+
+- task: PowerShell@1
+  displayName: 'Publish to vsix-gallery'
+  inputs:
+    scriptType: inlineScript
+    inlineScript: |
+     (new-object Net.WebClient).DownloadString("https://raw.github.com/tom-englert/BuildScripts/master/BuildScripts.ps1") | iex
+     
+     Vsix-PublishToGallery "$(build.artifactstagingdirectory)\ResXManager.Vsix.vsix"
+  continueOnError: true
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
