@@ -425,7 +425,7 @@ Als solches braucht es ihre Unterstützung, um es am Leben zu erhalten und weite
 &lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
 Der beste Weg, einen Beitrag zu leisten, ist mitzuhelfen &lt;Hyperlink NavigateUri = "https://github.com/dotnet/ResXResourceManager/issues"&gt; Fehler zu beheben oder neue Funktionen hinzuzufügen.&lt;/Hyperlink&gt;
 &lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
-Sie können aber auch mit einer &lt;Hyperlink NavigateUri = "https://github.com/dotnet/ResXResourceManager/Documentation/Topics/Donate.md"&gt;kleinen Spende&lt;/Hyperlink&gt; dazu Beitragen, dass der ResX&amp;#160;Resource&amp;#160;Manager ein großartiges Projekt bleibt, und Sie auch weiterhin bei Ihrer täglichen Arbeit unterstützen kann.
+Sie können aber auch mit einer &lt;Hyperlink NavigateUri = "https://github.com/dotnet/ResXResourceManager/blob/master/Documentation/Topics/Donate.md"&gt;kleinen Spende&lt;/Hyperlink&gt; dazu Beitragen, dass der ResX&amp;#160;Resource&amp;#160;Manager ein großartiges Projekt bleibt, und Sie auch weiterhin bei Ihrer täglichen Arbeit unterstützen kann.
 &lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
 Ihr ResXManager-Team.
 &lt;/TextBlock&gt;
