@@ -226,7 +226,12 @@
                 }
             }
 
+/*
+            Load();
+            await Task.Delay(1).ConfigureAwait(true); 
+/*/
             await Task.Run(Load).ConfigureAwait(true);
+//*/
 
             ResourceEntities.RemoveRange(unmatchedEntities);
             ResourceEntities.AddRange(newEntities);
