@@ -1,4 +1,7 @@
-﻿1.41
+﻿1.42
+- Fix #328: update broken links
+
+1.41
 - #191: Integration of DeepL translation service
 - Fix #272: Allow to specify ranking for each translator.
 - Fix #295: Do not treat invariant empty neutral strings as error.
