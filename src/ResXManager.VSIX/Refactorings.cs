@@ -111,7 +111,7 @@
                 entities.RemoveAll(item => !filter(item.ToString()));
             }
 
-            var projectResources = new HashSet<ResourceEntity>(GetResourceEntiesFromProject(document, entities));
+            var projectResources = new HashSet<ResourceEntity>(GetResourceEntriesFromProject(document, entities));
 
             // put resources from the same project on top
             entities.RemoveAll(entity => projectResources.Contains(entity));
@@ -158,7 +158,7 @@
         }
 
         [NotNull, ItemNotNull]
-        private static IEnumerable<ResourceEntity> GetResourceEntiesFromProject([NotNull] Document document, [NotNull][ItemNotNull] IEnumerable<ResourceEntity> entities)
+        private static IEnumerable<ResourceEntity> GetResourceEntriesFromProject([NotNull] Document document, [NotNull][ItemNotNull] IEnumerable<ResourceEntity> entities)
         {
             try
             {

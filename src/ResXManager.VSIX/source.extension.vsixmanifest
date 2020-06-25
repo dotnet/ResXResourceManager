@@ -8,8 +8,8 @@
         <License>License</License>
         <GettingStartedGuide>https://github.com/dotnet/ResXResourceManager/blob/master/Documentation/Readme.md</GettingStartedGuide>
         <ReleaseNotes>https://github.com/dotnet/ResXResourceManager/blob/master/Release%20notes.md</ReleaseNotes>
-        <Icon>32x32.png</Icon>
-        <PreviewImage>200x200.png</PreviewImage>
+        <Icon>96x96.png</Icon>
+        <PreviewImage>96x96.png</PreviewImage>
         <Tags>WPF, WinForms, resx, resources, Editor, localization, Productivity, Visual Studio, internationalization, string, resource</Tags>
     </Metadata>
     <Installation InstalledByMsi="false">

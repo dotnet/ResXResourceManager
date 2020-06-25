@@ -21,7 +21,9 @@
 
         [ImportingConstructor]
         // ReSharper disable once NotNullMemberIsNotInitialized
+#pragma warning disable 8618
         public DteConfiguration([NotNull] DteSolution solution, [NotNull] ITracer tracer)
+#pragma warning restore 8618
             : base(tracer)
         {
             _solution = solution;
