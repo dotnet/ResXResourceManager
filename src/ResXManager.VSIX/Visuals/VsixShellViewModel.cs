@@ -42,6 +42,8 @@
         {
             get
             {
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
                 var items = SelectedItemsCodeGenerators().ToArray();
                 var generator = items.FirstOrDefault();
 
@@ -54,6 +56,8 @@
 
         public void SelectEntry([NotNull] ResourceTableEntry entry)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             VsPackage.Instance.ShowToolWindow();
 
             Dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
@@ -65,6 +69,8 @@
         [NotNull]
         private IEnumerable<CodeGenerator> SelectedItemsCodeGenerators()
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             return _resourceViewModel.SelectedEntities
                 .Select(x => x.NeutralProjectFile)
                 .OfType<DteProjectFile>()
@@ -74,11 +80,15 @@
 
         private bool CanSetCodeProvider(CodeGenerator obj)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             return SelectedItemsCodeGenerators().All(g => g != CodeGenerator.None);
         }
 
         private void SetCodeProvider(CodeGenerator codeGenerator)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             _resourceViewModel.SelectedEntities
                 .Select(x => x.NeutralProjectFile)
                 .OfType<DteProjectFile>()

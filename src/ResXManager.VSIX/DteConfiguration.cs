@@ -43,16 +43,27 @@
 
         public override bool IsScopeSupported => true;
 
-        public override ConfigurationScope Scope => _solution.Globals != null ? ConfigurationScope.Solution : ConfigurationScope.Global;
+        public override ConfigurationScope Scope
+        {
+            get
+            {
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                return _solution.Globals != null ? ConfigurationScope.Solution : ConfigurationScope.Global;
+            }
+        }
 
         [CanBeNull]
         protected override T InternalGetValue<T>([CanBeNull] T defaultValue, string key)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             return TryGetValue(GetKey(key), defaultValue, out var value) ? value : base.InternalGetValue(defaultValue, key);
         }
 
         protected override void InternalSetValue<T>([CanBeNull] T value, string key)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var globals = _solution.Globals;
 
             if (globals != null)
@@ -67,6 +78,8 @@
 
         private bool TryGetValue<T>(string? key, [CanBeNull] T defaultValue, [CanBeNull] out T value)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             value = defaultValue;
 
             return TryGetValue(_solution.Globals, key, ref value);
@@ -74,6 +87,8 @@
 
         private static bool TryGetValue<T>(EnvDTE.Globals? globals, string? key, [CanBeNull] ref T value)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 if ((globals != null) && globals.VariableExists[key])
@@ -92,6 +107,8 @@
 
         private void TrySetValue<T>([NotNull] EnvDTE.Globals globals, string? internalKey, [CanBeNull] T value)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 globals[internalKey] = ConvertToString(value);

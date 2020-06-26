@@ -148,7 +148,7 @@
             // Create the command for the solution explorer context menu
             CreateMenuCommand(mcs, PkgCmdIdList.cmdidMySolutionExplorerContextMenu, ShowSelectedResourceFiles).BeforeQueryStatus += SolutionExplorerContextMenuCommand_BeforeQueryStatus;
             // Create the command for the text editor context menu
-            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTextEditorContextMenu, MoveToResourceAsync).BeforeQueryStatus += TextEditorContextMenuCommand_BeforeQueryStatus;
+            CreateMenuCommand(mcs, PkgCmdIdList.cmdidMyTextEditorContextMenu, MoveToResource).BeforeQueryStatus += TextEditorContextMenuCommand_BeforeQueryStatus;
         }
 
         protected override void Dispose(bool disposing)
@@ -282,6 +282,8 @@
 
         private void ShowToolWindow(object? sender, EventArgs? e)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             ShowToolWindow();
         }
 
@@ -300,6 +302,8 @@
 
         internal bool ShowToolWindow()
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 var window = FindToolWindow();
@@ -321,6 +325,8 @@
 
         private void ShowSelectedResourceFiles(object? sender, EventArgs? e)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var selectedResourceEntities = GetSelectedResourceEntities()?.Distinct().ToArray();
             if (selectedResourceEntities == null)
                 return;
@@ -339,6 +345,8 @@
 
         private void SolutionExplorerContextMenuCommand_BeforeQueryStatus(object? sender, EventArgs? e)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             if (!(sender is OleMenuCommand menuCommand))
                 return;
 
@@ -349,10 +357,13 @@
         [ItemNotNull]
         private IEnumerable<ResourceEntity>? GetSelectedResourceEntities()
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
 
-            // ReSharper disable once AssignNullToNotNullAttribute
-            var selection = monitorSelection.GetSelectedProjectItems();
+            var selection = monitorSelection?.GetSelectedProjectItems();
+            if (selection == null)
+                return null;
 
             var entities = selection
                 .Select(item => item.GetMkDocument())
@@ -367,6 +378,8 @@
         [ItemNotNull]
         private IEnumerable<ResourceEntity> GetSelectedResourceEntities(string? fileName)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             if (string.IsNullOrEmpty(fileName))
                 return Enumerable.Empty<ResourceEntity>();
 
@@ -379,6 +392,8 @@
 
         private static bool ContainsChildOfWinFormsDesignerItem([NotNull] ResourceEntity entity, string? fileName)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             return entity.Languages.Select(lang => lang.ProjectFile)
                 .OfType<DteProjectFile>()
                 .Any(projectFile => string.Equals(projectFile.ParentItem?.TryGetFileName(), fileName, StringComparison.OrdinalIgnoreCase) && projectFile.IsWinFormsDesignerResource);
@@ -389,16 +404,30 @@
             return entity.Languages.Any(lang => lang.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
         }
 
-        private async void MoveToResourceAsync(object? sender, EventArgs? e)
+#pragma warning disable VSTHRD100 // Avoid async void methods
+        private async void MoveToResource(object? sender, EventArgs? e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
-            var entry = await ExportProvider.GetExportedValue<IRefactorings>().MoveToResourceAsync(Dte.ActiveDocument).ConfigureAwait(true);
-            if (entry == null)
-                return;
+            if (!Microsoft.VisualStudio.Shell.ThreadHelper.CheckAccess())
+            {
+                await Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            }
 
-            if (!Properties.Settings.Default.MoveToResourceOpenInResXManager)
-                return;
+            try
+            {
+                var entry = await ExportProvider.GetExportedValue<IRefactorings>().MoveToResourceAsync(Dte.ActiveDocument).ConfigureAwait(true);
+                if (entry == null)
+                    return;
 
-            ExportProvider.GetExportedValue<VsixShellViewModel>().SelectEntry(entry);
+                if (!Properties.Settings.Default.MoveToResourceOpenInResXManager)
+                    return;
+
+                ExportProvider.GetExportedValue<VsixShellViewModel>().SelectEntry(entry);
+            }
+            catch (Exception ex)
+            {
+                Tracer.TraceError(ex.ToString());
+            }
         }
 
         private void TextEditorContextMenuCommand_BeforeQueryStatus(object? sender, EventArgs? e)
@@ -446,6 +475,8 @@
 
         private void DocumentEvents_DocumentOpened(EnvDTE.Document? document)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             //using (PerformanceTracer.Start("DTE event: Document opened"))
             {
                 if (!AffectsResourceFile(document))
@@ -457,6 +488,8 @@
 
         private void DocumentEvents_DocumentSaved([NotNull] EnvDTE.Document document)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             //using (PerformanceTracer.Start("DTE event: Document saved"))
             {
                 if (!AffectsResourceFile(document))
@@ -471,9 +504,11 @@
                 // extract some localization information.
                 // => find the resource entity that contains the document and run the custom tool on the neutral project file.
 
+#pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
                 bool Predicate(ResourceEntity e) => e.Languages.Select(lang => lang.ProjectFile)
                     .OfType<DteProjectFile>()
                     .Any(projectFile => projectFile.ProjectItems.Any(p => p.Document == document));
+#pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
 
                 var entity = resourceManager.ResourceEntities.FirstOrDefault(Predicate);
 
@@ -503,6 +538,8 @@
 
         private static bool AffectsResourceFile(EnvDTE.Document? document)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             if (document == null)
                 return false;
 
@@ -521,9 +558,18 @@
         }
 
         [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.ContextIdle)]
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void ReloadSolution()
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
-            await ExportProvider.GetExportedValue<ResourceViewModel>().ReloadAsync().ConfigureAwait(false);
+            try
+            {
+                await ExportProvider.GetExportedValue<ResourceViewModel>().ReloadAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Tracer.TraceError(ex.ToString());
+            }
         }
 
         private class LoaderMessages

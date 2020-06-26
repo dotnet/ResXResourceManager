@@ -279,7 +279,7 @@
         private bool SortAndAdd(StringComparison stringComparison, XElement? newNode)
         {
             var comparer = new DelegateComparer<string>((left, right) => string.Compare(left, right, stringComparison));
-            string GetName(XElement node) => node.Attribute(_nameAttributeName)?.Value.TrimStart('>') ?? string.Empty;
+            static string GetName(XElement node) => node.Attribute(_nameAttributeName)?.Value.TrimStart('>') ?? string.Empty;
 
             var nodes = DocumentRoot
                 .Elements(_dataNodeName)

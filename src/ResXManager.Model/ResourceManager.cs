@@ -50,7 +50,7 @@
             TableEntries = ResourceEntities.ObservableSelectMany(entity => entity.Entries);
         }
 
-        public IList<ProjectFile> AllSourceFiles { get; private set; }
+        public IList<ProjectFile> AllSourceFiles { get; private set; } = Array.Empty<ProjectFile>();
 
         /// <summary>
         /// Loads all resources from the specified project files.
@@ -176,7 +176,7 @@
 
         private async Task<bool> LoadEntitiesAsync([NotNull] [ItemNotNull] ICollection<IGrouping<string, ProjectFile>> fileNamesByDirectory, CancellationToken? cancellationToken)
         {
-            string GenerateKey(string projectName, string baseName, string directoryName)
+            static string GenerateKey(string projectName, string baseName, string directoryName)
             {
                 return string.Join("|", projectName, baseName, directoryName);
             }

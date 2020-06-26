@@ -35,19 +35,31 @@
         {
             using (_performanceTracer.Start("Enumerate source files"))
             {
+#pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
                 return await Task.FromResult(DteSourceFiles.ToList().AsReadOnly()).ConfigureAwait(false);
+#pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
             }
         }
 
         public void Invalidate() => Solution.Invalidate();
 
+        /// <summary>
+        /// Gets the solution folder.
+        /// </summary>
+        /// <value>
+        /// The solution folder.
+        /// </value>
+#pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
         public string? SolutionFolder => Solution.SolutionFolder;
+#pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
 
         [NotNull, ItemNotNull]
         private IEnumerable<ProjectFile> DteSourceFiles
         {
             get
             {
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
                 var fileFilter = new FileFilter(_configuration);
 
                 return GetProjectFiles(fileFilter);
@@ -57,6 +69,8 @@
         [NotNull, ItemNotNull]
         private IEnumerable<ProjectFile> GetProjectFiles(IFileFilter fileFilter)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             return Solution.GetProjectFiles(fileFilter);
         }
 

@@ -118,6 +118,8 @@
 
         private void ContentWrapper_Loaded(object sender, RoutedEventArgs e)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 var view = _exportProvider.GetExportedValue<VsixShellView>();
@@ -143,6 +145,8 @@
         {
             get
             {
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
                 var dte = (EnvDTE.DTE)GetService(typeof(EnvDTE.DTE));
                 return dte;
             }
@@ -184,6 +188,8 @@
 
         private void ResourceManager_BeginEditing(object? sender, [NotNull] ResourceBeginEditingEventArgs e)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             if (!CanEdit(e.Entity, e.CultureKey))
             {
                 e.Cancel = true;
@@ -192,6 +198,8 @@
 
         private bool CanEdit([NotNull] ResourceEntity entity, CultureKey? cultureKey)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var languages = entity.Languages.Where(lang => (cultureKey == null) || cultureKey.Equals(lang.CultureKey)).ToArray();
 
             if (!languages.Any())
@@ -252,6 +260,8 @@
         {
             try
             {
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
                 window?.Activate();
             }
             catch
@@ -266,6 +276,9 @@
         {
             try
             {
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
+#pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
                 var openDocuments = Dte.Windows?
                     .OfType<EnvDTE.Window>()
                     .Where(window => window.Visible && (window.Document != null))
@@ -278,6 +291,7 @@
                             let window = documents?.Select(doc => openDocuments?.GetValueOrDefault(doc)).FirstOrDefault(win => win != null)
                             where window != null
                             select Tuple.Create(file, window);
+#pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
 
                 return items.ToArray();
             }
@@ -289,6 +303,8 @@
 
         private bool QueryEditFiles([NotNull] [ItemNotNull] string[] lockedFiles)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var service = (IVsQueryEditQuerySave2)GetService(typeof(SVsQueryEditQuerySave));
             if (service != null)
             {
@@ -313,6 +329,8 @@
 
         private bool AddLanguage([NotNull] ResourceEntity entity, [NotNull] CultureInfo culture)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var resourceLanguages = entity.Languages;
             if (!resourceLanguages.Any())
                 return false;
@@ -344,7 +362,9 @@
 
         private void AddProjectItems([NotNull] ResourceEntity entity, [NotNull] ResourceLanguage neutralLanguage, [NotNull] string languageFileName)
         {
-            DteProjectFile projectFile = null;
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
+            DteProjectFile? projectFile = null;
 
             var projectItems = (neutralLanguage.ProjectFile as DteProjectFile)?.ProjectItems;
             if (projectItems == null)
@@ -361,7 +381,9 @@
                 var projectName = containingProject.Name;
                 if (projectFile == null)
                 {
-                    projectFile = new DteProjectFile(_exportProvider.GetExportedValue<DteSolution>(), languageFileName, projectName, containingProject.UniqueName, projectItem);
+                    var solution = _exportProvider.GetExportedValue<DteSolution>();
+
+                    projectFile = new DteProjectFile(solution, solution.SolutionFolder, languageFileName, projectName, containingProject.UniqueName, projectItem);
                 }
                 else
                 {

@@ -128,10 +128,12 @@
         [NotNull]
         private static string GetLocalNamespace(ProjectItem? resxItem)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 var resxPath = resxItem?.TryGetFileName();
-                if (resxPath == null)
+                if (resxItem == null || resxPath == null)
                     return string.Empty;
 
                 var resxFolder = Path.GetDirectoryName(resxPath);
@@ -167,6 +169,8 @@
         [NotNull]
         private string EvaluatePattern([NotNull] string pattern)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var entity = ReuseExisiting ? SelectedResourceEntry?.Container : SelectedResourceEntity;
             var key = ReuseExisiting ? SelectedResourceEntry?.Key : Key;
             var localNamespace = GetLocalNamespace((entity?.NeutralProjectFile as DteProjectFile)?.DefaultProjectItem);
@@ -221,8 +225,8 @@
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        [NotifyPropertyChangedInvocator, UsedImplicitly]
-        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        [NotifyPropertyChangedInvocator]
+        public void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             Update();

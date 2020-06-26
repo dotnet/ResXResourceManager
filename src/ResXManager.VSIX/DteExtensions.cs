@@ -7,7 +7,6 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows;
-    using System.Xml.Linq;
 
     using JetBrains.Annotations;
 
@@ -20,6 +19,8 @@
     {
         public static EnvDTE.Document? TryGetDocument(this EnvDTE.ProjectItem? projectItem)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 if (projectItem?.IsOpen != true)
@@ -34,20 +35,10 @@
             }
         }
 
-        public static XDocument? TryGetContent([NotNull] this EnvDTE.ProjectItem projectItem)
-        {
-            try
-            {
-                return !projectItem.IsOpen ? null : TryGetContent(projectItem.TryGetDocument());
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
         public static bool GetIsOpen([NotNull] this EnvDTE.ProjectItem projectItem)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 return projectItem.IsOpen;
@@ -61,6 +52,8 @@
         [NotNull]
         public static ICollection<VSITEMSELECTION> GetSelectedProjectItems([NotNull] this IVsMonitorSelection monitorSelection)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var hierarchyPtr = IntPtr.Zero;
             var selectionContainerPtr = IntPtr.Zero;
 
@@ -103,12 +96,13 @@
 
         public static string? GetMkDocument(this VSITEMSELECTION selection)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 // ReSharper disable once SuspiciousTypeConversion.Global
-                var vsProject = selection.pHier as IVsProject;
 
-                if (vsProject == null)
+                if (!(selection.pHier is IVsProject vsProject))
                     return null;
 
                 vsProject.GetMkDocument(selection.itemid, out var itemFullPath);
@@ -118,46 +112,6 @@
             catch (Exception)
             {
                 return null;
-            }
-        }
-
-        private static XDocument? TryGetContent(EnvDTE.Document? document)
-        {
-            try
-            {
-                var textDocument = document?.Object(@"TextDocument") as EnvDTE.TextDocument;
-                var text = textDocument?.CreateEditPoint().GetText(textDocument.EndPoint);
-
-                return text == null ? null : XDocument.Parse(text);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        public static bool TrySetContent([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] XDocument value)
-        {
-            return projectItem.IsOpen && TrySetContent(projectItem.TryGetDocument(), value);
-        }
-
-        private static bool TrySetContent(EnvDTE.Document? document, [NotNull] XDocument value)
-        {
-            try
-            {
-                var textDocument = (EnvDTE.TextDocument)document?.Object(@"TextDocument");
-                if (textDocument == null)
-                    return false;
-
-                var text = value.Declaration + Environment.NewLine + value;
-
-                textDocument.CreateEditPoint().ReplaceText(textDocument.EndPoint, text, 0);
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
             }
         }
 
@@ -202,6 +156,8 @@
 
         public static void SetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName, object? value)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var item = projectItem.Properties?.Item(propertyName);
             if (item != null)
                 item.Value = value;
@@ -209,12 +165,16 @@
 
         public static object? GetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
+#pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
                 return projectItem.Properties?.OfType<EnvDTE.Property>()
                     .Where(p => p.Name == propertyName)
                     .Select(p => p.Value)
                     .FirstOrDefault();
+#pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
             }
             catch
             {
@@ -222,9 +182,10 @@
             }
         }
 
-
         public static void RunCustomTool([NotNull] this EnvDTE.ProjectItem projectItem)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 var vsProjectItem = projectItem.Object as VSLangProj.VSProjectItem;
@@ -239,16 +200,22 @@
 
         public static void SetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem, string? value)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             SetProperty(projectItem, @"CustomTool", value);
         }
 
         public static string? GetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             return GetProperty(projectItem, @"CustomTool") as string;
         }
 
         public static EnvDTE.ProjectItem? AddFromFile([NotNull] this EnvDTE.ProjectItem projectItem, string? fileName)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 return projectItem.ProjectItems?.AddFromFile(fileName);
@@ -261,6 +228,8 @@
 
         public static EnvDTE.ProjectItem? AddFromFile([NotNull] this EnvDTE.Project project, string? fileName)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 return project.ProjectItems?.AddFromFile(fileName);
@@ -277,6 +246,8 @@
             const string CATEGORY_FONTS_AND_COLORS = "FontsAndColors";
             const string PAGE_TEXT_EDITOR = "TextEditor";
             const string PROPERTY_FONT_SIZE = "FontSize";
+
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
@@ -298,6 +269,8 @@
 
         public static string? TryGetFileName([NotNull] this EnvDTE.ProjectItem projectItem)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 if (string.Equals(projectItem.Kind, ItemKind.PhysicalFile, StringComparison.OrdinalIgnoreCase))

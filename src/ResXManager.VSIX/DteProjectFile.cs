@@ -5,8 +5,6 @@
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
-    using System.Threading.Tasks;
-    using System.Xml.Linq;
 
     using JetBrains.Annotations;
 
@@ -20,6 +18,7 @@
 
         [NotNull]
         private readonly DteSolution _solution;
+
         [NotNull]
         [ItemNotNull]
         private readonly List<EnvDTE.ProjectItem> _projectItems = new List<EnvDTE.ProjectItem>();
@@ -28,13 +27,16 @@
         /// Initializes a new instance of the <see cref="DteProjectFile" /> class.
         /// </summary>
         /// <param name="solution">The solution.</param>
+        /// <param name="solutionFolder">The solution folder.</param>
         /// <param name="filePath">Name of the file.</param>
         /// <param name="projectName">Name of the project.</param>
         /// <param name="uniqueProjectName">Unique name of the project file.</param>
         /// <param name="projectItem">The project item, or null if the projectItem is not known.</param>
-        public DteProjectFile([NotNull] DteSolution solution, [NotNull] string filePath, string? projectName, string? uniqueProjectName, [NotNull] EnvDTE.ProjectItem projectItem)
-            : base(filePath, solution.SolutionFolder, projectName, uniqueProjectName)
+        public DteProjectFile([NotNull] DteSolution solution, string solutionFolder, [NotNull] string filePath, string? projectName, string? uniqueProjectName, [NotNull] EnvDTE.ProjectItem projectItem)
+            : base(filePath, solutionFolder, projectName, uniqueProjectName)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             _solution = solution;
             _projectItems.Add(projectItem);
         }
@@ -51,72 +53,22 @@
             ProjectName += @", " + projectName;
         }
 
-        protected override XDocument InternalLoad()
-        {
-            var projectItem = DefaultProjectItem;
-
-            try
-            {
-                return projectItem.TryGetContent() ?? base.InternalLoad();
-            }
-            catch (IOException)
-            {
-                // The file does not exist locally, but VS may download it when we call projectItem.Open()
-            }
-
-            projectItem.Open();
-            return projectItem.TryGetContent() ?? new XDocument();
-        }
-
-        protected override void InternalChanged(XDocument document, bool willSaveImmediately)
-        {
-            var projectItem = DefaultProjectItem;
-
-            try
-            {
-                if (!willSaveImmediately)
-                    projectItem.Open();
-
-                if (projectItem.TrySetContent(document))
-                {
-                    HasChanges = !projectItem.Document?.Saved ?? false;
-                    return;
-                }
-            }
-            catch
-            {
-                // in case of errors write directly to the file...
-            }
-
-            base.InternalChanged(document, willSaveImmediately);
-        }
-
-        protected override void InternalSave(XDocument document)
-        {
-            var projectItem = DefaultProjectItem;
-
-            try
-            {
-                if (projectItem.Document?.Save() == EnvDTE.vsSaveStatus.vsSaveSucceeded)
-                    return;
-            }
-            catch
-            {
-                // in case of errors write directly to the file...
-            }
-
-            base.InternalSave(document);
-        }
-
-        public override bool IsWritable => !DefaultProjectItem.TryGetDocument()?.ReadOnly ?? base.IsWritable;
-
         public CodeGenerator CodeGenerator
         {
-            get => GetCodeGenerator();
+            get
+            {
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
+                return GetCodeGenerator();
+            }
             set
             {
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
                 if (GetCodeGenerator() != value)
+                {
                     SetCodeGenerator(value);
+                }
 
                 OnPropertyChanged();
             }
@@ -136,6 +88,8 @@
         {
             get
             {
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
                 try
                 {
                     return DefaultProjectItem.Collection?.Parent as EnvDTE.ProjectItem;
@@ -151,6 +105,8 @@
         {
             get
             {
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
                 try
                 {
                     var projectItem = DefaultProjectItem;
@@ -172,6 +128,8 @@
 
         private CodeGenerator GetCodeGenerator()
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 var projectItem = DefaultProjectItem;
@@ -201,6 +159,8 @@
 
         private void SetCodeGenerator(CodeGenerator value)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 foreach (var projectItem in ProjectItems)
@@ -230,6 +190,8 @@
 
         private static bool IsTextTemplate([NotNull] EnvDTE.ProjectItem item)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var name = item.Name;
 
             return (name != null) && name.EndsWith(@".tt", StringComparison.OrdinalIgnoreCase);
@@ -237,6 +199,8 @@
 
         private void SetTextTemplateCodeGenerator([NotNull] EnvDTE.ProjectItem projectItem)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             projectItem.SetCustomTool(null);
 
             if (_solution.GetCachedProjectFiles()?.Any(file => file.RelativeFilePath.Equals(T4FileName, StringComparison.OrdinalIgnoreCase)) != true)
@@ -262,15 +226,19 @@
 
             item.SetProperty(@"BuildAction", 0);
 
-            new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext()).StartNew(() => item.RunCustomTool());
+            item.RunCustomTool();
         }
 
         private static void SetCustomToolCodeGenerator([NotNull] EnvDTE.ProjectItem projectItem, CodeGenerator value)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
+#pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
             projectItem.Children()
                 .Where(IsTextTemplate)
                 .ToArray()
                 .ForEach(i => i.Delete());
+#pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
 
             projectItem.SetCustomTool(value.ToString());
         }

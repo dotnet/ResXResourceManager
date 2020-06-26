@@ -141,6 +141,8 @@
 
         private void Task_Navigate(object sender, EventArgs e)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var task = (ResourceErrorTask)sender;
             var entry = task.Entry;
 

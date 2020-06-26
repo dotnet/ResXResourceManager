@@ -23,6 +23,8 @@
 
         private void LogMessageToOutputWindow(string? value)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             if (!(_serviceProvider.GetService(typeof(SVsOutputWindow)) is IVsOutputWindow outputWindow))
                 return;
 
@@ -37,6 +39,8 @@
             pane?.OutputString(value);
         }
 
+#pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
+
         public void TraceError(string value)
         {
             WriteLine(string.Concat(Resources.Error, @" ", value));
@@ -47,9 +51,16 @@
             WriteLine(string.Concat(Resources.Warning, @" ", value));
         }
 
-        public void WriteLine(string value)
+        public async void WriteLine(string value)
         {
+            if (!Microsoft.VisualStudio.Shell.ThreadHelper.CheckAccess())
+            {
+                await Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            }
+
             LogMessageToOutputWindow(value + Environment.NewLine);
         }
+
+#pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
     }
 }

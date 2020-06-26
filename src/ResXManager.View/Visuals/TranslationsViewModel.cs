@@ -212,12 +212,12 @@
                         }))
                 .ToArray();
 
-            bool HasTranslation(string value) => !string.IsNullOrWhiteSpace(value) && !string.Equals(value, translationPrefix, StringComparison.Ordinal);
+            bool HasTranslation(string? value) => !string.IsNullOrWhiteSpace(value) && !string.Equals(value, translationPrefix, StringComparison.Ordinal);
 
             // #3: all entries with no target
             var itemsToTranslate = allEntries.AsParallel()
                 .Where(item => !HasTranslation(item.Target) && !item.Entry.IsItemInvariant.GetValue(item.TargetCulture))
-                .Select(item => new TranslationItem(item.Entry, item.Source, item.TargetCulture))
+                .Select(item => new TranslationItem(item.Entry, item.Source!, item.TargetCulture))
                 .ToArray();
 
             // #4: apply existing translations

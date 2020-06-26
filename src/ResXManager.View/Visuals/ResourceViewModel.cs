@@ -33,7 +33,7 @@
 
     [Export]
     [VisualCompositionExport(RegionId.Content, Sequence = 1)]
-    public class ResourceViewModel : ObservableObject
+    public sealed class ResourceViewModel : ObservableObject, IDisposable
     {
         [NotNull]
         private readonly Configuration _configuration;
@@ -522,9 +522,10 @@
 
         private async Task ReloadAsync(bool forceFindCodeReferences)
         {
-            _loadingCancellationTokenSource?.Cancel();
-            var cancellationTokenSource = _loadingCancellationTokenSource = new CancellationTokenSource();
+            var cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = cancellationTokenSource.Token;
+
+            Interlocked.Exchange(ref _loadingCancellationTokenSource, cancellationTokenSource)?.Cancel();
 
             try
             {
@@ -609,6 +610,7 @@
                 catch (Exception ex)
                 {
                     _tracer.TraceError(ex.ToString());
+
                     MessageBox.Show(ex.Message, Resources.Title);
                 }
             });
@@ -623,6 +625,11 @@
         public override string ToString()
         {
             return Resources.ShellTabHeader_Main;
+        }
+
+        public void Dispose()
+        {
+            Interlocked.Exchange(ref _loadingCancellationTokenSource, null)?.Dispose();
         }
     }
 }

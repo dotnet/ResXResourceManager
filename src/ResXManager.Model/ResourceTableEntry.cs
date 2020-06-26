@@ -72,16 +72,16 @@
 
             _languages = languages;
 
-            Values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(Key)!, (lang, value) => lang.SetValue(Key, value));
+            Values = new ResourceTableValues<string?>(_languages, lang => lang.GetValue(Key)!, (lang, value) => lang.SetValue(Key, value));
             Values.ValueChanged += Values_ValueChanged;
 
-            Comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(Key)!, (lang, value) => lang.SetComment(Key, value));
+            Comments = new ResourceTableValues<string?>(_languages, lang => lang.GetComment(Key)!, (lang, value) => lang.SetComment(Key, value));
             Comments.ValueChanged += Comments_ValueChanged;
 
             FileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
 
-            SnapshotValues = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text!, (lang, value) => false);
-            SnapshotComments = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment!, (lang, value) => false);
+            SnapshotValues = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text!, (lang, value) => false);
+            SnapshotComments = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment!, (lang, value) => false);
 
             ValueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
             CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
@@ -94,17 +94,17 @@
         private void ResetTableValues()
         {
             Values.ValueChanged -= Values_ValueChanged;
-            Values = new ResourceTableValues<string>(_languages, lang => lang.GetValue(Key)!, (lang, value) => lang.SetValue(Key, value));
+            Values = new ResourceTableValues<string?>(_languages, lang => lang.GetValue(Key)!, (lang, value) => lang.SetValue(Key, value));
             Values.ValueChanged += Values_ValueChanged;
 
             Comments.ValueChanged -= Comments_ValueChanged;
-            Comments = new ResourceTableValues<string>(_languages, lang => lang.GetComment(Key)!, (lang, value) => lang.SetComment(Key, value));
+            Comments = new ResourceTableValues<string?>(_languages, lang => lang.GetComment(Key)!, (lang, value) => lang.SetComment(Key, value));
             Comments.ValueChanged += Comments_ValueChanged;
 
             FileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
 
-            SnapshotValues = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text!, (lang, value) => false);
-            SnapshotComments = new ResourceTableValues<string>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment!, (lang, value) => false);
+            SnapshotValues = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text!, (lang, value) => false);
+            SnapshotComments = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment!, (lang, value) => false);
 
             ValueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
             CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
@@ -180,24 +180,24 @@
         /// </summary>
         [NotNull]
         [ItemNotNull]
-        public ResourceTableValues<string> Values { get; private set; }
+        public ResourceTableValues<string?> Values { get; private set; }
 
         /// <summary>
         /// Gets the localized comments.
         /// </summary>
         [NotNull]
         [ItemNotNull]
-        public ResourceTableValues<string> Comments { get; private set; }
+        public ResourceTableValues<string?> Comments { get; private set; }
 
         [DependsOn(nameof(Snapshot))]
         [NotNull]
         [ItemNotNull]
-        public ResourceTableValues<string> SnapshotValues { get; private set; }
+        public ResourceTableValues<string?> SnapshotValues { get; private set; }
 
         [DependsOn(nameof(Snapshot))]
         [NotNull]
         [ItemNotNull]
-        public ResourceTableValues<string> SnapshotComments { get; private set; }
+        public ResourceTableValues<string?> SnapshotComments { get; private set; }
 
         [NotNull]
         [ItemNotNull]
@@ -227,7 +227,7 @@
         [ItemNotNull]
         private ISet<string> MutedRuleIds
         {
-            get => _mutedRuleIds ?? (_mutedRuleIds = new HashSet<string>(GetMutedRuleIds(CultureKey.Neutral), StringComparer.OrdinalIgnoreCase));
+            get => _mutedRuleIds ??= new HashSet<string>(GetMutedRuleIds(CultureKey.Neutral), StringComparer.OrdinalIgnoreCase);
         }
 
         [NotNull]
@@ -460,7 +460,7 @@
                 if (string.IsNullOrEmpty(neutralValue))
                     return false;
 
-                if (Rules.CompliesToRules(MutedRuleIds, neutralValue!, value, out var ruleMessages))
+                if (Rules.CompliesToRules(MutedRuleIds, neutralValue, value, out var ruleMessages))
                     return false;
 
                 errorMessage = GetErrorPrefix(culture) + string.Join(" ", ruleMessages);
@@ -523,7 +523,7 @@
             if (string.IsNullOrEmpty(neutralValue))
                 yield break;
 
-            if (Rules.CompliesToRules(MutedRuleIds, neutralValue!, value!, out var ruleMessages))
+            if (Rules.CompliesToRules(MutedRuleIds, neutralValue, value, out var ruleMessages))
                 yield break;
 
             foreach (var message in ruleMessages)

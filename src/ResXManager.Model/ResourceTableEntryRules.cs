@@ -89,7 +89,7 @@
             return rules.AsReadOnly();
         }
 
-        internal bool CompliesToRules([NotNull] [ItemNotNull] ICollection<string> mutedRuleIds, string reference, string value, out IList<string> messages)
+        internal bool CompliesToRules([NotNull] [ItemNotNull] ICollection<string> mutedRuleIds, string? reference, string? value, out IList<string> messages)
         {
             return CompliesToRules(mutedRuleIds, reference, new[] { value }, out messages);
         }

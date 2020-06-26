@@ -40,6 +40,8 @@
         [NotNull, ItemNotNull]
         public IEnumerable<ProjectFile> GetProjectFiles([NotNull] IFileFilter fileFilter)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             return _projectFiles ??= EnumerateProjectFiles(fileFilter) ?? new DirectoryInfo(SolutionFolder).GetAllSourceFiles(fileFilter, null);
         }
 
@@ -52,12 +54,16 @@
         [ItemNotNull]
         private IEnumerable<ProjectFile>? EnumerateProjectFiles([NotNull] IFileFilter fileFilter)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             return EnumerateProjectFiles()?.Where(fileFilter.Matches);
         }
 
         [ItemNotNull]
         private IEnumerable<ProjectFile>? EnumerateProjectFiles()
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var items = new Dictionary<string, DteProjectFile>();
 
             try
@@ -111,6 +117,8 @@
         {
             get
             {
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
                 var solution = Solution;
 
                 return string.IsNullOrEmpty(FullName) ? null : solution?.Globals;
@@ -122,6 +130,8 @@
         {
             get
             {
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
                 try
                 {
                     var fullName = FullName;
@@ -142,10 +152,20 @@
             }
         }
 
-        public string? FullName => Solution?.FullName;
+        public string? FullName
+        {
+            get
+            {
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
+                return Solution?.FullName;
+            }
+        }
 
         public EnvDTE.ProjectItem? AddFile([NotNull] string fullName)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var solutionItemsProject = GetProjects().FirstOrDefault(IsSolutionItemsFolder) ?? Solution?.AddSolutionFolder(SolutionItemsFolderName);
 
             return solutionItemsProject?.AddFromFile(fullName);
@@ -158,6 +178,8 @@
 
         private static bool IsSolutionItemsFolder(EnvDTE.Project? project)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             if (project == null)
                 return false;
 
@@ -169,6 +191,8 @@
         [ItemNotNull]
         private IEnumerable<EnvDTE.Project> GetProjects()
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var solution = Solution;
 
             var projects = solution?.Projects;
@@ -194,6 +218,8 @@
 
         private void GetProjectFiles(string? projectName, [ItemNotNull] EnvDTE.ProjectItems? projectItems, [NotNull] IDictionary<string, DteProjectFile> items)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             if (projectItems == null)
                 return;
 
@@ -224,6 +250,8 @@
 
         private void GetProjectFiles(string? projectName, [NotNull] EnvDTE.ProjectItem projectItem, [NotNull] IDictionary<string, DteProjectFile> items)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             if (projectItem.Object is VSLangProj.References) // MPF project (e.g. WiX) references folder, do not traverse...
                 return;
 
@@ -231,7 +259,7 @@
             {
                 var fileName = TryGetFileName(projectItem);
 
-                if (!string.IsNullOrEmpty(fileName))
+                if (fileName != null && !string.IsNullOrEmpty(fileName))
                 {
                     var project = projectItem.ContainingProject;
 
@@ -241,7 +269,7 @@
                     }
                     else
                     {
-                        items.Add(fileName, new DteProjectFile(this, fileName, project.Name, project.UniqueName, projectItem));
+                        items.Add(fileName, new DteProjectFile(this, SolutionFolder, fileName, project.Name, project.UniqueName, projectItem));
                     }
                 }
             }
@@ -256,6 +284,8 @@
 
         private string? TryGetFileName([NotNull] EnvDTE.ProjectItem projectItem)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             var name = projectItem.Name;
 
             try
