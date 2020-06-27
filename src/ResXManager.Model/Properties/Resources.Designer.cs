@@ -72,7 +72,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate keys in '{0}':&amp;#13;&amp;#10;{1}&amp;....
+        ///   Looks up a localized string similar to "Duplicate keys in '{0}':&amp;#13;&amp;#10;{1}&amp;..."
         /// </summary>
         [NotNull]
         public static string DuplicateKeyError {
@@ -82,7 +82,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Show an error message and don't load the resource.
+        ///   Looks up a localized string similar to "Show an error message and don't load the resource"
         /// </summary>
         [NotNull]
         public static string DuplicateKeyHandling_Fail {
@@ -92,7 +92,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Postfix duplicate/empty keys with "_Duplicate[#]"/....
+        ///   Looks up a localized string similar to "Postfix duplicate/empty keys with "_Duplicate[#]"/..."
         /// </summary>
         [NotNull]
         public static string DuplicateKeyHandling_Rename {
@@ -102,7 +102,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Empty keys in '{0}'.
+        ///   Looks up a localized string similar to "Empty keys in '{0}'"
         /// </summary>
         [NotNull]
         public static string EmptyKeysError {
@@ -112,7 +112,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to &amp;lt;?xml version="1.0" encoding="utf-8"?&amp;g....
+        ///   Looks up a localized string similar to "&amp;lt;?xml version="1.0" encoding="utf-8"?&amp;g..."
         /// </summary>
         [NotNull]
         public static string EmptyResxTemplate {
@@ -122,7 +122,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Multiple sheets.
+        ///   Looks up a localized string similar to "Multiple sheets"
         /// </summary>
         [NotNull]
         public static string ExcelExport_MultipleSheets {
@@ -132,7 +132,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Plain text, tab delimited.
+        ///   Looks up a localized string similar to "Plain text, tab delimited"
         /// </summary>
         [NotNull]
         public static string ExcelExport_PlainTextTabDelimited {
@@ -142,7 +142,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Single sheet.
+        ///   Looks up a localized string similar to "Single sheet"
         /// </summary>
         [NotNull]
         public static string ExcelExport_SingleSheet {
@@ -152,7 +152,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Error saving file '{0}':&amp;#13;&amp;#10;{1}&amp;....
+        ///   Looks up a localized string similar to "Error saving file '{0}':&amp;#13;&amp;#10;{1}&amp;..."
         /// </summary>
         [NotNull]
         public static string FileSaveError {
@@ -162,7 +162,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to At least three columns expected..
+        ///   Looks up a localized string similar to "At least three columns expected."
         /// </summary>
         [NotNull]
         public static string ImportColumnMismatchError {
@@ -172,7 +172,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate language in header..
+        ///   Looks up a localized string similar to "Duplicate language in header."
         /// </summary>
         [NotNull]
         public static string ImportDuplicateLanguageError {
@@ -182,7 +182,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Import failed. Nothing has been imported!.
+        ///   Looks up a localized string similar to "Import failed. Nothing has been imported."
         /// </summary>
         [NotNull]
         public static string ImportFailedError {
@@ -192,7 +192,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Import failed partially. Some columns have been al....
+        ///   Looks up a localized string similar to "Import failed partially. Some columns have been al..."
         /// </summary>
         [NotNull]
         public static string ImportFailedPartiallyError {
@@ -202,7 +202,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Standard header expected..
+        ///   Looks up a localized string similar to "Standard header expected."
         /// </summary>
         [NotNull]
         public static string ImportHeaderMismatchError {
@@ -212,7 +212,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The language "{0}" can't be edited. The operation ....
+        ///   Looks up a localized string similar to "The language "{0}" can't be edited. The operation ..."
         /// </summary>
         [NotNull]
         public static string ImportLanguageNotEditable {
@@ -222,7 +222,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The sheet "{0}" can't be imported; there is no mat....
+        ///   Looks up a localized string similar to "The sheet "{0}" can't be imported; there is no mat..."
         /// </summary>
         [NotNull]
         public static string ImportMapSheetError {
@@ -232,7 +232,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to {0} is not a valid RESX resource file: No xml root....
+        ///   Looks up a localized string similar to "{0} is not a valid RESX resource file: No xml root..."
         /// </summary>
         [NotNull]
         public static string InvalidResourceFileError {
@@ -242,7 +242,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to {0} is not a valid RESX resource file: Not all ent....
+        ///   Looks up a localized string similar to "{0} is not a valid RESX resource file: Not all ent..."
         /// </summary>
         [NotNull]
         public static string InvalidResourceFileNameAttributeMissingError {
@@ -252,7 +252,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to {0} is not a valid RESX resource file: Not all ent....
+        ///   Looks up a localized string similar to "{0} is not a valid RESX resource file: Not all ent..."
         /// </summary>
         [NotNull]
         public static string InvalidResourceFileValueAttributeMissingError {
@@ -262,7 +262,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to This key already exists: {0}.
+        ///   Looks up a localized string similar to "This key already exists: {0}"
         /// </summary>
         [NotNull]
         public static string KeyAlreadyExists {
@@ -272,7 +272,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Language is not defined: "{0}".
+        ///   Looks up a localized string similar to "Language is not defined: "{0}"."
         /// </summary>
         [NotNull]
         public static string LanguageNotDefinedError {
@@ -282,7 +282,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Neutral.
+        ///   Looks up a localized string similar to "Neutral"
         /// </summary>
         [NotNull]
         public static string Neutral {
@@ -292,7 +292,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Not all resource files are editable.
+        ///   Looks up a localized string similar to "Not all resource files are editable"
         /// </summary>
         [NotNull]
         public static string NotAllLanguagesAreEditable {
@@ -302,7 +302,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Item is invariant but contains a value.
+        ///   Looks up a localized string similar to "Item is invariant but contains a value"
         /// </summary>
         [NotNull]
         public static string ResourceTableEntry_Error_InvariantWithValue {
@@ -312,7 +312,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Missing translation.
+        ///   Looks up a localized string similar to "Missing translation"
         /// </summary>
         [NotNull]
         public static string ResourceTableEntry_Error_MissingTranslation {
@@ -322,7 +322,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Warning: This item contains string format paramete....
+        ///   Looks up a localized string similar to "Warning: This item contains string format paramete..."
         /// </summary>
         [NotNull]
         public static string ResourceTableEntry_Error_StringFormatParameterMismatch {
@@ -332,7 +332,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to This rule verifies that the punctuation of the ent....
+        ///   Looks up a localized string similar to "This rule verifies that the punctuation of the ent..."
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRulePunctuationLead_Description {
@@ -342,7 +342,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The punctuation at the start of the messages doesn....
+        ///   Looks up a localized string similar to "The punctuation at the start of the messages doesn..."
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRulePunctuationLead_Error_Intro {
@@ -352,7 +352,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to No punctuation was expected at the start of the me....
+        ///   Looks up a localized string similar to "No punctuation was expected at the start of the me..."
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRulePunctuationLead_Error_NoPunctuationExpected {
@@ -362,7 +362,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The expected leading punctuation sequence is: {0}.
+        ///   Looks up a localized string similar to "The expected leading punctuation sequence is: {0}"
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRulePunctuationLead_Error_PunctuationSeqExpected {
@@ -372,7 +372,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Leading punctuation.
+        ///   Looks up a localized string similar to "Leading punctuation"
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRulePunctuationLead_Name {
@@ -382,7 +382,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to This rule verifies the punctuation at the end of t....
+        ///   Looks up a localized string similar to "This rule verifies the punctuation at the end of t..."
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRulePunctuationTail_Description {
@@ -392,7 +392,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The punctuation at the end of the messages doesn't....
+        ///   Looks up a localized string similar to "The punctuation at the end of the messages doesn't..."
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRulePunctuationTail_Error_Intro {
@@ -402,7 +402,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to No punctuation was expected at the end of the mess....
+        ///   Looks up a localized string similar to "No punctuation was expected at the end of the mess..."
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected {
@@ -412,7 +412,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The expected trailing punctuation sequence is: {0}.
+        ///   Looks up a localized string similar to "The expected trailing punctuation sequence is: {0}"
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected {
@@ -422,7 +422,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Trailing punctuation.
+        ///   Looks up a localized string similar to "Trailing punctuation"
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRulePunctuationTail_Name {
@@ -432,7 +432,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to This rule verifies that the string format paramete....
+        ///   Looks up a localized string similar to "This rule verifies that the string format paramete..."
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRuleStringFormat_Description {
@@ -442,7 +442,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Matching string format parameters.
+        ///   Looks up a localized string similar to "Matching string format parameters"
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRuleStringFormat_Name {
@@ -452,7 +452,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to This rule verifies that the whitespaces at the sta....
+        ///   Looks up a localized string similar to "This rule verifies that the whitespaces at the sta..."
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceLead_Description {
@@ -462,7 +462,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The whitespaces at the start of the sequence don't....
+        ///   Looks up a localized string similar to "The whitespaces at the start of the sequence don't..."
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceLead_Error_Intro {
@@ -472,7 +472,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to No whitespaces are expected at the start of the se....
+        ///   Looks up a localized string similar to "No whitespaces are expected at the start of the se..."
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceLead_Error_NoWhiteSpaceExpected {
@@ -482,7 +482,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The expected whitespace sequence is: {0}.
+        ///   Looks up a localized string similar to "The expected whitespace sequence is: {0}"
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceLead_Error_WhiteSpaceSeqExpected {
@@ -492,7 +492,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Leading whitespace.
+        ///   Looks up a localized string similar to "Leading whitespace"
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceLead_Name {
@@ -502,7 +502,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to This rule verifies that the trailing whitespaces o....
+        ///   Looks up a localized string similar to "This rule verifies that the trailing whitespaces o..."
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceTail_Description {
@@ -512,7 +512,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The whitespaces at the end of the sequence don't m....
+        ///   Looks up a localized string similar to "The whitespaces at the end of the sequence don't m..."
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceTail_Error_Intro {
@@ -522,7 +522,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to No whitespaces are expected at the end of the sequ....
+        ///   Looks up a localized string similar to "No whitespaces are expected at the end of the sequ..."
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceTail_Error_NoWhiteSpaceExpected {
@@ -532,7 +532,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The expected whitespace sequence is: {0}.
+        ///   Looks up a localized string similar to "The expected whitespace sequence is: {0}"
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceTail_Error_WhiteSpaceSeqExpected {
@@ -542,7 +542,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Trailing whitespace.
+        ///   Looks up a localized string similar to "Trailing whitespace"
         /// </summary>
         [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceTail_Name {
@@ -552,7 +552,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Snapshot: "{0}".
+        ///   Looks up a localized string similar to "Snapshot: "{0}""
         /// </summary>
         [NotNull]
         public static string SnapshotAnnotation {
@@ -562,7 +562,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to ResX Resource Manager.
+        ///   Looks up a localized string similar to "ResX Resource Manager"
         /// </summary>
         /// <remarks>
         /// @Invariant
@@ -627,7 +627,7 @@ namespace ResXManager.Model.Properties {
         /// </summary>
         ImportDuplicateLanguageError,
         /// <summary>
-        ///   Looks up a localized string similar to Import failed. Nothing has been imported!.
+        ///   Looks up a localized string similar to Import failed. Nothing has been imported..
         /// </summary>
         ImportFailedError,
         /// <summary>
@@ -663,7 +663,7 @@ namespace ResXManager.Model.Properties {
         /// </summary>
         KeyAlreadyExists,
         /// <summary>
-        ///   Looks up a localized string similar to Language is not defined: "{0}".
+        ///   Looks up a localized string similar to Language is not defined: "{0}"..
         /// </summary>
         LanguageNotDefinedError,
         /// <summary>
@@ -884,7 +884,7 @@ namespace ResXManager.Model.Properties {
     public sealed class LocalizedTextAttribute : global::TomsToolbox.Essentials.TextAttribute
     {
         // This code is generated by Resources.Designer.t4
-        // If you get compile errors because you don't use the TomsToolbox.Desktop NuGet package, remove this part in the Resources.Designer.t4 file. 
+        // If you get compile errors because you don't use the TomsToolbox.Essentials NuGet package, remove this part in the Resources.Designer.t4 file. 
         // Just search for this text and follow the instructions above.
 
         private readonly string _resourceKey;

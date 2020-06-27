@@ -72,7 +72,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Assembly location: {0}.
+        ///   Looks up a localized string similar to "Assembly location: {0}"
         /// </summary>
         [NotNull]
         public static string AssemblyLocation {
@@ -82,7 +82,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Can not create tool window..
+        ///   Looks up a localized string similar to "Can not create tool window"
         /// </summary>
         [NotNull]
         public static string CanNotCreateWindow {
@@ -92,7 +92,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Code generator.
+        ///   Looks up a localized string similar to "Code generator"
         /// </summary>
         [NotNull]
         public static string CodeGenerator_CommandGroup {
@@ -102,7 +102,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Custom tool (internal access).
+        ///   Looks up a localized string similar to "Custom tool (internal access)"
         /// </summary>
         [NotNull]
         public static string CodeGenerator_CommandInternal {
@@ -112,7 +112,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Custom tool (public access).
+        ///   Looks up a localized string similar to "Custom tool (public access)"
         /// </summary>
         [NotNull]
         public static string CodeGenerator_CommandPublic {
@@ -122,7 +122,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Text template.
+        ///   Looks up a localized string similar to "Text template"
         /// </summary>
         [NotNull]
         public static string CodeGenerator_CommandTextTemplate {
@@ -132,7 +132,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Custom tool code generator, internal access..
+        ///   Looks up a localized string similar to "Custom tool code generator, internal access."
         /// </summary>
         [NotNull]
         public static string CodeGenerator_Internal {
@@ -142,7 +142,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Custom tool code generator, public access..
+        ///   Looks up a localized string similar to "Custom tool code generator, public access."
         /// </summary>
         [NotNull]
         public static string CodeGenerator_Public {
@@ -152,7 +152,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to TextTemplate code generator..
+        ///   Looks up a localized string similar to "TextTemplate code generator."
         /// </summary>
         [NotNull]
         public static string CodeGenerator_TextTemplate {
@@ -162,7 +162,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Unknown code generator..
+        ///   Looks up a localized string similar to "Unknown code generator."
         /// </summary>
         [NotNull]
         public static string CodeGenerator_Unkown {
@@ -172,7 +172,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to WinForms Designer.
+        ///   Looks up a localized string similar to "WinForms Designer"
         /// </summary>
         [NotNull]
         public static string CodeGenerator_WinForms {
@@ -182,7 +182,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Code:.
+        ///   Looks up a localized string similar to "Code:"
         /// </summary>
         [NotNull]
         public static string CodeHeader {
@@ -192,7 +192,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Comment:.
+        ///   Looks up a localized string similar to "Comment:"
         /// </summary>
         [NotNull]
         public static string CommentHeader {
@@ -202,7 +202,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate key.
+        ///   Looks up a localized string similar to "Duplicate key"
         /// </summary>
         [NotNull]
         public static string DuplicateKey {
@@ -212,7 +212,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Error:.
+        ///   Looks up a localized string similar to "Error:"
         /// </summary>
         [NotNull]
         public static string Error {
@@ -222,7 +222,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Some files are open in another window. Please clos....
+        ///   Looks up a localized string similar to "Some files are open in another window. Please clos..."
         /// </summary>
         [NotNull]
         public static string ErrorOpenFilesInEditor {
@@ -232,7 +232,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Error loading the ResX Manager extension: {0}.&amp....
+        ///   Looks up a localized string similar to "Error loading the ResX Manager extension: {0}.&amp..."
         /// </summary>
         [NotNull]
         public static string ExtensionLoadingError {
@@ -242,7 +242,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to ResX Resource Manager loaded.&amp;#13;&amp;#10;Hom....
+        ///   Looks up a localized string similar to "ResX Resource Manager loaded.&amp;#13;&amp;#10;Hom..."
         /// </summary>
         [NotNull]
         public static string IntroMessage {
@@ -252,7 +252,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The key contains invalid characters..
+        ///   Looks up a localized string similar to "The key contains invalid characters."
         /// </summary>
         [NotNull]
         public static string KeyContainsInvalidCharacters {
@@ -262,7 +262,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Key:.
+        ///   Looks up a localized string similar to "Key:"
         /// </summary>
         [NotNull]
         public static string KeyHeader {
@@ -272,7 +272,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Move to Resource.
+        ///   Looks up a localized string similar to "Move to Resource"
         /// </summary>
         [NotNull]
         public static string MoveToResource {
@@ -282,7 +282,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Edit new entry in ResX Resource Manager.
+        ///   Looks up a localized string similar to "Edit new entry in ResX Resource Manager"
         /// </summary>
         [NotNull]
         public static string MoveToResourceEditNewEntry {
@@ -292,7 +292,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Open in ResX Manager.
+        ///   Looks up a localized string similar to "Open in ResX Manager"
         /// </summary>
         [NotNull]
         public static string OpenInResXManager {
@@ -302,7 +302,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The project has no resource file for the language ....
+        ///   Looks up a localized string similar to "The project has no resource file for the language ..."
         /// </summary>
         [NotNull]
         public static string ProjectHasNoResourceFile {
@@ -312,7 +312,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Some files in your project are not writable. Make ....
+        ///   Looks up a localized string similar to "Some files in your project are not writable. Make ..."
         /// </summary>
         [NotNull]
         public static string ProjectHasReadOnlyFiles {
@@ -322,7 +322,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Resource:.
+        ///   Looks up a localized string similar to "Resource:"
         /// </summary>
         [NotNull]
         public static string ResourceHeader {
@@ -332,7 +332,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Error loading resource files: {0}. &amp;#13;&amp;#....
+        ///   Looks up a localized string similar to "Error loading resource files: {0}. &amp;#13;&amp;#..."
         /// </summary>
         [NotNull]
         public static string ResourceLoadingError {
@@ -362,7 +362,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Error reporting.
+        ///   Looks up a localized string similar to "Error reporting"
         /// </summary>
         [NotNull]
         public static string ShowErrorsConfiguration_Header {
@@ -372,7 +372,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Show as.
+        ///   Looks up a localized string similar to "Show as"
         /// </summary>
         [NotNull]
         public static string ShowErrorsConfiguration_ShowAs {
@@ -382,7 +382,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Show messages in error list.
+        ///   Looks up a localized string similar to "Show messages in error list"
         /// </summary>
         [NotNull]
         public static string ShowErrorsConfiguration_SwitchHeader {
@@ -392,7 +392,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Show white space and formatting symbols.
+        ///   Looks up a localized string similar to "Show white space and formatting symbols"
         /// </summary>
         [NotNull]
         public static string ShowWhitespaceToolTip {
@@ -402,7 +402,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to ResX Resource Manager.
+        ///   Looks up a localized string similar to "ResX Resource Manager"
         /// </summary>
         /// <remarks>
         /// @Invariant
@@ -415,7 +415,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Value:.
+        ///   Looks up a localized string similar to "Value:"
         /// </summary>
         [NotNull]
         public static string ValueHeader {
@@ -425,7 +425,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Version: {0}.
+        ///   Looks up a localized string similar to "Version: {0}"
         /// </summary>
         [NotNull]
         public static string Version {
@@ -435,7 +435,7 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Warning:.
+        ///   Looks up a localized string similar to "Warning:"
         /// </summary>
         [NotNull]
         public static string Warning {
@@ -457,7 +457,7 @@ namespace ResXManager.VSIX {
         /// </summary>
         AssemblyLocation,
         /// <summary>
-        ///   Looks up a localized string similar to Can not create tool window..
+        ///   Looks up a localized string similar to Can not create tool window.
         /// </summary>
         CanNotCreateWindow,
         /// <summary>
@@ -694,7 +694,7 @@ namespace ResXManager.VSIX {
     public sealed class LocalizedTextAttribute : global::TomsToolbox.Essentials.TextAttribute
     {
         // This code is generated by Resources.Designer.t4
-        // If you get compile errors because you don't use the TomsToolbox.Desktop NuGet package, remove this part in the Resources.Designer.t4 file. 
+        // If you get compile errors because you don't use the TomsToolbox.Essentials NuGet package, remove this part in the Resources.Designer.t4 file. 
         // Just search for this text and follow the instructions above.
 
         private readonly string _resourceKey;

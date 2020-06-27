@@ -72,7 +72,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to You are about to add new entries to a WinForms des....
+        ///   Looks up a localized string similar to "You are about to add new entries to a WinForms des..."
         /// </summary>
         [NotNull]
         public static string AddEntryToWinFormsResourceWarning {
@@ -82,7 +82,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Add new key (Shift+Insert).
+        ///   Looks up a localized string similar to "Add new key (Shift+Insert)"
         /// </summary>
         [NotNull]
         public static string AddKeyToolTip {
@@ -92,7 +92,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Add new language.
+        ///   Looks up a localized string similar to "Add new language"
         /// </summary>
         [NotNull]
         public static string AddLanguageToolTip {
@@ -102,7 +102,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to All comments.
+        ///   Looks up a localized string similar to "All comments"
         /// </summary>
         [NotNull]
         public static string AllComments {
@@ -112,7 +112,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to All languages.
+        ///   Looks up a localized string similar to "All languages"
         /// </summary>
         [NotNull]
         public static string AllLanguages {
@@ -122,7 +122,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Authentication.
+        ///   Looks up a localized string similar to "Authentication"
         /// </summary>
         [NotNull]
         public static string Authentication {
@@ -132,7 +132,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Create all resource files when adding a new resour....
+        ///   Looks up a localized string similar to "Create all resource files when adding a new resour..."
         /// </summary>
         [NotNull]
         public static string AutoCreateNewLanguageFiles {
@@ -142,7 +142,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Case Sens..
+        ///   Looks up a localized string similar to "Case Sens."
         /// </summary>
         /// <remarks>
         /// @Invariant
@@ -155,7 +155,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Cell selection.
+        ///   Looks up a localized string similar to "Cell selection"
         /// </summary>
         [NotNull]
         public static string CellSelection {
@@ -165,7 +165,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Allow selection of individual cells to copy/paste ....
+        ///   Looks up a localized string similar to "Allow selection of individual cells to copy/paste ..."
         /// </summary>
         [NotNull]
         public static string CellSelectionToolTip {
@@ -175,7 +175,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Choose columns.
+        ///   Looks up a localized string similar to "Choose columns"
         /// </summary>
         [NotNull]
         public static string ChooseColumnsToolTip {
@@ -185,7 +185,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The number of references found in code files. This....
+        ///   Looks up a localized string similar to "The number of references found in code files. This..."
         /// </summary>
         [NotNull]
         public static string CodeReferencesToolTip {
@@ -195,7 +195,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Too many references to show details..
+        ///   Looks up a localized string similar to "Too many references to show details."
         /// </summary>
         [NotNull]
         public static string CodeReferencesTooManyDetailsToolTip {
@@ -205,7 +205,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Code reference detection is still in progress ({0}....
+        ///   Looks up a localized string similar to "Code reference detection is still in progress ({0}..."
         /// </summary>
         [NotNull]
         public static string CodeReferenceTrackingInProgress {
@@ -215,7 +215,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to +Ctrl =&amp;gt; Apply star sizes to right columns&....
+        ///   Looks up a localized string similar to "+Ctrl =&amp;gt; Apply star sizes to right columns&..."
         /// </summary>
         [NotNull]
         public static string ColumnHeaderGripperToolTip {
@@ -225,7 +225,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Comment.
+        ///   Looks up a localized string similar to "Comment"
         /// </summary>
         [NotNull]
         public static string Comment {
@@ -235,7 +235,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Comment.
+        ///   Looks up a localized string similar to "Comment"
         /// </summary>
         [NotNull]
         public static string CommentColumnHeader {
@@ -245,7 +245,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Comment Token.
+        ///   Looks up a localized string similar to "Comment Token"
         /// </summary>
         [NotNull]
         public static string CommentToken {
@@ -255,7 +255,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate/empty resource key handling.
+        ///   Looks up a localized string similar to "Duplicate/empty resource key handling"
         /// </summary>
         [NotNull]
         public static string Configuration_DuplicateKeyHandling {
@@ -265,7 +265,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Remove empty entries in resources.
+        ///   Looks up a localized string similar to "Remove empty entries in resources"
         /// </summary>
         [NotNull]
         public static string Configuration_EmptyValueHandling {
@@ -275,7 +275,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Empty resource value handling.
+        ///   Looks up a localized string similar to "Empty resource value handling"
         /// </summary>
         [NotNull]
         public static string Configuration_EmptyValueHandlingHeader {
@@ -285,7 +285,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Excel export mode.
+        ///   Looks up a localized string similar to "Excel export mode"
         /// </summary>
         [NotNull]
         public static string Configuration_ExcelExportModeHeader {
@@ -295,7 +295,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to File creation.
+        ///   Looks up a localized string similar to "File creation"
         /// </summary>
         [NotNull]
         public static string Configuration_FileCreationHeader {
@@ -305,7 +305,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to General.
+        ///   Looks up a localized string similar to "General"
         /// </summary>
         [NotNull]
         public static string Configuration_General {
@@ -315,7 +315,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Load &amp; Save.
+        ///   Looks up a localized string similar to "Load &amp; Save"
         /// </summary>
         [NotNull]
         public static string Configuration_LoadSaveHeader {
@@ -325,7 +325,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Consistency checks.
+        ///   Looks up a localized string similar to "Consistency checks"
         /// </summary>
         [NotNull]
         public static string Configuration_Rules {
@@ -335,7 +335,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Scope.
+        ///   Looks up a localized string similar to "Scope"
         /// </summary>
         [NotNull]
         public static string ConfigurationScopeHeader {
@@ -345,7 +345,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Confirm adding new resource files.
+        ///   Looks up a localized string similar to "Confirm adding new resource files"
         /// </summary>
         [NotNull]
         public static string ConfirmAddLanguage {
@@ -355,7 +355,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Cut the selected rows?.
+        ///   Looks up a localized string similar to "Cut the selected rows?"
         /// </summary>
         [NotNull]
         public static string ConfirmCutItems {
@@ -365,7 +365,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Delete the selected items?.
+        ///   Looks up a localized string similar to "Delete the selected items?"
         /// </summary>
         [NotNull]
         public static string ConfirmDeleteItems {
@@ -375,7 +375,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Copy (Ctrl+C).
+        ///   Looks up a localized string similar to "Copy (Ctrl+C)"
         /// </summary>
         [NotNull]
         public static string Copy {
@@ -385,7 +385,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Copy the selected rows or cells (Ctrl+C).
+        ///   Looks up a localized string similar to "Copy the selected rows or cells (Ctrl+C)"
         /// </summary>
         [NotNull]
         public static string CopyToolTip {
@@ -395,7 +395,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Create Snapshot.
+        ///   Looks up a localized string similar to "Create Snapshot"
         /// </summary>
         [NotNull]
         public static string CreateSnapshot {
@@ -405,7 +405,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Cut (Ctrl+X).
+        ///   Looks up a localized string similar to "Cut (Ctrl+X)"
         /// </summary>
         [NotNull]
         public static string Cut {
@@ -415,7 +415,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Cut selected rows (Ctrl+X).
+        ///   Looks up a localized string similar to "Cut selected rows (Ctrl+X)"
         /// </summary>
         [NotNull]
         public static string CutToolTip {
@@ -425,7 +425,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Delete (Del).
+        ///   Looks up a localized string similar to "Delete (Del)"
         /// </summary>
         [NotNull]
         public static string Delete {
@@ -435,7 +435,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Delete selected items (Del).
+        ///   Looks up a localized string similar to "Delete selected items (Del)"
         /// </summary>
         [NotNull]
         public static string DeleteToolTip {
@@ -445,7 +445,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Detect Code References.
+        ///   Looks up a localized string similar to "Detect Code References"
         /// </summary>
         [NotNull]
         public static string DetectCodeReferences_Header {
@@ -455,7 +455,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Diagnostics.
+        ///   Looks up a localized string similar to "Diagnostics"
         /// </summary>
         [NotNull]
         public static string Diagnostics {
@@ -465,7 +465,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Support this project with a donation.
+        ///   Looks up a localized string similar to "Support this project with a donation"
         /// </summary>
         [NotNull]
         public static string DonateButtonToolTip {
@@ -475,7 +475,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Your are editing the default configuration. If you....
+        ///   Looks up a localized string similar to "Your are editing the default configuration. If you..."
         /// </summary>
         [NotNull]
         public static string EditDefaultConfigurationNotification {
@@ -485,7 +485,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to You are editing the configuration specific for the....
+        ///   Looks up a localized string similar to "You are editing the configuration specific for the..."
         /// </summary>
         [NotNull]
         public static string EditSolutionConfigurationNotification {
@@ -495,7 +495,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Enabled.
+        ///   Looks up a localized string similar to "Enabled"
         /// </summary>
         [NotNull]
         public static string Enabled {
@@ -505,7 +505,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Error adding the new resource file '{0}'.
+        ///   Looks up a localized string similar to "Error adding the new resource file '{0}'"
         /// </summary>
         [NotNull]
         public static string ErrorAddingNewResourceFile {
@@ -515,7 +515,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Export all.
+        ///   Looks up a localized string similar to "Export all"
         /// </summary>
         [NotNull]
         public static string ExportExcelAll {
@@ -525,7 +525,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Export selection.
+        ///   Looks up a localized string similar to "Export selection"
         /// </summary>
         [NotNull]
         public static string ExportExcelSelection {
@@ -535,7 +535,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to File exclusion filter.
+        ///   Looks up a localized string similar to "File exclusion filter"
         /// </summary>
         [NotNull]
         public static string FileExclusionFilters_Header {
@@ -545,7 +545,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to File Extensions.
+        ///   Looks up a localized string similar to "File Extensions"
         /// </summary>
         [NotNull]
         public static string FileExtensions {
@@ -555,7 +555,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Detect code references..
+        ///   Looks up a localized string similar to "Detect code references."
         /// </summary>
         [NotNull]
         public static string FindCodeReferencesButtonToolTip {
@@ -565,7 +565,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Flat view.
+        ///   Looks up a localized string similar to "Flat view"
         /// </summary>
         [NotNull]
         public static string FlatViewToolTip {
@@ -575,7 +575,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Grouped view.
+        ///   Looks up a localized string similar to "Grouped view"
         /// </summary>
         [NotNull]
         public static string GroupedViewToolTip {
@@ -585,7 +585,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Documentation.
+        ///   Looks up a localized string similar to "Documentation"
         /// </summary>
         [NotNull]
         public static string HelpButtonToolTip {
@@ -595,7 +595,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Import.
+        ///   Looks up a localized string similar to "Import"
         /// </summary>
         [NotNull]
         public static string ImportExcel {
@@ -605,7 +605,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to A normalized table is expected..
+        ///   Looks up a localized string similar to "A normalized table is expected."
         /// </summary>
         [NotNull]
         public static string ImportNormalizedTableExpected {
@@ -615,7 +615,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Index of the entry in the resource file..
+        ///   Looks up a localized string similar to "Index of the entry in the resource file."
         /// </summary>
         [NotNull]
         public static string IndexColumnHeaderToolTip {
@@ -625,7 +625,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Show the index column.
+        ///   Looks up a localized string similar to "Show the index column"
         /// </summary>
         [NotNull]
         public static string IndexColumnToggleButtonToolTip {
@@ -635,7 +635,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Index of the entry in the resource file. Use fract....
+        ///   Looks up a localized string similar to "Index of the entry in the resource file. Use fract..."
         /// </summary>
         [NotNull]
         public static string IndexColumnToolTip {
@@ -645,7 +645,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Invariant.
+        ///   Looks up a localized string similar to "Invariant"
         /// </summary>
         [NotNull]
         public static string Invariant {
@@ -655,7 +655,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Key.
+        ///   Looks up a localized string similar to "Key"
         /// </summary>
         [NotNull]
         public static string Key {
@@ -665,7 +665,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to This is an overview of the languages supported by ....
+        ///   Looks up a localized string similar to "This is an overview of the languages supported by ..."
         /// </summary>
         [NotNull]
         public static string LanguageConfiguration_Description {
@@ -675,7 +675,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Like it? Support the project by writing a short re....
+        ///   Looks up a localized string similar to "Like it? Support the project by writing a short re..."
         /// </summary>
         [NotNull]
         public static string LikeButtonToolTip {
@@ -685,7 +685,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Load Snapshot.
+        ///   Looks up a localized string similar to "Load Snapshot"
         /// </summary>
         [NotNull]
         public static string LoadSnapshot {
@@ -695,7 +695,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Multiple selection..
+        ///   Looks up a localized string similar to "Multiple selection."
         /// </summary>
         [NotNull]
         public static string MultipleSelection {
@@ -705,7 +705,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to You must select a single resource in the left side....
+        ///   Looks up a localized string similar to "You must select a single resource in the left side..."
         /// </summary>
         [NotNull]
         public static string NeedSingleEntitySelection {
@@ -715,7 +715,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Neutral.
+        ///   Looks up a localized string similar to "Neutral"
         /// </summary>
         [NotNull]
         public static string Neutral {
@@ -725,7 +725,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Neutral Resources Language:.
+        ///   Looks up a localized string similar to "Neutral Resources Language:"
         /// </summary>
         [NotNull]
         public static string NeutralResourceLanguageHeader {
@@ -735,7 +735,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Enter new resource key:.
+        ///   Looks up a localized string similar to "Enter new resource key:"
         /// </summary>
         [NotNull]
         public static string NewKeyPrompt {
@@ -745,7 +745,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Select the new language:.
+        ///   Looks up a localized string similar to "Select the new language:"
         /// </summary>
         [NotNull]
         public static string NewLanguageIdPrompt {
@@ -755,7 +755,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to No code references have been found by this algorit....
+        ///   Looks up a localized string similar to "No code references have been found by this algorit..."
         /// </summary>
         [NotNull]
         public static string NoCodeReferencesToolTip {
@@ -765,7 +765,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to There is no resource file for this resource..
+        ///   Looks up a localized string similar to "There is no resource file for this resource."
         /// </summary>
         [NotNull]
         public static string NoResourceFileForResource {
@@ -775,7 +775,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to No selection..
+        ///   Looks up a localized string similar to "No selection."
         /// </summary>
         [NotNull]
         public static string NoSelection {
@@ -785,7 +785,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Got it - do not show this notification again..
+        ///   Looks up a localized string similar to "Got it - do not show this notification again."
         /// </summary>
         [NotNull]
         public static string OpenSourceOverlay_Confirmation {
@@ -795,7 +795,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to &amp;lt;StackPanel xmlns="http://schemas.microsoft....
+        ///   Looks up a localized string similar to "&amp;lt;StackPanel xmlns="http://schemas.microsoft..."
         /// </summary>
         [NotNull]
         public static string OpenSourceOverlay_Message {
@@ -805,7 +805,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Paste (Ctrl+V).
+        ///   Looks up a localized string similar to "Paste (Ctrl+V)"
         /// </summary>
         [NotNull]
         public static string Paste {
@@ -815,7 +815,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Error parsing the data from clipboard:.
+        ///   Looks up a localized string similar to "Error parsing the data from clipboard:"
         /// </summary>
         [NotNull]
         public static string PasteFailed {
@@ -825,7 +825,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The data you're pasting isn't the same size as you....
+        ///   Looks up a localized string similar to "The data you're pasting isn't the same size as you..."
         /// </summary>
         [NotNull]
         public static string PasteSelectionSizeMismatch {
@@ -835,7 +835,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Paste the clipboard content (Ctrl+V).
+        ///   Looks up a localized string similar to "Paste the clipboard content (Ctrl+V)"
         /// </summary>
         [NotNull]
         public static string PasteToolTip {
@@ -845,7 +845,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Patterns.
+        ///   Looks up a localized string similar to "Patterns"
         /// </summary>
         [NotNull]
         public static string Patterns {
@@ -855,7 +855,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Ranking:.
+        ///   Looks up a localized string similar to "Ranking:"
         /// </summary>
         [NotNull]
         public static string Ranking {
@@ -865,7 +865,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Refresh view.
+        ///   Looks up a localized string similar to "Refresh view"
         /// </summary>
         [NotNull]
         public static string RefreshViewToolTip {
@@ -875,7 +875,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Regular Expression.
+        ///   Looks up a localized string similar to "Regular Expression"
         /// </summary>
         [NotNull]
         public static string RegularExpression {
@@ -885,7 +885,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to A regular expression to filter resource files.&amp....
+        ///   Looks up a localized string similar to "A regular expression to filter resource files.&amp..."
         /// </summary>
         [NotNull]
         public static string ResourceFilterToolTip {
@@ -895,7 +895,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Save files immediately upon change.
+        ///   Looks up a localized string similar to "Save files immediately upon change"
         /// </summary>
         [NotNull]
         public static string SaveFilesImmediatelyUponChange {
@@ -905,7 +905,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Selected/Total.
+        ///   Looks up a localized string similar to "Selected/Total"
         /// </summary>
         [NotNull]
         public static string SelectedTotalToolTip {
@@ -915,7 +915,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Configuration.
+        ///   Looks up a localized string similar to "Configuration"
         /// </summary>
         [NotNull]
         public static string ShellTabHeader_Configuration {
@@ -925,7 +925,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Languages.
+        ///   Looks up a localized string similar to "Languages"
         /// </summary>
         [NotNull]
         public static string ShellTabHeader_Languages {
@@ -935,7 +935,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Main.
+        ///   Looks up a localized string similar to "Main"
         /// </summary>
         [NotNull]
         public static string ShellTabHeader_Main {
@@ -945,7 +945,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Translate.
+        ///   Looks up a localized string similar to "Translate"
         /// </summary>
         [NotNull]
         public static string ShellTabHeader_Translate {
@@ -955,7 +955,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Show only lines with warnings or changes.
+        ///   Looks up a localized string similar to "Show only lines with warnings or changes"
         /// </summary>
         [NotNull]
         public static string ShowOnlyMissingToolTip {
@@ -965,7 +965,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Show performance tracer messages in output window.
+        ///   Looks up a localized string similar to "Show performance tracer messages in output window"
         /// </summary>
         [NotNull]
         public static string ShowPerformanceTraces {
@@ -975,7 +975,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Sort all files now.
+        ///   Looks up a localized string similar to "Sort all files now"
         /// </summary>
         [NotNull]
         public static string SortAllFilesNow {
@@ -985,7 +985,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Sort using:.
+        ///   Looks up a localized string similar to "Sort using:"
         /// </summary>
         [NotNull]
         public static string SortBy {
@@ -995,7 +995,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to When saving a RESX file, sort the XML data nodes b....
+        ///   Looks up a localized string similar to "When saving a RESX file, sort the XML data nodes b..."
         /// </summary>
         [NotNull]
         public static string SortNodesByKey {
@@ -1005,7 +1005,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Do you want to sort all nodes of all resource file....
+        ///   Looks up a localized string similar to "Do you want to sort all nodes of all resource file..."
         /// </summary>
         [NotNull]
         public static string SortNodesByKey_Confirmation {
@@ -1015,7 +1015,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to ResX Resource Manager.
+        ///   Looks up a localized string similar to "ResX Resource Manager"
         /// </summary>
         /// <remarks>
         /// @Invariant
@@ -1028,7 +1028,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Apply All.
+        ///   Looks up a localized string similar to "Apply All"
         /// </summary>
         [NotNull]
         public static string Translations_ApplyAll {
@@ -1038,7 +1038,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Apply Selected.
+        ///   Looks up a localized string similar to "Apply Selected"
         /// </summary>
         [NotNull]
         public static string Translations_ApplySelected {
@@ -1048,7 +1048,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Discard.
+        ///   Looks up a localized string similar to "Discard"
         /// </summary>
         [NotNull]
         public static string Translations_Discard {
@@ -1058,7 +1058,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Source:.
+        ///   Looks up a localized string similar to "Source:"
         /// </summary>
         [NotNull]
         public static string Translations_Source {
@@ -1068,7 +1068,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Start.
+        ///   Looks up a localized string similar to "Start"
         /// </summary>
         [NotNull]
         public static string Translations_Start {
@@ -1078,7 +1078,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Stop.
+        ///   Looks up a localized string similar to "Stop"
         /// </summary>
         [NotNull]
         public static string Translations_Stop {
@@ -1088,7 +1088,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Targets:.
+        ///   Looks up a localized string similar to "Targets:"
         /// </summary>
         [NotNull]
         public static string Translations_Targets {
@@ -1098,7 +1098,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Prefix translations with.
+        ///   Looks up a localized string similar to "Prefix translations with"
         /// </summary>
         /// <remarks>
         /// @MutedRule(PunctuationTail)
@@ -1111,7 +1111,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Save credentials (Credentials will be stored as cl....
+        ///   Looks up a localized string similar to "Save credentials (Credentials will be stored as cl..."
         /// </summary>
         [NotNull]
         public static string TranslatorConfiguration_SaveCredentials {
@@ -1121,7 +1121,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Unload Snapshot.
+        ///   Looks up a localized string similar to "Unload Snapshot"
         /// </summary>
         [NotNull]
         public static string UnloadSnapshot {
@@ -1131,7 +1131,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Wrap long lines.
+        ///   Looks up a localized string similar to "Wrap long lines"
         /// </summary>
         [NotNull]
         public static string WrapLongLinesToolTip {
@@ -1680,7 +1680,7 @@ namespace ResXManager.View.Properties {
     public sealed class LocalizedTextAttribute : global::TomsToolbox.Essentials.TextAttribute
     {
         // This code is generated by Resources.Designer.t4
-        // If you get compile errors because you don't use the TomsToolbox.Desktop NuGet package, remove this part in the Resources.Designer.t4 file. 
+        // If you get compile errors because you don't use the TomsToolbox.Essentials NuGet package, remove this part in the Resources.Designer.t4 file. 
         // Just search for this text and follow the instructions above.
 
         private readonly string _resourceKey;
