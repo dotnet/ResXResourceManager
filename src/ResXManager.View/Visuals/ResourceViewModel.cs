@@ -546,7 +546,7 @@
                     }
                 }
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException)
             {
             }
             catch (Exception ex)
