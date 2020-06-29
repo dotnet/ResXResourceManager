@@ -46,9 +46,6 @@
         </Setter.Value>
       </Setter>
     </Style>
-
-    <themes:ResourceLocator x:Key="ResourceLocator" />
-
   </UserControl.Resources>
 
   <ScrollViewer Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Width="800" HorizontalAlignment="Left" VerticalScrollBarVisibility="Auto">
@@ -198,7 +195,7 @@
             <DataGridTextColumn Header="{x:Static properties:Resources.CommentToken}" Binding="{Binding SingleLineComment}" Width="2*" />
           </DataGrid.Columns>
           <Interactions:Interaction.Behaviors>
-            <dgx:ExtendedStarSizeBehavior ResourceLocator="{StaticResource ResourceLocator}" />
+            <dgx:ExtendedStarSizeBehavior ColumnHeaderGripperToolTipStyle="{StaticResource {x:Static themes:ResourceKeys.ColumnHeaderGripperToolTipStyleKey}}" />
           </Interactions:Interaction.Behaviors>
         </DataGrid>
       </GroupBox>
