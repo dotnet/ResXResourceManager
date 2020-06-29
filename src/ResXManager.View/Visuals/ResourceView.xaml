@@ -76,8 +76,6 @@
       <Setter Property="Stretch" Value="None" />
     </Style>
 
-    <themes:ResourceLocator x:Key="ResourceLocator" />
-
   </UserControl.Resources>
 
   <UserControl.InputBindings>
@@ -473,11 +471,12 @@
             <DataGrid x:Name="DataGrid" FrozenColumnCount="1" BorderThickness="0"
                       AutoGenerateColumns="False" CanUserAddRows="False"
                       CanUserDeleteRows="False" CanUserResizeRows="False"
-                      dgx:DataGridFilter.ResourceLocator="{StaticResource ResourceLocator}"
                       dgx:DataGridFilter.ContentFilterFactory="{StaticResource RegexContentFilterFactory}"
                       dgx:Tools.ForceCommitOnLostFocus="True"
                       dgx:Tools.ApplyInitialSorting="True"
                       VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                      EnableColumnVirtualization="True"
+                      EnableRowVirtualization="True"
                       toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
               <DataGrid.Resources>
 
@@ -545,9 +544,9 @@
 
               <DataGrid.ItemsPanel>
                 <ItemsPanelTemplate>
-                  <VirtualizingStackPanel DataContext="{Binding ElementName=DataGrid}"
-                                          TextElement.FontSize="{Binding Path=(view:Appearance.TextFontSize), RelativeSource={RelativeSource Self}}">
-                    <VirtualizingStackPanel.ContextMenu>
+                  <DataGridRowsPresenter x:Name="PART_RowsPresenter"
+                                         TextElement.FontSize="{Binding Path=(view:Appearance.TextFontSize), RelativeSource={RelativeSource Self}}">
+                    <DataGridRowsPresenter.ContextMenu>
                       <ContextMenu>
                         <ContextMenu.Style>
                           <Style TargetType="ContextMenu" BasedOn="{StaticResource {x:Static composition:ResourceKeys.CompositeContextMenuStyle}}">
@@ -560,11 +559,11 @@
                           </Style>
                         </ContextMenu.Style>
                       </ContextMenu>
-                    </VirtualizingStackPanel.ContextMenu>
+                    </DataGridRowsPresenter.ContextMenu>
                     <Interactions:Interaction.Behaviors>
                       <toms:ZoomFontSizeOnMouseWheelBehavior />
                     </Interactions:Interaction.Behaviors>
-                  </VirtualizingStackPanel>
+                  </DataGridRowsPresenter>
                 </ItemsPanelTemplate>
               </DataGrid.ItemsPanel>
 
@@ -667,7 +666,7 @@
 
               <Interactions:Interaction.Behaviors>
                 <dgx:BeginEditOnCtrlEnterBehavior />
-                <dgx:ExtendedStarSizeBehavior ResourceLocator="{StaticResource ResourceLocator}" />
+                <dgx:ExtendedStarSizeBehavior ColumnHeaderGripperToolTipStyle="{StaticResource {x:Static themes:ResourceKeys.ColumnHeaderGripperToolTipStyleKey}}" />
                 <behaviors:ShowErrorsOnlyBehavior x:Name="ShowErrorsOnlyBehavior" ToggleButton="{Binding ElementName=ErrorsOnlyFilterButton}" />
                 <behaviors:DataGridTryBeginEditBehavior />
               </Interactions:Interaction.Behaviors>

@@ -51,14 +51,18 @@
             WriteLine(string.Concat(Resources.Warning, @" ", value));
         }
 
-        public async void WriteLine(string value)
+        public void WriteLine(string value)
         {
             if (!Microsoft.VisualStudio.Shell.ThreadHelper.CheckAccess())
             {
-                await Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+#pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
+                Microsoft.VisualStudio.Shell.ThreadHelper.Generic.BeginInvoke(() => LogMessageToOutputWindow(value + Environment.NewLine));
+#pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
             }
-
-            LogMessageToOutputWindow(value + Environment.NewLine);
+            else
+            {
+                LogMessageToOutputWindow(value + Environment.NewLine);
+            }
         }
 
 #pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
