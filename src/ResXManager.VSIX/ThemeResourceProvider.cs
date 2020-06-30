@@ -1,6 +1,6 @@
 ﻿namespace ResXManager.VSIX
 {
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Windows;
 
     using TomsToolbox.Essentials;

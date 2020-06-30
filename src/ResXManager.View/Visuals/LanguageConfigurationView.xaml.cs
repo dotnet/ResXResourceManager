@@ -2,7 +2,7 @@
 {
     using System;
     using System.ComponentModel;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Globalization;
     using System.Linq;
     using System.Windows;
@@ -16,13 +16,12 @@
     using TomsToolbox.Composition;
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf.Composition;
-    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.AttributedModel;
 
     /// <summary>
     /// Interaction logic for LanguageConfigurationView.xaml
     /// </summary>
     [DataTemplate(typeof(LanguageConfigurationViewModel))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class LanguageConfigurationView
     {
         [ImportingConstructor]

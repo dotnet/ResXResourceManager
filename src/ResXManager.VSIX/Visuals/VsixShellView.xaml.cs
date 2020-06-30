@@ -1,7 +1,7 @@
 ﻿namespace ResXManager.VSIX.Visuals
 {
     using System;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Threading;
@@ -19,7 +19,6 @@
     /// Interaction logic for VsixShellView.xaml
     /// </summary>
     [Export]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class VsixShellView
     {
         [NotNull]

@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
@@ -24,7 +24,7 @@
     using ResXManager.View.Visuals;
 
     using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.AttributedModel;
 
     [VisualCompositionExport(RegionId.Main)]
     internal class MainViewModel : ObservableObject

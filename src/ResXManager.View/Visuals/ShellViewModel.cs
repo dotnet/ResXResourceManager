@@ -1,7 +1,7 @@
 ﻿namespace ResXManager.View.Visuals
 {
     using System.Collections.Specialized;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Windows.Threading;
 
     using JetBrains.Annotations;
@@ -12,7 +12,7 @@
     using ResXManager.Model;
 
     using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.AttributedModel;
 
     [Export]
     [VisualCompositionExport(RegionId.Shell)]

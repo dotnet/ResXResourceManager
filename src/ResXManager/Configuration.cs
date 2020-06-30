@@ -1,6 +1,6 @@
 ﻿namespace ResXManager
 {
-    using System.ComponentModel.Composition;
+    using System.Composition;
 
     using JetBrains.Annotations;
 

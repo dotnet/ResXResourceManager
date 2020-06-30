@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
+    using System.Composition;
+    using System.Composition.Hosting;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -13,32 +13,38 @@
     using ResXManager.Infrastructure;
     using ResXManager.Model;
 
+    using TomsToolbox.Composition;
+    using TomsToolbox.Composition.Mef2;
+
     public sealed class Host : IDisposable
     {
-        private readonly AggregateCatalog _compositionCatalog;
-        private readonly CompositionContainer _compositionContainer;
+        private CompositionHost? _container;
         private readonly SourceFilesProvider _sourceFilesProvider;
 
         public Host()
         {
             var assembly = GetType().Assembly;
 
-            _compositionCatalog = new AggregateCatalog();
-            _compositionContainer = new CompositionContainer(_compositionCatalog, true);
-#pragma warning disable CA2000 // Dispose objects before losing scope => AggregateCatalog will dispose all
-            // ReSharper disable RedundantNameQualifier
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Infrastructure.Properties.AssemblyKey).Assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Model.Properties.AssemblyKey).Assembly));
-#pragma warning restore CA2000 // Dispose objects before losing scope
-            // ReSharper restore RedundantNameQualifier
+            var configuration = new ContainerConfiguration()
+                .WithAssembly(assembly)
+                .WithAssembly(typeof(Infrastructure.Properties.AssemblyKey).Assembly)
+                .WithAssembly(typeof(Model.Properties.AssemblyKey).Assembly);
 
-            _sourceFilesProvider = _compositionContainer.GetExportedValue<SourceFilesProvider>();
-            ResourceManager = _compositionContainer.GetExportedValue<ResourceManager>();
+            _container = configuration.CreateContainer();
+
+            ExportProvider = new ExportProviderAdapter(_container);
+
+            _sourceFilesProvider = ExportProvider.GetExportedValue<SourceFilesProvider>();
+
+            ResourceManager = ExportProvider.GetExportedValue<ResourceManager>();
             ResourceManager.BeginEditing += ResourceManager_BeginEditing;
 
-            Configuration = _compositionContainer.GetExportedValue<Configuration>();
+            Configuration = ExportProvider.GetExportedValue<Configuration>();
         }
+
+        [Export(typeof(IExportProvider))]
+        public IExportProvider? ExportProvider { get; }
+
 
         [NotNull]
         public ResourceManager ResourceManager { get; }
@@ -106,8 +112,7 @@
 
         public void Dispose()
         {
-            _compositionCatalog.Dispose();
-            _compositionContainer.Dispose();
+            _container?.Dispose();
         }
 
         private void ResourceManager_BeginEditing([NotNull] object sender, [NotNull] ResourceBeginEditingEventArgs e)

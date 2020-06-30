@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
@@ -18,7 +18,7 @@
 
     using ResXManager.Infrastructure;
 
-    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.AttributedModel;
 
     [DataTemplate(typeof(MyMemoryTranslator))]
     public class MyMemoryTranslatorConfiguration : Decorator

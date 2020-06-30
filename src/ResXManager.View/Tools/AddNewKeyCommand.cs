@@ -1,7 +1,7 @@
 ﻿namespace ResXManager.View.Tools
 {
     using System;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Linq;
     using System.Windows;
 

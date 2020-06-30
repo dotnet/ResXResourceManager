@@ -1,6 +1,6 @@
 ﻿namespace ResXManager.View.Visuals
 {
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Linq;
     using System.Windows.Input;
 
@@ -12,7 +12,7 @@
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.AttributedModel;
 
     [VisualCompositionExport(RegionId.Content, Sequence = 3)]
     internal class ConfigurationEditorViewModel : ObservableObject

@@ -1,6 +1,6 @@
 ﻿namespace ResXManager.View.Themes
 {
-    using System.ComponentModel.Composition;
+    using System.Composition;
 
     using TomsToolbox.Wpf;
 

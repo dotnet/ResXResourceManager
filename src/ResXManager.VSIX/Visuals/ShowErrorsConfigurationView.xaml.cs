@@ -1,6 +1,6 @@
 ﻿namespace ResXManager.VSIX.Visuals
 {
-    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.AttributedModel;
 
     /// <summary>
     /// Interaction logic for ShowErrorsConfigurationView.xaml

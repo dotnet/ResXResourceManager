@@ -1,12 +1,12 @@
 ﻿namespace ResXManager.VSIX
 {
-    using System.ComponentModel.Composition;
+    using System.Composition;
 
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf.Composition;
-    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.AttributedModel;
 
     [Export]
     [VisualCompositionExport(RegionId.ProjectListContextMenu)]

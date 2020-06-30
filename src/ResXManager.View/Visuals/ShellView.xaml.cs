@@ -1,7 +1,7 @@
 ﻿namespace ResXManager.View.Visuals
 {
     using System;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Globalization;
     using System.IO;
     using System.Text;
@@ -17,14 +17,13 @@
     using TomsToolbox.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
-    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.AttributedModel;
 
     /// <summary>
     /// Interaction logic for ShellView.xaml
     /// </summary>
     [Export]
     [DataTemplate(typeof(ShellViewModel))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class ShellView
     {
         [ImportingConstructor]

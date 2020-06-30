@@ -1,7 +1,7 @@
 ﻿namespace ResXManager.View.Visuals
 {
     using System;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.IO;
     using System.Windows;
 
@@ -11,14 +11,13 @@
 
     using TomsToolbox.Composition;
     using TomsToolbox.Wpf.Composition;
-    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.AttributedModel;
     using TomsToolbox.Wpf.Converters;
 
     /// <summary>
     /// Interaction logic for ConfigurationEditorView.xaml
     /// </summary>
     [DataTemplate(typeof(ConfigurationEditorViewModel))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class ConfigurationEditorView
     {
         [NotNull]

@@ -1,8 +1,8 @@
 ﻿namespace ResXManager
 {
     using System;
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
+    using System.Composition;
+    using System.Composition.Hosting;
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
@@ -14,7 +14,7 @@
     using ResXManager.Model;
 
     using TomsToolbox.Composition;
-    using TomsToolbox.Composition.Mef;
+    using TomsToolbox.Composition.Mef2;
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Composition.XamlExtensions;
@@ -24,19 +24,13 @@
     /// </summary>
     public sealed partial class App : IDisposable
     {
-        private readonly AggregateCatalog _compositionCatalog;
-        private readonly CompositionContainer _compositionContainer;
-        private readonly IExportProvider _exportProvider;
+        private CompositionHost? _container;
 
         public App()
         {
 #if DEBUG && TEST_L10N
             System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("de-DE");
 #endif
-
-            _compositionCatalog = new AggregateCatalog();
-            _compositionContainer = new CompositionContainer(_compositionCatalog, true);
-            _exportProvider = new ExportProviderAdapter(_compositionContainer);
         }
 
         protected override void OnStartup([NotNull] StartupEventArgs e)
@@ -46,33 +40,41 @@
             SynchronizationContextThrottle.TaskFactory = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
 
             var assembly = GetType().Assembly;
-            var folder = Path.GetDirectoryName(assembly.Location);
 
-#pragma warning disable CA2000 // Dispose objects before losing scope => AggregateCatalog will dispose all
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Infrastructure.Properties.AssemblyKey).Assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Model.Properties.AssemblyKey).Assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Translators.Properties.AssemblyKey).Assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(View.Properties.AssemblyKey).Assembly));
-#pragma warning restore CA2000 // Dispose objects before losing scope
+            var configuration = new ContainerConfiguration()
+                .WithAssembly(assembly)
+                .WithAssembly(typeof(Infrastructure.Properties.AssemblyKey).Assembly)
+                .WithAssembly(typeof(Model.Properties.AssemblyKey).Assembly)
+                .WithAssembly(typeof(Translators.Properties.AssemblyKey).Assembly)
+                .WithAssembly(typeof(View.Properties.AssemblyKey).Assembly);
 
-            _compositionContainer.ComposeExportedValue(_exportProvider);
+            _container = configuration.CreateContainer();
 
-            Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(_exportProvider));
+            IExportProvider exportProvider = new ExportProviderAdapter(_container);
+            ExportProvider._instance = exportProvider;
 
-            _compositionContainer.GetExportedValues<IService>().ForEach(service => service.Start());
+            Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(exportProvider));
 
-            var tracer = _exportProvider.GetExportedValue<ITracer>();
+            exportProvider.GetExportedValues<IService>().ForEach(service => service.Start());
+
+            var tracer = exportProvider.GetExportedValue<ITracer>();
             tracer.WriteLine("Started");
-
             tracer.WriteLine(ResXManager.Properties.Resources.IntroMessage);
-            tracer.WriteLine(ResXManager.Properties.Resources.AssemblyLocation, folder ?? "unknown");
+            tracer.WriteLine(ResXManager.Properties.Resources.AssemblyLocation, Path.GetDirectoryName(assembly.Location) ?? "unknown");
             tracer.WriteLine(ResXManager.Properties.Resources.Version, new AssemblyName(assembly.FullName).Version ?? new Version());
 
             VisualComposition.Error += (_, args) => tracer.TraceError(args.Text);
 
-            MainWindow = _exportProvider.GetExportedValue<MainWindow>();
+            MainWindow = exportProvider.GetExportedValue<MainWindow>();
             MainWindow.Show();
+        }
+
+        class ExportProvider
+        {
+            public static IExportProvider? _instance;
+
+            [Export(typeof(IExportProvider))]
+            public IExportProvider? Instance => _instance;
         }
 
         protected override void OnExit([NotNull] ExitEventArgs e)
@@ -84,8 +86,7 @@
 
         public void Dispose()
         {
-            _compositionCatalog.Dispose();
-            _compositionContainer.Dispose();
+            _container?.Dispose();
         }
     }
 }

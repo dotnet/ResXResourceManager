@@ -83,7 +83,6 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -269,10 +268,13 @@
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all">
       <Version>3.2.8</Version>
     </PackageReference>
-    <PackageReference Include="TomsToolbox.Composition.Mef">
+    <PackageReference Include="System.Composition">
+      <Version>1.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="TomsToolbox.Composition.Mef2">
       <Version>2.0.1</Version>
     </PackageReference>
-    <PackageReference Include="TomsToolbox.Wpf.Composition.Mef">
+    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel">
       <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.Wpf.Styles">

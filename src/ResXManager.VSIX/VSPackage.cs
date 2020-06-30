@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
+    using System.Composition;
+    using System.Composition.Hosting;
     using System.ComponentModel.Design;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;

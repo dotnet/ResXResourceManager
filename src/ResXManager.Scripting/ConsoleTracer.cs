@@ -1,7 +1,7 @@
 namespace ResXManager.Scripting
 {
     using System;
-    using System.ComponentModel.Composition;
+    using System.Composition;
 
     using ResXManager.Infrastructure;
 

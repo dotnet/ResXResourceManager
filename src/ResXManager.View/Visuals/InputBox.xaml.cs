@@ -1,7 +1,7 @@
 ﻿namespace ResXManager.View.Visuals
 {
     using System;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Windows;
     using System.Windows.Input;
 
@@ -16,7 +16,6 @@
     /// Input box shows a prompt to enter a string.
     /// </summary>
     [Export(typeof(InputBox))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class InputBox
     {
         /// <summary>

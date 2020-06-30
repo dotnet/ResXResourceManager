@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Specialized;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Diagnostics;
     using System.Linq;
 

@@ -4,7 +4,7 @@
     using ResXManager.View.Properties;
 
     using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.AttributedModel;
 
     [VisualCompositionExport(RegionId.Content, Sequence = 4)]
     internal class LanguageConfigurationViewModel : ObservableObject

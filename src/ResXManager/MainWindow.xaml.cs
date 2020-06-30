@@ -2,7 +2,7 @@
 {
     using System;
     using System.ComponentModel;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Diagnostics;
     using System.Windows;
     using System.Windows.Controls.Primitives;
@@ -22,7 +22,6 @@
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     [Export]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class MainWindow
     {
         [NotNull]

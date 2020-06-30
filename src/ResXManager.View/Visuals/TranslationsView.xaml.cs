@@ -1,7 +1,7 @@
 ﻿namespace ResXManager.View.Visuals
 {
     using System;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -12,13 +12,12 @@
     using TomsToolbox.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
-    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.AttributedModel;
 
     /// <summary>
     /// Interaction logic for Translations.xaml
     /// </summary>
     [DataTemplate(typeof(TranslationsViewModel))]
-    [PartCreationPolicy(CreationPolicy.Shared)]
     public partial class TranslationsView
     {
         [ImportingConstructor]

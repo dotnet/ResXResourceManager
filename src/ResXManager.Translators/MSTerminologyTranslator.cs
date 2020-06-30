@@ -1,7 +1,7 @@
 ﻿namespace ResXManager.Translators
 {
     using System;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Globalization;
     using System.Linq;
     using System.ServiceModel;
@@ -14,7 +14,7 @@
     using ResXManager.Translators.Microsoft.TerminologyService;
 
     using TomsToolbox.Essentials;
-    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.AttributedModel;
 
     [DataTemplate(typeof(MSTerminologyTranslator))]
     public class MSTerminologyTranslatorConfiguration : Decorator

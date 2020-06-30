@@ -1,12 +1,12 @@
 ﻿namespace ResXManager.VSIX.Visuals
 {
-    using System.ComponentModel.Composition;
+    using System.Composition;
 
     using JetBrains.Annotations;
 
     using ResXManager.Infrastructure;
 
-    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.AttributedModel;
 
     [LocalizedDisplayName(StringResourceKey.MoveToResource)]
     [VisualCompositionExport(RegionId.Configuration)]

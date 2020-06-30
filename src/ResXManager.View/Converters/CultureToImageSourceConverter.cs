@@ -1,7 +1,7 @@
 ﻿namespace ResXManager.View.Converters
 {
     using System;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Globalization;
     using System.Linq;
     using System.Windows.Data;

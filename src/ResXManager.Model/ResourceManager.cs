@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -42,7 +42,7 @@
         public event EventHandler<ProjectFileEventArgs>? ProjectFileSaved;
 
         [ImportingConstructor]
-        private ResourceManager([NotNull] ISourceFilesProvider sourceFilesProvider, [NotNull] IConfiguration configuration)
+        public ResourceManager([NotNull] ISourceFilesProvider sourceFilesProvider, [NotNull] IConfiguration configuration)
         {
             Configuration = configuration;
 

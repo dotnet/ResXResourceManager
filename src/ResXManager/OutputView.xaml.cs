@@ -1,7 +1,7 @@
 ﻿namespace ResXManager
 {
     using System;
-    using System.ComponentModel.Composition;
+    using System.Composition;
 
     using JetBrains.Annotations;
 
@@ -9,13 +9,12 @@
 
     using TomsToolbox.Composition;
     using TomsToolbox.Wpf.Composition;
-    using TomsToolbox.Wpf.Composition.Mef;
+    using TomsToolbox.Wpf.Composition.AttributedModel;
 
     /// <summary>
     /// Interaction logic for OutputView.xaml
     /// </summary>
     [DataTemplate(typeof(OutputViewModel))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class OutputView
     {
         [ImportingConstructor]
