@@ -21,9 +21,6 @@
       </MenuItem>
     </Menu>
 
-    <Grid>
-      <ContentControl composition:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Shell}" />
-      <toms:LoadingIndicator IsActive="{Binding ResourceViewModel.IsLoading}" Header="Loading..." />
-    </Grid>
+    <ContentControl composition:VisualComposition.RegionId="{x:Static infrastructure:RegionId.Shell}" />
   </DockPanel>
 </UserControl>
