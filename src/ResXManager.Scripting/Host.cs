@@ -3,48 +3,42 @@
     using System;
     using System.Collections.Generic;
     using System.Composition;
-    using System.Composition.Hosting;
     using System.Globalization;
     using System.IO;
     using System.Linq;
 
     using JetBrains.Annotations;
 
+    using Ninject;
+
     using ResXManager.Infrastructure;
     using ResXManager.Model;
 
     using TomsToolbox.Composition;
-    using TomsToolbox.Composition.Mef2;
+    using TomsToolbox.Composition.Ninject;
 
     public sealed class Host : IDisposable
     {
-        private CompositionHost? _container;
+        private readonly IKernel _kernel = new StandardKernel();
         private readonly SourceFilesProvider _sourceFilesProvider;
 
         public Host()
         {
             var assembly = GetType().Assembly;
 
-            var configuration = new ContainerConfiguration()
-                .WithAssembly(assembly)
-                .WithAssembly(typeof(Infrastructure.Properties.AssemblyKey).Assembly)
-                .WithAssembly(typeof(Model.Properties.AssemblyKey).Assembly);
+            _kernel.BindExports(assembly,
+                typeof(Infrastructure.Properties.AssemblyKey).Assembly,
+                typeof(Model.Properties.AssemblyKey).Assembly);
 
-            _container = configuration.CreateContainer();
+            IExportProvider exportProvider = new ExportProvider(_kernel);
 
-            ExportProvider = new ExportProviderAdapter(_container);
+            _sourceFilesProvider = exportProvider.GetExportedValue<SourceFilesProvider>();
 
-            _sourceFilesProvider = ExportProvider.GetExportedValue<SourceFilesProvider>();
-
-            ResourceManager = ExportProvider.GetExportedValue<ResourceManager>();
+            ResourceManager = exportProvider.GetExportedValue<ResourceManager>();
             ResourceManager.BeginEditing += ResourceManager_BeginEditing;
 
-            Configuration = ExportProvider.GetExportedValue<Configuration>();
+            Configuration = exportProvider.GetExportedValue<Configuration>();
         }
-
-        [Export(typeof(IExportProvider))]
-        public IExportProvider? ExportProvider { get; }
-
 
         [NotNull]
         public ResourceManager ResourceManager { get; }
@@ -112,7 +106,7 @@
 
         public void Dispose()
         {
-            _container?.Dispose();
+            _kernel?.Dispose();
         }
 
         private void ResourceManager_BeginEditing([NotNull] object sender, [NotNull] ResourceBeginEditingEventArgs e)
@@ -166,8 +160,8 @@
         public Configuration Configuration { get; }
     }
 
+    [Export]
     [Export(typeof(IConfiguration))]
-    [Export(typeof(Configuration))]
     [Shared]
     public class Configuration : IConfiguration
     {

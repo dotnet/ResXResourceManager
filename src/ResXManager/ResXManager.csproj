@@ -268,7 +268,7 @@
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all">
       <Version>3.2.8</Version>
     </PackageReference>
-    <PackageReference Include="TomsToolbox.Composition.Mef2">
+    <PackageReference Include="TomsToolbox.Composition.Ninject">
       <Version>2.0.2</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel">

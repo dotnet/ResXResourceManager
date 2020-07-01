@@ -1,8 +1,6 @@
 ﻿namespace ResXManager
 {
     using System;
-    using System.Composition;
-    using System.Composition.Hosting;
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
@@ -10,11 +8,13 @@
 
     using JetBrains.Annotations;
 
+    using Ninject;
+
     using ResXManager.Infrastructure;
     using ResXManager.Model;
 
     using TomsToolbox.Composition;
-    using TomsToolbox.Composition.Mef2;
+    using TomsToolbox.Composition.Ninject;
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Composition.XamlExtensions;
@@ -24,7 +24,7 @@
     /// </summary>
     public sealed partial class App : IDisposable
     {
-        private CompositionHost? _container;
+        private IKernel _kernel = new StandardKernel();
 
         public App()
         {
@@ -41,17 +41,15 @@
 
             var assembly = GetType().Assembly;
 
-            var configuration = new ContainerConfiguration()
-                .WithAssembly(assembly)
-                .WithAssembly(typeof(Infrastructure.Properties.AssemblyKey).Assembly)
-                .WithAssembly(typeof(Model.Properties.AssemblyKey).Assembly)
-                .WithAssembly(typeof(Translators.Properties.AssemblyKey).Assembly)
-                .WithAssembly(typeof(View.Properties.AssemblyKey).Assembly);
+            _kernel.BindExports(assembly,
+                typeof(Infrastructure.Properties.AssemblyKey).Assembly,
+                typeof(Model.Properties.AssemblyKey).Assembly,
+                typeof(Translators.Properties.AssemblyKey).Assembly,
+                typeof(View.Properties.AssemblyKey).Assembly);
 
-            _container = configuration.CreateContainer();
 
-            IExportProvider exportProvider = new ExportProviderAdapter(_container);
-            ExportProvider._instance = exportProvider;
+            IExportProvider exportProvider = new ExportProvider(_kernel);
+            _kernel.Bind<IExportProvider>().ToConstant(exportProvider);
 
             Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(exportProvider));
 
@@ -69,14 +67,6 @@
             MainWindow.Show();
         }
 
-        class ExportProvider
-        {
-            public static IExportProvider? _instance;
-
-            [Export(typeof(IExportProvider))]
-            public IExportProvider? Instance => _instance;
-        }
-
         protected override void OnExit([NotNull] ExitEventArgs e)
         {
             Dispose();
@@ -86,7 +76,7 @@
 
         public void Dispose()
         {
-            _container?.Dispose();
+            _kernel?.Dispose();
         }
     }
 }
