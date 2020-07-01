@@ -28,7 +28,7 @@ namespace ResXManager.Tests
                 .Where(path => !path.Contains("Release"))
                 .Distinct(new DelegateEqualityComparer<string>(Path.GetFileName));
 
-            var targetFolder = Path.Combine(sourceFolder, @".migration\after");
+            var targetFolder = Path.Combine(sourceFolder, @".migration\before");
 
             foreach (var assemblyFileName in assemblyFileNames)
             {
@@ -40,6 +40,7 @@ namespace ResXManager.Tests
 
                 var targetFile = Path.Combine(targetFolder, Path.GetFileNameWithoutExtension(assemblyFileName) + ".mef.json");
 
+                Directory.CreateDirectory(Path.GetDirectoryName(targetFile));
                 File.WriteAllText(targetFile, data);
             }
         }
