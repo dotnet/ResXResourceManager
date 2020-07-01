@@ -532,6 +532,10 @@
                   </GroupStyle.ContainerStyle>
                 </GroupStyle>
 
+                <Style TargetType="DataGridColumnHeadersPresenter">
+                  <Setter Property="MinHeight" Value="12" />
+                </Style>
+
               </DataGrid.Resources>
 
               <DataGrid.InputBindings>
