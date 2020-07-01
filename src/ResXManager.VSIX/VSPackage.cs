@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Composition;
-    using System.Composition.Hosting;
     using System.ComponentModel.Design;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -21,6 +19,8 @@
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
+    using Ninject;
+
     using Throttle;
 
     using ResXManager.Infrastructure;
@@ -30,7 +30,7 @@
     using ResXManager.VSIX.Visuals;
 
     using TomsToolbox.Composition;
-    using TomsToolbox.Composition.Mef;
+    using TomsToolbox.Composition.Ninject;
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
 
@@ -39,7 +39,7 @@
     /// </summary>
     // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is a package.
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Package already handles this.")]
-    [PackageRegistration(UseManagedResourcesOnly = true,  AllowsBackgroundLoading = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     // This attribute is used to register the informations needed to show the this package in the Help/About dialog of Visual Studio.
     [InstalledProductRegistration(@"#110", @"#112", Product.Version, IconResourceID = 400)]
     // This attribute is needed to let the shell know that this package exposes some menus.
@@ -53,9 +53,8 @@
     {
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
         private readonly ManualResetEvent _exportProviderLoaded = new ManualResetEvent(false);
-        private readonly AggregateCatalog _compositionCatalog;
-        private readonly CompositionContainer _compositionContainer;
-        private readonly IExportProvider _exportProvider;
+        private IExportProvider? _exportProvider;
+        private readonly IKernel _kernel = new StandardKernel();
 
         private EnvDTE.SolutionEvents? _solutionEvents;
         private EnvDTE.DocumentEvents? _documentEvents;
@@ -71,10 +70,8 @@
             _instance = this;
             Tracer = new OutputWindowTracer(this);
 
-            _compositionCatalog = new AggregateCatalog();
-            _compositionContainer = new CompositionContainer(_compositionCatalog, true);
-            _exportProvider = new ExportProviderAdapter(_compositionContainer);
-            _compositionContainer.ComposeExportedValue(_exportProvider);
+            _kernel.Bind<ITracer>().ToConstant(Tracer);
+            _kernel.Bind<IServiceProvider>().ToConstant(this).Named(nameof(VsPackage));
         }
 
         [NotNull]
@@ -133,7 +130,7 @@
             ConnectEvents();
 
             // start background services
-            _compositionContainer
+            _exportProvider
                 .GetExportedValues<IService>()
                 .ForEach(service => service.Start());
 
@@ -156,8 +153,7 @@
             base.Dispose(disposing);
 
             _customToolRunner.Dispose();
-            _compositionCatalog.Dispose();
-            _compositionContainer.Dispose();
+            _kernel.Dispose();
         }
 
         private void ShowLoaderMessages([NotNull] LoaderMessages messages)
@@ -187,11 +183,7 @@
         [NotNull]
         private LoaderMessages FillCatalog()
         {
-            _compositionContainer.ComposeExportedValue(nameof(VsPackage), (IServiceProvider)this);
-            _compositionContainer.ComposeExportedValue(Tracer);
-
             var assembly = GetType().Assembly;
-
             var messages = new LoaderMessages();
 
             //var allLocalAssemblyFileNames = Directory.EnumerateFiles(path, @"*.dll");
@@ -205,13 +197,14 @@
             //    .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
             //    .ToList();
 
-#pragma warning disable CA2000 // Dispose objects before losing scope => AggregateCatalog will dispose all
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Infrastructure.Properties.AssemblyKey).Assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Model.Properties.AssemblyKey).Assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Translators.Properties.AssemblyKey).Assembly));
-            _compositionCatalog.Catalogs.Add(new AssemblyCatalog(typeof(View.Properties.AssemblyKey).Assembly));
-#pragma warning restore CA2000 // Dispose objects before losing scope
+            _kernel.BindExports(assembly,
+                typeof(Infrastructure.Properties.AssemblyKey).Assembly,
+                typeof(Model.Properties.AssemblyKey).Assembly,
+                typeof(Translators.Properties.AssemblyKey).Assembly,
+                typeof(View.Properties.AssemblyKey).Assembly);
+
+            _exportProvider = new ExportProvider(_kernel);
+            _kernel.Bind<IExportProvider>().ToConstant(_exportProvider);
 
             _exportProviderLoaded.Set();
 

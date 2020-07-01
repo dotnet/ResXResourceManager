@@ -26,7 +26,7 @@
         private IEnumerable<ProjectFile>? _projectFiles;
 
         [ImportingConstructor]
-        public DteSolution([NotNull][Import(nameof(VsPackage))] IServiceProvider serviceProvider, [NotNull] ITracer tracer)
+        public DteSolution([NotNull][Import(nameof(VsPackage))][Ninject.Named(nameof(VsPackage))] IServiceProvider serviceProvider, [NotNull] ITracer tracer)
         {
             _serviceProvider = serviceProvider;
             _tracer = tracer;

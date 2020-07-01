@@ -28,7 +28,7 @@ namespace ResXManager.Tests
                 .Where(path => !path.Contains("Release"))
                 .Distinct(new DelegateEqualityComparer<string>(Path.GetFileName));
 
-            var targetFolder = Path.Combine(sourceFolder, @".migration\before");
+            var targetFolder = Path.Combine(sourceFolder, @".migration\after");
 
             foreach (var assemblyFileName in assemblyFileNames)
             {
