@@ -101,6 +101,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Topics", "Topics", "{E3F92F
 		..\Documentation\Topics\Usage.md = ..\Documentation\Topics\Usage.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResXManager.Tests", "ResXManager.Tests\ResXManager.Tests.csproj", "{0C11F826-3F3D-4F55-91E4-331A9DE159A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +137,10 @@ Global
 		{4C82721F-0FFA-4D91-9C08-70D20115AC6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C82721F-0FFA-4D91-9C08-70D20115AC6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C82721F-0FFA-4D91-9C08-70D20115AC6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C11F826-3F3D-4F55-91E4-331A9DE159A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C11F826-3F3D-4F55-91E4-331A9DE159A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C11F826-3F3D-4F55-91E4-331A9DE159A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C11F826-3F3D-4F55-91E4-331A9DE159A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
