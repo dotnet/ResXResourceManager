@@ -10,6 +10,7 @@
 
     [LocalizedDisplayName(StringResourceKey.MoveToResource)]
     [VisualCompositionExport(RegionId.Configuration)]
+    [Shared]
     internal class MoveToResourceConfigurationViewModel
     {
         [ImportingConstructor]

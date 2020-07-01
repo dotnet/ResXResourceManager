@@ -15,6 +15,7 @@
     /// Interaction logic for CodeGeneratorView.xaml
     /// </summary>
     [VisualCompositionExport(RegionId.ProjectListItemDecorator)]
+    [Shared]
     public partial class CodeGeneratorView
     {
         [ImportingConstructor]

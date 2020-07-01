@@ -4,7 +4,7 @@
 
     using TomsToolbox.Wpf;
 
-    [Export]
+    [Export, Shared]
     public class ThemeManager : ObservableObject
     {
         public bool IsDarkTheme { get; set; }

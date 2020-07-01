@@ -18,6 +18,7 @@
     /// Interaction logic for Translations.xaml
     /// </summary>
     [DataTemplate(typeof(TranslationsViewModel))]
+    [Shared]
     public partial class TranslationsView
     {
         [ImportingConstructor]

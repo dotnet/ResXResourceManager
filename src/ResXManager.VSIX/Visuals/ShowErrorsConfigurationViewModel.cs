@@ -10,6 +10,7 @@
 
     [LocalizedDisplayName(StringResourceKey.ShowErrorsConfiguration_Header)]
     [VisualCompositionExport(RegionId.Configuration)]
+    [Shared]
     internal class ShowErrorsConfigurationViewModel
     {
         [ImportingConstructor]

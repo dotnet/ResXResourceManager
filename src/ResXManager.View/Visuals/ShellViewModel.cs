@@ -14,7 +14,7 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.AttributedModel;
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(RegionId.Shell)]
     public class ShellViewModel : ObservableObject
     {

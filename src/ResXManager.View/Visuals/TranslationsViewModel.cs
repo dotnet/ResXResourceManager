@@ -25,6 +25,7 @@
     using Settings = ResXManager.Model.Properties.Settings;
 
     [VisualCompositionExport(RegionId.Content, Sequence = 2)]
+    [Shared]
     internal class TranslationsViewModel : ObservableObject
     {
         [NotNull]

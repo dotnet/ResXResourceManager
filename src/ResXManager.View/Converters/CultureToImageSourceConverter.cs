@@ -15,7 +15,7 @@
 
     using TomsToolbox.Essentials;
 
-    [Export]
+    [Export, Shared]
     public class CultureToImageSourceConverter : IValueConverter
     {
         [NotNull]

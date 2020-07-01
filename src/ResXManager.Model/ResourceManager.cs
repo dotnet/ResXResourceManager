@@ -23,7 +23,7 @@
     /// <summary>
     /// Represents all resources found in a folder and it's sub folders.
     /// </summary>
-    [Export]
+    [Export, Shared]
     [AddINotifyPropertyChangedInterface]
     public sealed class ResourceManager
     {

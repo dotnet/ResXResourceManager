@@ -17,7 +17,7 @@
 
     using JsonConvert = Newtonsoft.Json.JsonConvert;
 
-    [Export(typeof(IService))]
+    [Export(typeof(IService)), Shared]
     class WebFilesExporter : IService
     {
         private readonly ResourceManager _resourceManager;

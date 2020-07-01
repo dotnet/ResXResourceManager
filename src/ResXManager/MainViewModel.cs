@@ -27,6 +27,7 @@
     using TomsToolbox.Wpf.Composition.AttributedModel;
 
     [VisualCompositionExport(RegionId.Main)]
+    [Shared]
     internal class MainViewModel : ObservableObject
     {
         private readonly ITracer _tracer;
@@ -331,6 +332,7 @@
 
     [Export]
     [Export(typeof(ISourceFilesProvider))]
+    [Shared]
     internal class SourceFilesProvider : ObservableObject, ISourceFilesProvider
     {
         [NotNull]

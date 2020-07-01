@@ -17,7 +17,7 @@
 
     using TomsToolbox.Wpf;
 
-    [Export]
+    [Export, Shared]
     public sealed class TranslatorHost : IDisposable
     {
         private readonly ITranslator[] _translators;

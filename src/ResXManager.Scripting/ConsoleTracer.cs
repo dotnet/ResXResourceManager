@@ -5,7 +5,7 @@ namespace ResXManager.Scripting
 
     using ResXManager.Infrastructure;
 
-    [Export(typeof(ITracer))]
+    [Export(typeof(ITracer)), Shared]
     internal class ConsoleTracer : ITracer
     {
         public void TraceError(string value)

@@ -19,7 +19,7 @@ namespace ResXManager.Translators
 
     using TomsToolbox.Essentials;
 
-    [Export(typeof(ITranslator))]
+    [Export(typeof(ITranslator)), Shared]
     public class AzureTranslator : TranslatorBase
     {
         [NotNull]

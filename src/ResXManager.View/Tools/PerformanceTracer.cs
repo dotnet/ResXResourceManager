@@ -15,7 +15,7 @@
 
     using TomsToolbox.Wpf;
 
-    [Export]
+    [Export, Shared]
     public class PerformanceTracer
     {
         [NotNull]

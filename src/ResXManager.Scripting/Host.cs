@@ -168,6 +168,7 @@
 
     [Export(typeof(IConfiguration))]
     [Export(typeof(Configuration))]
+    [Shared]
     public class Configuration : IConfiguration
     {
         public bool SaveFilesImmediatelyUponChange => false;

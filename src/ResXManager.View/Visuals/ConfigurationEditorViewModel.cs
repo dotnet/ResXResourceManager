@@ -15,6 +15,7 @@
     using TomsToolbox.Wpf.Composition.AttributedModel;
 
     [VisualCompositionExport(RegionId.Content, Sequence = 3)]
+    [Shared]
     internal class ConfigurationEditorViewModel : ObservableObject
     {
         [ImportingConstructor]

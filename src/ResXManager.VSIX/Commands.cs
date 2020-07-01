@@ -8,7 +8,7 @@
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Composition.AttributedModel;
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(RegionId.ProjectListContextMenu)]
     [LocalizedDisplayName(StringResourceKey.CodeGenerator_CommandGroup)]
     [Text(SubRegionIdKey, @"CodeGen")]
@@ -16,7 +16,7 @@
     {
     }
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(@"CodeGen")]
     [LocalizedDisplayName(StringResourceKey.CodeGenerator_CommandInternal)]
     [Text(IsCheckableKey, @"True")]
@@ -24,7 +24,7 @@
     {
     }
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(@"CodeGen")]
     [LocalizedDisplayName(StringResourceKey.CodeGenerator_CommandPublic)]
     [Text(IsCheckableKey, @"True")]
@@ -32,7 +32,7 @@
     {
     }
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(@"CodeGen")]
     [LocalizedDisplayName(StringResourceKey.CodeGenerator_CommandTextTemplate)]
     [Text(IsCheckableKey, @"True")]

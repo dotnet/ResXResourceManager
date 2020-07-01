@@ -17,12 +17,13 @@
 
     using ThreadState = System.Threading.ThreadState;
 
-    [Export]
+    [Export, Shared]
     public class CodeReferenceTracker
     {
         private Engine? _engine;
 
-        private CodeReferenceTracker()
+        [ImportingConstructor]
+        public CodeReferenceTracker()
         {
         }
 

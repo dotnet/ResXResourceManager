@@ -27,6 +27,7 @@
     /// Interaction logic for ResourceView.xaml
     /// </summary>
     [DataTemplate(typeof(ResourceViewModel))]
+    [Shared]
     public partial class ResourceView
     {
         [NotNull]

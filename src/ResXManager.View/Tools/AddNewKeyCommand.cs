@@ -13,7 +13,7 @@
     using TomsToolbox.Composition;
     using TomsToolbox.Wpf;
 
-    [Export]
+    [Export, Shared]
     internal class AddNewKeyCommand : DelegateCommand<DependencyObject>
     {
         [NotNull]

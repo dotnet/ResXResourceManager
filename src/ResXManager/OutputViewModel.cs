@@ -17,6 +17,7 @@
 
     [VisualCompositionExport(RegionId.Content, Sequence = 99)]
     [Export(typeof(ITracer))]
+    [Shared]
     public sealed class OutputViewModel : ObservableObject, ITracer
     {
         [NotNull]

@@ -9,7 +9,7 @@
 
     using ResXManager.Model;
 
-    [Export]
+    [Export, Shared]
     public class CultureToDisplayNameConverter : IValueConverter
     {
         [NotNull]

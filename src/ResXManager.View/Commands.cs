@@ -9,7 +9,7 @@
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Composition.AttributedModel;
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(RegionId.ResourceTableContextMenu, RegionId.ResourceTableItemContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Delete)]
     [Text(IconUriKey, "pack://application:,,,/ResXManager.View;component/Assets/delete.png")]
@@ -18,7 +18,7 @@
     {
     }
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Cut)]
     [Text(IconUriKey, "pack://application:,,,/ResXManager.View;component/Assets/cut.png")]
@@ -27,7 +27,7 @@
     {
     }
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(RegionId.ResourceTableContextMenu, RegionId.ResourceTableItemContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Copy)]
     [Text(IconUriKey, "pack://application:,,,/ResXManager.View;component/Assets/copy.png")]
@@ -36,7 +36,7 @@
     {
     }
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(RegionId.ResourceTableContextMenu, RegionId.ProjectListContextMenu, RegionId.ResourceTableItemContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Paste)]
     [Text(IconUriKey, "pack://application:,,,/ResXManager.View;component/Assets/paste.png")]
@@ -45,7 +45,7 @@
     {
     }
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Invariant)]
     [Text(IsCheckableKey, "True")]
@@ -54,7 +54,7 @@
     {
     }
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(RegionId.ResourceTableItemContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Invariant)]
     [Text(IsCheckableKey, "True")]
@@ -63,7 +63,7 @@
     {
     }
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(RegionId.ResourceTableContextMenu)]
     [LocalizedDisplayName(StringResourceKey.Configuration_Rules)]
     [Text(SubRegionIdKey, Region)]
@@ -73,7 +73,7 @@
         public const string Region = "ConsistencyChecks";
     }
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(ConsistencyChecksCommand.Region, Sequence = 1)]
     [Model.Properties.LocalizedDisplayName(Model.Properties.StringResourceKey.ResourceTableEntryRuleStringFormat_Name)]
     [Text(IsCheckableKey, "True")]
@@ -81,14 +81,14 @@
     {
     }
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(ConsistencyChecksCommand.Region, Sequence = 2)]
     [Model.Properties.LocalizedDisplayName(Model.Properties.StringResourceKey.ResourceTableEntryRuleWhiteSpaceLead_Name)]
     [Text(IsCheckableKey, "True")]
     public class ToggleConsistencyCheckWhiteSpaceLeadCommand : CommandSourceFactory
     {
     }
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(ConsistencyChecksCommand.Region, Sequence = 3)]
     [Model.Properties.LocalizedDisplayName(Model.Properties.StringResourceKey.ResourceTableEntryRuleWhiteSpaceTail_Name)]
     [Text(IsCheckableKey, "True")]
@@ -96,14 +96,14 @@
     {
     }
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(ConsistencyChecksCommand.Region, Sequence = 4)]
     [Model.Properties.LocalizedDisplayName(Model.Properties.StringResourceKey.ResourceTableEntryRulePunctuationLead_Name)]
     [Text(IsCheckableKey, "True")]
     public class ToggleConsistencyCheckPunctuationLeadCommand : CommandSourceFactory
     {
     }
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(ConsistencyChecksCommand.Region, Sequence = 5)]
     [Model.Properties.LocalizedDisplayName(Model.Properties.StringResourceKey.ResourceTableEntryRulePunctuationTail_Name)]
     [Text(IsCheckableKey, "True")]
@@ -111,7 +111,7 @@
     {
     }
 
-    [Export]
+    [Export, Shared]
     [VisualCompositionExport(RegionId.ResourceTableContextMenu, RegionId.ResourceTableItemContextMenu)]
     [LocalizedDisplayName(StringResourceKey.CellSelection)]
     [Text(IsCheckableKey, "True")]
@@ -119,5 +119,4 @@
     public class ToggleCellSelectionCommand : CommandSourceFactory
     {
     }
-
 }

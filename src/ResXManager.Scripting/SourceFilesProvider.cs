@@ -11,7 +11,7 @@ namespace ResXManager.Scripting
     using ResXManager.Infrastructure;
     using ResXManager.Model;
 
-    [Export]
+    [Export, Shared]
     [Export(typeof(ISourceFilesProvider))]
     internal class SourceFilesProvider : ISourceFilesProvider, IFileFilter
     {

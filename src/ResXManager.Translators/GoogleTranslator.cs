@@ -26,7 +26,7 @@
     {
     }
 
-    [Export(typeof(ITranslator))]
+    [Export(typeof(ITranslator)), Shared]
     public class GoogleTranslator : TranslatorBase
     {
         [NotNull]
