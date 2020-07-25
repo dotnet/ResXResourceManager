@@ -8,8 +8,6 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using JetBrains.Annotations;
-
     using Throttle;
 
     using ResXManager.Infrastructure;
@@ -44,7 +42,7 @@
 
         public ITranslationSession? ActiveSession => _activeSession;
 
-        public void StartSession(CultureInfo? sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull][ItemNotNull] ICollection<ITranslationItem> items)
+        public void StartSession(CultureInfo? sourceLanguage, CultureInfo neutralResourcesLanguage, ICollection<ITranslationItem> items)
         {
             Task.Run(() =>
             {
@@ -86,7 +84,7 @@
             settings.Configuration = JsonConvert.SerializeObject(values);
         }
 
-        private static void LoadConfiguration([NotNull][ItemNotNull] ITranslator[] translators, string? configuration)
+        private static void LoadConfiguration(ITranslator[] translators, string? configuration)
         {
             if (string.IsNullOrEmpty(configuration))
                 return;
@@ -120,7 +118,7 @@
             }
         }
 
-        private void RegisterChangeEvents([NotNull][ItemNotNull] ITranslator[] translators)
+        private void RegisterChangeEvents(ITranslator[] translators)
         {
             foreach (var translator in translators)
             {

@@ -7,13 +7,10 @@
     using System.Windows.Controls;
     using System.Windows.Data;
 
-    using JetBrains.Annotations;
-
     using ResXManager.View.Tools;
 
     public sealed class IsCellSelectionInvariantConverter : IValueConverter
     {
-        [NotNull]
         public static readonly IsCellSelectionInvariantConverter Default = new IsCellSelectionInvariantConverter();
 
         object? IValueConverter.Convert(object? value, Type? targetType, object? parameter, CultureInfo? culture)

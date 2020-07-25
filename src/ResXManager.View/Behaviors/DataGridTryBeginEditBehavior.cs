@@ -3,8 +3,6 @@
     using System.Linq;
     using System.Windows.Controls;
 
-    using JetBrains.Annotations;
-
     using Microsoft.Xaml.Behaviors;
 
     using ResXManager.Model;
@@ -26,7 +24,7 @@
             AssociatedObject.BeginningEdit -= DataGrid_BeginningEdit;
         }
 
-        private static void DataGrid_BeginningEdit([NotNull] object sender, [NotNull] DataGridBeginningEditEventArgs e)
+        private static void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
             var dataGridRow = e.Row;
             var entry = (ResourceTableEntry)dataGridRow.Item;

@@ -6,8 +6,6 @@
     using System.Threading.Tasks;
     using System.Windows;
 
-    using JetBrains.Annotations;
-
     using Ninject;
 
     using ResXManager.Infrastructure;
@@ -33,7 +31,7 @@
 #endif
         }
 
-        protected override void OnStartup([NotNull] StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
@@ -46,7 +44,6 @@
                 typeof(Model.Properties.AssemblyKey).Assembly,
                 typeof(Translators.Properties.AssemblyKey).Assembly,
                 typeof(View.Properties.AssemblyKey).Assembly);
-
 
             IExportProvider exportProvider = new ExportProvider(_kernel);
             _kernel.Bind<IExportProvider>().ToConstant(exportProvider);
@@ -67,7 +64,7 @@
             MainWindow.Show();
         }
 
-        protected override void OnExit([NotNull] ExitEventArgs e)
+        protected override void OnExit(ExitEventArgs e)
         {
             Dispose();
 

@@ -6,8 +6,6 @@
     using System.Windows.Controls;
     using System.Windows.Threading;
 
-    using JetBrains.Annotations;
-
     using Microsoft.Xaml.Behaviors;
 
     using Throttle;
@@ -31,7 +29,6 @@
         /// <summary>
         /// Identifies the <see cref="AreAllFilesSelected"/> dependency property
         /// </summary>
-        [NotNull]
         public static readonly DependencyProperty AreAllFilesSelectedProperty =
             DependencyProperty.Register("AreAllFilesSelected", typeof(bool?), typeof(SelectAllBehavior), new FrameworkPropertyMetadata(Settings.Default.AreAllFilesSelected, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (sender, e) => ((SelectAllBehavior)sender).AreAllFilesSelected_Changed((bool?)e.NewValue)));
 
@@ -51,7 +48,7 @@
             _performanceTracer = listBox.GetExportProvider().GetExportedValue<PerformanceTracer>();
         }
 
-        private void ListBox_SelectionChanged([NotNull] object sender, [NotNull] EventArgs e)
+        private void ListBox_SelectionChanged(object sender, EventArgs e)
         {
             var listBox = AssociatedObject;
             if (listBox == null)

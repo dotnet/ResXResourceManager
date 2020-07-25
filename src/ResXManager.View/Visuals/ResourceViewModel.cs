@@ -17,8 +17,6 @@
 
     using DataGridExtensions;
 
-    using JetBrains.Annotations;
-
     using Throttle;
 
     using ResXManager.Infrastructure;
@@ -36,21 +34,16 @@
     [Shared]
     public sealed class ResourceViewModel : ObservableObject, IDisposable
     {
-        [NotNull]
         private readonly Configuration _configuration;
-        [NotNull]
         private readonly ISourceFilesProvider _sourceFilesProvider;
-        [NotNull]
         private readonly ITracer _tracer;
-        [NotNull]
         private readonly CodeReferenceTracker _codeReferenceTracker;
-        [NotNull]
         private readonly PerformanceTracer _performanceTracer;
 
         private CancellationTokenSource? _loadingCancellationTokenSource;
 
         [ImportingConstructor]
-        public ResourceViewModel([NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, [NotNull] ISourceFilesProvider sourceFilesProvider, [NotNull] CodeReferenceTracker codeReferenceTracker, [NotNull] ITracer tracer, [NotNull] PerformanceTracer performanceTracer)
+        public ResourceViewModel(ResourceManager resourceManager, Configuration configuration, ISourceFilesProvider sourceFilesProvider, CodeReferenceTracker codeReferenceTracker, ITracer tracer, PerformanceTracer performanceTracer)
         {
             ResourceManager = resourceManager;
             _configuration = configuration;
@@ -68,22 +61,16 @@
 
         internal event EventHandler<ResourceTableEntryEventArgs>? ClearFiltersRequest;
 
-        [NotNull]
         public ResourceManager ResourceManager { get; }
 
-        [NotNull, ItemNotNull]
         public IObservableCollection<ResourceTableEntry> ResourceTableEntries { get; }
 
-        [NotNull, ItemNotNull]
         public ObservableCollection<ResourceEntity> SelectedEntities { get; } = new ObservableCollection<ResourceEntity>();
 
-        [NotNull, ItemNotNull]
         public ObservableCollection<ResourceTableEntry> SelectedTableEntries { get; } = new ObservableCollection<ResourceTableEntry>();
 
         public bool IsLoading { get; private set; }
 
-        [NotNull]
-        [ItemNotNull]
         public CollectionView GroupedResourceTableEntries
         {
             get
@@ -98,55 +85,38 @@
 
         public string? LoadedSnapshot { get; set; }
 
-        [NotNull]
         public static ICommand ToggleCellSelectionCommand => new DelegateCommand(() => Settings.IsCellSelectionEnabled = !Settings.IsCellSelectionEnabled);
 
-        [NotNull]
         public ICommand CopyCommand => new DelegateCommand<DataGrid>(CanCopy, CopySelected);
 
-        [NotNull]
         public ICommand CutCommand => new DelegateCommand<DataGrid>(CanCut, CutSelected);
 
-        [NotNull]
         public ICommand DeleteCommand => new DelegateCommand<DataGrid>(CanDelete, DeleteSelected);
 
-        [NotNull]
         public ICommand PasteCommand => new DelegateCommand<DataGrid>(CanPaste, Paste);
 
-        [NotNull]
         public ICommand ExportExcelCommand => new DelegateCommand<IExportParameters>(CanExportExcel, ExportExcel);
 
-        [NotNull]
         public ICommand ImportExcelCommand => new DelegateCommand<string>(ImportExcel);
 
-        [NotNull]
         public ICommand ToggleInvariantCommand => new DelegateCommand(() => SelectedTableEntries.Any(), ToggleInvariant);
 
-        [NotNull]
         public static ICommand ToggleItemInvariantCommand => new DelegateCommand<DataGrid>(CanToggleItemInvariant, ToggleItemInvariant);
 
-        [NotNull]
         public ICommand ToggleConsistencyCheckCommand => new DelegateCommand<string>(CanToggleConsistencyCheck, ToggleConsistencyCheck);
 
-        [NotNull]
         public ICommand ReloadCommand => new DelegateCommand(async () => await ForceReloadAsync().ConfigureAwait(false));
 
-        [NotNull]
         public ICommand SaveCommand => new DelegateCommand(() => ResourceManager.HasChanges, () => ResourceManager.Save());
 
-        [NotNull]
         public ICommand BeginFindCodeReferencesCommand => new DelegateCommand(BeginFindCodeReferences);
 
-        [NotNull]
         public ICommand CreateSnapshotCommand => new DelegateCommand<string>(CreateSnapshot);
 
-        [NotNull]
         public ICommand LoadSnapshotCommand => new DelegateCommand<string>(LoadSnapshot);
 
-        [NotNull]
         public ICommand UnloadSnapshotCommand => new DelegateCommand(() => LoadSnapshot(null));
 
-        [NotNull]
         public ICommand SelectEntityCommand
         {
             get
@@ -163,7 +133,7 @@
 
         public int ResourceTableEntryCount => ResourceTableEntries.Count;
 
-        public void AddNewKey([NotNull] ResourceEntity entity, [NotNull] string key)
+        public void AddNewKey(ResourceEntity entity, string key)
         {
             if (!entity.CanEdit(null))
                 return;
@@ -180,7 +150,7 @@
             SelectedTableEntries.Add(entry);
         }
 
-        public void SelectEntry([NotNull] ResourceTableEntry entry)
+        public void SelectEntry(ResourceTableEntry entry)
         {
             if (!ResourceManager.TableEntries.Contains(entry))
                 return;
@@ -196,7 +166,6 @@
             SelectedTableEntries.Add(entry);
         }
 
-        [NotNull]
         private static Settings Settings => Settings.Default;
 
         private void LoadSnapshot(string? fileName)
@@ -206,7 +175,7 @@
             LoadedSnapshot = fileName;
         }
 
-        private void CreateSnapshot([NotNull] string fileName)
+        private void CreateSnapshot(string fileName)
         {
             var snapshot = ResourceManager.CreateSnapshot();
 
@@ -358,7 +327,7 @@
             }
         }
 
-        private void PasteRows([NotNull, ItemNotNull] IList<IList<string>> table)
+        private void PasteRows(IList<IList<string>> table)
         {
             var selectedEntities = SelectedEntities.ToList();
 
@@ -387,7 +356,7 @@
             }
         }
 
-        private static void PasteCells([NotNull] DataGrid dataGrid, [NotNull, ItemNotNull] IList<IList<string>> table)
+        private static void PasteCells(DataGrid dataGrid, IList<IList<string>> table)
         {
             if (dataGrid.GetSelectedVisibleCells().Any(cell => (cell.Item as ResourceTableEntry)?.Container.CanEdit((cell.Column?.Header as ILanguageColumnHeader)?.CultureKey) == false))
                 return;
@@ -578,7 +547,7 @@
             }
         }
 
-        private void BeginFindCodeReferences([NotNull, ItemNotNull] IList<ProjectFile> allSourceFiles)
+        private void BeginFindCodeReferences(IList<ProjectFile> allSourceFiles)
         {
             _codeReferenceTracker.StopFind();
 
@@ -591,7 +560,7 @@
             }
         }
 
-        private void ResourceManager_LanguageChanged([NotNull] object sender, [NotNull] LanguageEventArgs e)
+        private void ResourceManager_LanguageChanged(object sender, LanguageEventArgs e)
         {
             if (!_configuration.SaveFilesImmediatelyUponChange)
                 return;

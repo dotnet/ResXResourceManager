@@ -8,8 +8,6 @@
 
     using DataGridExtensions;
 
-    using JetBrains.Annotations;
-
     using Microsoft.Xaml.Behaviors;
 
     using ResXManager.Model;
@@ -27,7 +25,6 @@
         /// <summary>
         /// Identifies the ToggleButton dependency property
         /// </summary>
-        [NotNull]
         public static readonly DependencyProperty ToggleButtonProperty =
             DependencyProperty.Register("ToggleButton", typeof(ToggleButton), typeof(ShowErrorsOnlyBehavior), new FrameworkPropertyMetadata(null, (sender, e) => ((ShowErrorsOnlyBehavior)sender).ToggleButton_Changed((ToggleButton)e.OldValue, (ToggleButton)e.NewValue)));
 
@@ -50,7 +47,6 @@
             DataGrid.GetAdditionalEvents().ColumnVisibilityChanged -= DataGrid_ColumnVisibilityChanged;
         }
 
-        [NotNull]
         private DataGrid DataGrid => AssociatedObject;
 
         private void ToggleButton_Changed(ToggleButton? oldValue, ToggleButton? newValue)
@@ -69,7 +65,7 @@
             }
         }
 
-        private void ToggleButton_StateChanged([NotNull] object sender, [NotNull] EventArgs e)
+        private void ToggleButton_StateChanged(object sender, EventArgs e)
         {
             Refresh((ToggleButton)sender);
         }
@@ -88,7 +84,7 @@
                 dataGrid.ScrollIntoView(selectedItem);
         }
 
-        private void DataGrid_ColumnVisibilityChanged([NotNull] object source, [NotNull] EventArgs e)
+        private void DataGrid_ColumnVisibilityChanged(object source, EventArgs e)
         {
             var toggleButton = ToggleButton;
 

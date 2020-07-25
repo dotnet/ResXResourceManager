@@ -2,8 +2,6 @@
 {
     using System.Globalization;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     public enum ColumnType
@@ -24,13 +22,11 @@
 
     public interface ILanguageColumnHeader : IColumnHeader
     {
-        [NotNull]
         CultureKey CultureKey
         {
             get;
         }
 
-        [NotNull]
         CultureInfo EffectiveCulture
         {
             get;

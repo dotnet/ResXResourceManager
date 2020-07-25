@@ -14,50 +14,50 @@
 
     public interface ITracer
     {
-        void TraceError([Localizable(false)][NotNull] string value);
+        void TraceError([Localizable(false)]string value);
 
-        void TraceWarning([Localizable(false)][NotNull] string value);
+        void TraceWarning([Localizable(false)]string value);
 
-        void WriteLine([Localizable(false)][NotNull] string value);
+        void WriteLine([Localizable(false)]string value);
     }
 
     public static class TracerExtensions
     {
         [StringFormatMethod("format")]
-        public static void TraceError([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
+        public static void TraceError(this ITracer tracer, [Localizable(false)]string format, params object[] args)
         {
             tracer.TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
         [StringFormatMethod("format")]
-        public static void TraceWarning([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
+        public static void TraceWarning(this ITracer tracer, [Localizable(false)]string format, params object[] args)
         {
             tracer.TraceWarning(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
         [StringFormatMethod("format")]
-        public static void WriteLine([NotNull] this ITracer tracer, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
+        public static void WriteLine(this ITracer tracer, [Localizable(false)]string format, params object[] args)
         {
             tracer.WriteLine(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
         [StringFormatMethod("format")]
-        public static void TraceError([NotNull] this IExportProvider exportProvider, [Localizable(false)][NotNull] string format, [NotNull][ItemNotNull] params object[] args)
+        public static void TraceError(this IExportProvider exportProvider, [Localizable(false)]string format, params object[] args)
         {
             exportProvider.GetExportedValue<ITracer>().TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
-        public static void TraceError([NotNull] this IExportProvider exportProvider, [Localizable(false)][NotNull] string message)
+        public static void TraceError(this IExportProvider exportProvider, [Localizable(false)]string message)
         {
             exportProvider.GetExportedValue<ITracer>().TraceError(message);
         }
 
-        public static void WriteLine([NotNull] this IExportProvider exportProvider, [Localizable(false)] [NotNull] string message)
+        public static void WriteLine(this IExportProvider exportProvider, [Localizable(false)] string message)
         {
             exportProvider.GetExportedValue<ITracer>().WriteLine(message);
         }
 
-        public static void TraceXamlLoaderError([NotNull] this IExportProvider exportProvider, Exception? ex)
+        public static void TraceXamlLoaderError(this IExportProvider exportProvider, Exception? ex)
         {
             var exceptions = ex?.ExceptionChain().Select(e => e.Message);
 

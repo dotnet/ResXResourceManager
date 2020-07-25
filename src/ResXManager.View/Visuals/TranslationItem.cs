@@ -7,8 +7,6 @@ namespace ResXManager.View.Visuals
     using System.Linq;
     using System.Windows.Data;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model;
 
@@ -16,17 +14,14 @@ namespace ResXManager.View.Visuals
 
     public class TranslationItem : ObservableObject, ITranslationItem
     {
-        [NotNull, ItemNotNull]
         private readonly ObservableCollection<ITranslationMatch> _results = new ObservableCollection<ITranslationMatch>();
-        [NotNull]
         private readonly ResourceTableEntry _entry;
 
-        [ItemNotNull]
         private ICollectionView? _orderedResults;
 
         private string? _translation;
 
-        public TranslationItem([NotNull] ResourceTableEntry entry, [NotNull] string source, [NotNull] CultureKey targetCulture)
+        public TranslationItem(ResourceTableEntry entry, string source, CultureKey targetCulture)
         {
             _entry = entry;
             Source = source;
@@ -35,16 +30,12 @@ namespace ResXManager.View.Visuals
             _results.CollectionChanged += (_, __) => OnPropertyChanged(() => Translation);
         }
 
-        [NotNull]
         public string Source { get; }
 
-        [NotNull]
         public CultureKey TargetCulture { get; }
 
         public IList<ITranslationMatch> Results => _results;
 
-        [NotNull]
-        [ItemNotNull]
         public ICollectionView OrderedResults => _orderedResults ??= CreateOrderedResults(_results);
 
         public string? Translation
@@ -61,9 +52,7 @@ namespace ResXManager.View.Visuals
             return _entry.Values.SetValue(TargetCulture, prefix + Translation);
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private static ICollectionView CreateOrderedResults([NotNull][ItemNotNull] IList results)
+        private static ICollectionView CreateOrderedResults(IList results)
         {
             var orderedResults = new ListCollectionView(results);
 

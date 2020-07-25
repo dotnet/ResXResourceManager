@@ -8,8 +8,6 @@
     using System.Windows;
     using System.Windows.Input;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.View.Tools;
 
@@ -25,7 +23,7 @@
     public partial class LanguageConfigurationView
     {
         [ImportingConstructor]
-        public LanguageConfigurationView([NotNull] IExportProvider exportProvider)
+        public LanguageConfigurationView(IExportProvider exportProvider)
         {
             try
             {
@@ -39,7 +37,7 @@
             }
         }
 
-        private void Language_MouseDoubleClick([NotNull] object sender, [NotNull] MouseButtonEventArgs e)
+        private void Language_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var specificCulture = (sender as FrameworkElement)?.DataContext as CultureInfo;
             if (specificCulture == null)

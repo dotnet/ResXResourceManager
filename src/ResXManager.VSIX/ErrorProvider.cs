@@ -3,12 +3,9 @@
     using System;
     using System.Collections.Specialized;
     using System.Composition;
-    using System.Diagnostics;
     using System.Linq;
 
     using EnvDTE;
-
-    using JetBrains.Annotations;
 
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -21,22 +18,17 @@
     [Export]
     internal sealed class ErrorProvider : IDisposable
     {
-        [NotNull]
         private readonly ResourceManager _resourceManager;
-        [NotNull]
         private readonly VsixShellViewModel _shellViewModel;
-        [NotNull]
         private readonly DteConfiguration _configuration;
-        [NotNull]
         private readonly ErrorListProvider _errorListProvider;
-        [NotNull]
         private readonly TaskProvider.TaskCollection _tasks;
 
         private BuildEvents? _buildEvents;
 
 
         [ImportingConstructor]
-        public ErrorProvider([Import(nameof(VsPackage))][Ninject.Named(nameof(VsPackage))][NotNull] IServiceProvider serviceProvider, [NotNull] ResourceManager resourceManager, [NotNull] VsixShellViewModel shellViewModel, [NotNull] DteConfiguration configuration)
+        public ErrorProvider([Import(nameof(VsPackage))][Ninject.Named(nameof(VsPackage))]IServiceProvider serviceProvider, ResourceManager resourceManager, VsixShellViewModel shellViewModel, DteConfiguration configuration)
         {
             _resourceManager = resourceManager;
             _shellViewModel = shellViewModel;
@@ -65,7 +57,7 @@
             buildEvents.OnBuildBegin += BuildEvents_OnBuildBegin;
         }
 
-        private void TableEntries_CollectionChanged([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
+        private void TableEntries_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action != NotifyCollectionChangedAction.Remove)
                 return;
@@ -81,7 +73,7 @@
             }
         }
 
-        public static void Register([NotNull] IExportProvider exportProvider)
+        public static void Register(IExportProvider exportProvider)
         {
             try
             {

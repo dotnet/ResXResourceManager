@@ -9,8 +9,6 @@ namespace ResXManager.Translators
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
@@ -18,13 +16,11 @@ namespace ResXManager.Translators
     [DataContract]
     public abstract class TranslatorBase : ITranslator
     {
-        [NotNull]
         private static readonly Regex _removeKeyboardShortcutIndicatorsRegex = new Regex(@"[&_](?=[\w\d])", RegexOptions.Compiled);
 
-        [NotNull]
         protected static readonly IWebProxy WebProxy = TryGetDefaultProxy();
 
-        protected TranslatorBase([NotNull] string id, [NotNull] string displayName, Uri? uri, [ItemNotNull] IList<ICredentialItem>? credentials)
+        protected TranslatorBase(string id, string displayName, Uri? uri, IList<ICredentialItem>? credentials)
         {
             Id = id;
             DisplayName = displayName;
@@ -71,8 +67,7 @@ namespace ResXManager.Translators
 
         protected abstract Task Translate(ITranslationSession translationSession);
 
-        [NotNull]
-        protected static string RemoveKeyboardShortcutIndicators([NotNull] string value)
+        protected static string RemoveKeyboardShortcutIndicators(string value)
         {
             return _removeKeyboardShortcutIndicatorsRegex.Replace(value, string.Empty);
         }
@@ -91,7 +86,6 @@ namespace ResXManager.Translators
             }
         }
 
-        [UsedImplicitly]
         public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

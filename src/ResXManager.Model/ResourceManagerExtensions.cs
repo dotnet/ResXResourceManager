@@ -4,9 +4,6 @@
     using System.IO;
     using System.Linq;
     using System.Threading;
-    using System.Threading.Tasks;
-
-    using JetBrains.Annotations;
 
     using TomsToolbox.Essentials;
 
@@ -15,9 +12,7 @@
     /// </summary>
     public static class ResourceManagerExtensions
     {
-        [NotNull]
-        [ItemNotNull]
-        public static IList<ProjectFile> GetAllSourceFiles([NotNull] this DirectoryInfo solutionFolder, [NotNull] IFileFilter fileFilter, CancellationToken? cancellationToken)
+        public static IList<ProjectFile> GetAllSourceFiles(this DirectoryInfo solutionFolder, IFileFilter fileFilter, CancellationToken? cancellationToken)
         {
             void EnumerationShouldContinue()
             {
@@ -72,7 +67,7 @@
             return allProjectFiles;
         }
 
-        private static FileInfo? FindProject([NotNull] DirectoryInfo directory, [NotNull] string solutionFolder)
+        private static FileInfo? FindProject(DirectoryInfo directory, string solutionFolder)
         {
             while ((directory != null) && (directory.FullName.Length >= solutionFolder.Length))
             {

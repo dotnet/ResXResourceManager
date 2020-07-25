@@ -3,8 +3,6 @@
     using System;
     using System.Composition;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Composition;
@@ -18,7 +16,7 @@
     public partial class LanguageSelectionBoxView
     {
         [ImportingConstructor]
-        public LanguageSelectionBoxView([NotNull] IExportProvider exportProvider)
+        public LanguageSelectionBoxView(IExportProvider exportProvider)
         {
             try
             {

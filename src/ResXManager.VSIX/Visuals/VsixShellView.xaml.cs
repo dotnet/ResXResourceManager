@@ -6,8 +6,6 @@
     using System.Windows.Media;
     using System.Windows.Threading;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.View.Themes;
 
@@ -21,11 +19,10 @@
     [Export]
     public partial class VsixShellView
     {
-        [NotNull]
         private readonly ThemeManager _themeManager;
 
         [ImportingConstructor]
-        public VsixShellView([NotNull] IExportProvider exportProvider, [NotNull] ThemeManager themeManager, VsixShellViewModel viewModel)
+        public VsixShellView(IExportProvider exportProvider, ThemeManager themeManager, VsixShellViewModel viewModel)
         {
             _themeManager = themeManager;
 

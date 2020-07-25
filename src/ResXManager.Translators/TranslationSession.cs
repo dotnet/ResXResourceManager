@@ -7,18 +7,15 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     public sealed class TranslationSession : INotifyPropertyChanged, ITranslationSession
     {
-        [ItemNotNull]
         private readonly ObservableCollection<string> _internalMessage = new ObservableCollection<string>();
 
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        public TranslationSession(TaskFactory mainThread, CultureInfo? sourceLanguage, [NotNull] CultureInfo neutralResourcesLanguage, [NotNull][ItemNotNull] ICollection<ITranslationItem> items)
+        public TranslationSession(TaskFactory mainThread, CultureInfo? sourceLanguage, CultureInfo neutralResourcesLanguage, ICollection<ITranslationItem> items)
         {
             MainThread = mainThread;
             SourceLanguage = sourceLanguage ?? neutralResourcesLanguage;

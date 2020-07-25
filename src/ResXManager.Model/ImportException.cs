@@ -3,8 +3,6 @@ namespace ResXManager.Model
     using System;
     using System.Runtime.Serialization;
 
-    using JetBrains.Annotations;
-
     [Serializable]
     public class ImportException : Exception
     {
@@ -20,7 +18,7 @@ namespace ResXManager.Model
         {
         }
 
-        protected ImportException([NotNull] SerializationInfo info, StreamingContext context)
+        protected ImportException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

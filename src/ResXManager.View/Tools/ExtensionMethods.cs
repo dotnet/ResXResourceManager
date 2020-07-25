@@ -11,25 +11,23 @@ namespace ResXManager.View.Tools
     using System.Windows.Data;
     using System.Windows.Input;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.View.ColumnHeaders;
 
     public static class ExtensionMethods
     {
-        public static CultureKey? GetCultureKey([NotNull] this DataGridColumn column)
+        public static CultureKey? GetCultureKey(this DataGridColumn column)
         {
             return (column.Header as ILanguageColumnHeader)?.CultureKey;
         }
 
-        public static CultureInfo? GetCulture([NotNull] this DataGridColumn column)
+        public static CultureInfo? GetCulture(this DataGridColumn column)
         {
             return column.GetCultureKey()?.Culture;
         }
 
-        public static void SetEditingElementStyle([NotNull] this DataGridBoundColumn column, Binding? languageBinding, Binding? flowDirectionBinding)
+        public static void SetEditingElementStyle(this DataGridBoundColumn column, Binding? languageBinding, Binding? flowDirectionBinding)
         {
             var textBoxStyle = new Style(typeof(TextBox), column.EditingElementStyle);
             var setters = textBoxStyle.Setters;
@@ -47,7 +45,7 @@ namespace ResXManager.View.Tools
             column.EditingElementStyle = textBoxStyle;
         }
 
-        public static void SetElementStyle([NotNull] this DataGridBoundColumn column, Binding? languageBinding, Binding? flowDirectionBinding)
+        public static void SetElementStyle(this DataGridBoundColumn column, Binding? languageBinding, Binding? flowDirectionBinding)
         {
             var elementStyle = new Style(typeof(TextBlock), column.ElementStyle);
             var setters = elementStyle.Setters;
@@ -59,7 +57,7 @@ namespace ResXManager.View.Tools
             column.ElementStyle = elementStyle;
         }
 
-        private static void EditingElement_PreviewKeyDown([NotNull] object sender, [NotNull] KeyEventArgs e)
+        private static void EditingElement_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Return)
                 return;
@@ -113,20 +111,19 @@ namespace ResXManager.View.Tools
             return false;
         }
 
-        public static bool IsOfColumnType(this DataGridCellInfo cell, [NotNull] params ColumnType[] columnTypes)
+        public static bool IsOfColumnType(this DataGridCellInfo cell, params ColumnType[] columnTypes)
         {
             var cellColumnType = (cell.Column?.Header as ILanguageColumnHeader)?.ColumnType;
 
             return columnTypes.Any(columnType => columnType == cellColumnType);
         }
 
-        [NotNull]
-        public static IEnumerable<DataGridCellInfo> GetSelectedVisibleCells([NotNull] this DataGrid dataGrid)
+        public static IEnumerable<DataGridCellInfo> GetSelectedVisibleCells(this DataGrid dataGrid)
         {
             return dataGrid.SelectedCells.Where(cell => cell.IsValid && cell.Column?.Visibility == Visibility.Visible);
         }
 
-        public static bool GetIsEditing([NotNull] this DataGrid dataGrid)
+        public static bool GetIsEditing(this DataGrid dataGrid)
         {
             var view = (IEditableCollectionView)dataGrid.Items;
 

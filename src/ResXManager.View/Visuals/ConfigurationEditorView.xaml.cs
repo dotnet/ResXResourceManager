@@ -5,8 +5,6 @@
     using System.IO;
     using System.Windows;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Composition;
@@ -20,11 +18,10 @@
     [DataTemplate(typeof(ConfigurationEditorViewModel))]
     public partial class ConfigurationEditorView
     {
-        [NotNull]
         private readonly ITracer _tracer;
 
         [ImportingConstructor]
-        public ConfigurationEditorView([NotNull] IExportProvider exportProvider, [NotNull] ITracer tracer)
+        public ConfigurationEditorView(IExportProvider exportProvider, ITracer tracer)
         {
             _tracer = tracer;
 
@@ -40,7 +37,7 @@
             }
         }
 
-        private void CommandConverter_Error([NotNull] object sender, [NotNull] ErrorEventArgs e)
+        private void CommandConverter_Error(object sender, ErrorEventArgs e)
         {
             var ex = e.GetException();
             if (ex == null)
@@ -51,7 +48,7 @@
             MessageBox.Show(ex.Message, Properties.Resources.Title);
         }
 
-        private void SortNodesByKeyCommandConverter_Executing([NotNull] object sender, [NotNull] ConfirmedCommandEventArgs e)
+        private void SortNodesByKeyCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
         {
             if (MessageBox.Show(Properties.Resources.SortNodesByKey_Confirmation, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {

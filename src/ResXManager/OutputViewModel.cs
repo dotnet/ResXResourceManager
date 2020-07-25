@@ -7,8 +7,6 @@
     using System.Windows;
     using System.Windows.Input;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
@@ -20,11 +18,8 @@
     [Shared]
     public sealed class OutputViewModel : ObservableObject, ITracer
     {
-        [NotNull]
-        [ItemNotNull]
         public ObservableCollection<string> Lines { get; } = new ObservableCollection<string>();
 
-        [NotNull]
         public ICommand CopyCommand => new DelegateCommand(Copy);
 
         private void Copy()
@@ -32,7 +27,7 @@
             Clipboard.SetText(string.Join(Environment.NewLine, Lines));
         }
 
-        private void Append([NotNull] string prefix, [NotNull] string value)
+        private void Append(string prefix, string value)
         {
             var lines = value.Split('\n');
 

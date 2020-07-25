@@ -4,8 +4,6 @@
     using System.Windows;
     using System.Windows.Controls;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     /// <summary>
@@ -18,7 +16,6 @@
             InitializeComponent();
         }
 
-        [ItemNotNull]
         public IEnumerable<ITranslator>? Translators
         {
             get => (IEnumerable<ITranslator>)GetValue(TranslatorsProperty);
@@ -27,11 +24,10 @@
         /// <summary>
         /// Identifies the <see cref="Translators"/> dependency property
         /// </summary>
-        [NotNull]
         public static readonly DependencyProperty TranslatorsProperty =
             DependencyProperty.Register("Translators", typeof(IEnumerable<ITranslator>), typeof(TranslatorConfiguration));
 
-        private void TabControl_Loaded([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void TabControl_Loaded(object sender, RoutedEventArgs e)
         {
             var tabControl = (TabControl)sender;
             tabControl.SelectedIndex = 0;

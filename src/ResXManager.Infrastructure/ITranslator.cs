@@ -5,14 +5,10 @@
     using System.ComponentModel;
     using System.Threading.Tasks;
 
-    using JetBrains.Annotations;
-
     public interface ITranslator : INotifyPropertyChanged
     {
-        [NotNull]
         string Id { get; }
 
-        [NotNull]
         string DisplayName { get; }
 
         Uri? Uri { get; }
@@ -25,9 +21,8 @@
 
         double Ranking { get; set; }
 
-        Task Translate([NotNull] ITranslationSession translationSession);
+        Task Translate(ITranslationSession translationSession);
 
-        [NotNull, ItemNotNull]
         IList<ICredentialItem> Credentials { get; }
     }
 }

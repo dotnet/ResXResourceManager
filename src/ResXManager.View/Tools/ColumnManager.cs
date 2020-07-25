@@ -12,8 +12,6 @@
 
     using DataGridExtensions;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.View.ColumnHeaders;
@@ -29,15 +27,12 @@
 
     public static class ColumnManager
     {
-        [NotNull]
         private const string NeutralCultureKeyString = ".";
-        [NotNull]
         private static readonly BitmapImage _codeReferencesImage = new BitmapImage(new Uri("/ResXManager.View;component/Assets/references.png", UriKind.RelativeOrAbsolute));
 
         /// <summary>
         /// Identifies the ResourceFileExists attached property
         /// </summary>
-        [NotNull]
         public static readonly DependencyProperty ResourceFileExistsProperty =
             DependencyProperty.RegisterAttached("ResourceFileExists", typeof(bool), typeof(ColumnManager), new FrameworkPropertyMetadata(true));
 
@@ -52,22 +47,19 @@
         /// <summary>
         /// Identifies the CellAnnotations attached property
         /// </summary>
-        [NotNull]
         public static readonly DependencyProperty CellAnnotationsProperty =
             DependencyProperty.RegisterAttached("CellAnnotations", typeof(ICollection<string>), typeof(ColumnManager), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
         /// <summary>
         /// Identifies the IsCellInvariant attached property
         /// </summary>
-        [NotNull]
         public static readonly DependencyProperty IsCellInvariantProperty =
             DependencyProperty.RegisterAttached("IsCellInvariant", typeof(bool), typeof(ColumnManager), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits, IsCellInvariant_Changed));
 
-        [NotNull]
         public static readonly DependencyProperty SelectedCellsProperty =
             DependencyProperty.RegisterAttached("SelectedCells", typeof(IList<DataGridCellInfo>), typeof(ColumnManager));
 
-        public static void SetupColumns([NotNull] this DataGrid dataGrid, [NotNull] ResourceManager resourceManager, [NotNull] ResourceViewModel resourceViewModel, [NotNull] Configuration configuration)
+        public static void SetupColumns(this DataGrid dataGrid, ResourceManager resourceManager, ResourceViewModel resourceViewModel, Configuration configuration)
         {
             var dataGridEvents = dataGrid.GetAdditionalEvents();
 
@@ -105,7 +97,7 @@
             }
         }
 
-        public static void CreateNewLanguageColumn([NotNull] this DataGrid dataGrid, [NotNull] Configuration configuration, CultureInfo? culture)
+        public static void CreateNewLanguageColumn(this DataGrid dataGrid, Configuration configuration, CultureInfo? culture)
         {
             var cultureKey = new CultureKey(culture);
 
@@ -116,7 +108,6 @@
             HiddenLanguageColumns = HiddenLanguageColumns.Where(col => !string.Equals(col, key, StringComparison.OrdinalIgnoreCase));
         }
 
-        [NotNull]
         private static DataGridTextColumn CreateKeyColumn()
         {
             return new DataGridTextColumn
@@ -129,7 +120,6 @@
             };
         }
 
-        [NotNull]
         private static DataGridTextColumn CreateIndexColumn(ResourceViewModel? resourceViewModel, Configuration? configuration)
         {
             var elementStyle = new Style(typeof(TextBlock))
@@ -173,7 +163,6 @@
             return column;
         }
 
-        [NotNull]
         private static Image CreateCodeReferencesImage()
         {
             return new Image
@@ -183,8 +172,7 @@
             };
         }
 
-        [NotNull]
-        private static DataGridColumn CreateCodeReferencesColumn([NotNull] FrameworkElement dataGrid)
+        private static DataGridColumn CreateCodeReferencesColumn(FrameworkElement dataGrid)
         {
             var elementStyle = new Style(typeof(TextBlock))
             {
@@ -252,7 +240,7 @@
             return column;
         }
 
-        private static void AddLanguageColumn([NotNull] this DataGrid dataGrid, [NotNull] Configuration configuration, [NotNull] CultureKey cultureKey)
+        private static void AddLanguageColumn(this DataGrid dataGrid, Configuration configuration, CultureKey cultureKey)
         {
             var columns = dataGrid.Columns;
             var key = cultureKey.ToString(NeutralCultureKeyString);
@@ -326,14 +314,14 @@
             columns.AddLanguageColumn(column, languageBinding, flowDirectionBinding);
         }
 
-        private static void AddLanguageColumn([NotNull][ItemNotNull] this ICollection<DataGridColumn> columns, [NotNull] DataGridBoundColumn column, [NotNull] Binding languageBinding, Binding? flowDirectionBinding)
+        private static void AddLanguageColumn(this ICollection<DataGridColumn> columns, DataGridBoundColumn column, Binding languageBinding, Binding? flowDirectionBinding)
         {
             column.SetElementStyle(languageBinding, flowDirectionBinding);
             column.SetEditingElementStyle(languageBinding, flowDirectionBinding);
             columns.Add(column);
         }
 
-        private static void DataGrid_ColumnVisibilityChanged([NotNull] object sender, [NotNull] EventArgs e)
+        private static void DataGrid_ColumnVisibilityChanged(object sender, EventArgs e)
         {
             var dataGrid = (DataGrid)sender;
 
@@ -341,9 +329,7 @@
             HiddenLanguageColumns = UpdateColumnSettings<LanguageHeader>(HiddenLanguageColumns, dataGrid, col => col?.Visibility != Visibility.Visible);
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<string> UpdateColumnSettings<T>([NotNull][ItemNotNull] IEnumerable<string> current, [NotNull] DataGrid dataGrid, [NotNull] Func<DataGridColumn, bool> includePredicate)
+        private static IEnumerable<string> UpdateColumnSettings<T>(IEnumerable<string> current, DataGrid dataGrid, Func<DataGridColumn, bool> includePredicate)
             where T : LanguageColumnHeaderBase
         {
             bool ExcludePredicate(DataGridColumn col) => !includePredicate(col);
@@ -353,9 +339,7 @@
                 .Distinct();
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<string> GetColumnKeys<T>([NotNull] DataGrid dataGrid, [NotNull] Func<DataGridColumn, bool> predicate)
+        private static IEnumerable<string> GetColumnKeys<T>(DataGrid dataGrid, Func<DataGridColumn, bool> predicate)
             where T : LanguageColumnHeaderBase
         {
             return dataGrid.Columns
@@ -365,23 +349,19 @@
                 .Select(hdr => hdr.CultureKey.ToString(NeutralCultureKeyString));
         }
 
-        [NotNull]
-        [ItemNotNull]
         private static IEnumerable<string> VisibleCommentColumns
         {
             get => (Settings.Default.VisibleCommentColumns ?? string.Empty).Split(',');
             set => Settings.Default.VisibleCommentColumns = string.Join(",", value);
         }
 
-        [NotNull]
-        [ItemNotNull]
         private static IEnumerable<string> HiddenLanguageColumns
         {
             get => (Settings.Default.HiddenLanguageColumns ?? string.Empty).Split(',');
             set => Settings.Default.HiddenLanguageColumns = string.Join(",", value);
         }
 
-        private static void DataGrid_CurrentCellChanged([NotNull] object sender, [NotNull] EventArgs eventArgs)
+        private static void DataGrid_CurrentCellChanged(object sender, EventArgs eventArgs)
         {
             var dataGrid = (DataGrid)sender;
             // postpone update, SelectedCells is updates *after* the current cell has changed.
@@ -404,10 +384,8 @@
 
         private class IsRightToLeftToFlowDirectionConverter : IValueConverter
         {
-            [NotNull]
             public static readonly IValueConverter Default = new IsRightToLeftToFlowDirectionConverter();
 
-            [NotNull]
             public object Convert(object? value, Type? targetType, object? parameter, CultureInfo? culture)
             {
                 return true.Equals(value) ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;

@@ -4,10 +4,6 @@
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
 
-    using JetBrains.Annotations;
-
-    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
-
     /// <summary>A rule that is validated against a entry of the resource table.</summary>
     /// <remarks>
     /// This is used to implement the different rules that are used to check the proper translation.
@@ -24,7 +20,6 @@
         /// <returns>
         ///   <see langword="true" /> in case the values passed the check; otherwise <see langword="false" />
         /// </returns>
-        [ContractAnnotation(" => true, message: null; => false, message:notnull")]
-        bool CompliesToRule(string? neutralValue, [NotNull] IEnumerable<string?> values, [Localizable(true)][NotNullWhen(false)] out string? message);
+        bool CompliesToRule(string? neutralValue, IEnumerable<string?> values, [Localizable(true)][NotNullWhen(false)] out string? message);
     }
 }

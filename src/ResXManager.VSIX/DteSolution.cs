@@ -3,11 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Composition;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
-
-    using JetBrains.Annotations;
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
@@ -17,16 +14,13 @@
     {
         private const string SolutionItemsFolderName = "Solution Items";
 
-        [NotNull]
         private readonly IServiceProvider _serviceProvider;
-        [NotNull]
         private readonly ITracer _tracer;
 
-        [ItemNotNull]
         private IEnumerable<ProjectFile>? _projectFiles;
 
         [ImportingConstructor]
-        public DteSolution([NotNull][Import(nameof(VsPackage))][Ninject.Named(nameof(VsPackage))] IServiceProvider serviceProvider, [NotNull] ITracer tracer)
+        public DteSolution([Import(nameof(VsPackage))][Ninject.Named(nameof(VsPackage))] IServiceProvider serviceProvider, ITracer tracer)
         {
             _serviceProvider = serviceProvider;
             _tracer = tracer;
@@ -37,29 +31,25 @@
         /// </summary>
         /// <param name="fileFilter"></param>
         /// <returns>The files.</returns>
-        [NotNull, ItemNotNull]
-        public IEnumerable<ProjectFile> GetProjectFiles([NotNull] IFileFilter fileFilter)
+        public IEnumerable<ProjectFile> GetProjectFiles(IFileFilter fileFilter)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
             return _projectFiles ??= EnumerateProjectFiles(fileFilter) ?? new DirectoryInfo(SolutionFolder).GetAllSourceFiles(fileFilter, null);
         }
 
-        [ItemNotNull]
         public IEnumerable<ProjectFile>? GetCachedProjectFiles()
         {
             return _projectFiles;
         }
 
-        [ItemNotNull]
-        private IEnumerable<ProjectFile>? EnumerateProjectFiles([NotNull] IFileFilter fileFilter)
+        private IEnumerable<ProjectFile>? EnumerateProjectFiles(IFileFilter fileFilter)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
             return EnumerateProjectFiles()?.Where(fileFilter.Matches);
         }
 
-        [ItemNotNull]
         private IEnumerable<ProjectFile>? EnumerateProjectFiles()
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
@@ -108,7 +98,6 @@
         }
 
         // ReSharper disable once SuspiciousTypeConversion.Global
-        [ItemNotNull]
         private EnvDTE80.Solution2? Solution => Dte?.Solution as EnvDTE80.Solution2;
 
         private EnvDTE80.DTE2? Dte => _serviceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
@@ -125,7 +114,6 @@
             }
         }
 
-        [NotNull]
         public string SolutionFolder
         {
             get
@@ -162,7 +150,7 @@
             }
         }
 
-        public EnvDTE.ProjectItem? AddFile([NotNull] string fullName)
+        public EnvDTE.ProjectItem? AddFile(string fullName)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -187,8 +175,6 @@
                 && string.Equals(project.Name, SolutionItemsFolderName, StringComparison.CurrentCultureIgnoreCase);
         }
 
-        [NotNull]
-        [ItemNotNull]
         private IEnumerable<EnvDTE.Project> GetProjects()
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
@@ -216,7 +202,7 @@
             }
         }
 
-        private void GetProjectFiles(string? projectName, [ItemNotNull] EnvDTE.ProjectItems? projectItems, [NotNull] IDictionary<string, DteProjectFile> items)
+        private void GetProjectFiles(string? projectName, EnvDTE.ProjectItems? projectItems, IDictionary<string, DteProjectFile> items)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -248,7 +234,7 @@
             }
         }
 
-        private void GetProjectFiles(string? projectName, [NotNull] EnvDTE.ProjectItem projectItem, [NotNull] IDictionary<string, DteProjectFile> items)
+        private void GetProjectFiles(string? projectName, EnvDTE.ProjectItem projectItem, IDictionary<string, DteProjectFile> items)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -282,7 +268,7 @@
             }
         }
 
-        private string? TryGetFileName([NotNull] EnvDTE.ProjectItem projectItem)
+        private string? TryGetFileName(EnvDTE.ProjectItem projectItem)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 

@@ -2,8 +2,6 @@
 {
     using System;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Composition;
@@ -14,7 +12,7 @@
     /// </summary>
     public partial class CodeReferencesToolTip
     {
-        public CodeReferencesToolTip([NotNull] IExportProvider exportProvider)
+        public CodeReferencesToolTip(IExportProvider exportProvider)
         {
             try
             {

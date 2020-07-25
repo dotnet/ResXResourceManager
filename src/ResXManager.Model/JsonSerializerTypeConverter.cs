@@ -8,8 +8,6 @@
     using System.Runtime.Serialization.Json;
     using System.Text;
 
-    using JetBrains.Annotations;
-
     /// <summary>
     /// A type converter that converts an integer string to a boolean value.
     /// </summary>
@@ -20,7 +18,6 @@
     public class JsonSerializerTypeConverter<T> : TypeConverter
         where T : class
     {
-        [NotNull]
         private readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof(T));
 
         /// <summary>
@@ -99,8 +96,7 @@
         /// </returns>
         /// <exception cref="System.ArgumentNullException">The <paramref name="destinationType"/> parameter is null. </exception>
         /// <exception cref="System.NotSupportedException">The conversion cannot be performed. </exception>
-        [NotNull]
-        public override object ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, [NotNull] object value, Type? destinationType)
+        public override object ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object value, Type? destinationType)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));

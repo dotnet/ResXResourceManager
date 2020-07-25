@@ -5,13 +5,10 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using JetBrains.Annotations;
-
     internal static class AzureAuthentication
     {
         private const string OcpApimSubscriptionKeyHeader = "Ocp-Apim-Subscription-Key";
 
-        [NotNull]
         private static readonly Uri _serviceUrl = new Uri("https://api.cognitive.microsoft.com/sts/v1.0/issueToken");
 
         /// <summary>
@@ -20,7 +17,6 @@
         /// <param name="authenticationKey">Subscription secret key.</param>
         /// <param name="cancellationToken"></param>
         /// <returns>The encoded JWT token.</returns>
-        [NotNull, ItemCanBeNull]
         private static async Task<string?> GetAccessTokenAsync(string? authenticationKey, CancellationToken cancellationToken)
         {
             using (var client = new HttpClient())
@@ -47,7 +43,6 @@
         /// <param name="authenticationKey">Subscription secret key.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The encoded JWT token, prefixed with "Bearer ".</returns>
-        [ItemNotNull]
         public static async Task<string> GetBearerAccessTokenAsync(string? authenticationKey, CancellationToken cancellationToken)
         {
             return "Bearer " + await GetAccessTokenAsync(authenticationKey, cancellationToken).ConfigureAwait(false);

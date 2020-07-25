@@ -16,8 +16,6 @@
     using System.Windows.Documents;
     using System.Windows.Media;
 
-    using JetBrains.Annotations;
-
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.Win32;
@@ -38,16 +36,12 @@
     [Guid("79664857-03bf-4bca-aa54-ec998b3328f8")]
     public sealed class MyToolWindow : ToolWindowPane
     {
-        [NotNull]
         private readonly ITracer _tracer;
 
-        [NotNull]
         private readonly Configuration _configuration;
 
-        [NotNull]
         private readonly IExportProvider _exportProvider;
 
-        [NotNull]
         private readonly ContentControl _contentWrapper = new ContentControl
         {
             Focusable = false, Content = new Border { Background = Brushes.Red }
@@ -140,7 +134,6 @@
             _contentWrapper.Content = null;
         }
 
-        [NotNull]
         private EnvDTE.DTE Dte
         {
             get
@@ -152,7 +145,7 @@
             }
         }
 
-        private static void Navigate_Click(object? sender, [NotNull] RoutedEventArgs e)
+        private static void Navigate_Click(object? sender, RoutedEventArgs e)
         {
             string? url;
 
@@ -181,12 +174,12 @@
         }
 
         [Localizable(false)]
-        private static void CreateWebBrowser([NotNull] string url)
+        private static void CreateWebBrowser(string url)
         {
             Process.Start(url);
         }
 
-        private void ResourceManager_BeginEditing(object? sender, [NotNull] ResourceBeginEditingEventArgs e)
+        private void ResourceManager_BeginEditing(object? sender, ResourceBeginEditingEventArgs e)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -196,7 +189,7 @@
             }
         }
 
-        private bool CanEdit([NotNull] ResourceEntity entity, CultureKey? cultureKey)
+        private bool CanEdit(ResourceEntity entity, CultureKey? cultureKey)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -271,8 +264,7 @@
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        [NotNull, ItemNotNull]
-        private Tuple<string, EnvDTE.Window>[] GetLanguagesOpenedInAnotherEditor([NotNull, ItemNotNull] IEnumerable<ResourceLanguage> languages)
+        private Tuple<string, EnvDTE.Window>[] GetLanguagesOpenedInAnotherEditor(IEnumerable<ResourceLanguage> languages)
         {
             try
             {
@@ -301,7 +293,7 @@
             }
         }
 
-        private bool QueryEditFiles([NotNull] [ItemNotNull] string[] lockedFiles)
+        private bool QueryEditFiles(string[] lockedFiles)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -318,16 +310,14 @@
             return true;
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private static string[] GetLockedFiles([NotNull] [ItemNotNull] IEnumerable<ResourceLanguage> languages)
+        private static string[] GetLockedFiles(IEnumerable<ResourceLanguage> languages)
         {
             return languages.Where(l => !l.ProjectFile.IsWritable)
                 .Select(l => l.FileName)
                 .ToArray();
         }
 
-        private bool AddLanguage([NotNull] ResourceEntity entity, [NotNull] CultureInfo culture)
+        private bool AddLanguage(ResourceEntity entity, CultureInfo culture)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -360,7 +350,7 @@
             return true;
         }
 
-        private void AddProjectItems([NotNull] ResourceEntity entity, [NotNull] ResourceLanguage neutralLanguage, [NotNull] string languageFileName)
+        private void AddProjectItems(ResourceEntity entity, ResourceLanguage neutralLanguage, string languageFileName)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -397,14 +387,13 @@
             }
         }
 
-        [NotNull]
         [Localizable(false)]
-        private static string FormatFileNames([NotNull] [ItemNotNull] IEnumerable<string> lockedFiles)
+        private static string FormatFileNames(IEnumerable<string> lockedFiles)
         {
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
 
-        private void VisualComposition_Error(object? sender, [NotNull] TextEventArgs e)
+        private void VisualComposition_Error(object? sender, TextEventArgs e)
         {
             _tracer.TraceError(e.Text);
         }

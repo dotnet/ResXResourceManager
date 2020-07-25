@@ -6,12 +6,8 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
-
-    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
     /// <summary>
     /// An indexer that maps the language to the localized string for a resource table entry with the specified resource key; 
@@ -19,28 +15,26 @@
     /// </summary>
     public sealed class ResourceTableValues<T> : IEnumerable<ResourceLanguage>
     {
-        [NotNull]
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
-        [NotNull]
         private readonly Func<ResourceLanguage, T> _getter;
-        [NotNull]
         private readonly Func<ResourceLanguage, T, bool> _setter;
 
-        public ResourceTableValues([NotNull] IDictionary<CultureKey, ResourceLanguage> languages, [NotNull] Func<ResourceLanguage, T> getter, [NotNull] Func<ResourceLanguage, T, bool> setter)
+        public ResourceTableValues(IDictionary<CultureKey, ResourceLanguage> languages, Func<ResourceLanguage, T> getter, Func<ResourceLanguage, T, bool> setter)
         {
             _languages = languages;
             _getter = getter;
             _setter = setter;
         }
 
-        [CanBeNull]
+        [MaybeNull, AllowNull]
         public T this[string? cultureKey]
         {
+            [return: MaybeNull]
             get => GetValue(cultureKey);
             set => SetValue(cultureKey, value);
         }
 
-        [CanBeNull]
+        [return: MaybeNull]
         public T GetValue(object? culture)
         {
             var cultureKey = CultureKey.Parse(culture);

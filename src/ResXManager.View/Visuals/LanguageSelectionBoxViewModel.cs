@@ -5,13 +5,11 @@
     using System.Globalization;
     using System.Linq;
 
-    using JetBrains.Annotations;
-
     using TomsToolbox.Wpf;
 
     public class LanguageSelectionBoxViewModel : ObservableObject
     {
-        public LanguageSelectionBoxViewModel([NotNull][ItemNotNull] IEnumerable<CultureInfo> existingLanguages)
+        public LanguageSelectionBoxViewModel(IEnumerable<CultureInfo> existingLanguages)
         {
             Languages = CultureInfo.GetCultures(CultureTypes.AllCultures)
                 .Where(culture => !CultureInfo.InvariantCulture.Equals(culture))
@@ -23,7 +21,6 @@
         [Required]
         public CultureInfo? SelectedLanguage { get; set; }
 
-        [ItemNotNull]
         public ICollection<CultureInfo>? Languages { get; }
     }
 }

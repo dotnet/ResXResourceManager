@@ -22,8 +22,6 @@
 namespace ResXManager.Model.Properties {
     using System;
 
-    using JetBrains.Annotations;
-
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -74,7 +72,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Duplicate keys in '{0}':&amp;#13;&amp;#10;{1}&amp;..."
         /// </summary>
-        [NotNull]
         public static string DuplicateKeyError {
             get {
                 return ResourceManager.GetString("DuplicateKeyError", resourceCulture) ?? string.Empty;
@@ -84,7 +81,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Show an error message and don't load the resource"
         /// </summary>
-        [NotNull]
         public static string DuplicateKeyHandling_Fail {
             get {
                 return ResourceManager.GetString("DuplicateKeyHandling_Fail", resourceCulture) ?? string.Empty;
@@ -94,7 +90,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Postfix duplicate/empty keys with "_Duplicate[#]"/..."
         /// </summary>
-        [NotNull]
         public static string DuplicateKeyHandling_Rename {
             get {
                 return ResourceManager.GetString("DuplicateKeyHandling_Rename", resourceCulture) ?? string.Empty;
@@ -104,7 +99,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Empty keys in '{0}'"
         /// </summary>
-        [NotNull]
         public static string EmptyKeysError {
             get {
                 return ResourceManager.GetString("EmptyKeysError", resourceCulture) ?? string.Empty;
@@ -114,7 +108,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "&amp;lt;?xml version="1.0" encoding="utf-8"?&amp;g..."
         /// </summary>
-        [NotNull]
         public static string EmptyResxTemplate {
             get {
                 return ResourceManager.GetString("EmptyResxTemplate", resourceCulture) ?? string.Empty;
@@ -124,7 +117,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Multiple sheets"
         /// </summary>
-        [NotNull]
         public static string ExcelExport_MultipleSheets {
             get {
                 return ResourceManager.GetString("ExcelExport_MultipleSheets", resourceCulture) ?? string.Empty;
@@ -134,7 +126,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Plain text, tab delimited"
         /// </summary>
-        [NotNull]
         public static string ExcelExport_PlainTextTabDelimited {
             get {
                 return ResourceManager.GetString("ExcelExport_PlainTextTabDelimited", resourceCulture) ?? string.Empty;
@@ -144,7 +135,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Single sheet"
         /// </summary>
-        [NotNull]
         public static string ExcelExport_SingleSheet {
             get {
                 return ResourceManager.GetString("ExcelExport_SingleSheet", resourceCulture) ?? string.Empty;
@@ -154,7 +144,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Error saving file '{0}':&amp;#13;&amp;#10;{1}&amp;..."
         /// </summary>
-        [NotNull]
         public static string FileSaveError {
             get {
                 return ResourceManager.GetString("FileSaveError", resourceCulture) ?? string.Empty;
@@ -164,7 +153,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "At least three columns expected."
         /// </summary>
-        [NotNull]
         public static string ImportColumnMismatchError {
             get {
                 return ResourceManager.GetString("ImportColumnMismatchError", resourceCulture) ?? string.Empty;
@@ -174,7 +162,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Duplicate language in header."
         /// </summary>
-        [NotNull]
         public static string ImportDuplicateLanguageError {
             get {
                 return ResourceManager.GetString("ImportDuplicateLanguageError", resourceCulture) ?? string.Empty;
@@ -184,7 +171,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Import failed. Nothing has been imported."
         /// </summary>
-        [NotNull]
         public static string ImportFailedError {
             get {
                 return ResourceManager.GetString("ImportFailedError", resourceCulture) ?? string.Empty;
@@ -194,7 +180,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Import failed partially. Some columns have been al..."
         /// </summary>
-        [NotNull]
         public static string ImportFailedPartiallyError {
             get {
                 return ResourceManager.GetString("ImportFailedPartiallyError", resourceCulture) ?? string.Empty;
@@ -204,7 +189,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Standard header expected."
         /// </summary>
-        [NotNull]
         public static string ImportHeaderMismatchError {
             get {
                 return ResourceManager.GetString("ImportHeaderMismatchError", resourceCulture) ?? string.Empty;
@@ -214,7 +198,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "The language "{0}" can't be edited. The operation ..."
         /// </summary>
-        [NotNull]
         public static string ImportLanguageNotEditable {
             get {
                 return ResourceManager.GetString("ImportLanguageNotEditable", resourceCulture) ?? string.Empty;
@@ -224,7 +207,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "The sheet "{0}" can't be imported; there is no mat..."
         /// </summary>
-        [NotNull]
         public static string ImportMapSheetError {
             get {
                 return ResourceManager.GetString("ImportMapSheetError", resourceCulture) ?? string.Empty;
@@ -234,7 +216,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "{0} is not a valid RESX resource file: No xml root..."
         /// </summary>
-        [NotNull]
         public static string InvalidResourceFileError {
             get {
                 return ResourceManager.GetString("InvalidResourceFileError", resourceCulture) ?? string.Empty;
@@ -244,7 +225,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "{0} is not a valid RESX resource file: Not all ent..."
         /// </summary>
-        [NotNull]
         public static string InvalidResourceFileNameAttributeMissingError {
             get {
                 return ResourceManager.GetString("InvalidResourceFileNameAttributeMissingError", resourceCulture) ?? string.Empty;
@@ -254,7 +234,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "{0} is not a valid RESX resource file: Not all ent..."
         /// </summary>
-        [NotNull]
         public static string InvalidResourceFileValueAttributeMissingError {
             get {
                 return ResourceManager.GetString("InvalidResourceFileValueAttributeMissingError", resourceCulture) ?? string.Empty;
@@ -264,7 +243,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "This key already exists: {0}"
         /// </summary>
-        [NotNull]
         public static string KeyAlreadyExists {
             get {
                 return ResourceManager.GetString("KeyAlreadyExists", resourceCulture) ?? string.Empty;
@@ -274,7 +252,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Language is not defined: "{0}"."
         /// </summary>
-        [NotNull]
         public static string LanguageNotDefinedError {
             get {
                 return ResourceManager.GetString("LanguageNotDefinedError", resourceCulture) ?? string.Empty;
@@ -284,7 +261,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Neutral"
         /// </summary>
-        [NotNull]
         public static string Neutral {
             get {
                 return ResourceManager.GetString("Neutral", resourceCulture) ?? string.Empty;
@@ -294,7 +270,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Not all resource files are editable"
         /// </summary>
-        [NotNull]
         public static string NotAllLanguagesAreEditable {
             get {
                 return ResourceManager.GetString("NotAllLanguagesAreEditable", resourceCulture) ?? string.Empty;
@@ -304,7 +279,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Item is invariant but contains a value"
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntry_Error_InvariantWithValue {
             get {
                 return ResourceManager.GetString("ResourceTableEntry_Error_InvariantWithValue", resourceCulture) ?? string.Empty;
@@ -314,7 +288,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Missing translation"
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntry_Error_MissingTranslation {
             get {
                 return ResourceManager.GetString("ResourceTableEntry_Error_MissingTranslation", resourceCulture) ?? string.Empty;
@@ -324,7 +297,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Warning: This item contains string format paramete..."
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntry_Error_StringFormatParameterMismatch {
             get {
                 return ResourceManager.GetString("ResourceTableEntry_Error_StringFormatParameterMismatch", resourceCulture) ?? string.Empty;
@@ -334,7 +306,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "This rule verifies that the punctuation of the ent..."
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRulePunctuationLead_Description {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRulePunctuationLead_Description", resourceCulture) ?? string.Empty;
@@ -344,7 +315,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "The punctuation at the start of the messages doesn..."
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRulePunctuationLead_Error_Intro {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRulePunctuationLead_Error_Intro", resourceCulture) ?? string.Empty;
@@ -354,7 +324,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "No punctuation was expected at the start of the me..."
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRulePunctuationLead_Error_NoPunctuationExpected {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRulePunctuationLead_Error_NoPunctuationExpected", resourceCulture) ?? string.Empty;
@@ -364,7 +333,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "The expected leading punctuation sequence is: {0}"
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRulePunctuationLead_Error_PunctuationSeqExpected {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRulePunctuationLead_Error_PunctuationSeqExpected", resourceCulture) ?? string.Empty;
@@ -374,7 +342,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Leading punctuation"
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRulePunctuationLead_Name {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRulePunctuationLead_Name", resourceCulture) ?? string.Empty;
@@ -384,7 +351,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "This rule verifies the punctuation at the end of t..."
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRulePunctuationTail_Description {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRulePunctuationTail_Description", resourceCulture) ?? string.Empty;
@@ -394,7 +360,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "The punctuation at the end of the messages doesn't..."
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRulePunctuationTail_Error_Intro {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRulePunctuationTail_Error_Intro", resourceCulture) ?? string.Empty;
@@ -404,7 +369,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "No punctuation was expected at the end of the mess..."
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected", resourceCulture) ?? string.Empty;
@@ -414,7 +378,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "The expected trailing punctuation sequence is: {0}"
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected", resourceCulture) ?? string.Empty;
@@ -424,7 +387,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Trailing punctuation"
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRulePunctuationTail_Name {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRulePunctuationTail_Name", resourceCulture) ?? string.Empty;
@@ -434,7 +396,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "This rule verifies that the string format paramete..."
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRuleStringFormat_Description {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRuleStringFormat_Description", resourceCulture) ?? string.Empty;
@@ -444,7 +405,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Matching string format parameters"
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRuleStringFormat_Name {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRuleStringFormat_Name", resourceCulture) ?? string.Empty;
@@ -454,7 +414,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "This rule verifies that the whitespaces at the sta..."
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceLead_Description {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceLead_Description", resourceCulture) ?? string.Empty;
@@ -464,7 +423,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "The whitespaces at the start of the sequence don't..."
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceLead_Error_Intro {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceLead_Error_Intro", resourceCulture) ?? string.Empty;
@@ -474,7 +432,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "No whitespaces are expected at the start of the se..."
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceLead_Error_NoWhiteSpaceExpected {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceLead_Error_NoWhiteSpaceExpected", resourceCulture) ?? string.Empty;
@@ -484,7 +441,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "The expected whitespace sequence is: {0}"
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceLead_Error_WhiteSpaceSeqExpected {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceLead_Error_WhiteSpaceSeqExpected", resourceCulture) ?? string.Empty;
@@ -494,7 +450,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Leading whitespace"
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceLead_Name {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceLead_Name", resourceCulture) ?? string.Empty;
@@ -504,7 +459,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "This rule verifies that the trailing whitespaces o..."
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceTail_Description {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceTail_Description", resourceCulture) ?? string.Empty;
@@ -514,7 +468,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "The whitespaces at the end of the sequence don't m..."
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceTail_Error_Intro {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceTail_Error_Intro", resourceCulture) ?? string.Empty;
@@ -524,7 +477,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "No whitespaces are expected at the end of the sequ..."
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceTail_Error_NoWhiteSpaceExpected {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceTail_Error_NoWhiteSpaceExpected", resourceCulture) ?? string.Empty;
@@ -534,7 +486,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "The expected whitespace sequence is: {0}"
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceTail_Error_WhiteSpaceSeqExpected {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceTail_Error_WhiteSpaceSeqExpected", resourceCulture) ?? string.Empty;
@@ -544,7 +495,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Trailing whitespace"
         /// </summary>
-        [NotNull]
         public static string ResourceTableEntryRuleWhiteSpaceTail_Name {
             get {
                 return ResourceManager.GetString("ResourceTableEntryRuleWhiteSpaceTail_Name", resourceCulture) ?? string.Empty;
@@ -554,7 +504,6 @@ namespace ResXManager.Model.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Snapshot: "{0}""
         /// </summary>
-        [NotNull]
         public static string SnapshotAnnotation {
             get {
                 return ResourceManager.GetString("SnapshotAnnotation", resourceCulture) ?? string.Empty;
@@ -567,7 +516,6 @@ namespace ResXManager.Model.Properties {
         /// <remarks>
         /// @Invariant
         /// </remarks>
-        [NotNull]
         public static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture) ?? string.Empty;

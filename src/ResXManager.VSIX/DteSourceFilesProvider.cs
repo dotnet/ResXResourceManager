@@ -6,8 +6,6 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Model;
     using ResXManager.View.Tools;
 
@@ -16,15 +14,12 @@
     [Export(typeof(ISourceFilesProvider))]
     internal class DteSourceFilesProvider : ISourceFilesProvider
     {
-        [NotNull]
         private readonly IExportProvider _exportProvider;
-        [NotNull]
         private readonly PerformanceTracer _performanceTracer;
-        [NotNull]
         private readonly Configuration _configuration;
 
         [ImportingConstructor]
-        public DteSourceFilesProvider([NotNull] IExportProvider exportProvider)
+        public DteSourceFilesProvider(IExportProvider exportProvider)
         {
             _exportProvider = exportProvider;
             _performanceTracer = exportProvider.GetExportedValue<PerformanceTracer>();
@@ -53,7 +48,6 @@
         public string? SolutionFolder => Solution.SolutionFolder;
 #pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
 
-        [NotNull, ItemNotNull]
         private IEnumerable<ProjectFile> DteSourceFiles
         {
             get
@@ -66,7 +60,6 @@
             }
         }
 
-        [NotNull, ItemNotNull]
         private IEnumerable<ProjectFile> GetProjectFiles(IFileFilter fileFilter)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
@@ -74,7 +67,6 @@
             return Solution.GetProjectFiles(fileFilter);
         }
 
-        [NotNull]
         private DteSolution Solution => _exportProvider.GetExportedValue<DteSolution>();
     }
 }

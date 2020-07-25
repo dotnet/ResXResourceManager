@@ -2,16 +2,13 @@
 {
     using System;
 
-    using JetBrains.Annotations;
-
     public sealed class ResourceTableEntryEventArgs : EventArgs
     {
-        public ResourceTableEntryEventArgs([NotNull] ResourceTableEntry entry)
+        public ResourceTableEntryEventArgs(ResourceTableEntry entry)
         {
             Entry = entry;
         }
 
-        [NotNull]
         public ResourceTableEntry Entry { get; }
     }
 }

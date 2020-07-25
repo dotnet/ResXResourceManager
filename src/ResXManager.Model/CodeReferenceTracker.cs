@@ -9,8 +9,6 @@
     using System.Text.RegularExpressions;
     using System.Threading;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
@@ -36,7 +34,7 @@
             Interlocked.Exchange(ref _engine, null)?.Dispose();
         }
 
-        public void BeginFind([NotNull] ResourceManager resourceManager, [NotNull] CodeReferenceConfiguration configuration, [ItemNotNull][NotNull] IEnumerable<ProjectFile> allSourceFiles, [NotNull] ITracer tracer)
+        public void BeginFind(ResourceManager resourceManager, CodeReferenceConfiguration configuration, IEnumerable<ProjectFile> allSourceFiles, ITracer tracer)
         {
             var sourceFiles = allSourceFiles.Where(item => !item.IsResourceFile() && !item.IsDesignerFile()).ToArray();
 
@@ -49,14 +47,13 @@
 
         private sealed class Engine : IDisposable
         {
-            [NotNull]
             private readonly Thread _backgroundThread;
             private long _total;
             private long _visited;
 
             public int Progress => (int)(_total <= 0 ? 0 : Math.Max(1, (100 * _visited) / _total));
 
-            public Engine([NotNull] CodeReferenceConfiguration configuration, [NotNull][ItemNotNull] ICollection<ProjectFile> sourceFiles, [NotNull][ItemNotNull] ICollection<ResourceTableEntry> resourceTableEntries, [NotNull] ITracer tracer)
+            public Engine(CodeReferenceConfiguration configuration, ICollection<ProjectFile> sourceFiles, ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
             {
                 _backgroundThread = new Thread(() => FindCodeReferences(configuration, sourceFiles, resourceTableEntries, tracer))
                 {
@@ -67,7 +64,7 @@
                 _backgroundThread.Start();
             }
 
-            private void FindCodeReferences([NotNull] CodeReferenceConfiguration configuration, [NotNull, ItemNotNull] ICollection<ProjectFile> projectFiles, [NotNull, ItemNotNull] ICollection<ResourceTableEntry> resourceTableEntries, [NotNull] ITracer tracer)
+            private void FindCodeReferences(CodeReferenceConfiguration configuration, ICollection<ProjectFile> projectFiles, ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
             {
                 var stopwatch = Stopwatch.StartNew();
 
@@ -130,7 +127,7 @@
 
         private class CodeMatch
         {
-            public CodeMatch([NotNull] string line, [NotNull] string key, Regex? regex, StringComparison stringComparison, string? singleLineComment)
+            public CodeMatch(string line, string key, Regex? regex, StringComparison stringComparison, string? singleLineComment)
             {
                 var keyIndexes = new List<int>();
 
@@ -192,24 +189,18 @@
 
             public bool Success { get; }
 
-            [NotNull, ItemNotNull]
             public IList<string> Segments { get; } = Array.Empty<string>();
         }
 
         private class FileInfo
         {
-            [NotNull]
             private static readonly Regex _regex = new Regex(@"\W+", RegexOptions.Compiled);
-            [NotNull]
             private readonly ProjectFile _projectFile;
-            [NotNull]
             private readonly Dictionary<string, HashSet<int>> _keyLinesLookup = new Dictionary<string, HashSet<int>>();
-            [NotNull, ItemNotNull]
             private readonly CodeReferenceConfigurationItem[] _configurations;
-            [ItemNotNull]
             private readonly string[]? _lines;
 
-            public FileInfo([NotNull] ProjectFile projectFile, [NotNull, ItemNotNull] IEnumerable<CodeReferenceConfigurationItem> configurations, [NotNull][ItemNotNull] ICollection<string> keys, ref long visited)
+            public FileInfo(ProjectFile projectFile, IEnumerable<CodeReferenceConfigurationItem> configurations, ICollection<string> keys, ref long visited)
             {
                 _projectFile = projectFile;
 
@@ -233,11 +224,9 @@
 
             public bool HasConfigurations => _configurations.Any();
 
-            [NotNull]
-            [ItemNotNull]
             public IEnumerable<string> Keys => _keyLinesLookup.Keys;
 
-            public void FindCodeReferences([NotNull] ResourceTableEntry entry, [NotNull][ItemNotNull] ICollection<CodeReference> references, [NotNull] ITracer tracer)
+            public void FindCodeReferences(ResourceTableEntry entry, ICollection<CodeReference> references, ITracer tracer)
             {
                 var baseName = entry.Container.BaseName;
 
@@ -294,7 +283,7 @@
 
     public class CodeReference
     {
-        internal CodeReference([NotNull] ProjectFile projectFile, int lineNumber, [NotNull][ItemNotNull] IList<string> lineSegments)
+        internal CodeReference(ProjectFile projectFile, int lineNumber, IList<string> lineSegments)
         {
             ProjectFile = projectFile;
             LineNumber = lineNumber;
@@ -305,15 +294,12 @@
 
         public ProjectFile? ProjectFile { get; }
 
-        [ItemNotNull]
         public IList<string>? LineSegments { get; }
     }
 
     internal static class CodeReferenceExtensionMethods
     {
-        [NotNull]
-        [ItemNotNull]
-        public static string[] ReadAllLines([NotNull] this ProjectFile file)
+        public static string[] ReadAllLines(this ProjectFile file)
         {
             try
             {

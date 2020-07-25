@@ -13,8 +13,6 @@
     using System.Windows;
     using System.Windows.Input;
 
-    using JetBrains.Annotations;
-
     using Microsoft.WindowsAPICodePack.Dialogs;
 
     using ResXManager.Infrastructure;
@@ -35,7 +33,7 @@
         private readonly PowerShellProcessor _powerShell;
 
         [ImportingConstructor]
-        public MainViewModel([NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration, [NotNull] ResourceViewModel resourceViewModel, [NotNull] ITracer tracer, [NotNull] SourceFilesProvider sourceFilesProvider)
+        public MainViewModel(ResourceManager resourceManager, Configuration configuration, ResourceViewModel resourceViewModel, ITracer tracer, SourceFilesProvider sourceFilesProvider)
         {
             ResourceManager = resourceManager;
             ResourceViewModel = resourceViewModel;
@@ -82,16 +80,12 @@
             await _powerShell.Run(solutionFolder, scriptFile).ConfigureAwait(false);
         }
 
-        [NotNull]
         public ICommand BrowseCommand => new DelegateCommand(Browse);
 
-        [NotNull]
         public ResourceManager ResourceManager { get; }
 
-        [NotNull]
         public ResourceViewModel ResourceViewModel { get; }
 
-        [NotNull]
         public SourceFilesProvider SourceFilesProvider { get; }
 
         private void Browse()
@@ -140,7 +134,7 @@
             }
         }
 
-        private void ResourceManager_Reloading([NotNull] object sender, [NotNull] CancelEventArgs e)
+        private void ResourceManager_Reloading(object sender, CancelEventArgs e)
         {
             if (!ResourceManager.HasChanges)
                 return;
@@ -151,7 +145,7 @@
             e.Cancel = true;
         }
 
-        private void ResourceManager_BeginEditing([NotNull] object sender, [NotNull] ResourceBeginEditingEventArgs e)
+        private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
         {
             if (!CanEdit(e.Entity, e.CultureKey))
             {
@@ -159,7 +153,7 @@
             }
         }
 
-        private bool CanEdit([NotNull] ResourceEntity entity, CultureKey? cultureKey)
+        private bool CanEdit(ResourceEntity entity, CultureKey? cultureKey)
         {
             string message;
             var languages = entity.Languages.Where(lang => (cultureKey == null) || cultureKey.Equals(lang.CultureKey)).ToArray();
@@ -222,9 +216,8 @@
             return false;
         }
 
-        [NotNull]
         [Localizable(false)]
-        private static string FormatFileNames([NotNull][ItemNotNull] IEnumerable<string> lockedFiles)
+        private static string FormatFileNames(IEnumerable<string> lockedFiles)
         {
             return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
         }
@@ -335,13 +328,11 @@
     [Shared]
     internal class SourceFilesProvider : ObservableObject, ISourceFilesProvider
     {
-        [NotNull]
         private readonly Configuration _configuration;
-        [NotNull]
         private readonly PerformanceTracer _performanceTracer;
 
         [ImportingConstructor]
-        public SourceFilesProvider([NotNull] Configuration configuration, [NotNull] PerformanceTracer performanceTracer)
+        public SourceFilesProvider(Configuration configuration, PerformanceTracer performanceTracer)
         {
             _configuration = configuration;
             _performanceTracer = performanceTracer;

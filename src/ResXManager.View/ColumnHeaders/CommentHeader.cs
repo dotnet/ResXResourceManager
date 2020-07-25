@@ -1,14 +1,12 @@
 ﻿namespace ResXManager.View.ColumnHeaders
 {
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.View.Properties;
 
     public class CommentHeader : LanguageColumnHeaderBase
     {
-        public CommentHeader([NotNull] Configuration configuration, [NotNull] CultureKey cultureKey)
+        public CommentHeader(Configuration configuration, CultureKey cultureKey)
             : base(configuration, cultureKey)
         {
         }

@@ -11,8 +11,6 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using JetBrains.Annotations;
-
     using PropertyChanged;
 
     using ResXManager.Infrastructure;
@@ -27,10 +25,8 @@
     [AddINotifyPropertyChangedInterface]
     public sealed class ResourceManager
     {
-        [NotNull, ItemNotNull]
         private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
 
-        [NotNull]
         private readonly ISourceFilesProvider _sourceFilesProvider;
 
         private string? _snapshot;
@@ -42,7 +38,7 @@
         public event EventHandler<ProjectFileEventArgs>? ProjectFileSaved;
 
         [ImportingConstructor]
-        public ResourceManager([NotNull] ISourceFilesProvider sourceFilesProvider, [NotNull] IConfiguration configuration)
+        public ResourceManager(ISourceFilesProvider sourceFilesProvider, IConfiguration configuration)
         {
             Configuration = configuration;
 
@@ -57,7 +53,7 @@
         /// </summary>
         /// <param name="allSourceFiles">All resource x files.</param>
         /// <param name="cancellationToken"></param>
-        private async Task<bool> LoadAsync([NotNull] [ItemNotNull] IList<ProjectFile> allSourceFiles, CancellationToken? cancellationToken)
+        private async Task<bool> LoadAsync(IList<ProjectFile> allSourceFiles, CancellationToken? cancellationToken)
         {
             AllSourceFiles = allSourceFiles;
 
@@ -87,28 +83,23 @@
         /// <summary>
         /// Gets the loaded resource entities.
         /// </summary>
-        [NotNull, ItemNotNull]
         public ObservableCollection<ResourceEntity> ResourceEntities { get; } = new ObservableCollection<ResourceEntity>();
 
         /// <summary>
         /// Gets the table entries of all entities.
         /// </summary>
-        [NotNull, ItemNotNull]
         public IObservableCollection<ResourceTableEntry> TableEntries { get; }
 
         /// <summary>
         /// Gets the cultures of all entities.
         /// </summary>
-        [NotNull, ItemNotNull]
         public ObservableCollection<CultureKey> Cultures { get; } = new ObservableCollection<CultureKey>();
 
         /// <summary>
         /// Gets all system specific cultures.
         /// </summary>
-        [NotNull, ItemNotNull]
         public static IEnumerable<CultureInfo> SpecificCultures { get; } = GetSpecificCultures();
 
-        [NotNull]
         public IConfiguration Configuration { get; }
 
         public bool HasChanges => ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.HasChanges);
@@ -123,7 +114,7 @@
                 ResourceEntities.LoadSnapshot(_snapshot);
         }
 
-        public async Task<bool> ReloadAsync([NotNull][ItemNotNull] IList<ProjectFile> sourceFiles, [CanBeNull] CancellationToken? cancellationToken)
+        public async Task<bool> ReloadAsync(IList<ProjectFile> sourceFiles, CancellationToken? cancellationToken)
         {
             var args = new CancelEventArgs();
             Reloading?.Invoke(this, args);
@@ -133,7 +124,7 @@
             return await LoadAsync(sourceFiles, cancellationToken).ConfigureAwait(false);
         }
 
-        public bool CanEdit([NotNull] ResourceEntity resourceEntity, CultureKey? cultureKey)
+        public bool CanEdit(ResourceEntity resourceEntity, CultureKey? cultureKey)
         {
             var eventHandler = BeginEditing;
 
@@ -152,7 +143,7 @@
             Loaded?.Invoke(this, EventArgs.Empty);
         }
 
-        private async Task<bool> InternalLoadAsync([NotNull] [ItemNotNull] ICollection<IGrouping<string, ProjectFile>> resourceFilesByDirectory, CancellationToken? cancellationToken)
+        private async Task<bool> InternalLoadAsync(ICollection<IGrouping<string, ProjectFile>> resourceFilesByDirectory, CancellationToken? cancellationToken)
         {
             if (!await LoadEntitiesAsync(resourceFilesByDirectory, cancellationToken).ConfigureAwait(true))
                 return false; // nothing has changed, no need to continue
@@ -174,7 +165,7 @@
             return true;
         }
 
-        private async Task<bool> LoadEntitiesAsync([NotNull] [ItemNotNull] ICollection<IGrouping<string, ProjectFile>> fileNamesByDirectory, CancellationToken? cancellationToken)
+        private async Task<bool> LoadEntitiesAsync(ICollection<IGrouping<string, ProjectFile>> fileNamesByDirectory, CancellationToken? cancellationToken)
         {
             static string GenerateKey(string projectName, string baseName, string directoryName)
             {
@@ -242,7 +233,7 @@
             return hasChanged;
         }
 
-        internal void LanguageAdded([NotNull] CultureKey cultureKey)
+        internal void LanguageAdded(CultureKey cultureKey)
         {
             if (!Cultures.Contains(cultureKey))
             {
@@ -251,12 +242,12 @@
         }
 
         [SuppressPropertyChangedWarnings]
-        internal void OnLanguageChanged([NotNull] ResourceLanguage language)
+        internal void OnLanguageChanged(ResourceLanguage language)
         {
             LanguageChanged?.Invoke(this, new LanguageEventArgs(language));
         }
 
-        internal void OnProjectFileSaved([NotNull] ResourceLanguage language, [NotNull] ProjectFile projectFile)
+        internal void OnProjectFileSaved(ResourceLanguage language, ProjectFile projectFile)
         {
             ProjectFileSaved?.Invoke(this, new ProjectFileEventArgs(language, projectFile));
         }
@@ -269,8 +260,6 @@
             return Array.BinarySearch(_sortedCultureNames, languageName, StringComparer.OrdinalIgnoreCase) >= 0;
         }
 
-        [NotNull]
-        [ItemNotNull]
         private static string[] GetSortedCultureNames()
         {
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
@@ -288,8 +277,6 @@
             return cultureNames;
         }
 
-        [NotNull]
-        [ItemNotNull]
         private static CultureInfo[] GetSpecificCultures()
         {
             var specificCultures = CultureInfo.GetCultures(CultureTypes.AllCultures)
@@ -307,7 +294,6 @@
             _snapshot = value;
         }
 
-        [NotNull]
         public string CreateSnapshot()
         {
             return _snapshot = ResourceEntities.CreateSnapshot();

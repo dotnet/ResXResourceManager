@@ -2,20 +2,17 @@
 {
     using System.Globalization;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.View.Properties;
 
     public class LanguageHeader : LanguageColumnHeaderBase
     {
-        public LanguageHeader([NotNull] Configuration configuration, [NotNull] CultureKey cultureKey)
+        public LanguageHeader(Configuration configuration, CultureKey cultureKey)
             : base(configuration, cultureKey)
         {
         }
 
-        [NotNull]
         public string DisplayName
         {
             get

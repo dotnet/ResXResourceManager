@@ -3,8 +3,6 @@
     using System;
     using System.Composition;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Composition;
@@ -19,7 +17,7 @@
     public partial class CodeGeneratorView
     {
         [ImportingConstructor]
-        public CodeGeneratorView([NotNull] IExportProvider exportProvider)
+        public CodeGeneratorView(IExportProvider exportProvider)
         {
             try
             {

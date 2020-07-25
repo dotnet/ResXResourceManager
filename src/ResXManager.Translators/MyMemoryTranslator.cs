@@ -6,15 +6,13 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using System.Net;
     using System.Net.Http;
     using System.Runtime.Serialization;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Windows.Controls;
-
-    using JetBrains.Annotations;
 
     using ResXManager.Infrastructure;
 
@@ -28,7 +26,6 @@
     [Export(typeof(ITranslator)), Shared]
     public class MyMemoryTranslator : TranslatorBase
     {
-        [NotNull]
         private static readonly Uri _uri = new Uri("http://mymemory.translated.net/doc");
 
         public MyMemoryTranslator()
@@ -36,8 +33,6 @@
         {
         }
 
-        [NotNull]
-        [ItemNotNull]
         private static IList<ICredentialItem> GetCredentials()
         {
             return new ICredentialItem[] { new CredentialItem("Key", "Key") };
@@ -93,18 +88,17 @@
             }
         }
 
-        [NotNull, ItemCanBeNull]
-        private static async Task<Response?> TranslateTextAsync(HttpClient client, [NotNull] string input, string? key, [NotNull] CultureInfo sourceLanguage, [NotNull] CultureInfo targetLanguage, CancellationToken cancellationToken)
+        private static async Task<Response?> TranslateTextAsync(HttpClient client, string input, string? key, CultureInfo sourceLanguage, CultureInfo targetLanguage, CancellationToken cancellationToken)
         {
             var rawInput = RemoveKeyboardShortcutIndicators(input);
 
             var url = string.Format(CultureInfo.InvariantCulture,
                 "http://api.mymemory.translated.net/get?q={0}!&langpair={1}|{2}",
-                HttpUtility.UrlEncode(rawInput, Encoding.UTF8),
+                WebUtility.UrlEncode(rawInput),
                 sourceLanguage, targetLanguage);
 
             if (!string.IsNullOrEmpty(key))
-                url += string.Format(CultureInfo.InvariantCulture, "&key={0}", HttpUtility.UrlEncode(key));
+                url += string.Format(CultureInfo.InvariantCulture, "&key={0}", WebUtility.UrlEncode(key));
 
             var response = await client.GetAsync(new Uri(url, UriKind.RelativeOrAbsolute), cancellationToken).ConfigureAwait(false);
 
@@ -174,7 +168,6 @@
             }
 
             [DataMember(Name = "matches")]
-            [ItemNotNull]
             public MatchData[]? Matches
             {
                 get;

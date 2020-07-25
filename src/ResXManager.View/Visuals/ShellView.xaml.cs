@@ -10,8 +10,6 @@
     using System.Windows.Input;
     using System.Windows.Markup;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Composition;
@@ -27,7 +25,7 @@
     public partial class ShellView
     {
         [ImportingConstructor]
-        public ShellView([NotNull] IExportProvider exportProvider)
+        public ShellView(IExportProvider exportProvider)
         {
             try
             {
@@ -43,12 +41,12 @@
             }
         }
 
-        private void OpenSourceOverlay_MouseDown([NotNull] object sender, MouseButtonEventArgs e)
+        private void OpenSourceOverlay_MouseDown(object sender, MouseButtonEventArgs e)
         {
             ((Grid)sender).Children.Clear();
         }
 
-        private void OpenSourceOverlay_Loaded([NotNull] object sender, RoutedEventArgs e)
+        private void OpenSourceOverlay_Loaded(object sender, RoutedEventArgs e)
         {
             if (Properties.Settings.Default.IsOpenSourceMessageConfirmed)
             {
@@ -56,7 +54,7 @@
             }
         }
 
-        private void OpenSourceOverlayTextContainer_Loaded([NotNull] object sender, RoutedEventArgs e)
+        private void OpenSourceOverlayTextContainer_Loaded(object sender, RoutedEventArgs e)
         {
             var container = (Decorator)sender;
 

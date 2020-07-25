@@ -5,20 +5,15 @@
     using System.IO;
     using System.Linq;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     public static class ProjectFileExtensions
     {
         private const string Resx = ".resx";
         private const string Resw = ".resw";
-        [NotNull]
-        [ItemNotNull]
         public static readonly string[] SupportedFileExtensions = { Resx, Resw };
 
-        [NotNull]
-        public static string GetBaseDirectory([NotNull] this ProjectFile projectFile)
+        public static string GetBaseDirectory(this ProjectFile projectFile)
         {
             var extension = projectFile.Extension;
             var filePath = projectFile.FilePath;
@@ -28,7 +23,7 @@
             return directoryName ?? throw new InvalidOperationException();
         }
 
-        public static bool IsResourceFile([NotNull] this ProjectFile projectFile)
+        public static bool IsResourceFile(this ProjectFile projectFile)
         {
             var extension = projectFile.Extension;
             var filePath = projectFile.FilePath;
@@ -44,8 +39,7 @@
             return ResourceManager.IsValidLanguageName(languageName);
         }
 
-        [NotNull]
-        public static CultureKey GetCultureKey([NotNull] this ProjectFile projectFile, [NotNull] IConfiguration configuration)
+        public static CultureKey GetCultureKey(this ProjectFile projectFile, IConfiguration configuration)
         {
             var extension = projectFile.Extension;
             var filePath = projectFile.FilePath;
@@ -79,8 +73,7 @@
             throw new InvalidOperationException("Unsupported file format: " + extension);
         }
 
-        [NotNull]
-        public static string GetBaseName([NotNull] this ProjectFile projectFile)
+        public static string GetBaseName(this ProjectFile projectFile)
         {
             var extension = projectFile.Extension;
             var filePath = projectFile.FilePath;
@@ -95,8 +88,7 @@
             return ResourceManager.IsValidLanguageName(languageName) ? Path.GetFileNameWithoutExtension(name) : name;
         }
 
-        [NotNull]
-        public static string GetLanguageFileName([NotNull] this ProjectFile projectFile, [NotNull] CultureInfo culture)
+        public static string GetLanguageFileName(this ProjectFile projectFile, CultureInfo culture)
         {
             var extension = projectFile.Extension;
             var filePath = projectFile.FilePath;
@@ -115,17 +107,17 @@
             throw new InvalidOperationException("Extension not supported: " + extension);
         }
 
-        public static bool IsDesignerFile([NotNull] this ProjectFile projectFile)
+        public static bool IsDesignerFile(this ProjectFile projectFile)
         {
             return projectFile.GetBaseName().EndsWith(".Designer", StringComparison.OrdinalIgnoreCase);
         }
 
-        public static bool IsVisualBasicFile([NotNull] this ProjectFile projectFile)
+        public static bool IsVisualBasicFile(this ProjectFile projectFile)
         {
             return Path.GetExtension(projectFile.FilePath).Equals(".vb", StringComparison.OrdinalIgnoreCase);
         }
 
-        public static bool IsCSharpFile([NotNull] this ProjectFile projectFile)
+        public static bool IsCSharpFile(this ProjectFile projectFile)
         {
             return Path.GetExtension(projectFile.FilePath).Equals(".cs", StringComparison.OrdinalIgnoreCase);
         }

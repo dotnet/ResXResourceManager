@@ -8,8 +8,6 @@
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.Properties;
@@ -24,13 +22,12 @@
     [Export]
     public partial class MainWindow
     {
-        [NotNull]
         private readonly ITracer _tracer;
         private Size _lastKnownSize;
         private Vector _lastKnownLocation;
 
         [ImportingConstructor]
-        public MainWindow([NotNull] IExportProvider exportProvider, [NotNull] ITracer tracer)
+        public MainWindow(IExportProvider exportProvider, ITracer tracer)
         {
             _tracer = tracer;
 
@@ -110,7 +107,6 @@
             Settings.StartupSize = _lastKnownSize;
         }
 
-        [NotNull]
         private static Settings Settings => Settings.Default;
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
@@ -129,7 +125,7 @@
                 _lastKnownLocation = new Vector(Left, Top);
         }
 
-        private static void Navigate_Click([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private static void Navigate_Click(object sender, RoutedEventArgs e)
         {
             string? url;
 

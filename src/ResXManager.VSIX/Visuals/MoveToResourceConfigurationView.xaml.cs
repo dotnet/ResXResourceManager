@@ -3,8 +3,6 @@
     using System;
     using System.Composition;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Composition;
@@ -18,7 +16,7 @@
     public partial class MoveToResourceConfigurationView
     {
         [ImportingConstructor]
-        public MoveToResourceConfigurationView([NotNull] IExportProvider exportProvider)
+        public MoveToResourceConfigurationView(IExportProvider exportProvider)
         {
             try
             {

@@ -5,8 +5,6 @@
     using System.Linq;
     using System.Windows;
 
-    using JetBrains.Annotations;
-
     using ResXManager.View.Properties;
     using ResXManager.View.Visuals;
 
@@ -16,13 +14,11 @@
     [Export, Shared]
     internal class AddNewKeyCommand : DelegateCommand<DependencyObject>
     {
-        [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
-        [NotNull]
         private readonly IExportProvider _exportProvider;
 
         [ImportingConstructor]
-        public AddNewKeyCommand([NotNull] ResourceViewModel resourceViewModel, [NotNull] IExportProvider exportProvider)
+        public AddNewKeyCommand(ResourceViewModel resourceViewModel, IExportProvider exportProvider)
         {
             _resourceViewModel = resourceViewModel;
             _exportProvider = exportProvider;

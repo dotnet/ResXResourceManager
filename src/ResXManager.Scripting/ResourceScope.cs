@@ -5,14 +5,12 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model;
 
     internal class ResourceScope : IResourceScope
     {
-        public ResourceScope([NotNull] object entries, [NotNull] object languages, [NotNull] object comments)
+        public ResourceScope(object entries, object languages, object comments)
         {
             Entries = CastResourceTableEntries(entries);
             Languages = CastLanguages(languages);
@@ -59,15 +57,12 @@
 
     internal static class ExtensionMethods
     {
-        [NotNull]
-        [ItemNotNull]
-        public static IEnumerable<T> PsCast<T>([NotNull][ItemNotNull] this IEnumerable items)
+        public static IEnumerable<T> PsCast<T>(this IEnumerable items)
         {
             return items.OfType<object>().Select(PsObjectCast<T>);
         }
 
-        [NotNull]
-        public static T PsObjectCast<T>([NotNull] this object item)
+        public static T PsObjectCast<T>(this object item)
         {
             var type = item.GetType();
 

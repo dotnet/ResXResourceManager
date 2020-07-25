@@ -4,8 +4,6 @@
     using System.Linq;
     using System.Windows.Input;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.View.Properties;
@@ -19,19 +17,16 @@
     internal class ConfigurationEditorViewModel : ObservableObject
     {
         [ImportingConstructor]
-        public ConfigurationEditorViewModel([NotNull] ResourceManager resourceManager, [NotNull] Configuration configuration)
+        public ConfigurationEditorViewModel(ResourceManager resourceManager, Configuration configuration)
         {
             ResourceManager = resourceManager;
             Configuration = configuration;
         }
 
-        [NotNull]
         public ResourceManager ResourceManager { get; }
 
-        [NotNull]
         public Configuration Configuration { get; }
 
-        [NotNull]
         public ICommand SortNodesByKeyCommand => new DelegateCommand(SortNodesByKey);
 
         private void SortNodesByKey()

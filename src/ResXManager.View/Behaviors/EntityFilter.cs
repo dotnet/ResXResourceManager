@@ -5,8 +5,6 @@
     using System.Windows;
     using System.Windows.Controls;
 
-    using JetBrains.Annotations;
-
     using Microsoft.Xaml.Behaviors;
 
     public class EntityFilter : Behavior<ListBox>
@@ -19,7 +17,6 @@
         /// <summary>
         /// Identifies the <see cref="FilterText"/> dependency property
         /// </summary>
-        [NotNull]
         public static readonly DependencyProperty FilterTextProperty =
             DependencyProperty.Register("FilterText", typeof(string), typeof(EntityFilter),
                 new FrameworkPropertyMetadata(null, (sender, e) => ((EntityFilter)sender).FilterText_Changed((string)e.NewValue)));

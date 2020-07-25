@@ -6,18 +6,13 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
 
-    using JetBrains.Annotations;
-
     using TomsToolbox.Essentials;
     using TomsToolbox.ObservableCollections;
-
-    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
     [DataContract]
     public abstract class ItemTrackingCollectionHost<T> : INotifyChanged
         where T : class, INotifyPropertyChanged
     {
-        [NotNull, ItemNotNull]
         private ObservableCollection<T> _items;
 
         private ObservablePropertyChangeTracker<T>? _changeTracker;
@@ -32,7 +27,6 @@
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required by serializer")]
         [DataMember(Name = "Items")]
-        [NotNull, ItemNotNull]
         public ObservableCollection<T> Items
         {
             get => _items;

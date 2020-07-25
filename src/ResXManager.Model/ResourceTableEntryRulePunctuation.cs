@@ -6,10 +6,6 @@
     using System.Globalization;
     using System.Linq;
 
-    using JetBrains.Annotations;
-
-    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
-
     public abstract class ResourceTableEntryRulePunctuation : IResourceTableEntryRule
     {
         /// <inheritdoc />
@@ -18,7 +14,7 @@
         /// <inheritdoc />
         public abstract string RuleId { get; }
 
-        public bool CompliesToRule(string? neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
+        public bool CompliesToRule(string? neutralValue, IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
         {
             var reference = GetPunctuationSequence(neutralValue).ToArray();
 
@@ -32,16 +28,12 @@
             return true;
         }
 
-        [JetBrains.Annotations.NotNull]
-        protected abstract IEnumerable<char> GetCharIterator([JetBrains.Annotations.NotNull] string value);
+        protected abstract IEnumerable<char> GetCharIterator(string value);
 
-        [JetBrains.Annotations.NotNull]
-        protected abstract string GetErrorMessage([JetBrains.Annotations.NotNull] string reference);
+        protected abstract string GetErrorMessage(string reference);
 
-        [JetBrains.Annotations.NotNull]
         private static string NormalizeUnicode(string? value) => value?.Normalize() ?? string.Empty;
 
-        [JetBrains.Annotations.NotNull]
         private IEnumerable<char> GetPunctuationSequence(string? value)
         {
             return GetCharIterator(NormalizeUnicode(value))

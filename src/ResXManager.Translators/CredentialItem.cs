@@ -8,7 +8,7 @@ namespace ResXManager.Translators
 
     public class CredentialItem : ICredentialItem
     {
-        public CredentialItem([NotNull] string key, [NotNull] string description)
+        public CredentialItem(string key, string description)
         {
             Key = key;
             Description = description;

@@ -5,8 +5,6 @@
     using System.Windows;
     using System.Windows.Input;
 
-    using JetBrains.Annotations;
-
     using TomsToolbox.Composition;
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
@@ -22,7 +20,7 @@
         /// Initializes a new instance of the <see cref="InputBox"/> class.
         /// </summary>
         [ImportingConstructor]
-        public InputBox([NotNull] IExportProvider exportProvider)
+        public InputBox(IExportProvider exportProvider)
         {
             this.SetExportProvider(exportProvider);
 
@@ -45,7 +43,6 @@
         /// <summary>
         /// Identifies the Prompt dependency property
         /// </summary>
-        [NotNull]
         public static readonly DependencyProperty PromptProperty =
             DependencyProperty.Register("Prompt", typeof(string), typeof(InputBox));
 
@@ -60,7 +57,6 @@
         /// <summary>
         /// Identifies the Text dependency property
         /// </summary>
-        [NotNull]
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register("Text", typeof(string), typeof(InputBox), new FrameworkPropertyMetadata(null, (sender, e) => ((InputBox)sender).Text_Changed((string)e.NewValue)));
 
@@ -81,12 +77,10 @@
         /// <summary>
         /// Identifies the IsInputValid dependency property
         /// </summary>
-        [NotNull]
         public static readonly DependencyProperty IsInputValidProperty =
             DependencyProperty.Register("IsInputValid", typeof(bool), typeof(InputBox), new FrameworkPropertyMetadata(false));
 
 
-        [NotNull]
         public ICommand CommitCommand => new DelegateCommand(CanCommit, Commit);
 
         private void Commit()

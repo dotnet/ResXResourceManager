@@ -2,8 +2,6 @@
 {
     using System;
 
-    using JetBrains.Annotations;
-
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
 
@@ -11,12 +9,11 @@
 
     public class OutputWindowTracer : ITracer
     {
-        [NotNull]
         private readonly IServiceProvider _serviceProvider;
 
         private static Guid _outputPaneGuid = new Guid("{C49C2D45-A34D-4255-9382-40CE2BDAD575}");
 
-        public OutputWindowTracer([NotNull]IServiceProvider serviceProvider)
+        public OutputWindowTracer(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }

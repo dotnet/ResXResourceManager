@@ -10,8 +10,6 @@
     using System.Text;
     using System.Text.RegularExpressions;
 
-    using JetBrains.Annotations;
-
     using TomsToolbox.Essentials;
 
     [DataContract]
@@ -21,7 +19,6 @@
         private const string MutedRulePattern = @"@MutedRule\(([a-zA-Z]+)\)";
         private const string MutedRuleFormat = @"@MutedRule({0})";
 
-        [NotNull]
         private static readonly Regex _mutedRuleExpression = new Regex(MutedRulePattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         public const string Default = @"{""EnabledRules"": [
@@ -32,16 +29,12 @@
 """ + ResourceTableEntryRuleWhiteSpaceTail.Id + @"""
 ]}";
 
-        [ItemNotNull]
         private IReadOnlyCollection<IResourceTableEntryRule>? _rules;
 
         private IDictionary<string, IResourceTableEntryRuleConfig>? _configurableRules;
 
-        [NotNull]
-        [ItemNotNull]
         private IReadOnlyCollection<IResourceTableEntryRule> Rules => _rules ??= BuildRuleCollection();
 
-        [NotNull]
         public IDictionary<string, IResourceTableEntryRuleConfig> ConfigurableRules => _configurableRules ??= new ReadOnlyDictionary<string, IResourceTableEntryRuleConfig>(Rules.Cast<IResourceTableEntryRuleConfig>().ToDictionary(rule => rule.RuleId));
 
         public bool IsEnabled(string? ruleId)
@@ -52,8 +45,6 @@
             return ConfigurableRules!.GetValueOrDefault(ruleId)?.IsEnabled ?? false;
         }
 
-        [NotNull]
-        [ItemNotNull]
         [DataMember(Name = "EnabledRules")]
         public IEnumerable<string> EnabledRuleIds
         {
@@ -89,12 +80,12 @@
             return rules.AsReadOnly();
         }
 
-        internal bool CompliesToRules([NotNull] [ItemNotNull] ICollection<string> mutedRuleIds, string? reference, string? value, out IList<string> messages)
+        internal bool CompliesToRules(ICollection<string> mutedRuleIds, string? reference, string? value, out IList<string> messages)
         {
             return CompliesToRules(mutedRuleIds, reference, new[] { value }, out messages);
         }
 
-        internal bool CompliesToRules([NotNull][ItemNotNull] ICollection<string> mutedRuleIds, string? reference, [NotNull, ItemCanBeNull] ICollection<string?> values, out IList<string> messages)
+        internal bool CompliesToRules(ICollection<string> mutedRuleIds, string? reference, ICollection<string?> values, out IList<string> messages)
         {
             var result = new List<string>();
 
@@ -118,7 +109,6 @@
             Changed?.Invoke(this, EventArgs.Empty);
         }
 
-        [NotNull]
         internal static IEnumerable<string> GetMutedRuleIds(string? comment)
         {
             if (string.IsNullOrWhiteSpace(comment))
@@ -133,8 +123,7 @@
             return rules;
         }
 
-        [NotNull]
-        internal static string SetMutedRuleIds(string? comment, [NotNull] ISet<string> mutedRuleIds)
+        internal static string SetMutedRuleIds(string? comment, ISet<string> mutedRuleIds)
         {
             var commentBuilder = new StringBuilder(comment ?? string.Empty);
 

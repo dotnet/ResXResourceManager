@@ -3,14 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
     using AutoProperties;
-
-    using JetBrains.Annotations;
 
     using ResXManager.Infrastructure;
 
@@ -23,16 +22,12 @@
     {
         private const string FileName = "Configuration.xml";
 
-        [NotNull]
         private static readonly string _directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "tom-englert.de", "ResXManager");
-        [NotNull]
         private readonly string _filePath;
-        [NotNull]
         private readonly XmlConfiguration _configuration;
-        [NotNull]
         private readonly Dictionary<string, object> _cachedObjects = new Dictionary<string, object>();
 
-        protected ConfigurationBase([NotNull] ITracer tracer)
+        protected ConfigurationBase(ITracer tracer)
         {
             Tracer = tracer;
             _filePath = Path.Combine(_directory, FileName);
@@ -65,11 +60,12 @@
             get;
         }
 
-        [NotNull, InterceptIgnore]
+        [InterceptIgnore]
         protected ITracer Tracer { get; }
 
-        [CanBeNull, GetInterceptor, UsedImplicitly]
-        protected T GetProperty<T>([NotNull] string key, PropertyInfo? propertyInfo)
+        [return: MaybeNull]
+        [GetInterceptor]
+        protected T GetProperty<T>(string key, PropertyInfo? propertyInfo)
         {
             if (!typeof(INotifyChanged).IsAssignableFrom(typeof(T)))
             {
@@ -96,8 +92,8 @@
             return value;
         }
 
-        [CanBeNull]
-        private T GetValue<T>([CanBeNull] T defaultValue, [NotNull] string key)
+        [return: MaybeNull]
+        private T GetValue<T>([AllowNull] T defaultValue, string key)
         {
             try
             {
@@ -110,19 +106,19 @@
             return defaultValue;
         }
 
-        [CanBeNull]
-        protected virtual T InternalGetValue<T>([CanBeNull] T defaultValue, [NotNull] string key)
+        [return: MaybeNull]
+        protected virtual T InternalGetValue<T>([AllowNull] T defaultValue, string key)
         {
             return ConvertFromString(_configuration.GetValue(key, null), defaultValue);
         }
 
-        [SetInterceptor, UsedImplicitly]
-        protected void SetValue<T>([CanBeNull] T value, [NotNull] string key)
+        [SetInterceptor]
+        protected void SetValue<T>([AllowNull] T value, string key)
         {
             InternalSetValue(value, key);
         }
 
-        protected virtual void InternalSetValue<T>([CanBeNull] T value, [NotNull] string key)
+        protected virtual void InternalSetValue<T>([AllowNull] T value, string key)
         {
             try
             {
@@ -139,8 +135,8 @@
             }
         }
 
-        [CanBeNull]
-        protected static T ConvertFromString<T>(string? value, [CanBeNull] T defaultValue)
+        [return: MaybeNull]
+        protected static T ConvertFromString<T>(string? value, [AllowNull] T defaultValue)
         {
             try
             {
@@ -158,7 +154,7 @@
             return defaultValue;
         }
 
-        protected static string? ConvertToString<T>([CanBeNull] T value)
+        protected static string? ConvertToString<T>([AllowNull] T value)
         {
             if (value == null)
                 return null;
@@ -167,13 +163,12 @@
             return typeConverter.ConvertToInvariantString(value);
         }
 
-        [NotNull]
-        private static TypeConverter GetTypeConverter([NotNull] Type type)
+        private static TypeConverter GetTypeConverter(Type type)
         {
             return GetCustomTypeConverter(type) ?? TypeDescriptor.GetConverter(type);
         }
 
-        private static TypeConverter? GetCustomTypeConverter([NotNull] ICustomAttributeProvider item)
+        private static TypeConverter? GetCustomTypeConverter(ICustomAttributeProvider item)
         {
             /*
              * Workaround: a copy of the identical method from TomsToolbox.Essentials.
@@ -188,7 +183,7 @@
                 .FirstOrDefault();
         }
 
-        [CanBeNull]
+        [return: MaybeNull]
         private static T GetDefaultValue<T>(MemberInfo? propertyInfo)
         {
             var defaultValueAttribute = propertyInfo?.GetCustomAttributes<DefaultValueAttribute>().Select(attr => attr?.Value).FirstOrDefault();
@@ -205,11 +200,5 @@
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

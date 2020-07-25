@@ -6,8 +6,6 @@
     using System.IO;
     using System.Linq;
 
-    using JetBrains.Annotations;
-
     using PropertyChanged;
 
     using ResXManager.Infrastructure;
@@ -22,12 +20,10 @@
     [AddINotifyPropertyChangedInterface]
     public sealed class ResourceEntity
     {
-        [NotNull]
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
-        [NotNull, ItemNotNull]
         private readonly ObservableCollection<ResourceTableEntry> _resourceTableEntries;
 
-        internal ResourceEntity([NotNull] ResourceManager container, [NotNull] string projectName, [NotNull] string baseName, [NotNull] string directoryName, [NotNull][ItemNotNull] ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
+        internal ResourceEntity(ResourceManager container, string projectName, string baseName, string directoryName, ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
         {
             Container = container;
             ProjectName = projectName;
@@ -49,7 +45,7 @@
             Entries = new ReadOnlyObservableCollection<ResourceTableEntry>(_resourceTableEntries);
         }
 
-        internal bool Update([NotNull, ItemNotNull] ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
+        internal bool Update(ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
         {
             if (!MergeItems(_languages, GetResourceLanguages(files, duplicateKeyHandling)))
                 return false; // nothing has changed, no need to continue
@@ -88,8 +84,7 @@
             return true;
         }
 
-        [NotNull]
-        private static string GetRelativePath([NotNull][ItemNotNull] ICollection<ProjectFile> files)
+        private static string GetRelativePath(ICollection<ProjectFile> files)
         {
             var uniqueProjectName = files.Select(file => file.UniqueProjectName).FirstOrDefault();
             if (uniqueProjectName == null)
@@ -117,34 +112,27 @@
             return string.Empty;
         }
 
-        [NotNull]
         public ResourceManager Container { get; }
 
         /// <summary>
         /// Gets the containing project name of the resource entity.
         /// </summary>
-        [NotNull]
         public string ProjectName { get; }
 
         /// <summary>
         /// Gets the base name of the resource entity.
         /// </summary>
-        [NotNull]
         public string BaseName { get; }
 
-        [NotNull]
         public string RelativePath { get; }
 
-        [NotNull]
         public string UniqueName => RelativePath + BaseName;
 
-        [NotNull]
         public string DisplayName { get; }
 
         /// <summary>
         /// Gets the directory where the physical files are located.
         /// </summary>
-        [NotNull]
         public string DirectoryName { get; }
 
         public ProjectFile? NeutralProjectFile { get; private set; }
@@ -154,20 +142,18 @@
         /// <summary>
         /// Gets the available languages of this resource entity.
         /// </summary>
-        [NotNull, ItemNotNull]
         public ICollection<ResourceLanguage> Languages => _languages.Values;
 
         /// <summary>
         /// Gets all the entries of this resource entity.
         /// </summary>
-        [NotNull, ItemNotNull]
         public ReadOnlyObservableCollection<ResourceTableEntry> Entries { get; }
 
         /// <summary>
         /// Removes the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
-        public void Remove([NotNull] ResourceTableEntry item)
+        public void Remove(ResourceTableEntry item)
         {
             foreach (var language in _languages.Values)
             {
@@ -181,7 +167,7 @@
         /// Adds an item with the specified key.
         /// </summary>
         /// <param name="key">The key.</param>
-        public ResourceTableEntry? Add([NotNull] string key)
+        public ResourceTableEntry? Add(string key)
         {
             if (!_languages.Any() || !_languages.Values.Any())
                 return null;
@@ -200,7 +186,7 @@
         /// Adds the language represented by the specified file.
         /// </summary>
         /// <param name="file">The file.</param>
-        public void AddLanguage([NotNull] ProjectFile file)
+        public void AddLanguage(ProjectFile file)
         {
             var cultureKey = file.GetCultureKey(Container.Configuration);
             var resourceLanguage = new ResourceLanguage(this, cultureKey, file, Container.Configuration.DuplicateKeyHandling);
@@ -222,7 +208,7 @@
         }
 
         [SuppressPropertyChangedWarnings]
-        internal void OnIndexChanged([NotNull] ResourceTableEntry resourceTableEntry)
+        internal void OnIndexChanged(ResourceTableEntry resourceTableEntry)
         {
             var previousEntries = _resourceTableEntries
                 .Where(entry => entry.Index < resourceTableEntry.Index)
@@ -242,7 +228,7 @@
         }
 
         [SuppressPropertyChangedWarnings]
-        public void OnItemOrderChanged([NotNull] ResourceLanguage resourceLanguage)
+        public void OnItemOrderChanged(ResourceLanguage resourceLanguage)
         {
             if (resourceLanguage.CultureKey != CultureKey.Neutral)
                 return;
@@ -267,8 +253,7 @@
                    && string.Equals(directoryName, DirectoryName, StringComparison.OrdinalIgnoreCase);
         }
 
-        [NotNull]
-        private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages([NotNull][ItemNotNull] IEnumerable<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
+        private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages(IEnumerable<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
         {
             var languageQuery =
                 from file in files
@@ -281,7 +266,7 @@
             return languages;
         }
 
-        private bool MergeItems([NotNull] IDictionary<CultureKey, ResourceLanguage> targets, [NotNull] IDictionary<CultureKey, ResourceLanguage> sources)
+        private bool MergeItems(IDictionary<CultureKey, ResourceLanguage> targets, IDictionary<CultureKey, ResourceLanguage> sources)
         {
             var removedLanguages = targets.Keys
                 .Except(sources.Keys)
@@ -302,7 +287,7 @@
             return removedLanguages.Any() || hasChanges || addedLanguages.Any();
         }
 
-        private bool UpdateChangedEntries([NotNull] IDictionary<CultureKey, ResourceLanguage> targets, [NotNull] IDictionary<CultureKey, ResourceLanguage> sources)
+        private bool UpdateChangedEntries(IDictionary<CultureKey, ResourceLanguage> targets, IDictionary<CultureKey, ResourceLanguage> sources)
         {
             var hasChanges = false;
 

@@ -5,8 +5,6 @@
     using System.Linq;
     using System.Runtime.Serialization;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Model;
 
     [DataContract]
@@ -18,7 +16,6 @@
         [DataMember]
         public string? Patterns { get; set; }
 
-        [NotNull, ItemNotNull]
         public IEnumerable<string> ParseExtensions()
         {
             if (Extensions == null || string.IsNullOrEmpty(Extensions))
@@ -29,7 +26,6 @@
                 .Where(ext => !string.IsNullOrEmpty(ext));
         }
 
-        [NotNull, ItemNotNull]
         public IEnumerable<string> ParsePatterns()
         {
             if (Patterns == null || string.IsNullOrEmpty(Patterns))
@@ -40,23 +36,12 @@
                 .Where(ext => !string.IsNullOrEmpty(ext));
         }
 
-        #region INotifyPropertyChanged implementation
-
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        [NotifyPropertyChangedInvocator, UsedImplicitly]
-        private void OnPropertyChanged([NotNull] string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
     }
 
     [KnownType(typeof(MoveToResourceConfigurationItem))]
     [DataContract]
     [TypeConverter(typeof(JsonSerializerTypeConverter<MoveToResourceConfiguration>))]
-    [UsedImplicitly]
     public class MoveToResourceConfiguration : ItemTrackingCollectionHost<MoveToResourceConfigurationItem>
     {
         public const string Default = @"{""Items"":

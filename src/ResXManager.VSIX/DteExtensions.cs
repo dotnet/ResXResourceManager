@@ -8,8 +8,6 @@
     using System.Runtime.InteropServices;
     using System.Windows;
 
-    using JetBrains.Annotations;
-
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
 
@@ -35,7 +33,7 @@
             }
         }
 
-        public static bool GetIsOpen([NotNull] this EnvDTE.ProjectItem projectItem)
+        public static bool GetIsOpen(this EnvDTE.ProjectItem projectItem)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -49,8 +47,7 @@
             }
         }
 
-        [NotNull]
-        public static ICollection<VSITEMSELECTION> GetSelectedProjectItems([NotNull] this IVsMonitorSelection monitorSelection)
+        public static ICollection<VSITEMSELECTION> GetSelectedProjectItems(this IVsMonitorSelection monitorSelection)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -115,7 +112,6 @@
             }
         }
 
-        [ItemNotNull]
         public static IEnumerable<EnvDTE.ProjectItem>? TryGetProjectItems(this EnvDTE.ProjectItem? projectItem)
         {
             try
@@ -128,19 +124,16 @@
             }
         }
 
-        [NotNull, ItemNotNull]
         public static IEnumerable<EnvDTE.ProjectItem> Children(this EnvDTE.ProjectItem? projectItem)
         {
             return projectItem?.TryGetProjectItems() ?? Enumerable.Empty<EnvDTE.ProjectItem>();
         }
 
-        [NotNull, ItemNotNull]
         public static IEnumerable<EnvDTE.ProjectItem> Descendants(this EnvDTE.ProjectItem? projectItem)
         {
             return projectItem?.TryGetProjectItems()?.SelectMany(p => p.DescendantsAndSelf()) ?? Enumerable.Empty<EnvDTE.ProjectItem>();
         }
 
-        [NotNull, ItemNotNull]
         public static IEnumerable<EnvDTE.ProjectItem> DescendantsAndSelf(this EnvDTE.ProjectItem? projectItem)
         {
             if (projectItem == null)
@@ -154,7 +147,7 @@
             }
         }
 
-        public static void SetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName, object? value)
+        public static void SetProperty(this EnvDTE.ProjectItem projectItem, string propertyName, object? value)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -163,7 +156,7 @@
                 item.Value = value;
         }
 
-        public static object? GetProperty([NotNull] this EnvDTE.ProjectItem projectItem, [NotNull] string propertyName)
+        public static object? GetProperty(this EnvDTE.ProjectItem projectItem, string propertyName)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -182,7 +175,7 @@
             }
         }
 
-        public static void RunCustomTool([NotNull] this EnvDTE.ProjectItem projectItem)
+        public static void RunCustomTool(this EnvDTE.ProjectItem projectItem)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -198,21 +191,21 @@
             }
         }
 
-        public static void SetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem, string? value)
+        public static void SetCustomTool(this EnvDTE.ProjectItem projectItem, string? value)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
             SetProperty(projectItem, @"CustomTool", value);
         }
 
-        public static string? GetCustomTool([NotNull] this EnvDTE.ProjectItem projectItem)
+        public static string? GetCustomTool(this EnvDTE.ProjectItem projectItem)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
             return GetProperty(projectItem, @"CustomTool") as string;
         }
 
-        public static EnvDTE.ProjectItem? AddFromFile([NotNull] this EnvDTE.ProjectItem projectItem, string? fileName)
+        public static EnvDTE.ProjectItem? AddFromFile(this EnvDTE.ProjectItem projectItem, string? fileName)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -226,7 +219,7 @@
             }
         }
 
-        public static EnvDTE.ProjectItem? AddFromFile([NotNull] this EnvDTE.Project project, string? fileName)
+        public static EnvDTE.ProjectItem? AddFromFile(this EnvDTE.Project project, string? fileName)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -241,7 +234,7 @@
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public static void SetFontSize([NotNull] this EnvDTE.DTE dte, [NotNull] DependencyObject view)
+        public static void SetFontSize(this EnvDTE.DTE dte, DependencyObject view)
         {
             const string CATEGORY_FONTS_AND_COLORS = "FontsAndColors";
             const string PAGE_TEXT_EDITOR = "TextEditor";
@@ -267,7 +260,7 @@
             }
         }
 
-        public static string? TryGetFileName([NotNull] this EnvDTE.ProjectItem projectItem)
+        public static string? TryGetFileName(this EnvDTE.ProjectItem projectItem)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 

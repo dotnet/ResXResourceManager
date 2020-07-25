@@ -7,10 +7,6 @@
     using System.Globalization;
     using System.Linq;
 
-    using JetBrains.Annotations;
-
-    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
-
     public abstract class ResourceTableEntryRuleWhiteSpace : IResourceTableEntryRule
     {
         /// <inheritdoc />
@@ -19,7 +15,7 @@
         /// <inheritdoc />
         public abstract string RuleId { get; }
 
-        public bool CompliesToRule(string? neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
+        public bool CompliesToRule(string? neutralValue, IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
         {
             var reference = GetWhiteSpaceSequence(neutralValue).ToArray();
 
@@ -33,19 +29,15 @@
             return true;
         }
 
-        [NotNull]
         protected abstract IEnumerable<char> GetCharIterator(string? value);
 
-        [NotNull]
-        protected abstract string GetErrorMessage([NotNull][ItemNotNull] IEnumerable<string> reference);
+        protected abstract string GetErrorMessage(IEnumerable<string> reference);
 
-        [NotNull]
         private IEnumerable<char> GetWhiteSpaceSequence(string? value)
         {
             return GetCharIterator(value).TakeWhile(char.IsWhiteSpace);
         }
 
-        [NotNull]
         private static string GetWhiteSpaceName(char wsChar)
         {
             Debug.Assert(char.IsWhiteSpace(wsChar));

@@ -7,8 +7,6 @@
     using System.Windows.Input;
     using System.Windows.Threading;
 
-    using JetBrains.Annotations;
-
     using Throttle;
 
     using ResXManager.Model;
@@ -20,13 +18,11 @@
     [Export]
     public sealed class VsixShellViewModel : ObservableObject
     {
-        [NotNull]
         private readonly ResourceViewModel _resourceViewModel;
-        [NotNull]
         private readonly ShellViewModel _shellViewModel;
 
         [ImportingConstructor]
-        public VsixShellViewModel([NotNull] ResourceManager resourceManager, [NotNull] ResourceViewModel resourceViewModel, [NotNull] ShellViewModel shellViewModel)
+        public VsixShellViewModel(ResourceManager resourceManager, ResourceViewModel resourceViewModel, ShellViewModel shellViewModel)
         {
             _resourceViewModel = resourceViewModel;
             _shellViewModel = shellViewModel;
@@ -35,7 +31,6 @@
             resourceViewModel.SelectedEntities.CollectionChanged += (_, __) => SelectedCodeGeneratorsChanged();
         }
 
-        [NotNull]
         public ICommand SetCodeProviderCommand => new DelegateCommand<CodeGenerator>(CanSetCodeProvider, SetCodeProvider);
 
         public CodeGenerator SelectedCodeGenerators
@@ -54,7 +49,7 @@
             }
         }
 
-        public void SelectEntry([NotNull] ResourceTableEntry entry)
+        public void SelectEntry(ResourceTableEntry entry)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -66,7 +61,6 @@
             });
         }
 
-        [NotNull]
         private IEnumerable<CodeGenerator> SelectedItemsCodeGenerators()
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();

@@ -22,8 +22,6 @@
 namespace ResXManager.View.Properties {
     using System;
 
-    using JetBrains.Annotations;
-
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -74,7 +72,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "You are about to add new entries to a WinForms des..."
         /// </summary>
-        [NotNull]
         public static string AddEntryToWinFormsResourceWarning {
             get {
                 return ResourceManager.GetString("AddEntryToWinFormsResourceWarning", resourceCulture) ?? string.Empty;
@@ -84,7 +81,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Add new key (Shift+Insert)"
         /// </summary>
-        [NotNull]
         public static string AddKeyToolTip {
             get {
                 return ResourceManager.GetString("AddKeyToolTip", resourceCulture) ?? string.Empty;
@@ -94,7 +90,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Add new language"
         /// </summary>
-        [NotNull]
         public static string AddLanguageToolTip {
             get {
                 return ResourceManager.GetString("AddLanguageToolTip", resourceCulture) ?? string.Empty;
@@ -104,7 +99,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "All comments"
         /// </summary>
-        [NotNull]
         public static string AllComments {
             get {
                 return ResourceManager.GetString("AllComments", resourceCulture) ?? string.Empty;
@@ -114,7 +108,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "All languages"
         /// </summary>
-        [NotNull]
         public static string AllLanguages {
             get {
                 return ResourceManager.GetString("AllLanguages", resourceCulture) ?? string.Empty;
@@ -124,7 +117,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Authentication"
         /// </summary>
-        [NotNull]
         public static string Authentication {
             get {
                 return ResourceManager.GetString("Authentication", resourceCulture) ?? string.Empty;
@@ -134,7 +126,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Create all resource files when adding a new resour..."
         /// </summary>
-        [NotNull]
         public static string AutoCreateNewLanguageFiles {
             get {
                 return ResourceManager.GetString("AutoCreateNewLanguageFiles", resourceCulture) ?? string.Empty;
@@ -147,7 +138,6 @@ namespace ResXManager.View.Properties {
         /// <remarks>
         /// @Invariant
         /// </remarks>
-        [NotNull]
         public static string CaseSensitive {
             get {
                 return ResourceManager.GetString("CaseSensitive", resourceCulture) ?? string.Empty;
@@ -157,7 +147,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Cell selection"
         /// </summary>
-        [NotNull]
         public static string CellSelection {
             get {
                 return ResourceManager.GetString("CellSelection", resourceCulture) ?? string.Empty;
@@ -167,7 +156,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Allow selection of individual cells to copy/paste ..."
         /// </summary>
-        [NotNull]
         public static string CellSelectionToolTip {
             get {
                 return ResourceManager.GetString("CellSelectionToolTip", resourceCulture) ?? string.Empty;
@@ -177,7 +165,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Choose columns"
         /// </summary>
-        [NotNull]
         public static string ChooseColumnsToolTip {
             get {
                 return ResourceManager.GetString("ChooseColumnsToolTip", resourceCulture) ?? string.Empty;
@@ -187,7 +174,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "The number of references found in code files. This..."
         /// </summary>
-        [NotNull]
         public static string CodeReferencesToolTip {
             get {
                 return ResourceManager.GetString("CodeReferencesToolTip", resourceCulture) ?? string.Empty;
@@ -197,7 +183,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Too many references to show details."
         /// </summary>
-        [NotNull]
         public static string CodeReferencesTooManyDetailsToolTip {
             get {
                 return ResourceManager.GetString("CodeReferencesTooManyDetailsToolTip", resourceCulture) ?? string.Empty;
@@ -207,7 +192,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Code reference detection is still in progress ({0}..."
         /// </summary>
-        [NotNull]
         public static string CodeReferenceTrackingInProgress {
             get {
                 return ResourceManager.GetString("CodeReferenceTrackingInProgress", resourceCulture) ?? string.Empty;
@@ -217,7 +201,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "+Ctrl =&amp;gt; Apply star sizes to right columns&..."
         /// </summary>
-        [NotNull]
         public static string ColumnHeaderGripperToolTip {
             get {
                 return ResourceManager.GetString("ColumnHeaderGripperToolTip", resourceCulture) ?? string.Empty;
@@ -227,7 +210,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Comment"
         /// </summary>
-        [NotNull]
         public static string Comment {
             get {
                 return ResourceManager.GetString("Comment", resourceCulture) ?? string.Empty;
@@ -237,7 +219,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Comment"
         /// </summary>
-        [NotNull]
         public static string CommentColumnHeader {
             get {
                 return ResourceManager.GetString("CommentColumnHeader", resourceCulture) ?? string.Empty;
@@ -247,7 +228,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Comment Token"
         /// </summary>
-        [NotNull]
         public static string CommentToken {
             get {
                 return ResourceManager.GetString("CommentToken", resourceCulture) ?? string.Empty;
@@ -257,7 +237,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Duplicate/empty resource key handling"
         /// </summary>
-        [NotNull]
         public static string Configuration_DuplicateKeyHandling {
             get {
                 return ResourceManager.GetString("Configuration_DuplicateKeyHandling", resourceCulture) ?? string.Empty;
@@ -267,7 +246,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Remove empty entries in resources"
         /// </summary>
-        [NotNull]
         public static string Configuration_EmptyValueHandling {
             get {
                 return ResourceManager.GetString("Configuration_EmptyValueHandling", resourceCulture) ?? string.Empty;
@@ -277,7 +255,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Empty resource value handling"
         /// </summary>
-        [NotNull]
         public static string Configuration_EmptyValueHandlingHeader {
             get {
                 return ResourceManager.GetString("Configuration_EmptyValueHandlingHeader", resourceCulture) ?? string.Empty;
@@ -287,7 +264,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Excel export mode"
         /// </summary>
-        [NotNull]
         public static string Configuration_ExcelExportModeHeader {
             get {
                 return ResourceManager.GetString("Configuration_ExcelExportModeHeader", resourceCulture) ?? string.Empty;
@@ -297,7 +273,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "File creation"
         /// </summary>
-        [NotNull]
         public static string Configuration_FileCreationHeader {
             get {
                 return ResourceManager.GetString("Configuration_FileCreationHeader", resourceCulture) ?? string.Empty;
@@ -307,7 +282,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "General"
         /// </summary>
-        [NotNull]
         public static string Configuration_General {
             get {
                 return ResourceManager.GetString("Configuration_General", resourceCulture) ?? string.Empty;
@@ -317,7 +291,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Load &amp; Save"
         /// </summary>
-        [NotNull]
         public static string Configuration_LoadSaveHeader {
             get {
                 return ResourceManager.GetString("Configuration_LoadSaveHeader", resourceCulture) ?? string.Empty;
@@ -327,7 +300,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Consistency checks"
         /// </summary>
-        [NotNull]
         public static string Configuration_Rules {
             get {
                 return ResourceManager.GetString("Configuration_Rules", resourceCulture) ?? string.Empty;
@@ -337,7 +309,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Scope"
         /// </summary>
-        [NotNull]
         public static string ConfigurationScopeHeader {
             get {
                 return ResourceManager.GetString("ConfigurationScopeHeader", resourceCulture) ?? string.Empty;
@@ -347,7 +318,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Confirm adding new resource files"
         /// </summary>
-        [NotNull]
         public static string ConfirmAddLanguage {
             get {
                 return ResourceManager.GetString("ConfirmAddLanguage", resourceCulture) ?? string.Empty;
@@ -357,7 +327,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Cut the selected rows?"
         /// </summary>
-        [NotNull]
         public static string ConfirmCutItems {
             get {
                 return ResourceManager.GetString("ConfirmCutItems", resourceCulture) ?? string.Empty;
@@ -367,7 +336,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Delete the selected items?"
         /// </summary>
-        [NotNull]
         public static string ConfirmDeleteItems {
             get {
                 return ResourceManager.GetString("ConfirmDeleteItems", resourceCulture) ?? string.Empty;
@@ -377,7 +345,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Copy (Ctrl+C)"
         /// </summary>
-        [NotNull]
         public static string Copy {
             get {
                 return ResourceManager.GetString("Copy", resourceCulture) ?? string.Empty;
@@ -387,7 +354,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Copy the selected rows or cells (Ctrl+C)"
         /// </summary>
-        [NotNull]
         public static string CopyToolTip {
             get {
                 return ResourceManager.GetString("CopyToolTip", resourceCulture) ?? string.Empty;
@@ -397,7 +363,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Create Snapshot"
         /// </summary>
-        [NotNull]
         public static string CreateSnapshot {
             get {
                 return ResourceManager.GetString("CreateSnapshot", resourceCulture) ?? string.Empty;
@@ -407,7 +372,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Cut (Ctrl+X)"
         /// </summary>
-        [NotNull]
         public static string Cut {
             get {
                 return ResourceManager.GetString("Cut", resourceCulture) ?? string.Empty;
@@ -417,7 +381,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Cut selected rows (Ctrl+X)"
         /// </summary>
-        [NotNull]
         public static string CutToolTip {
             get {
                 return ResourceManager.GetString("CutToolTip", resourceCulture) ?? string.Empty;
@@ -427,7 +390,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Delete (Del)"
         /// </summary>
-        [NotNull]
         public static string Delete {
             get {
                 return ResourceManager.GetString("Delete", resourceCulture) ?? string.Empty;
@@ -437,7 +399,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Delete selected items (Del)"
         /// </summary>
-        [NotNull]
         public static string DeleteToolTip {
             get {
                 return ResourceManager.GetString("DeleteToolTip", resourceCulture) ?? string.Empty;
@@ -447,7 +408,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Detect Code References"
         /// </summary>
-        [NotNull]
         public static string DetectCodeReferences_Header {
             get {
                 return ResourceManager.GetString("DetectCodeReferences_Header", resourceCulture) ?? string.Empty;
@@ -457,7 +417,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Diagnostics"
         /// </summary>
-        [NotNull]
         public static string Diagnostics {
             get {
                 return ResourceManager.GetString("Diagnostics", resourceCulture) ?? string.Empty;
@@ -467,7 +426,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Support this project with a donation"
         /// </summary>
-        [NotNull]
         public static string DonateButtonToolTip {
             get {
                 return ResourceManager.GetString("DonateButtonToolTip", resourceCulture) ?? string.Empty;
@@ -477,7 +435,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Your are editing the default configuration. If you..."
         /// </summary>
-        [NotNull]
         public static string EditDefaultConfigurationNotification {
             get {
                 return ResourceManager.GetString("EditDefaultConfigurationNotification", resourceCulture) ?? string.Empty;
@@ -487,7 +444,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "You are editing the configuration specific for the..."
         /// </summary>
-        [NotNull]
         public static string EditSolutionConfigurationNotification {
             get {
                 return ResourceManager.GetString("EditSolutionConfigurationNotification", resourceCulture) ?? string.Empty;
@@ -497,7 +453,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Enabled"
         /// </summary>
-        [NotNull]
         public static string Enabled {
             get {
                 return ResourceManager.GetString("Enabled", resourceCulture) ?? string.Empty;
@@ -507,7 +462,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Error adding the new resource file '{0}'"
         /// </summary>
-        [NotNull]
         public static string ErrorAddingNewResourceFile {
             get {
                 return ResourceManager.GetString("ErrorAddingNewResourceFile", resourceCulture) ?? string.Empty;
@@ -517,7 +471,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Export all"
         /// </summary>
-        [NotNull]
         public static string ExportExcelAll {
             get {
                 return ResourceManager.GetString("ExportExcelAll", resourceCulture) ?? string.Empty;
@@ -527,7 +480,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Export selection"
         /// </summary>
-        [NotNull]
         public static string ExportExcelSelection {
             get {
                 return ResourceManager.GetString("ExportExcelSelection", resourceCulture) ?? string.Empty;
@@ -537,7 +489,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "File exclusion filter"
         /// </summary>
-        [NotNull]
         public static string FileExclusionFilters_Header {
             get {
                 return ResourceManager.GetString("FileExclusionFilters_Header", resourceCulture) ?? string.Empty;
@@ -547,7 +498,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "File Extensions"
         /// </summary>
-        [NotNull]
         public static string FileExtensions {
             get {
                 return ResourceManager.GetString("FileExtensions", resourceCulture) ?? string.Empty;
@@ -557,7 +507,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Detect code references."
         /// </summary>
-        [NotNull]
         public static string FindCodeReferencesButtonToolTip {
             get {
                 return ResourceManager.GetString("FindCodeReferencesButtonToolTip", resourceCulture) ?? string.Empty;
@@ -567,7 +516,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Flat view"
         /// </summary>
-        [NotNull]
         public static string FlatViewToolTip {
             get {
                 return ResourceManager.GetString("FlatViewToolTip", resourceCulture) ?? string.Empty;
@@ -577,7 +525,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Grouped view"
         /// </summary>
-        [NotNull]
         public static string GroupedViewToolTip {
             get {
                 return ResourceManager.GetString("GroupedViewToolTip", resourceCulture) ?? string.Empty;
@@ -587,7 +534,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Documentation"
         /// </summary>
-        [NotNull]
         public static string HelpButtonToolTip {
             get {
                 return ResourceManager.GetString("HelpButtonToolTip", resourceCulture) ?? string.Empty;
@@ -597,7 +543,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Import"
         /// </summary>
-        [NotNull]
         public static string ImportExcel {
             get {
                 return ResourceManager.GetString("ImportExcel", resourceCulture) ?? string.Empty;
@@ -607,7 +552,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "A normalized table is expected."
         /// </summary>
-        [NotNull]
         public static string ImportNormalizedTableExpected {
             get {
                 return ResourceManager.GetString("ImportNormalizedTableExpected", resourceCulture) ?? string.Empty;
@@ -617,7 +561,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Index of the entry in the resource file."
         /// </summary>
-        [NotNull]
         public static string IndexColumnHeaderToolTip {
             get {
                 return ResourceManager.GetString("IndexColumnHeaderToolTip", resourceCulture) ?? string.Empty;
@@ -627,7 +570,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Show the index column"
         /// </summary>
-        [NotNull]
         public static string IndexColumnToggleButtonToolTip {
             get {
                 return ResourceManager.GetString("IndexColumnToggleButtonToolTip", resourceCulture) ?? string.Empty;
@@ -637,7 +579,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Index of the entry in the resource file. Use fract..."
         /// </summary>
-        [NotNull]
         public static string IndexColumnToolTip {
             get {
                 return ResourceManager.GetString("IndexColumnToolTip", resourceCulture) ?? string.Empty;
@@ -647,7 +588,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Invariant"
         /// </summary>
-        [NotNull]
         public static string Invariant {
             get {
                 return ResourceManager.GetString("Invariant", resourceCulture) ?? string.Empty;
@@ -657,7 +597,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Key"
         /// </summary>
-        [NotNull]
         public static string Key {
             get {
                 return ResourceManager.GetString("Key", resourceCulture) ?? string.Empty;
@@ -667,7 +606,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "This is an overview of the languages supported by ..."
         /// </summary>
-        [NotNull]
         public static string LanguageConfiguration_Description {
             get {
                 return ResourceManager.GetString("LanguageConfiguration_Description", resourceCulture) ?? string.Empty;
@@ -677,7 +615,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Like it? Support the project by writing a short re..."
         /// </summary>
-        [NotNull]
         public static string LikeButtonToolTip {
             get {
                 return ResourceManager.GetString("LikeButtonToolTip", resourceCulture) ?? string.Empty;
@@ -687,7 +624,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Load Snapshot"
         /// </summary>
-        [NotNull]
         public static string LoadSnapshot {
             get {
                 return ResourceManager.GetString("LoadSnapshot", resourceCulture) ?? string.Empty;
@@ -697,7 +633,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Multiple selection."
         /// </summary>
-        [NotNull]
         public static string MultipleSelection {
             get {
                 return ResourceManager.GetString("MultipleSelection", resourceCulture) ?? string.Empty;
@@ -707,7 +642,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "You must select a single resource in the left side..."
         /// </summary>
-        [NotNull]
         public static string NeedSingleEntitySelection {
             get {
                 return ResourceManager.GetString("NeedSingleEntitySelection", resourceCulture) ?? string.Empty;
@@ -717,7 +651,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Neutral"
         /// </summary>
-        [NotNull]
         public static string Neutral {
             get {
                 return ResourceManager.GetString("Neutral", resourceCulture) ?? string.Empty;
@@ -727,7 +660,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Neutral Resources Language:"
         /// </summary>
-        [NotNull]
         public static string NeutralResourceLanguageHeader {
             get {
                 return ResourceManager.GetString("NeutralResourceLanguageHeader", resourceCulture) ?? string.Empty;
@@ -737,7 +669,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Enter new resource key:"
         /// </summary>
-        [NotNull]
         public static string NewKeyPrompt {
             get {
                 return ResourceManager.GetString("NewKeyPrompt", resourceCulture) ?? string.Empty;
@@ -747,7 +678,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Select the new language:"
         /// </summary>
-        [NotNull]
         public static string NewLanguageIdPrompt {
             get {
                 return ResourceManager.GetString("NewLanguageIdPrompt", resourceCulture) ?? string.Empty;
@@ -757,7 +687,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "No code references have been found by this algorit..."
         /// </summary>
-        [NotNull]
         public static string NoCodeReferencesToolTip {
             get {
                 return ResourceManager.GetString("NoCodeReferencesToolTip", resourceCulture) ?? string.Empty;
@@ -767,7 +696,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "There is no resource file for this resource."
         /// </summary>
-        [NotNull]
         public static string NoResourceFileForResource {
             get {
                 return ResourceManager.GetString("NoResourceFileForResource", resourceCulture) ?? string.Empty;
@@ -777,7 +705,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "No selection."
         /// </summary>
-        [NotNull]
         public static string NoSelection {
             get {
                 return ResourceManager.GetString("NoSelection", resourceCulture) ?? string.Empty;
@@ -787,7 +714,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Got it - do not show this notification again."
         /// </summary>
-        [NotNull]
         public static string OpenSourceOverlay_Confirmation {
             get {
                 return ResourceManager.GetString("OpenSourceOverlay_Confirmation", resourceCulture) ?? string.Empty;
@@ -797,7 +723,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "&amp;lt;StackPanel xmlns="http://schemas.microsoft..."
         /// </summary>
-        [NotNull]
         public static string OpenSourceOverlay_Message {
             get {
                 return ResourceManager.GetString("OpenSourceOverlay_Message", resourceCulture) ?? string.Empty;
@@ -807,7 +732,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Paste (Ctrl+V)"
         /// </summary>
-        [NotNull]
         public static string Paste {
             get {
                 return ResourceManager.GetString("Paste", resourceCulture) ?? string.Empty;
@@ -817,7 +741,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Error parsing the data from clipboard:"
         /// </summary>
-        [NotNull]
         public static string PasteFailed {
             get {
                 return ResourceManager.GetString("PasteFailed", resourceCulture) ?? string.Empty;
@@ -827,7 +750,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "The data you're pasting isn't the same size as you..."
         /// </summary>
-        [NotNull]
         public static string PasteSelectionSizeMismatch {
             get {
                 return ResourceManager.GetString("PasteSelectionSizeMismatch", resourceCulture) ?? string.Empty;
@@ -837,7 +759,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Paste the clipboard content (Ctrl+V)"
         /// </summary>
-        [NotNull]
         public static string PasteToolTip {
             get {
                 return ResourceManager.GetString("PasteToolTip", resourceCulture) ?? string.Empty;
@@ -847,7 +768,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Patterns"
         /// </summary>
-        [NotNull]
         public static string Patterns {
             get {
                 return ResourceManager.GetString("Patterns", resourceCulture) ?? string.Empty;
@@ -857,7 +777,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Ranking:"
         /// </summary>
-        [NotNull]
         public static string Ranking {
             get {
                 return ResourceManager.GetString("Ranking", resourceCulture) ?? string.Empty;
@@ -867,7 +786,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Refresh view"
         /// </summary>
-        [NotNull]
         public static string RefreshViewToolTip {
             get {
                 return ResourceManager.GetString("RefreshViewToolTip", resourceCulture) ?? string.Empty;
@@ -877,7 +795,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Regular Expression"
         /// </summary>
-        [NotNull]
         public static string RegularExpression {
             get {
                 return ResourceManager.GetString("RegularExpression", resourceCulture) ?? string.Empty;
@@ -887,7 +804,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "A regular expression to filter resource files.&amp..."
         /// </summary>
-        [NotNull]
         public static string ResourceFilterToolTip {
             get {
                 return ResourceManager.GetString("ResourceFilterToolTip", resourceCulture) ?? string.Empty;
@@ -897,7 +813,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Save files immediately upon change"
         /// </summary>
-        [NotNull]
         public static string SaveFilesImmediatelyUponChange {
             get {
                 return ResourceManager.GetString("SaveFilesImmediatelyUponChange", resourceCulture) ?? string.Empty;
@@ -907,7 +822,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Selected/Total"
         /// </summary>
-        [NotNull]
         public static string SelectedTotalToolTip {
             get {
                 return ResourceManager.GetString("SelectedTotalToolTip", resourceCulture) ?? string.Empty;
@@ -917,7 +831,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Configuration"
         /// </summary>
-        [NotNull]
         public static string ShellTabHeader_Configuration {
             get {
                 return ResourceManager.GetString("ShellTabHeader_Configuration", resourceCulture) ?? string.Empty;
@@ -927,7 +840,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Languages"
         /// </summary>
-        [NotNull]
         public static string ShellTabHeader_Languages {
             get {
                 return ResourceManager.GetString("ShellTabHeader_Languages", resourceCulture) ?? string.Empty;
@@ -937,7 +849,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Main"
         /// </summary>
-        [NotNull]
         public static string ShellTabHeader_Main {
             get {
                 return ResourceManager.GetString("ShellTabHeader_Main", resourceCulture) ?? string.Empty;
@@ -947,7 +858,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Translate"
         /// </summary>
-        [NotNull]
         public static string ShellTabHeader_Translate {
             get {
                 return ResourceManager.GetString("ShellTabHeader_Translate", resourceCulture) ?? string.Empty;
@@ -957,7 +867,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Show only lines with warnings or changes"
         /// </summary>
-        [NotNull]
         public static string ShowOnlyMissingToolTip {
             get {
                 return ResourceManager.GetString("ShowOnlyMissingToolTip", resourceCulture) ?? string.Empty;
@@ -967,7 +876,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Show performance tracer messages in output window"
         /// </summary>
-        [NotNull]
         public static string ShowPerformanceTraces {
             get {
                 return ResourceManager.GetString("ShowPerformanceTraces", resourceCulture) ?? string.Empty;
@@ -977,7 +885,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Sort all files now"
         /// </summary>
-        [NotNull]
         public static string SortAllFilesNow {
             get {
                 return ResourceManager.GetString("SortAllFilesNow", resourceCulture) ?? string.Empty;
@@ -987,7 +894,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Sort using:"
         /// </summary>
-        [NotNull]
         public static string SortBy {
             get {
                 return ResourceManager.GetString("SortBy", resourceCulture) ?? string.Empty;
@@ -997,7 +903,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "When saving a RESX file, sort the XML data nodes b..."
         /// </summary>
-        [NotNull]
         public static string SortNodesByKey {
             get {
                 return ResourceManager.GetString("SortNodesByKey", resourceCulture) ?? string.Empty;
@@ -1007,7 +912,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Do you want to sort all nodes of all resource file..."
         /// </summary>
-        [NotNull]
         public static string SortNodesByKey_Confirmation {
             get {
                 return ResourceManager.GetString("SortNodesByKey_Confirmation", resourceCulture) ?? string.Empty;
@@ -1020,7 +924,6 @@ namespace ResXManager.View.Properties {
         /// <remarks>
         /// @Invariant
         /// </remarks>
-        [NotNull]
         public static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture) ?? string.Empty;
@@ -1030,7 +933,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Apply All"
         /// </summary>
-        [NotNull]
         public static string Translations_ApplyAll {
             get {
                 return ResourceManager.GetString("Translations_ApplyAll", resourceCulture) ?? string.Empty;
@@ -1040,7 +942,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Apply Selected"
         /// </summary>
-        [NotNull]
         public static string Translations_ApplySelected {
             get {
                 return ResourceManager.GetString("Translations_ApplySelected", resourceCulture) ?? string.Empty;
@@ -1050,7 +951,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Discard"
         /// </summary>
-        [NotNull]
         public static string Translations_Discard {
             get {
                 return ResourceManager.GetString("Translations_Discard", resourceCulture) ?? string.Empty;
@@ -1060,7 +960,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Source:"
         /// </summary>
-        [NotNull]
         public static string Translations_Source {
             get {
                 return ResourceManager.GetString("Translations_Source", resourceCulture) ?? string.Empty;
@@ -1070,7 +969,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Start"
         /// </summary>
-        [NotNull]
         public static string Translations_Start {
             get {
                 return ResourceManager.GetString("Translations_Start", resourceCulture) ?? string.Empty;
@@ -1080,7 +978,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Stop"
         /// </summary>
-        [NotNull]
         public static string Translations_Stop {
             get {
                 return ResourceManager.GetString("Translations_Stop", resourceCulture) ?? string.Empty;
@@ -1090,7 +987,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Targets:"
         /// </summary>
-        [NotNull]
         public static string Translations_Targets {
             get {
                 return ResourceManager.GetString("Translations_Targets", resourceCulture) ?? string.Empty;
@@ -1103,7 +999,6 @@ namespace ResXManager.View.Properties {
         /// <remarks>
         /// @MutedRule(PunctuationTail)
         /// </remarks>
-        [NotNull]
         public static string TranslationsPrefixHeader {
             get {
                 return ResourceManager.GetString("TranslationsPrefixHeader", resourceCulture) ?? string.Empty;
@@ -1113,7 +1008,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Save credentials (Credentials will be stored as cl..."
         /// </summary>
-        [NotNull]
         public static string TranslatorConfiguration_SaveCredentials {
             get {
                 return ResourceManager.GetString("TranslatorConfiguration_SaveCredentials", resourceCulture) ?? string.Empty;
@@ -1123,7 +1017,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Unload Snapshot"
         /// </summary>
-        [NotNull]
         public static string UnloadSnapshot {
             get {
                 return ResourceManager.GetString("UnloadSnapshot", resourceCulture) ?? string.Empty;
@@ -1133,7 +1026,6 @@ namespace ResXManager.View.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Wrap long lines"
         /// </summary>
-        [NotNull]
         public static string WrapLongLinesToolTip {
             get {
                 return ResourceManager.GetString("WrapLongLinesToolTip", resourceCulture) ?? string.Empty;

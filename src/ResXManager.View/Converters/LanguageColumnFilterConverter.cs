@@ -5,13 +5,10 @@
     using System.Windows.Controls;
     using System.Windows.Data;
 
-    using JetBrains.Annotations;
-
     using ResXManager.View.ColumnHeaders;
 
     public class LanguageColumnFilterConverter : IValueConverter
     {
-        [NotNull]
         public static readonly IValueConverter Default = new LanguageColumnFilterConverter();
 
         public object? Convert(object? value, Type? targetType, object? parameter, CultureInfo? culture)

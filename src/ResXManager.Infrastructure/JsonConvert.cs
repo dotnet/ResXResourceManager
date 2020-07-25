@@ -1,7 +1,5 @@
 ﻿namespace ResXManager.Infrastructure
 {
-    using JetBrains.Annotations;
-
     public static class JsonConvert
     {
         public static string? SerializeObject(object value)

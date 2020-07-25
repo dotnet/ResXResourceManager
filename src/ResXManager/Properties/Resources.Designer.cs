@@ -22,8 +22,6 @@
 namespace ResXManager.Properties {
     using System;
 
-    using JetBrains.Annotations;
-
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -74,7 +72,6 @@ namespace ResXManager.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Assembly location: {0}"
         /// </summary>
-        [NotNull]
         public static string AssemblyLocation {
             get {
                 return ResourceManager.GetString("AssemblyLocation", resourceCulture) ?? string.Empty;
@@ -84,7 +81,6 @@ namespace ResXManager.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "ResX Resource Manager loaded.&amp;#13;&amp;#10;Hom..."
         /// </summary>
-        [NotNull]
         public static string IntroMessage {
             get {
                 return ResourceManager.GetString("IntroMessage", resourceCulture) ?? string.Empty;
@@ -94,7 +90,6 @@ namespace ResXManager.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "The project has no resource file for the language ..."
         /// </summary>
-        [NotNull]
         public static string ProjectHasNoResourceFile {
             get {
                 return ResourceManager.GetString("ProjectHasNoResourceFile", resourceCulture) ?? string.Empty;
@@ -104,7 +99,6 @@ namespace ResXManager.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Some files in your project are not writable. You m..."
         /// </summary>
-        [NotNull]
         public static string ProjectHasReadOnlyFiles {
             get {
                 return ResourceManager.GetString("ProjectHasReadOnlyFiles", resourceCulture) ?? string.Empty;
@@ -114,7 +108,6 @@ namespace ResXManager.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Do you want to save the changes?"
         /// </summary>
-        [NotNull]
         public static string QuerySaveChanges {
             get {
                 return ResourceManager.GetString("QuerySaveChanges", resourceCulture) ?? string.Empty;
@@ -127,7 +120,6 @@ namespace ResXManager.Properties {
         /// <remarks>
         /// @Invariant
         /// </remarks>
-        [NotNull]
         public static string Version {
             get {
                 return ResourceManager.GetString("Version", resourceCulture) ?? string.Empty;
@@ -137,7 +129,6 @@ namespace ResXManager.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "You have unsaved changes; reloading all resources ..."
         /// </summary>
-        [NotNull]
         public static string WarningUnsavedChanges {
             get {
                 return ResourceManager.GetString("WarningUnsavedChanges", resourceCulture) ?? string.Empty;

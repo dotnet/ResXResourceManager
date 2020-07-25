@@ -5,16 +5,13 @@
     using System.Linq;
     using System.Runtime.Serialization;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
 
     public static class Snapshot
     {
-        [NotNull]
-        public static string CreateSnapshot([NotNull][ItemNotNull] this ICollection<ResourceEntity> resourceEntities)
+        public static string CreateSnapshot(this ICollection<ResourceEntity> resourceEntities)
         {
             var entitySnapshots = resourceEntities.Select(
                 entity => new EntitySnapshot
@@ -38,7 +35,7 @@
             return JsonConvert.SerializeObject(entitySnapshots) ?? string.Empty;
         }
 
-        public static void LoadSnapshot([NotNull][ItemNotNull] this ICollection<ResourceEntity> resourceEntities, string? snapshot)
+        public static void LoadSnapshot(this ICollection<ResourceEntity> resourceEntities, string? snapshot)
         {
             if (string.IsNullOrEmpty(snapshot))
             {
@@ -51,13 +48,13 @@
             }
         }
 
-        private static void UnloadSnapshot([NotNull][ItemNotNull] IEnumerable<ResourceEntity> resourceEntities)
+        private static void UnloadSnapshot(IEnumerable<ResourceEntity> resourceEntities)
         {
             resourceEntities.SelectMany(entitiy => entitiy.Entries)
                 .ForEach(entry => entry.Snapshot = null);
         }
 
-        private static void Load([NotNull][ItemNotNull] this IEnumerable<ResourceEntity> resourceEntities, [NotNull][ItemNotNull] IEnumerable<EntitySnapshot> entitySnapshots)
+        private static void Load(this IEnumerable<ResourceEntity> resourceEntities, IEnumerable<EntitySnapshot> entitySnapshots)
         {
             resourceEntities.ForEach(entity =>
             {
@@ -72,7 +69,7 @@
             });
         }
 
-        private static bool Equals([NotNull] ResourceEntity entity, [NotNull] EntitySnapshot snapshot)
+        private static bool Equals(ResourceEntity entity, EntitySnapshot snapshot)
         {
             return string.Equals(entity.ProjectName, snapshot.ProjectName, StringComparison.OrdinalIgnoreCase)
                    && string.Equals(entity.UniqueName, snapshot.UniqueName, StringComparison.OrdinalIgnoreCase);
@@ -100,7 +97,6 @@
                 set;
             }
 
-            [ItemNotNull]
             [DataMember]
             public ICollection<EntrySnapshot>? Entries
             {
@@ -119,7 +115,6 @@
                 set;
             }
 
-            [ItemNotNull]
             [DataMember]
             public ICollection<DataSnapshot>? Data
             {

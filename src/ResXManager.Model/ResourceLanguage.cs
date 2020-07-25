@@ -10,8 +10,6 @@
     using System.Xml;
     using System.Xml.Linq;
 
-    using JetBrains.Annotations;
-
     using Throttle;
 
     using ResXManager.Infrastructure;
@@ -25,37 +23,24 @@
     [Localizable(false)]
     public class ResourceLanguage
     {
-        [NotNull]
         private const string Quote = "\"";
-        [NotNull]
         private const string WinFormsMemberNamePrefix = @">>";
-        [NotNull]
         private static readonly XName _spaceAttributeName = XNamespace.Xml.GetName(@"space");
-        [NotNull]
         private static readonly XName _typeAttributeName = XNamespace.None.GetName(@"type");
-        [NotNull]
         private static readonly XName _mimetypeAttributeName = XNamespace.None.GetName(@"mimetype");
-        [NotNull]
         private static readonly XName _nameAttributeName = XNamespace.None.GetName(@"name");
 
-        [NotNull]
         private readonly XDocument _document;
 
-        [NotNull]
         // ReSharper disable once AssignNullToNotNullAttribute
         private XElement DocumentRoot => _document.Root;
 
-        [NotNull]
         private IDictionary<string, Node> _nodes = new Dictionary<string, Node>();
 
-        [NotNull]
         private readonly XName _dataNodeName;
-        [NotNull]
         private readonly XName _valueNodeName;
-        [NotNull]
         private readonly XName _commentNodeName;
 
-        [NotNull]
         private readonly IConfiguration _configuration;
 
         private bool _hasUncommittedChanges;
@@ -70,7 +55,7 @@
         /// <exception cref="InvalidOperationException">
         /// </exception>
         /// <exception cref="System.InvalidOperationException"></exception>
-        internal ResourceLanguage([NotNull] ResourceEntity container, [NotNull] CultureKey cultureKey, [NotNull] ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
+        internal ResourceLanguage(ResourceEntity container, CultureKey cultureKey, ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
         {
             Container = container;
             CultureKey = cultureKey;
@@ -137,13 +122,11 @@
         /// <summary>
         /// Gets the display name of this language.
         /// </summary>
-        [NotNull]
         public string DisplayName => ToString();
 
         /// <summary>
         /// Gets all the resource keys defined in this language.
         /// </summary>
-        [NotNull, ItemNotNull]
         public IEnumerable<string> ResourceKeys => _nodes.Keys;
 
         public bool HasChanges
@@ -159,21 +142,17 @@
 
         public bool IsSaving { get; private set; }
 
-        [NotNull]
         public string FileName => ProjectFile.FilePath;
 
-        [NotNull]
         public ProjectFile ProjectFile { get; }
 
         public bool IsNeutralLanguage => Container.Languages.FirstOrDefault() == this;
 
-        [NotNull]
         public CultureKey CultureKey { get; }
 
-        [NotNull]
         public ResourceEntity Container { get; }
 
-        private static bool IsStringType([NotNull] XElement entry)
+        private static bool IsStringType(XElement entry)
         {
             var typeAttribute = entry.Attribute(_typeAttributeName);
 
@@ -195,17 +174,17 @@
                 .AsReadOnly();
         }
 
-        internal string? GetValue([NotNull] string key)
+        internal string? GetValue(string key)
         {
             return !_nodes.TryGetValue(key, out var node) ? null : node?.Text;
         }
 
-        internal bool SetValue([NotNull] string key, string? value)
+        internal bool SetValue(string key, string? value)
         {
             return GetValue(key) == value || SetNodeData(key, node => node.Text = value);
         }
 
-        public void ForceValue([NotNull] string key, string? value)
+        public void ForceValue(string key, string? value)
         {
             SetNodeData(key, node => node.Text = value);
         }
@@ -309,7 +288,7 @@
             return true;
         }
 
-        private bool SortNodes([NotNull, ItemNotNull] XElement[] nodes, [NotNull, ItemNotNull] XElement[] sortedNodes)
+        private bool SortNodes(XElement[] nodes, XElement[] sortedNodes)
         {
             if (nodes.SequenceEqual(sortedNodes))
                 return false;
@@ -327,7 +306,7 @@
             return true;
         }
 
-        internal string? GetComment([NotNull] string key)
+        internal string? GetComment(string key)
         {
             if (!_nodes.TryGetValue(key, out var node) || (node == null))
                 return null;
@@ -335,7 +314,7 @@
             return node.Comment;
         }
 
-        internal bool SetComment([NotNull] string key, string? value)
+        internal bool SetComment(string key, string? value)
         {
             if (GetComment(key) == value)
                 return true;
@@ -343,7 +322,7 @@
             return SetNodeData(key, node => node.Comment = value);
         }
 
-        private bool SetNodeData([NotNull] string key, [NotNull] Action<Node> updateCallback)
+        private bool SetNodeData(string key, Action<Node> updateCallback)
         {
             if (!CanEdit())
                 return false;
@@ -376,8 +355,7 @@
             }
         }
 
-        [NotNull]
-        private Node CreateNode([NotNull] string key)
+        private Node CreateNode(string key)
         {
             var content = new XElement(_valueNodeName);
             content.Add(new XText(string.Empty));
@@ -410,7 +388,7 @@
             return _nodes[key];
         }
 
-        internal bool RenameKey([NotNull] string oldKey, [NotNull] string newKey)
+        internal bool RenameKey(string oldKey, string newKey)
         {
             if (!CanEdit())
                 return false;
@@ -429,7 +407,7 @@
             return true;
         }
 
-        internal bool RemoveKey([NotNull] string key)
+        internal bool RemoveKey(string key)
         {
             if (!CanEdit())
                 return false;
@@ -454,12 +432,12 @@
             }
         }
 
-        internal bool KeyExists([NotNull] string key)
+        internal bool KeyExists(string key)
         {
             return _nodes.ContainsKey(key);
         }
 
-        internal void MoveNode([NotNull] ResourceTableEntry resourceTableEntry, [NotNull][ItemNotNull] IEnumerable<ResourceTableEntry> previousEntries)
+        internal void MoveNode(ResourceTableEntry resourceTableEntry, IEnumerable<ResourceTableEntry> previousEntries)
         {
             if (!CanEdit())
                 return;
@@ -483,19 +461,19 @@
             OnChanged();
         }
 
-        internal bool IsContentEqual([NotNull] ResourceLanguage other)
+        internal bool IsContentEqual(ResourceLanguage other)
         {
             return _document.ToString(SaveOptions.DisableFormatting) == other._document.ToString(SaveOptions.DisableFormatting);
         }
 
-        private static void MakeKeysValid([NotNull][ItemNotNull] ICollection<Node> elements)
+        private static void MakeKeysValid(ICollection<Node> elements)
         {
             RenameEmptyKeys(elements);
 
             RenameDuplicates(elements);
         }
 
-        private static void RenameDuplicates([NotNull, ItemNotNull] ICollection<Node> elements)
+        private static void RenameDuplicates(ICollection<Node> elements)
         {
             var itemsWithDuplicateKeys = elements.GroupBy(item => item.Key)
                 .Where(group => group.Count() > 1);
@@ -508,7 +486,7 @@
             }
         }
 
-        private static void RenameEmptyKeys([NotNull, ItemNotNull] ICollection<Node> elements)
+        private static void RenameEmptyKeys(ICollection<Node> elements)
         {
             var itemsWithEmptyKeys = elements.Where(item => string.IsNullOrEmpty(item.Key));
 
@@ -517,8 +495,7 @@
             itemsWithEmptyKeys.ForEach(item => item.Key = GenerateUniqueKey(elements, item, "Empty", ref index));
         }
 
-        [NotNull]
-        private static string GenerateUniqueKey([NotNull][ItemNotNull] ICollection<Node> elements, [NotNull] Node item, string? text, ref int index)
+        private static string GenerateUniqueKey(ICollection<Node> elements, Node item, string? text, ref int index)
         {
             var key = item.Key;
             string newKey;
@@ -540,22 +517,19 @@
 
         private class Node
         {
-            [NotNull]
             private readonly ResourceLanguage _owner;
 
             private string? _text;
             private string? _comment;
 
-            public Node([NotNull] ResourceLanguage owner, [NotNull] XElement element)
+            public Node(ResourceLanguage owner, XElement element)
             {
                 Element = element;
                 _owner = owner;
             }
 
-            [NotNull]
             public XElement Element { get; }
 
-            [NotNull]
             public string Key
             {
                 get => GetNameAttribute(Element).Value;
@@ -646,8 +620,7 @@
                 return !(valueElement.FirstNode is XText textNode) ? string.Empty : textNode.Value;
             }
 
-            [NotNull]
-            private XAttribute GetNameAttribute([NotNull] XElement entry)
+            private XAttribute GetNameAttribute(XElement entry)
             {
                 var nameAttribute = entry.Attribute(_nameAttributeName);
                 if (nameAttribute == null)

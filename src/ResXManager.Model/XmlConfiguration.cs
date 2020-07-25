@@ -5,8 +5,6 @@
     using System.Linq;
     using System.Xml.Linq;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     /// <summary>
@@ -33,13 +31,9 @@
         /// </summary>
         public const string KeyAttributeName = "Key";
 
-        [NotNull]
         private readonly XDocument _document;
-        [NotNull]
         private readonly XElement _root;
-        [NotNull]
         private readonly XName _valueName;
-        [NotNull]
         private readonly XName _keyName;
 
 
@@ -47,7 +41,7 @@
         /// Initializes a new instance of the <see cref="XmlConfiguration" /> class.
         /// </summary>
         /// <param name="tracer">The tracer.</param>
-        public XmlConfiguration([NotNull] ITracer tracer)
+        public XmlConfiguration(ITracer tracer)
             : this(tracer, null)
         {
         }
@@ -57,7 +51,7 @@
         /// </summary>
         /// <param name="tracer">The tracer.</param>
         /// <param name="reader">The reader providing the XML stream.</param>
-        public XmlConfiguration([NotNull] ITracer tracer, TextReader? reader)
+        public XmlConfiguration(ITracer tracer, TextReader? reader)
         {
             XNamespace? @namespace = null;
             XDocument? document = null;
@@ -101,7 +95,7 @@
         /// <returns>
         /// The value stored in the XML file, or null if the value does not exist.
         /// </returns>
-        public string? GetValue([NotNull] string key, string? defaultValue)
+        public string? GetValue(string key, string? defaultValue)
         {
             return _root
                 .DescendantsAndSelf(_valueName)
@@ -117,7 +111,7 @@
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value. If value is null, the node will be deleted from the xml stream.</param>
-        public void SetValue([NotNull] string key, string? value)
+        public void SetValue(string key, string? value)
         {
             var valueNode = _root.Descendants(_valueName)
                 .FirstOrDefault(node => string.Equals(key, node.Attribute(_keyName)?.Value, StringComparison.Ordinal));
@@ -151,7 +145,7 @@
         /// Saves the XML stream to the specified writer.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        public void Save([NotNull] TextWriter writer)
+        public void Save(TextWriter writer)
         {
             _document.Save(writer);
         }
@@ -160,7 +154,7 @@
         /// Saves the XML stream to the file with the specified file name.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
-        public void Save([NotNull] string fileName)
+        public void Save(string fileName)
         {
             using (var writer = new StreamWriter(fileName))
             {

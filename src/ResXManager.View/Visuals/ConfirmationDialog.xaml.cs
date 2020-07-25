@@ -7,8 +7,6 @@
     using System.Windows.Input;
     using System.Windows.Media.Imaging;
 
-    using JetBrains.Annotations;
-
     using TomsToolbox.Composition;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
@@ -23,7 +21,7 @@
             InitializeComponent();
         }
 
-        public static bool? Show([NotNull] IExportProvider exportProvider, object? content, string? title, Window? owner)
+        public static bool? Show(IExportProvider exportProvider, object? content, string? title, Window? owner)
         {
             var window = new Window
             {
@@ -44,7 +42,6 @@
             return window.ShowDialog();
         }
 
-        [NotNull]
         public ICommand CommitCommand => new DelegateCommand(CanCommit, Commit);
 
         private void Commit()

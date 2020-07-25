@@ -3,8 +3,6 @@
     using System;
     using System.Collections.Generic;
 
-    using JetBrains.Annotations;
-
     using Throttle;
 
     using TomsToolbox.Essentials;
@@ -15,11 +13,9 @@
     /// </summary>
     internal sealed class CustomToolRunner : IDisposable
     {
-        [NotNull]
-        [ItemNotNull]
         private HashSet<EnvDTE.ProjectItem> _projectItems = new HashSet<EnvDTE.ProjectItem>();
 
-        public void Enqueue([ItemNotNull] IEnumerable<EnvDTE.ProjectItem>? projectItems)
+        public void Enqueue(IEnumerable<EnvDTE.ProjectItem>? projectItems)
         {
             if (projectItems == null)
                 return;

@@ -1,11 +1,9 @@
 ﻿namespace ResXManager.Model
 {
-    using JetBrains.Annotations;
-
     public interface IFileFilter
     {
-        bool IsSourceFile([NotNull] ProjectFile file);
+        bool IsSourceFile(ProjectFile file);
 
-        bool IncludeFile([NotNull] ProjectFile file);
+        bool IncludeFile(ProjectFile file);
     }
 }

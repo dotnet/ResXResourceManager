@@ -4,13 +4,10 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using JetBrains.Annotations;
-
     public class SynchronizationContextThrottle
     {
         public static TaskFactory? TaskFactory { get; set; }
 
-        [NotNull]
         private readonly Action _target;
 
         private int _counter;
@@ -19,7 +16,7 @@
         /// Initializes a new instance of the <see cref="SynchronizationContextThrottle"/> class.
         /// </summary>
         /// <param name="target">The target action to invoke when the throttle condition is hit.</param>
-        public SynchronizationContextThrottle([NotNull] Action target)
+        public SynchronizationContextThrottle(Action target)
         {
             _target = target;
 

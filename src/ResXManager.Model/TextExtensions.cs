@@ -7,8 +7,6 @@
     using System.Linq;
     using System.Text;
 
-    using JetBrains.Annotations;
-
     public static class TextExtensions
     {
         private const string Quote = "\"";
@@ -18,8 +16,7 @@
         /// </summary>
         private const char TextColumnSeparator = '\t';
 
-        [NotNull]
-        public static string ToTextString([NotNull, ItemCanBeNull] this IList<IList<string?>?> table, char separator = TextColumnSeparator)
+        public static string ToTextString(this IList<IList<string?>?> table, char separator = TextColumnSeparator)
         {
             IList<string?>? row;
 
@@ -29,7 +26,6 @@
             return string.Join(Environment.NewLine, table.Select(line => string.Join(separator.ToString(CultureInfo.InvariantCulture), line?.Select(cell => Quoted(cell, separator)) ?? Enumerable.Empty<string>())));
         }
 
-        [NotNull]
         private static string Quoted(string? value, char separator)
         {
             if (value == null || string.IsNullOrEmpty(value))
@@ -43,8 +39,7 @@
             return value;
         }
 
-        [ItemNotNull]
-        internal static IList<IList<string>>? ParseTable([NotNull] this string text, char separator = TextColumnSeparator)
+        internal static IList<IList<string>>? ParseTable(this string text, char separator = TextColumnSeparator)
         {
             var table = new List<IList<string>>();
 
@@ -64,8 +59,7 @@
             return table.Any(columns => columns?.Count != headerColumns?.Count) ? null : table;
         }
 
-        [NotNull, ItemNotNull]
-        private static IList<string> ReadTableLine([NotNull] TextReader reader, char separator)
+        private static IList<string> ReadTableLine(TextReader reader, char separator)
         {
 
             var columns = new List<string>();
@@ -90,8 +84,7 @@
             return columns;
         }
 
-        [NotNull]
-        internal static string ReadTableColumn([NotNull] TextReader reader, char separator)
+        internal static string ReadTableColumn(TextReader reader, char separator)
         {
 
             var stringBuilder = new StringBuilder();

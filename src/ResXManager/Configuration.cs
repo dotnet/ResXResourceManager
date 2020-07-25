@@ -2,8 +2,6 @@
 {
     using System.Composition;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model;
 
@@ -13,7 +11,7 @@
     public class StandaloneConfiguration : Configuration
     {
         [ImportingConstructor]
-        public StandaloneConfiguration([NotNull] ITracer tracer)
+        public StandaloneConfiguration(ITracer tracer)
             : base(tracer)
         {
         }

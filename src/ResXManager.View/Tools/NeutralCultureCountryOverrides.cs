@@ -5,8 +5,6 @@
     using System.Globalization;
     using System.Linq;
 
-    using JetBrains.Annotations;
-
     using ResXManager.View.Properties;
 
     using TomsToolbox.Essentials;
@@ -15,11 +13,8 @@
     {
         private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,";
 
-        [NotNull]
         private static readonly IEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>> _comparer = new DelegateEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>>(item => item.Key);
-        [NotNull]
         private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
-        [NotNull]
         public static readonly NeutralCultureCountryOverrides Default = new NeutralCultureCountryOverrides();
 
         private NeutralCultureCountryOverrides()
@@ -27,7 +22,7 @@
         }
 
 #pragma warning disable CA1043 // Use Integral Or String Argument For Indexers
-        public CultureInfo? this[[NotNull] CultureInfo neutralCulture]
+        public CultureInfo? this[CultureInfo neutralCulture]
 #pragma warning restore CA1043 // Use Integral Or String Argument For Indexers
         {
             get
@@ -55,7 +50,7 @@
             }
         }
 
-        private static CultureInfo? GetDefaultSpecificCulture([NotNull] CultureInfo neutralCulture)
+        private static CultureInfo? GetDefaultSpecificCulture(CultureInfo neutralCulture)
         {
             var cultureName = neutralCulture.Name;
             var specificCultures = neutralCulture.GetDescendants().ToArray();
@@ -73,7 +68,6 @@
             return specificCulture;
         }
 
-        [NotNull]
         private static IEnumerable<KeyValuePair<CultureInfo, CultureInfo>> ReadSettings()
         {
             var neutralCultureCountryOverrides = (DefaultOverrides + Settings.Default.NeutralCultureCountyOverrides).Split(',');

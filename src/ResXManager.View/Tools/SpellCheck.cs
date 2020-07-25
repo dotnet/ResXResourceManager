@@ -5,8 +5,6 @@
     using System.Windows.Controls.Primitives;
     using System.Windows.Threading;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
@@ -18,11 +16,11 @@
         private static bool _exceptionTraced;
 
         [AttachedPropertyBrowsableForType(typeof(TextBoxBase))]
-        public static bool GetIsEnabled([NotNull] TextBoxBase item)
+        public static bool GetIsEnabled(TextBoxBase item)
         {
             return item.GetValue<bool>(IsEnabledProperty);
         }
-        public static void SetIsEnabled([NotNull] TextBoxBase item, bool value)
+        public static void SetIsEnabled(TextBoxBase item, bool value)
         {
             item.SetValue(IsEnabledProperty, value);
         }
@@ -35,7 +33,6 @@
         /// A exception safe wrapper around <see cref="System.Windows.Controls.SpellCheck"/>
         /// </summary>
         /// </AttachedPropertyComments>
-        [NotNull]
 #pragma warning restore CA1200 // Avoid using cref tags with a prefix
         public static readonly DependencyProperty IsEnabledProperty =
             DependencyProperty.RegisterAttached("IsEnabled", typeof(bool), typeof(Spellcheck), new FrameworkPropertyMetadata(false, IsEnabled_Changed));

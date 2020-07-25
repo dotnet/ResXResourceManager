@@ -8,8 +8,6 @@
     using System.Threading.Tasks;
     using System.Windows.Controls;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Translators.Microsoft.TerminologyService;
 
@@ -24,11 +22,8 @@
     [Export(typeof(ITranslator)), Shared]
     public class MSTerminologyTranslator : TranslatorBase
     {
-        [NotNull]
         private static readonly BasicHttpBinding _binding = new BasicHttpBinding();
-        [NotNull]
         private static readonly EndpointAddress _endpoint = new EndpointAddress("http://api.terminology.microsoft.com/Terminology.svc");
-        [NotNull]
         private static readonly Uri _uri = new Uri("https://www.microsoft.com/en-us/language/default.aspx");
 
         public MSTerminologyTranslator()

@@ -3,14 +3,11 @@
     using System;
     using System.Globalization;
 
-    using JetBrains.Annotations;
-
     /// <summary>
     /// A class encapsulating a <see cref="CultureInfo"/>, usable as a key to a dictionary to allow also indexing a <c>null</c> <see cref="CultureInfo"/>.
     /// </summary>
     public class CultureKey : IComparable<CultureKey>, IEquatable<CultureKey>, IComparable
     {
-        [NotNull]
         public static readonly CultureKey Neutral = new CultureKey((CultureInfo?)null);
 
         public CultureKey(string? cultureName)
@@ -32,8 +29,7 @@
             return ToString(string.Empty);
         }
 
-        [NotNull]
-        public string ToString([NotNull] string neutralCultureKey)
+        public string ToString(string neutralCultureKey)
         {
             return Culture != null ? "." + Culture.Name : neutralCultureKey;
         }
@@ -162,7 +158,6 @@
 
         #endregion
 
-        [NotNull]
 #pragma warning disable CA2225 // Operator overloads have named alternates
         public static implicit operator CultureKey(CultureInfo? culture)
 #pragma warning restore CA2225 // Operator overloads have named alternates
@@ -170,7 +165,6 @@
             return new CultureKey(culture);
         }
 
-        [NotNull]
         public static CultureKey Parse(object? item)
         {
             if (item == null)

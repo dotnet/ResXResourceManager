@@ -22,8 +22,6 @@
 namespace ResXManager.Translators.Properties {
     using System;
 
-    using JetBrains.Annotations;
-
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -74,7 +72,6 @@ namespace ResXManager.Translators.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Automatically detect HTML"
         /// </summary>
-        [NotNull]
         public static string AutoDetectHtml {
             get {
                 return ResourceManager.GetString("AutoDetectHtml", resourceCulture) ?? string.Empty;
@@ -84,7 +81,6 @@ namespace ResXManager.Translators.Properties {
         /// <summary>
         ///   Looks up a localized string similar to "Max characters per minute"
         /// </summary>
-        [NotNull]
         public static string MaxCharactersPerMinute {
             get {
                 return ResourceManager.GetString("MaxCharactersPerMinute", resourceCulture) ?? string.Empty;

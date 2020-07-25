@@ -2,8 +2,6 @@ namespace ResXManager.Translators
 {
     using System.Collections.Generic;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
@@ -23,7 +21,6 @@ namespace ResXManager.Translators
 
         public double Rating { get; }
 
-        [NotNull]
         public static readonly IEqualityComparer<TranslationMatch> TextComparer = new DelegateEqualityComparer<TranslationMatch>(m => m?.TranslatedText!);
     }
 }

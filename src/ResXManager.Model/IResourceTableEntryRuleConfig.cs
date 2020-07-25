@@ -2,8 +2,6 @@
 {
     using System.ComponentModel;
 
-    using JetBrains.Annotations;
-
     /// <summary>A rule that is validated against a entry of the resource table.</summary>
     /// <remarks>
     /// This is used to implement the different rules that are used to check the proper translation.
@@ -18,7 +16,6 @@
         /// <summary>
         /// The identification of the rule. This value is used to disable the rule check.
         /// </summary>
-        [NotNull]
         string RuleId { get; }
     }
 }

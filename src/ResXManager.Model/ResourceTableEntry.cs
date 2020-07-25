@@ -12,8 +12,6 @@
 
     using AutoProperties;
 
-    using JetBrains.Annotations;
-
     using PropertyChanged;
 
     using Throttle;
@@ -23,8 +21,6 @@
 
     using TomsToolbox.Essentials;
 
-    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
-
     /// <summary>
     /// Represents one entry in the resource table.
     /// </summary>
@@ -32,13 +28,10 @@
     {
         private const string InvariantKey = "@Invariant";
 
-        [NotNull]
         private static readonly Regex _duplicateKeyExpression = new Regex(@"_Duplicate\[\d+\]$");
-        [NotNull]
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
 
         // the key actually stored in the file, identical to Key if no error occurred.
-        [NotNull]
         private string _storedKey;
 
         // the last validation error
@@ -46,13 +39,11 @@
 
         private ISet<string>? _mutedRuleIds;
 
-        [NotNull]
         private IConfiguration Configuration => Container.Container.Configuration;
 
         /// <summary>
         /// A reference to the rules that are enabled in the configuration.
         /// </summary>
-        [NotNull]
         private ResourceTableEntryRules Rules => Configuration.Rules;
 
         /// <summary>
@@ -62,7 +53,7 @@
         /// <param name="key">The resource key.</param>
         /// <param name="index">The original index of the resource in the file.</param>
         /// <param name="languages">The localized values.</param>
-        internal ResourceTableEntry([NotNull] ResourceEntity container, [NotNull] string key, double index, [NotNull] IDictionary<CultureKey, ResourceLanguage> languages)
+        internal ResourceTableEntry(ResourceEntity container, string key, double index, IDictionary<CultureKey, ResourceLanguage> languages)
         {
             Container = container;
             _storedKey = key;
@@ -121,7 +112,6 @@
             Refresh();
         }
 
-        [NotNull]
         public ResourceEntity Container { get; }
 
         /// <summary>
@@ -162,7 +152,6 @@
             _storedKey = value;
         }
 
-        [NotNull]
         public ResourceLanguage NeutralLanguage => _languages.First().Value;
 
         /// <summary>
@@ -178,61 +167,40 @@
         /// <summary>
         /// Gets the localized values.
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
         public ResourceTableValues<string?> Values { get; private set; }
 
         /// <summary>
         /// Gets the localized comments.
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
         public ResourceTableValues<string?> Comments { get; private set; }
 
         [DependsOn(nameof(Snapshot))]
-        [NotNull]
-        [ItemNotNull]
         public ResourceTableValues<string?> SnapshotValues { get; private set; }
 
         [DependsOn(nameof(Snapshot))]
-        [NotNull]
-        [ItemNotNull]
         public ResourceTableValues<string?> SnapshotComments { get; private set; }
 
-        [NotNull]
-        [ItemNotNull]
         public ResourceTableValues<bool> FileExists { get; private set; }
 
         [DependsOn(nameof(Snapshot))]
-        [NotNull]
-        [ItemNotNull]
         public ResourceTableValues<ICollection<string>> ValueAnnotations { get; private set; }
 
         [DependsOn(nameof(Snapshot))]
-        [NotNull]
-        [ItemNotNull]
         public ResourceTableValues<ICollection<string>> CommentAnnotations { get; private set; }
 
         [DependsOn(nameof(Comment))]
-        [NotNull]
-        [ItemNotNull]
         public ICollection<CultureKey> Languages => _languages.Keys;
 
         [DependsOn(nameof(Comment))]
-        [NotNull]
         public DelegateIndexer<string, bool> IsRuleEnabled { get; }
 
         // TODO: maybe rules should be mutable per language, like Invariant?
-        [NotNull]
-        [ItemNotNull]
         private ISet<string> MutedRuleIds
         {
             get => _mutedRuleIds ??= new HashSet<string>(GetMutedRuleIds(CultureKey.Neutral), StringComparer.OrdinalIgnoreCase);
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private IEnumerable<string> GetMutedRuleIds([NotNull] CultureKey culture)
+        private IEnumerable<string> GetMutedRuleIds(CultureKey culture)
         {
             var comment = Comments.GetValue(culture);
 
@@ -263,7 +231,7 @@
             SetMutedRuleIds(CultureKey.Neutral, ids);
         }
 
-        private void SetMutedRuleIds([NotNull] CultureKey culture, [NotNull, ItemNotNull] ISet<string> mutedRuleIds)
+        private void SetMutedRuleIds(CultureKey culture, ISet<string> mutedRuleIds)
         {
             var comment = Comments.GetValue(culture);
 
@@ -275,8 +243,6 @@
             Refresh();
         }
 
-        [NotNull]
-        [ItemNotNull]
         public ResourceTableValues<bool> IsItemInvariant { get; private set; }
 
         [DependsOn(nameof(Comment))]
@@ -286,12 +252,12 @@
             set => SetIsInvariant(CultureKey.Neutral, value);
         }
 
-        private bool GetIsInvariant([NotNull] CultureKey culture)
+        private bool GetIsInvariant(CultureKey culture)
         {
             return Comments.GetValue(culture)?.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
-        private bool SetIsInvariant([NotNull] CultureKey culture, bool value)
+        private bool SetIsInvariant(CultureKey culture, bool value)
         {
             var comment = Comments.GetValue(culture);
 
@@ -314,10 +280,9 @@
         [DependsOn(nameof(Key))]
         public bool IsDuplicateKey => _duplicateKeyExpression.Match(Key).Success;
 
-        [ItemNotNull]
         public ReadOnlyCollection<CodeReference>? CodeReferences { get; internal set; }
 
-        [UsedImplicitly, OnChangedMethod(nameof(OnIndexChanged))]
+        [OnChangedMethod(nameof(OnIndexChanged))]
         public double Index { get; set; }
         private void OnIndexChanged()
         {
@@ -351,7 +316,7 @@
             OnCommentsChanged();
         }
 
-        public bool HasRulesMismatches([NotNull][ItemNotNull] IEnumerable<object> cultures)
+        public bool HasRulesMismatches(IEnumerable<object> cultures)
         {
             var neutralValue = Values.GetValue(null);
             var values = cultures.Select(CultureKey.Parse)
@@ -364,12 +329,12 @@
             return !Rules.CompliesToRules(MutedRuleIds, neutralValue, (ICollection<string?>)values, out _);
         }
 
-        public bool HasSnapshotDifferences([NotNull][ItemNotNull] IEnumerable<object> cultures)
+        public bool HasSnapshotDifferences(IEnumerable<object> cultures)
         {
             return Snapshot != null && cultures.Select(CultureKey.Parse).Any(IsSnapshotDifferent);
         }
 
-        private bool IsSnapshotDifferent([NotNull] CultureKey culture)
+        private bool IsSnapshotDifferent(CultureKey culture)
         {
             if (Snapshot == null)
                 return false;
@@ -415,9 +380,7 @@
             OnPropertyChanged(nameof(IsRuleEnabled));
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private ICollection<string> GetValueAnnotations([NotNull] ResourceLanguage language)
+        private ICollection<string> GetValueAnnotations(ResourceLanguage language)
         {
             var cultureKey = language.CultureKey;
 
@@ -429,7 +392,7 @@
                 .ToArray();
         }
 
-        public bool GetError([NotNull] CultureKey culture, out string? errorMessage)
+        public bool GetError(CultureKey culture, out string? errorMessage)
         {
             errorMessage = null;
 
@@ -470,11 +433,9 @@
             return false;
         }
 
-        [NotNull]
-        private string GetErrorPrefix([NotNull] CultureKey culture) => string.Format(CultureInfo.CurrentCulture, "{0}{1}: ", Key, culture);
+        private string GetErrorPrefix(CultureKey culture) => string.Format(CultureInfo.CurrentCulture, "{0}{1}: ", Key, culture);
 
-        [NotNull, ItemNotNull]
-        private IEnumerable<string> GetInvariantMismatches([NotNull] CultureKey culture, string? value)
+        private IEnumerable<string> GetInvariantMismatches(CultureKey culture, string? value)
         {
             if (culture == CultureKey.Neutral)
                 yield break;
@@ -485,16 +446,13 @@
                 yield return Resources.ResourceTableEntry_Error_InvariantWithValue;
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private ICollection<string> GetCommentAnnotations([NotNull] ResourceLanguage language)
+        private ICollection<string> GetCommentAnnotations(ResourceLanguage language)
         {
             return GetSnapshotDifferences(language, Comments.GetValue(language.CultureKey), d => d?.Comment)
                 .ToArray();
         }
 
-        [NotNull, ItemNotNull]
-        private IEnumerable<string> GetSnapshotDifferences([NotNull] ResourceLanguage language, string? current, [NotNull] Func<ResourceData, string?> selector)
+        private IEnumerable<string> GetSnapshotDifferences(ResourceLanguage language, string? current, Func<ResourceData, string?> selector)
         {
             var snapshot = Snapshot;
             if (snapshot == null)
@@ -509,8 +467,7 @@
             yield return string.Format(CultureInfo.CurrentCulture, Resources.SnapshotAnnotation, snapshotValue);
         }
 
-        [NotNull, ItemNotNull]
-        private IEnumerable<string> GetRuleAnnotations([NotNull] ResourceLanguage language)
+        private IEnumerable<string> GetRuleAnnotations(ResourceLanguage language)
         {
             if (language.IsNeutralLanguage)
                 yield break;
@@ -532,7 +489,6 @@
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -6,8 +6,6 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using JetBrains.Annotations;
-
     public interface ITranslationSession : IDisposable
     {
         bool IsActive { get; }
@@ -20,10 +18,8 @@
 
         void Cancel();
 
-        [ItemNotNull]
         ICollection<ITranslationItem> Items { get; }
 
-        [ItemNotNull]
         IList<string> Messages { get; }
 
         CultureInfo NeutralResourcesLanguage { get; }
@@ -34,6 +30,6 @@
 
         TaskFactory MainThread { get; }
 
-        void AddMessage([NotNull] string text);
+        void AddMessage(string text);
     }
 }

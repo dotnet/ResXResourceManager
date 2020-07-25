@@ -5,14 +5,9 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
 
-    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
-
-    
     public enum DuplicateKeyHandling
     {
         [LocalizedDisplayName(StringResourceKey.DuplicateKeyHandling_Rename)]
@@ -27,14 +22,12 @@
 
         bool RemoveEmptyEntries { get; }
 
-        [NotNull]
         CultureInfo NeutralResourcesLanguage { get; }
 
         StringComparison? EffectiveResXSortingComparison { get; }
 
         DuplicateKeyHandling DuplicateKeyHandling { get; }
 
-        [NotNull]
         ResourceTableEntryRules Rules { get; }
     }
 
@@ -42,13 +35,12 @@
     public abstract class Configuration : ConfigurationBase, IConfiguration
     {
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-        protected Configuration([NotNull] ITracer tracer)
+        protected Configuration(ITracer tracer)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
             : base(tracer)
         {
         }
 
-        [NotNull, UsedImplicitly]
         [DefaultValue(CodeReferenceConfiguration.Default)]
         public CodeReferenceConfiguration CodeReferences { get; }
 
@@ -82,11 +74,9 @@
         public bool PrefixTranslations { get; set; }
 
         [DefaultValue("#TODO#_")]
-        [CanBeNull]
-        public string TranslationPrefix { get; set; }
+        public string? TranslationPrefix { get; set; }
 
-        [CanBeNull]
-        public string EffectiveTranslationPrefix => PrefixTranslations ? TranslationPrefix : string.Empty;
+        public string? EffectiveTranslationPrefix => PrefixTranslations ? TranslationPrefix : string.Empty;
 
         [DefaultValue(default(ExcelExportMode))]
         public ExcelExportMode ExcelExportMode { get; set; }
@@ -94,7 +84,6 @@
         [DefaultValue(default(DuplicateKeyHandling))]
         public DuplicateKeyHandling DuplicateKeyHandling { get; set; }
 
-        [UsedImplicitly]
         [DefaultValue(ResourceTableEntryRules.Default)]
         public ResourceTableEntryRules Rules { get; }
 

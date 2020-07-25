@@ -11,12 +11,8 @@
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Spreadsheet;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
-
-    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
     public enum ExcelExportMode
     {
@@ -30,10 +26,9 @@
 
     public static partial class ResourceEntityExtensions
     {
-        [NotNull, ItemNotNull]
         private static readonly string[] _singleSheetFixedColumnHeaders = { "Project", "File", "Key" };
 
-        public static void ExportExcelFile([NotNull] this ResourceManager resourceManager, [NotNull] string filePath, IResourceScope? scope, ExcelExportMode exportMode)
+        public static void ExportExcelFile(this ResourceManager resourceManager, string filePath, IResourceScope? scope, ExcelExportMode exportMode)
         {
             if (exportMode == ExcelExportMode.Text)
             {
@@ -58,7 +53,7 @@
             }
         }
 
-        private static void ExportToText([NotNull] string filePath, [NotNull] IResourceScope scope)
+        private static void ExportToText(string filePath, IResourceScope scope)
         {
             var languages = scope.Languages.Concat(scope.Comments).Distinct().ToArray();
             var entries = scope.Entries.ToArray();
@@ -73,7 +68,7 @@
             File.WriteAllText(filePath, data);
         }
 
-        private static void ExportToMultipleSheets([NotNull] ResourceManager resourceManager, [NotNull] WorkbookPart workbookPart, IResourceScope? scope)
+        private static void ExportToMultipleSheets(ResourceManager resourceManager, WorkbookPart workbookPart, IResourceScope? scope)
         {
             var entitiesQuery = GetMultipleSheetEntities(resourceManager);
 
@@ -100,7 +95,7 @@
             }
         }
 
-        private static void ExportToSingleSheet([NotNull] WorkbookPart workbookPart, [NotNull] IResourceScope scope)
+        private static void ExportToSingleSheet(WorkbookPart workbookPart, IResourceScope scope)
         {
             var languages = scope.Languages.Concat(scope.Comments).Distinct().ToArray();
             var entries = scope.Entries.ToArray();
@@ -135,8 +130,7 @@
             return worksheet.AppendItem(new SheetProtection { Sheet = true, Objects = true, Scenarios = true, FormatColumns = false, FormatRows = false, Sort = false, AutoFilter = false });
         }
 
-        [NotNull, ItemNotNull]
-        public static IList<EntryChange> ImportExcelFile([NotNull] this ResourceManager resourceManager, [NotNull] string filePath)
+        public static IList<EntryChange> ImportExcelFile(this ResourceManager resourceManager, string filePath)
         {
             var content = File.ReadAllText(filePath);
 
@@ -166,16 +160,14 @@
             }
         }
 
-        [NotNull, ItemNotNull]
-        private static IEnumerable<EntryChange> ImportSingleSheet([NotNull] ResourceManager resourceManager, [NotNull, ItemNotNull] Sheet firstSheet, [NotNull] WorkbookPart workbookPart, [ItemNotNull] IList<SharedStringItem>? sharedStrings)
+        private static IEnumerable<EntryChange> ImportSingleSheet(ResourceManager resourceManager, Sheet firstSheet, WorkbookPart workbookPart, IList<SharedStringItem>? sharedStrings)
         {
             var data = firstSheet.GetRows(workbookPart).Select(row => row.GetCellValues(sharedStrings)).ToArray();
 
             return ImportSingleSheet(resourceManager, data);
         }
 
-        [NotNull, ItemNotNull]
-        private static IEnumerable<EntryChange> ImportSingleSheet([NotNull] ResourceManager resourceManager, [ItemNotNull] IList<IList<string>>? data)
+        private static IEnumerable<EntryChange> ImportSingleSheet(ResourceManager resourceManager, IList<IList<string>>? data)
         {
             var firstRow = data?.FirstOrDefault();
             if (firstRow == null)
@@ -221,8 +213,7 @@
             }
         }
 
-        [NotNull, ItemNotNull]
-        private static IEnumerable<EntryChange> ImportMultipleSheets([NotNull] ResourceManager resourceManager, [NotNull][ItemNotNull] Sheets sheets, [NotNull] WorkbookPart workbookPart, [ItemNotNull] IList<SharedStringItem>? sharedStrings)
+        private static IEnumerable<EntryChange> ImportMultipleSheets(ResourceManager resourceManager, Sheets sheets, WorkbookPart workbookPart, IList<SharedStringItem>? sharedStrings)
         {
             var entities = GetMultipleSheetEntities(resourceManager).ToArray();
 
@@ -232,40 +223,33 @@
             return changes;
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private static IList<string>[] GetTable([NotNull][ItemNotNull] this Sheet sheet, [NotNull] WorkbookPart workbookPart, [ItemNotNull] IList<SharedStringItem>? sharedStrings)
+        private static IList<string>[] GetTable(this Sheet sheet, WorkbookPart workbookPart, IList<SharedStringItem>? sharedStrings)
         {
             return sheet.GetRows(workbookPart)
                 .Select(row => row.GetCellValues(sharedStrings))
                 .ToArray();
         }
 
-        private static bool IsSingleSheetHeader([ItemNotNull] Row? firstRow, [ItemNotNull] IList<SharedStringItem>? sharedStrings)
+        private static bool IsSingleSheetHeader(Row? firstRow, IList<SharedStringItem>? sharedStrings)
         {
             return (firstRow != null) && firstRow.GetCellValues(sharedStrings)
                 .Take(_singleSheetFixedColumnHeaders.Length)
                 .SequenceEqual(_singleSheetFixedColumnHeaders);
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private static IList<string> GetCellValues([NotNull][ItemNotNull] this Row row, [ItemNotNull] IList<SharedStringItem>? sharedStrings)
+        private static IList<string> GetCellValues(this Row row, IList<SharedStringItem>? sharedStrings)
         {
             return row.OfType<Cell>().GetCellValues(sharedStrings).ToArray();
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<Row> GetRows([NotNull][ItemNotNull] this Sheet sheet, [NotNull] WorkbookPart workbookPart)
+        private static IEnumerable<Row> GetRows(this Sheet sheet, WorkbookPart workbookPart)
         {
             var worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id);
 
             return worksheetPart?.Worksheet?.ChildElements?.OfType<SheetData>()?.FirstOrDefault()?.OfType<Row>() ?? Enumerable.Empty<Row>();
         }
 
-        [NotNull]
-        private static ResourceEntity FindResourceEntity([NotNull][ItemNotNull] this IEnumerable<MultipleSheetEntity> entities, [NotNull][ItemNotNull] Sheet sheet)
+        private static ResourceEntity FindResourceEntity(this IEnumerable<MultipleSheetEntity> entities, Sheet sheet)
         {
             var name = sheet.Name.Value;
 
@@ -288,17 +272,13 @@
                 _numberOfFixedColumns = numberOfFixedColumns;
             }
 
-            [NotNull]
-            [ItemNotNull]
-            public SheetData AppendRow([NotNull, ItemNotNull] SheetData sheetData, [NotNull, ItemNotNull] IEnumerable<string> rowData)
+            public SheetData AppendRow(SheetData sheetData, IEnumerable<string> rowData)
             {
                 var row = (sheetData.ChildElements?.OfType<Row>()?.Count() ?? 0) + 1;
                 var column = 1;
                 return sheetData.AppendItem(rowData.Aggregate(new Row(), (seed, item) => seed.AppendItem(CreateCell(item, row, column++))));
             }
 
-            [NotNull]
-            [ItemNotNull]
             private Cell CreateCell(string? text, int row, int column)
             {
                 if (text?.Length > 32767)
@@ -327,14 +307,12 @@
                 return cell;
             }
 
-            [NotNull]
             private static string CreateCellReference(int row, int column)
             {
                 return GetExcelColumnName(column) + row.ToString(CultureInfo.InvariantCulture);
             }
 
             // From: https://stackoverflow.com/questions/181596/how-to-convert-a-column-number-eg-127-into-an-excel-column-eg-aa
-            [NotNull]
             private static string GetExcelColumnName(int columnNumber)
             {
                 var dividend = columnNumber;
@@ -351,8 +329,7 @@
             }
         }
 
-        [ItemNotNull]
-        private static IList<SharedStringItem>? GetSharedStrings([NotNull] this WorkbookPart workbookPart)
+        private static IList<SharedStringItem>? GetSharedStrings(this WorkbookPart workbookPart)
         {
             var sharedStringsPart = workbookPart.SharedStringTablePart;
 
@@ -361,7 +338,7 @@
             return stringTable?.OfType<SharedStringItem>().ToArray();
         }
 
-        private static string? GetText([NotNull][ItemNotNull] this CellType cell, [ItemNotNull] IList<SharedStringItem>? sharedStrings)
+        private static string? GetText(this CellType cell, IList<SharedStringItem>? sharedStrings)
         {
             var cellValue = cell.CellValue;
             var dataType = cell.DataType;
@@ -382,7 +359,7 @@
 
         }
 
-        private static string? GetTextFromTextElement([NotNull] OpenXmlElement cell)
+        private static string? GetTextFromTextElement(OpenXmlElement cell)
         {
             return cell.ChildElements
                        .OfType<Text>()
@@ -398,9 +375,7 @@
                        .Aggregate(default(string), (a, b) => a + b);
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<string> GetCellValues([NotNull][ItemNotNull] this IEnumerable<Cell> cells, [ItemNotNull] IList<SharedStringItem>? sharedStrings)
+        private static IEnumerable<string> GetCellValues(this IEnumerable<Cell> cells, IList<SharedStringItem>? sharedStrings)
         {
             var columnIndex = 0;
 
@@ -425,8 +400,7 @@
             }
         }
 
-        [ItemNotNull]
-        private static IEnumerable<string>? GetLanguageColumnHeaders([NotNull] this CultureKey language, IResourceScope? scope)
+        private static IEnumerable<string>? GetLanguageColumnHeaders(this CultureKey language, IResourceScope? scope)
         {
             var cultureKeyName = language.ToString();
 
@@ -437,8 +411,7 @@
                 yield return cultureKeyName;
         }
 
-        [ItemNotNull]
-        private static IEnumerable<string>? GetLanguageDataColumns([NotNull] this ResourceTableEntry entry, [NotNull] CultureKey language, IResourceScope? scope)
+        private static IEnumerable<string>? GetLanguageDataColumns(this ResourceTableEntry entry, CultureKey language, IResourceScope? scope)
         {
             if ((scope == null) || scope.Comments.Contains(language))
                 yield return entry.Comments.GetValue(language) ?? string.Empty;
@@ -455,17 +428,14 @@
         /// <returns>
         /// The header line.
         /// </returns>
-        [NotNull, ItemNotNull]
-        private static IEnumerable<IEnumerable<string>> GetHeaderRows([NotNull][ItemNotNull] this IEnumerable<CultureKey> languages, IResourceScope? scope)
+        private static IEnumerable<IEnumerable<string>> GetHeaderRows(this IEnumerable<CultureKey> languages, IResourceScope? scope)
         {
             var languageColumnHeaders = languages.GetLanguageColumnHeaders(scope);
 
             yield return _fixedColumnHeaders.Concat(languageColumnHeaders);
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<string> GetLanguageColumnHeaders([NotNull][ItemNotNull] this IEnumerable<CultureKey> languages, IResourceScope? scope)
+        private static IEnumerable<string> GetLanguageColumnHeaders(this IEnumerable<CultureKey> languages, IResourceScope? scope)
         {
             return languages.SelectMany(lang => lang.GetLanguageColumnHeaders(scope));
         }
@@ -479,9 +449,7 @@
         /// <returns>
         /// The data lines.
         /// </returns>
-        [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<IEnumerable<string>> GetDataRows([NotNull] this ResourceEntity entity, [NotNull][ItemNotNull] IEnumerable<CultureKey> languages, IResourceScope? scope)
+        private static IEnumerable<IEnumerable<string>> GetDataRows(this ResourceEntity entity, IEnumerable<CultureKey> languages, IResourceScope? scope)
         {
             var entries = scope?.Entries.Where(entry => entry.Container == entity) ?? entity.Entries;
 
@@ -497,16 +465,12 @@
         /// <returns>
         /// The columns of this line.
         /// </returns>
-        [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<string> GetDataRow([NotNull] this ResourceTableEntry entry, [NotNull][ItemNotNull] IEnumerable<CultureKey> languages, IResourceScope? scope)
+        private static IEnumerable<string> GetDataRow(this ResourceTableEntry entry, IEnumerable<CultureKey> languages, IResourceScope? scope)
         {
             return new[] { entry.Key }.Concat(entry.GetLanguageDataColumns(languages, scope));
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<string> GetLanguageDataColumns([NotNull] this ResourceTableEntry entry, [NotNull][ItemNotNull] IEnumerable<CultureKey> languages, IResourceScope? scope)
+        private static IEnumerable<string> GetLanguageDataColumns(this ResourceTableEntry entry, IEnumerable<CultureKey> languages, IResourceScope? scope)
         {
             return languages.SelectMany(l => entry.GetLanguageDataColumns(l, scope));
         }
@@ -523,9 +487,7 @@
             return container;
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<MultipleSheetEntity> GetMultipleSheetEntities([NotNull] ResourceManager resourceManager)
+        private static IEnumerable<MultipleSheetEntity> GetMultipleSheetEntities(ResourceManager resourceManager)
         {
             var uniqueNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -541,7 +503,7 @@
 
             private readonly UInt32Value? _sheetId;
 
-            public MultipleSheetEntity([NotNull] ResourceEntity resourceEntity, int index, [NotNull][ItemNotNull] ISet<string> uniqueNames)
+            public MultipleSheetEntity(ResourceEntity resourceEntity, int index, ISet<string> uniqueNames)
             {
                 ResourceEntity = resourceEntity;
 
@@ -552,8 +514,7 @@
                 _sheetId = UInt32Value.FromUInt32((uint)index + 1);
             }
 
-            [NotNull]
-            private static string GetSheetName([NotNull] ResourceEntity resourceEntity, [NotNull][ItemNotNull] ISet<string> uniqueNames)
+            private static string GetSheetName(ResourceEntity resourceEntity, ISet<string> uniqueNames)
             {
                 var name = string.Join("|", resourceEntity.ProjectName, resourceEntity.BaseName);
 
@@ -572,8 +533,7 @@
                 return name;
             }
 
-            [NotNull]
-            private static string GenrateShortName(int i, [NotNull] string name)
+            private static string GenrateShortName(int i, string name)
             {
                 var suffix = "~" + i;
                 var prefixLenght = Math.Min(name.Length, MaxSheetNameLength - suffix.Length);
@@ -581,16 +541,12 @@
                 return name.Substring(0, prefixLenght) + suffix;
             }
 
-            [NotNull]
             public string SheetName { get; }
 
-            [NotNull]
             public ResourceEntity ResourceEntity { get; }
 
             public string? Id { get; }
 
-            [NotNull]
-            [ItemNotNull]
             public Sheet CreateSheet()
             {
                 return new Sheet
@@ -601,8 +557,6 @@
                 };
             }
 
-            [NotNull]
-            [ItemNotNull]
             public IEnumerable<IEnumerable<string>> GetDataRows(IResourceScope? scope)
             {
                 var languages = ResourceEntity.Languages
@@ -616,7 +570,7 @@
 
         private class FullScope : IResourceScope
         {
-            public FullScope([NotNull][ItemNotNull] ICollection<ResourceEntity> entities)
+            public FullScope(ICollection<ResourceEntity> entities)
             {
                 Entries = entities.SelectMany(entity => entity.Entries)
                     .ToArray();

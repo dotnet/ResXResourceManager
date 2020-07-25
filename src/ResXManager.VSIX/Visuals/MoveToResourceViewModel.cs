@@ -12,8 +12,6 @@
 
     using EnvDTE;
 
-    using JetBrains.Annotations;
-
     using PropertyChanged;
 
     using Throttle;
@@ -26,10 +24,9 @@
 
     internal sealed class MoveToResourceViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
-        [NotNull]
         private readonly string _extension;
 
-        public MoveToResourceViewModel([NotNull, ItemNotNull] ICollection<string> patterns, [NotNull][ItemNotNull] ICollection<ResourceEntity> resourceEntities, [NotNull] string text, [NotNull] string extension, string? className, string? functionName, string? fileName)
+        public MoveToResourceViewModel(ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text, string extension, string? className, string? functionName, string? fileName)
         {
             ResourceEntities = resourceEntities;
             SelectedResourceEntity = resourceEntities.FirstOrDefault();
@@ -49,8 +46,6 @@
             Value = text;
         }
 
-        [NotNull]
-        [ItemNotNull]
         public ICollection<ResourceEntity> ResourceEntities { get; }
 
         [Required]
@@ -58,14 +53,12 @@
 
         public ResourceTableEntry? SelectedResourceEntry { get; set; }
 
-        [NotNull, ItemNotNull]
         public ICollection<string> Keys { get; }
 
         [Required(AllowEmptyStrings = false)]
         [DependsOn(nameof(ReuseExisiting), nameof(SelectedResourceEntity))] // must raise a change event for key, key validation is different when these change
         public string? Key { get; set; }
 
-        [NotNull, ItemNotNull]
         public ICollection<Replacement> Replacements { get; }
 
         [Required]
@@ -78,8 +71,6 @@
 
         public bool ReuseExisiting { get; set; }
 
-        [NotNull]
-        [ItemNotNull]
         public ICollection<ResourceTableEntry> ExistingEntries { get; }
 
         public int SelectedReplacementIndex
@@ -125,7 +116,6 @@
             return SelectedResourceEntity?.Entries.Any(entry => string.Equals(entry.Key, value, StringComparison.OrdinalIgnoreCase)) ?? false;
         }
 
-        [NotNull]
         private static string GetLocalNamespace(ProjectItem? resxItem)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
@@ -166,8 +156,7 @@
             Replacements.ForEach(r => r.Update());
         }
 
-        [NotNull]
-        private string EvaluatePattern([NotNull] string pattern)
+        private string EvaluatePattern(string pattern)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -180,8 +169,7 @@
                 .Replace(@"$Namespace", localNamespace);
         }
 
-        [NotNull]
-        private static string CreateKey([NotNull] string text, string? className, string? functionName)
+        private static string CreateKey(string text, string? className, string? functionName)
         {
             var keyBuilder = new StringBuilder();
 
@@ -225,7 +213,6 @@
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
         public void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -239,12 +226,10 @@
 
     public sealed class Replacement : INotifyPropertyChanged
     {
-        [NotNull]
         private readonly string _pattern;
-        [NotNull]
         private readonly Func<string, string> _evaluator;
 
-        public Replacement([NotNull] string pattern, [NotNull] Func<string, string> evaluator)
+        public Replacement(string pattern, Func<string, string> evaluator)
         {
             _pattern = pattern;
             _evaluator = evaluator;
@@ -252,14 +237,14 @@
 
         public string? Value => _evaluator(_pattern);
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public void Update()
         {
             OnPropertyChanged(nameof(Value));
         }
 
-        private void OnPropertyChanged([NotNull] string propertyName)
+        private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

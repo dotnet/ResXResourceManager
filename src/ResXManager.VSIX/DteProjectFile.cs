@@ -6,8 +6,6 @@
     using System.Linq;
     using System.Runtime.InteropServices;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Model;
 
     using TomsToolbox.Essentials;
@@ -16,11 +14,8 @@
     {
         public const string T4FileName = "Resources.Designer.t4";
 
-        [NotNull]
         private readonly DteSolution _solution;
 
-        [NotNull]
-        [ItemNotNull]
         private readonly List<EnvDTE.ProjectItem> _projectItems = new List<EnvDTE.ProjectItem>();
 
         /// <summary>
@@ -32,7 +27,7 @@
         /// <param name="projectName">Name of the project.</param>
         /// <param name="uniqueProjectName">Unique name of the project file.</param>
         /// <param name="projectItem">The project item, or null if the projectItem is not known.</param>
-        public DteProjectFile([NotNull] DteSolution solution, string solutionFolder, [NotNull] string filePath, string? projectName, string? uniqueProjectName, [NotNull] EnvDTE.ProjectItem projectItem)
+        public DteProjectFile(DteSolution solution, string solutionFolder, string filePath, string? projectName, string? uniqueProjectName, EnvDTE.ProjectItem projectItem)
             : base(filePath, solutionFolder, projectName, uniqueProjectName)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
@@ -44,10 +39,9 @@
         /// <summary>
         /// Gets the project items.
         /// </summary>
-        [NotNull, ItemNotNull]
         public IList<EnvDTE.ProjectItem> ProjectItems => _projectItems;
 
-        public void AddProject([NotNull] string projectName, [NotNull] EnvDTE.ProjectItem projectItem)
+        public void AddProject(string projectName, EnvDTE.ProjectItem projectItem)
         {
             _projectItems.Add(projectItem);
             ProjectName += @", " + projectName;
@@ -74,7 +68,6 @@
             }
         }
 
-        [NotNull]
         public EnvDTE.ProjectItem DefaultProjectItem
         {
             get
@@ -188,7 +181,7 @@
             }
         }
 
-        private static bool IsTextTemplate([NotNull] EnvDTE.ProjectItem item)
+        private static bool IsTextTemplate(EnvDTE.ProjectItem item)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -197,7 +190,7 @@
             return (name != null) && name.EndsWith(@".tt", StringComparison.OrdinalIgnoreCase);
         }
 
-        private void SetTextTemplateCodeGenerator([NotNull] EnvDTE.ProjectItem projectItem)
+        private void SetTextTemplateCodeGenerator(EnvDTE.ProjectItem projectItem)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -229,7 +222,7 @@
             item.RunCustomTool();
         }
 
-        private static void SetCustomToolCodeGenerator([NotNull] EnvDTE.ProjectItem projectItem, CodeGenerator value)
+        private static void SetCustomToolCodeGenerator(EnvDTE.ProjectItem projectItem, CodeGenerator value)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 

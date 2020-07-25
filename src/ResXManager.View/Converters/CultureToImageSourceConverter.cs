@@ -8,8 +8,6 @@
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Model;
     using ResXManager.View.Tools;
 
@@ -18,10 +16,8 @@
     [Export, Shared]
     public class CultureToImageSourceConverter : IValueConverter
     {
-        [NotNull]
         private readonly Configuration _configuration;
 
-        [NotNull, ItemNotNull]
         private static readonly string[] _existingFlags =
         {
             "ad", "ae", "af", "ag", "ai", "al", "am", "an", "ao", "ar", "as", "at", "au", "aw", "ax", "az", "ba", "bb", "bd", "be", "bf",
@@ -39,7 +35,7 @@
         };
 
         [ImportingConstructor]
-        public CultureToImageSourceConverter([NotNull] Configuration configuration)
+        public CultureToImageSourceConverter(Configuration configuration)
         {
             _configuration = configuration;
         }

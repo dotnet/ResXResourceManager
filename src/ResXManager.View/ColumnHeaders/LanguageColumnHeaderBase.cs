@@ -2,8 +2,6 @@
 {
     using System.Globalization;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model;
 
@@ -11,10 +9,9 @@
 
     public abstract class LanguageColumnHeaderBase : ObservableObject, ILanguageColumnHeader
     {
-        [NotNull]
         private readonly Configuration _configuration;
 
-        protected LanguageColumnHeaderBase([NotNull] Configuration configuration, [NotNull] CultureKey cultureKey)
+        protected LanguageColumnHeaderBase(Configuration configuration, CultureKey cultureKey)
         {
             _configuration = configuration;
             CultureKey = cultureKey;

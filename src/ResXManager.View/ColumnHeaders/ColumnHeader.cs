@@ -2,8 +2,6 @@
 {
     using System.Windows.Controls;
 
-    using JetBrains.Annotations;
-
     public class ColumnHeader : ContentControl, IColumnHeader
     {
         public ColumnHeader(object? content, ColumnType columnType)

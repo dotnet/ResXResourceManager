@@ -7,14 +7,13 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Net.Http;
     using System.Runtime.Serialization;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Controls;
-
-    using JetBrains.Annotations;
 
     using ResXManager.Infrastructure;
 
@@ -29,9 +28,7 @@
     [Export(typeof(ITranslator)), Shared]
     public class DeepLTranslator : TranslatorBase
     {
-        [NotNull]
         private static readonly Uri _uri = new Uri("https://deepl.com/translator");
-        [NotNull, ItemNotNull]
         private static readonly IList<ICredentialItem> _credentialItems = new ICredentialItem[] { new CredentialItem("APIKey", "API Key") };
 
         public DeepLTranslator()
@@ -106,8 +103,7 @@
             }
         }
 
-        [NotNull]
-        private static string DeepLLangCode([NotNull] CultureInfo cultureInfo)
+        private static string DeepLLangCode(CultureInfo cultureInfo)
         {
             var iso1 = cultureInfo.TwoLetterISOLanguageName;
             return iso1;
@@ -131,7 +127,7 @@
             }
         }
 
-        private static T? JsonConverter<T>([NotNull] Stream stream)
+        private static T? JsonConverter<T>(Stream stream)
             where T : class
         {
             using (var reader = new StreamReader(stream, Encoding.UTF8))
@@ -161,8 +157,7 @@
         /// <param name="pairs">The name/value paired parameters.</param>
         /// <returns>Resulting URL.</returns>
         /// <exception cref="System.ArgumentException">There must be an even number of strings supplied for parameters.</exception>
-        [NotNull]
-        private static string BuildUrl(string url, [NotNull, ItemNotNull] ICollection<string?> pairs)
+        private static string BuildUrl(string url, ICollection<string?> pairs)
         {
             if (pairs.Count % 2 != 0)
                 throw new ArgumentException("There must be an even number of strings supplied for parameters.");
@@ -175,7 +170,7 @@
             }
             return sb.ToString();
 
-            static string Format(string? a, string? b) => string.Concat(System.Web.HttpUtility.UrlEncode(a), "=", System.Web.HttpUtility.UrlEncode(b));
+            static string Format(string? a, string? b) => string.Concat(WebUtility.UrlEncode(a), "=", WebUtility.UrlEncode(b));
         }
     }
 }

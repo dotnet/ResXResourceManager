@@ -6,8 +6,6 @@
     using System.Windows.Data;
     using System.Windows.Markup;
 
-    using JetBrains.Annotations;
-
     using Microsoft.Xaml.Behaviors;
 
     using ResXManager.View.ColumnHeaders;
@@ -22,7 +20,6 @@
         /// <summary>
         /// Identifies the DataGrid dependency property
         /// </summary>
-        [NotNull]
         public static readonly DependencyProperty DataGridProperty =
             DependencyProperty.Register("DataGrid", typeof(DataGrid), typeof(SynchronizeTextBoxWithDataGridCellBehavior), new FrameworkPropertyMetadata(null, (sender, e) => ((SynchronizeTextBoxWithDataGridCellBehavior)sender).DataGrid_Changed((DataGrid)e.OldValue, (DataGrid)e.NewValue)));
 
@@ -42,7 +39,7 @@
 
         private TextBox? TextBox => AssociatedObject;
 
-        private void DataGrid_CurrentCellChanged([NotNull] object sender, [NotNull] EventArgs e)
+        private void DataGrid_CurrentCellChanged(object sender, EventArgs e)
         {
             var textBox = TextBox;
             if (textBox == null)

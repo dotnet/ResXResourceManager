@@ -5,8 +5,6 @@
     using System.Globalization;
     using System.Linq;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
 
@@ -15,8 +13,6 @@
         private const string KeyColumnHeader = @"Key";
         private const string CommentHeaderPrefix = "Comment";
 
-        [NotNull]
-        [ItemNotNull]
         private static readonly string[] _fixedColumnHeaders = { KeyColumnHeader };
 
         /// <summary>
@@ -24,9 +20,7 @@
         /// </summary>
         /// <param name="entries">The entries.</param>
         /// <returns>The table.</returns>
-        [NotNull]
-        [ItemNotNull]
-        public static IList<IList<string>> ToTable([NotNull][ItemNotNull] this ICollection<ResourceTableEntry> entries)
+        public static IList<IList<string>> ToTable(this ICollection<ResourceTableEntry> entries)
         {
             var languages = entries.SelectMany(e => e.Container.Languages)
                 .Select(l => l.CultureKey)
@@ -38,8 +32,7 @@
             return table;
         }
 
-        [NotNull, ItemNotNull]
-        private static IEnumerable<string> GetTableLanguageColumnHeaders([NotNull] this CultureKey cultureKey)
+        private static IEnumerable<string> GetTableLanguageColumnHeaders(this CultureKey cultureKey)
         {
             var cultureName = cultureKey.ToString();
 
@@ -47,8 +40,7 @@
             yield return cultureName;
         }
 
-        [NotNull, ItemNotNull]
-        private static IEnumerable<string> GetTableDataColumns([NotNull] this ResourceTableEntry entry, CultureKey? cultureKey)
+        private static IEnumerable<string> GetTableDataColumns(this ResourceTableEntry entry, CultureKey? cultureKey)
         {
             yield return entry.Comments.GetValue(cultureKey) ?? string.Empty;
             yield return entry.Values.GetValue(cultureKey) ?? string.Empty;
@@ -59,8 +51,7 @@
         /// </summary>
         /// <param name="languages"></param>
         /// <returns>The header line.</returns>
-        [NotNull, ItemNotNull]
-        private static IEnumerable<IList<string>> GetTableHeaderLines([NotNull, ItemNotNull] this IEnumerable<CultureKey> languages)
+        private static IEnumerable<IList<string>> GetTableHeaderLines(this IEnumerable<CultureKey> languages)
         {
             var languageColumns = languages.SelectMany(l => l.GetTableLanguageColumnHeaders());
 
@@ -73,9 +64,7 @@
         /// <param name="entries"></param>
         /// <param name="languages"></param>
         /// <returns>The data table.</returns>
-        [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<IList<string>> GetTableDataLines([NotNull][ItemNotNull] this IEnumerable<ResourceTableEntry> entries, [NotNull][ItemNotNull] IEnumerable<CultureKey> languages)
+        private static IEnumerable<IList<string>> GetTableDataLines(this IEnumerable<ResourceTableEntry> entries, IEnumerable<CultureKey> languages)
         {
             return entries.Select(entry => entry.GetTableLine(languages).ToArray());
         }
@@ -88,36 +77,34 @@
         /// <returns>
         /// The columns of this line.
         /// </returns>
-        [NotNull, ItemNotNull]
-        private static IEnumerable<string> GetTableLine([NotNull] this ResourceTableEntry entry, [NotNull][ItemNotNull] IEnumerable<CultureKey> languages)
+        private static IEnumerable<string> GetTableLine(this ResourceTableEntry entry, IEnumerable<CultureKey> languages)
         {
             return new[] { entry.Key }.Concat(languages.SelectMany(entry.GetTableDataColumns));
         }
 
-        [NotNull]
-        private static string GetLanguageName([NotNull] string dataColumnHeader)
+        private static string GetLanguageName(string dataColumnHeader)
         {
             var languageName = dataColumnHeader.StartsWith(CommentHeaderPrefix, StringComparison.OrdinalIgnoreCase)
                 ? dataColumnHeader.Substring(CommentHeaderPrefix.Length) : dataColumnHeader;
             return languageName;
         }
 
-        private static CultureInfo? ExtractCulture([NotNull] this string dataColumnHeader)
+        private static CultureInfo? ExtractCulture(this string dataColumnHeader)
         {
             return GetLanguageName(dataColumnHeader).ToCulture();
         }
 
-        private static CultureKey? ExtractCultureKey([NotNull] this string dataColumnHeader)
+        private static CultureKey? ExtractCultureKey(this string dataColumnHeader)
         {
             return GetLanguageName(dataColumnHeader).ToCultureKey();
         }
 
-        private static ColumnKind GetColumnKind([NotNull] this string dataColumnHeader)
+        private static ColumnKind GetColumnKind(this string dataColumnHeader)
         {
             return dataColumnHeader.StartsWith(CommentHeaderPrefix, StringComparison.OrdinalIgnoreCase) ? ColumnKind.Comment : ColumnKind.Text;
         }
 
-        private static string? GetEntryData([NotNull] this ResourceTableEntry entry, [NotNull] CultureKey culture, ColumnKind columnKind)
+        private static string? GetEntryData(this ResourceTableEntry entry, CultureKey culture, ColumnKind columnKind)
         {
             var snapshot = entry.Snapshot;
 
@@ -152,7 +139,7 @@
             }
         }
 
-        private static bool SetEntryData([NotNull] this ResourceTableEntry entry, CultureInfo? culture, ColumnKind columnKind, string? text)
+        private static bool SetEntryData(this ResourceTableEntry entry, CultureInfo? culture, ColumnKind columnKind, string? text)
         {
             if (!entry.CanEdit(culture))
                 return false;
@@ -175,17 +162,17 @@
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <param name="table">The text.</param>
-        public static void ImportTable([NotNull] this ResourceEntity entity, [NotNull][ItemNotNull] IList<IList<string>> table)
+        public static void ImportTable(this ResourceEntity entity, IList<IList<string>> table)
         {
             entity.ImportTable(_fixedColumnHeaders, table).Apply();
         }
 
-        public static bool Apply([NotNull] this EntryChange change)
+        public static bool Apply(this EntryChange change)
         {
             return change.Entry.SetEntryData(change.Culture, change.ColumnKind, change.Text);
         }
 
-        public static void Apply([NotNull][ItemNotNull] this ICollection<EntryChange> changes)
+        public static void Apply(this ICollection<EntryChange> changes)
         {
             var acceptedChanges = changes
                 .TakeWhile(change => change.Apply())
@@ -197,9 +184,7 @@
             throw new ImportException(acceptedChanges.Length > 0 ? Resources.ImportFailedPartiallyError : Resources.ImportFailedError);
         }
 
-        [NotNull]
-        [ItemNotNull]
-        public static ICollection<EntryChange> ImportTable([NotNull] this ResourceEntity entity, [NotNull][ItemNotNull] ICollection<string> fixedColumnHeaders, [NotNull][ItemNotNull] IList<IList<string>> table)
+        public static ICollection<EntryChange> ImportTable(this ResourceEntity entity, ICollection<string> fixedColumnHeaders, IList<IList<string>> table)
         {
             if (!table.Any())
                 return Array.Empty<EntryChange>();
@@ -281,9 +266,7 @@
             return row;
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private static IList<string> GetHeaderColumns([NotNull][ItemNotNull] ICollection<IList<string>> table, [NotNull][ItemNotNull] ICollection<string> fixedColumnHeaders)
+        private static IList<string> GetHeaderColumns(ICollection<IList<string>> table, ICollection<string> fixedColumnHeaders)
         {
             var headerColumns = table.First();
 
@@ -299,7 +282,7 @@
         }
 
         [System.Diagnostics.Contracts.Pure]
-        public static bool HasValidTableHeaderRow([NotNull, ItemNotNull] this IList<IList<string>> table)
+        public static bool HasValidTableHeaderRow(this IList<IList<string>> table)
         {
             if (table.Count == 0)
                 return false;
@@ -320,7 +303,7 @@
             return headerCultures.All(c => c != null);
         }
 
-        private static void VerifyCultures([NotNull] ResourceEntity entity, [NotNull][ItemNotNull] IEnumerable<CultureInfo?> languages)
+        private static void VerifyCultures(ResourceEntity entity, IEnumerable<CultureInfo?> languages)
         {
             var undefinedLanguages = languages.Where(outer => entity.Languages.All(inner => !Equals(outer, inner.Culture))).ToArray();
 

@@ -4,18 +4,14 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     public class FileFilter : IFileFilter
     {
-        [NotNull]
-        [ItemNotNull]
         private readonly string[] _extensions;
         private readonly Regex? _fileExclusionFilter;
 
-        public FileFilter([NotNull] Configuration configuration)
+        public FileFilter(Configuration configuration)
         {
             _extensions = configuration.CodeReferences
                 .Items.SelectMany(item => item.ParseExtensions())

@@ -5,18 +5,15 @@
     using System.Globalization;
     using System.Windows.Data;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Model;
 
     [Export, Shared]
     public class CultureToDisplayNameConverter : IValueConverter
     {
-        [NotNull]
         private readonly Configuration _configuration;
 
         [ImportingConstructor]
-        public CultureToDisplayNameConverter([NotNull] Configuration configuration)
+        public CultureToDisplayNameConverter(Configuration configuration)
         {
             _configuration = configuration;
         }

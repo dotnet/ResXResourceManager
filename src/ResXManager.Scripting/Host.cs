@@ -7,8 +7,6 @@
     using System.IO;
     using System.Linq;
 
-    using JetBrains.Annotations;
-
     using Ninject;
 
     using ResXManager.Infrastructure;
@@ -40,7 +38,6 @@
             Configuration = exportProvider.GetExportedValue<Configuration>();
         }
 
-        [NotNull]
         public ResourceManager ResourceManager { get; }
 
         public void Load(string? folder, string? exclusionFilter = @"Migrations\\\d{15}")
@@ -48,7 +45,7 @@
             _sourceFilesProvider.SolutionFolder = folder;
             _sourceFilesProvider.ExclusionFilter = exclusionFilter;
 
-            var loaded = ResourceManager.ReloadAsync(_sourceFilesProvider.EnumerateSourceFiles(), null).Result;
+            var _ = ResourceManager.ReloadAsync(_sourceFilesProvider.EnumerateSourceFiles(), null).Result;
         }
 
         public void Save()
@@ -56,27 +53,27 @@
             ResourceManager.Save();
         }
 
-        public void ExportExcel([NotNull] string filePath)
+        public void ExportExcel(string filePath)
         {
             ExportExcel(filePath, null);
         }
 
-        public void ExportExcel([NotNull] string filePath, object? entries)
+        public void ExportExcel(string filePath, object? entries)
         {
             ExportExcel(filePath, entries as IEnumerable<object>, null);
         }
 
-        public void ExportExcel([NotNull] string filePath, object? entries, object? languages)
+        public void ExportExcel(string filePath, object? entries, object? languages)
         {
             ExportExcel(filePath, entries, languages, null);
         }
 
-        public void ExportExcel([NotNull] string filePath, object? entries, object? languages, object? comments)
+        public void ExportExcel(string filePath, object? entries, object? languages, object? comments)
         {
             ExportExcel(filePath, entries, languages, comments, ExcelExportMode.SingleSheet);
         }
 
-        public void ExportExcel([NotNull] string filePath, object? entries, object? languages, object? comments, ExcelExportMode exportMode)
+        public void ExportExcel(string filePath, object? entries, object? languages, object? comments, ExcelExportMode exportMode)
         {
             var resourceScope = new ResourceScope(
                 entries ?? ResourceManager.TableEntries,
@@ -86,14 +83,13 @@
             ResourceManager.ExportExcelFile(filePath, resourceScope, exportMode);
         }
 
-        public void ImportExcel([NotNull] string filePath)
+        public void ImportExcel(string filePath)
         {
             var changes = ResourceManager.ImportExcelFile(filePath);
 
             changes.Apply();
         }
 
-        [NotNull]
         public string CreateSnapshot()
         {
             return ResourceManager.CreateSnapshot();
@@ -109,7 +105,7 @@
             _kernel?.Dispose();
         }
 
-        private void ResourceManager_BeginEditing([NotNull] object sender, [NotNull] ResourceBeginEditingEventArgs e)
+        private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
         {
             if (!CanEdit(e.Entity, e.CultureKey))
             {
@@ -117,7 +113,7 @@
             }
         }
 
-        private bool CanEdit([NotNull] ResourceEntity entity, CultureKey? cultureKey)
+        private bool CanEdit(ResourceEntity entity, CultureKey? cultureKey)
         {
             if (cultureKey == null)
                 return true;
@@ -156,7 +152,6 @@
             return true;
         }
 
-        [NotNull]
         public Configuration Configuration { get; }
     }
 

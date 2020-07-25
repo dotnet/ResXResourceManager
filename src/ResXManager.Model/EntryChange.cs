@@ -2,11 +2,9 @@ namespace ResXManager.Model
 {
     using System.Globalization;
 
-    using JetBrains.Annotations;
-
     public class EntryChange
     {
-        public EntryChange([NotNull] ResourceTableEntry entry, string? text, CultureInfo? culture, ColumnKind columnKind, string? originalText)
+        public EntryChange(ResourceTableEntry entry, string? text, CultureInfo? culture, ColumnKind columnKind, string? originalText)
         {
             Entry = entry;
             Text = text;
@@ -15,7 +13,6 @@ namespace ResXManager.Model
             OriginalText = originalText;
         }
 
-        [NotNull]
         public ResourceTableEntry Entry { get; }
 
         public string? Text { get; }

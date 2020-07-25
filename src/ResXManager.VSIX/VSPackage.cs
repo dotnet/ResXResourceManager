@@ -13,8 +13,6 @@
     using System.Windows;
     using System.Windows.Threading;
 
-    using JetBrains.Annotations;
-
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -53,7 +51,7 @@
     {
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
         private readonly ManualResetEvent _exportProviderLoaded = new ManualResetEvent(false);
-        private IExportProvider? _exportProvider;
+        private readonly IExportProvider _exportProvider;
         private readonly IKernel _kernel = new StandardKernel();
 
         private EnvDTE.SolutionEvents? _solutionEvents;
@@ -72,9 +70,9 @@
 
             _kernel.Bind<ITracer>().ToConstant(Tracer);
             _kernel.Bind<IServiceProvider>().ToConstant(this).Named(nameof(VsPackage));
+            _exportProvider = new ExportProvider(_kernel);
         }
 
-        [NotNull]
         public static VsPackage Instance
         {
             get
@@ -86,7 +84,6 @@
             }
         }
 
-        [NotNull]
         public IExportProvider ExportProvider
         {
             get
@@ -106,14 +103,13 @@
             }
         }
 
-        [NotNull]
         private ITracer Tracer { get; }
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
         /// </summary>
-        protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, [NotNull] IProgress<ServiceProgressData> progress)
+        protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await base.InitializeAsync(cancellationToken, progress).ConfigureAwait(false);
 
@@ -156,7 +152,7 @@
             _kernel.Dispose();
         }
 
-        private void ShowLoaderMessages([NotNull] LoaderMessages messages)
+        private void ShowLoaderMessages(LoaderMessages messages)
         {
             if (!messages.Errors.Any())
             {
@@ -180,7 +176,6 @@
             }
         }
 
-        [NotNull]
         private LoaderMessages FillCatalog()
         {
             var assembly = GetType().Assembly;
@@ -203,7 +198,6 @@
                 typeof(Translators.Properties.AssemblyKey).Assembly,
                 typeof(View.Properties.AssemblyKey).Assembly);
 
-            _exportProvider = new ExportProvider(_kernel);
             _kernel.Bind<IExportProvider>().ToConstant(_exportProvider);
 
             _exportProviderLoaded.Set();
@@ -211,7 +205,6 @@
             return messages;
         }
 
-        [NotNull]
         private EnvDTE80.DTE2 Dte
         {
             get
@@ -264,8 +257,7 @@
             }
         }
 
-        [NotNull]
-        private static OleMenuCommand CreateMenuCommand([NotNull] IMenuCommandService mcs, int cmdId, EventHandler? invokeHandler)
+        private static OleMenuCommand CreateMenuCommand(IMenuCommandService mcs, int cmdId, EventHandler? invokeHandler)
         {
             var menuCommandId = new CommandID(GuidList.guidResXManager_VSIXCmdSet, cmdId);
             var menuCommand = new OleMenuCommand(invokeHandler, menuCommandId);
@@ -347,7 +339,6 @@
             menuCommand.Visible = GetSelectedResourceEntities() != null;
         }
 
-        [ItemNotNull]
         private IEnumerable<ResourceEntity>? GetSelectedResourceEntities()
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
@@ -367,8 +358,6 @@
             return (entities.Length > 0) && (entities.Length == selection.Count) ? entities : null;
         }
 
-        [NotNull]
-        [ItemNotNull]
         private IEnumerable<ResourceEntity> GetSelectedResourceEntities(string? fileName)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
@@ -383,7 +372,7 @@
                 .ToArray();
         }
 
-        private static bool ContainsChildOfWinFormsDesignerItem([NotNull] ResourceEntity entity, string? fileName)
+        private static bool ContainsChildOfWinFormsDesignerItem(ResourceEntity entity, string? fileName)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -392,7 +381,7 @@
                 .Any(projectFile => string.Equals(projectFile.ParentItem?.TryGetFileName(), fileName, StringComparison.OrdinalIgnoreCase) && projectFile.IsWinFormsDesignerResource);
         }
 
-        private static bool ContainsFile([NotNull] ResourceEntity entity, string? fileName)
+        private static bool ContainsFile(ResourceEntity entity, string? fileName)
         {
             return entity.Languages.Any(lang => lang.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
         }
@@ -479,7 +468,7 @@
             }
         }
 
-        private void DocumentEvents_DocumentSaved([NotNull] EnvDTE.Document document)
+        private void DocumentEvents_DocumentSaved(EnvDTE.Document document)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -516,7 +505,7 @@
             }
         }
 
-        private void ResourceManager_ProjectFileSaved([NotNull] object sender, [NotNull] ProjectFileEventArgs e)
+        private void ResourceManager_ProjectFileSaved(object sender, ProjectFileEventArgs e)
         {
             var entity = e.Language.Container;
 
@@ -567,9 +556,7 @@
 
         private class LoaderMessages
         {
-            [NotNull, ItemNotNull]
             public IList<string> Messages { get; } = new List<string>();
-            [NotNull, ItemNotNull]
             public IList<string> Errors { get; } = new List<string>();
         }
     }

@@ -8,11 +8,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Model.Properties;
-
-    using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleStringFormat_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleStringFormat_Description)]
@@ -25,7 +21,7 @@
 
         public string RuleId => Id;
 
-        public bool CompliesToRule(string? neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
+        public bool CompliesToRule(string? neutralValue, IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
         {
             if (CompliesToRule(neutralValue, values))
             {
@@ -37,7 +33,7 @@
             return false;
         }
 
-        private static bool CompliesToRule(string? neutralValue, [NotNull, ItemCanBeNull] IEnumerable<string?> values)
+        private static bool CompliesToRule(string? neutralValue, IEnumerable<string?> values)
         {
             var allValues = new[] {neutralValue}.Concat(values.Where(value => !string.IsNullOrEmpty(value))).ToList();
 

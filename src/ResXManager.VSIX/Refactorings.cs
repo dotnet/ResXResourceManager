@@ -9,8 +9,6 @@
 
     using EnvDTE;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Model;
     using ResXManager.View.Behaviors;
     using ResXManager.View.Properties;
@@ -23,20 +21,18 @@
     {
         bool CanMoveToResource(Document? document);
 
-        [NotNull, ItemCanBeNull]
         Task<ResourceTableEntry?> MoveToResourceAsync(Document? document);
     }
 
     [Export(typeof(IRefactorings))]
     internal class Refactorings : IRefactorings
     {
-        [NotNull]
         private readonly IExportProvider _exportProvider;
         private ResourceEntity? _lastUsedEntity;
         private bool _isLastUsedEntityInSameProject;
 
         [ImportingConstructor]
-        public Refactorings([NotNull] IExportProvider exportProvider)
+        public Refactorings(IExportProvider exportProvider)
         {
             _exportProvider = exportProvider;
         }
@@ -71,7 +67,6 @@
             return s != null;
         }
 
-        [NotNull, ItemCanBeNull]
         public async Task<ResourceTableEntry?> MoveToResourceAsync(Document? document)
         {
             if (document == null)
@@ -170,8 +165,7 @@
             return entry;
         }
 
-        [NotNull, ItemNotNull]
-        private static IEnumerable<ResourceEntity> GetResourceEntriesFromProject([NotNull] Document document, [NotNull][ItemNotNull] IEnumerable<ResourceEntity> entities)
+        private static IEnumerable<ResourceEntity> GetResourceEntriesFromProject(Document document, IEnumerable<ResourceEntity> entities)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -187,7 +181,7 @@
             }
         }
 
-        private static bool IsInProject([NotNull] ResourceEntity entity, Document? document)
+        private static bool IsInProject(ResourceEntity entity, Document? document)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -203,7 +197,7 @@
             }
         }
 
-        private static bool IsInProject([NotNull] ResourceEntity entity, Project? project)
+        private static bool IsInProject(ResourceEntity entity, Project? project)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -226,23 +220,22 @@
             if (topPoint == null)
                 return null;
 
-            var line = textDocument.CreateEditPoint()?.GetLines(topPoint.Line, topPoint.Line + 1);
+            var line = textDocument!.CreateEditPoint()?.GetLines(topPoint.Line, topPoint.Line + 1);
             if (line == null)
                 return null;
 
-            var fileCodeModel = document.ProjectItem?.FileCodeModel;
+            var fileCodeModel = document!.ProjectItem?.FileCodeModel;
 
             return new Selection(textDocument, line, fileCodeModel);
         }
 
         private class Selection
         {
-            [NotNull]
             private readonly TextDocument _textDocument;
 
             private readonly FileCodeModel? _codeModel;
 
-            public Selection([NotNull] TextDocument textDocument, [NotNull] string line, FileCodeModel? codeModel)
+            public Selection(TextDocument textDocument, string line, FileCodeModel? codeModel)
             {
                 Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -251,7 +244,6 @@
                 _codeModel = codeModel;
             }
 
-            [NotNull]
             public VirtualPoint Begin
             {
                 get
@@ -261,7 +253,6 @@
                 }
             }
 
-            [NotNull]
             public VirtualPoint End
             {
                 get
@@ -289,7 +280,6 @@
                 }
             }
 
-            [NotNull]
             public string Line { get; }
 
 #pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.

@@ -7,8 +7,6 @@
 
     using HtmlAgilityPack;
 
-    using JetBrains.Annotations;
-
     public static class ExtensionMethods
     {
         /// <summary>

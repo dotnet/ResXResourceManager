@@ -13,8 +13,6 @@ namespace ResXManager.Translators
     using System.Threading;
     using System.Threading.Tasks;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
@@ -22,7 +20,6 @@ namespace ResXManager.Translators
     [Export(typeof(ITranslator)), Shared]
     public class AzureTranslator : TranslatorBase
     {
-        [NotNull]
         private static readonly Uri _uri = new Uri("https://www.microsoft.com/en-us/translator/");
 
         // Azure has a 5000-character translation limit across all Texts in a single request
@@ -119,7 +116,7 @@ namespace ResXManager.Translators
 
         private string? AuthenticationKey => Credentials[0].Value;
 
-        private void ReturnResults([NotNull][ItemNotNull] IEnumerable<ITranslationItem> items, [NotNull][ItemNotNull] IEnumerable<AzureTranslationResponse> responses)
+        private void ReturnResults(IEnumerable<ITranslationItem> items, IEnumerable<AzureTranslationResponse> responses)
         {
             foreach (var tuple in Enumerate.AsTuples(items, responses))
             {
@@ -136,8 +133,6 @@ namespace ResXManager.Translators
             }
         }
 
-        [NotNull]
-        [ItemNotNull]
         private static IList<ICredentialItem> GetCredentials()
         {
             return new ICredentialItem[]
@@ -168,7 +163,6 @@ namespace ResXManager.Translators
             return AutoDetectHtml && item.Source.ContainsHtml() ? "html" : "plain";
         }
 
-        [ItemNotNull]
         private static IEnumerable<ICollection<ITranslationItem>> SplitIntoChunks(ITranslationSession translationSession, IEnumerable<ITranslationItem> items)
         {
             var chunk = new List<ITranslationItem>();

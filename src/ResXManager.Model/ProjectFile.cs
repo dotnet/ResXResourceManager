@@ -7,8 +7,6 @@
     using System.Runtime.CompilerServices;
     using System.Xml.Linq;
 
-    using JetBrains.Annotations;
-
     /// <summary>
     /// Represents a file associated with a project.
     /// </summary>
@@ -23,7 +21,7 @@
         /// <param name="rootFolder">The root folder to calculate the relative path from.</param>
         /// <param name="projectName">Name of the project.</param>
         /// <param name="uniqueProjectName">Unique name of the project file.</param>
-        public ProjectFile([NotNull] string filePath, [NotNull] string rootFolder, string? projectName, string? uniqueProjectName)
+        public ProjectFile(string filePath, string rootFolder, string? projectName, string? uniqueProjectName)
         {
             FilePath = filePath;
             RelativeFilePath = GetRelativePath(rootFolder, filePath);
@@ -36,10 +34,8 @@
         /// <summary>
         /// Gets the file name of the file.
         /// </summary>
-        [NotNull]
         public string FilePath { get; }
 
-        [NotNull]
         public string Extension { get; }
 
         /// <summary>
@@ -49,12 +45,10 @@
 
         public string? UniqueProjectName { get; set; }
 
-        [NotNull]
         public string RelativeFilePath { get; }
 
         public bool HasChanges { get; protected set; }
 
-        [NotNull]
         public XDocument Load()
         {
             var document = InternalLoad();
@@ -66,7 +60,6 @@
             return document;
         }
 
-        [NotNull]
         protected virtual XDocument InternalLoad()
         {
             return XDocument.Load(FilePath);
@@ -80,7 +73,7 @@
             InternalChanged(document, willSaveImmediately);
         }
 
-        protected virtual void InternalChanged([NotNull] XDocument document, bool willSaveImmediately)
+        protected virtual void InternalChanged(XDocument document, bool willSaveImmediately)
         {
             HasChanges = _fingerPrint != document.ToString(SaveOptions.DisableFormatting);
         }
@@ -97,7 +90,7 @@
             _fingerPrint = document.ToString(SaveOptions.DisableFormatting);
         }
 
-        protected virtual void InternalSave([NotNull] XDocument document)
+        protected virtual void InternalSave(XDocument document)
         {
             document.Save(FilePath);
         }
@@ -128,8 +121,7 @@
 
         public virtual bool IsWinFormsDesignerResource => false;
 
-        [NotNull]
-        private static string GetRelativePath([NotNull] string solutionFolder, [NotNull] string filePath)
+        private static string GetRelativePath(string solutionFolder, string filePath)
         {
             solutionFolder = solutionFolder.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             filePath = filePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
@@ -144,7 +136,6 @@
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

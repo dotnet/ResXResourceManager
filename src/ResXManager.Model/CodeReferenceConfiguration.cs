@@ -5,8 +5,6 @@
     using System.Linq;
     using System.Runtime.Serialization;
 
-    using JetBrains.Annotations;
-
     [DataContract]
     public sealed class CodeReferenceConfigurationItem : INotifyPropertyChanged
     {
@@ -22,7 +20,6 @@
         [DataMember]
         public string? SingleLineComment { get; set; }
 
-        [NotNull, ItemNotNull]
         public IEnumerable<string> ParseExtensions()
         {
             if (string.IsNullOrEmpty(Extensions))
@@ -34,24 +31,13 @@
                    ?? Enumerable.Empty<string>();
         }
 
-        #region INotifyPropertyChanged implementation
-
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        [NotifyPropertyChangedInvocator, UsedImplicitly]
-        private void OnPropertyChanged([NotNull] string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
     }
 
 
     [KnownType(typeof(CodeReferenceConfigurationItem))]
     [DataContract]
     [TypeConverter(typeof(JsonSerializerTypeConverter<CodeReferenceConfiguration>))]
-    [UsedImplicitly]
     public sealed class CodeReferenceConfiguration : ItemTrackingCollectionHost<CodeReferenceConfigurationItem>
     {
         public const string Default = @"{""Items"":[

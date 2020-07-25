@@ -5,8 +5,6 @@
     using System.Windows;
     using System.Windows.Controls;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Composition;
@@ -22,7 +20,7 @@
     public partial class TranslationsView
     {
         [ImportingConstructor]
-        public TranslationsView([NotNull] IExportProvider exportProvider)
+        public TranslationsView(IExportProvider exportProvider)
         {
             try
             {
@@ -36,7 +34,7 @@
             }
         }
 
-        private void ComboBox_IsKeyboardFocusWithinChanged([NotNull] object sender, DependencyPropertyChangedEventArgs e)
+        private void ComboBox_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (!true.Equals(e.NewValue))
                 return;
