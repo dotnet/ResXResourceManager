@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
 
     using EnvDTE;
+
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.View.Behaviors;

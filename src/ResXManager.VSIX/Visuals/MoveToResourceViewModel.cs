@@ -14,14 +14,14 @@
 
     using PropertyChanged;
 
-    using Throttle;
-
+    using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.VSIX.Properties;
 
+    using Throttle;
+
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
-    using ResXManager.Infrastructure;
 
     internal sealed class MoveToResourceViewModel : INotifyPropertyChanged, IDataErrorInfo
     {

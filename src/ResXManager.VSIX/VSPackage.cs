@@ -19,13 +19,13 @@
 
     using Ninject;
 
-    using Throttle;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.View.Tools;
     using ResXManager.View.Visuals;
     using ResXManager.VSIX.Visuals;
+
+    using Throttle;
 
     using TomsToolbox.Composition;
     using TomsToolbox.Composition.Ninject;

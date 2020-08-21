@@ -3,9 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
-    
+
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRulePunctuationTail_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRulePunctuationTail_Description)]
     public sealed class ResourceTableEntryRulePunctuationTail : ResourceTableEntryRulePunctuation

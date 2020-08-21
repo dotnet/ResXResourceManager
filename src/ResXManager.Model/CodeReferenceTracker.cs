@@ -84,7 +84,7 @@
 
                     sourceFiles.ForEach(file => file.Keys.ForEach(key => keyFilesLookup.ForceValue(key, _ => new HashSet<FileInfo>()).Add(file)));
 
-                    void FindReferences(ResourceTableEntry entry,  IDictionary<string, HashSet<FileInfo>> keyFiles)
+                    void FindReferences(ResourceTableEntry entry, IDictionary<string, HashSet<FileInfo>> keyFiles)
                     {
                         var key = entry.Key;
 

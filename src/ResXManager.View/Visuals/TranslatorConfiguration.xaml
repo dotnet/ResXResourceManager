@@ -25,7 +25,7 @@
           <Rectangle x:Name="spinner"
                      DockPanel.Dock="Right" VerticalAlignment="Center"
                      Visibility="{Binding IsActive, Converter={StaticResource BooleanToVisibilityConverter}}"
-                     Width="8" Height="8" 
+                     Width="8" Height="8"
                      RenderTransformOrigin="0.5,0.5"
                      StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}">
             <Rectangle.RenderTransform>
@@ -37,7 +37,7 @@
               </EventTrigger>
             </Rectangle.Triggers>
           </Rectangle>
-          <TextBlock Text="{Binding DisplayName}" Margin="4" VerticalAlignment="Center"/>
+          <TextBlock Text="{Binding DisplayName}" Margin="4" VerticalAlignment="Center" />
         </DockPanel>
       </DataTemplate>
     </TabControl.ItemTemplate>
@@ -48,9 +48,9 @@
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
               <TextBlock VerticalAlignment="Center">
                 <Run Text="{x:Static properties:Resources.Ranking}" />
-                <Run Text=" "/>
+                <Run Text=" " />
               </TextBlock>
-              <TextBox Width="35" Text="{Binding Ranking, StringFormat=F1}" VerticalAlignment="Center" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}"/>
+              <TextBox Width="35" Text="{Binding Ranking, StringFormat=F1}" VerticalAlignment="Center" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
             </StackPanel>
             <Button Tag="{Binding Uri, Mode=OneWay}" DockPanel.Dock="Right" VerticalAlignment="Center">
               <Button.Template>
@@ -63,7 +63,7 @@
                 </ControlTemplate>
               </Button.Template>
             </Button>
-            <ContentControl DockPanel.Dock="Left" Content="{Binding}" Margin="20,0" VerticalAlignment="Center"/>
+            <ContentControl DockPanel.Dock="Left" Content="{Binding}" Margin="20,0" VerticalAlignment="Center" />
           </DockPanel>
           <Decorator Height="4" />
           <GroupBox x:Name="AuthenticationGroup" Header="{x:Static properties:Resources.Authentication}"

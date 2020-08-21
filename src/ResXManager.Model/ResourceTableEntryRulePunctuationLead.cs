@@ -1,9 +1,10 @@
 ﻿namespace ResXManager.Model
 {
     using System.Collections.Generic;
+
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
-    
+
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRulePunctuationLead_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRulePunctuationLead_Description)]
     public sealed class ResourceTableEntryRulePunctuationLead : ResourceTableEntryRulePunctuation

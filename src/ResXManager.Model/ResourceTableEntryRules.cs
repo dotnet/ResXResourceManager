@@ -1,6 +1,5 @@
 ﻿namespace ResXManager.Model
 {
-    using ResXManager.Infrastructure;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -10,6 +9,8 @@
     using System.Runtime.Serialization;
     using System.Text;
     using System.Text.RegularExpressions;
+
+    using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
 

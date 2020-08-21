@@ -2,8 +2,6 @@ namespace ResXManager.Translators
 {
     using System.ComponentModel;
 
-    using JetBrains.Annotations;
-
     using ResXManager.Infrastructure;
 
     public class CredentialItem : ICredentialItem

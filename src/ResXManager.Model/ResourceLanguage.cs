@@ -10,10 +10,10 @@
     using System.Xml;
     using System.Xml.Linq;
 
-    using Throttle;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
+
+    using Throttle;
 
     using TomsToolbox.Essentials;
 

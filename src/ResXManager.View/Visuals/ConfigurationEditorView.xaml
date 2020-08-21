@@ -151,7 +151,7 @@
 
       <GroupBox Header="{x:Static properties:Resources.Configuration_Rules}" Style="{StaticResource GroupStyle}">
         <ItemsControl Margin="10" BorderThickness="0" Background="Transparent"
-                  ItemsSource="{Binding Configuration.Rules.ConfigurableRules.Values}">
+                      ItemsSource="{Binding Configuration.Rules.ConfigurableRules.Values}">
           <ItemsControl.ItemTemplate>
             <DataTemplate DataType="{x:Type model:IResourceTableEntryRuleConfig}">
               <CheckBox Margin="0,2" IsChecked="{Binding IsEnabled, Mode=TwoWay}"

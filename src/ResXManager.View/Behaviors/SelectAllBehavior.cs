@@ -8,10 +8,10 @@
 
     using Microsoft.Xaml.Behaviors;
 
-    using Throttle;
-
     using ResXManager.View.Properties;
     using ResXManager.View.Tools;
+
+    using Throttle;
 
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;

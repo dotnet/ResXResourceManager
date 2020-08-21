@@ -1,6 +1,5 @@
 ﻿namespace ResXManager.Model
 {
-    using ResXManager.Infrastructure;
     using System;
     using System.ComponentModel;
     using System.Globalization;
@@ -8,6 +7,8 @@
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Json;
     using System.Text;
+
+    using ResXManager.Infrastructure;
 
     /// <summary>
     /// A type converter that converts an integer string to a boolean value.

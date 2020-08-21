@@ -6,6 +6,7 @@
     using System.Windows.Controls;
 
     using Microsoft.Xaml.Behaviors;
+
     using ResXManager.Infrastructure;
 
     public class EntityFilter : Behavior<ListBox>

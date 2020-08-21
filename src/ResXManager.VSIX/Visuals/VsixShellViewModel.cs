@@ -7,10 +7,10 @@
     using System.Windows.Input;
     using System.Windows.Threading;
 
-    using Throttle;
-
     using ResXManager.Model;
     using ResXManager.View.Visuals;
+
+    using Throttle;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;

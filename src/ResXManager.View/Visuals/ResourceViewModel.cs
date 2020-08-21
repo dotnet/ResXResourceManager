@@ -17,13 +17,13 @@
 
     using DataGridExtensions;
 
-    using Throttle;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.View.ColumnHeaders;
     using ResXManager.View.Properties;
     using ResXManager.View.Tools;
+
+    using Throttle;
 
     using TomsToolbox.ObservableCollections;
     using TomsToolbox.Wpf;

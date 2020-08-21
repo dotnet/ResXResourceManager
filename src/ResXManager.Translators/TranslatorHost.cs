@@ -8,10 +8,10 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Throttle;
-
     using ResXManager.Infrastructure;
     using ResXManager.Translators.Properties;
+
+    using Throttle;
 
     using TomsToolbox.Wpf;
 

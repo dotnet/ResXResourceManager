@@ -604,8 +604,6 @@
 
     namespace GeneratedCode
     {
-        using System.Diagnostics.CodeAnalysis;
-
         // Generated from an empty document using the OpenXML SDK Productivity Tool
         [SuppressMessage("ReSharper", "All")]
         public static class GeneratedClass

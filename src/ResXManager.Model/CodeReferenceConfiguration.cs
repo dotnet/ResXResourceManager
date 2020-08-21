@@ -1,10 +1,11 @@
 ﻿namespace ResXManager.Model
 {
-    using ResXManager.Infrastructure;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
     using System.Runtime.Serialization;
+
+    using ResXManager.Infrastructure;
 
     [DataContract]
     public sealed class CodeReferenceConfigurationItem : INotifyPropertyChanged

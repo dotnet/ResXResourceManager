@@ -2,9 +2,10 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
-    
+
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleWhiteSpaceLead_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleWhiteSpaceLead_Description)]
     public sealed class ResourceTableEntryRuleWhiteSpaceLead : ResourceTableEntryRuleWhiteSpace

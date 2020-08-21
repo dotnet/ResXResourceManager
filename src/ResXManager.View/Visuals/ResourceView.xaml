@@ -375,12 +375,12 @@
                   <DataTemplate DataType="DataGridColumn">
                     <DockPanel Margin="2">
                       <CheckBox DockPanel.Dock="Left"
-                              IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}"
-                              Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+                                IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}"
+                                Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
                       <Decorator DockPanel.Dock="Left" Width="2" />
                       <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                       <Image DockPanel.Dock="Left"
-                           Source="{Binding Path=Header.EffectiveCulture, Converter={composition:Import converters:CultureToImageSourceConverter}, FallbackValue={x:Null}}" />
+                             Source="{Binding Path=Header.EffectiveCulture, Converter={composition:Import converters:CultureToImageSourceConverter}, FallbackValue={x:Null}}" />
                       <Decorator DockPanel.Dock="Left" Width="2" />
                       <Decorator DockPanel.Dock="Right" Width="3" />
                       <ContentPresenter Content="{Binding Path=Header}" VerticalAlignment="Center" />
@@ -718,23 +718,23 @@
     <composition:CommandRoutingBehavior CommandSource="view:ToggleConsistencyCheckStringFormatCommand"
                                         CommandTarget="{Binding ToggleConsistencyCheckCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                         CommandParameter="{x:Static model:ResourceTableEntryRuleStringFormat.Id}"
-                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[StringFormat], Mode=OneWay, ElementName=DataGrid}"/>
+                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[StringFormat], Mode=OneWay, ElementName=DataGrid}" />
     <composition:CommandRoutingBehavior CommandSource="view:ToggleConsistencyCheckPunctuationLeadCommand"
                                         CommandTarget="{Binding ToggleConsistencyCheckCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                         CommandParameter="{x:Static model:ResourceTableEntryRulePunctuationLead.Id}"
-                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[PunctuationLead], Mode=OneWay, ElementName=DataGrid}"/>
+                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[PunctuationLead], Mode=OneWay, ElementName=DataGrid}" />
     <composition:CommandRoutingBehavior CommandSource="view:ToggleConsistencyCheckPunctuationTailCommand"
                                         CommandTarget="{Binding ToggleConsistencyCheckCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                         CommandParameter="{x:Static model:ResourceTableEntryRulePunctuationTail.Id}"
-                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[PunctuationTail], Mode=OneWay, ElementName=DataGrid}"/>
+                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[PunctuationTail], Mode=OneWay, ElementName=DataGrid}" />
     <composition:CommandRoutingBehavior CommandSource="view:ToggleConsistencyCheckWhiteSpaceLeadCommand"
                                         CommandTarget="{Binding ToggleConsistencyCheckCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                         CommandParameter="{x:Static model:ResourceTableEntryRuleWhiteSpaceLead.Id}"
-                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[WhiteSpaceLead], Mode=OneWay, ElementName=DataGrid}"/>
+                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[WhiteSpaceLead], Mode=OneWay, ElementName=DataGrid}" />
     <composition:CommandRoutingBehavior CommandSource="view:ToggleConsistencyCheckWhiteSpaceTailCommand"
                                         CommandTarget="{Binding ToggleConsistencyCheckCommand, Converter={StaticResource ErrorHandlerCommandConverter}}"
                                         CommandParameter="{x:Static model:ResourceTableEntryRuleWhiteSpaceTail.Id}"
-                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[WhiteSpaceTail], Mode=OneWay, ElementName=DataGrid}"/>
+                                        IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[WhiteSpaceTail], Mode=OneWay, ElementName=DataGrid}" />
     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
   </Interactions:Interaction.Behaviors>
 

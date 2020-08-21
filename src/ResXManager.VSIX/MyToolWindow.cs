@@ -22,7 +22,6 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
-    using ResXManager.View.Visuals;
     using ResXManager.VSIX.Visuals;
 
     using TomsToolbox.Composition;

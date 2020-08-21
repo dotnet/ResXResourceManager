@@ -4,10 +4,10 @@
     using System.Composition;
     using System.Windows.Threading;
 
-    using Throttle;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model;
+
+    using Throttle;
 
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.AttributedModel;

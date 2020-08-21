@@ -1,10 +1,11 @@
 ﻿namespace ResXManager.Model
 {
-    using ResXManager.Infrastructure;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Threading;
+
+    using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
 
