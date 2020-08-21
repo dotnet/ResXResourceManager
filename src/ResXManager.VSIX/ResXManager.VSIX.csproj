@@ -29,6 +29,7 @@
     <DefineConstants>DEBUG;TRACE;NETFRAMEWORK</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <DebugType>embedded</DebugType>
+    <NoWarn>CS8632</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -140,9 +141,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\CodeContracts.ruleset">
-      <Link>CodeContracts.ruleset</Link>
-    </None>
     <None Include="..\Key.snk">
       <Link>Key.snk</Link>
     </None>
@@ -171,9 +169,6 @@
     <None Include="Resources\Images_24bit.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
-      <Link>CustomDictionary.xml</Link>
-    </CodeAnalysisDictionary>
     <Content Include="..\..\Release notes.md">
       <Link>Release notes.md</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
