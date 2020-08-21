@@ -4,17 +4,15 @@
     using System.Collections.Generic;
     using System.Composition;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading;
+    using System.Threading.Tasks;
 
     using ResXManager.Infrastructure;
 
     using TomsToolbox.Essentials;
-
-    using ThreadState = System.Threading.ThreadState;
 
     [Export, Shared]
     public class CodeReferenceTracker
@@ -48,7 +46,9 @@
 
         private sealed class Engine : IDisposable
         {
-            private readonly Thread _backgroundThread;
+            private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+            private readonly CancellationToken _cancellationToken;
+
             private long _total;
             private long _visited;
 
@@ -56,16 +56,12 @@
 
             public Engine(CodeReferenceConfiguration configuration, ICollection<ProjectFile> sourceFiles, ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
             {
-                _backgroundThread = new Thread(() => FindCodeReferences(configuration, sourceFiles, resourceTableEntries, tracer))
-                {
-                    IsBackground = true,
-                    Priority = ThreadPriority.Lowest
-                };
+                _cancellationToken = _cancellationTokenSource.Token;
 
-                _backgroundThread.Start();
+                Task.Run(async () => await FindCodeReferences(configuration, sourceFiles, resourceTableEntries, tracer).ConfigureAwait(false), _cancellationToken);
             }
 
-            private void FindCodeReferences(CodeReferenceConfiguration configuration, ICollection<ProjectFile> projectFiles, ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
+            private async Task FindCodeReferences(CodeReferenceConfiguration configuration, ICollection<ProjectFile> projectFiles, ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
             {
                 var stopwatch = Stopwatch.StartNew();
 
@@ -77,25 +73,22 @@
 
                     var keys = new HashSet<string>(resourceTableEntries.Select(entry => entry.Key));
 
-                    var sourceFiles = projectFiles.AsParallel()
-                        .Select(file => new FileInfo(file, configuration.Items, keys, ref _visited))
+                    var sourceFileTasks = projectFiles
+                        .Select(file => Task.Run(() => new FileInfo(file, configuration.Items, keys, ref _visited), _cancellationToken));
+
+                    var sourceFiles = (await Task.WhenAll(sourceFileTasks).ConfigureAwait(false))
                         .Where(file => file.HasConfigurations)
-                        .ToArray();
+                        .ToList();
 
-                    var keyFilesLookup = sourceFiles.Aggregate(new Dictionary<string, HashSet<FileInfo>>(),
-                        (accumulator, file) =>
-                        {
-                            // ReSharper disable PossibleNullReferenceException
-                            file.Keys.ForEach(key => accumulator.ForceValue(key, _ => new HashSet<FileInfo>()).Add(file));
-                            // ReSharper restore PossibleNullReferenceException
-                            return accumulator;
-                        });
+                    var keyFilesLookup = new Dictionary<string, HashSet<FileInfo>>();
 
-                    resourceTableEntries.AsParallel().ForAll(entry =>
+                    sourceFiles.ForEach(file => file.Keys.ForEach(key => keyFilesLookup.ForceValue(key, _ => new HashSet<FileInfo>()).Add(file)));
+
+                    void FindReferences(ResourceTableEntry entry,  IDictionary<string, HashSet<FileInfo>> keyFiles)
                     {
                         var key = entry.Key;
 
-                        var files = keyFilesLookup.GetValueOrDefault(key);
+                        var files = keyFiles.GetValueOrDefault(key);
 
                         var references = new List<CodeReference>();
 
@@ -104,11 +97,15 @@
                         entry.CodeReferences = references.AsReadOnly();
 
                         Interlocked.Increment(ref _visited);
-                    });
+                    }
+
+                    var lookupTasks = resourceTableEntries.Select(entry => Task.Run(() => FindReferences(entry, keyFilesLookup), _cancellationToken));
+
+                    await Task.WhenAll(lookupTasks).ConfigureAwait(false);
 
                     Debug.WriteLine(stopwatch.Elapsed);
                 }
-                catch (ThreadAbortException)
+                catch (OperationCanceledException)
                 {
                 }
                 finally
@@ -119,10 +116,8 @@
 
             public void Dispose()
             {
-                if (_backgroundThread.ThreadState == ThreadState.Background)
-                {
-                    _backgroundThread.Abort();
-                }
+                _cancellationTokenSource.Cancel(true);
+                _cancellationTokenSource.Dispose();
             }
         }
 
@@ -216,7 +211,6 @@
                     _lines.ForEach((line, index) =>
                         _regex.Split(line)
                             .Where(keys.Contains)
-                            // ReSharper disable once PossibleNullReferenceException
                             .ForEach(key => _keyLinesLookup.ForceValue(key, _ => new HashSet<int>()).Add(index)));
                 }
 
