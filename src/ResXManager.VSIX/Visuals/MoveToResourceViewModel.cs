@@ -85,7 +85,7 @@
             get => Settings.Default.MoveToResourcePreferedKeyPatternIndex[_extension];
             set
             {
-                if (value >= 0) 
+                if (value >= 0)
                     Settings.Default.MoveToResourcePreferedKeyPatternIndex[_extension] = value;
             }
         }
@@ -175,9 +175,9 @@
             var keyBuilder = new StringBuilder();
 
             if (!className.IsNullOrEmpty())
-                keyBuilder.Append(className).Append(@"_");
+                keyBuilder.Append(className).Append('_');
             if (!functionName.IsNullOrEmpty())
-                keyBuilder.Append(functionName).Append(@"_");
+                keyBuilder.Append(functionName).Append('_');
 
             var makeUpper = true;
 

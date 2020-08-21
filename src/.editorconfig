@@ -16,6 +16,8 @@ dotnet_diagnostic.CA1724.severity = none
 dotnet_diagnostic.CA1812.severity = none
 # CA2008: Do not create tasks without passing a TaskScheduler
 dotnet_diagnostic.CA2008.severity = none
+# IDE0063: Using statement can be simplified
+dotnet_diagnostic.IDE0063.severity = none
 
 
 [*.xaml]

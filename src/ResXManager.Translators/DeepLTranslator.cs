@@ -165,7 +165,7 @@
             var sb = new StringBuilder(url);
             if (pairs.Count > 0)
             {
-                sb.Append("?");
+                sb.Append('?');
                 sb.Append(string.Join("&", pairs.Where((s, i) => i % 2 == 0).Zip(pairs.Where((s, i) => i % 2 == 1), Format)));
             }
             return sb.ToString();
