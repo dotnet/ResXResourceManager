@@ -86,7 +86,7 @@
 
         private static void LoadConfiguration(ITranslator[] translators, string? configuration)
         {
-            if (string.IsNullOrEmpty(configuration))
+            if (configuration.IsNullOrEmpty())
                 return;
 
             try
@@ -99,7 +99,7 @@
                 {
                     if (!values.TryGetValue(translator.Id, out var setting))
                         continue;
-                    if (string.IsNullOrEmpty(setting))
+                    if (setting.IsNullOrEmpty())
                         continue;
 
                     try

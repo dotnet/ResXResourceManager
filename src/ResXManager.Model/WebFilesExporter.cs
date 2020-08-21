@@ -52,7 +52,7 @@
 
                 var typeScriptFileDir = config.TypeScriptFileDir;
 
-                if (string.IsNullOrEmpty(typeScriptFileDir))
+                if (typeScriptFileDir.IsNullOrEmpty())
                     return;
 
                 typeScriptFileDir = Directory.CreateDirectory(Path.Combine(solutionFolder, typeScriptFileDir)).FullName;
@@ -104,7 +104,7 @@
                 File.WriteAllText(typeScriptFilePath, typescript.ToString());
 
                 var jsonFileDir = config.JsonFileDir;
-                if (!string.IsNullOrEmpty(jsonFileDir))
+                if (!jsonFileDir.IsNullOrEmpty())
                 {
                     jsonFileDir = Directory.CreateDirectory(Path.Combine(solutionFolder, jsonFileDir)).FullName;
 

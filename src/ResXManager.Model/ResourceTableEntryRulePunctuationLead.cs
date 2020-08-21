@@ -1,7 +1,7 @@
 ﻿namespace ResXManager.Model
 {
     using System.Collections.Generic;
-
+    using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
     
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRulePunctuationLead_Name)]
@@ -17,7 +17,7 @@
         protected override string GetErrorMessage(string reference)
         {
             var intro = Resources.ResourceTableEntryRulePunctuationLead_Error_Intro;
-            if (string.IsNullOrEmpty(reference))
+            if (reference.IsNullOrEmpty())
                 return intro + " " + Resources.ResourceTableEntryRulePunctuationLead_Error_NoPunctuationExpected;
 
             return intro + " " + string.Format(Resources.Culture,

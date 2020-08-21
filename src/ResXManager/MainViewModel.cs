@@ -47,7 +47,7 @@
             {
                 var folder = Settings.Default.StartupFolder;
 
-                if (string.IsNullOrEmpty(folder))
+                if (folder.IsNullOrEmpty())
                     return;
 
                 SourceFilesProvider.SolutionFolder = folder;
@@ -143,7 +143,7 @@
             var languages = entity.Languages.Where(lang => (cultureKey == null) || cultureKey.Equals(lang.CultureKey)).ToArray();
 
             var rootFolder = SourceFilesProvider.SolutionFolder;
-            if (rootFolder == null || string.IsNullOrEmpty(rootFolder))
+            if (rootFolder.IsNullOrEmpty())
                 return false;
 
             if (!languages.Any())
@@ -172,7 +172,7 @@
                     if (!File.Exists(languageFileName))
                     {
                         var directoryName = Path.GetDirectoryName(languageFileName);
-                        if (!string.IsNullOrEmpty(directoryName))
+                        if (!directoryName.IsNullOrEmpty())
                             Directory.CreateDirectory(directoryName);
 
                         File.WriteAllText(languageFileName, Model.Properties.Resources.EmptyResxTemplate);
@@ -227,7 +227,7 @@
         public async Task<IList<ProjectFile>> GetSourceFilesAsync(CancellationToken? cancellationToken)
         {
             var folder = SolutionFolder;
-            if (string.IsNullOrEmpty(folder))
+            if (folder.IsNullOrEmpty())
                 return Array.Empty<ProjectFile>();
 
             using (_performanceTracer.Start("Enumerate source files"))

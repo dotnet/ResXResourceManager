@@ -6,6 +6,7 @@
     using System.Windows.Controls;
 
     using Microsoft.Xaml.Behaviors;
+    using ResXManager.Infrastructure;
 
     public class EntityFilter : Behavior<ListBox>
     {
@@ -34,7 +35,7 @@
         {
             value = value?.Trim();
 
-            if (value == null || string.IsNullOrEmpty(value))
+            if (value.IsNullOrEmpty())
                 return null;
 
             try
@@ -48,7 +49,7 @@
 
             try
             {
-                var regex = new Regex(value.Replace(@"\", @"\\"), RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                var regex = new Regex(value.Replace(@"\", @"\\", StringComparison.Ordinal), RegexOptions.IgnoreCase | RegexOptions.Singleline);
                 return item => regex.Match(item.ToString()).Success;
             }
             catch (ArgumentException)

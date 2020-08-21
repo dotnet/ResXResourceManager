@@ -1,5 +1,6 @@
 ﻿namespace ResXManager.Model
 {
+    using ResXManager.Infrastructure;
     using System;
     using System.ComponentModel;
     using System.Globalization;
@@ -65,7 +66,7 @@
 
             try
             {
-                if (!string.IsNullOrEmpty(stringValue))
+                if (!stringValue.IsNullOrEmpty())
                 {
                     using (var stream = new MemoryStream())
                     {

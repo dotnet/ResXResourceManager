@@ -21,6 +21,7 @@
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
+    using ResXManager.Infrastructure;
 
     internal sealed class MoveToResourceViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
@@ -99,7 +100,7 @@
 
             var key = Key;
 
-            if (string.IsNullOrEmpty(key))
+            if (key.IsNullOrEmpty())
                 return null;
 
             if (!key.All(c => (c == '_') || char.IsLetterOrDigit(c)) || char.IsDigit(key.FirstOrDefault()))
@@ -173,9 +174,9 @@
         {
             var keyBuilder = new StringBuilder();
 
-            if (!string.IsNullOrEmpty(className))
+            if (!className.IsNullOrEmpty())
                 keyBuilder.Append(className).Append(@"_");
-            if (!string.IsNullOrEmpty(functionName))
+            if (!functionName.IsNullOrEmpty())
                 keyBuilder.Append(functionName).Append(@"_");
 
             var makeUpper = true;

@@ -140,7 +140,7 @@
         {
             try
             {
-                if (!string.IsNullOrEmpty(value))
+                if (!value.IsNullOrEmpty())
                 {
                     var typeConverter = GetTypeConverter(typeof(T));
                     var obj = typeConverter.ConvertFromInvariantString(value);
@@ -179,7 +179,7 @@
                 .Select(attr => attr.ConverterTypeName)
                 .Select(typeName => Type.GetType(typeName, true))
                 .Where(type => typeof(TypeConverter).IsAssignableFrom(type))
-                .Select(type => (TypeConverter)Activator.CreateInstance(type))
+                .Select(type => (TypeConverter?)Activator.CreateInstance(type!))
                 .FirstOrDefault();
         }
 
@@ -199,6 +199,8 @@
             return default!;
         }
 
+#pragma warning disable CS0067
         public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
     }
 }

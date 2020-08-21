@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Composition;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -177,7 +178,7 @@
                     }
                 }
 
-                if (!string.IsNullOrEmpty(singleLineComment))
+                if (!singleLineComment.IsNullOrEmpty())
                 {
                     var indexOfComment = line.IndexOf(singleLineComment, stringComparison);
                     if ((indexOfComment >= 0) && (indexOfComment <= keyIndexes.FirstOrDefault()))
@@ -244,7 +245,7 @@
                     var parameters = _configurations.Select(cfg => new
                     {
                         StringComparison = cfg.IsCaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase,
-                        Regex = cfg.Expression != null && !string.IsNullOrEmpty(cfg.Expression) ? new Regex(cfg.Expression.Replace("$Key", key).Replace("$File", baseName)) : null,
+                        Regex = cfg.Expression != null && !string.IsNullOrEmpty(cfg.Expression) ? new Regex(cfg.Expression.Replace("$Key", key, StringComparison.Ordinal).Replace("$File", baseName, StringComparison.Ordinal)) : null,
                         cfg.SingleLineComment
                     }).ToArray();
 

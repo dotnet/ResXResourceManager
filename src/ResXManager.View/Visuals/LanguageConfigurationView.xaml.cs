@@ -37,7 +37,7 @@
             }
         }
 
-        private void Language_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void Language_MouseDoubleClick(object? sender, MouseButtonEventArgs e)
         {
             var specificCulture = (sender as FrameworkElement)?.DataContext as CultureInfo;
             if (specificCulture == null)

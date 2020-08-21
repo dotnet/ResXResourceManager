@@ -91,13 +91,13 @@
                 return string.Empty;
 
             var relativeFilePath = files.Select(file => file.RelativeFilePath).FirstOrDefault();
-            if (string.IsNullOrEmpty(relativeFilePath))
+            if (relativeFilePath.IsNullOrEmpty())
                 return string.Empty;
 
             var relativeFileDirectory = Path.GetDirectoryName(relativeFilePath) + Path.DirectorySeparatorChar;
 
             var relativeProjectPath = Path.GetDirectoryName(uniqueProjectName);
-            if (string.IsNullOrEmpty(relativeProjectPath))
+            if (relativeProjectPath.IsNullOrEmpty())
             {
                 return relativeFileDirectory;
             }

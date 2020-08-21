@@ -37,7 +37,7 @@
 
         public static void LoadSnapshot(this ICollection<ResourceEntity> resourceEntities, string? snapshot)
         {
-            if (string.IsNullOrEmpty(snapshot))
+            if (snapshot.IsNullOrEmpty())
             {
                 UnloadSnapshot(resourceEntities);
             }
@@ -77,7 +77,7 @@
 
         private static string? NullIfEmpty(string? value)
         {
-            return string.IsNullOrEmpty(value) ? null : value;
+            return value.IsNullOrEmpty() ? null : value;
         }
 
         [DataContract]

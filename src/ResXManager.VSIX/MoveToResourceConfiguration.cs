@@ -4,7 +4,7 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Runtime.Serialization;
-
+    using ResXManager.Infrastructure;
     using ResXManager.Model;
 
     [DataContract]
@@ -18,25 +18,27 @@
 
         public IEnumerable<string> ParseExtensions()
         {
-            if (Extensions == null || string.IsNullOrEmpty(Extensions))
+            if (Extensions == null || Extensions.IsNullOrEmpty())
                 return Enumerable.Empty<string>();
 
             return Extensions.Split(',')
                 .Select(ext => ext.Trim())
-                .Where(ext => !string.IsNullOrEmpty(ext));
+                .Where(ext => !ext.IsNullOrEmpty());
         }
 
         public IEnumerable<string> ParsePatterns()
         {
-            if (Patterns == null || string.IsNullOrEmpty(Patterns))
+            if (Patterns == null || Patterns.IsNullOrEmpty())
                 return Enumerable.Empty<string>();
 
             return Patterns.Split('|')
                 .Select(ext => ext.Trim())
-                .Where(ext => !string.IsNullOrEmpty(ext));
+                .Where(ext => !ext.IsNullOrEmpty());
         }
 
+#pragma warning disable CS0067
         public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
     }
 
     [KnownType(typeof(MoveToResourceConfigurationItem))]

@@ -65,9 +65,12 @@
             }
         }
 
-        private void ToggleButton_StateChanged(object sender, EventArgs e)
+        private void ToggleButton_StateChanged(object? sender, EventArgs e)
         {
-            Refresh((ToggleButton)sender);
+            if (sender is ToggleButton toggleButton)
+            {
+                Refresh(toggleButton);
+            }
         }
 
         private void Refresh(ToggleButton? button)
@@ -84,7 +87,7 @@
                 dataGrid.ScrollIntoView(selectedItem);
         }
 
-        private void DataGrid_ColumnVisibilityChanged(object source, EventArgs e)
+        private void DataGrid_ColumnVisibilityChanged(object? source, EventArgs e)
         {
             var toggleButton = ToggleButton;
 

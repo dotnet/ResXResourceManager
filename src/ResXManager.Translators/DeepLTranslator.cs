@@ -47,7 +47,7 @@
 
         protected override async Task Translate(ITranslationSession translationSession)
         {
-            if (string.IsNullOrEmpty(ApiKey))
+            if (ApiKey.IsNullOrEmpty())
             {
                 translationSession.AddMessage("DeepL Translator requires API Key.");
                 return;

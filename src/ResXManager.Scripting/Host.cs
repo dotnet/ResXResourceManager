@@ -105,7 +105,7 @@
             _kernel?.Dispose();
         }
 
-        private void ResourceManager_BeginEditing(object sender, ResourceBeginEditingEventArgs e)
+        private void ResourceManager_BeginEditing(object? sender, ResourceBeginEditingEventArgs e)
         {
             if (!CanEdit(e.Entity, e.CultureKey))
             {
@@ -119,7 +119,7 @@
                 return true;
 
             var rootFolder = _sourceFilesProvider.SolutionFolder;
-            if (rootFolder == null || string.IsNullOrEmpty(rootFolder))
+            if (rootFolder.IsNullOrEmpty())
                 return false;
 
             var language = entity.Languages.FirstOrDefault(lang => cultureKey.Equals(lang.CultureKey));
@@ -141,7 +141,7 @@
             if (!File.Exists(languageFileName))
             {
                 var directoryName = Path.GetDirectoryName(languageFileName);
-                if (!string.IsNullOrEmpty(directoryName))
+                if (!directoryName.IsNullOrEmpty())
                     Directory.CreateDirectory(directoryName);
 
                 File.WriteAllText(languageFileName, Model.Properties.Resources.EmptyResxTemplate);

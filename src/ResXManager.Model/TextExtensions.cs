@@ -1,5 +1,6 @@
 ﻿namespace ResXManager.Model
 {
+    using ResXManager.Infrastructure;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -28,12 +29,12 @@
 
         private static string Quoted(string? value, char separator)
         {
-            if (value == null || string.IsNullOrEmpty(value))
+            if (value.IsNullOrEmpty())
                 return string.Empty;
 
-            if (value.Any(IsLineFeed) || value.Contains(separator) || value.StartsWith(Quote, StringComparison.Ordinal))
+            if (value.Any(IsLineFeed) || value.Contains(separator, StringComparison.Ordinal) || value.StartsWith(Quote, StringComparison.Ordinal))
             {
-                return Quote + value.Replace(Quote, Quote + Quote) + Quote;
+                return Quote + value.Replace(Quote, Quote + Quote, StringComparison.Ordinal) + Quote;
             }
 
             return value;

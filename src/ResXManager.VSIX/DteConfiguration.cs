@@ -88,7 +88,7 @@
             {
                 if ((globals != null) && globals.VariableExists[key])
                 {
-                    value = ConvertFromString(globals[key] as string, value);
+                    value = ConvertFromString(globals[key] as string, value)!;
                     return true;
                 }
             }

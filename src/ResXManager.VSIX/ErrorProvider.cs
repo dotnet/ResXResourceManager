@@ -57,7 +57,7 @@
             buildEvents.OnBuildBegin += BuildEvents_OnBuildBegin;
         }
 
-        private void TableEntries_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void TableEntries_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action != NotifyCollectionChangedAction.Remove)
                 return;
@@ -131,13 +131,14 @@
             }
         }
 
-        private void Task_Navigate(object sender, EventArgs e)
+        private void Task_Navigate(object? sender, EventArgs e)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            var task = (ResourceErrorTask)sender;
-            var entry = task.Entry;
+            if (!(sender is ResourceErrorTask task))
+                return;
 
+            var entry = task.Entry;
             if (entry == null)
                 return;
 

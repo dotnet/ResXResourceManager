@@ -41,7 +41,7 @@ namespace ResXManager.Translators
         {
             var authenticationKey = AuthenticationKey;
 
-            if (string.IsNullOrEmpty(authenticationKey))
+            if (authenticationKey.IsNullOrEmpty())
             {
                 translationSession.AddMessage("Azure Translator requires API key.");
                 return;

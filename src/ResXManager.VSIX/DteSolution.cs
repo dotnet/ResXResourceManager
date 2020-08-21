@@ -88,7 +88,7 @@
                 var solutionFolder = SolutionFolder;
                 var fullName = FullName;
 
-                if (!string.IsNullOrEmpty(solutionFolder) && string.Equals(solutionFolder, fullName, StringComparison.OrdinalIgnoreCase))
+                if (!solutionFolder.IsNullOrEmpty() && string.Equals(solutionFolder, fullName, StringComparison.OrdinalIgnoreCase))
                 {
                     return null;
                 }
@@ -110,7 +110,7 @@
 
                 var solution = Solution;
 
-                return string.IsNullOrEmpty(FullName) ? null : solution?.Globals;
+                return FullName.IsNullOrEmpty() ? null : solution?.Globals;
             }
         }
 
@@ -124,7 +124,7 @@
                 {
                     var fullName = FullName;
 
-                    if (fullName == null || string.IsNullOrEmpty(fullName))
+                    if (fullName.IsNullOrEmpty())
                         return string.Empty;
                     if (new DirectoryInfo(fullName).Exists)
                         return fullName;
@@ -245,7 +245,7 @@
             {
                 var fileName = TryGetFileName(projectItem);
 
-                if (fileName != null && !string.IsNullOrEmpty(fileName))
+                if (!fileName.IsNullOrEmpty())
                 {
                     var project = projectItem.ContainingProject;
 
@@ -285,7 +285,7 @@
                 if (string.Equals(projectItem.Kind, ItemKind.SolutionFile, StringComparison.OrdinalIgnoreCase))
                 {
                     var solutionFolder = SolutionFolder;
-                    if (!string.IsNullOrEmpty(solutionFolder))
+                    if (!solutionFolder.IsNullOrEmpty())
                         return Path.Combine(solutionFolder, name);
                 }
             }

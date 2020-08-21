@@ -37,7 +37,7 @@
             }
         }
 
-        private void CommandConverter_Error(object sender, ErrorEventArgs e)
+        private void CommandConverter_Error(object? sender, ErrorEventArgs e)
         {
             var ex = e.GetException();
             if (ex == null)
@@ -48,7 +48,7 @@
             MessageBox.Show(ex.Message, Properties.Resources.Title);
         }
 
-        private void SortNodesByKeyCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        private void SortNodesByKeyCommandConverter_Executing(object? sender, ConfirmedCommandEventArgs e)
         {
             if (MessageBox.Show(Properties.Resources.SortNodesByKey_Confirmation, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {

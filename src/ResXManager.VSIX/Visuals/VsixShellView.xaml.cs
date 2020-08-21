@@ -59,7 +59,7 @@
             return color?.R * 0.21 + color?.G * 0.72 + color?.B * 0.07 ?? 0.0;
         }
 
-        private void Self_Loaded(object sender, RoutedEventArgs e)
+        private void Self_Loaded(object? sender, RoutedEventArgs e)
         {
             this.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {

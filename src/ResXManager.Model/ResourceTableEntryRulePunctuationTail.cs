@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
     
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRulePunctuationTail_Name)]
@@ -19,7 +19,7 @@
         protected override string GetErrorMessage(string reference)
         {
             var intro = Resources.ResourceTableEntryRulePunctuationTail_Error_Intro;
-            if (string.IsNullOrEmpty(reference))
+            if (reference.IsNullOrEmpty())
                 return intro + " " + Resources.ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected;
 
             return intro + " " + string.Format(Resources.Culture,

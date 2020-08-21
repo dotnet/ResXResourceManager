@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-
+    using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
     
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleWhiteSpaceLead_Name)]
@@ -20,7 +20,7 @@
             var whiteSpaceSeq = string.Join("][", reference);
 
             var intro = Resources.ResourceTableEntryRuleWhiteSpaceLead_Error_Intro;
-            if (string.IsNullOrEmpty(whiteSpaceSeq))
+            if (whiteSpaceSeq.IsNullOrEmpty())
                 return intro + " " + Resources.ResourceTableEntryRuleWhiteSpaceLead_Error_NoWhiteSpaceExpected;
 
             whiteSpaceSeq = "[" + whiteSpaceSeq + "]";

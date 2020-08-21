@@ -1,5 +1,6 @@
 ﻿namespace ResXManager.Model
 {
+    using ResXManager.Infrastructure;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -37,7 +38,7 @@
 
                 var directoryPath = directoryFiles?.Key;
 
-                if (string.IsNullOrEmpty(directoryPath))
+                if (directoryPath.IsNullOrEmpty())
                     continue;
 
                 var directory = new DirectoryInfo(directoryPath);

@@ -7,15 +7,9 @@
     using System.Globalization;
     using System.Linq;
 
-    public abstract class ResourceTableEntryRuleWhiteSpace : IResourceTableEntryRule
+    public abstract class ResourceTableEntryRuleWhiteSpace : ResourceTableEntryRule
     {
-        /// <inheritdoc />
-        public bool IsEnabled { get; set; }
-
-        /// <inheritdoc />
-        public abstract string RuleId { get; }
-
-        public bool CompliesToRule(string? neutralValue, IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
+        public override bool CompliesToRule(string? neutralValue, IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
         {
             var reference = GetWhiteSpaceSequence(neutralValue).ToArray();
 
@@ -80,8 +74,5 @@
                 default: return string.Format(CultureInfo.InvariantCulture, "0x{0:X4}", (int)wsChar);
             }
         }
-
-#pragma warning disable CS0067
-        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

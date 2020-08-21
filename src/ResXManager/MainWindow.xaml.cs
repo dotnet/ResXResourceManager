@@ -125,7 +125,7 @@
                 _lastKnownLocation = new Vector(Left, Top);
         }
 
-        private static void Navigate_Click(object sender, RoutedEventArgs e)
+        private static void Navigate_Click(object? sender, RoutedEventArgs e)
         {
             string? url;
 
@@ -136,7 +136,7 @@
                     return;
 
                 url = source.Tag as string;
-                if (url == null || string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                if (url.IsNullOrEmpty() || !url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                     return;
             }
             else

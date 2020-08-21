@@ -1,5 +1,6 @@
 ﻿namespace ResXManager.Model
 {
+    using ResXManager.Infrastructure;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -39,7 +40,7 @@
 
         public bool IsEnabled(string? ruleId)
         {
-            if (string.IsNullOrEmpty(ruleId))
+            if (ruleId.IsNullOrEmpty())
                 return false;
 
             return ConfigurableRules!.GetValueOrDefault(ruleId)?.IsEnabled ?? false;

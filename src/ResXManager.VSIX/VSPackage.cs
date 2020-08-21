@@ -351,7 +351,7 @@
 
             var entities = selection
                 .Select(item => item.GetMkDocument())
-                .Where(file => !string.IsNullOrEmpty(file))
+                .Where(file => !file.IsNullOrEmpty())
                 .SelectMany(GetSelectedResourceEntities)
                 .ToArray();
 
@@ -362,7 +362,7 @@
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (string.IsNullOrEmpty(fileName))
+            if (fileName.IsNullOrEmpty())
                 return Enumerable.Empty<ResourceEntity>();
 
             var resourceEntities = ExportProvider.GetExportedValue<ResourceManager>().ResourceEntities;
@@ -505,7 +505,7 @@
             }
         }
 
-        private void ResourceManager_ProjectFileSaved(object sender, ProjectFileEventArgs e)
+        private void ResourceManager_ProjectFileSaved(object? sender, ProjectFileEventArgs e)
         {
             var entity = e.Language.Container;
 

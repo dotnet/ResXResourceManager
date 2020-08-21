@@ -1,20 +1,16 @@
 ﻿namespace ResXManager.Model
 {
+    using ResXManager.Infrastructure;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
-    public abstract class ResourceTableEntryRulePunctuation : IResourceTableEntryRule
+    public abstract class ResourceTableEntryRulePunctuation : ResourceTableEntryRule
     {
-        /// <inheritdoc />
-        public bool IsEnabled { get; set; }
-
-        /// <inheritdoc />
-        public abstract string RuleId { get; }
-
-        public bool CompliesToRule(string? neutralValue, IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
+        public override bool CompliesToRule(string? neutralValue, IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
         {
             var reference = GetPunctuationSequence(neutralValue).ToArray();
 
@@ -81,15 +77,12 @@
             switch (char.GetUnicodeCategory(value))
             {
                 case UnicodeCategory.OtherPunctuation:
-                    return !excluded.Contains(value);
+                    return !excluded.Contains(value, StringComparison.Ordinal);
                 case UnicodeCategory.DashPunctuation:
                     return true;
                 default:
                     return false;
             }
         }
-
-#pragma warning disable CS0067
-        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

@@ -66,22 +66,21 @@
 
             var path = Path.GetDirectoryName(typeof(ITracer).Assembly.Location);
 
-            // ReSharper disable once AssignNullToNotNullAttribute
             var assemblyFileNames = Directory.EnumerateFiles(path, @"*.dll")
-                .ToArray();
+                .ToList();
 
-            var assemblyNames = new HashSet<string>(assemblyFileNames.Select(Path.GetFileNameWithoutExtension));
+            var assemblyNames = new HashSet<string>(assemblyFileNames.Select(Path.GetFileNameWithoutExtension)!);
 
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 
             var assemblies = loadedAssemblies
-                .Where(a => assemblyNames.Contains(a.GetName().Name))
-                .ToArray();
+                .Where(a => assemblyNames.Contains(a.GetName().Name!))
+                .ToList();
 
             var messages = assemblies
                 .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Assembly '{0}' loaded from {1}", assembly.FullName, assembly.CodeBase))
                 .OrderBy(text => text, StringComparer.OrdinalIgnoreCase)
-                .ToArray();
+                .ToList();
 
             foreach (var message in messages)
             {
@@ -92,7 +91,7 @@
                 .GroupBy(a => a.FullName)
                 .Where(g => g.Count() > 1)
                 .Select(g => g.Key)
-                .ToArray();
+                .ToList();
 
             if (assembliesByName.Any())
             {

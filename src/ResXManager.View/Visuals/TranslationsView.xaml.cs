@@ -34,7 +34,7 @@
             }
         }
 
-        private void ComboBox_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void ComboBox_IsKeyboardFocusWithinChanged(object? sender, DependencyPropertyChangedEventArgs e)
         {
             if (!true.Equals(e.NewValue))
                 return;

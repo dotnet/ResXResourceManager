@@ -57,13 +57,14 @@ namespace ResXManager.View.Tools
             column.ElementStyle = elementStyle;
         }
 
-        private static void EditingElement_PreviewKeyDown(object sender, KeyEventArgs e)
+        private static void EditingElement_PreviewKeyDown(object? sender, KeyEventArgs e)
         {
             if (e.Key != Key.Return)
                 return;
 
             e.Handled = true;
-            var editingElement = (TextBox)sender;
+            if (!(sender is TextBox editingElement))
+                return;
 
             if (IsKeyDown(Key.LeftCtrl) || IsKeyDown(Key.RightCtrl))
             {

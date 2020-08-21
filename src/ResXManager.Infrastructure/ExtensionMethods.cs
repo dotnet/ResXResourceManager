@@ -23,7 +23,7 @@
             {
                 cultureKeyName = cultureKeyName?.TrimStart('.');
 
-                return string.IsNullOrEmpty(cultureKeyName) ? null : CultureInfo.GetCultureInfo(cultureKeyName);
+                return cultureKeyName.IsNullOrEmpty() ? null : CultureInfo.GetCultureInfo(cultureKeyName);
             }
             catch (ArgumentException)
             {
@@ -45,7 +45,7 @@
             {
                 cultureKeyName = cultureKeyName?.TrimStart('.');
 
-                return new CultureKey(string.IsNullOrEmpty(cultureKeyName) ? null : CultureInfo.GetCultureInfo(cultureKeyName));
+                return new CultureKey(cultureKeyName.IsNullOrEmpty() ? null : CultureInfo.GetCultureInfo(cultureKeyName));
             }
             catch (ArgumentException)
             {
@@ -58,7 +58,7 @@
         {
             try
             {
-                if (!string.IsNullOrEmpty(expression))
+                if (!expression.IsNullOrEmpty())
                     return new Regex(expression, RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
             }
             catch

@@ -24,7 +24,7 @@
             AssociatedObject.BeginningEdit -= DataGrid_BeginningEdit;
         }
 
-        private static void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        private static void DataGrid_BeginningEdit(object? sender, DataGridBeginningEditEventArgs e)
         {
             var dataGridRow = e.Row;
             var entry = (ResourceTableEntry)dataGridRow.Item;

@@ -41,22 +41,29 @@
             }
         }
 
-        private void OpenSourceOverlay_MouseDown(object sender, MouseButtonEventArgs e)
+        private void OpenSourceOverlay_MouseDown(object? sender, MouseButtonEventArgs e)
         {
-            ((Grid)sender).Children.Clear();
-        }
-
-        private void OpenSourceOverlay_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (Properties.Settings.Default.IsOpenSourceMessageConfirmed)
+            if (sender is Grid grid)
             {
-                ((Grid)sender).Children.Clear();
+                grid.Children.Clear();
             }
         }
 
-        private void OpenSourceOverlayTextContainer_Loaded(object sender, RoutedEventArgs e)
+        private void OpenSourceOverlay_Loaded(object? sender, RoutedEventArgs e)
         {
-            var container = (Decorator)sender;
+            if (Properties.Settings.Default.IsOpenSourceMessageConfirmed)
+            {
+                if (sender is Grid grid)
+                {
+                    grid.Children.Clear();
+                }
+            }
+        }
+
+        private void OpenSourceOverlayTextContainer_Loaded(object? sender, RoutedEventArgs e)
+        {
+            if (!(sender is Decorator container))
+                return;
 
             container.BeginInvoke(() =>
             {

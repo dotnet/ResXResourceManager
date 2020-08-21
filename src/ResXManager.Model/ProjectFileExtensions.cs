@@ -49,7 +49,7 @@
                 var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
                 var cultureName = Path.GetExtension(fileNameWithoutExtension).TrimStart('.');
 
-                if (string.IsNullOrEmpty(cultureName))
+                if (cultureName.IsNullOrEmpty())
                     return CultureKey.Neutral;
 
                 if (!ResourceManager.IsValidLanguageName(cultureName))

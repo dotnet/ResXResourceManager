@@ -321,9 +321,10 @@
             columns.Add(column);
         }
 
-        private static void DataGrid_ColumnVisibilityChanged(object sender, EventArgs e)
+        private static void DataGrid_ColumnVisibilityChanged(object? sender, EventArgs e)
         {
-            var dataGrid = (DataGrid)sender;
+            if (!(sender is DataGrid dataGrid))
+                return;
 
             VisibleCommentColumns = UpdateColumnSettings<CommentHeader>(VisibleCommentColumns, dataGrid, col => col?.Visibility == Visibility.Visible);
             HiddenLanguageColumns = UpdateColumnSettings<LanguageHeader>(HiddenLanguageColumns, dataGrid, col => col?.Visibility != Visibility.Visible);
@@ -361,9 +362,11 @@
             set => Settings.Default.HiddenLanguageColumns = string.Join(",", value);
         }
 
-        private static void DataGrid_CurrentCellChanged(object sender, EventArgs eventArgs)
+        private static void DataGrid_CurrentCellChanged(object? sender, EventArgs eventArgs)
         {
-            var dataGrid = (DataGrid)sender;
+            if (!(sender is DataGrid dataGrid))
+                return;
+
             // postpone update, SelectedCells is updates *after* the current cell has changed.
             dataGrid.Dispatcher?.BeginInvoke(() =>
             {

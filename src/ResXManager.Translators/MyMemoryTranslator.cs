@@ -69,7 +69,7 @@
                             foreach (var match in result.Matches)
                             {
                                 var translation = match.Translation;
-                                if (string.IsNullOrEmpty(translation))
+                                if (translation.IsNullOrEmpty())
                                     continue;
 
                                 translationItem.Results.Add(new TranslationMatch(this, translation, Ranking * match.Match.GetValueOrDefault() * match.Quality.GetValueOrDefault() / 100.0));
@@ -78,7 +78,7 @@
                         else
                         {
                             var translation = result?.ResponseData?.TranslatedText;
-                            if (!string.IsNullOrEmpty(translation))
+                            if (!translation.IsNullOrEmpty())
                             {
                                 translationItem.Results.Add(new TranslationMatch(this, translation, Ranking * result?.ResponseData?.Match.GetValueOrDefault() ?? 0));
                             }
@@ -97,7 +97,7 @@
                 WebUtility.UrlEncode(rawInput),
                 sourceLanguage, targetLanguage);
 
-            if (!string.IsNullOrEmpty(key))
+            if (!key.IsNullOrEmpty())
                 url += string.Format(CultureInfo.InvariantCulture, "&key={0}", WebUtility.UrlEncode(key));
 
             var response = await client.GetAsync(new Uri(url, UriKind.RelativeOrAbsolute), cancellationToken).ConfigureAwait(false);

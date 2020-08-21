@@ -56,9 +56,10 @@
                 newValue.SelectionChanged += ListBox_SelectionChanged;
         }
 
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ListBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
-            var listBox = (ListBox)sender;
+            if (!(sender is ListBox listBox))
+                return;
 
             var items = GetEffectiveColumns(listBox.Items, ColumnType);
 
@@ -78,7 +79,7 @@
             }
         }
 
-        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        private void CheckBox_Unchecked(object? sender, RoutedEventArgs e)
         {
             var listBox = ListBox;
             if (listBox == null)
@@ -92,7 +93,7 @@
             }
         }
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void CheckBox_Checked(object? sender, RoutedEventArgs e)
         {
             var listBox = ListBox;
             if (listBox == null)

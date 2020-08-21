@@ -5,6 +5,7 @@
     <TargetFrameworks>net462;netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Nullable.cs" Link="Nullable.cs" />
     <Compile Include="..\Trademark.cs">
       <Link>Trademark.cs</Link>
     </Compile>

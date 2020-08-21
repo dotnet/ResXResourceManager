@@ -270,7 +270,7 @@
             }
             else
             {
-                Comments.SetValue(culture, comment?.Replace(InvariantKey, string.Empty));
+                Comments.SetValue(culture, comment?.Replace(InvariantKey, string.Empty, StringComparison.Ordinal));
             }
 
             Refresh();
@@ -322,7 +322,7 @@
             var values = cultures.Select(CultureKey.Parse)
                 .Where(lang => !lang.IsNeutral)
                 .Select(lang => Values.GetValue(lang))
-                .Where(value => !string.IsNullOrEmpty(value))
+                .Where(value => !value.IsNullOrEmpty())
                 .ToList()
                 .AsReadOnly();
 
@@ -400,7 +400,7 @@
 
             var isInvariant = IsInvariant || IsItemInvariant.GetValue(culture);
 
-            if (string.IsNullOrEmpty(value))
+            if (value.IsNullOrEmpty())
             {
                 if (!isInvariant)
                 {
@@ -420,7 +420,7 @@
                 }
 
                 var neutralValue = NeutralLanguage.GetValue(Key);
-                if (string.IsNullOrEmpty(neutralValue))
+                if (neutralValue.IsNullOrEmpty())
                     return false;
 
                 if (Rules.CompliesToRules(MutedRuleIds, neutralValue, value, out var ruleMessages))
@@ -442,7 +442,7 @@
 
             var isInvariant = IsInvariant || IsItemInvariant.GetValue(culture);
 
-            if (isInvariant && !string.IsNullOrEmpty(value))
+            if (isInvariant && !value.IsNullOrEmpty())
                 yield return Resources.ResourceTableEntry_Error_InvariantWithValue;
         }
 
@@ -473,11 +473,11 @@
                 yield break;
 
             var value = language.GetValue(Key);
-            if (string.IsNullOrEmpty(value))
+            if (value.IsNullOrEmpty())
                 yield break;
 
             var neutralValue = NeutralLanguage.GetValue(Key);
-            if (string.IsNullOrEmpty(neutralValue))
+            if (neutralValue.IsNullOrEmpty())
                 yield break;
 
             if (Rules.CompliesToRules(MutedRuleIds, neutralValue, value, out var ruleMessages))

@@ -39,13 +39,15 @@
 
         private TextBox? TextBox => AssociatedObject;
 
-        private void DataGrid_CurrentCellChanged(object sender, EventArgs e)
+        private void DataGrid_CurrentCellChanged(object? sender, EventArgs e)
         {
             var textBox = TextBox;
             if (textBox == null)
                 return;
 
-            var dataGrid = (DataGrid)sender;
+            if (!(sender is DataGrid dataGrid))
+                return;
+
             var currentCell = dataGrid.CurrentCell;
 
             if (!(currentCell.Column is DataGridBoundColumn column))

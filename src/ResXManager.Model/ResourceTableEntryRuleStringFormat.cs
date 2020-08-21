@@ -7,21 +7,18 @@
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
-
+    using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
 
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleStringFormat_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleStringFormat_Description)]
-    public sealed class ResourceTableEntryRuleStringFormat : IResourceTableEntryRule
+    public sealed class ResourceTableEntryRuleStringFormat : ResourceTableEntryRule
     {
         public const string Id = "StringFormat";
 
-        /// <inheritdoc />
-        public bool IsEnabled { get; set; }
+        public override string RuleId => Id;
 
-        public string RuleId => Id;
-
-        public bool CompliesToRule(string? neutralValue, IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
+        public override bool CompliesToRule(string? neutralValue, IEnumerable<string?> values, [NotNullWhen(false)] out string? message)
         {
             if (CompliesToRule(neutralValue, values))
             {
@@ -35,7 +32,7 @@
 
         private static bool CompliesToRule(string? neutralValue, IEnumerable<string?> values)
         {
-            var allValues = new[] {neutralValue}.Concat(values.Where(value => !string.IsNullOrEmpty(value))).ToList();
+            var allValues = new[] {neutralValue}.Concat(values.Where(value => !value.IsNullOrEmpty())).ToList();
 
             var indexedComply = allValues
                        .Select(GetStringFormatByIndexFlags)
@@ -52,7 +49,7 @@
 
         private static long GetStringFormatByIndexFlags(string? value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (value.IsNullOrEmpty())
                 return 0;
 
             const string pattern = @"\{([0-9]+)(?:,-?[0-9]+)?(?::\S+)?\}";
@@ -66,7 +63,7 @@
 
         private static string GetStringFormatByPlaceholdersFingerprint(string? value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (value.IsNullOrEmpty())
                 return string.Empty;
 
             return string.Join("|", WebFilesExporter.ExtractPlaceholders(value!).OrderBy(item => item));
@@ -80,9 +77,5 @@
             Debug.Fail("Unexpected parsing failure.", $"Regular expression matched {match.Groups[1].Value} as number, but parsing integer failed.");
             return 0;
         }
-
-#pragma warning disable CS0067
-        public event PropertyChangedEventHandler? PropertyChanged;
-
     }
 }

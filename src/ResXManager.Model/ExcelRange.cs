@@ -4,13 +4,15 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
+    using ResXManager.Infrastructure;
+
     public class ExcelRange
     {
         private static readonly Regex _rangeRegex = new Regex(@"(((?<sheetName>\w+)|('(?<sheetName>.*?)'))!)?\$?(?<startColumn>[A-Z]+)\$?(?<startRow>[0-9]*)(:\$?(?<endColumn>[A-Z]+)\$?(?<endRow>[0-9]*))?");
 
         public ExcelRange(string? definition)
         {
-            if (string.IsNullOrEmpty(definition))
+            if (definition.IsNullOrEmpty())
                 return;
 
             var match = _rangeRegex.Match(definition);
@@ -22,16 +24,16 @@
             var startRow = match.Groups[@"startRow"]?.Value;
             var endRow = match.Groups[@"endRow"]?.Value;
 
-            if (string.IsNullOrEmpty(endColumn))
+            if (endColumn.IsNullOrEmpty())
                 endColumn = startColumn;
 
-            if (string.IsNullOrEmpty(endRow))
+            if (endRow.IsNullOrEmpty())
                 endRow = startRow;
 
             StartColumnIndex = ColumnToIndex(startColumn);
             EndColumnIndex = ColumnToIndex(endColumn);
-            StartRowIndex = string.IsNullOrEmpty(startRow) ? 0 : int.Parse(startRow, CultureInfo.InvariantCulture) - 1;
-            EndRowIndex = string.IsNullOrEmpty(endRow) ? int.MaxValue : int.Parse(endRow, CultureInfo.InvariantCulture) - 1;
+            StartRowIndex = startRow.IsNullOrEmpty() ? 0 : int.Parse(startRow, CultureInfo.InvariantCulture) - 1;
+            EndRowIndex = endRow.IsNullOrEmpty() ? int.MaxValue : int.Parse(endRow, CultureInfo.InvariantCulture) - 1;
         }
 
         public int EndColumnIndex
@@ -56,7 +58,7 @@
 
         private static int ColumnToIndex(string? column)
         {
-            return string.IsNullOrEmpty(column) ? 0 : column.Aggregate(0, (current, c) => current * 26 + (c - 'A' + 1)) - 1;
+            return column.IsNullOrEmpty() ? 0 : column.Aggregate(0, (current, c) => current * 26 + (c - 'A' + 1)) - 1;
         }
     }
 }

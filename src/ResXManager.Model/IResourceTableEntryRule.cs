@@ -8,7 +8,7 @@
     /// <remarks>
     /// This is used to implement the different rules that are used to check the proper translation.
     /// </remarks>
-    internal interface IResourceTableEntryRule : IResourceTableEntryRuleConfig
+    public interface IResourceTableEntryRule : IResourceTableEntryRuleConfig
     {
         /// <summary>
         /// Check the rule by validating all the <paramref name="values" />.
@@ -21,5 +21,21 @@
         ///   <see langword="true" /> in case the values passed the check; otherwise <see langword="false" />
         /// </returns>
         bool CompliesToRule(string? neutralValue, IEnumerable<string?> values, [Localizable(true)][NotNullWhen(false)] out string? message);
+    }
+
+    public abstract class ResourceTableEntryRule : IResourceTableEntryRule
+    {
+        public bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// The identification of the rule. This value is used to disable the rule check.
+        /// </summary>
+        public abstract string RuleId { get; }
+
+        public abstract bool CompliesToRule(string? neutralValue, IEnumerable<string?> values, [Localizable(true)][NotNullWhen(false)] out string? message);
+
+#pragma warning disable CS0067
+        public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
     }
 }

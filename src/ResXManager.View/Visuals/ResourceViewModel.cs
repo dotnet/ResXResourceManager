@@ -170,7 +170,7 @@
 
         private void LoadSnapshot(string? fileName)
         {
-            ResourceManager.LoadSnapshot(string.IsNullOrEmpty(fileName) ? null : File.ReadAllText(fileName));
+            ResourceManager.LoadSnapshot(fileName.IsNullOrEmpty() ? null : File.ReadAllText(fileName));
 
             LoadedSnapshot = fileName;
         }
@@ -470,7 +470,7 @@
 
         private void ImportExcel(string? fileName)
         {
-            if (fileName == null || string.IsNullOrEmpty(fileName))
+            if (fileName.IsNullOrEmpty())
                 return;
 
             var changes = ResourceManager.ImportExcelFile(fileName);
@@ -560,7 +560,7 @@
             }
         }
 
-        private void ResourceManager_LanguageChanged(object sender, LanguageEventArgs e)
+        private void ResourceManager_LanguageChanged(object? sender, LanguageEventArgs e)
         {
             if (!_configuration.SaveFilesImmediatelyUponChange)
                 return;

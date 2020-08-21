@@ -58,7 +58,7 @@
             }
         }
 
-        private void ResourceViewModel_ClearFiltersRequest(object sender, ResourceTableEntryEventArgs e)
+        private void ResourceViewModel_ClearFiltersRequest(object? sender, ResourceTableEntryEventArgs e)
         {
             var filter = DataGrid.Items.Filter;
 
@@ -71,12 +71,12 @@
             DataGrid.GetFilter().Clear();
         }
 
-        private void ResourceManager_Loaded(object sender, EventArgs e)
+        private void ResourceManager_Loaded(object? sender, EventArgs e)
         {
             DataGrid?.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
         }
 
-        private void AddLanguage_Click(object sender, RoutedEventArgs e)
+        private void AddLanguage_Click(object? sender, RoutedEventArgs e)
         {
             var existingCultures = _resourceManager.Cultures
                 .Select(c => c.Culture)
@@ -104,7 +104,7 @@
             }
         }
 
-        private void CreateSnapshotCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        private void CreateSnapshotCommandConverter_Executing(object? sender, ConfirmedCommandEventArgs e)
         {
             var dlg = new SaveFileDialog
             {
@@ -124,7 +124,7 @@
             WaitCursor.Start(this);
         }
 
-        private void LoadSnapshotCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        private void LoadSnapshotCommandConverter_Executing(object? sender, ConfirmedCommandEventArgs e)
         {
             var dlg = new OpenFileDialog
             {
@@ -145,7 +145,7 @@
             WaitCursor.Start(this);
         }
 
-        private void ExportExcelCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        private void ExportExcelCommandConverter_Executing(object? sender, ConfirmedCommandEventArgs e)
         {
             var dlg = new SaveFileDialog
             {
@@ -171,7 +171,7 @@
             WaitCursor.Start(this);
         }
 
-        private void ImportExcelCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        private void ImportExcelCommandConverter_Executing(object? sender, ConfirmedCommandEventArgs e)
         {
             var dlg = new OpenFileDialog
             {
@@ -192,7 +192,7 @@
             WaitCursor.Start(this);
         }
 
-        private void DeleteCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        private void DeleteCommandConverter_Executing(object? sender, ConfirmedCommandEventArgs e)
         {
             if (MessageBox.Show(Properties.Resources.ConfirmDeleteItems, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {
@@ -200,7 +200,7 @@
             }
         }
 
-        private void CutCommandConverter_Executing(object sender, ConfirmedCommandEventArgs e)
+        private void CutCommandConverter_Executing(object? sender, ConfirmedCommandEventArgs e)
         {
             if (MessageBox.Show(Properties.Resources.ConfirmCutItems, Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {
@@ -208,7 +208,7 @@
             }
         }
 
-        private void CommandConverter_Error(object sender, ErrorEventArgs e)
+        private void CommandConverter_Error(object? sender, ErrorEventArgs e)
         {
             var ex = e.GetException();
 

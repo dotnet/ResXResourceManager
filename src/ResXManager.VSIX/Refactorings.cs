@@ -8,7 +8,7 @@
     using System.Threading.Tasks;
 
     using EnvDTE;
-
+    using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.View.Behaviors;
     using ResXManager.View.Properties;
@@ -98,7 +98,7 @@
             IParser parser = new GenericParser();
 
             var text = !selection.IsEmpty ? selection.Text?.Trim('"', '\'', '`') : parser.LocateString(selection, true);
-            if (string.IsNullOrEmpty(text))
+            if (text.IsNullOrEmpty())
                 return null;
 
             var patterns = configuration.ParsePatterns().ToArray();
@@ -341,7 +341,7 @@
 
                 var column = selection.Begin.LineCharOffset - 1;
                 var line = selection.Line;
-                if (string.IsNullOrEmpty(line))
+                if (line.IsNullOrEmpty())
                     return null;
 
                 if (!expandSelection)

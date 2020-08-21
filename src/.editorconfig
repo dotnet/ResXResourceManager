@@ -8,12 +8,15 @@ indent_size = 4
 dotnet_diagnostic.CA1031.severity = none
 # CA1062: Validate arguments of public methods
 dotnet_diagnostic.CA1062.severity = none
+# CA1303 pass a literal string as parameter message
+dotnet_diagnostic.CA1303.severity = none
 # CA1724: The type name X conflicts in whole or in part with the namespace name 'System.X'
 dotnet_diagnostic.CA1724.severity = none
 # CA1812: X is an internal class that is apparently never instantiated...
 dotnet_diagnostic.CA1812.severity = none
 # CA2008: Do not create tasks without passing a TaskScheduler
 dotnet_diagnostic.CA2008.severity = none
+
 
 [*.xaml]
 indent_size = 2

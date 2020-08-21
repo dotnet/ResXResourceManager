@@ -110,7 +110,7 @@
 
         public void ReloadSnapshot()
         {
-            if (!string.IsNullOrEmpty(_snapshot))
+            if (!_snapshot.IsNullOrEmpty())
                 ResourceEntities.LoadSnapshot(_snapshot);
         }
 
@@ -148,7 +148,7 @@
             if (!await LoadEntitiesAsync(resourceFilesByDirectory, cancellationToken).ConfigureAwait(true))
                 return false; // nothing has changed, no need to continue
 
-            if (!string.IsNullOrEmpty(_snapshot))
+            if (!_snapshot.IsNullOrEmpty())
                 ResourceEntities.LoadSnapshot(_snapshot);
 
             var cultureKeys = ResourceEntities
@@ -200,7 +200,7 @@
                             var projectName = item.Key;
                             var projectFiles = item.ToArray();
 
-                            if (projectName == null || string.IsNullOrEmpty(projectName) || !projectFiles.Any())
+                            if (projectName.IsNullOrEmpty() || !projectFiles.Any())
                                 continue;
 
                             if (existingEntities.TryGetValue(GenerateKey(projectName, baseName, directoryName), out var existingEntity))
@@ -254,7 +254,7 @@
 
         public static bool IsValidLanguageName(string? languageName)
         {
-            if (string.IsNullOrEmpty(languageName))
+            if (languageName.IsNullOrEmpty())
                 return false;
 
             return Array.BinarySearch(_sortedCultureNames, languageName, StringComparer.OrdinalIgnoreCase) >= 0;

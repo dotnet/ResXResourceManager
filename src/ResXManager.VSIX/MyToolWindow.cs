@@ -110,7 +110,7 @@
             }
         }
 
-        private void ContentWrapper_Loaded(object sender, RoutedEventArgs e)
+        private void ContentWrapper_Loaded(object? sender, RoutedEventArgs e)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -129,7 +129,7 @@
             }
         }
 
-        private void ContentWrapper_Unloaded(object sender, RoutedEventArgs e)
+        private void ContentWrapper_Unloaded(object? sender, RoutedEventArgs e)
         {
             _contentWrapper.Content = null;
         }
@@ -339,7 +339,7 @@
             if (!File.Exists(languageFileName))
             {
                 var directoryName = Path.GetDirectoryName(languageFileName);
-                if (!string.IsNullOrEmpty(directoryName))
+                if (!directoryName.IsNullOrEmpty())
                     Directory.CreateDirectory(directoryName);
 
                 File.WriteAllText(languageFileName, Model.Properties.Resources.EmptyResxTemplate);

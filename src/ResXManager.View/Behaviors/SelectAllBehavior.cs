@@ -48,7 +48,7 @@
             _performanceTracer = listBox.GetExportProvider().GetExportedValue<PerformanceTracer>();
         }
 
-        private void ListBox_SelectionChanged(object sender, EventArgs e)
+        private void ListBox_SelectionChanged(object? sender, EventArgs e)
         {
             var listBox = AssociatedObject;
             if (listBox == null)

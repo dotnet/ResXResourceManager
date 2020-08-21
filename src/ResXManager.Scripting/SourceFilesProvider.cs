@@ -27,7 +27,7 @@ namespace ResXManager.Scripting
         public IList<ProjectFile> EnumerateSourceFiles()
         {
             var folder = SolutionFolder;
-            if (string.IsNullOrEmpty(folder))
+            if (folder.IsNullOrEmpty())
                 return Array.Empty<ProjectFile>();
 
             _fileExclusionFilter = ExclusionFilter.TryCreateRegex();

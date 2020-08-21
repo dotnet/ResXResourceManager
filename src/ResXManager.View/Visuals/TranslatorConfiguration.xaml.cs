@@ -27,10 +27,12 @@
         public static readonly DependencyProperty TranslatorsProperty =
             DependencyProperty.Register("Translators", typeof(IEnumerable<ITranslator>), typeof(TranslatorConfiguration));
 
-        private void TabControl_Loaded(object sender, RoutedEventArgs e)
+        private void TabControl_Loaded(object? sender, RoutedEventArgs e)
         {
-            var tabControl = (TabControl)sender;
-            tabControl.SelectedIndex = 0;
+            if (sender is TabControl tabControl)
+            {
+                tabControl.SelectedIndex = 0;
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace ResXManager.Model
 {
+    using ResXManager.Infrastructure;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
@@ -22,16 +23,18 @@
 
         public IEnumerable<string> ParseExtensions()
         {
-            if (string.IsNullOrEmpty(Extensions))
+            if (Extensions.IsNullOrEmpty())
                 return Enumerable.Empty<string>();
 
             return Extensions?.Split(',')
                        .Select(ext => ext.Trim())
-                       .Where(ext => !string.IsNullOrEmpty(ext))
+                       .Where(ext => !ext.IsNullOrEmpty())
                    ?? Enumerable.Empty<string>();
         }
 
+#pragma warning disable CS0067
         public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
     }
 
 

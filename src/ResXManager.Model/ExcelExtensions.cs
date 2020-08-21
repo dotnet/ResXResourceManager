@@ -181,7 +181,7 @@
             {
                 var projectName = projectRows.Key;
 
-                if (string.IsNullOrEmpty(projectName))
+                if (projectName.IsNullOrEmpty())
                     continue;
 
                 var rowsByFile = projectRows.GroupBy(row => row.FirstOrDefault() ?? string.Empty, row => (IList<string>)row.Skip(1).ToArray());
@@ -189,7 +189,7 @@
                 foreach (var fileRows in rowsByFile)
                 {
                     var uniqueName = fileRows.Key;
-                    if (string.IsNullOrEmpty(uniqueName))
+                    if (uniqueName.IsNullOrEmpty())
                         continue;
 
                     var projectEntities = resourceManager.ResourceEntities
@@ -392,7 +392,7 @@
                 var text = cell.GetText(sharedStrings) ?? string.Empty;
                 // depending on how multi-line text is pasted into Excel, \r\n might be translated into _x000D_\n,
                 // because Excel internally only use \n as line delimiter.
-                text = text.Replace("_x000D_\n", "\n");
+                text = text.Replace("_x000D_\n", "\n", StringComparison.Ordinal);
 
                 yield return text;
 

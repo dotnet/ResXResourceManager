@@ -95,7 +95,7 @@
 
         public ICommand StopCommand => new DelegateCommand(() => IsSessionRunning, Stop);
 
-        private void ResourceManager_Loaded(object sender, EventArgs e)
+        private void ResourceManager_Loaded(object? sender, EventArgs e)
         {
             if ((SourceCulture == null) || !_resourceManager.Cultures.Contains(SourceCulture))
                 SourceCulture = _resourceManager.Cultures.FirstOrDefault();
@@ -228,7 +228,7 @@
             return itemsToTranslate;
         }
 
-        private void SelectedTargetCultures_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void SelectedTargetCultures_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             UpdateTargetList();
             Dispatcher.BeginInvoke(() => UnselectedTargetCultures = AllTargetCultures.Concat(UnselectedTargetCultures).Distinct().Except(SelectedTargetCultures));

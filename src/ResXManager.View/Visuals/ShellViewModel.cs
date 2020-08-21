@@ -40,7 +40,7 @@
             });
         }
 
-        private void SelectedEntities_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void SelectedEntities_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             Update();
 

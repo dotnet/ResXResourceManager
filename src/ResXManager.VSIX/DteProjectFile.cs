@@ -5,7 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
-
+    using ResXManager.Infrastructure;
     using ResXManager.Model;
 
     using TomsToolbox.Essentials;
@@ -133,7 +133,7 @@
 
                 var customTool = projectItem.GetCustomTool();
 
-                if (string.IsNullOrEmpty(customTool))
+                if (customTool.IsNullOrEmpty())
                 {
                     if (IsWinFormsDesignerResource)
                         return CodeGenerator.WinForms;
