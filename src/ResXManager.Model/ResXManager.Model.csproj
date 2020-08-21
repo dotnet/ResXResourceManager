@@ -48,15 +48,15 @@
       <Version>1.25.0</Version>
     </PackageReference>
     <PackageReference Include="DocumentFormat.OpenXml">
-      <Version>2.11.0</Version>
+      <Version>2.11.3</Version>
     </PackageReference>
     <PackageReference Include="Fody" PrivateAssets="all">
-      <Version>6.2.0</Version>
+      <Version>6.2.4</Version>
     </PackageReference>
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all">
       <Version>2020.1.0</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -72,10 +72,10 @@
       <Version>1.7.0</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.Composition">
-      <Version>2.0.2</Version>
+      <Version>2.1.1</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.ObservableCollections">
-      <Version>2.0.2</Version>
+      <Version>2.1.1</Version>
     </PackageReference>
   </ItemGroup>
 </Project>
