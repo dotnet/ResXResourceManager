@@ -10,6 +10,7 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Windows;
 
     using PropertyChanged;
 
@@ -28,6 +29,7 @@
         private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
 
         private readonly ISourceFilesProvider _sourceFilesProvider;
+        private readonly ITracer _tracer;
 
         private string? _snapshot;
 
@@ -38,11 +40,12 @@
         public event EventHandler<ProjectFileEventArgs>? ProjectFileSaved;
 
         [ImportingConstructor]
-        public ResourceManager(ISourceFilesProvider sourceFilesProvider, IConfiguration configuration)
+        public ResourceManager(ISourceFilesProvider sourceFilesProvider, IConfiguration configuration, ITracer tracer)
         {
             Configuration = configuration;
 
             _sourceFilesProvider = sourceFilesProvider;
+            _tracer = tracer;
             TableEntries = ResourceEntities.ObservableSelectMany(entity => entity.Entries);
         }
 
@@ -217,12 +220,22 @@
                 }
             }
 
-/*
-            Load();
-            await Task.Delay(1).ConfigureAwait(true); 
-/*/
-            await Task.Run(Load).ConfigureAwait(true);
-//*/
+            try
+            {
+                /*
+                            Load();
+                            await Task.Delay(1).ConfigureAwait(true); 
+                /*/
+                await Task.Run(Load).ConfigureAwait(true);
+                //*/
+            }
+            catch (Exception ex)
+            {
+                ResourceEntities.Clear();
+                MessageBox.Show(ex.Message, Application.Current?.MainWindow?.Title ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _tracer.TraceError(ex.ToString());
+                return true;
+            }
 
             ResourceEntities.RemoveRange(unmatchedEntities);
             ResourceEntities.AddRange(newEntities);
