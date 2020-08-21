@@ -15,9 +15,6 @@
     <Content Include="Sample.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="..\CodeContracts.ruleset">
-      <Link>CodeContracts.ruleset</Link>
-    </None>
     <None Include="..\Key.snk">
       <Link>Key.snk</Link>
     </None>

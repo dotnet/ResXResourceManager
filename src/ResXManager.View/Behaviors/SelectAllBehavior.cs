@@ -103,7 +103,7 @@
 
             if (newValue == null)
             {
-                Dispatcher?.BeginInvoke(() => AreAllFilesSelected = false);
+                Dispatcher?.BeginInvoke(DispatcherPriority.Normal, () => AreAllFilesSelected = false);
                 return;
             }
 

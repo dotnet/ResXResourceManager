@@ -568,7 +568,7 @@
             var language = e.Language;
 
             // Defer save to avoid repeated file access
-            Dispatcher.BeginInvoke(() =>
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
                 try
                 {

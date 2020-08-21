@@ -1,11 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <TargetFrameworks>net462;netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System.Xaml" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Trademark.cs">
       <Link>Trademark.cs</Link>
@@ -36,7 +34,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>6.0.8</Version>
+      <Version>9.0.1</Version>
     </PackageReference>
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all">
       <Version>3.2.8</Version>

@@ -22,7 +22,7 @@
     /// </summary>
     public sealed partial class App : IDisposable
     {
-        private IKernel _kernel = new StandardKernel();
+        private readonly IKernel _kernel = new StandardKernel();
 
         public App()
         {
@@ -56,7 +56,7 @@
             tracer.WriteLine("Started");
             tracer.WriteLine(ResXManager.Properties.Resources.IntroMessage);
             tracer.WriteLine(ResXManager.Properties.Resources.AssemblyLocation, Path.GetDirectoryName(assembly.Location) ?? "unknown");
-            tracer.WriteLine(ResXManager.Properties.Resources.Version, new AssemblyName(assembly.FullName).Version ?? new Version());
+            tracer.WriteLine(ResXManager.Properties.Resources.Version, new AssemblyName(assembly.FullName!).Version ?? new Version());
 
             VisualComposition.Error += (_, args) => tracer.TraceError(args.Text);
 
