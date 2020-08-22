@@ -1,4 +1,10 @@
-﻿1.42
+﻿1.43
+- #341: Improve performance when editing large amounts of texts
+- Show error message when loading of resx file fails
+- Improve UI performance by using column-virtualization in DataGrid
+- Improve loading experience by using background loading of files
+
+1.42
 - Fix #328: update broken links
 
 1.41
