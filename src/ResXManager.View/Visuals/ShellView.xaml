@@ -37,31 +37,29 @@
       </Interactions:Interaction.Behaviors>
     </TabControl>
     <Button x:Name="DonateButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5,0"
-            Background="Transparent" BorderBrush="Transparent"
-            BorderThickness="0" ToolTip="{x:Static properties:Resources.DonateButtonToolTip}"
-            Tag="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=RN8MF9PE9PYEL">
-      <Button.Style>
-        <Style TargetType="Button">
-          <Setter Property="Opacity" Value="0.15" />
-          <Style.Triggers>
+            ToolTip="{x:Static properties:Resources.DonateButtonToolTip}"
+            Tag="https://github.com/dotnet/ResXResourceManager/blob/master/Documentation/Topics/Donate.md">
+      <Button.Template>
+        <ControlTemplate TargetType="Button">
+          <Image Name="Image" Opacity="0.15" Margin="0,2" SnapsToDevicePixels="True" Stretch="None" Source="/ResXManager.View;component/Assets/btn_donate_SM.gif" />
+          <ControlTemplate.Triggers>
             <EventTrigger RoutedEvent="MouseEnter">
               <BeginStoryboard Name="DonateMouseEnter">
-                <Storyboard Duration="0:0:0.5" Storyboard.TargetProperty="Opacity">
+                <Storyboard Duration="0:0:0.5" Storyboard.TargetProperty="Opacity" TargetName="Image">
                   <DoubleAnimation To="1.0" />
                 </Storyboard>
               </BeginStoryboard>
             </EventTrigger>
             <EventTrigger RoutedEvent="MouseLeave">
               <BeginStoryboard Name="DonateMouseLeave">
-                <Storyboard Duration="0:0:0.5" Storyboard.TargetProperty="Opacity">
+                <Storyboard Duration="0:0:0.5" Storyboard.TargetProperty="Opacity" TargetName="Image">
                   <DoubleAnimation To="0.15" />
                 </Storyboard>
               </BeginStoryboard>
             </EventTrigger>
-          </Style.Triggers>
-        </Style>
-      </Button.Style>
-      <Image SnapsToDevicePixels="True" Stretch="None" Source="/ResXManager.View;component/Assets/btn_donate_SM.gif" />
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Button.Template>
     </Button>
     <Grid MouseDown="OpenSourceOverlay_MouseDown" Loaded="OpenSourceOverlay_Loaded">
       <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
