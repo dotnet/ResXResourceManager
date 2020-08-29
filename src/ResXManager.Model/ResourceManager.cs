@@ -180,6 +180,7 @@
             var newEntities = new List<ResourceEntity>();
             var entitiesToUpdate = new List<Tuple<ResourceEntity, ProjectFile[]>>();
             var duplicateKeyHandling = Configuration.DuplicateKeyHandling;
+            var neutralResourcesLanguage = Configuration.NeutralResourcesLanguage;
 
             void Load()
             {
@@ -213,7 +214,7 @@
                             }
                             else
                             {
-                                newEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles, duplicateKeyHandling));
+                                newEntities.Add(new ResourceEntity(this, projectName, baseName, directoryName, projectFiles, neutralResourcesLanguage, duplicateKeyHandling));
                             }
                         }
                     }
@@ -239,7 +240,7 @@
 
             ResourceEntities.RemoveRange(unmatchedEntities);
             ResourceEntities.AddRange(newEntities);
-            var hasChanged = entitiesToUpdate.Aggregate(false, (current, item) => current | item.Item1.Update(item.Item2, duplicateKeyHandling));
+            var hasChanged = entitiesToUpdate.Aggregate(false, (current, item) => current | item.Item1.Update(item.Item2, neutralResourcesLanguage, duplicateKeyHandling));
 
             hasChanged |= unmatchedEntities.Any() || newEntities.Any();
 

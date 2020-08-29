@@ -164,10 +164,6 @@
       <Link>Key.snk</Link>
     </None>
     <None Include="app.config" />
-    <None Include="..\CodeContracts.ruleset">
-      <Link>CodeContracts.ruleset</Link>
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -196,11 +192,6 @@
       <Project>{32935FC5-1F28-419C-B67F-12D2014F8A8B}</Project>
       <Name>ResXManager.View</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
-      <Link>CustomDictionary.xml</Link>
-    </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

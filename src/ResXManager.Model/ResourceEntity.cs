@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
 
@@ -23,17 +24,17 @@
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly ObservableCollection<ResourceTableEntry> _resourceTableEntries;
 
-        internal ResourceEntity(ResourceManager container, string projectName, string baseName, string directoryName, ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
+        internal ResourceEntity(ResourceManager container, string projectName, string baseName, string directoryName, ICollection<ProjectFile> files, CultureInfo neutralResourcesLanguage, DuplicateKeyHandling duplicateKeyHandling)
         {
             Container = container;
             ProjectName = projectName;
             BaseName = baseName;
             DirectoryName = directoryName;
-            _languages = GetResourceLanguages(files, duplicateKeyHandling);
+            _languages = GetResourceLanguages(files, neutralResourcesLanguage, duplicateKeyHandling);
             RelativePath = GetRelativePath(files);
             DisplayName = projectName + @" - " + RelativePath + baseName;
 
-            NeutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey(container.Configuration) == CultureKey.Neutral);
+            NeutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey(neutralResourcesLanguage) == CultureKey.Neutral);
 
             var entriesQuery = _languages.Values
                 .SelectMany(language => language.ResourceKeys)
@@ -45,12 +46,12 @@
             Entries = new ReadOnlyObservableCollection<ResourceTableEntry>(_resourceTableEntries);
         }
 
-        internal bool Update(ICollection<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
+        internal bool Update(ICollection<ProjectFile> files, CultureInfo neutralResourcesLanguage, DuplicateKeyHandling duplicateKeyHandling)
         {
-            if (!MergeItems(_languages, GetResourceLanguages(files, duplicateKeyHandling)))
+            if (!MergeItems(_languages, GetResourceLanguages(files, neutralResourcesLanguage, duplicateKeyHandling)))
                 return false; // nothing has changed, no need to continue
 
-            var neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey(Container.Configuration) == CultureKey.Neutral);
+            var neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey(neutralResourcesLanguage) == CultureKey.Neutral);
 
             var unmatchedTableEntries = _resourceTableEntries.ToList();
 
@@ -188,7 +189,7 @@
         /// <param name="file">The file.</param>
         public void AddLanguage(ProjectFile file)
         {
-            var cultureKey = file.GetCultureKey(Container.Configuration);
+            var cultureKey = file.GetCultureKey(Container.Configuration.NeutralResourcesLanguage);
             var resourceLanguage = new ResourceLanguage(this, cultureKey, file, Container.Configuration.DuplicateKeyHandling);
 
             _languages.Add(cultureKey, resourceLanguage);
@@ -253,11 +254,11 @@
                    && string.Equals(directoryName, DirectoryName, StringComparison.OrdinalIgnoreCase);
         }
 
-        private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages(IEnumerable<ProjectFile> files, DuplicateKeyHandling duplicateKeyHandling)
+        private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages(IEnumerable<ProjectFile> files, CultureInfo neutralResourcesLanguage, DuplicateKeyHandling duplicateKeyHandling)
         {
             var languageQuery =
                 from file in files
-                let cultureKey = file.GetCultureKey(Container.Configuration)
+                let cultureKey = file.GetCultureKey(neutralResourcesLanguage)
                 orderby cultureKey
                 select new ResourceLanguage(this, cultureKey, file, duplicateKeyHandling);
 

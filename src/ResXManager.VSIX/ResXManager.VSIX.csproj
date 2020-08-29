@@ -29,7 +29,6 @@
     <DefineConstants>DEBUG;TRACE;NETFRAMEWORK</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <DebugType>embedded</DebugType>
-    <NoWarn>CS8632</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>

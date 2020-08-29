@@ -39,7 +39,7 @@
             return ResourceManager.IsValidLanguageName(languageName);
         }
 
-        public static CultureKey GetCultureKey(this ProjectFile projectFile, IConfiguration configuration)
+        public static CultureKey GetCultureKey(this ProjectFile projectFile, CultureInfo neutralResourcesLanguage)
         {
             var extension = projectFile.Extension;
             var filePath = projectFile.FilePath;
@@ -67,7 +67,7 @@
 
                 var culture = cultureName.ToCulture();
 
-                return Equals(configuration.NeutralResourcesLanguage, culture) ? CultureKey.Neutral : new CultureKey(culture);
+                return Equals(neutralResourcesLanguage, culture) ? CultureKey.Neutral : new CultureKey(culture);
             }
 
             throw new InvalidOperationException("Unsupported file format: " + extension);
