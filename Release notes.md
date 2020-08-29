@@ -1,4 +1,9 @@
-﻿1.43
+﻿1.44
+- Fix #345: Donate button layout
+- Fix #352: Exception when loading .resw resources in VS extension.
+- Fix #348: Auto-focus on Last Marked Row when crossing out the search pattern
+
+1.43
 - #341: Improve performance when editing large amounts of texts
 - Show error message when loading of resx file fails
 - Improve UI performance by using column-virtualization in DataGrid
