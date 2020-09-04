@@ -21,6 +21,7 @@
     <TargetFrameworkProfile />
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
+    <NoWarn>CS8632</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -266,13 +267,13 @@
       <Version>1.25.0</Version>
     </PackageReference>
     <PackageReference Include="DataGridExtensions">
-      <Version>2.4.3</Version>
+      <Version>2.4.4</Version>
     </PackageReference>
     <PackageReference Include="EnvDTE100">
       <Version>10.0.3</Version>
     </PackageReference>
     <PackageReference Include="Fody" PrivateAssets="all">
-      <Version>6.2.4</Version>
+      <Version>6.2.5</Version>
     </PackageReference>
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all">
       <Version>2020.1.0</Version>
@@ -297,7 +298,7 @@
       <Version>14.3.26929</Version>
     </PackageReference>
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all">
-      <Version>3.2.8</Version>
+      <Version>3.2.9</Version>
     </PackageReference>
     <PackageReference Include="Throttle.Fody" PrivateAssets="all">
       <Version>1.7.0</Version>
