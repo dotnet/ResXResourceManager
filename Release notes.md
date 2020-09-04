@@ -1,4 +1,7 @@
-﻿1.44
+﻿1.45
+- Fix #354: Crash of devenv.exe when opening ResX window (via update DGX)
+
+1.44
 - Fix #345: Donate button layout
 - Fix #352: Exception when loading .resw resources in VS extension.
 - Fix #348: Auto-focus on Last Marked Row when crossing out the search pattern
