@@ -511,16 +511,18 @@
                         <Setter.Value>
                           <ControlTemplate TargetType="{x:Type GroupItem}">
                             <StackPanel Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" d:DataContext="{d:DesignInstance GroupItem}">
-                              <ContentControl>
-                                <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Margin="4" />
-                                <Interactions:Interaction.Triggers>
-                                  <Interactions:EventTrigger EventName="MouseDoubleClick">
-                                    <Interactions:EventTrigger.Actions>
-                                      <Interactions:InvokeCommandAction Command="{Binding ElementName=DataGrid, Path=DataContext.SelectEntityCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding Name}" />
-                                    </Interactions:EventTrigger.Actions>
-                                  </Interactions:EventTrigger>
-                                </Interactions:Interaction.Triggers>
-                              </ContentControl>
+                              <SelectiveScrollingGrid SelectiveScrollingOrientation="Vertical">
+                                <ContentControl>
+                                  <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Margin="4" />
+                                  <Interactions:Interaction.Triggers>
+                                    <Interactions:EventTrigger EventName="MouseDoubleClick">
+                                      <Interactions:EventTrigger.Actions>
+                                        <Interactions:InvokeCommandAction Command="{Binding ElementName=DataGrid, Path=DataContext.SelectEntityCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding Name}" />
+                                      </Interactions:EventTrigger.Actions>
+                                    </Interactions:EventTrigger>
+                                  </Interactions:Interaction.Triggers>
+                                </ContentControl>
+                              </SelectiveScrollingGrid>
                               <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
                                 <ItemsPresenter />
                               </Border>
