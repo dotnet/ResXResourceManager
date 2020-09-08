@@ -19,7 +19,8 @@
     /// For windows store apps "de\Resources.resw", "en-us\Resources.resw" are also supported.
     /// </summary>
     [AddINotifyPropertyChangedInterface]
-    public sealed class ResourceEntity
+#pragma warning disable CA1036 // Override methods on comparable types => just to enable sorting in the UI
+    public sealed class ResourceEntity : IComparable, IComparable<ResourceEntity>
     {
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
         private readonly ObservableCollection<ResourceTableEntry> _resourceTableEntries;
@@ -201,6 +202,16 @@
         public override string ToString()
         {
             return DisplayName;
+        }
+
+        public int CompareTo(object? obj)
+        {
+            return CompareTo(obj as ResourceEntity);
+        }
+
+        public int CompareTo(ResourceEntity? other)
+        {
+            return DisplayName.CompareTo(other?.DisplayName);
         }
 
         public bool CanEdit(CultureKey? cultureKey)

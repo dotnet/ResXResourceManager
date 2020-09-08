@@ -76,6 +76,12 @@
       <Setter Property="Stretch" Value="None" />
     </Style>
 
+    <CollectionViewSource x:Key="GroupedResourceTableEntriesSource" Source="{Binding ResourceTableEntries}">
+      <CollectionViewSource.GroupDescriptions>
+        <PropertyGroupDescription PropertyName="Container" />
+      </CollectionViewSource.GroupDescriptions>
+    </CollectionViewSource>
+
   </UserControl.Resources>
 
   <UserControl.InputBindings>
@@ -660,7 +666,7 @@
                   <Setter Property="dgx:DataGridFilter.IsAutoFilterEnabled" Value="True" />
                   <Style.Triggers>
                     <DataTrigger Binding="{Binding Path=IsChecked, ElementName=GroupedViewButton}" Value="True">
-                      <Setter Property="ItemsSource" Value="{Binding GroupedResourceTableEntries}" />
+                      <Setter Property="ItemsSource" Value="{Binding Source={StaticResource GroupedResourceTableEntriesSource}}" />
                       <Setter Property="toms:StyleBindings.GroupStyle" Value="{StaticResource GroupStyle}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding IsCellSelectionEnabled, Source={x:Static properties:Settings.Default}}" Value="True">

@@ -71,18 +71,6 @@
 
         public bool IsLoading { get; private set; }
 
-        public CollectionView GroupedResourceTableEntries
-        {
-            get
-            {
-                CollectionView collectionView = new ListCollectionView((IList)ResourceTableEntries);
-
-                collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Container"));
-
-                return collectionView;
-            }
-        }
-
         public string? LoadedSnapshot { get; set; }
 
         public static ICommand ToggleCellSelectionCommand => new DelegateCommand(() => Settings.IsCellSelectionEnabled = !Settings.IsCellSelectionEnabled);
