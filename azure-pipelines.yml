@@ -1,71 +1,124 @@
 name: $(Build.DefinitionName) $(date:yyyyMMdd)$(rev:.r)
 
-pool:
-  name: Default
-  demands:
-  - DotNetFramework
-  - msbuild
-  - visualstudio
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    pool:
+      vmImage: windows-latest
 
-variables:
-  BuildPlatform: 'any cpu'
-  BuildConfiguration: 'release'
+    variables:
+      BuildPlatform: 'any cpu'
+      BuildConfiguration: 'release'
 
-steps:
-- task: PowerShell@1
-  displayName: 'Set build version'
-  inputs:
-    scriptType: inlineScript
-    inlineScript: |
-     (new-object Net.WebClient).DownloadString("https://raw.github.com/tom-englert/BuildScripts/master/BuildScripts.ps1") | iex
-     
-     Source-SetBuildVersion "src\version.cs" | Build-AppendVersionToBuildNumber
-     Vsix-SetBuildVersion "src\ResXManager.VSIX\source.extension.vsixmanifest"
-     Project-SetBuildVersion "src\ResXManager\ResXManager.csproj"
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    steps:
+    - task: PowerShell@1
+      displayName: 'Set build version'
+      inputs:
+        scriptType: inlineScript
+        inlineScript: |
+         (new-object Net.WebClient).DownloadString("https://raw.github.com/tom-englert/BuildScripts/master/BuildScripts.ps1") | iex
+         
+         Source-SetBuildVersion "src\version.cs" | Build-AppendVersionToBuildNumber
+         Vsix-SetBuildVersion "src\ResXManager.VSIX\source.extension.vsixmanifest"
+         Project-SetBuildVersion "src\ResXManager\ResXManager.csproj"
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
-- task: VSBuild@1
-  displayName: 'Build solution **\*.sln'
-  inputs:
-    vsVersion: 16.0
-    msbuildArgs: '-restore'
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
-    createLogFile: true
+    - task: VSBuild@1
+      displayName: 'Build solution **\*.sln'
+      inputs:
+        vsVersion: 16.0
+        msbuildArgs: '-restore'
+        platform: '$(BuildPlatform)'
+        configuration: '$(BuildConfiguration)'
+        createLogFile: true
 
-- task: MSBuild@1
-  displayName: 'Publish ResxManager'
-  inputs:
-    solution: 'src\ResxManager\ResxManager.csproj'
-    platform: AnyCPU
-    configuration: release
-    msbuildArguments: '/target:publish'
-    logProjectEvents: true
-    createLogFile: true
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    - task: MSBuild@1
+      displayName: 'Publish Click Once'
+      inputs:
+        solution: 'src\ResxManager\ResxManager.csproj'
+        platform: AnyCPU
+        configuration: release
+        msbuildArguments: '/target:publish'
+        logProjectEvents: true
+        createLogFile: true
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
-- task: CopyFiles@2
-  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
-  inputs:
-    SourceFolder: '$(build.sourcesdirectory)\src\Deploy'
-    Contents: '*.*'
-    TargetFolder: '$(build.artifactstagingdirectory)'
-    CleanTargetFolder: true
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+      inputs:
+        SourceFolder: '$(build.sourcesdirectory)\src\Deploy'
+        Contents: '*.*'
+        TargetFolder: '$(build.artifactstagingdirectory)'
+        CleanTargetFolder: true
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: Deploy'
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
-    ArtifactName: Deploy
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: BuildPackages'
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)'
+        ArtifactName: BuildPackages
 
-- task: PowerShell@1
-  displayName: 'Publish to vsix-gallery'
-  inputs:
-    scriptType: inlineScript
-    inlineScript: |
-     (new-object Net.WebClient).DownloadString("https://raw.github.com/tom-englert/BuildScripts/master/BuildScripts.ps1") | iex
-     
-     Vsix-PublishToGallery "$(build.artifactstagingdirectory)\ResXManager.Vsix.vsix"
-  continueOnError: true
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: signing scripts'
+      inputs:
+        PathtoPublish: 'signing'
+        ArtifactName: signing
+
+- stage: CodeSign
+  condition: and(succeeded('Build'), ne(variables['build.reason'], 'PullRequest'))
+  jobs:
+  - deployment: CodeSign
+    displayName: Code Signing
+    pool:
+      vmImage: windows-latest
+    environment: Code Sign - Approvals
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: CmdLine@2
+            displayName: "AntiMalware Scan"
+            inputs:
+              script: |
+                Dir "$(Pipeline.Workspace)\BuildPackages"
+                "%ProgramFiles%\Windows Defender\MpCmdRun.exe" -Scan -ScanType 3 -File "$(Pipeline.Workspace)\BuildPackages"
+              failOnStderr: true
+
+          - task: DotNetCoreCLI@2
+            inputs:
+              command: custom
+              custom: tool
+              arguments: install --tool-path . SignClient
+            displayName: Install SignTool tool
+
+          - pwsh: Rename-Item -Path "$(Pipeline.Workspace)\BuildPackages\Publish.zip" -NewName Publish.clickonce
+            displayName: 'Rename click-once archive to .clickonce'
+
+          - pwsh: |
+              .\SignClient "Sign" `
+              --baseDirectory "$(Pipeline.Workspace)\BuildPackages" `
+              --input "**/*.*" `
+              --config "$(Pipeline.Workspace)\signing\SignClient.json" `
+              --filelist "$(Pipeline.Workspace)\signing\filelist.txt" `
+              --user "$(SignClientUser)" `
+              --secret "$(SignClientSecret)" `
+              --name "ResX Resource Manager" `
+              --description "ResX Resource Manager" `
+              --descriptionUrl "https://github.com/dotnet/ResXResourceManager"
+            displayName: Sign packages
+
+          - pwsh: Rename-Item -Path "$(Pipeline.Workspace)\BuildPackages\Publish.clickonce" -NewName Publish.zip
+            displayName: 'Rename click-once archive back to .zip'
+
+          - task: PowerShell@1
+            displayName: 'Publish to vsix-gallery'
+            inputs:
+              scriptType: inlineScript
+              inlineScript: |
+                (new-object Net.WebClient).DownloadString("https://raw.github.com/tom-englert/BuildScripts/master/BuildScripts.ps1") | iex
+                Vsix-PublishToGallery "$(Pipeline.Workspace)\BuildPackages\ResXManager.Vsix.vsix"
+
+          - publish: $(Pipeline.Workspace)\BuildPackages
+            displayName: Publish Signed Packages
+            artifact: SignedPackages
 

@@ -101,7 +101,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Topics", "Topics", "{E3F92F
 		..\Documentation\Topics\Usage.md = ..\Documentation\Topics\Usage.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResXManager.Tests", "ResXManager.Tests\ResXManager.Tests.csproj", "{0C11F826-3F3D-4F55-91E4-331A9DE159A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.Tests", "ResXManager.Tests\ResXManager.Tests.csproj", "{0C11F826-3F3D-4F55-91E4-331A9DE159A5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Signing", "Signing", "{8B0472B3-8542-4E8E-A06A-9134CC7185BF}"
+	ProjectSection(SolutionItems) = preProject
+		..\signing\filelist.txt = ..\signing\filelist.txt
+		..\signing\SignClient.json = ..\signing\SignClient.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
