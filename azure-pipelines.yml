@@ -71,7 +71,7 @@ stages:
     displayName: Code Signing
     pool:
       vmImage: windows-latest
-    environment: Code Sign - Approvals
+    environment: Code Signing
     strategy:
       runOnce:
         deploy:
