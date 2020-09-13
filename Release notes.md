@@ -1,4 +1,8 @@
-﻿1.45
+﻿1.46
+- Fix #355: Grouping view: Group headers scroll horizontally with the content
+- Fix #356: Sorting of columns does not work in grouped view
+
+1.45
 - Fix #354: Crash of devenv.exe when opening ResX window (via update DGX)
 
 1.44
