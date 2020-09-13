@@ -148,6 +148,7 @@
       <Link>License</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
+      <TargetPath>License.txt</TargetPath>
     </Content>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">

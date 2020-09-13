@@ -5,7 +5,7 @@
         <DisplayName>ResXManager</DisplayName>
         <Description xml:space="preserve">The most popular tool to localize and manage all kind of applications with resx-based resources. Shows all resources of a solution and let's you edit the strings and their localizations in a well-arranged data grid.</Description>
         <MoreInfo>https://github.com/dotnet/ResXResourceManager</MoreInfo>
-        <License>License</License>
+        <License>License.txt</License>
         <GettingStartedGuide>https://github.com/dotnet/ResXResourceManager/blob/master/Documentation/Readme.md</GettingStartedGuide>
         <ReleaseNotes>https://github.com/dotnet/ResXResourceManager/blob/master/Release%20notes.md</ReleaseNotes>
         <Icon>96x96.png</Icon>
