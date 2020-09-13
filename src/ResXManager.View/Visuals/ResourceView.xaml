@@ -336,7 +336,7 @@
             </Menu>
             <Separator />
             <Button ToolTip="{x:Static properties:Resources.LikeButtonToolTip}"
-                    Tag="https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager#review-details">
+                    Tag="https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager&amp;ssr=false#review-details">
               <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/like.png" />
             </Button>
             <Button ToolTip="{x:Static properties:Resources.DonateButtonToolTip}"
