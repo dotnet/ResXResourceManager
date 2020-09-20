@@ -164,10 +164,6 @@
       <Project>{6AF977DB-2C9F-4D9C-8C2D-CFDDF7E022FC}</Project>
       <Name>ResXManager.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ResXManager.Scripting\ResXManager.Scripting.csproj">
-      <Project>{4c82721f-0ffa-4d91-9c08-70d20115ac6a}</Project>
-      <Name>ResXManager.Scripting</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ResXManager.Translators\ResXManager.Translators.csproj">
       <Project>{d8b0b04f-4273-45db-ae2d-5a91c89e1225}</Project>
       <Name>ResXManager.Translators</Name>
