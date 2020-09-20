@@ -109,6 +109,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Signing", "Signing", "{8B04
 		..\signing\SignClient.json = ..\signing\SignClient.json
 	EndProjectSection
 EndProject
+Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "ResXManager.Package", "ResXManager.Package\ResXManager.Package.wapproj", "{487E9C60-4177-416A-B762-5B694D7C0A5B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +149,12 @@ Global
 		{0C11F826-3F3D-4F55-91E4-331A9DE159A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C11F826-3F3D-4F55-91E4-331A9DE159A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C11F826-3F3D-4F55-91E4-331A9DE159A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{487E9C60-4177-416A-B762-5B694D7C0A5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{487E9C60-4177-416A-B762-5B694D7C0A5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{487E9C60-4177-416A-B762-5B694D7C0A5B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{487E9C60-4177-416A-B762-5B694D7C0A5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{487E9C60-4177-416A-B762-5B694D7C0A5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{487E9C60-4177-416A-B762-5B694D7C0A5B}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
