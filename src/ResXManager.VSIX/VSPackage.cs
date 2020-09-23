@@ -390,6 +390,8 @@
         private async void MoveToResource(object? sender, EventArgs? e)
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
+            FindToolWindow();
+
             if (!Microsoft.VisualStudio.Shell.ThreadHelper.CheckAccess())
             {
                 await Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();

@@ -202,13 +202,32 @@
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            var projectFile = entity.NeutralProjectFile as DteProjectFile;
+            try
+            {
+                var projectFile = entity.NeutralProjectFile as DteProjectFile;
 
-#pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
-            return projectFile?.ProjectItems
-                .Select(item => item.ContainingProject)
-                .Contains(project) ?? false;
-#pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
+                return projectFile?.ProjectItems
+                    .Select(GetContainingProject)
+                    .Contains(project) ?? false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static Project? GetContainingProject(ProjectItem item)
+        {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
+            try
+            {
+                return item.ContainingProject;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private static Selection? GetSelection(Document? document)
