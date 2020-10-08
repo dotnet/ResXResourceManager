@@ -3,10 +3,11 @@
                     xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.14.0"
                     xmlns:styles="urn:TomsToolbox.Wpf.Styles">
 
+  <SolidColorBrush x:Key="{x:Static SystemColors.ControlLightLightBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.SearchBoxBackgroundKey}}" />
+  <SolidColorBrush x:Key="{x:Static SystemColors.ControlLightBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ButtonHighlightKey}}" />
   <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowBackgroundKey}}" />
-  <SolidColorBrush x:Key="{x:Static SystemColors.ControlLightBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ButtonFaceKey}}" />
-
-  <SolidColorBrush x:Key="{x:Static SystemColors.ControlDarkBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.GrayTextKey}}" />
+  <SolidColorBrush x:Key="{x:Static SystemColors.ControlDarkBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ScrollBarThumbBackgroundKey}}" />
+  <SolidColorBrush x:Key="{x:Static SystemColors.ControlDarkDarkBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ScrollBarThumbMouseOverBackgroundKey}}" />
   <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.ToolWindowTextKey}}" />
 
   <SolidColorBrush x:Key="{x:Static SystemColors.GrayTextBrushKey}" Color="{DynamicResource {x:Static vsfx:VsColors.GrayTextKey}}" />
