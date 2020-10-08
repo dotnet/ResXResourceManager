@@ -71,6 +71,19 @@
 
         public bool IsLoading { get; private set; }
 
+        // Do not use CollectionViewSource in XAML, has huge performance impact when there are many items in the list.
+        public CollectionView GroupedResourceTableEntries
+        {
+            get
+            {
+                CollectionView collectionView = new ListCollectionView((IList)ResourceTableEntries);
+
+                collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Container"));
+
+                return collectionView;
+            }
+        }
+
         public string? LoadedSnapshot { get; set; }
 
         public static ICommand ToggleCellSelectionCommand => new DelegateCommand(() => Settings.IsCellSelectionEnabled = !Settings.IsCellSelectionEnabled);
