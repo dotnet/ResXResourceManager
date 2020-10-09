@@ -47,7 +47,7 @@
 
         public string RelativeFilePath { get; }
 
-        public bool HasChanges { get; protected set; }
+        public bool HasChanges { get; private set; }
 
         public XDocument Load()
         {
@@ -60,20 +60,20 @@
             return document;
         }
 
-        protected virtual XDocument InternalLoad()
+        private XDocument InternalLoad()
         {
             return XDocument.Load(FilePath);
         }
 
-        public void Changed(XDocument? document, bool willSaveImmediately)
+        public void Changed(XDocument? document)
         {
             if (document == null)
                 return;
 
-            InternalChanged(document, willSaveImmediately);
+            InternalChanged(document);
         }
 
-        protected virtual void InternalChanged(XDocument document, bool willSaveImmediately)
+        private void InternalChanged(XDocument document)
         {
             HasChanges = _fingerPrint != document.ToString(SaveOptions.DisableFormatting);
         }
@@ -90,7 +90,7 @@
             _fingerPrint = document.ToString(SaveOptions.DisableFormatting);
         }
 
-        protected virtual void InternalSave(XDocument document)
+        private void InternalSave(XDocument document)
         {
             document.Save(FilePath);
         }
@@ -98,7 +98,7 @@
         /// <summary>
         /// Gets a value indicating whether the file associated with this instance can be written.
         /// </summary>
-        public virtual bool IsWritable
+        public bool IsWritable
         {
             get
             {
@@ -136,7 +136,7 @@
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

@@ -50,8 +50,6 @@
     public sealed class VsPackage : AsyncPackage
     {
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
-        private readonly ManualResetEvent _exportProviderLoaded = new ManualResetEvent(false);
-        private readonly IExportProvider _exportProvider;
         private readonly IKernel _kernel = new StandardKernel();
 
         private EnvDTE.SolutionEvents? _solutionEvents;
@@ -60,6 +58,7 @@
         private EnvDTE.ProjectItemsEvents? _solutionItemsEvents;
         private EnvDTE.ProjectItemsEvents? _miscFilesEvents;
         private EnvDTE.ProjectsEvents? _projectsEvents;
+        private PerformanceTracer? _performanceTracer;
 
         private static VsPackage? _instance;
 
@@ -70,7 +69,7 @@
 
             _kernel.Bind<ITracer>().ToConstant(Tracer);
             _kernel.Bind<IServiceProvider>().ToConstant(this).Named(nameof(VsPackage));
-            _exportProvider = new ExportProvider(_kernel);
+            ExportProvider = new ExportProvider(_kernel);
         }
 
         public static VsPackage Instance
@@ -84,24 +83,7 @@
             }
         }
 
-        public IExportProvider ExportProvider
-        {
-            get
-            {
-                var stopwatch = Stopwatch.StartNew();
-
-                _exportProviderLoaded.WaitOne();
-
-                stopwatch.Stop();
-
-                if (stopwatch.Elapsed >= TimeSpan.FromMilliseconds(100))
-                {
-                    Tracer.WriteLine("Init: " + stopwatch.ElapsedMilliseconds + " ms");
-                }
-
-                return _exportProvider;
-            }
-        }
+        public IExportProvider ExportProvider { get; }
 
         private ITracer Tracer { get; }
 
@@ -115,18 +97,20 @@
 
             var loaderMessages = await System.Threading.Tasks.Task.Run(FillCatalog, cancellationToken).ConfigureAwait(false);
 
+            _performanceTracer = ExportProvider.GetExportedValue<PerformanceTracer>();
+
             var menuCommandService = await GetServiceAsync(typeof(IMenuCommandService)).ConfigureAwait(false);
 
             await JoinableTaskFactory.SwitchToMainThreadAsync();
 
             ShowLoaderMessages(loaderMessages);
 
-            ErrorProvider.Register(_exportProvider);
+            ErrorProvider.Register(ExportProvider);
 
             ConnectEvents();
 
             // start background services
-            _exportProvider
+            ExportProvider
                 .GetExportedValues<IService>()
                 .ForEach(service => service.Start());
 
@@ -198,9 +182,7 @@
                 typeof(Translators.Properties.AssemblyKey).Assembly,
                 typeof(View.Properties.AssemblyKey).Assembly);
 
-            _kernel.Bind<IExportProvider>().ToConstant(_exportProvider);
-
-            _exportProviderLoaded.Set();
+            _kernel.Bind<IExportProvider>().ToConstant(ExportProvider);
 
             return messages;
         }
@@ -428,7 +410,7 @@
 
         private void Solution_Opened()
         {
-            //using (PerformanceTracer.Start("DTE event: Solution opened"))
+            using (_performanceTracer?.Start("DTE event: Solution opened"))
             {
                 ReloadSolution();
 
@@ -441,7 +423,7 @@
 
         private void Solution_AfterClosing()
         {
-            //using (PerformanceTracer.Start("DTE event: Solution closed"))
+            using (_performanceTracer?.Start("DTE event: Solution closed"))
             {
                 Invalidate();
                 ReloadSolution();
@@ -450,7 +432,7 @@
 
         private void Solution_ContentChanged(object? item)
         {
-            //using (PerformanceTracer.Start("DTE event: Solution content changed"))
+            using (_performanceTracer?.Start("DTE event: Solution content changed"))
             {
                 Invalidate();
                 ReloadSolution();
@@ -461,7 +443,7 @@
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            //using (PerformanceTracer.Start("DTE event: Document opened"))
+            using (_performanceTracer?.Start("DTE event: Document opened"))
             {
                 if (!AffectsResourceFile(document))
                     return;
@@ -474,7 +456,7 @@
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            //using (PerformanceTracer.Start("DTE event: Document saved"))
+            using (_performanceTracer?.Start("DTE event: Document saved"))
             {
                 if (!AffectsResourceFile(document))
                     return;

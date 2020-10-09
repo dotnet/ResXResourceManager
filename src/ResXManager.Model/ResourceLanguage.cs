@@ -206,7 +206,7 @@
         {
             _hasUncommittedChanges = false;
 
-            ProjectFile.Changed(_document, _configuration.SaveFilesImmediatelyUponChange);
+            ProjectFile.Changed(_document);
 
             Container.Container.OnLanguageChanged(this);
         }
@@ -245,7 +245,7 @@
             UpdateNodes(duplicateKeyHandling);
             Container.OnItemOrderChanged(this);
 
-            ProjectFile.Changed(_document, true);
+            ProjectFile.Changed(_document);
 
             Save();
         }
