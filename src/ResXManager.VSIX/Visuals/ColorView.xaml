@@ -1,0 +1,33 @@
+<UserControl x:Class="ResXManager.VSIX.Visuals.ColorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:visuals="clr-namespace:ResXManager.VSIX.Visuals"
+             mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance visuals:ColorViewModel}" MouseDoubleClick="ColorView_MouseDoubleClick">
+  <ScrollViewer>
+    <ItemsControl ItemsSource="{Binding Items, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate DataType="visuals:ColorItemViewModel">
+          <Border Margin="2" Background="{Binding Brush}">
+            <Border.Style>
+              <Style TargetType="Border">
+                <Setter Property="TextElement.Foreground" Value="Black"/>
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding IsDark}" Value="True">
+                    <Setter Property="TextElement.Foreground" Value="White"/>
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </Border.Style>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="{Binding}" Margin="5" />
+              <TextBlock Text="{Binding KeyName}" Margin="5" />
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </ScrollViewer>
+</UserControl>
