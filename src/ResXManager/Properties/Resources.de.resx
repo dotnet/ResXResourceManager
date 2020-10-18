@@ -143,4 +143,16 @@ Die Datei wird nicht automatisch dem Visual Studio-Projekt hinzugefügt.</value>
   <data name="QuerySaveChanges" xml:space="preserve">
     <value>Möchten sie die Änderungen speichern?</value>
   </data>
+  <data name="ColorTheme_System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="ColorTheme_Dark" xml:space="preserve">
+    <value>Dunkel</value>
+  </data>
+  <data name="ColorTheme_Light" xml:space="preserve">
+    <value>Hell</value>
+  </data>
+  <data name="ColorTheme_Title" xml:space="preserve">
+    <value>Farbschema</value>
+  </data>
 </root>

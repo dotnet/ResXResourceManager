@@ -7,6 +7,7 @@
     using System.Windows.Threading;
 
     using ResXManager.Infrastructure;
+    using ResXManager.View;
     using ResXManager.View.Themes;
 
     using TomsToolbox.Composition;
@@ -48,15 +49,10 @@
             if ((e.Property != ForegroundProperty) && (e.Property != BackgroundProperty))
                 return;
 
-            var foreground = ToGray((Foreground as SolidColorBrush)?.Color);
-            var background = ToGray((Background as SolidColorBrush)?.Color);
+            var foreground = ((Foreground as SolidColorBrush)?.Color).ToGray();
+            var background = ((Background as SolidColorBrush)?.Color).ToGray();
 
             _themeManager.IsDarkTheme = background < foreground;
-        }
-
-        private static double ToGray(Color? color)
-        {
-            return color?.R * 0.21 + color?.G * 0.72 + color?.B * 0.07 ?? 0.0;
         }
 
         private void Self_Loaded(object? sender, RoutedEventArgs e)

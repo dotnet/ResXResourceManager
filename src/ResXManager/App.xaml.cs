@@ -48,6 +48,7 @@
             IExportProvider exportProvider = new ExportProvider(_kernel);
             _kernel.Bind<IExportProvider>().ToConstant(exportProvider);
 
+            Resources.MergedDictionaries.Add(TomsToolbox.Wpf.Styles.WpfStyles.GetDefaultStyles());
             Resources.MergedDictionaries.Add(DataTemplateManager.CreateDynamicDataTemplates(exportProvider));
 
             exportProvider.GetExportedValues<IService>().ForEach(service => service.Start());

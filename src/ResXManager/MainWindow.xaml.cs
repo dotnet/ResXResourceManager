@@ -7,10 +7,13 @@
     using System.Windows;
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
+    using System.Windows.Media;
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.Properties;
+    using ResXManager.View;
+    using ResXManager.View.Themes;
 
     using TomsToolbox.Composition;
     using TomsToolbox.Wpf;
@@ -23,13 +26,15 @@
     public partial class MainWindow
     {
         private readonly ITracer _tracer;
+        private readonly ThemeManager _themeManager;
         private Size _lastKnownSize;
         private Vector _lastKnownLocation;
 
         [ImportingConstructor]
-        public MainWindow(IExportProvider exportProvider, ITracer tracer)
+        public MainWindow(IExportProvider exportProvider, ITracer tracer, ThemeManager themeManager)
         {
             _tracer = tracer;
+            _themeManager = themeManager;
 
             try
             {
@@ -151,6 +156,19 @@
             }
 
             Process.Start(url);
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+
+            if ((e.Property != ForegroundProperty) && (e.Property != BackgroundProperty))
+                return;
+
+            var foreground =((Foreground as SolidColorBrush)?.Color).ToGray();
+            var background = ((Background as SolidColorBrush)?.Color).ToGray();
+
+            _themeManager.IsDarkTheme = background < foreground;
         }
     }
 }

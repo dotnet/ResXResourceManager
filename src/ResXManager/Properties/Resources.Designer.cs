@@ -79,6 +79,42 @@ namespace ResXManager.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Dark"
+        /// </summary>
+        public static string ColorTheme_Dark {
+            get {
+                return ResourceManager.GetString("ColorTheme_Dark", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Light"
+        /// </summary>
+        public static string ColorTheme_Light {
+            get {
+                return ResourceManager.GetString("ColorTheme_Light", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "System"
+        /// </summary>
+        public static string ColorTheme_System {
+            get {
+                return ResourceManager.GetString("ColorTheme_System", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Color Theme"
+        /// </summary>
+        public static string ColorTheme_Title {
+            get {
+                return ResourceManager.GetString("ColorTheme_Title", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "ResX Resource Manager loaded.&amp;#13;&amp;#10;Hom..."
         /// </summary>
         public static string IntroMessage {
@@ -147,6 +183,22 @@ namespace ResXManager.Properties {
         ///   Looks up a localized string similar to Assembly location: {0}.
         /// </summary>
         AssemblyLocation,
+        /// <summary>
+        ///   Looks up a localized string similar to Dark.
+        /// </summary>
+        ColorTheme_Dark,
+        /// <summary>
+        ///   Looks up a localized string similar to Light.
+        /// </summary>
+        ColorTheme_Light,
+        /// <summary>
+        ///   Looks up a localized string similar to System.
+        /// </summary>
+        ColorTheme_System,
+        /// <summary>
+        ///   Looks up a localized string similar to Color Theme.
+        /// </summary>
+        ColorTheme_Title,
         /// <summary>
         ///   Looks up a localized string similar to ResX Resource Manager loaded.&amp;#13;&amp;#10;Hom....
         /// </summary>

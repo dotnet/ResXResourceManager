@@ -4,12 +4,13 @@
 
     using ResXManager.Infrastructure;
 
+    using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.AttributedModel;
 
     [LocalizedDisplayName(StringResourceKey.MoveToResource)]
     [VisualCompositionExport(RegionId.Configuration)]
     [Shared]
-    internal class MoveToResourceConfigurationViewModel
+    internal class MoveToResourceConfigurationViewModel : ObservableObject
     {
         [ImportingConstructor]
         public MoveToResourceConfigurationViewModel(DteConfiguration configuration)
