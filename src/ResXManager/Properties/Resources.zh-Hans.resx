@@ -144,4 +144,16 @@
   <data name="QuerySaveChanges" xml:space="preserve">
     <value>你要保存这些更改吗?</value>
   </data>
+  <data name="ColorTheme_System" xml:space="preserve">
+    <value>系统</value>
+  </data>
+  <data name="ColorTheme_Dark" xml:space="preserve">
+    <value>黑暗</value>
+  </data>
+  <data name="ColorTheme_Light" xml:space="preserve">
+    <value>明亮</value>
+  </data>
+  <data name="ColorTheme_Title" xml:space="preserve">
+    <value>配色方案</value>
+  </data>
 </root>
