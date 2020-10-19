@@ -71,7 +71,7 @@
             </GroupStyle.ContainerStyle>
             <GroupStyle.Panel>
               <ItemsPanelTemplate>
-                <WrapPanel Orientation="Vertical" />
+                <WrapPanel Orientation="Vertical" Height="{Binding ActualHeight, ElementName=ContainerSizeTemplate}"/>
               </ItemsPanelTemplate>
             </GroupStyle.Panel>
           </GroupStyle>
