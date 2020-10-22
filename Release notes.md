@@ -1,4 +1,10 @@
-﻿1.46
+﻿1.47
+- Fix #359: shield enumeration of project items against invalid or broken items.
+- Fix #363: Revert using CollectionViewSource in XAML, has huge performance impact.
+- Fix #364: Applying Translations do not create new resources to target language files.
+- Support color themes for the standalone application 
+
+1.46
 - Fix #355: Grouping view: Group headers scroll horizontally with the content
 - Fix #356: Sorting of columns does not work in grouped view
 
