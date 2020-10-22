@@ -1,4 +1,7 @@
-﻿1.47
+﻿1.48
+- Fix #367: Update of grid after editing in the top-right text box is broken
+
+1.47
 - Fix #359: shield enumeration of project items against invalid or broken items.
 - Fix #363: Revert using CollectionViewSource in XAML, has huge performance impact.
 - Fix #364: Applying Translations do not create new resources to target language files.
