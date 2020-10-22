@@ -10,6 +10,7 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Threading;
 
@@ -102,6 +103,8 @@
             var menuCommandService = await GetServiceAsync(typeof(IMenuCommandService)).ConfigureAwait(false);
 
             await JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            SynchronizationContextThrottle.TaskFactory = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
 
             ShowLoaderMessages(loaderMessages);
 
