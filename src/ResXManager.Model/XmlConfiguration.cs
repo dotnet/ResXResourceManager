@@ -36,7 +36,6 @@
         private readonly XName _valueName;
         private readonly XName _keyName;
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlConfiguration" /> class.
         /// </summary>
@@ -82,7 +81,7 @@
             }
 
             _document = document ?? new XDocument();
-            _root = _document.Root;
+            _root = _document.Root!;
             _keyName = XName.Get("Key");
             _valueName = XName.Get("Value", @namespace.NamespaceName);
         }
@@ -101,8 +100,8 @@
                 .DescendantsAndSelf(_valueName)
                 .Select(node => new { Node = node, KeyAttribute = node.Attribute(_keyName) })
                 .Where(item => (item.KeyAttribute != null) && key.Equals(item.KeyAttribute.Value, StringComparison.Ordinal))
-                .Select(item => item.Node.FirstNode as XText)
-                .Select(node => node!.Value)
+                .Select(item => item.Node.DescendantNodes().OfType<XText>().FirstOrDefault())
+                .Select(node => node?.Value?.Trim())
                 .FirstOrDefault(value => value != null) ?? defaultValue;
         }
 
