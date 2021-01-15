@@ -355,22 +355,30 @@
             <toms:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=ColumnChooserToggleButton}" />
           </Interactions:Interaction.Behaviors>
           <Border Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}" Padding="8,4" BorderThickness="1" BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
-            <StackPanel>
-              <CheckBox Content="{x:Static properties:Resources.AllLanguages}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" Margin="2">
+            <Grid>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+              </Grid.RowDefinitions>
+              <CheckBox Content="{x:Static properties:Resources.AllLanguages}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" Margin="2" Grid.Row="0">
                 <Interactions:Interaction.Behaviors>
                   <behaviors:SelectAllColumnsBehavior ListBox="{Binding ElementName=SelectedColumns}" ColumnType="Language" />
                 </Interactions:Interaction.Behaviors>
               </CheckBox>
-              <CheckBox Content="{x:Static properties:Resources.AllComments}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" Margin="2">
+              <CheckBox Content="{x:Static properties:Resources.AllComments}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" Margin="2" Grid.Row="1">
                 <Interactions:Interaction.Behaviors>
                   <behaviors:SelectAllColumnsBehavior ListBox="{Binding ElementName=SelectedColumns}" ColumnType="Comment" />
                 </Interactions:Interaction.Behaviors>
               </CheckBox>
-              <Separator />
+              <Separator Grid.Row="2"/>
               <ListBox x:Name="SelectedColumns" ItemsSource="{Binding Columns, ElementName=DataGrid, Converter={x:Static converters:LanguageColumnFilterConverter.Default}}"
                        Style="{DynamicResource {x:Static styles:ResourceKeys.ListBoxStyle}}"
                        SelectionMode="Multiple" KeyboardNavigation.TabNavigation="Once"
-                       Background="Transparent" BorderThickness="0">
+                       Background="Transparent" BorderThickness="0"
+                       ScrollViewer.VerticalScrollBarVisibility="Auto"
+                       Grid.Row="3">
                 <ListBox.ItemTemplate>
                   <DataTemplate DataType="DataGridColumn">
                     <DockPanel Margin="2">
@@ -401,7 +409,7 @@
                   </Style>
                 </ListBox.ItemContainerStyle>
               </ListBox>
-            </StackPanel>
+            </Grid>
           </Border>
         </Popup>
         <Decorator DockPanel.Dock="Left" Width="4" />
