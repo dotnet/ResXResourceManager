@@ -88,7 +88,7 @@
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
               <wpf:SharedWidthHeaderedContentControl Margin="2,0">
-                <CheckBox Margin="1" Content="{x:Static properties:Resources.TranslatorConfiguration_SaveCredentials}" IsChecked="{Binding SaveCredentials}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+                <CheckBox Margin="1" Content="{x:Static properties:Resources.TranslatorConfiguration_SaveCredentials}" IsChecked="{Binding SaveCredentials, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
               </wpf:SharedWidthHeaderedContentControl>
             </StackPanel>
           </GroupBox>

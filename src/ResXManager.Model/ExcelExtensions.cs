@@ -605,7 +605,6 @@
     namespace GeneratedCode
     {
         // Generated from an empty document using the OpenXML SDK Productivity Tool
-        [SuppressMessage("ReSharper", "All")]
         public static class GeneratedClass
         {
             public static void AddStylesToWorkbookPart(WorkbookPart part)
