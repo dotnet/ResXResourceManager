@@ -26,8 +26,6 @@
     [AddINotifyPropertyChangedInterface]
     public sealed class ResourceManager
     {
-        private static readonly string[] _sortedCultureNames = GetSortedCultureNames();
-
         private readonly ISourceFilesProvider _sourceFilesProvider;
         private readonly ITracer _tracer;
 
@@ -268,27 +266,28 @@
 
         public static bool IsValidLanguageName(string? languageName)
         {
-            if (languageName.IsNullOrEmpty())
+            try
+            {
+                if (languageName.IsNullOrEmpty())
+                    return false;
+
+                // pseudo-locales:
+                if (languageName.StartsWith("qps-", StringComparison.Ordinal)) 
+                    return true;
+
+                var culture = new CultureInfo(languageName);
+
+                while (!culture.IsNeutralCulture)
+                {
+                    culture = culture.Parent;
+                }
+
+                return culture.LCID != 4096;
+            }
+            catch
+            {
                 return false;
-
-            return Array.BinarySearch(_sortedCultureNames, languageName, StringComparer.OrdinalIgnoreCase) >= 0;
-        }
-
-        private static string[] GetSortedCultureNames()
-        {
-            var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-
-            var pseudoLocales = new[] { "qps-ploc", "qps-ploca", "qps-plocm", "qps-Latn-x-sh" };
-
-            var cultureNames = allCultures
-                .SelectMany(culture => new[] { culture.IetfLanguageTag, culture.Name })
-                .Concat(pseudoLocales)
-                .Distinct()
-                .ToArray();
-
-            Array.Sort(cultureNames, StringComparer.OrdinalIgnoreCase);
-
-            return cultureNames;
+            }
         }
 
         private static CultureInfo[] GetSpecificCultures()

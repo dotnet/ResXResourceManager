@@ -21,4 +21,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj" />
+  </ItemGroup>
+
 </Project>

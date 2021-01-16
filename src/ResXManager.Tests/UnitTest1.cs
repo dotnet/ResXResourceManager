@@ -2,9 +2,11 @@ namespace ResXManager.Tests
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Resources;
 
     using Newtonsoft.Json;
 
@@ -15,39 +17,19 @@ namespace ResXManager.Tests
 
     public class UnitTest1
     {
-        [Fact]
-        public void MefMigrationHelper()
+        [Theory]
+        [InlineData("de-DE", true)]
+        [InlineData("en", true)]
+        [InlineData("en-GB-dev", true)]
+        [InlineData("ab-cd", false)]
+        [InlineData("xy-ab", false)]
+        [InlineData("xy-abc", false)]
+        [InlineData("en-dummy", false)]
+        [InlineData("some", false)]
+        [InlineData("qps-ploc", true)] // pseudo locale
+        public void IsValidLanguageNameTest(string cultureName, bool expected)
         {
-            string sourceFolder = Path.GetFullPath(@"..\..\..\..");
-
-            var assemblyFileNames = Directory
-                .EnumerateFiles(sourceFolder, "ResXManager*", SearchOption.AllDirectories)
-                .Where(path => path.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) || path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
-                .Where(path => !path.Contains("resources"))
-                .Where(path => !path.Contains("obj"))
-                .Where(path => !path.Contains("Release"))
-                .Distinct(new DelegateEqualityComparer<string>(Path.GetFileName));
-
-            var targetFolder = Path.Combine(sourceFolder, @".migration\after");
-
-            foreach (var assemblyFileName in assemblyFileNames)
-            {
-                var assembly = Assembly.LoadFrom(assemblyFileName);
-
-                var result = MetadataReader.Read(assembly);
-
-                var data = Serialize(result);
-
-                var targetFile = Path.Combine(targetFolder, Path.GetFileNameWithoutExtension(assemblyFileName) + ".mef.json");
-
-                Directory.CreateDirectory(Path.GetDirectoryName(targetFile));
-                File.WriteAllText(targetFile, data);
-            }
-        }
-
-        private static string Serialize(IList<ExportInfo> result)
-        {
-            return JsonConvert.SerializeObject(result, Formatting.Indented);
+            Assert.Equal(expected, Model.ResourceManager.IsValidLanguageName(cultureName));
         }
     }
 }
