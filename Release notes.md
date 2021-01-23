@@ -1,4 +1,10 @@
-﻿1.48
+﻿1.49
+- Fix #372: make XmlConfiguration reader more robust.
+- Fix #379: Azure auth key not stored if "Save credentials" is checked and app is closed while the focus is still on the check box.
+- Fix #357 Add scroll if too many languages
+- Fix #376: support Custom dialect resource
+
+1.48
 - Fix #367: Update of grid after editing in the top-right text box is broken
 
 1.47
