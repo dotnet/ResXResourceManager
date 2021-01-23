@@ -452,7 +452,7 @@
                 .ToArray();
         }
 
-        private IEnumerable<string> GetSnapshotDifferences(ResourceLanguage language, string? current, Func<ResourceData, string?> selector)
+        private IEnumerable<string> GetSnapshotDifferences(ResourceLanguage language, string? current, Func<ResourceData?, string?> selector)
         {
             var snapshot = Snapshot;
             if (snapshot == null)
