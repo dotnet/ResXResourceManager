@@ -6,6 +6,7 @@
     using System.Text.RegularExpressions;
 
     using HtmlAgilityPack;
+    using TomsToolbox.Essentials;
 
     public static class ExtensionMethods
     {

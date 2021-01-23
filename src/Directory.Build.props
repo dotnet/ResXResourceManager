@@ -9,5 +9,6 @@
     <Nullable>enable</Nullable>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
 </Project>

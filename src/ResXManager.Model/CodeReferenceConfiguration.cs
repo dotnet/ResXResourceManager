@@ -6,6 +6,7 @@
     using System.Runtime.Serialization;
 
     using ResXManager.Infrastructure;
+    using TomsToolbox.Essentials;
 
     [DataContract]
     public sealed class CodeReferenceConfigurationItem : INotifyPropertyChanged

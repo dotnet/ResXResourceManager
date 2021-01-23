@@ -10,6 +10,7 @@ namespace ResXManager.Scripting
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
+    using TomsToolbox.Essentials;
 
     [Export, Shared]
     [Export(typeof(ISourceFilesProvider))]

@@ -12,7 +12,7 @@
     using ResXManager.Translators.Properties;
 
     using Throttle;
-
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
 
     [Export, Shared]

@@ -13,6 +13,7 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
+    using TomsToolbox.Essentials;
 
     public enum ExcelExportMode
     {

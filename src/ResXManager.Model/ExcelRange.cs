@@ -5,6 +5,7 @@
     using System.Text.RegularExpressions;
 
     using ResXManager.Infrastructure;
+    using TomsToolbox.Essentials;
 
     public class ExcelRange
     {

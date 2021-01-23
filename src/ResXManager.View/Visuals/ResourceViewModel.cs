@@ -24,7 +24,7 @@
     using ResXManager.View.Tools;
 
     using Throttle;
-
+    using TomsToolbox.Essentials;
     using TomsToolbox.ObservableCollections;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.AttributedModel;
@@ -529,7 +529,7 @@
             }
             finally
             {
-                if (Interlocked.CompareExchange(ref _loadingCancellationTokenSource, null, cancellationTokenSource) == cancellationTokenSource)
+                if (Interlocked.CompareExchange(ref _loadingCancellationTokenSource, null!, cancellationTokenSource) == cancellationTokenSource)
                 {
                     IsLoading = false;
                 }

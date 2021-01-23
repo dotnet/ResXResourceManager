@@ -16,6 +16,7 @@
     using ResXManager.View.Themes;
 
     using TomsToolbox.Composition;
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
 

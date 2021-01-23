@@ -8,6 +8,7 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
+    using TomsToolbox.Essentials;
 
     [Export]
     internal class DteSolution

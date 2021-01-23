@@ -8,6 +8,7 @@
     using Microsoft.Xaml.Behaviors;
 
     using ResXManager.Infrastructure;
+    using TomsToolbox.Essentials;
 
     public class EntityFilter : Behavior<ListBox>
     {

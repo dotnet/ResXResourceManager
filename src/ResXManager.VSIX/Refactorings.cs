@@ -17,6 +17,7 @@
     using ResXManager.VSIX.Visuals;
 
     using TomsToolbox.Composition;
+    using TomsToolbox.Essentials;
 
     public interface IRefactorings
     {

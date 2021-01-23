@@ -8,6 +8,7 @@
     using System.Text;
 
     using ResXManager.Infrastructure;
+    using TomsToolbox.Essentials;
 
     public static class TextExtensions
     {

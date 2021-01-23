@@ -15,7 +15,7 @@
     using System.Windows.Controls;
 
     using ResXManager.Infrastructure;
-
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf.Composition.AttributedModel;
 
     [DataTemplate(typeof(MyMemoryTranslator))]

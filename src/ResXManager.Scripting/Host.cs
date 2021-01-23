@@ -14,6 +14,7 @@
 
     using TomsToolbox.Composition;
     using TomsToolbox.Composition.Ninject;
+    using TomsToolbox.Essentials;
 
     public sealed class Host : IDisposable
     {

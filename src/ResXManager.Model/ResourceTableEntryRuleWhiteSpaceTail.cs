@@ -5,6 +5,7 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
+    using TomsToolbox.Essentials;
 
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleWhiteSpaceTail_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleWhiteSpaceTail_Description)]

@@ -7,6 +7,7 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
+    using TomsToolbox.Essentials;
 
     [DataContract]
     public sealed class MoveToResourceConfigurationItem : INotifyPropertyChanged

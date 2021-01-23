@@ -6,11 +6,6 @@
 
     public static class StringExtensions
     {
-        public static bool IsNullOrEmpty([NotNullWhen(false)] this string? value)
-        {
-            return string.IsNullOrEmpty(value);
-        }
-
         #if NETFRAMEWORK
 
         public static string Replace(this string target, string oldValue, string? newValue, StringComparison _)

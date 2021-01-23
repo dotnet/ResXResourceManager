@@ -19,7 +19,7 @@
     using ResXManager.Properties;
     using ResXManager.View.Tools;
     using ResXManager.View.Visuals;
-
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.AttributedModel;
 

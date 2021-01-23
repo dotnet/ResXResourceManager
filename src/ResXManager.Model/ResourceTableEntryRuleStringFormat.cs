@@ -9,6 +9,7 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
+    using TomsToolbox.Essentials;
 
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleStringFormat_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleStringFormat_Description)]

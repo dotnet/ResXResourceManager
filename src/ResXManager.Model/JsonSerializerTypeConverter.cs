@@ -9,6 +9,7 @@
     using System.Text;
 
     using ResXManager.Infrastructure;
+    using TomsToolbox.Essentials;
 
     /// <summary>
     /// A type converter that converts an integer string to a boolean value.

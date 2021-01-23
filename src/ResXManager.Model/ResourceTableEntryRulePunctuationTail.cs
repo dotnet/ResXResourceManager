@@ -6,6 +6,7 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
+    using TomsToolbox.Essentials;
 
     [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRulePunctuationTail_Name)]
     [LocalizedDescription(StringResourceKey.ResourceTableEntryRulePunctuationTail_Description)]
