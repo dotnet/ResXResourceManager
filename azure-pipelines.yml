@@ -117,6 +117,7 @@ stages:
               inlineScript: |
                 (new-object Net.WebClient).DownloadString("https://raw.github.com/tom-englert/BuildScripts/master/BuildScripts.ps1") | iex
                 Vsix-PublishToGallery "$(Pipeline.Workspace)\BuildPackages\ResXManager.Vsix.vsix"
+            continueOnError: true
 
           - publish: $(Pipeline.Workspace)\BuildPackages
             displayName: Publish Signed Packages
