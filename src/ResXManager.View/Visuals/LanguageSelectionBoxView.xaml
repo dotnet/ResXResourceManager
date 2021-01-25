@@ -14,7 +14,7 @@
     <TextBlock Text="{x:Static properties:Resources.NewLanguageIdPrompt}" TextWrapping="Wrap" />
     <Decorator Height="10" />
     <ComboBox x:Name="ComboBox" IsEditable="True"
-              ItemsSource="{Binding Languages}"
+              ItemsSource="{Binding Languages, Mode=OneTime}"
               HorizontalAlignment="Stretch"
               SelectedItem="{Binding SelectedLanguage, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
               Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
