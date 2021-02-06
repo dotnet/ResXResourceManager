@@ -47,11 +47,9 @@ namespace ResXManager.Translators
                 return;
             }
 
-            var token = await AzureAuthentication.GetBearerAccessTokenAsync(authenticationKey, translationSession.CancellationToken).ConfigureAwait(false);
-
             using (var client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("Authorization", token);
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", authenticationKey);
 
                 var throttle = new Throttle(MaxCharactersPerMinute, translationSession.CancellationToken);
 
