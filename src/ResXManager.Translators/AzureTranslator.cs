@@ -50,6 +50,10 @@ namespace ResXManager.Translators
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", authenticationKey);
+                if (!Region.IsNullOrEmpty())
+                {
+                    client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Region", Region);
+                }
 
                 var throttle = new Throttle(MaxCharactersPerMinute, translationSession.CancellationToken);
 
