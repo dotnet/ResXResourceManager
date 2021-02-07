@@ -9,5 +9,7 @@
         string Description { get; }
 
         string? Value { get; set; }
+
+        bool IsPassword { get; }
     }
 }

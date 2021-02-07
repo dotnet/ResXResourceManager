@@ -114,6 +114,13 @@ namespace ResXManager.Translators
             set => Credentials[0].Value = value;
         }
 
+        [DataMember(Name = "Region")]
+        public string? Region
+        {
+            get => Credentials[1].Value;
+            set => Credentials[1].Value = value;
+        }
+
         private string? AuthenticationKey => Credentials[0].Value;
 
         private void ReturnResults(IEnumerable<ITranslationItem> items, IEnumerable<AzureTranslationResponse> responses)
@@ -137,7 +144,8 @@ namespace ResXManager.Translators
         {
             return new ICredentialItem[]
             {
-                new CredentialItem("AuthenticationKey", "Key")
+                new CredentialItem("AuthenticationKey", "Key"),
+                new CredentialItem("Region", "Region", false)
             };
         }
 

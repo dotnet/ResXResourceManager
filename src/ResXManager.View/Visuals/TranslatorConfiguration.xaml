@@ -78,12 +78,23 @@
                           <Run Text="{Binding Description, Mode=OneWay}" /><Run Text=": " />
                         </TextBlock>
                       </wpf:SharedWidthHeaderedContentControl.Header>
-                      <PasswordBox Style="{DynamicResource {x:Static styles:ResourceKeys.PasswordBoxStyle}}">
-                        <i:Interaction.Behaviors>
-                          <wpf:PasswordBoxBindingBehavior Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
-                        </i:Interaction.Behaviors>
-                      </PasswordBox>
+                      <Grid>
+                        <PasswordBox x:Name="PasswordBox" Style="{DynamicResource {x:Static styles:ResourceKeys.PasswordBoxStyle}}" >
+                          <i:Interaction.Behaviors>
+                            <wpf:PasswordBoxBindingBehavior Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                          </i:Interaction.Behaviors>
+                        </PasswordBox>
+                        <TextBox x:Name="TextBox" Visibility="Collapsed"
+                                 Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}"
+                                 Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                      </Grid>
                     </wpf:SharedWidthHeaderedContentControl>
+                    <DataTemplate.Triggers>
+                      <DataTrigger Binding="{Binding IsPassword}" Value="False">
+                        <Setter TargetName="PasswordBox" Property="Visibility" Value="Collapsed" />
+                        <Setter TargetName="TextBox" Property="Visibility" Value="Visible" />
+                      </DataTrigger>
+                    </DataTemplate.Triggers>
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
               </ItemsControl>

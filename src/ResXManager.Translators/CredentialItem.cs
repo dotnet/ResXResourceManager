@@ -6,10 +6,11 @@ namespace ResXManager.Translators
 
     public class CredentialItem : ICredentialItem
     {
-        public CredentialItem(string key, string description)
+        public CredentialItem(string key, string description, bool isPassword = true)
         {
             Key = key;
             Description = description;
+            IsPassword = isPassword;
         }
 
         public string Key { get; }
@@ -17,6 +18,8 @@ namespace ResXManager.Translators
         public string Description { get; }
 
         public string? Value { get; set; }
+
+        public bool IsPassword { get; }
         
 #pragma warning disable CS0067
         public event PropertyChangedEventHandler? PropertyChanged;
