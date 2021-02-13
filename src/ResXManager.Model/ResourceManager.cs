@@ -228,6 +228,10 @@
                 await Task.Run(Load).ConfigureAwait(true);
                 //*/
             }
+            catch (OperationCanceledException)
+            {
+                return false;
+            }
             catch (Exception ex)
             {
                 ResourceEntities.Clear();
