@@ -1,4 +1,8 @@
-﻿1.49
+﻿1.50
+- Fix #392: Occasional "The operation was canceled" messages
+- Fix #368: Authentication for Azure: Region can be specified
+
+1.49
 - Fix #372: make XmlConfiguration reader more robust.
 - Fix #379: Azure auth key not stored if "Save credentials" is checked and app is closed while the focus is still on the check box.
 - Fix #357 Add scroll if too many languages
