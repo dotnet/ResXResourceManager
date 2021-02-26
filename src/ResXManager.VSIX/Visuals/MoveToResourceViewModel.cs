@@ -34,7 +34,7 @@
 
             ExistingEntries = resourceEntities
                 .SelectMany(entity => entity.Entries)
-                .Where(entry => entry.Values[null] == text)
+                .Where(entry => entry.Languages.Any(lang => entry.Values[lang?.Culture?.TwoLetterISOLanguageName] == text))
                 .ToArray();
             ReuseExisiting = ExistingEntries.Any();
 

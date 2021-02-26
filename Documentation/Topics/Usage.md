@@ -14,6 +14,11 @@ no solution will be parsed, so if you don't have a clean directory, orphan or st
 
 ![Standalone](Documentation_standalone.png)
 
+### Move to Resource
+You can easily add strings into the resources simply just by selecting the required string including quotes and clicking right mouse button. You will find a context menu item "Move to Resources".
+
+![Standalone](MoveToResource.png)
+
 ### All versions
 When you select a resource file, all entries and their translations will be displayed in an editable grid. 
 The first column displays the resource key, the second column the neutral resource, continued by one column per localized language. 
