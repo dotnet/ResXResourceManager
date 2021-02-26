@@ -9,7 +9,7 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Text;
-
+    using Diacritics.Extensions;
     using EnvDTE;
 
     using PropertyChanged;
@@ -181,16 +181,21 @@
 
             var makeUpper = true;
 
-            foreach (var c in text)
+            if (!string.IsNullOrEmpty(text))
             {
-                if (!IsCharValidForSymbol(c))
+                var textNonDiacritics = text?.RemoveDiacritics();
+
+                foreach (var c in textNonDiacritics)
                 {
-                    makeUpper = true;
-                }
-                else
-                {
-                    keyBuilder.Append(makeUpper ? char.ToUpper(c, CultureInfo.CurrentCulture) : c);
-                    makeUpper = false;
+                    if (!IsCharValidForSymbol(c))
+                    {
+                        makeUpper = true;
+                    }
+                    else
+                    {
+                        keyBuilder.Append(makeUpper ? char.ToUpper(c, CultureInfo.CurrentCulture) : c);
+                        makeUpper = false;
+                    }
                 }
             }
 

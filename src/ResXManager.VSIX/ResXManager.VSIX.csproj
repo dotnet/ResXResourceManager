@@ -268,6 +268,9 @@
     <PackageReference Include="DataGridExtensions">
       <Version>2.4.7</Version>
     </PackageReference>
+    <PackageReference Include="Diacritics">
+      <Version>2.1.20036.1</Version>
+    </PackageReference>
     <PackageReference Include="Fody" PrivateAssets="all">
       <Version>6.3.0</Version>
     </PackageReference>
