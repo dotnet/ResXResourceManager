@@ -181,21 +181,18 @@
 
             var makeUpper = true;
 
-            if (!string.IsNullOrEmpty(text))
-            {
-                var textNonDiacritics = text?.RemoveDiacritics();
+            var textNonDiacritics = text.RemoveDiacritics();
 
-                foreach (var c in textNonDiacritics)
+            foreach (var c in textNonDiacritics)
+            {
+                if (!IsCharValidForSymbol(c))
                 {
-                    if (!IsCharValidForSymbol(c))
-                    {
-                        makeUpper = true;
-                    }
-                    else
-                    {
-                        keyBuilder.Append(makeUpper ? char.ToUpper(c, CultureInfo.CurrentCulture) : c);
-                        makeUpper = false;
-                    }
+                    makeUpper = true;
+                }
+                else
+                {
+                    keyBuilder.Append(makeUpper ? char.ToUpper(c, CultureInfo.CurrentCulture) : c);
+                    makeUpper = false;
                 }
             }
 
