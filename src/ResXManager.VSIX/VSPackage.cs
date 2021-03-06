@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Design;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
@@ -40,7 +39,7 @@
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Package already handles this.")]
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     // This attribute is used to register the informations needed to show the this package in the Help/About dialog of Visual Studio.
-    [InstalledProductRegistration(@"#110", @"#112", Product.Version, IconResourceID = 400)]
+    [InstalledProductRegistration(@"#110", @"#112", "ResXManager", IconResourceID = 400)]
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource(@"Menus.ctmenu", 1)]
     // This attribute registers a tool window exposed by this package.
@@ -199,7 +198,6 @@
             }
         }
 
-        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private void ConnectEvents()
         {
             var events = (EnvDTE80.Events2)Dte.Events;
@@ -252,7 +250,7 @@
 
         private void ShowToolWindow(object? sender, EventArgs? e)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             ShowToolWindow();
         }
@@ -272,7 +270,7 @@
 
         internal bool ShowToolWindow()
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
@@ -295,7 +293,7 @@
 
         private void ShowSelectedResourceFiles(object? sender, EventArgs? e)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             var selectedResourceEntities = GetSelectedResourceEntities()?.Distinct().ToArray();
             if (selectedResourceEntities == null)
@@ -315,7 +313,7 @@
 
         private void SolutionExplorerContextMenuCommand_BeforeQueryStatus(object? sender, EventArgs? e)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             if (!(sender is OleMenuCommand menuCommand))
                 return;
@@ -326,7 +324,7 @@
 
         private IEnumerable<ResourceEntity>? GetSelectedResourceEntities()
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
 
@@ -345,7 +343,7 @@
 
         private IEnumerable<ResourceEntity> GetSelectedResourceEntities(string? fileName)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             if (fileName.IsNullOrEmpty())
                 return Enumerable.Empty<ResourceEntity>();
@@ -359,7 +357,7 @@
 
         private static bool ContainsChildOfWinFormsDesignerItem(ResourceEntity entity, string? fileName)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             return entity.Languages.Select(lang => lang.ProjectFile)
                 .OfType<DteProjectFile>()
@@ -377,9 +375,9 @@
         {
             FindToolWindow();
 
-            if (!Microsoft.VisualStudio.Shell.ThreadHelper.CheckAccess())
+            if (!ThreadHelper.CheckAccess())
             {
-                await Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             }
 
             try
@@ -444,7 +442,7 @@
 
         private void DocumentEvents_DocumentOpened(EnvDTE.Document? document)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             using (_performanceTracer?.Start("DTE event: Document opened"))
             {
@@ -457,7 +455,7 @@
 
         private void DocumentEvents_DocumentSaved(EnvDTE.Document document)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             using (_performanceTracer?.Start("DTE event: Document saved"))
             {
@@ -474,9 +472,12 @@
                 // => find the resource entity that contains the document and run the custom tool on the neutral project file.
 
 #pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
-                bool Predicate(ResourceEntity e) => e.Languages.Select(lang => lang.ProjectFile)
-                    .OfType<DteProjectFile>()
-                    .Any(projectFile => projectFile.ProjectItems.Any(p => p.Document == document));
+                bool Predicate(ResourceEntity e)
+                {
+                    return e.Languages.Select(lang => lang.ProjectFile)
+                        .OfType<DteProjectFile>()
+                        .Any(projectFile => projectFile.ProjectItems.Any(p => p.Document == document));
+                }
 #pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
 
                 var entity = resourceManager.ResourceEntities.FirstOrDefault(Predicate);
@@ -507,7 +508,7 @@
 
         private static bool AffectsResourceFile(EnvDTE.Document? document)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             if (document == null)
                 return false;

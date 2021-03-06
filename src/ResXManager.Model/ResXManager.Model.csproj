@@ -6,12 +6,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\Nullable.cs" Link="Nullable.cs" />
-    <Compile Include="..\Trademark.cs">
-      <Link>Trademark.cs</Link>
-    </Compile>
-    <Compile Include="..\Version.cs">
-      <Link>Version.cs</Link>
-    </Compile>
     <None Include="..\Key.snk">
       <Link>Key.snk</Link>
     </None>

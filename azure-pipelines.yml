@@ -18,10 +18,10 @@ stages:
         scriptType: inlineScript
         inlineScript: |
          (new-object Net.WebClient).DownloadString("https://raw.github.com/tom-englert/BuildScripts/master/BuildScripts.ps1") | iex
-         
-         Source-SetBuildVersion "src\version.cs" | Build-AppendVersionToBuildNumber
-         Vsix-SetBuildVersion "src\ResXManager.VSIX\source.extension.vsixmanifest"
-         Project-SetBuildVersion "src\ResXManager\ResXManager.csproj"
+         $version = Project-SetVersion "src\Directory.Build.props"
+         $version | Build-AppendVersionToBuildNumber
+         $version | File-PatchVersion "src\ResXManager\ResXManager.csproj"
+         $version | File-PatchVersion "src\ResXManager\Properties\AssemblyInfo.cs"
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
     - task: VSBuild@1

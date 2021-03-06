@@ -173,7 +173,7 @@
                 return false;
 
             return string.Equals(project.Kind, ItemKind.SolutionFolder, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(project.Name, SolutionItemsFolderName, StringComparison.CurrentCultureIgnoreCase);
+                && string.Equals(project.Name, SolutionItemsFolderName, StringComparison.OrdinalIgnoreCase);
         }
 
         private IEnumerable<EnvDTE.Project> GetProjects()
