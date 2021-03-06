@@ -5,12 +5,6 @@
     <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Trademark.cs">
-      <Link>Trademark.cs</Link>
-    </Compile>
-    <Compile Include="..\Version.cs">
-      <Link>Version.cs</Link>
-    </Compile>
     <None Remove="Sample.ps1" />
     <Content Include="Sample.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

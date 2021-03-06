@@ -5,12 +5,6 @@
     <TargetFrameworks>net462;netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Trademark.cs">
-      <Link>Trademark.cs</Link>
-    </Compile>
-    <Compile Include="..\Version.cs">
-      <Link>Version.cs</Link>
-    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

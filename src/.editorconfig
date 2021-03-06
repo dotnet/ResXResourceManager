@@ -4,21 +4,44 @@ trim_trailing_whitespace = true
 
 [*.cs]
 indent_size = 4
+
+dotnet_analyzer_diagnostic.severity = error
+
 # CA1031: Do not catch general exception types
 dotnet_diagnostic.CA1031.severity = none
+
 # CA1062: Validate arguments of public methods
 dotnet_diagnostic.CA1062.severity = none
+
 # CA1303 pass a literal string as parameter message
 dotnet_diagnostic.CA1303.severity = none
+
 # CA1724: The type name X conflicts in whole or in part with the namespace name 'System.X'
 dotnet_diagnostic.CA1724.severity = none
+
 # CA1812: X is an internal class that is apparently never instantiated...
 dotnet_diagnostic.CA1812.severity = none
+
 # CA2008: Do not create tasks without passing a TaskScheduler
 dotnet_diagnostic.CA2008.severity = none
+
 # IDE0063: Using statement can be simplified
 dotnet_diagnostic.IDE0063.severity = none
 
+# IDE0008: Use explicit type
+dotnet_diagnostic.IDE0008.severity = none
+
+# IDE0011: Add braces
+dotnet_diagnostic.IDE0011.severity = none
+
+# IDE0046: Convert to conditional expression
+dotnet_diagnostic.IDE0046.severity = none
+
+# IDE0058: Expression value is never used
+dotnet_diagnostic.IDE0058.severity = none
+
+# IDE0065: Misplaced using directive
+dotnet_diagnostic.IDE0065.severity = none
 
 [*.xaml]
 indent_size = 2

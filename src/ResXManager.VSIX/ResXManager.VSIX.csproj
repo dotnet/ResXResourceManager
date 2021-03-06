@@ -1,143 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{41E0911D-7C82-4B4F-B905-BF0B549BC9C4}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ResXManager.VSIX</RootNamespace>
-    <AssemblyName>ResXManager.VSIX</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
+    <UseWPF>true</UseWPF>
+    <TargetFramework>net462</TargetFramework>
+    <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
-    <TargetFrameworkProfile />
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
-    <NoWarn>CS8632</NoWarn>
+    <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFRAMEWORK</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <DebugType>embedded</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFRAMEWORK</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <DeployExtension>False</DeployExtension>
-    <DebugType>embedded</DebugType>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="UIAutomationTypes" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="System.Xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\Nullable.cs">
-      <Link>Nullable.cs</Link>
-    </Compile>
-    <Compile Include="..\Trademark.cs">
-      <Link>Trademark.cs</Link>
-    </Compile>
-    <Compile Include="..\Version.cs">
-      <Link>Version.cs</Link>
-    </Compile>
-    <Compile Include="ErrorProvider.cs" />
-    <Compile Include="CodeGenerator.cs" />
-    <Compile Include="Commands.cs" />
-    <Compile Include="CustomToolRunner.cs" />
-    <Compile Include="DteConfiguration.cs" />
-    <Compile Include="DteExtensions.cs" />
-    <Compile Include="DteProjectFile.cs" />
-    <Compile Include="DteSolution.cs" />
-    <Compile Include="DteSourceFilesProvider.cs" />
-    <Compile Include="ItemKind.cs" />
-    <Compile Include="MoveToResourceConfiguration.cs" />
-    <Compile Include="MyToolWindow.cs" />
-    <Compile Include="Guids.cs" />
-    <Compile Include="OutputWindowTracer.cs" />
-    <Compile Include="Properties\Settings.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Refactorings.cs" />
-    <Compile Include="Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.Designer.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Visuals\ShowErrorsConfigurationView.xaml.cs">
-      <DependentUpon>ShowErrorsConfigurationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Visuals\ShowErrorsConfigurationViewModel.cs" />
-    <Compile Include="VSPackage.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PkgCmdID.cs" />
-    <Compile Include="ThemeResourceProvider.cs" />
-    <Compile Include="Visuals\CodeGeneratorView.xaml.cs">
-      <DependentUpon>CodeGeneratorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Visuals\MoveToResourceConfigurationView.xaml.cs">
-      <DependentUpon>MoveToResourceConfigurationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Visuals\MoveToResourceConfigurationViewModel.cs" />
-    <Compile Include="Visuals\MoveToResourceView.xaml.cs">
-      <DependentUpon>MoveToResourceView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Visuals\MoveToResourceViewModel.cs" />
-    <Compile Include="Visuals\VsixShellView.xaml.cs">
-      <DependentUpon>VsixShellView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Visuals\VsixShellViewModel.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources.zh-Hans.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources.de.resx" />
-    <EmbeddedResource Include="Resources.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="VSPackage.resx">
-      <MergeWithCTO>true</MergeWithCTO>
-      <ManifestResourceName>VSPackage</ManifestResourceName>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
   <ItemGroup>
     <None Include="..\Key.snk">
       <Link>Key.snk</Link>
@@ -148,26 +19,9 @@
       <IncludeInVSIX>true</IncludeInVSIX>
       <TargetPath>License.txt</TargetPath>
     </Content>
-    <None Include="app.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>PublicSettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Resources\Resources.Designer.t4" />
-    <None Include="source.extension.vsixmanifest">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <VSCTCompile Include="VSPackage.vsct">
-      <ResourceName>Menus.ctmenu</ResourceName>
-      <SubType>Designer</SubType>
-    </VSCTCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Images_24bit.bmp" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="..\Nullable.cs">
+      <Link>Nullable.cs</Link>
+    </Compile>
     <Content Include="..\..\Release notes.md">
       <Link>Release notes.md</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -177,86 +31,50 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="200x200.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="96x96.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="32x32.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="48x48.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="64x64.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Resource Include="Assets\WinForms.png" />
-    <None Include="FodyWeavers.xml" />
-    <None Include="Resources.Designer.tt">
+    <None Update="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <None Update="Resources.Designer.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <DependentUpon>Resources.resx</DependentUpon>
     </None>
-    <None Include="Resources\Resources.Designer.tt">
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </None>
-    <Resource Include="Assets\PrivateTool.png" />
-    <Resource Include="Assets\PublicTool.png" />
-    <Resource Include="Assets\TextTemplate.png" />
-    <Resource Include="Assets\Unknown.png" />
+    <Compile Update="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.Designer.tt</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="VSPackage.resx">
+      <MergeWithCTO>true</MergeWithCTO>
+      <ManifestResourceName>VSPackage</ManifestResourceName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Remove="**\*.png" />
+    <Content Include="*.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Resource Include="Assets\*.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ResXManager.Infrastructure\ResXManager.Infrastructure.csproj">
-      <Project>{A20586DF-CBE9-4A6F-807C-10960D13E848}</Project>
-      <Name>ResXManager.Infrastructure</Name>
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3bDebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
     <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj">
-      <Project>{6AF977DB-2C9F-4D9C-8C2D-CFDDF7E022FC}</Project>
-      <Name>ResXManager.Model</Name>
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3bDebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
     <ProjectReference Include="..\ResXManager.Translators\ResXManager.Translators.csproj">
-      <Project>{d8b0b04f-4273-45db-ae2d-5a91c89e1225}</Project>
-      <Name>ResXManager.Translators</Name>
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3bDebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
     <ProjectReference Include="..\ResXManager.View\ResXManager.View.csproj">
-      <Project>{32935FC5-1F28-419C-B67F-12D2014F8A8B}</Project>
-      <Name>ResXManager.View</Name>
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3bDebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Resources\VSColorScheme.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Visuals\CodeGeneratorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Visuals\MoveToResourceConfigurationView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Visuals\MoveToResourceView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Visuals\ShowErrorsConfigurationView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Visuals\VsixShellView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -279,6 +97,7 @@
     <PackageReference Include="Microsoft.VisualStudio.SDK" ExcludeAssets="runtime">
       <Version>15.0.1</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.8.3038" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all">
       <Version>3.3.1</Version>
     </PackageReference>
@@ -297,19 +116,10 @@
     <PackageReference Include="TomsToolbox.Wpf.Styles">
       <Version>2.3.2</Version>
     </PackageReference>
+    <PackageReference Include="VSIX-SdkProjectAdapter" Version="1.1.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
-  <PropertyGroup>
-    <UseCodebase>true</UseCodebase>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-  </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v14.0\VSSDK\Microsoft.VsSDK.targets" Condition="false" />
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release' ">
     <MakeDir Directories="$(SolutionDir)Deploy" />
     <Copy SourceFiles="$(OutDir)ResXManager.VSIX.vsix" DestinationFolder="$(SolutionDir)Deploy" />
