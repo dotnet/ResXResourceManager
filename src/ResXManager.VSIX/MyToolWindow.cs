@@ -12,8 +12,8 @@
     using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
+    using System.Windows.Input;
     using System.Windows.Media;
 
     using Microsoft.VisualStudio.Shell;
@@ -26,7 +26,6 @@
 
     using TomsToolbox.Composition;
     using TomsToolbox.Essentials;
-    using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.XamlExtensions;
 
     /// <summary>
@@ -208,7 +207,7 @@
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(string.Format(CultureInfo.CurrentCulture, View.Properties.Resources.ErrorAddingNewResourceFile, ex), Resources.ToolWindowTitle);
+                    MessageBox.Show(string.Format(CultureInfo.CurrentCulture, ResXManager.View.Properties.Resources.ErrorAddingNewResourceFile, ex), Resources.ToolWindowTitle);
                 }
             }
 
@@ -405,6 +404,28 @@
             using var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
             using var ndpKey = baseKey.OpenSubKey(Subkey);
             return (int?)ndpKey?.GetValue("Release") ?? 0;
+        }
+
+        protected override bool PreProcessMessage(ref System.Windows.Forms.Message m)
+        {
+            if ((m.Msg != 0x0100) || (m.WParam != (IntPtr) 27))
+            {
+                return base.PreProcessMessage(ref m);
+            }
+
+            // https://github.com/dotnet/ResXResourceManager/issues/397
+            // must process ESC key here, else window will loose focus without notification.
+
+            var keyboardDevice = Keyboard.PrimaryDevice;
+
+            var e = new KeyEventArgs(keyboardDevice, keyboardDevice.ActiveSource, 0, Key.Escape)
+            {
+                RoutedEvent = Keyboard.KeyDownEvent
+            };
+
+            InputManager.Current.ProcessInput(e);
+
+            return true;
         }
     }
 }
