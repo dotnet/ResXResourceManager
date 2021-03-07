@@ -80,6 +80,9 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all">
       <Version>1.25.0</Version>
     </PackageReference>
