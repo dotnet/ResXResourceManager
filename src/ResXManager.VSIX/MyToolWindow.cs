@@ -12,6 +12,7 @@
     using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
     using System.Windows.Input;
     using System.Windows.Media;
@@ -26,6 +27,7 @@
 
     using TomsToolbox.Composition;
     using TomsToolbox.Essentials;
+    using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.XamlExtensions;
 
     /// <summary>
@@ -207,7 +209,7 @@
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(string.Format(CultureInfo.CurrentCulture, ResXManager.View.Properties.Resources.ErrorAddingNewResourceFile, ex), Resources.ToolWindowTitle);
+                    MessageBox.Show(string.Format(CultureInfo.CurrentCulture, View.Properties.Resources.ErrorAddingNewResourceFile, ex), Resources.ToolWindowTitle);
                 }
             }
 
@@ -408,7 +410,7 @@
 
         protected override bool PreProcessMessage(ref System.Windows.Forms.Message m)
         {
-            if ((m.Msg != 0x0100) || (m.WParam != (IntPtr) 27))
+            if ((m.Msg != 0x0100) || (m.WParam != (IntPtr)27))
             {
                 return base.PreProcessMessage(ref m);
             }
