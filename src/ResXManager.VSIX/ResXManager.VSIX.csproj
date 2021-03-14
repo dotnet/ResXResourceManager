@@ -123,7 +123,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release' ">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">
     <MakeDir Directories="$(SolutionDir)Deploy" />
     <Copy SourceFiles="$(OutDir)ResXManager.VSIX.vsix" DestinationFolder="$(SolutionDir)Deploy" />
   </Target>
