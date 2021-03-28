@@ -119,7 +119,7 @@
     <PackageReference Include="TomsToolbox.Wpf.Styles">
       <Version>2.3.2</Version>
     </PackageReference>
-    <PackageReference Include="VSIX-SdkProjectAdapter" Version="1.1.0">
+    <PackageReference Include="VSIX-SdkProjectAdapter" Version="2.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
