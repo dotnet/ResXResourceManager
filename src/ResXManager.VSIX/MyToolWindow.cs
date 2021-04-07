@@ -14,6 +14,7 @@
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
+    using System.Windows.Input;
     using System.Windows.Media;
 
     using Microsoft.VisualStudio.Shell;
@@ -43,7 +44,8 @@
 
         private readonly ContentControl _contentWrapper = new ContentControl
         {
-            Focusable = false, Content = new Border { Background = Brushes.Red }
+            Focusable = false,
+            Content = new Border { Background = Brushes.Red }
         };
 
         /// <summary>
@@ -59,7 +61,7 @@
             // The resource ID correspond to the one defined in the resx file while the Index is the offset in the bitmap strip.
             // Each image in the strip being 16x16.
             BitmapResourceID = 301;
-            BitmapIndex = 1;
+            BitmapIndex = 0;
 
             var exportProvider = VsPackage.Instance.ExportProvider;
             _tracer = exportProvider.GetExportedValue<ITracer>();
@@ -111,7 +113,7 @@
 
         private void ContentWrapper_Loaded(object? sender, RoutedEventArgs e)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
@@ -137,7 +139,7 @@
         {
             get
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThreadHelper.ThrowIfNotOnUIThread();
 
                 var dte = (EnvDTE.DTE)GetService(typeof(EnvDTE.DTE));
                 return dte;
@@ -180,7 +182,7 @@
 
         private void ResourceManager_BeginEditing(object? sender, ResourceBeginEditingEventArgs e)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             if (!CanEdit(e.Entity, e.CultureKey))
             {
@@ -190,7 +192,7 @@
 
         private bool CanEdit(ResourceEntity entity, CultureKey? cultureKey)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             var languages = entity.Languages.Where(lang => (cultureKey == null) || cultureKey.Equals(lang.CultureKey)).ToArray();
 
@@ -252,7 +254,7 @@
         {
             try
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThreadHelper.ThrowIfNotOnUIThread();
 
                 window?.Activate();
             }
@@ -267,7 +269,7 @@
         {
             try
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThreadHelper.ThrowIfNotOnUIThread();
 
 #pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
                 var openDocuments = Dte.Windows?
@@ -294,7 +296,7 @@
 
         private bool QueryEditFiles(string[] lockedFiles)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             var service = (IVsQueryEditQuerySave2)GetService(typeof(SVsQueryEditQuerySave));
             if (service != null)
@@ -318,7 +320,7 @@
 
         private bool AddLanguage(ResourceEntity entity, CultureInfo culture)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             var resourceLanguages = entity.Languages;
             if (!resourceLanguages.Any())
@@ -351,7 +353,7 @@
 
         private void AddProjectItems(ResourceEntity entity, ResourceLanguage neutralLanguage, string languageFileName)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             DteProjectFile? projectFile = null;
 
@@ -404,6 +406,28 @@
             using var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
             using var ndpKey = baseKey.OpenSubKey(Subkey);
             return (int?)ndpKey?.GetValue("Release") ?? 0;
+        }
+
+        protected override bool PreProcessMessage(ref System.Windows.Forms.Message m)
+        {
+            if ((m.Msg != 0x0100) || (m.WParam != (IntPtr)27))
+            {
+                return base.PreProcessMessage(ref m);
+            }
+
+            // https://github.com/dotnet/ResXResourceManager/issues/397
+            // must process ESC key here, else window will loose focus without notification.
+
+            var keyboardDevice = Keyboard.PrimaryDevice;
+
+            var e = new KeyEventArgs(keyboardDevice, keyboardDevice.ActiveSource, 0, Key.Escape)
+            {
+                RoutedEvent = Keyboard.KeyDownEvent
+            };
+
+            InputManager.Current.ProcessInput(e);
+
+            return true;
         }
     }
 }

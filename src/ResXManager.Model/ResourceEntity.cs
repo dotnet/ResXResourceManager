@@ -211,7 +211,9 @@
 
         public int CompareTo(ResourceEntity? other)
         {
+#pragma warning disable CA1310 // Specify StringComparison for correctness => only available in .NetCore api
             return DisplayName.CompareTo(other?.DisplayName);
+#pragma warning restore CA1310 // Specify StringComparison for correctness
         }
 
         public bool CanEdit(CultureKey? cultureKey)

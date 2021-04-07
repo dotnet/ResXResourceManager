@@ -1,16 +1,7 @@
-﻿using System;
-using System.Reflection;
-using System.Resources;
-using System.Runtime.InteropServices;
+﻿using System.Resources;
 
 using Microsoft.VisualStudio.Shell;
 
-[assembly: AssemblyTitle("ResXManager.VSIX")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCulture("")]
-[assembly: ComVisible(false)]
-[assembly: CLSCompliant(false)]
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
 
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\TomsToolbox.Composition.dll")]

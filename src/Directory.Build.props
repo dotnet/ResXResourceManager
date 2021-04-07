@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Version>1.51.0.0</Version>
+    <Company>tom-englert.de</Company>
+    <Product>ResXManager</Product>
+    <Copyright>Copyright (c) .NET Foundation and Contributors.</Copyright>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <LangVersion>latest</LangVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <DebugType>embedded</DebugType>
