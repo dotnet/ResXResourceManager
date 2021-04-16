@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Composition;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -136,7 +135,6 @@
             }
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Instantiated by the data contract serializer")]
         [DataContract]
         private class Translation
         {
@@ -144,7 +142,6 @@
             public string? Text { get; set; }
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Instantiated by the data contract serializer")]
         [DataContract]
         private class TranslationRootObject
         {
@@ -156,7 +153,7 @@
         /// <param name="url">The base URL.</param>
         /// <param name="pairs">The name/value paired parameters.</param>
         /// <returns>Resulting URL.</returns>
-        /// <exception cref="System.ArgumentException">There must be an even number of strings supplied for parameters.</exception>
+        /// <exception cref="ArgumentException">There must be an even number of strings supplied for parameters.</exception>
         private static string BuildUrl(string url, ICollection<string?> pairs)
         {
             if (pairs.Count % 2 != 0)
@@ -170,7 +167,10 @@
             }
             return sb.ToString();
 
-            static string Format(string? a, string? b) => string.Concat(WebUtility.UrlEncode(a), "=", WebUtility.UrlEncode(b));
+            static string Format(string? a, string? b)
+            {
+                return string.Concat(WebUtility.UrlEncode(a), "=", WebUtility.UrlEncode(b));
+            }
         }
     }
 }

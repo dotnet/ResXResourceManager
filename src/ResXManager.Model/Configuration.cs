@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
     using ResXManager.Infrastructure;
@@ -31,12 +30,11 @@
         ResourceTableEntryRules Rules { get; }
     }
 
-    [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized", Justification = "value provided by AutoProperties")]
     public abstract class Configuration : ConfigurationBase, IConfiguration
     {
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         protected Configuration(ITracer tracer)
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
             : base(tracer)
         {
         }

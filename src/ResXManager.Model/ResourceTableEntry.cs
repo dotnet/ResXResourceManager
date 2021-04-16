@@ -195,10 +195,7 @@
         public DelegateIndexer<string, bool> IsRuleEnabled { get; }
 
         // TODO: maybe rules should be mutable per language, like Invariant?
-        private ISet<string> MutedRuleIds
-        {
-            get => _mutedRuleIds ??= new HashSet<string>(GetMutedRuleIds(CultureKey.Neutral), StringComparer.OrdinalIgnoreCase);
-        }
+        private ISet<string> MutedRuleIds => _mutedRuleIds ??= new HashSet<string>(GetMutedRuleIds(CultureKey.Neutral), StringComparer.OrdinalIgnoreCase);
 
         private IEnumerable<string> GetMutedRuleIds(CultureKey culture)
         {
@@ -302,7 +299,6 @@
             OnPropertyChanged(nameof(Index));
         }
 
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public IDictionary<CultureKey, ResourceData>? Snapshot { get; set; }
 
         public bool CanEdit(CultureKey? cultureKey)
@@ -326,7 +322,7 @@
                 .ToList()
                 .AsReadOnly();
 
-            return !Rules.CompliesToRules(MutedRuleIds, neutralValue, (ICollection<string?>)values, out _);
+            return !Rules.CompliesToRules(MutedRuleIds, neutralValue, values, out _);
         }
 
         public bool HasSnapshotDifferences(IEnumerable<object> cultures)
@@ -433,7 +429,10 @@
             return false;
         }
 
-        private string GetErrorPrefix(CultureKey culture) => string.Format(CultureInfo.CurrentCulture, "{0}{1}: ", Key, culture);
+        private string GetErrorPrefix(CultureKey culture)
+        {
+            return string.Format(CultureInfo.CurrentCulture, "{0}{1}: ", Key, culture);
+        }
 
         private IEnumerable<string> GetInvariantMismatches(CultureKey culture, string? value)
         {

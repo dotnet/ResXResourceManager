@@ -118,19 +118,13 @@
 
         public ICommand UnloadSnapshotCommand => new DelegateCommand(() => LoadSnapshot(null));
 
-        public ICommand SelectEntityCommand
+        public ICommand SelectEntityCommand => new DelegateCommand<ResourceEntity>(entity =>
         {
-            get
-            {
-                return new DelegateCommand<ResourceEntity>(entity =>
-                {
-                    var selectedEntities = SelectedEntities;
+            var selectedEntities = SelectedEntities;
 
-                    selectedEntities.Clear();
-                    selectedEntities.Add(entity);
-                });
-            }
-        }
+            selectedEntities.Clear();
+            selectedEntities.Add(entity);
+        });
 
         public int ResourceTableEntryCount => ResourceTableEntries.Count;
 

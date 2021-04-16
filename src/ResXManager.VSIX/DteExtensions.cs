@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Runtime.InteropServices;
@@ -233,7 +232,6 @@
             }
         }
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public static void SetFontSize(this EnvDTE.DTE dte, DependencyObject view)
         {
             const string CATEGORY_FONTS_AND_COLORS = "FontsAndColors";

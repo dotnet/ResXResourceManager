@@ -187,15 +187,12 @@
         {
             var defaultValueAttribute = propertyInfo?.GetCustomAttributes<DefaultValueAttribute>().Select(attr => attr?.Value).FirstOrDefault();
 
-            switch (defaultValueAttribute)
+            return defaultValueAttribute switch
             {
-                case T defaultValue:
-                    return defaultValue;
-                case string stringValue:
-                    return ConvertFromString(stringValue, default(T)!);
-            }
-
-            return default!;
+                T defaultValue => defaultValue,
+                string stringValue => ConvertFromString(stringValue, default(T)),
+                _ => default,
+            };
         }
 
 #pragma warning disable CS0067

@@ -27,7 +27,7 @@
             _configuration = configuration;
         }
 
-        public IDisposable? Start([Localizable(false)]string message)
+        public IDisposable? Start([Localizable(false)] string message)
         {
             if (!_configuration.ShowPerformanceTraces)
                 return null;
@@ -35,7 +35,7 @@
             return new Tracer(_tracer, Interlocked.Increment(ref _index), message);
         }
 
-        public void Start([Localizable(false)]string message, DispatcherPriority priority)
+        public void Start([Localizable(false)] string message, DispatcherPriority priority)
         {
 #pragma warning disable CA2000 // Dispose objects before losing scope => will be disposed deferred
             var tracer = Start(message);

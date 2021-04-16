@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -76,7 +75,6 @@
             _contentWrapper.Unloaded += ContentWrapper_Unloaded;
         }
 
-        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         protected override void OnCreate()
         {
             base.OnCreate();
@@ -117,6 +115,8 @@
 
             try
             {
+                VsPackage.Instance.ToolWindowLoaded();
+
                 var view = _exportProvider.GetExportedValue<VsixShellView>();
 
                 _contentWrapper.Content = view;
@@ -132,6 +132,7 @@
 
         private void ContentWrapper_Unloaded(object? sender, RoutedEventArgs e)
         {
+            VsPackage.Instance.ToolWindowUnloaded();
             _contentWrapper.Content = null;
         }
 
@@ -264,7 +265,6 @@
             }
         }
 
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private Tuple<string, EnvDTE.Window>[] GetLanguagesOpenedInAnotherEditor(IEnumerable<ResourceLanguage> languages)
         {
             try

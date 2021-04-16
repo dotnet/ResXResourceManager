@@ -12,7 +12,7 @@
     {
         private const string Resx = ".resx";
         private const string Resw = ".resw";
-        public static readonly string[] SupportedFileExtensions = { Resx, Resw };
+        private static readonly string[] _supportedFileExtensions = { Resx, Resw };
 
         public static string GetBaseDirectory(this ProjectFile projectFile)
         {
@@ -24,12 +24,16 @@
             return directoryName ?? throw new InvalidOperationException();
         }
 
-        public static bool IsResourceFile(this ProjectFile projectFile)
+        public static bool IsSupportedFileExtension(string extension)
         {
-            var extension = projectFile.Extension;
-            var filePath = projectFile.FilePath;
+            return _supportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase);
+        }
 
-            if (!SupportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
+        public static bool IsResourceFile(string filePath, string? extension = null)
+        {
+            extension ??= Path.GetExtension(filePath);
+
+            if (!IsSupportedFileExtension(extension))
                 return false;
 
             if (!Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
@@ -38,6 +42,14 @@
             var languageName = Path.GetFileName(Path.GetDirectoryName(filePath));
 
             return ResourceManager.IsValidLanguageName(languageName);
+        }
+
+        public static bool IsResourceFile(this ProjectFile projectFile)
+        {
+            var extension = projectFile.Extension;
+            var filePath = projectFile.FilePath;
+
+            return IsResourceFile(filePath, extension);
         }
 
         public static CultureKey GetCultureKey(this ProjectFile projectFile, CultureInfo neutralResourcesLanguage)

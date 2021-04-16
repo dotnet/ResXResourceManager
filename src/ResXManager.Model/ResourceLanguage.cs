@@ -54,7 +54,7 @@
         /// <param name="duplicateKeyHandling">The duplicate key handling.</param>
         /// <exception cref="InvalidOperationException">
         /// </exception>
-        /// <exception cref="System.InvalidOperationException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
         internal ResourceLanguage(ResourceEntity container, CultureKey cultureKey, ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
         {
             Container = container;
@@ -158,7 +158,7 @@
 
             if (typeAttribute != null)
             {
-                return string.IsNullOrEmpty(typeAttribute.Value) || typeAttribute.Value.StartsWith(typeof(string).Name, StringComparison.OrdinalIgnoreCase);
+                return string.IsNullOrEmpty(typeAttribute.Value) || typeAttribute.Value.StartsWith(nameof(String), StringComparison.OrdinalIgnoreCase);
             }
 
             var mimeTypeAttribute = entry.Attribute(_mimetypeAttributeName);
@@ -258,7 +258,11 @@
         private bool SortAndAdd(StringComparison stringComparison, XElement? newNode)
         {
             var comparer = new DelegateComparer<string>((left, right) => string.Compare(left, right, stringComparison));
-            static string GetName(XElement node) => node.Attribute(_nameAttributeName)?.Value.TrimStart('>') ?? string.Empty;
+
+            static string GetName(XElement node)
+            {
+                return node.Attribute(_nameAttributeName)?.Value.TrimStart('>') ?? string.Empty;
+            }
 
             var nodes = DocumentRoot
                 .Elements(_dataNodeName)
@@ -583,14 +587,14 @@
                             entry.Add(new XText("  "), valueElement, new XText("\n  "));
                         }
 
-                        if (!(valueElement.FirstNode is XText textNode))
+                        if (valueElement.FirstNode is XText textNode)
                         {
-                            textNode = new XText(value);
-                            valueElement.Add(textNode);
+                            textNode.Value = value;
                         }
                         else
                         {
-                            textNode.Value = value;
+                            textNode = new XText(value);
+                            valueElement.Add(textNode);
                         }
                     }
                 }
@@ -606,7 +610,7 @@
                     throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileValueAttributeMissingError, _owner.FileName));
                 }
 
-                return !(valueElement.FirstNode is XText textNode) ? string.Empty : textNode.Value;
+                return valueElement.FirstNode is XText textNode ? textNode.Value : string.Empty;
             }
 
             private string? LoadComment()
@@ -617,7 +621,7 @@
                 if (valueElement == null)
                     return string.Empty;
 
-                return !(valueElement.FirstNode is XText textNode) ? string.Empty : textNode.Value;
+                return valueElement.FirstNode is XText textNode ? textNode.Value : string.Empty;
             }
 
             private XAttribute GetNameAttribute(XElement entry)

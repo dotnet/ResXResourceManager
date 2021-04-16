@@ -276,7 +276,7 @@
                     return false;
 
                 // pseudo-locales:
-                if (languageName.StartsWith("qps-", StringComparison.Ordinal)) 
+                if (languageName.StartsWith("qps-", StringComparison.Ordinal))
                     return true;
 
                 var culture = new CultureInfo(languageName);

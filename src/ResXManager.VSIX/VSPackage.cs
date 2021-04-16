@@ -32,6 +32,10 @@
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
 
+    using Task = System.Threading.Tasks.Task;
+
+#pragma warning disable VSTHRD100 // Avoid async void methods
+
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
     /// </summary>
@@ -59,8 +63,12 @@
         private EnvDTE.ProjectItemsEvents? _miscFilesEvents;
         private EnvDTE.ProjectsEvents? _projectsEvents;
         private PerformanceTracer? _performanceTracer;
+        private ResourceManager? _resourceManager;
 
         private static VsPackage? _instance;
+
+        private bool _isToolWindowLoaded;
+        private bool _isReloadRequestPending;
 
         public VsPackage()
         {
@@ -87,15 +95,11 @@
 
         private ITracer Tracer { get; }
 
-        /// <summary>
-        /// Initialization of the package; this method is called right after the package is sited, so this is the place
-        /// where you can put all the initialization code that rely on services provided by VisualStudio.
-        /// </summary>
-        protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
+        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await base.InitializeAsync(cancellationToken, progress).ConfigureAwait(false);
 
-            var loaderMessages = await System.Threading.Tasks.Task.Run(FillCatalog, cancellationToken).ConfigureAwait(false);
+            var loaderMessages = await Task.Run(FillCatalog, cancellationToken).ConfigureAwait(false);
 
             _performanceTracer = ExportProvider.GetExportedValue<PerformanceTracer>();
 
@@ -115,6 +119,9 @@
             ExportProvider
                 .GetExportedValues<IService>()
                 .ForEach(service => service.Start());
+
+            _resourceManager = ExportProvider.GetExportedValue<ResourceManager>();
+            _resourceManager.ProjectFileSaved += ResourceManager_ProjectFileSaved;
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             if (!(menuCommandService is IMenuCommandService mcs))
@@ -240,7 +247,7 @@
             }
         }
 
-        private static OleMenuCommand CreateMenuCommand(IMenuCommandService mcs, int cmdId, EventHandler? invokeHandler)
+        private static OleMenuCommand CreateMenuCommand(IMenuCommandService mcs, int cmdId, EventHandler invokeHandler)
         {
             var menuCommandId = new CommandID(GuidList.guidResXManager_VSIXCmdSet, cmdId);
             var menuCommand = new OleMenuCommand(invokeHandler, menuCommandId);
@@ -291,40 +298,52 @@
             }
         }
 
-        private void ShowSelectedResourceFiles(object? sender, EventArgs? e)
+        private async void ShowSelectedResourceFiles(object? sender, EventArgs? e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            try
+            {
+                var selectedResourceEntities = (await GetSelectedResourceEntitiesAsync().ConfigureAwait(false))?.Distinct().ToArray();
+                if (selectedResourceEntities == null)
+                    return;
 
-            var selectedResourceEntities = GetSelectedResourceEntities()?.Distinct().ToArray();
-            if (selectedResourceEntities == null)
-                return;
+                await JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            // if we open the window the first time, make sure it does not select all entities by default.
-            var settings = View.Properties.Settings.Default;
-            settings.AreAllFilesSelected = false;
-            settings.ResourceFilter = string.Empty;
+                // if we open the window the first time, make sure it does not select all entities by default.
+                var settings = View.Properties.Settings.Default;
+                settings.AreAllFilesSelected = false;
+                settings.ResourceFilter = string.Empty;
 
-            var selectedEntities = ExportProvider.GetExportedValue<ResourceViewModel>().SelectedEntities;
-            selectedEntities.Clear();
-            selectedEntities.AddRange(selectedResourceEntities);
+                var selectedEntities = ExportProvider.GetExportedValue<ResourceViewModel>().SelectedEntities;
+                selectedEntities.Clear();
+                selectedEntities.AddRange(selectedResourceEntities);
 
-            ShowToolWindow();
+                ShowToolWindow();
+            }
+            catch (Exception ex)
+            {
+                Tracer.TraceError("ShowSelectedResourceFiles failed: " + ex);
+            }
         }
 
-        private void SolutionExplorerContextMenuCommand_BeforeQueryStatus(object? sender, EventArgs? e)
+        private async void SolutionExplorerContextMenuCommand_BeforeQueryStatus(object? sender, EventArgs? e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            try
+            {
+                if (!(sender is OleMenuCommand menuCommand))
+                    return;
 
-            if (!(sender is OleMenuCommand menuCommand))
-                return;
-
-            menuCommand.Text = Resources.OpenInResXManager;
-            menuCommand.Visible = GetSelectedResourceEntities() != null;
+                menuCommand.Text = Resources.OpenInResXManager;
+                menuCommand.Visible = await GetSelectedResourceEntitiesAsync().ConfigureAwait(true) != null;
+            }
+            catch (Exception ex)
+            {
+                Tracer.TraceError("SolutionExplorerContextMenuCommand_BeforeQueryStatus failed: " + ex);
+            }
         }
 
-        private IEnumerable<ResourceEntity>? GetSelectedResourceEntities()
+        private async Task<IEnumerable<ResourceEntity>?> GetSelectedResourceEntitiesAsync()
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            await JoinableTaskFactory.SwitchToMainThreadAsync();
 
             var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
 
@@ -332,27 +351,46 @@
             if (selection == null)
                 return null;
 
-            var entities = selection
+            var files = selection
                 .Select(item => item.GetMkDocument())
-                .Where(file => !file.IsNullOrEmpty())
-                .SelectMany(GetSelectedResourceEntities)
+                .ExceptNullItems()
+                .Where(file => ProjectFileExtensions.IsResourceFile(file))
+                .ToArray();
+
+            if (!files.Any())
+                return null;
+
+            var groups = await Task.WhenAll(files.Select(GetSelectedResourceEntitiesAsync)).ConfigureAwait(true);
+
+            var entities = groups
+                .SelectMany(items => items)
                 .ToArray();
 
             return (entities.Length > 0) && (entities.Length == selection.Count) ? entities : null;
         }
 
-        private IEnumerable<ResourceEntity> GetSelectedResourceEntities(string? fileName)
+        private async Task<IEnumerable<ResourceEntity>> GetSelectedResourceEntitiesAsync(string fileName)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            var resourceEntities = await GetResourceEntitiesAsync().ConfigureAwait(false);
 
-            if (fileName.IsNullOrEmpty())
-                return Enumerable.Empty<ResourceEntity>();
-
-            var resourceEntities = ExportProvider.GetExportedValue<ResourceManager>().ResourceEntities;
+            await JoinableTaskFactory.SwitchToMainThreadAsync();
 
             return resourceEntities
                 .Where(entity => ContainsFile(entity, fileName) || ContainsChildOfWinFormsDesignerItem(entity, fileName))
                 .ToArray();
+        }
+
+        private async Task<IEnumerable<ResourceEntity>> GetResourceEntitiesAsync()
+        {
+            if (_isReloadRequestPending)
+            {
+                await ExportProvider.GetExportedValue<ResourceViewModel>().ReloadAsync().ConfigureAwait(false);
+                _isReloadRequestPending = false;
+            }
+
+            var resourceEntities = _resourceManager?.ResourceEntities;
+
+            return resourceEntities?.AsEnumerable() ?? Array.Empty<ResourceEntity>();
         }
 
         private static bool ContainsChildOfWinFormsDesignerItem(ResourceEntity entity, string? fileName)
@@ -369,16 +407,11 @@
             return entity.Languages.Any(lang => lang.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
         }
 
-#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void MoveToResource(object? sender, EventArgs? e)
-#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             FindToolWindow();
 
-            if (!ThreadHelper.CheckAccess())
-            {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            }
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             try
             {
@@ -414,11 +447,6 @@
             using (_performanceTracer?.Start("DTE event: Solution opened"))
             {
                 ReloadSolution();
-
-                var resourceManager = ExportProvider.GetExportedValue<ResourceManager>();
-
-                resourceManager.ProjectFileSaved -= ResourceManager_ProjectFileSaved;
-                resourceManager.ProjectFileSaved += ResourceManager_ProjectFileSaved;
             }
         }
 
@@ -453,17 +481,17 @@
             }
         }
 
-        private void DocumentEvents_DocumentSaved(EnvDTE.Document document)
+        private async void DocumentEvents_DocumentSaved(EnvDTE.Document document)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            await JoinableTaskFactory.SwitchToMainThreadAsync();
 
             using (_performanceTracer?.Start("DTE event: Document saved"))
             {
                 if (!AffectsResourceFile(document))
                     return;
 
-                var resourceManager = ExportProvider.GetExportedValue<ResourceManager>();
-                if (resourceManager.IsSaving)
+                var resourceManager = _resourceManager;
+                if (resourceManager == null || resourceManager.IsSaving)
                     return;
 
                 // Run custom tool (usually attached to neutral language) even if a localized language changes,
@@ -480,7 +508,7 @@
                 }
 #pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
 
-                var entity = resourceManager.ResourceEntities.FirstOrDefault(Predicate);
+                var entity = (await GetResourceEntitiesAsync().ConfigureAwait(true)).FirstOrDefault(Predicate);
 
                 var neutralProjectFile = entity?.NeutralProjectFile as DteProjectFile;
 
@@ -518,7 +546,7 @@
                 .Select(item => item.TryGetFileName())
                 .Where(fileName => fileName != null)
                 .Select(Path.GetExtension)
-                .Any(extension => ProjectFileExtensions.SupportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase));
+                .Any(ProjectFileExtensions.IsSupportedFileExtension);
         }
 
         [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Background)]
@@ -528,12 +556,16 @@
         }
 
         [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.ContextIdle)]
-#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void ReloadSolution()
-#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             try
             {
+                if (!_isToolWindowLoaded)
+                {
+                    _isReloadRequestPending = true;
+                    return;
+                }
+
                 await ExportProvider.GetExportedValue<ResourceViewModel>().ReloadAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -546,6 +578,22 @@
         {
             public IList<string> Messages { get; } = new List<string>();
             public IList<string> Errors { get; } = new List<string>();
+        }
+
+        public void ToolWindowLoaded()
+        {
+            _isToolWindowLoaded = true;
+
+            if (!_isReloadRequestPending)
+                return;
+
+            _isReloadRequestPending = false;
+            ReloadSolution();
+        }
+
+        public void ToolWindowUnloaded()
+        {
+            _isToolWindowLoaded = false;
         }
     }
 }

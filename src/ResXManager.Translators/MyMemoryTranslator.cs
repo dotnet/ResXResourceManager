@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Composition;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Net;
@@ -111,7 +110,6 @@
             }
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
         [DataContract]
         private class ResponseData
         {
@@ -130,7 +128,6 @@
             }
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
         [DataContract]
         private class MatchData
         {
@@ -156,7 +153,6 @@
             }
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
         [DataContract]
         private class Response
         {

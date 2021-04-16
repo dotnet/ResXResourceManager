@@ -36,7 +36,10 @@
             }
         }
 
-        public void Invalidate() => Solution.Invalidate();
+        public void Invalidate()
+        {
+            Solution.Invalidate();
+        }
 
         /// <summary>
         /// Gets the solution folder.
