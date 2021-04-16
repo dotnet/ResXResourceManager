@@ -1,4 +1,7 @@
-﻿1.51
+﻿1.52
+- #403: improve loading, only enumerate project files when view is visible or when needed by a feature.
+ 
+1.51
 - Fix #397: Tool window unexpectedly looses focus on ESC key, data is committed instead of reverted
 
 1.50
