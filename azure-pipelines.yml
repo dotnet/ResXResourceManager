@@ -24,13 +24,18 @@ stages:
          $version | File-PatchVersion "src\ResXManager\Properties\AssemblyInfo.cs"
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
-    - task: VSBuild@1
-      displayName: 'Build solution **\*.sln'
+    - task: NuGetCommand@2
       inputs:
-        vsVersion: 16.0
-        msbuildArgs: '-restore'
+        command: 'restore'
+        restoreSolution: '**/*.sln'
+        feedsToUse: 'config'
+
+    - task: MSBuild@1
+      displayName: 'Build solution'
+      inputs:
         platform: '$(BuildPlatform)'
         configuration: '$(BuildConfiguration)'
+        logProjectEvents: true
         createLogFile: true
 
     - task: MSBuild@1
