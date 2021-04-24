@@ -28,7 +28,11 @@
     public class DeepLTranslator : TranslatorBase
     {
         private static readonly Uri _uri = new Uri("https://deepl.com/translator");
-        private static readonly IList<ICredentialItem> _credentialItems = new ICredentialItem[] { new CredentialItem("APIKey", "API Key") };
+        private static readonly IList<ICredentialItem> _credentialItems = new ICredentialItem[]
+        {
+            new CredentialItem("APIKey", "API Key"),
+            new CredentialItem("Url", "Api Url", false)
+        };
 
         public DeepLTranslator()
             : base("DeepL", "DeepL", _uri, _credentialItems)
@@ -40,6 +44,13 @@
         {
             get => SaveCredentials ? Credentials[0].Value : null;
             set => Credentials[0].Value = value;
+        }
+
+        [DataMember(Name = "ApiUrl")]
+        public string? ApiUrl
+        {
+            get => Credentials[1].Value;
+            set => Credentials[1].Value = value;
         }
 
         private string? ApiKey => Credentials[0].Value;
@@ -82,10 +93,15 @@
                             "auth_key", ApiKey
                         });
 
+                        var apiUrl = ApiUrl;
+                        if (apiUrl.IsNullOrWhiteSpace())
+                        {
+                            apiUrl = "https://api.deepl.com/v2/translate";
+                        }
+
                         // Call the DeepL API
-                        // ReSharper disable once AssignNullToNotNullAttribute
                         var response = await GetHttpResponse<TranslationRootObject>(
-                            "https://api.deepl.com/v2/translate",
+                            apiUrl,
                             parameters,
                             translationSession.CancellationToken).ConfigureAwait(false);
 
