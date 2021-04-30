@@ -8,6 +8,7 @@
     using System.Windows;
 
     using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
     using ResXManager.View;
@@ -116,6 +117,20 @@
             try
             {
                 return projectItem?.ProjectItems?.OfType<EnvDTE.ProjectItem>().ToArray();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static EnvDTE.ProjectItem? GetProjectItem(this EnvDTE.Document? document)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            try
+            {
+                return document?.ProjectItem;
             }
             catch
             {

@@ -409,12 +409,12 @@
 
         private async void MoveToResource(object? sender, EventArgs? e)
         {
-            FindToolWindow();
-
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             try
             {
+                FindToolWindow();
+
                 var entry = await ExportProvider.GetExportedValue<IRefactorings>().MoveToResourceAsync(Dte.ActiveDocument).ConfigureAwait(true);
                 if (entry == null)
                     return;
@@ -485,39 +485,47 @@
         {
             await JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            using (_performanceTracer?.Start("DTE event: Document saved"))
+            try
             {
-                if (!AffectsResourceFile(document))
-                    return;
 
-                var resourceManager = _resourceManager;
-                if (resourceManager == null || resourceManager.IsSaving)
-                    return;
+                using (_performanceTracer?.Start("DTE event: Document saved"))
+                {
+                    if (!AffectsResourceFile(document))
+                        return;
 
-                // Run custom tool (usually attached to neutral language) even if a localized language changes,
-                // e.g. if custom tool is a text template, we might want not only to generate the designer file but also
-                // extract some localization information.
-                // => find the resource entity that contains the document and run the custom tool on the neutral project file.
+                    var resourceManager = _resourceManager;
+                    if (resourceManager == null || resourceManager.IsSaving)
+                        return;
+
+                    // Run custom tool (usually attached to neutral language) even if a localized language changes,
+                    // e.g. if custom tool is a text template, we might want not only to generate the designer file but also
+                    // extract some localization information.
+                    // => find the resource entity that contains the document and run the custom tool on the neutral project file.
 
 #pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
-                bool Predicate(ResourceEntity e)
-                {
-                    return e.Languages.Select(lang => lang.ProjectFile)
-                        .OfType<DteProjectFile>()
-                        .Any(projectFile => projectFile.ProjectItems.Any(p => p.Document == document));
-                }
+                    bool Predicate(ResourceEntity e)
+                    {
+                        return e.Languages.Select(lang => lang.ProjectFile)
+                            .OfType<DteProjectFile>()
+                            .Any(projectFile => projectFile.ProjectItems.Any(p => p.Document == document));
+                    }
 #pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
 
-                var entity = (await GetResourceEntitiesAsync().ConfigureAwait(true)).FirstOrDefault(Predicate);
+                    var entity = (await GetResourceEntitiesAsync().ConfigureAwait(true)).FirstOrDefault(Predicate);
 
-                var neutralProjectFile = entity?.NeutralProjectFile as DteProjectFile;
+                    var neutralProjectFile = entity?.NeutralProjectFile as DteProjectFile;
 
-                // VS will run the custom tool on the project item only. Run the custom tool on any of the descendants, too.
-                var projectItems = neutralProjectFile?.ProjectItems.SelectMany(projectItem => projectItem.Descendants());
+                    // VS will run the custom tool on the project item only. Run the custom tool on any of the descendants, too.
+                    var projectItems = neutralProjectFile?.ProjectItems.SelectMany(projectItem => projectItem.Descendants());
 
-                _customToolRunner.Enqueue(projectItems);
+                    _customToolRunner.Enqueue(projectItems);
 
-                ReloadSolution();
+                    ReloadSolution();
+                }
+            }
+            catch (Exception ex)
+            {
+                Tracer.TraceError(ex.ToString());
             }
         }
 
@@ -541,10 +549,10 @@
             if (document == null)
                 return false;
 
-            return document.ProjectItem
+            return document.GetProjectItem()
                 .DescendantsAndSelf()
                 .Select(item => item.TryGetFileName())
-                .Where(fileName => fileName != null)
+                .ExceptNullItems()
                 .Select(Path.GetExtension)
                 .Any(ProjectFileExtensions.IsSupportedFileExtension);
         }
