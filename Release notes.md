@@ -1,4 +1,9 @@
-﻿1.52
+﻿1.53
+- Fix #405: allow to specify Deepl api url, so the free subscription can be used.
+- Fix #406: Wrap EnvDTE.Document.ProjectItem to catch unexpected com exceptions.
+- Fix #407: string format pattern parsing for patterns with custom format section
+
+1.52
 - #403: improve loading, only enumerate project files when view is visible or when needed by a feature.
  
 1.51
