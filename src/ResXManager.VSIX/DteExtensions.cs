@@ -17,7 +17,7 @@
     {
         public static EnvDTE.Document? TryGetDocument(this EnvDTE.ProjectItem? projectItem)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
@@ -35,7 +35,7 @@
 
         public static bool GetIsOpen(this EnvDTE.ProjectItem projectItem)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
@@ -49,7 +49,7 @@
 
         public static ICollection<VSITEMSELECTION> GetSelectedProjectItems(this IVsMonitorSelection monitorSelection)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             var hierarchyPtr = IntPtr.Zero;
             var selectionContainerPtr = IntPtr.Zero;
@@ -93,7 +93,7 @@
 
         public static string? GetMkDocument(this VSITEMSELECTION selection)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
@@ -163,7 +163,7 @@
 
         public static void SetProperty(this EnvDTE.ProjectItem projectItem, string propertyName, object? value)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             var item = projectItem.Properties?.Item(propertyName);
             if (item != null)
@@ -172,7 +172,7 @@
 
         public static object? GetProperty(this EnvDTE.ProjectItem projectItem, string propertyName)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
@@ -191,7 +191,7 @@
 
         public static void RunCustomTool(this EnvDTE.ProjectItem projectItem)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
@@ -207,21 +207,21 @@
 
         public static void SetCustomTool(this EnvDTE.ProjectItem projectItem, string? value)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             SetProperty(projectItem, @"CustomTool", value);
         }
 
         public static string? GetCustomTool(this EnvDTE.ProjectItem projectItem)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             return GetProperty(projectItem, @"CustomTool") as string;
         }
 
         public static EnvDTE.ProjectItem? AddFromFile(this EnvDTE.ProjectItem projectItem, string? fileName)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
@@ -235,7 +235,7 @@
 
         public static EnvDTE.ProjectItem? AddFromFile(this EnvDTE.Project project, string? fileName)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
@@ -253,7 +253,7 @@
             const string PAGE_TEXT_EDITOR = "TextEditor";
             const string PROPERTY_FONT_SIZE = "FontSize";
 
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
@@ -275,7 +275,7 @@
 
         public static string? TryGetFileName(this EnvDTE.ProjectItem projectItem)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {

@@ -173,6 +173,13 @@
                         case CodeGenerator.TextTemplate:
                             SetTextTemplateCodeGenerator(projectItem);
                             break;
+
+                        case CodeGenerator.None:
+                        case CodeGenerator.Unknown:
+                        case CodeGenerator.WinForms:
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
