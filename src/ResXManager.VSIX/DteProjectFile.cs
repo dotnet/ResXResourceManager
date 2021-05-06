@@ -6,7 +6,6 @@
     using System.Linq;
     using System.Runtime.InteropServices;
 
-    using ResXManager.Infrastructure;
     using ResXManager.Model;
 
     using TomsToolbox.Essentials;

@@ -10,8 +10,6 @@
     using System.Text;
     using System.Text.RegularExpressions;
 
-    using ResXManager.Infrastructure;
-
     using TomsToolbox.Essentials;
 
     [DataContract]

@@ -7,7 +7,6 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
     using TomsToolbox.Essentials;
 
@@ -33,7 +32,7 @@
 
         private static bool CompliesToRule(string? neutralValue, IEnumerable<string?> values)
         {
-            var allValues = new[] {neutralValue}.Concat(values.Where(value => !value.IsNullOrEmpty())).ToList();
+            var allValues = new[] { neutralValue }.Concat(values.Where(value => !value.IsNullOrEmpty())).ToList();
 
             var indexedComply = allValues
                        .Select(GetStringFormatByIndexFlags)
@@ -48,15 +47,14 @@
             return indexedComply && namedComply;
         }
 
+        private static readonly Regex _getStringFormatByIndexExpression = new Regex(@"\{([0-9]+)(?:,-?[0-9]+)?(?::[^\}]+)?\}", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+
         private static long GetStringFormatByIndexFlags(string? value)
         {
             if (value.IsNullOrEmpty())
                 return 0;
 
-            const string pattern = @"\{([0-9]+)(?:,-?[0-9]+)?(?::\S+)?\}";
-            const RegexOptions options = RegexOptions.CultureInvariant;
-
-            return Regex.Matches(value, pattern, options)
+            return _getStringFormatByIndexExpression.Matches(value)
                 .Cast<Match>()
                 .Where(m => m.Success)
                 .Aggregate(0L, (a, match) => a | ParseMatch(match));
@@ -67,7 +65,7 @@
             if (value.IsNullOrEmpty())
                 return string.Empty;
 
-            return string.Join("|", WebFilesExporter.ExtractPlaceholders(value!).OrderBy(item => item));
+            return string.Join("|", WebFilesExporter.ExtractPlaceholders(value).OrderBy(item => item));
         }
 
         private static long ParseMatch(Match match)
