@@ -15,7 +15,7 @@
       <Version>6.5.1</Version>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.32</Version>
+      <Version>1.11.33</Version>
     </PackageReference>
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all">
       <Version>2021.1.0</Version>
@@ -31,7 +31,7 @@
       <Version>3.3.3</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.Composition">
-      <Version>2.5.2</Version>
+      <Version>2.5.3</Version>
     </PackageReference>
   </ItemGroup>
 </Project>

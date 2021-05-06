@@ -8,8 +8,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
-    <PackageReference Include="TomsToolbox.Essentials" Version="2.5.2" />
-    <PackageReference Include="TomsToolbox.Composition" Version="2.5.2" />
+    <PackageReference Include="TomsToolbox.Essentials" Version="2.5.3" />
+    <PackageReference Include="TomsToolbox.Composition" Version="2.5.3" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>

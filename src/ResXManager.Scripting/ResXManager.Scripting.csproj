@@ -23,7 +23,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.5.2" />
+    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.5.3" />
   </ItemGroup>
   <Target Name="CompressFiles" Condition="'$(Configuration)' == 'Release'" AfterTargets="CopyFilesToOutputDirectory" Outputs="..\Deploy\Scripting.zip">
     <ItemGroup>
