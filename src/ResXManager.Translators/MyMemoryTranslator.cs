@@ -34,7 +34,7 @@
 
         private static IList<ICredentialItem> GetCredentials()
         {
-            return new ICredentialItem[] { new CredentialItem("Key", "Key") };
+            return new ICredentialItem[] { new CredentialItem("Key", "Key"), new CredentialItem("Mail", "Mail") };
         }
 
         [DataMember(Name = "Key")]
@@ -45,6 +45,15 @@
         }
 
         private string? Key => Credentials[0].Value;
+
+        [DataMember(Name = "Mail")]
+        public string? SerializedMail
+        {
+            get => SaveCredentials ? Credentials[1].Value : null;
+            set => Credentials[1].Value = value;
+        }
+
+        private string? Mail => Credentials[1].Value;
 
         protected override async Task Translate(ITranslationSession translationSession)
         {
@@ -59,7 +68,7 @@
                     var translationItem = item;
 
                     var targetCulture = translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage;
-                    var result = await TranslateTextAsync(client, translationItem.Source, Key, translationSession.SourceLanguage, targetCulture, translationSession.CancellationToken).ConfigureAwait(false);
+                    var result = await TranslateTextAsync(client, translationItem.Source, Key, Mail, translationSession.SourceLanguage, targetCulture, translationSession.CancellationToken).ConfigureAwait(false);
 
                     await translationSession.MainThread.StartNew(() =>
                     {
@@ -87,7 +96,7 @@
             }
         }
 
-        private static async Task<Response?> TranslateTextAsync(HttpClient client, string input, string? key, CultureInfo sourceLanguage, CultureInfo targetLanguage, CancellationToken cancellationToken)
+        private static async Task<Response?> TranslateTextAsync(HttpClient client, string input, string? key, string? mail, CultureInfo sourceLanguage, CultureInfo targetLanguage, CancellationToken cancellationToken)
         {
             var rawInput = RemoveKeyboardShortcutIndicators(input);
 
@@ -98,6 +107,10 @@
 
             if (!key.IsNullOrEmpty())
                 url += string.Format(CultureInfo.InvariantCulture, "&key={0}", WebUtility.UrlEncode(key));
+
+
+            if (!mail.IsNullOrEmpty())
+                url += string.Format(CultureInfo.InvariantCulture, "&de={0}", WebUtility.UrlEncode(mail));
 
             var response = await client.GetAsync(new Uri(url, UriKind.RelativeOrAbsolute), cancellationToken).ConfigureAwait(false);
 
