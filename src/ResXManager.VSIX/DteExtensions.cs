@@ -247,7 +247,7 @@
             }
         }
 
-        public static void SetFontSize(this EnvDTE.DTE dte, DependencyObject view)
+        public static void SetFontSize(this EnvDTE80.DTE2 dte, DependencyObject view)
         {
             const string CATEGORY_FONTS_AND_COLORS = "FontsAndColors";
             const string PAGE_TEXT_EDITOR = "TextEditor";

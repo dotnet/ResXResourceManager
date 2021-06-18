@@ -136,13 +136,13 @@
             _contentWrapper.Content = null;
         }
 
-        private EnvDTE.DTE Dte
+        private EnvDTE80.DTE2 Dte
         {
             get
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
 
-                var dte = (EnvDTE.DTE)GetService(typeof(EnvDTE.DTE));
+                var dte = (EnvDTE80.DTE2)GetService(typeof(EnvDTE.DTE));
                 return dte;
             }
         }

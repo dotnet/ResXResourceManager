@@ -117,9 +117,10 @@
             {
                 ConnectEvents();
             }
-            catch
+            catch (Exception ex)
             {
                 // VS_17_NOTSUPPORTED
+                Tracer.TraceError("ConnectEvents:" + ex);
             }
 
             // start background services
@@ -207,7 +208,7 @@
         {
             get
             {
-                var dte = (EnvDTE80.DTE2)GetService(typeof(SDTE));
+                var dte = (EnvDTE80.DTE2)GetService(typeof(EnvDTE.DTE));
                 return dte;
             }
         }

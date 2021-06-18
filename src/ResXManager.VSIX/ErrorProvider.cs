@@ -8,8 +8,8 @@
     using EnvDTE;
 
     using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Shell.Interop;
 
+    using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.VSIX.Visuals;
 
@@ -28,7 +28,12 @@
 
 
         [ImportingConstructor]
-        public ErrorProvider([Import(nameof(VsPackage))][Ninject.Named(nameof(VsPackage))]IServiceProvider serviceProvider, ResourceManager resourceManager, VsixShellViewModel shellViewModel, DteConfiguration configuration)
+        public ErrorProvider(
+            [Import(nameof(VsPackage))][Ninject.Named(nameof(VsPackage))] IServiceProvider serviceProvider,
+            ResourceManager resourceManager,
+            VsixShellViewModel shellViewModel,
+            ITracer tracer,
+            DteConfiguration configuration)
         {
             _resourceManager = resourceManager;
             _shellViewModel = shellViewModel;
@@ -45,7 +50,7 @@
             var tasks = _errorListProvider.Tasks;
             _tasks = tasks;
 
-            var dte = (EnvDTE80.DTE2)serviceProvider.GetService(typeof(SDTE));
+            var dte = (EnvDTE80.DTE2)serviceProvider.GetService(typeof(DTE));
             var events = dte?.Events as EnvDTE80.Events2;
             var buildEvents = events?.BuildEvents;
 
@@ -58,10 +63,12 @@
             {
                 buildEvents.OnBuildBegin += BuildEvents_OnBuildBegin;
             }
-            catch
+            catch (Exception ex)
             {
                 // VS_17_NOTSUPPORTED
+                tracer.TraceError("buildEvents.OnBuildBegin:" + ex);
             }
+
         }
 
         private void TableEntries_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -140,7 +147,7 @@
 
         private void Task_Navigate(object? sender, EventArgs e)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             if (!(sender is ResourceErrorTask task))
                 return;
