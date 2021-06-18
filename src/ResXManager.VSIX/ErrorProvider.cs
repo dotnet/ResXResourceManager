@@ -59,16 +59,7 @@
             if (buildEvents == null)
                 return;
 
-            try
-            {
-                buildEvents.OnBuildBegin += BuildEvents_OnBuildBegin;
-            }
-            catch (Exception ex)
-            {
-                // VS_17_NOTSUPPORTED
-                tracer.TraceError("buildEvents.OnBuildBegin:" + ex);
-            }
-
+            buildEvents.OnBuildBegin += BuildEvents_OnBuildBegin;
         }
 
         private void TableEntries_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

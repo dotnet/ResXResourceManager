@@ -111,7 +111,15 @@
 
             ShowLoaderMessages(loaderMessages);
 
-            ErrorProvider.Register(ExportProvider);
+            try
+            {
+                ErrorProvider.Register(ExportProvider);
+            }
+            catch (Exception ex)
+            {
+                // VS_17_NOTSUPPORTED
+                Tracer.TraceError("buildEvents.OnBuildBegin:" + ex);
+            }
 
             try
             {
@@ -208,7 +216,7 @@
         {
             get
             {
-                var dte = (EnvDTE80.DTE2)GetService(typeof(EnvDTE.DTE));
+                var dte = (EnvDTE80.DTE2)GetService(typeof(EnvDTE80.DTE2));
                 return dte;
             }
         }
