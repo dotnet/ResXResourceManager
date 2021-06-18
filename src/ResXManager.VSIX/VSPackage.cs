@@ -113,7 +113,14 @@
 
             ErrorProvider.Register(ExportProvider);
 
-            ConnectEvents();
+            try
+            {
+                ConnectEvents();
+            }
+            catch
+            {
+                // VS_17_NOTSUPPORTED
+            }
 
             // start background services
             ExportProvider

@@ -54,7 +54,14 @@
             if (buildEvents == null)
                 return;
 
-            buildEvents.OnBuildBegin += BuildEvents_OnBuildBegin;
+            try
+            {
+                buildEvents.OnBuildBegin += BuildEvents_OnBuildBegin;
+            }
+            catch
+            {
+                // VS_17_NOTSUPPORTED
+            }
         }
 
         private void TableEntries_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
