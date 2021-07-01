@@ -1,7 +1,6 @@
 ﻿namespace ResXManager.VSIX
 {
     using System;
-    using System.Collections;
     using System.Collections.Specialized;
     using System.Composition;
     using System.Linq;
@@ -24,7 +23,7 @@
         private readonly VsixShellViewModel _shellViewModel;
         private readonly DteConfiguration _configuration;
         private readonly ErrorListProvider _errorListProvider;
-        private readonly IList _tasks;
+        private readonly TaskProvider.TaskCollection _tasks;
 
         [ImportingConstructor]
         public ErrorProvider(
@@ -130,6 +129,7 @@
                         if (++errorCount >= 20)
                             return;
 
+                        // Bug in VS2022: : this is the call that is responsible for the exeption: 'Could not load type 'Microsoft.VisualStudio.Shell.Task' from assembly 'Microsoft.VisualStudio.Shell.15.0, Version=17.0.0.0
                         var task = new ResourceErrorTask(entry)
                         {
                             ErrorCategory = errorCategory,
