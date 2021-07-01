@@ -11,6 +11,8 @@
 
     using TomsToolbox.Composition;
 
+    using static Microsoft.VisualStudio.Shell.ThreadHelper;
+
     [Export(typeof(ISourceFilesProvider))]
     internal class DteSourceFilesProvider : ISourceFilesProvider
     {
@@ -55,7 +57,7 @@
         {
             get
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 var fileFilter = new FileFilter(_configuration);
 
@@ -65,7 +67,7 @@
 
         private IEnumerable<ProjectFile> GetProjectFiles(IFileFilter fileFilter)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             return Solution.GetProjectFiles(fileFilter);
         }

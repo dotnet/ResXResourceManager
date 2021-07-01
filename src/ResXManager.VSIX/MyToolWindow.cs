@@ -29,6 +29,8 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.XamlExtensions;
 
+    using static Microsoft.VisualStudio.Shell.ThreadHelper;
+
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
     /// </summary>
@@ -111,7 +113,7 @@
 
         private void ContentWrapper_Loaded(object? sender, RoutedEventArgs e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             try
             {
@@ -140,7 +142,7 @@
         {
             get
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 var dte = (EnvDTE80.DTE2)GetService(typeof(EnvDTE.DTE));
                 return dte;
@@ -183,7 +185,7 @@
 
         private void ResourceManager_BeginEditing(object? sender, ResourceBeginEditingEventArgs e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             if (!CanEdit(e.Entity, e.CultureKey))
             {
@@ -193,7 +195,7 @@
 
         private bool CanEdit(ResourceEntity entity, CultureKey? cultureKey)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             var languages = entity.Languages.Where(lang => (cultureKey == null) || cultureKey.Equals(lang.CultureKey)).ToArray();
 
@@ -255,7 +257,7 @@
         {
             try
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 window?.Activate();
             }
@@ -269,7 +271,7 @@
         {
             try
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
 #pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
                 var openDocuments = Dte.Windows?
@@ -296,7 +298,7 @@
 
         private bool QueryEditFiles(string[] lockedFiles)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             var service = (IVsQueryEditQuerySave2)GetService(typeof(SVsQueryEditQuerySave));
             if (service != null)
@@ -320,7 +322,7 @@
 
         private bool AddLanguage(ResourceEntity entity, CultureInfo culture)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             var resourceLanguages = entity.Languages;
             if (!resourceLanguages.Any())
@@ -353,7 +355,7 @@
 
         private void AddProjectItems(ResourceEntity entity, ResourceLanguage neutralLanguage, string languageFileName)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             DteProjectFile? projectFile = null;
 

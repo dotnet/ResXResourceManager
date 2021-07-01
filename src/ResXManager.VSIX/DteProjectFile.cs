@@ -10,6 +10,9 @@
 
     using TomsToolbox.Essentials;
 
+    using static Microsoft.VisualStudio.Shell.ThreadHelper;
+
+
     internal class DteProjectFile : ProjectFile
     {
         public const string T4FileName = "Resources.Designer.t4";
@@ -30,7 +33,7 @@
         public DteProjectFile(DteSolution solution, string solutionFolder, string filePath, string? projectName, string? uniqueProjectName, EnvDTE.ProjectItem projectItem)
             : base(filePath, solutionFolder, projectName, uniqueProjectName)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             _solution = solution;
             _projectItems.Add(projectItem);
@@ -51,13 +54,13 @@
         {
             get
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 return GetCodeGenerator();
             }
             set
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 if (GetCodeGenerator() != value)
                 {
@@ -81,7 +84,7 @@
         {
             get
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 try
                 {
@@ -98,7 +101,7 @@
         {
             get
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 try
                 {
@@ -121,7 +124,7 @@
 
         private CodeGenerator GetCodeGenerator()
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             try
             {
@@ -152,7 +155,7 @@
 
         private void SetCodeGenerator(CodeGenerator value)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             try
             {
@@ -190,7 +193,7 @@
 
         private static bool IsTextTemplate(EnvDTE.ProjectItem item)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             var name = item.Name;
 
@@ -199,7 +202,7 @@
 
         private void SetTextTemplateCodeGenerator(EnvDTE.ProjectItem projectItem)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             projectItem.SetCustomTool(null);
 
@@ -231,7 +234,7 @@
 
         private static void SetCustomToolCodeGenerator(EnvDTE.ProjectItem projectItem, CodeGenerator value)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
 #pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
             projectItem.Children()

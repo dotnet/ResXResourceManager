@@ -19,6 +19,8 @@
     using TomsToolbox.Composition;
     using TomsToolbox.Essentials;
 
+    using static Microsoft.VisualStudio.Shell.ThreadHelper;
+
     public interface IRefactorings
     {
         bool CanMoveToResource(Document? document);
@@ -41,7 +43,7 @@
 
         public bool CanMoveToResource(Document? document)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             var extension = Path.GetExtension(document?.FullName);
             if (extension == null)
@@ -74,9 +76,9 @@
             if (document == null)
                 return null;
 
-            if (!Microsoft.VisualStudio.Shell.ThreadHelper.CheckAccess())
+            if (!CheckAccess())
             {
-                await Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                await JoinableTaskFactory.SwitchToMainThreadAsync();
             }
 
             var extension = Path.GetExtension(document.FullName);
@@ -169,7 +171,7 @@
 
         private static IEnumerable<ResourceEntity> GetResourceEntriesFromProject(Document document, IEnumerable<ResourceEntity> entities)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             try
             {
@@ -185,7 +187,7 @@
 
         private static bool IsInProject(ResourceEntity entity, Document? document)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             try
             {
@@ -201,7 +203,7 @@
 
         private static bool IsInProject(ResourceEntity entity, Project? project)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             try
             {
@@ -219,7 +221,7 @@
 
         private static Project? GetContainingProject(ProjectItem item)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             try
             {
@@ -233,7 +235,7 @@
 
         private static Selection? GetSelection(Document? document)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             var textDocument = (TextDocument?)document?.Object(@"TextDocument");
 
@@ -258,7 +260,7 @@
 
             public Selection(TextDocument textDocument, string line, FileCodeModel? codeModel)
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 _textDocument = textDocument;
                 Line = line;
@@ -269,7 +271,7 @@
             {
                 get
                 {
-                    Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                    ThrowIfNotOnUIThread();
                     return _textDocument.Selection.TopPoint;
                 }
             }
@@ -278,7 +280,7 @@
             {
                 get
                 {
-                    Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                    ThrowIfNotOnUIThread();
                     return _textDocument.Selection.BottomPoint;
                 }
             }
@@ -287,7 +289,7 @@
             {
                 get
                 {
-                    Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                    ThrowIfNotOnUIThread();
                     return Begin.EqualTo(End);
                 }
             }
@@ -296,7 +298,7 @@
             {
                 get
                 {
-                    Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                    ThrowIfNotOnUIThread();
                     return _textDocument.Selection?.Text;
                 }
             }
@@ -311,7 +313,7 @@
 
             public void MoveTo(int startColumn, int endColumn)
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 var selection = _textDocument.Selection;
                 if (selection == null)
@@ -323,7 +325,7 @@
 
             public void ReplaceWith(string? replacement)
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 var selection = _textDocument.Selection;
                 // using "selection.Text = replacement" does not work here, since it will trigger auto-complete,
@@ -333,7 +335,7 @@
 
             private CodeElement? GetCodeElement(vsCMElement scope)
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 try
                 {
@@ -355,7 +357,7 @@
         {
             public string? LocateString(Selection? selection, bool expandSelection)
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 if (selection == null)
                     return null;
@@ -388,7 +390,7 @@
 
                 public string? Locate(string quote)
                 {
-                    Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                    ThrowIfNotOnUIThread();
 
                     var secondQuote = -1;
 

@@ -10,6 +10,8 @@
     using ResXManager.Infrastructure;
     using ResXManager.Model;
 
+    using static Microsoft.VisualStudio.Shell.ThreadHelper;
+
     [Export(typeof(IConfiguration))]
     [Export(typeof(Configuration))]
     [Export(typeof(DteConfiguration))]
@@ -42,7 +44,7 @@
         {
             get
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
                 return _solution.Globals != null ? ConfigurationScope.Solution : ConfigurationScope.Global;
             }
         }
@@ -50,14 +52,14 @@
         [return: MaybeNull]
         protected override T InternalGetValue<T>([AllowNull] T defaultValue, string key)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             return TryGetValue(GetKey(key), defaultValue, out var value) ? value : base.InternalGetValue(defaultValue, key);
         }
 
         protected override void InternalSetValue<T>([AllowNull] T value, string key)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             var globals = _solution.Globals;
 
@@ -73,7 +75,7 @@
 
         private bool TryGetValue<T>(string? key, [AllowNull] T defaultValue, [MaybeNull] out T value)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             value = defaultValue;
 
@@ -82,7 +84,7 @@
 
         private static bool TryGetValue<T>(EnvDTE.Globals? globals, string? key, [AllowNull] ref T value)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             try
             {
@@ -102,7 +104,7 @@
 
         private void TrySetValue<T>(EnvDTE.Globals globals, string? internalKey, [AllowNull] T value)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             try
             {

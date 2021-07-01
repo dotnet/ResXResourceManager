@@ -7,6 +7,8 @@
 
     using ResXManager.Infrastructure;
 
+    using static Microsoft.VisualStudio.Shell.ThreadHelper;
+
     public class OutputWindowTracer : ITracer
     {
         private readonly IServiceProvider _serviceProvider;
@@ -20,7 +22,7 @@
 
         private void LogMessageToOutputWindow(string? value)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             if (!(_serviceProvider.GetService(typeof(SVsOutputWindow)) is IVsOutputWindow outputWindow))
                 return;
@@ -50,10 +52,10 @@
 
         public void WriteLine(string value)
         {
-            if (!Microsoft.VisualStudio.Shell.ThreadHelper.CheckAccess())
+            if (!CheckAccess())
             {
 #pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
-                Microsoft.VisualStudio.Shell.ThreadHelper.Generic.BeginInvoke(() => LogMessageToOutputWindow(value + Environment.NewLine));
+                Generic.BeginInvoke(() => LogMessageToOutputWindow(value + Environment.NewLine));
 #pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
             }
             else

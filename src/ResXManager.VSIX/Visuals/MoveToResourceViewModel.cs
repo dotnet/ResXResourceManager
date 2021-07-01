@@ -14,7 +14,6 @@
 
     using PropertyChanged;
 
-    using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.VSIX.Properties;
 
@@ -22,6 +21,8 @@
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
+
+    using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
     internal sealed class MoveToResourceViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
@@ -119,7 +120,7 @@
 
         private static string GetLocalNamespace(ProjectItem? resxItem)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             try
             {
@@ -159,7 +160,7 @@
 
         private string EvaluatePattern(string pattern)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             var entity = ReuseExisiting ? SelectedResourceEntry?.Container : SelectedResourceEntity;
             var key = ReuseExisiting ? SelectedResourceEntry?.Key : Key;

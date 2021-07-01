@@ -1,12 +1,11 @@
 ﻿namespace ResXManager.VSIX
 {
     using System;
+    using System.Collections;
     using System.Collections.Specialized;
     using System.Composition;
     using System.Linq;
-
-    using EnvDTE;
-
+    using Community.VisualStudio.Toolkit;
     using Microsoft.VisualStudio.Shell;
 
     using ResXManager.Infrastructure;
@@ -15,6 +14,9 @@
 
     using TomsToolbox.Composition;
 
+    using static Microsoft.VisualStudio.Shell.ThreadHelper;
+
+
     [Export]
     internal sealed class ErrorProvider : IDisposable
     {
@@ -22,10 +24,7 @@
         private readonly VsixShellViewModel _shellViewModel;
         private readonly DteConfiguration _configuration;
         private readonly ErrorListProvider _errorListProvider;
-        private readonly TaskProvider.TaskCollection _tasks;
-
-        private BuildEvents? _buildEvents;
-
+        private readonly IList _tasks;
 
         [ImportingConstructor]
         public ErrorProvider(
@@ -47,19 +46,9 @@
                 ProviderGuid = new Guid("36C23699-DA00-4D2C-8233-5484A091BFD2")
             };
 
-            var tasks = _errorListProvider.Tasks;
-            _tasks = tasks;
+            _tasks = _errorListProvider.Tasks;
 
-            var dte = (EnvDTE80.DTE2)serviceProvider.GetService(typeof(DTE));
-            var events = dte?.Events as EnvDTE80.Events2;
-            var buildEvents = events?.BuildEvents;
-
-            _buildEvents = buildEvents;
-
-            if (buildEvents == null)
-                return;
-
-            buildEvents.OnBuildBegin += BuildEvents_OnBuildBegin;
+            VS.Events.BuildEvents.SolutionBuildStarted += BuildEvents_SolutionBuildStarted;
         }
 
         private void TableEntries_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -74,8 +63,20 @@
                 if (task == null)
                     continue;
 
-                _tasks.Remove(task);
+                try
+                {
+                    TryRemoveTask(task);
+                }
+                catch (MissingMethodException)
+                {
+                    // BUG in VS2022: missing method Microsoft.VisualStudio.Shell.TaskProvider.TaskCollection.Remove
+                }
             }
+        }
+
+        private void TryRemoveTask(ResourceErrorTask task)
+        {
+            _tasks.Remove(task);
         }
 
         public static void Register(IExportProvider exportProvider)
@@ -90,7 +91,19 @@
             }
         }
 
-        private void BuildEvents_OnBuildBegin(vsBuildScope scope, vsBuildAction action)
+        private void BuildEvents_SolutionBuildStarted(object sender, EventArgs e)
+        {
+            try
+            {
+                BuildStarted();
+            }
+            catch (TypeLoadException)
+            {
+                // Bug in VS2022: : 'Could not load type 'Microsoft.VisualStudio.Shell.Task' from assembly 'Microsoft.VisualStudio.Shell.15.0, Version=17.0.0.0
+            }
+        }
+
+        private void BuildStarted()
         {
             _errorListProvider.SuspendRefresh();
 
@@ -138,7 +151,7 @@
 
         private void Task_Navigate(object? sender, EventArgs e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             if (!(sender is ResourceErrorTask task))
                 return;
@@ -154,14 +167,7 @@
         {
             _errorListProvider.Dispose();
 
-            var buildEvents = _buildEvents;
-
-            if (buildEvents == null)
-                return;
-
-            buildEvents.OnBuildBegin -= BuildEvents_OnBuildBegin;
-
-            _buildEvents = null;
+            VS.Events.BuildEvents.SolutionBuildStarted -= BuildEvents_SolutionBuildStarted;
         }
 
         private class ResourceErrorTask : ErrorTask

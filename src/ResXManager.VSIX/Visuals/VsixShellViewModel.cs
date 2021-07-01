@@ -15,6 +15,8 @@
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
 
+    using static Microsoft.VisualStudio.Shell.ThreadHelper;
+
     [Export]
     public sealed class VsixShellViewModel : ObservableObject
     {
@@ -37,7 +39,7 @@
         {
             get
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 var items = SelectedItemsCodeGenerators().ToArray();
                 var generator = items.FirstOrDefault();
@@ -51,7 +53,7 @@
 
         public void SelectEntry(ResourceTableEntry entry)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             VsPackage.Instance.ShowToolWindow();
 
@@ -63,7 +65,7 @@
 
         private IEnumerable<CodeGenerator> SelectedItemsCodeGenerators()
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             return _resourceViewModel.SelectedEntities
                 .Select(x => x.NeutralProjectFile)
@@ -74,14 +76,14 @@
 
         private bool CanSetCodeProvider(CodeGenerator obj)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             return SelectedItemsCodeGenerators().All(g => g != CodeGenerator.None);
         }
 
         private void SetCodeProvider(CodeGenerator codeGenerator)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             _resourceViewModel.SelectedEntities
                 .Select(x => x.NeutralProjectFile)

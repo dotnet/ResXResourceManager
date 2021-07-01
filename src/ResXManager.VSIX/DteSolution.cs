@@ -10,6 +10,8 @@
     using ResXManager.Model;
     using TomsToolbox.Essentials;
 
+    using static Microsoft.VisualStudio.Shell.ThreadHelper;
+
     [Export]
     internal class DteSolution
     {
@@ -34,7 +36,7 @@
         /// <returns>The files.</returns>
         public IEnumerable<ProjectFile> GetProjectFiles(IFileFilter fileFilter)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             return _projectFiles ??= EnumerateProjectFiles(fileFilter) ?? new DirectoryInfo(SolutionFolder).GetAllSourceFiles(fileFilter, null);
         }
@@ -46,14 +48,14 @@
 
         private IEnumerable<ProjectFile>? EnumerateProjectFiles(IFileFilter fileFilter)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             return EnumerateProjectFiles()?.Where(fileFilter.Matches);
         }
 
         private IEnumerable<ProjectFile>? EnumerateProjectFiles()
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             var items = new Dictionary<string, DteProjectFile>();
 
@@ -107,7 +109,7 @@
         {
             get
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 var solution = Solution;
 
@@ -119,7 +121,7 @@
         {
             get
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 try
                 {
@@ -145,7 +147,7 @@
         {
             get
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThrowIfNotOnUIThread();
 
                 return Solution?.FullName;
             }
@@ -153,7 +155,7 @@
 
         public EnvDTE.ProjectItem? AddFile(string fullName)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             var solutionItemsProject = GetProjects().FirstOrDefault(IsSolutionItemsFolder) ?? Solution?.AddSolutionFolder(SolutionItemsFolderName);
 
@@ -167,7 +169,7 @@
 
         private static bool IsSolutionItemsFolder(EnvDTE.Project? project)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             if (project == null)
                 return false;
@@ -178,7 +180,7 @@
 
         private IEnumerable<EnvDTE.Project> GetProjects()
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             var solution = Solution;
 
@@ -205,7 +207,7 @@
 
         private void GetProjectFiles(string? projectName, EnvDTE.ProjectItems? projectItems, IDictionary<string, DteProjectFile> items)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             if (projectItems == null)
                 return;
@@ -237,7 +239,7 @@
 
         private void GetProjectFiles(string? projectName, EnvDTE.ProjectItem projectItem, IDictionary<string, DteProjectFile> items)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             if (projectItem.Object is VSLangProj.References) // MPF project (e.g. WiX) references folder, do not traverse...
                 return;
@@ -271,7 +273,7 @@
 
         private string? TryGetFileName(EnvDTE.ProjectItem projectItem)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             var name = projectItem.Name;
 

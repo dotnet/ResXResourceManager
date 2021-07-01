@@ -10,8 +10,9 @@
     using System.Runtime.InteropServices;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Windows;
     using System.Windows.Threading;
+
+    using Community.VisualStudio.Toolkit;
 
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
@@ -33,6 +34,10 @@
     using TomsToolbox.Wpf;
 
     using Task = System.Threading.Tasks.Task;
+    using MessageBox = System.Windows.MessageBox;
+
+    using static Microsoft.VisualStudio.Shell.ThreadHelper;
+
 
 #pragma warning disable VSTHRD100 // Avoid async void methods
 
@@ -56,12 +61,6 @@
         private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
         private readonly IKernel _kernel = new StandardKernel();
 
-        private EnvDTE.SolutionEvents? _solutionEvents;
-        private EnvDTE.DocumentEvents? _documentEvents;
-        private EnvDTE.ProjectItemsEvents? _projectItemsEvents;
-        private EnvDTE.ProjectItemsEvents? _solutionItemsEvents;
-        private EnvDTE.ProjectItemsEvents? _miscFilesEvents;
-        private EnvDTE.ProjectsEvents? _projectsEvents;
         private PerformanceTracer? _performanceTracer;
         private ResourceManager? _resourceManager;
 
@@ -111,15 +110,7 @@
 
             ShowLoaderMessages(loaderMessages);
 
-            try
-            {
-                ErrorProvider.Register(ExportProvider);
-            }
-            catch (Exception ex)
-            {
-                // VS_17_NOTSUPPORTED
-                Tracer.TraceError("buildEvents.OnBuildBegin:" + ex);
-            }
+            ErrorProvider.Register(ExportProvider);
 
             try
             {
@@ -216,46 +207,47 @@
         {
             get
             {
-                var dte = (EnvDTE80.DTE2)GetService(typeof(EnvDTE80.DTE2));
+                var dte = (EnvDTE80.DTE2)GetService(typeof(EnvDTE.DTE));
                 return dte;
             }
         }
 
         private void ConnectEvents()
         {
-            var events = (EnvDTE80.Events2)Dte.Events;
+            var events = VS.Events;
 
-            _solutionEvents = events.SolutionEvents;
-            _solutionEvents.Opened += Solution_Opened;
-            _solutionEvents.AfterClosing += Solution_AfterClosing;
+            var solutionEvents = events.SolutionEvents;
+            solutionEvents.OnAfterOpenSolution += (sender, e) => Solution_Opened();
+            solutionEvents.OnAfterCloseSolution += Solution_AfterClosing;
 
-            _solutionEvents.ProjectAdded += Solution_ContentChanged;
-            _solutionEvents.ProjectRemoved += Solution_ContentChanged;
-            _solutionEvents.ProjectRenamed += (item, newName) => Solution_ContentChanged(item);
+            solutionEvents.OnAfterOpenProject += (sender, e) => Solution_ContentChanged();
+            solutionEvents.OnBeforeUnloadProject += (sender, e) => Solution_ContentChanged();
+            solutionEvents.OnAfterRenameProject += (sender, e) => Solution_ContentChanged();
 
-            _projectItemsEvents = events.ProjectItemsEvents;
-            _projectItemsEvents.ItemAdded += Solution_ContentChanged;
-            _projectItemsEvents.ItemRemoved += Solution_ContentChanged;
-            _projectItemsEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
+            // var projectItemsEvents = events.ProjectItemEvents;
+            // projectItemsEvents.ItemAdded += (item) => Solution_ContentChanged();
+            //_projectItemsEvents.ItemRemoved += Solution_ContentChanged;
+            //_projectItemsEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
 
-            _solutionItemsEvents = events.SolutionItemsEvents;
-            _solutionItemsEvents.ItemAdded += Solution_ContentChanged;
-            _solutionItemsEvents.ItemRemoved += Solution_ContentChanged;
-            _solutionItemsEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
+            //_solutionItemsEvents = events.SolutionItemsEvents;
+            //_solutionItemsEvents.ItemAdded += Solution_ContentChanged;
+            //_solutionItemsEvents.ItemRemoved += Solution_ContentChanged;
+            //_solutionItemsEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
 
-            _miscFilesEvents = events.MiscFilesEvents;
-            _miscFilesEvents.ItemAdded += Solution_ContentChanged;
-            _miscFilesEvents.ItemRemoved += Solution_ContentChanged;
-            _miscFilesEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
+            //_miscFilesEvents = events.MiscFilesEvents;
+            //_miscFilesEvents.ItemAdded += Solution_ContentChanged;
+            //_miscFilesEvents.ItemRemoved += Solution_ContentChanged;
+            //_miscFilesEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
 
-            _projectsEvents = events.ProjectsEvents;
-            _projectsEvents.ItemAdded += Solution_ContentChanged;
-            _projectsEvents.ItemRemoved += Solution_ContentChanged;
-            _projectsEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
+            //_projectsEvents = events.ProjectsEvents;
+            //_projectsEvents.ItemAdded += Solution_ContentChanged;
+            //_projectsEvents.ItemRemoved += Solution_ContentChanged;
+            //_projectsEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
 
-            _documentEvents = events.DocumentEvents;
-            _documentEvents.DocumentOpened += DocumentEvents_DocumentOpened;
-            _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
+            events.DocumentEvents.Saved += DocumentEvents_DocumentSaved;
+            var documentEvents = events.DocumentEvents;
+            documentEvents.Opened += DocumentEvents_DocumentOpened;
+            documentEvents.Saved += DocumentEvents_DocumentSaved;
 
             if (Dte.Solution != null)
             {
@@ -273,7 +265,7 @@
 
         private void ShowToolWindow(object? sender, EventArgs? e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             ShowToolWindow();
         }
@@ -293,7 +285,7 @@
 
         internal bool ShowToolWindow()
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             try
             {
@@ -411,7 +403,7 @@
 
         private static bool ContainsChildOfWinFormsDesignerItem(ResourceEntity entity, string? fileName)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             return entity.Languages.Select(lang => lang.ProjectFile)
                 .OfType<DteProjectFile>()
@@ -466,7 +458,7 @@
             }
         }
 
-        private void Solution_AfterClosing()
+        private void Solution_AfterClosing(object sender, EventArgs e)
         {
             using (_performanceTracer?.Start("DTE event: Solution closed"))
             {
@@ -475,7 +467,7 @@
             }
         }
 
-        private void Solution_ContentChanged(object? item)
+        private void Solution_ContentChanged()
         {
             using (_performanceTracer?.Start("DTE event: Solution content changed"))
             {
@@ -484,20 +476,20 @@
             }
         }
 
-        private void DocumentEvents_DocumentOpened(EnvDTE.Document? document)
+        private void DocumentEvents_DocumentOpened(object sender, string fileName)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
             using (_performanceTracer?.Start("DTE event: Document opened"))
             {
-                if (!AffectsResourceFile(document))
+                if (!AffectsResourceFile(fileName))
                     return;
 
                 ReloadSolution();
             }
         }
 
-        private async void DocumentEvents_DocumentSaved(EnvDTE.Document document)
+        private async void DocumentEvents_DocumentSaved(object sender, string fileName)
         {
             await JoinableTaskFactory.SwitchToMainThreadAsync();
 
@@ -506,7 +498,7 @@
 
                 using (_performanceTracer?.Start("DTE event: Document saved"))
                 {
-                    if (!AffectsResourceFile(document))
+                    if (!AffectsResourceFile(fileName))
                         return;
 
                     var resourceManager = _resourceManager;
@@ -523,7 +515,7 @@
                     {
                         return e.Languages.Select(lang => lang.ProjectFile)
                             .OfType<DteProjectFile>()
-                            .Any(projectFile => projectFile.ProjectItems.Any(p => p.Document == document));
+                            .Any(projectFile => projectFile.ProjectItems.Any(p => string.Equals(p.Document.FullName, fileName, StringComparison.OrdinalIgnoreCase)));
                     }
 #pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
 
@@ -558,14 +550,18 @@
             _customToolRunner.Enqueue(projectItems);
         }
 
-        private static bool AffectsResourceFile(EnvDTE.Document? document)
+        private bool AffectsResourceFile(string fileName)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            ThrowIfNotOnUIThread();
 
-            if (document == null)
+            if (fileName == null)
                 return false;
 
-            return document.GetProjectItem()
+            var projectItem = Dte.Solution?.FindProjectItem(fileName);
+            if (projectItem == null)
+                return false;
+
+            return projectItem
                 .DescendantsAndSelf()
                 .Select(item => item.TryGetFileName())
                 .ExceptNullItems()
