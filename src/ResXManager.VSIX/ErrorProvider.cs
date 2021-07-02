@@ -52,6 +52,18 @@
 
         private void TableEntries_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
+            try
+            {
+                TableEntries_CollectionChanged(e);
+            }
+            catch (MissingMethodException)
+            {
+                // BUG in VS2022: missing method Microsoft.VisualStudio.Shell.TaskProvider.TaskCollection.Remove
+            }
+        }
+
+        private void TableEntries_CollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
             if (e.Action != NotifyCollectionChangedAction.Remove)
                 return;
 
@@ -62,20 +74,8 @@
                 if (task == null)
                     continue;
 
-                try
-                {
-                    TryRemoveTask(task);
-                }
-                catch (MissingMethodException)
-                {
-                    // BUG in VS2022: missing method Microsoft.VisualStudio.Shell.TaskProvider.TaskCollection.Remove
-                }
+                _tasks.Remove(task);
             }
-        }
-
-        private void TryRemoveTask(ResourceErrorTask task)
-        {
-            _tasks.Remove(task);
         }
 
         public static void Register(IExportProvider exportProvider)
