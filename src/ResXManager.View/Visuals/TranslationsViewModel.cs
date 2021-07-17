@@ -89,9 +89,9 @@
 
         public ICommand DiscardCommand => new DelegateCommand(() => IsSessionComplete && HasTranslationResults, UpdateTargetList);
 
-        public ICommand ApplyAllCommand => new DelegateCommand(() => IsSessionComplete && Items.Any(item => item.Results.Any()), () => Apply(Items));
+        public ICommand ApplyAllCommand => new DelegateCommand(() => Items.Any(item => item.Results.Any()), () => Apply(Items));
 
-        public ICommand ApplySelectedCommand => new DelegateCommand(() => IsSessionComplete && SelectedItems.Any(item => item.Results.Any()), () => Apply(SelectedItems));
+        public ICommand ApplySelectedCommand => new DelegateCommand(() => SelectedItems.Any(item => item.Results.Any()), () => Apply(SelectedItems));
 
         public ICommand StopCommand => new DelegateCommand(() => IsSessionRunning, Stop);
 
