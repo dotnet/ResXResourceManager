@@ -1,4 +1,7 @@
-﻿1.53
+﻿1.54
+- #415: Support Visual Studio 2022 (v17.0)
+
+1.53
 - Fix #405: allow to specify Deepl api url, so the free subscription can be used.
 - Fix #406: Wrap EnvDTE.Document.ProjectItem to catch unexpected com exceptions.
 - Fix #407: string format pattern parsing for patterns with custom format section
