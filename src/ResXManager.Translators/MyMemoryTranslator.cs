@@ -25,7 +25,7 @@
     [Export(typeof(ITranslator)), Shared]
     public class MyMemoryTranslator : TranslatorBase
     {
-        private static readonly Uri _uri = new Uri("http://mymemory.translated.net/doc");
+        private static readonly Uri _uri = new("http://mymemory.translated.net/doc");
 
         public MyMemoryTranslator()
             : base("MyMemory", "MyMemory", _uri, GetCredentials())

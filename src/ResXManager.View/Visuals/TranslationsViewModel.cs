@@ -20,7 +20,7 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.AttributedModel;
 
-    using Settings = ResXManager.Model.Properties.Settings;
+    using Settings = Model.Properties.Settings;
 
     [VisualCompositionExport(RegionId.Content, Sequence = 2)]
     [Shared]
@@ -129,17 +129,11 @@
 
         private static IEnumerable<CultureKey> UnselectedTargetCultures
         {
-            get
-            {
-                return (Settings.Default.TranslationUnselectedTargetCultures ?? string.Empty)
+            get => (Settings.Default.TranslationUnselectedTargetCultures ?? string.Empty)
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(c => c.ToCultureKey())
                     .Where(c => c != null)!;
-            }
-            set
-            {
-                Settings.Default.TranslationUnselectedTargetCultures = string.Join(",", value.Select(c => c.ToString(".")));
-            }
+            set => Settings.Default.TranslationUnselectedTargetCultures = string.Join(",", value.Select(c => c.ToString(".")));
         }
 
         private void UpdateTargetList()
@@ -156,6 +150,7 @@
             var itemsToTranslate = GetItemsToTranslate(_resourceViewModel.ResourceTableEntries, sourceCulture, SelectedTargetCultures, Configuration.EffectiveTranslationPrefix);
 
             Items = new ObservableCollection<ITranslationItem>(itemsToTranslate);
+            CommandManager.InvalidateRequerySuggested();
         }
 
         private void StartSession()
@@ -194,7 +189,11 @@
                         }))
                 .ToArray();
 
-            bool HasTranslation(string? value) => !string.IsNullOrWhiteSpace(value) && !string.Equals(value, translationPrefix, StringComparison.Ordinal);
+            bool HasTranslation(string? value)
+            {
+                return !string.IsNullOrWhiteSpace(value) &&
+                       !string.Equals(value, translationPrefix, StringComparison.Ordinal);
+            }
 
             // #3: all entries with no target
             var itemsToTranslate = allEntries.AsParallel()
@@ -234,6 +233,9 @@
             Dispatcher.BeginInvoke(() => UnselectedTargetCultures = AllTargetCultures.Concat(UnselectedTargetCultures).Distinct().Except(SelectedTargetCultures));
         }
 
-        public override string ToString() => Resources.ShellTabHeader_Translate;
+        public override string ToString()
+        {
+            return Resources.ShellTabHeader_Translate;
+        }
     }
 }

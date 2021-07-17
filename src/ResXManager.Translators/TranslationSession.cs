@@ -11,9 +11,9 @@
 
     public sealed class TranslationSession : INotifyPropertyChanged, ITranslationSession
     {
-        private readonly ObservableCollection<string> _internalMessage = new ObservableCollection<string>();
+        private readonly ObservableCollection<string> _internalMessage = new();
 
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource _cancellationTokenSource = new();
 
         public TranslationSession(TaskFactory mainThread, CultureInfo? sourceLanguage, CultureInfo neutralResourcesLanguage, ICollection<ITranslationItem> items)
         {

@@ -19,7 +19,7 @@
     public sealed class TranslatorHost : IDisposable
     {
         private readonly ITranslator[] _translators;
-        private readonly TaskFactory _mainThread = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
+        private readonly TaskFactory _mainThread = new(TaskScheduler.FromCurrentSynchronizationContext());
 
         private ITranslationSession? _activeSession;
 

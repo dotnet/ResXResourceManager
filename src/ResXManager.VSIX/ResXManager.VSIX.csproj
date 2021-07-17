@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <UseWPF>true</UseWPF>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
     <LangVersion>8.0</LangVersion>

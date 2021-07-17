@@ -22,9 +22,9 @@
     [Export(typeof(ITranslator)), Shared]
     public class MSTerminologyTranslator : TranslatorBase
     {
-        private static readonly BasicHttpBinding _binding = new BasicHttpBinding();
-        private static readonly EndpointAddress _endpoint = new EndpointAddress("http://api.terminology.microsoft.com/Terminology.svc");
-        private static readonly Uri _uri = new Uri("https://www.microsoft.com/en-us/language/default.aspx");
+        private static readonly BasicHttpBinding _binding = new();
+        private static readonly EndpointAddress _endpoint = new("http://api.terminology.microsoft.com/Terminology.svc");
+        private static readonly Uri _uri = new("https://www.microsoft.com/en-us/language/default.aspx");
 
         public MSTerminologyTranslator()
             : base("MSTerm", "MS Terminology", _uri, Array.Empty<ICredentialItem>())

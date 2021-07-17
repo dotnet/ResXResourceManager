@@ -16,7 +16,7 @@ namespace ResXManager.Translators
     [DataContract]
     public abstract class TranslatorBase : ITranslator
     {
-        private static readonly Regex _removeKeyboardShortcutIndicatorsRegex = new Regex(@"[&_](?=[\w\d])", RegexOptions.Compiled);
+        private static readonly Regex _removeKeyboardShortcutIndicatorsRegex = new(@"[&_](?=[\w\d])", RegexOptions.Compiled);
 
         protected static readonly IWebProxy WebProxy = TryGetDefaultProxy();
 

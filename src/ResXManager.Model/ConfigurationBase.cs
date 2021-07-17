@@ -24,7 +24,7 @@
         private static readonly string _directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "tom-englert.de", "ResXManager");
         private readonly string _filePath;
         private readonly XmlConfiguration _configuration;
-        private readonly Dictionary<string, object> _cachedObjects = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _cachedObjects = new();
 
         protected ConfigurationBase(ITracer tracer)
         {

@@ -20,7 +20,7 @@ namespace ResXManager.Translators
     [Export(typeof(ITranslator)), Shared]
     public class AzureTranslator : TranslatorBase
     {
-        private static readonly Uri _uri = new Uri("https://www.microsoft.com/en-us/translator/");
+        private static readonly Uri _uri = new("https://www.microsoft.com/en-us/translator/");
 
         // Azure has a 5000-character translation limit across all Texts in a single request
         private const int MaxCharsPerApiCall = 5000;
@@ -206,7 +206,7 @@ namespace ResXManager.Translators
         {
             private readonly int _maxCharactersPerMinute;
             private readonly CancellationToken _cancellationToken;
-            private readonly List<Tuple<DateTime, int>> _characterCounts = new List<Tuple<DateTime, int>>();
+            private readonly List<Tuple<DateTime, int>> _characterCounts = new();
 
             public Throttle(int maxCharactersPerMinute, CancellationToken cancellationToken)
             {

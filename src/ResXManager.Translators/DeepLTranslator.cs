@@ -27,7 +27,7 @@
     [Export(typeof(ITranslator)), Shared]
     public class DeepLTranslator : TranslatorBase
     {
-        private static readonly Uri _uri = new Uri("https://deepl.com/translator");
+        private static readonly Uri _uri = new("https://deepl.com/translator");
         private static readonly IList<ICredentialItem> _credentialItems = new ICredentialItem[]
         {
             new CredentialItem("APIKey", "API Key"),

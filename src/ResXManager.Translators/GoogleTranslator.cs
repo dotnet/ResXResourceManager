@@ -27,7 +27,7 @@
     [Export(typeof(ITranslator)), Shared]
     public class GoogleTranslator : TranslatorBase
     {
-        private static readonly Uri _uri = new Uri("https://developers.google.com/translate/");
+        private static readonly Uri _uri = new("https://developers.google.com/translate/");
         private static readonly IList<ICredentialItem> _credentialItems = new ICredentialItem[] { new CredentialItem("APIKey", "API Key") };
 
         public GoogleTranslator()
