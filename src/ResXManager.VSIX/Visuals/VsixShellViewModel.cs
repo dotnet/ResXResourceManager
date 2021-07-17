@@ -57,10 +57,10 @@
 
             VsPackage.Instance.ShowToolWindow();
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
-            {
-                _shellViewModel.SelectEntry(entry);
-            });
+#pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
+            // Must defer selection until tool window is fully shown!
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, () => _shellViewModel.SelectEntry(entry));
+#pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
         }
 
         private IEnumerable<CodeGenerator> SelectedItemsCodeGenerators()

@@ -46,6 +46,9 @@ dotnet_diagnostic.IDE0065.severity = none
 # CS8002: Referenced assembly 'Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null' does not have a strong name.
 dotnet_diagnostic.CS8002.severity = none
 
+# IDE0045: Convert to conditional expression
+dotnet_diagnostic.IDE0045.severity = suggestion
+
 [*.xaml]
 indent_size = 2
 

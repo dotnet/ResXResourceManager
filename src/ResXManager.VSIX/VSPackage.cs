@@ -110,8 +110,6 @@
 
             ShowLoaderMessages(loaderMessages);
 
-            ErrorProvider.Register(ExportProvider);
-
             try
             {
                 ConnectEvents();
@@ -197,6 +195,16 @@
                 typeof(Model.Properties.AssemblyKey).Assembly,
                 typeof(Translators.Properties.AssemblyKey).Assembly,
                 typeof(View.Properties.AssemblyKey).Assembly);
+
+            try
+            {
+                var path = Path.Combine(Path.GetDirectoryName(assembly.Location), "ResXManager.VSIX.Compatibility.dll");
+                _kernel.BindExports(System.Reflection.Assembly.LoadFrom(path));
+            }
+            catch
+            {
+                // ResXManager.VSIX.Compatibility.dll only loads in VS2022 and above, so ignore this
+            }
 
             _kernel.Bind<IExportProvider>().ToConstant(ExportProvider);
 

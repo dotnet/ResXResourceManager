@@ -96,7 +96,7 @@
     <PackageReference Include="Microsoft.VisualStudio.SDK" ExcludeAssets="runtime">
       <Version>15.0.1</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.9.1050">
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.3155-preview3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -121,6 +121,9 @@
     <PackageReference Include="VSIX-SdkProjectAdapter" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <VSIXSourceItem Include="..\ResXManager.VSIX.Compatibility\bin\$(Configuration)\$(TargetFramework)\ResXManager.VSIX.Compatibility.dll" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">
     <MakeDir Directories="$(SolutionDir)Deploy" />
