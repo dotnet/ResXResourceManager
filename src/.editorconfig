@@ -49,6 +49,9 @@ dotnet_diagnostic.CS8002.severity = none
 # IDE0045: Convert to conditional expression
 dotnet_diagnostic.IDE0045.severity = suggestion
 
+# CA1845: Use span-based 'string.Concat'
+dotnet_diagnostic.CA1845.severity = suggestion
+
 [*.xaml]
 indent_size = 2
 
