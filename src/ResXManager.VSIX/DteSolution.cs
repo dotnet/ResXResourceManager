@@ -287,9 +287,8 @@
 
                 if (string.Equals(projectItem.Kind, ItemKind.SolutionFile, StringComparison.OrdinalIgnoreCase))
                 {
-                    var solutionFolder = SolutionFolder;
-                    if (!solutionFolder.IsNullOrEmpty())
-                        return Path.Combine(solutionFolder, name);
+                    // solution file seems to be one-based
+                    return projectItem.FileNames[1];
                 }
             }
             catch (ArgumentException)
