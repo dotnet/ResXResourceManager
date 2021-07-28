@@ -62,10 +62,10 @@
                 case ColorTheme.System:
                     break;
                 case ColorTheme.Light:
-                    _colorThemeResourceContainer.Add(new ResourceDictionary {Source = GetType().Assembly.GeneratePackUri("Themes/LightTheme.xaml")});
+                    _colorThemeResourceContainer.Add(new ResourceDictionary { Source = GetType().Assembly.GeneratePackUri("Themes/LightTheme.xaml") });
                     break;
                 case ColorTheme.Dark:
-                    _colorThemeResourceContainer.Add(new ResourceDictionary {Source = GetType().Assembly.GeneratePackUri("Themes/DarkTheme.xaml")});
+                    _colorThemeResourceContainer.Add(new ResourceDictionary { Source = GetType().Assembly.GeneratePackUri("Themes/DarkTheme.xaml") });
                     break;
             }
         }
