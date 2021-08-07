@@ -73,7 +73,7 @@
             }
         }
 
-        private bool TryGetValue<T>(string? key, [AllowNull] T defaultValue, [MaybeNull] out T value)
+        private bool TryGetValue<T>(string? key, T? defaultValue, out T? value)
         {
             ThrowIfNotOnUIThread();
 
@@ -102,7 +102,7 @@
             return false;
         }
 
-        private void TrySetValue<T>(EnvDTE.Globals globals, string? internalKey, [AllowNull] T value)
+        private void TrySetValue<T>(EnvDTE.Globals globals, string? internalKey, T? value)
         {
             ThrowIfNotOnUIThread();
 

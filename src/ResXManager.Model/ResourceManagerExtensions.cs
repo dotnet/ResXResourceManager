@@ -5,8 +5,6 @@
     using System.Linq;
     using System.Threading;
 
-    using ResXManager.Infrastructure;
-
     using TomsToolbox.Essentials;
 
     /// <summary>
@@ -28,7 +26,7 @@
             var allProjectFiles = fileInfos
                 .Select(item => item.Intercept(_ => EnumerationShouldContinue()))
                 .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
-                .Where(fileFilter.Matches!)
+                .Where(fileFilter.Matches)
                 .ToList();
 
             var fileNamesByDirectory = allProjectFiles.GroupBy(file => file.GetBaseDirectory()).ToArray();

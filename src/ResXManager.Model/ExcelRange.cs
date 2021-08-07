@@ -4,12 +4,11 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    using ResXManager.Infrastructure;
     using TomsToolbox.Essentials;
 
     public class ExcelRange
     {
-        private static readonly Regex _rangeRegex = new Regex(@"(((?<sheetName>\w+)|('(?<sheetName>.*?)'))!)?\$?(?<startColumn>[A-Z]+)\$?(?<startRow>[0-9]*)(:\$?(?<endColumn>[A-Z]+)\$?(?<endRow>[0-9]*))?");
+        private static readonly Regex _rangeRegex = new(@"(((?<sheetName>\w+)|('(?<sheetName>.*?)'))!)?\$?(?<startColumn>[A-Z]+)\$?(?<startRow>[0-9]*)(:\$?(?<endColumn>[A-Z]+)\$?(?<endRow>[0-9]*))?");
 
         public ExcelRange(string? definition)
         {
@@ -59,7 +58,7 @@
 
         private static int ColumnToIndex(string? column)
         {
-            return column.IsNullOrEmpty() ? 0 : column.Aggregate(0, (current, c) => current * 26 + (c - 'A' + 1)) - 1;
+            return column.IsNullOrEmpty() ? 0 : column.Aggregate(0, (current, c) => (current * 26) + (c - 'A') + 1) - 1;
         }
     }
 }

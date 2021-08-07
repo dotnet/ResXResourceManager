@@ -17,4 +17,12 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nullable.Extended.Analyzer" Version="1.2.4089">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>

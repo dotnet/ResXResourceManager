@@ -101,7 +101,8 @@
             var languages = scope.Languages.Concat(scope.Comments).Distinct().ToArray();
             var entries = scope.Entries.ToArray();
 
-            var sheet = new Sheet { Name = "ResXResourceManager", Id = "Id1", SheetId = 1 };
+            const string sheetId = "Id1";
+            var sheet = new Sheet { Name = "ResXResourceManager", Id = sheetId, SheetId = 1 };
 
             var headerRow = _singleSheetFixedColumnHeaders.Concat(languages.GetLanguageColumnHeaders(scope));
             var dataRows = entries.Select(e => new[] { e.Container.ProjectName, e.Container.UniqueName }.Concat(e.GetDataRow(languages, scope)));
@@ -118,7 +119,7 @@
             }
 
             workbookPart
-                .AddNewPart<WorksheetPart>(sheet.Id)
+                .AddNewPart<WorksheetPart>(sheetId)
                 // ReSharper disable once AssignNullToNotNullAttribute
                 .Worksheet = new Worksheet()
                     .AppendItem(sheetData)
@@ -143,9 +144,11 @@
             using (var package = SpreadsheetDocument.Open(filePath, false))
             {
                 var workbookPart = package.WorkbookPart;
-                var workbook = workbookPart.Workbook;
-                var sharedStrings = workbookPart.GetSharedStrings();
-                var sheets = workbook.Sheets;
+                var workbook = workbookPart?.Workbook;
+                var sharedStrings = workbookPart?.GetSharedStrings();
+                var sheets = workbook?.Sheets;
+                if (sheets == null)
+                    return Array.Empty<EntryChange>();
 
                 var firstSheet = sheets.OfType<Sheet>().FirstOrDefault();
                 if (firstSheet == null)
@@ -245,14 +248,18 @@
 
         private static IEnumerable<Row> GetRows(this Sheet sheet, WorkbookPart workbookPart)
         {
-            var worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id);
+            var sheetId = sheet.Id;
+            if (string.IsNullOrEmpty(sheetId))
+                return Enumerable.Empty<Row>();
 
-            return worksheetPart?.Worksheet?.ChildElements?.OfType<SheetData>()?.FirstOrDefault()?.OfType<Row>() ?? Enumerable.Empty<Row>();
+            var worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheetId);
+
+            return worksheetPart.Worksheet.ChildElements.OfType<SheetData>().FirstOrDefault()?.OfType<Row>() ?? Enumerable.Empty<Row>();
         }
 
         private static ResourceEntity FindResourceEntity(this IEnumerable<MultipleSheetEntity> entities, Sheet sheet)
         {
-            var name = sheet.Name.Value;
+            var name = sheet.Name?.Value;
 
             var entity = entities.Where(item => item.SheetName.Equals(name, StringComparison.OrdinalIgnoreCase))
                 .Select(item => item.ResourceEntity)
@@ -349,7 +356,7 @@
 
             var text = cellValue.Text;
 
-            if ((dataType != null) && (dataType == CellValues.SharedString) && (sharedStrings != null) && (int.TryParse(text, out var index) && (index >= 0) && (index < sharedStrings.Count)))
+            if ((dataType != null) && (dataType == CellValues.SharedString) && (sharedStrings != null) && int.TryParse(text, out var index) && (index >= 0) && (index < sharedStrings.Count))
             {
                 var stringItem = sharedStrings[index];
 
@@ -368,11 +375,11 @@
                        .FirstOrDefault() ??
                    cell.ChildElements
                        .OfType<InlineString>()
-                       .Select(item => item.Text.Text)
+                       .Select(item => item.Text?.Text)
                        .FirstOrDefault() ??
                    cell.ChildElements
                        .OfType<Run>()
-                       .Select(item => item.Text.Text)
+                       .Select(item => item.Text?.Text)
                        .Aggregate(default(string), (a, b) => a + b);
         }
 
@@ -476,7 +483,7 @@
             return languages.SelectMany(l => entry.GetLanguageDataColumns(l, scope));
         }
 
-        [return:NotNullIfNotNull("container")]
+        [return: NotNullIfNotNull("container")]
         public static TContainer? AppendItem<TContainer, TItem>(this TContainer? container, TItem? item)
             where TContainer : OpenXmlElement
             where TItem : OpenXmlElement
@@ -502,7 +509,7 @@
         {
             private const int MaxSheetNameLength = 31;
 
-            private readonly UInt32Value? _sheetId;
+            private readonly UInt32Value _sheetId;
 
             public MultipleSheetEntity(ResourceEntity resourceEntity, int index, ISet<string> uniqueNames)
             {
@@ -546,7 +553,7 @@
 
             public ResourceEntity ResourceEntity { get; }
 
-            public string? Id { get; }
+            public string Id { get; }
 
             public Sheet CreateSheet()
             {

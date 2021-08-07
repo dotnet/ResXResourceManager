@@ -47,7 +47,7 @@
             return indexedComply && namedComply;
         }
 
-        private static readonly Regex _getStringFormatByIndexExpression = new Regex(@"\{([0-9]+)(?:,-?[0-9]+)?(?::[^\}]+)?\}", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+        private static readonly Regex _getStringFormatByIndexExpression = new(@"\{([0-9]+)(?:,-?[0-9]+)?(?::[^\}]+)?\}", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
         private static long GetStringFormatByIndexFlags(string? value)
         {

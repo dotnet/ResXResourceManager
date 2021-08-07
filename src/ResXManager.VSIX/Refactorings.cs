@@ -243,11 +243,11 @@
             if (topPoint == null)
                 return null;
 
-            var line = textDocument!.CreateEditPoint()?.GetLines(topPoint.Line, topPoint.Line + 1);
+            var line = textDocument.CreateEditPoint()?.GetLines(topPoint.Line, topPoint.Line + 1);
             if (line == null)
                 return null;
 
-            var fileCodeModel = document!.ProjectItem?.FileCodeModel;
+            var fileCodeModel = document.ProjectItem?.FileCodeModel;
 
             return new Selection(textDocument, line, fileCodeModel);
         }

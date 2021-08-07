@@ -46,13 +46,13 @@
 
         private sealed class Engine : IDisposable
         {
-            private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+            private readonly CancellationTokenSource _cancellationTokenSource = new();
             private readonly CancellationToken _cancellationToken;
 
             private long _total;
             private long _visited;
 
-            public int Progress => (int)(_total <= 0 ? 0 : Math.Max(1, (100 * _visited) / _total));
+            public int Progress => (int)(_total <= 0 ? 0 : Math.Max(1, 100 * _visited / _total));
 
             public Engine(CodeReferenceConfiguration configuration, ICollection<ProjectFile> sourceFiles, ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
             {
@@ -190,9 +190,9 @@
 
         private class FileInfo
         {
-            private static readonly Regex _regex = new Regex(@"\W+", RegexOptions.Compiled);
+            private static readonly Regex _regex = new(@"\W+", RegexOptions.Compiled);
             private readonly ProjectFile _projectFile;
-            private readonly Dictionary<string, HashSet<int>> _keyLinesLookup = new Dictionary<string, HashSet<int>>();
+            private readonly Dictionary<string, HashSet<int>> _keyLinesLookup = new();
             private readonly CodeReferenceConfigurationItem[] _configurations;
             private readonly string[]? _lines;
 

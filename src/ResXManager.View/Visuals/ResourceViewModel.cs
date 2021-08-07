@@ -459,7 +459,7 @@
             var fileName = param?.FileName;
             if (fileName != null)
             {
-                ResourceManager.ExportExcelFile(fileName, param!.Scope, _configuration.ExcelExportMode);
+                ResourceManager.ExportExcelFile(fileName, param.Scope, _configuration.ExcelExportMode);
             }
         }
 
@@ -523,7 +523,7 @@
             }
             finally
             {
-                if (Interlocked.CompareExchange(ref _loadingCancellationTokenSource, null!, cancellationTokenSource) == cancellationTokenSource)
+                if (Interlocked.CompareExchange(ref _loadingCancellationTokenSource, null, cancellationTokenSource) == cancellationTokenSource)
                 {
                     IsLoading = false;
                 }
@@ -566,7 +566,7 @@
             var language = e.Language;
 
             // Defer save to avoid repeated file access
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
             {
                 try
                 {
@@ -581,7 +581,7 @@
 
                     MessageBox.Show(ex.Message, Resources.Title);
                 }
-            });
+            }));
         }
 
         [Throttled(typeof(DispatcherThrottle))]

@@ -81,7 +81,7 @@
             }
 
             _document = document ?? new XDocument();
-            _root = _document.Root!;
+            _root = _document.Root;
             _keyName = XName.Get("Key");
             _valueName = XName.Get("Value", @namespace.NamespaceName);
         }
@@ -128,9 +128,7 @@
                 valueNode.Add(new XAttribute(_keyName, key));
             }
 
-            var textNode = valueNode.FirstNode as XText;
-
-            if (textNode == null)
+            if (valueNode.FirstNode is not XText textNode)
             {
                 valueNode.Add(new XText(value));
             }

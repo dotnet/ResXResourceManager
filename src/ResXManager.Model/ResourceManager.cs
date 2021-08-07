@@ -84,7 +84,7 @@
         /// <summary>
         /// Gets the loaded resource entities.
         /// </summary>
-        public ObservableCollection<ResourceEntity> ResourceEntities { get; } = new ObservableCollection<ResourceEntity>();
+        public ObservableCollection<ResourceEntity> ResourceEntities { get; } = new();
 
         /// <summary>
         /// Gets the table entries of all entities.
@@ -94,7 +94,7 @@
         /// <summary>
         /// Gets the cultures of all entities.
         /// </summary>
-        public ObservableCollection<CultureKey> Cultures { get; } = new ObservableCollection<CultureKey>();
+        public ObservableCollection<CultureKey> Cultures { get; } = new();
 
         /// <summary>
         /// Gets all system specific cultures.

@@ -19,7 +19,7 @@
         private const string MutedRulePattern = @"@MutedRule\(([a-zA-Z]+)\)";
         private const string MutedRuleFormat = @"@MutedRule({0})";
 
-        private static readonly Regex _mutedRuleExpression = new Regex(MutedRulePattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        private static readonly Regex _mutedRuleExpression = new(MutedRulePattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         public const string Default = @"{""EnabledRules"": [
 """ + ResourceTableEntryRulePunctuationLead.Id + @""",
@@ -42,7 +42,7 @@
             if (ruleId.IsNullOrEmpty())
                 return false;
 
-            return ConfigurableRules!.GetValueOrDefault(ruleId)?.IsEnabled ?? false;
+            return ConfigurableRules.GetValueOrDefault(ruleId)?.IsEnabled ?? false;
         }
 
         [DataMember(Name = "EnabledRules")]

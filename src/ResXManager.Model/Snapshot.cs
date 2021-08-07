@@ -43,7 +43,7 @@
             }
             else
             {
-                var entitySnapshots = JsonConvert.DeserializeObject<ICollection<EntitySnapshot>>(snapshot!) ?? Array.Empty<EntitySnapshot>();
+                var entitySnapshots = JsonConvert.DeserializeObject<ICollection<EntitySnapshot>>(snapshot) ?? Array.Empty<EntitySnapshot>();
                 resourceEntities.Load(entitySnapshots);
             }
         }

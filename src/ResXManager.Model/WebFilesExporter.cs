@@ -125,7 +125,7 @@
         }
 
         private const string FormatTemplateSuffix = @"_TEMPLATE";
-        private static readonly Regex _formatPlaceholderExpression = new Regex(@"\$\{\s*(\w[.\w\d_]*)\s*\}");
+        private static readonly Regex _formatPlaceholderExpression = new(@"\$\{\s*(\w[.\w\d_]*)\s*\}");
 
         private static void AppendTypescript(ResourceNode node, StringBuilder typescript, HashSet<string> formatTemplates)
         {

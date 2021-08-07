@@ -28,7 +28,7 @@
     {
         private const string InvariantKey = "@Invariant";
 
-        private static readonly Regex _duplicateKeyExpression = new Regex(@"_Duplicate\[\d+\]$");
+        private static readonly Regex _duplicateKeyExpression = new(@"_Duplicate\[\d+\]$");
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
 
         // the key actually stored in the file, identical to Key if no error occurred.
@@ -63,16 +63,16 @@
 
             _languages = languages;
 
-            Values = new ResourceTableValues<string?>(_languages, lang => lang.GetValue(Key)!, (lang, value) => lang.SetValue(Key, value));
+            Values = new ResourceTableValues<string?>(_languages, lang => lang.GetValue(Key), (lang, value) => lang.SetValue(Key, value));
             Values.ValueChanged += Values_ValueChanged;
 
-            Comments = new ResourceTableValues<string?>(_languages, lang => lang.GetComment(Key)!, (lang, value) => lang.SetComment(Key, value));
+            Comments = new ResourceTableValues<string?>(_languages, lang => lang.GetComment(Key), (lang, value) => lang.SetComment(Key, value));
             Comments.ValueChanged += Comments_ValueChanged;
 
             FileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
 
-            SnapshotValues = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text!, (lang, value) => false);
-            SnapshotComments = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment!, (lang, value) => false);
+            SnapshotValues = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text, (lang, value) => false);
+            SnapshotComments = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment, (lang, value) => false);
 
             ValueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
             CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
@@ -85,17 +85,17 @@
         private void ResetTableValues()
         {
             Values.ValueChanged -= Values_ValueChanged;
-            Values = new ResourceTableValues<string?>(_languages, lang => lang.GetValue(Key)!, (lang, value) => lang.SetValue(Key, value));
+            Values = new ResourceTableValues<string?>(_languages, lang => lang.GetValue(Key), (lang, value) => lang.SetValue(Key, value));
             Values.ValueChanged += Values_ValueChanged;
 
             Comments.ValueChanged -= Comments_ValueChanged;
-            Comments = new ResourceTableValues<string?>(_languages, lang => lang.GetComment(Key)!, (lang, value) => lang.SetComment(Key, value));
+            Comments = new ResourceTableValues<string?>(_languages, lang => lang.GetComment(Key), (lang, value) => lang.SetComment(Key, value));
             Comments.ValueChanged += Comments_ValueChanged;
 
             FileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
 
-            SnapshotValues = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text!, (lang, value) => false);
-            SnapshotComments = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment!, (lang, value) => false);
+            SnapshotValues = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text, (lang, value) => false);
+            SnapshotComments = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment, (lang, value) => false);
 
             ValueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
             CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);

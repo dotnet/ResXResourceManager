@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -62,9 +61,8 @@
         [InterceptIgnore]
         protected ITracer Tracer { get; }
 
-        [return: MaybeNull]
         [GetInterceptor]
-        protected T GetProperty<T>(string key, PropertyInfo? propertyInfo)
+        protected T? GetProperty<T>(string key, PropertyInfo? propertyInfo)
         {
             if (!typeof(INotifyChanged).IsAssignableFrom(typeof(T)))
             {
@@ -79,7 +77,7 @@
             var value = GetValue(GetDefaultValue<T>(propertyInfo), key);
 
             if (value == null)
-                return default!;
+                return default;
 
             ((INotifyChanged)value).Changed += (sender, e) =>
             {
@@ -91,8 +89,7 @@
             return value;
         }
 
-        [return: MaybeNull]
-        private T GetValue<T>([AllowNull] T defaultValue, string key)
+        private T? GetValue<T>(T? defaultValue, string key)
         {
             try
             {
@@ -105,19 +102,18 @@
             return defaultValue;
         }
 
-        [return: MaybeNull]
-        protected virtual T InternalGetValue<T>([AllowNull] T defaultValue, string key)
+        protected virtual T? InternalGetValue<T>(T? defaultValue, string key)
         {
             return ConvertFromString(_configuration.GetValue(key, null), defaultValue);
         }
 
         [SetInterceptor]
-        protected void SetValue<T>([AllowNull] T value, string key)
+        protected void SetValue<T>(T? value, string key)
         {
             InternalSetValue(value, key);
         }
 
-        protected virtual void InternalSetValue<T>([AllowNull] T value, string key)
+        protected virtual void InternalSetValue<T>(T? value, string key)
         {
             try
             {
@@ -134,8 +130,7 @@
             }
         }
 
-        [return: MaybeNull]
-        protected static T ConvertFromString<T>(string? value, [AllowNull] T defaultValue)
+        protected static T? ConvertFromString<T>(string? value, T? defaultValue)
         {
             try
             {
@@ -153,7 +148,7 @@
             return defaultValue;
         }
 
-        protected static string? ConvertToString<T>([AllowNull] T value)
+        protected static string? ConvertToString<T>(T? value)
         {
             if (value == null)
                 return null;
@@ -178,12 +173,11 @@
                 .Select(attr => attr.ConverterTypeName)
                 .Select(typeName => Type.GetType(typeName, true))
                 .Where(type => typeof(TypeConverter).IsAssignableFrom(type))
-                .Select(type => (TypeConverter?)Activator.CreateInstance(type!))
+                .Select(type => (TypeConverter?)Activator.CreateInstance(type))
                 .FirstOrDefault();
         }
 
-        [return: MaybeNull]
-        private static T GetDefaultValue<T>(MemberInfo? propertyInfo)
+        private static T? GetDefaultValue<T>(MemberInfo? propertyInfo)
         {
             var defaultValueAttribute = propertyInfo?.GetCustomAttributes<DefaultValueAttribute>().Select(attr => attr?.Value).FirstOrDefault();
 

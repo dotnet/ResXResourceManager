@@ -26,26 +26,24 @@
             _setter = setter;
         }
 
-        [MaybeNull, AllowNull]
-        public T this[string? cultureKey]
+        public T? this[string? cultureKey]
         {
             [return: MaybeNull]
             get => GetValue(cultureKey);
             set => SetValue(cultureKey, value);
         }
 
-        [return: MaybeNull]
-        public T GetValue(object? culture)
+        public T? GetValue(object? culture)
         {
             var cultureKey = CultureKey.Parse(culture);
 
             if (!_languages.TryGetValue(cultureKey, out var language))
-                return default!;
+                return default;
 
             return _getter(language);
         }
 
-        public bool SetValue(object? culture, [AllowNull] T value)
+        public bool SetValue(object? culture, T? value)
         {
             var cultureKey = CultureKey.Parse(culture);
 
