@@ -1,4 +1,8 @@
-﻿1.54
+﻿1.55
+- Fix #418: Solution-level RESX files throw FileNotFoundException
+- Fix #290: Can't make T4 template work with .NET Core project
+
+1.54
 - #415: Support Visual Studio 2022 (v17.0)
 
 1.53
