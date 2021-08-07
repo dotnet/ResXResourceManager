@@ -228,7 +228,7 @@
                 return;
 
             item.SetProperty(@"BuildAction", 0);
-
+            item.SetProperty(@"DependentUpon", projectItem.Name);
             item.RunCustomTool();
         }
 
