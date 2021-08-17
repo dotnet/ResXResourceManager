@@ -58,6 +58,7 @@
                 case 0xFF1A: return ':'; // FULLWIDTH COLON
                 case 0xFF1B: return ';'; // FULLWIDTH SEMICOLON
                 case 0xFF1F: return '?'; // FULLWIDTH QUESTION MARK
+                case 0x061F: return '?'; // ARABIC QUESTION MARK
                 default: return value;
             }
         }
