@@ -525,41 +525,42 @@
 
             private string? _text;
             private string? _comment;
+            private string _key;
+            private readonly XElement _valueElement;
+            private readonly XAttribute _nameAttribute;
 
             public Node(ResourceLanguage owner, XElement element)
             {
                 Element = element;
                 _owner = owner;
+                _valueElement = element.Element(_owner._valueNodeName) ?? throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileValueAttributeMissingError, owner.FileName));
+                _nameAttribute = GetNameAttribute(element);
+                _key = _nameAttribute.Value;
+                _text = LoadText();
             }
 
             public XElement Element { get; }
 
             public string Key
             {
-                get => GetNameAttribute(Element).Value;
-                set => GetNameAttribute(Element).Value = value;
+                get => _key;
+                set => _key = _nameAttribute.Value = value;
             }
 
             public string? Text
             {
-                get => _text ??= LoadText();
+                get => _text;
                 set
                 {
                     _text = value ?? string.Empty;
 
-                    var entry = Element;
-
-                    var valueElement = entry.Element(_owner._valueNodeName);
-                    if (valueElement == null)
-                        throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileValueAttributeMissingError, _owner.FileName));
-
-                    if (valueElement.FirstNode == null)
+                    if (_valueElement.FirstNode == null)
                     {
-                        valueElement.Add(value);
+                        _valueElement.Add(value);
                     }
                     else
                     {
-                        valueElement.FirstNode.ReplaceWith(value);
+                        _valueElement.FirstNode.ReplaceWith(value);
                     }
                 }
             }
@@ -573,28 +574,28 @@
 
                     var entry = Element;
 
-                    var valueElement = entry.Element(_owner._commentNodeName);
+                    var commentElement = entry.Element(_owner._commentNodeName);
 
                     if (string.IsNullOrWhiteSpace(value))
                     {
-                        valueElement?.Remove();
+                        commentElement?.Remove();
                     }
                     else
                     {
-                        if (valueElement == null)
+                        if (commentElement == null)
                         {
-                            valueElement = new XElement(_owner._commentNodeName);
-                            entry.Add(new XText("  "), valueElement, new XText("\n  "));
+                            commentElement = new XElement(_owner._commentNodeName);
+                            entry.Add(new XText("  "), commentElement, new XText("\n  "));
                         }
 
-                        if (valueElement.FirstNode is XText textNode)
+                        if (commentElement.FirstNode is XText textNode)
                         {
                             textNode.Value = value;
                         }
                         else
                         {
                             textNode = new XText(value);
-                            valueElement.Add(textNode);
+                            commentElement.Add(textNode);
                         }
                     }
                 }
@@ -602,26 +603,16 @@
 
             private string? LoadText()
             {
-                var entry = Element;
-
-                var valueElement = entry.Element(_owner._valueNodeName);
-                if (valueElement == null)
-                {
-                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileValueAttributeMissingError, _owner.FileName));
-                }
-
-                return valueElement.FirstNode is XText textNode ? textNode.Value : string.Empty;
+                return _valueElement.FirstNode is XText textNode ? textNode.Value : string.Empty;
             }
 
-            private string? LoadComment()
+            private string LoadComment()
             {
                 var entry = Element;
 
-                var valueElement = entry.Element(_owner._commentNodeName);
-                if (valueElement == null)
-                    return string.Empty;
+                var commentElement = entry.Element(_owner._commentNodeName);
 
-                return valueElement.FirstNode is XText textNode ? textNode.Value : string.Empty;
+                return commentElement?.FirstNode is XText textNode ? textNode.Value : string.Empty;
             }
 
             private XAttribute GetNameAttribute(XElement entry)

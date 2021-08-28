@@ -66,8 +66,7 @@
 
             var path = Path.GetDirectoryName(typeof(ITracer).Assembly.Location);
 
-            var assemblyFileNames = Directory.EnumerateFiles(path, @"*.dll")
-                .ToList();
+            var assemblyFileNames = Directory.EnumerateFiles(path, @"*.dll");
 
             var assemblyNames = new HashSet<string>(assemblyFileNames.Select(Path.GetFileNameWithoutExtension));
 

@@ -27,8 +27,6 @@
     public sealed class ResourceManager
     {
         private readonly ISourceFilesProvider _sourceFilesProvider;
-        private readonly ITracer _tracer;
-
         private string? _snapshot;
 
         public event EventHandler<ResourceBeginEditingEventArgs>? BeginEditing;
@@ -43,7 +41,7 @@
             Configuration = configuration;
 
             _sourceFilesProvider = sourceFilesProvider;
-            _tracer = tracer;
+            Tracer = tracer;
             TableEntries = ResourceEntities.ObservableSelectMany(entity => entity.Entries);
         }
 
@@ -100,6 +98,8 @@
         /// Gets all system specific cultures.
         /// </summary>
         public static IEnumerable<CultureInfo> SpecificCultures { get; } = GetSpecificCultures();
+
+        public ITracer Tracer { get; }
 
         public IConfiguration Configuration { get; }
 
@@ -236,7 +236,7 @@
             {
                 ResourceEntities.Clear();
                 MessageBox.Show(ex.Message, Application.Current?.MainWindow?.Title ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                _tracer.TraceError(ex.ToString());
+                Tracer.TraceError(ex.ToString());
                 return true;
             }
 
