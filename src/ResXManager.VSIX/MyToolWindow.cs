@@ -412,17 +412,15 @@
 
         protected override bool PreProcessMessage(ref System.Windows.Forms.Message m)
         {
-            if ((m.Msg != 0x0100) || (m.WParam != (IntPtr)27))
+            // some keys may not be passed through VS
+            if (!TryGetKeyForPrivateProcessing(ref m, out var key))
             {
                 return base.PreProcessMessage(ref m);
             }
 
-            // https://github.com/dotnet/ResXResourceManager/issues/397
-            // must process ESC key here, else window will loose focus without notification.
-
             var keyboardDevice = Keyboard.PrimaryDevice;
 
-            var e = new KeyEventArgs(keyboardDevice, keyboardDevice.ActiveSource, 0, Key.Escape)
+            var e = new KeyEventArgs(keyboardDevice, keyboardDevice.ActiveSource, 0, key)
             {
                 RoutedEvent = Keyboard.KeyDownEvent
             };
@@ -430,6 +428,31 @@
             InputManager.Current.ProcessInput(e);
 
             return true;
+        }
+
+        private static bool TryGetKeyForPrivateProcessing(ref System.Windows.Forms.Message m, out Key key)
+        {
+            key = default;
+
+            if (m.Msg != 0x0100)
+                return false;
+
+            if (m.WParam == (IntPtr)27)
+            {
+                // https://github.com/dotnet/ResXResourceManager/issues/397
+                // must process ESC key here, else window will loose focus without notification.
+                key = Key.Escape;
+                return true;
+            }
+
+            if ((m.WParam == (IntPtr)0x46 || m.WParam == (IntPtr)0x66) && (Keyboard.Modifiers & ModifierKeys.Control) != 0)
+            {
+                // process Ctrl+F locally, we do our own search
+                key = Key.F;
+                return true;
+            }
+
+            return false;
         }
     }
 }

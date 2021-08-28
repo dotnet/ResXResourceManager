@@ -81,7 +81,7 @@
 
             ((INotifyChanged)value).Changed += (sender, e) =>
             {
-                SetValue((T)sender, key);
+                SetValue((T?)sender, key);
             };
 
             _cachedObjects.Add(key, value);

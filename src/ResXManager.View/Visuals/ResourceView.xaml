@@ -477,6 +477,7 @@
                       dgx:DataGridFilter.ContentFilterFactory="{StaticResource RegexContentFilterFactory}"
                       dgx:Tools.ForceCommitOnLostFocus="True"
                       dgx:Tools.ApplyInitialSorting="True"
+                      dgx:DataGridFilter.StartFilteringKeyGesture="Ctrl+F"
                       VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                       EnableColumnVirtualization="True"
                       EnableRowVirtualization="True"
