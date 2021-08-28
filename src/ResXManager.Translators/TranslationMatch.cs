@@ -21,6 +21,6 @@ namespace ResXManager.Translators
 
         public double Rating { get; }
 
-        public static readonly IEqualityComparer<TranslationMatch> TextComparer = new DelegateEqualityComparer<TranslationMatch>(m => m?.TranslatedText!);
+        public static readonly IEqualityComparer<TranslationMatch> TextComparer = new DelegateEqualityComparer<TranslationMatch>(m => m?.TranslatedText);
     }
 }

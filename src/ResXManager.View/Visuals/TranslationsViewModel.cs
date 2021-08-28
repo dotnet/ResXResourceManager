@@ -132,7 +132,7 @@
             get => (Settings.Default.TranslationUnselectedTargetCultures ?? string.Empty)
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(c => c.ToCultureKey())
-                    .Where(c => c != null)!;
+                    .ExceptNullItems();
             set => Settings.Default.TranslationUnselectedTargetCultures = string.Join(",", value.Select(c => c.ToString(".")));
         }
 
@@ -169,11 +169,7 @@
             // #1: all entries that are not invariant and have a valid value in the source culture
             var allEntriesWithSourceValue = resourceTableEntries
                 .Where(entry => !entry.IsInvariant)
-                .Select(entry => new
-                {
-                    Entry = entry,
-                    Source = entry.Values.GetValue(sourceCulture),
-                })
+                .Select(entry => (Entry: entry, Source: entry.Values.GetValue(sourceCulture)))
                 .Where(item => !string.IsNullOrWhiteSpace(item.Source))
                 .ToArray();
 
@@ -196,6 +192,7 @@
             }
 
             // #3: all entries with no target
+            // ! item.Source is checked in #1
             var itemsToTranslate = allEntries.AsParallel()
                 .Where(item => !HasTranslation(item.Target) && !item.Entry.IsItemInvariant.GetValue(item.TargetCulture))
                 .Select(item => new TranslationItem(item.Entry, item.Source!, item.TargetCulture))

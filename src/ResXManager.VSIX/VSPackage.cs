@@ -58,7 +58,7 @@
     [ProvideAutoLoad(UIContextGuids.NoSolution, PackageAutoLoadFlags.BackgroundLoad)]
     public sealed class VsPackage : AsyncPackage
     {
-        private readonly CustomToolRunner _customToolRunner = new CustomToolRunner();
+        private readonly CustomToolRunner _customToolRunner = new();
         private readonly IKernel _kernel = new StandardKernel();
 
         private PerformanceTracer? _performanceTracer;

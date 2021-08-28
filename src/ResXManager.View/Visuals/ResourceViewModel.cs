@@ -65,9 +65,9 @@
 
         public IObservableCollection<ResourceTableEntry> ResourceTableEntries { get; }
 
-        public ObservableCollection<ResourceEntity> SelectedEntities { get; } = new ObservableCollection<ResourceEntity>();
+        public ObservableCollection<ResourceEntity> SelectedEntities { get; } = new();
 
-        public ObservableCollection<ResourceTableEntry> SelectedTableEntries { get; } = new ObservableCollection<ResourceTableEntry>();
+        public ObservableCollection<ResourceTableEntry> SelectedTableEntries { get; } = new();
 
         public bool IsLoading { get; private set; }
 

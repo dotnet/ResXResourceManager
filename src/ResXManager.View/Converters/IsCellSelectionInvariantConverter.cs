@@ -11,7 +11,7 @@
 
     public sealed class IsCellSelectionInvariantConverter : IValueConverter
     {
-        public static readonly IsCellSelectionInvariantConverter Default = new IsCellSelectionInvariantConverter();
+        public static readonly IsCellSelectionInvariantConverter Default = new();
 
         object? IValueConverter.Convert(object? value, Type? targetType, object? parameter, CultureInfo? culture)
         {

@@ -206,6 +206,7 @@
 
         private bool GetIsRuleEnabled(string? ruleId)
         {
+            // ! Collection.Contains allows null arguments
             return !MutedRuleIds.Contains(ruleId!) && Rules.IsEnabled(ruleId);
         }
 

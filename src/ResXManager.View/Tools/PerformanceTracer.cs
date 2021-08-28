@@ -51,7 +51,7 @@
             private readonly ITracer _tracer;
             private readonly int _index;
             private readonly string _message;
-            private readonly Stopwatch _stopwatch = new Stopwatch();
+            private readonly Stopwatch _stopwatch = new();
 
             public Tracer(ITracer tracer, int index, string message)
             {

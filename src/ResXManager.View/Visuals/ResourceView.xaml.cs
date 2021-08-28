@@ -16,6 +16,7 @@
     using ResXManager.View.Tools;
 
     using TomsToolbox.Composition;
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Composition.AttributedModel;
@@ -80,9 +81,9 @@
         {
             var existingCultures = _resourceManager.Cultures
                 .Select(c => c.Culture)
-                .Where(c => c != null);
+                .ExceptNullItems();
 
-            var languageSelection = new LanguageSelectionBoxViewModel(existingCultures!);
+            var languageSelection = new LanguageSelectionBoxViewModel(existingCultures);
 
             var window = Window.GetWindow(this);
 

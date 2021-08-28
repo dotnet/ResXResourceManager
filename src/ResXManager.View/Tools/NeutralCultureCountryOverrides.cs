@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
@@ -14,14 +15,15 @@
         private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,";
 
         private static readonly IEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>> _comparer = new DelegateEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>>(item => item.Key);
-        private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new Dictionary<CultureInfo, CultureInfo>(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
-        public static readonly NeutralCultureCountryOverrides Default = new NeutralCultureCountryOverrides();
+        private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
+        public static readonly NeutralCultureCountryOverrides Default = new();
 
         private NeutralCultureCountryOverrides()
         {
         }
 
 #pragma warning disable CA1043 // Use Integral Or String Argument For Indexers
+        [DisallowNull]
         public CultureInfo? this[CultureInfo neutralCulture]
 #pragma warning restore CA1043 // Use Integral Or String Argument For Indexers
         {
@@ -34,7 +36,6 @@
 
                 return specificCulture;
             }
-            [param: System.Diagnostics.CodeAnalysis.DisallowNull]
             set
             {
                 if (Equals(value, GetDefaultSpecificCulture(neutralCulture)))
@@ -43,7 +44,7 @@
                 }
                 else
                 {
-                    _overrides[neutralCulture] = value!;
+                    _overrides[neutralCulture] = value;
                 }
 
                 WriteSettings();

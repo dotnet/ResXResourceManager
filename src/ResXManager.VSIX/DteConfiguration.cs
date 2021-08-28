@@ -82,7 +82,7 @@
             return TryGetValue(_solution.Globals, key, ref value);
         }
 
-        private static bool TryGetValue<T>(EnvDTE.Globals? globals, string? key, [AllowNull] ref T value)
+        private static bool TryGetValue<T>(EnvDTE.Globals? globals, string? key, ref T? value)
         {
             ThrowIfNotOnUIThread();
 
@@ -90,7 +90,7 @@
             {
                 if ((globals != null) && globals.VariableExists[key])
                 {
-                    value = ConvertFromString(globals[key] as string, value)!;
+                    value = ConvertFromString(globals[key] as string, value);
                     return true;
                 }
             }

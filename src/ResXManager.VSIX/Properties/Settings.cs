@@ -43,9 +43,9 @@
             MoveToResourcePreferedKeyPatternIndex.PropertyChanged += (_, __) => MoveToResource_PreferedKeyPatternIndex_Changed();
         }
 
-        public ObservableIndexer<string, int> MoveToResourcePreferedReplacementPatternIndex { get; } = new ObservableIndexer<string, int>(_ => 0);
+        public ObservableIndexer<string, int> MoveToResourcePreferedReplacementPatternIndex { get; } = new(_ => 0);
 
-        public ObservableIndexer<string, int> MoveToResourcePreferedKeyPatternIndex { get; } = new ObservableIndexer<string, int>(_ => 0);
+        public ObservableIndexer<string, int> MoveToResourcePreferedKeyPatternIndex { get; } = new(_ => 0);
 
         private void MoveToResource_PreferedReplacementPatternIndex_Changed()
         {

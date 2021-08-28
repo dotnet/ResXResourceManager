@@ -19,7 +19,7 @@
 
         private readonly DteSolution _solution;
 
-        private readonly List<EnvDTE.ProjectItem> _projectItems = new List<EnvDTE.ProjectItem>();
+        private readonly List<EnvDTE.ProjectItem> _projectItems = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DteProjectFile" /> class.

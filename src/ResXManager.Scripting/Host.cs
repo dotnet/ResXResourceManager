@@ -163,13 +163,13 @@
     {
         public bool SaveFilesImmediatelyUponChange => false;
 
-        public CultureInfo NeutralResourcesLanguage { get; set; } = new CultureInfo("en-US");
+        public CultureInfo NeutralResourcesLanguage { get; set; } = new("en-US");
 
         public StringComparison? EffectiveResXSortingComparison { get; set; }
 
         public DuplicateKeyHandling DuplicateKeyHandling { get; set; }
 
-        public ResourceTableEntryRules Rules { get; } = new ResourceTableEntryRules();
+        public ResourceTableEntryRules Rules { get; } = new();
 
         public bool RemoveEmptyEntries { get; set; }
     }

@@ -16,10 +16,10 @@
     public sealed class ResourceTableValues<T> : IEnumerable<ResourceLanguage>
     {
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
-        private readonly Func<ResourceLanguage, T> _getter;
-        private readonly Func<ResourceLanguage, T, bool> _setter;
+        private readonly Func<ResourceLanguage, T?> _getter;
+        private readonly Func<ResourceLanguage, T?, bool> _setter;
 
-        public ResourceTableValues(IDictionary<CultureKey, ResourceLanguage> languages, Func<ResourceLanguage, T> getter, Func<ResourceLanguage, T, bool> setter)
+        public ResourceTableValues(IDictionary<CultureKey, ResourceLanguage> languages, Func<ResourceLanguage, T?> getter, Func<ResourceLanguage, T?, bool> setter)
         {
             _languages = languages;
             _getter = getter;
@@ -50,7 +50,7 @@
             if (!_languages.TryGetValue(cultureKey, out var language))
                 throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.LanguageNotDefinedError, cultureKey.Culture?.DisplayName ?? Resources.Neutral));
 
-            if (!_setter(language, value!))
+            if (!_setter(language, value))
                 return false;
 
             OnValueChanged();

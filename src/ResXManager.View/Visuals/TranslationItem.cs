@@ -14,7 +14,7 @@ namespace ResXManager.View.Visuals
 
     public class TranslationItem : ObservableObject, ITranslationItem
     {
-        private readonly ObservableCollection<ITranslationMatch> _results = new ObservableCollection<ITranslationMatch>();
+        private readonly ObservableCollection<ITranslationMatch> _results = new();
         private readonly ResourceTableEntry _entry;
 
         private ICollectionView? _orderedResults;

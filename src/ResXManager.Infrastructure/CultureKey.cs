@@ -8,7 +8,7 @@
     /// </summary>
     public class CultureKey : IComparable<CultureKey>, IEquatable<CultureKey>, IComparable
     {
-        public static readonly CultureKey Neutral = new CultureKey((CultureInfo?)null);
+        public static readonly CultureKey Neutral = new((CultureInfo?)null);
 
         public CultureKey(string? cultureName)
         {

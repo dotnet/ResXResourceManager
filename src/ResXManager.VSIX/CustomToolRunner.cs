@@ -13,7 +13,7 @@
     /// </summary>
     internal sealed class CustomToolRunner : IDisposable
     {
-        private HashSet<EnvDTE.ProjectItem> _projectItems = new HashSet<EnvDTE.ProjectItem>();
+        private HashSet<EnvDTE.ProjectItem> _projectItems = new();
 
         public void Enqueue(IEnumerable<EnvDTE.ProjectItem>? projectItems)
         {

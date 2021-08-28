@@ -12,6 +12,7 @@
     public abstract class ItemTrackingCollectionHost<T> : INotifyChanged
         where T : class, INotifyPropertyChanged
     {
+        // ! must be initialized via property setter on Items in constructor.
         private ObservableCollection<T> _items = null!;
 
         private ObservablePropertyChangeTracker<T>? _changeTracker;

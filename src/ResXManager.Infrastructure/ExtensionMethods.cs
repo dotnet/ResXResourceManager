@@ -78,7 +78,7 @@
         /// </returns>
         public static bool ContainsHtml(this string text)
         {
-            HtmlDocument doc = new HtmlDocument();
+            HtmlDocument doc = new();
             doc.LoadHtml(text);
             return doc.DocumentNode.Descendants().Any(n => n.NodeType != HtmlNodeType.Text);
         }

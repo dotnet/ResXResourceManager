@@ -29,7 +29,7 @@
                 .Where(fileFilter.Matches)
                 .ToList();
 
-            var fileNamesByDirectory = allProjectFiles.GroupBy(file => file.GetBaseDirectory()).ToArray();
+            var fileNamesByDirectory = allProjectFiles.GroupBy(file => file.GetBaseDirectory()).ToList();
 
             foreach (var directoryFiles in fileNamesByDirectory)
             {
@@ -57,6 +57,7 @@
                     }
                 }
 
+                // ! GroupBy always returns a non-empty collection
                 foreach (var file in directoryFiles!)
                 {
                     file.ProjectName = projectName;

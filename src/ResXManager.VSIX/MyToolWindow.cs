@@ -43,7 +43,7 @@
 
         private readonly IExportProvider _exportProvider;
 
-        private readonly ContentControl _contentWrapper = new ContentControl
+        private readonly ContentControl _contentWrapper = new()
         {
             Focusable = false,
             Content = new Border { Background = Brushes.Red }

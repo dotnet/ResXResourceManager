@@ -13,7 +13,7 @@
     {
         private readonly IServiceProvider _serviceProvider;
 
-        private static Guid _outputPaneGuid = new Guid("{C49C2D45-A34D-4255-9382-40CE2BDAD575}");
+        private static Guid _outputPaneGuid = new("{C49C2D45-A34D-4255-9382-40CE2BDAD575}");
 
         public OutputWindowTracer(IServiceProvider serviceProvider)
         {

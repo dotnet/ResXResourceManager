@@ -12,6 +12,6 @@ namespace ResXManager.VSIX
         public const string guidResXManager_VSIXCmdSetString = "4beab5e4-da91-4600-bd36-53a67b206b19";
         public const string guidToolWindowPersistanceString = "79664857-03bf-4bca-aa54-ec998b3328f8";
 
-        public static readonly Guid guidResXManager_VSIXCmdSet = new Guid(guidResXManager_VSIXCmdSetString);
+        public static readonly Guid guidResXManager_VSIXCmdSet = new(guidResXManager_VSIXCmdSetString);
     }
 }

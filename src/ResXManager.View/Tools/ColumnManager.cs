@@ -28,7 +28,7 @@
     public static class ColumnManager
     {
         private const string NeutralCultureKeyString = ".";
-        private static readonly BitmapImage _codeReferencesImage = new BitmapImage(new Uri("/ResXManager.View;component/Assets/references.png", UriKind.RelativeOrAbsolute));
+        private static readonly BitmapImage _codeReferencesImage = new(new Uri("/ResXManager.View;component/Assets/references.png", UriKind.RelativeOrAbsolute));
 
         /// <summary>
         /// Identifies the ResourceFileExists attached property
