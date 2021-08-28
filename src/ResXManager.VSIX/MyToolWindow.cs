@@ -445,7 +445,7 @@
                 return true;
             }
 
-            if ((m.WParam == (IntPtr)0x46 || m.WParam == (IntPtr)0x66) && (Keyboard.Modifiers & ModifierKeys.Control) != 0)
+            if ((m.WParam == (IntPtr)0x46 || m.WParam == (IntPtr)0x66) && (Keyboard.Modifiers == ModifierKeys.Control))
             {
                 // process Ctrl+F locally, we do our own search
                 key = Key.F;

@@ -1,4 +1,9 @@
-﻿1.55
+﻿1.56
+- Add Arabic question mark to NormalizePunctuation method.
+- Fix #424: Broken resource files may crash application on launch
+- Improve DGX filtering experience. Ctrl+F jumps to filter, arrow down jumps back to grid. Fixes #420
+
+1.55
 - Fix #418: Solution-level RESX files throw FileNotFoundException
 - Fix #290: Can't make T4 template work with .NET Core project
 
