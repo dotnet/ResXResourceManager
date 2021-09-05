@@ -24,7 +24,7 @@
     using ResXManager.Model;
     using ResXManager.View.Tools;
     using ResXManager.View.Visuals;
-    using ResXManager.VSIX.Visuals;
+    using ResXManager.VSIX.Compatibility;
 
     using Throttle;
 
@@ -58,7 +58,6 @@
     [ProvideAutoLoad(UIContextGuids.NoSolution, PackageAutoLoadFlags.BackgroundLoad)]
     public sealed class VsPackage : AsyncPackage
     {
-        private readonly CustomToolRunner _customToolRunner = new();
         private readonly IKernel _kernel = new StandardKernel();
 
         private PerformanceTracer? _performanceTracer;
@@ -110,15 +109,7 @@
 
             ShowLoaderMessages(loaderMessages);
 
-            try
-            {
-                ConnectEvents();
-            }
-            catch (Exception ex)
-            {
-                // VS_17_NOTSUPPORTED
-                Tracer.TraceError("ConnectEvents:" + ex);
-            }
+            ConnectEvents();
 
             // start background services
             ExportProvider
@@ -129,7 +120,7 @@
             _resourceManager.ProjectFileSaved += ResourceManager_ProjectFileSaved;
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
-            if (!(menuCommandService is IMenuCommandService mcs))
+            if (menuCommandService is not IMenuCommandService mcs)
                 return;
 
             // Create the command for the menu item.
@@ -145,8 +136,6 @@
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-
-            _customToolRunner.Dispose();
             _kernel.Dispose();
         }
 
@@ -198,7 +187,7 @@
 
             try
             {
-                var path = Path.Combine(Path.GetDirectoryName(assembly.Location), "ResXManager.VSIX.Compatibility.dll");
+                var path = Path.Combine(Path.GetDirectoryName(assembly.Location), "ResXManager.VSIX.Compatibility.x64.dll");
                 _kernel.BindExports(System.Reflection.Assembly.LoadFrom(path));
             }
             catch
@@ -211,56 +200,24 @@
             return messages;
         }
 
-        private EnvDTE80.DTE2 Dte
-        {
-            get
-            {
-                var dte = (EnvDTE80.DTE2)GetService(typeof(EnvDTE.DTE));
-                return dte;
-            }
-        }
-
         private void ConnectEvents()
         {
             var events = VS.Events;
 
             var solutionEvents = events.SolutionEvents;
-            solutionEvents.OnAfterOpenSolution += (sender, e) => Solution_Opened();
+            solutionEvents.OnAfterOpenSolution += _ => Solution_Opened();
             solutionEvents.OnAfterCloseSolution += Solution_AfterClosing;
 
-            solutionEvents.OnAfterOpenProject += (sender, e) => Solution_ContentChanged();
-            solutionEvents.OnBeforeUnloadProject += (sender, e) => Solution_ContentChanged();
-            solutionEvents.OnAfterRenameProject += (sender, e) => Solution_ContentChanged();
-
-            // var projectItemsEvents = events.ProjectItemEvents;
-            // projectItemsEvents.ItemAdded += (item) => Solution_ContentChanged();
-            //_projectItemsEvents.ItemRemoved += Solution_ContentChanged;
-            //_projectItemsEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
-
-            //_solutionItemsEvents = events.SolutionItemsEvents;
-            //_solutionItemsEvents.ItemAdded += Solution_ContentChanged;
-            //_solutionItemsEvents.ItemRemoved += Solution_ContentChanged;
-            //_solutionItemsEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
-
-            //_miscFilesEvents = events.MiscFilesEvents;
-            //_miscFilesEvents.ItemAdded += Solution_ContentChanged;
-            //_miscFilesEvents.ItemRemoved += Solution_ContentChanged;
-            //_miscFilesEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
-
-            //_projectsEvents = events.ProjectsEvents;
-            //_projectsEvents.ItemAdded += Solution_ContentChanged;
-            //_projectsEvents.ItemRemoved += Solution_ContentChanged;
-            //_projectsEvents.ItemRenamed += (item, newName) => Solution_ContentChanged(item);
+            solutionEvents.OnAfterOpenProject += _ => Solution_ContentChanged();
+            solutionEvents.OnBeforeUnloadProject += _ => Solution_ContentChanged();
+            solutionEvents.OnAfterRenameProject += _ => Solution_ContentChanged();
 
             events.DocumentEvents.Saved += DocumentEvents_DocumentSaved;
             var documentEvents = events.DocumentEvents;
             documentEvents.Opened += DocumentEvents_DocumentOpened;
             documentEvents.Saved += DocumentEvents_DocumentSaved;
 
-            if (Dte.Solution != null)
-            {
-                Solution_Opened();
-            }
+            Solution_Opened();
         }
 
         private static OleMenuCommand CreateMenuCommand(IMenuCommandService mcs, int cmdId, EventHandler invokeHandler)
@@ -345,7 +302,7 @@
         {
             try
             {
-                if (!(sender is OleMenuCommand menuCommand))
+                if (sender is not OleMenuCommand menuCommand)
                     return;
 
                 menuCommand.Text = Resources.OpenInResXManager;
@@ -361,28 +318,22 @@
         {
             await JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            var monitorSelection = GetGlobalService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
+            var vsixCompatibility = ExportProvider.GetExportedValue<IVsixCompatibility>();
 
-            var selection = monitorSelection?.GetSelectedProjectItems();
-            if (selection == null)
+            var selectedFiles = await vsixCompatibility.GetSelectedFilesAsync().ConfigureAwait(false);
+
+            if (!selectedFiles.Any())
                 return null;
 
-            var files = selection
-                .Select(item => item.GetMkDocument())
-                .ExceptNullItems()
-                .Where(file => ProjectFileExtensions.IsResourceFile(file))
-                .ToArray();
+            var resourceFiles = selectedFiles.Where(file => ProjectFileExtensions.IsResourceFile(file));
 
-            if (!files.Any())
-                return null;
-
-            var groups = await Task.WhenAll(files.Select(GetSelectedResourceEntitiesAsync)).ConfigureAwait(true);
+            var groups = await Task.WhenAll(resourceFiles.Select(GetSelectedResourceEntitiesAsync)).ConfigureAwait(true);
 
             var entities = groups
                 .SelectMany(items => items)
                 .ToArray();
 
-            return (entities.Length > 0) && (entities.Length == selection.Count) ? entities : null;
+            return (entities.Length > 0) && (entities.Length == selectedFiles.Count) ? entities : null;
         }
 
         private async Task<IEnumerable<ResourceEntity>> GetSelectedResourceEntitiesAsync(string fileName)
@@ -391,8 +342,10 @@
 
             await JoinableTaskFactory.SwitchToMainThreadAsync();
 
+            var vsixCompatibility = ExportProvider.GetExportedValue<IVsixCompatibility>();
+
             return resourceEntities
-                .Where(entity => ContainsFile(entity, fileName) || ContainsChildOfWinFormsDesignerItem(entity, fileName))
+                .Where(entity => ContainsFile(entity, fileName) || vsixCompatibility.ContainsChildOfWinFormsDesignerItem(entity, fileName))
                 .ToArray();
         }
 
@@ -409,15 +362,6 @@
             return resourceEntities?.AsEnumerable() ?? Array.Empty<ResourceEntity>();
         }
 
-        private static bool ContainsChildOfWinFormsDesignerItem(ResourceEntity entity, string? fileName)
-        {
-            ThrowIfNotOnUIThread();
-
-            return entity.Languages.Select(lang => lang.ProjectFile)
-                .OfType<DteProjectFile>()
-                .Any(projectFile => string.Equals(projectFile.ParentItem?.TryGetFileName(), fileName, StringComparison.OrdinalIgnoreCase) && projectFile.IsWinFormsDesignerResource);
-        }
-
         private static bool ContainsFile(ResourceEntity entity, string? fileName)
         {
             return entity.Languages.Any(lang => lang.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
@@ -431,14 +375,21 @@
             {
                 FindToolWindow();
 
-                var entry = await ExportProvider.GetExportedValue<IRefactorings>().MoveToResourceAsync(Dte.ActiveDocument).ConfigureAwait(true);
+                var textDocument = await VS.Documents.GetActiveDocumentViewAsync().ConfigureAwait(false);
+                if (textDocument == null)
+                    return;
+                var filePath = textDocument.FilePath;
+                if (filePath == null)
+                    return;
+
+                var entry = await ExportProvider.GetExportedValue<IRefactorings>().MoveToResourceAsync(filePath).ConfigureAwait(true);
                 if (entry == null)
                     return;
 
                 if (!Properties.Settings.Default.MoveToResourceOpenInResXManager)
                     return;
 
-                ExportProvider.GetExportedValue<VsixShellViewModel>().SelectEntry(entry);
+                ExportProvider.GetExportedValue<IVsixShellViewModel>().SelectEntry(entry);
             }
             catch (Exception ex)
             {
@@ -446,15 +397,22 @@
             }
         }
 
-        private void TextEditorContextMenuCommand_BeforeQueryStatus(object? sender, EventArgs? e)
+        private async void TextEditorContextMenuCommand_BeforeQueryStatus(object? sender, EventArgs? e)
         {
-            if (!(sender is OleMenuCommand menuCommand))
+            if (sender is not OleMenuCommand menuCommand)
                 return;
 
             using (ExportProvider.GetExportedValue<PerformanceTracer>().Start("Can move to resource"))
             {
+                var textDocument = await VS.Documents.GetActiveDocumentViewAsync().ConfigureAwait(false);
+                if (textDocument == null)
+                    return;
+                var filePath = textDocument.FilePath;
+                if (filePath == null)
+                    return;
+
                 menuCommand.Text = Resources.MoveToResource;
-                menuCommand.Visible = ExportProvider.GetExportedValue<IRefactorings>().CanMoveToResource(Dte.ActiveDocument);
+                menuCommand.Visible = ExportProvider.GetExportedValue<IRefactorings>().CanMoveToResource(filePath);
             }
         }
 
@@ -466,7 +424,7 @@
             }
         }
 
-        private void Solution_AfterClosing(object sender, EventArgs e)
+        private void Solution_AfterClosing()
         {
             using (_performanceTracer?.Start("DTE event: Solution closed"))
             {
@@ -484,57 +442,35 @@
             }
         }
 
-        private void DocumentEvents_DocumentOpened(object sender, string fileName)
+        private async void DocumentEvents_DocumentOpened(string fileName)
         {
-            ThrowIfNotOnUIThread();
-
             using (_performanceTracer?.Start("DTE event: Document opened"))
             {
-                if (!AffectsResourceFile(fileName))
+                if (!await AffectsResourceFileAsync(fileName).ConfigureAwait(false))
                     return;
 
                 ReloadSolution();
             }
         }
 
-        private async void DocumentEvents_DocumentSaved(object sender, string fileName)
+        private async void DocumentEvents_DocumentSaved(string fileName)
         {
             await JoinableTaskFactory.SwitchToMainThreadAsync();
 
             try
             {
-
                 using (_performanceTracer?.Start("DTE event: Document saved"))
                 {
-                    if (!AffectsResourceFile(fileName))
+                    if (!await AffectsResourceFileAsync(fileName).ConfigureAwait(false))
                         return;
 
                     var resourceManager = _resourceManager;
                     if (resourceManager == null || resourceManager.IsSaving)
                         return;
 
-                    // Run custom tool (usually attached to neutral language) even if a localized language changes,
-                    // e.g. if custom tool is a text template, we might want not only to generate the designer file but also
-                    // extract some localization information.
-                    // => find the resource entity that contains the document and run the custom tool on the neutral project file.
+                    var vsixCompatibility = ExportProvider.GetExportedValue<IVsixCompatibility>();
 
-#pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
-                    bool Predicate(ResourceEntity e)
-                    {
-                        return e.Languages.Select(lang => lang.ProjectFile)
-                            .OfType<DteProjectFile>()
-                            .Any(projectFile => projectFile.ProjectItems.Any(p => string.Equals(p.Document.FullName, fileName, StringComparison.OrdinalIgnoreCase)));
-                    }
-#pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
-
-                    var entity = (await GetResourceEntitiesAsync().ConfigureAwait(true)).FirstOrDefault(Predicate);
-
-                    var neutralProjectFile = entity?.NeutralProjectFile as DteProjectFile;
-
-                    // VS will run the custom tool on the project item only. Run the custom tool on any of the descendants, too.
-                    var projectItems = neutralProjectFile?.ProjectItems.SelectMany(projectItem => projectItem.Descendants());
-
-                    _customToolRunner.Enqueue(projectItems);
+                    vsixCompatibility.RunCustomTool(await GetResourceEntitiesAsync().ConfigureAwait(true), fileName);
 
                     ReloadSolution();
                 }
@@ -549,32 +485,14 @@
         {
             var entity = e.Language.Container;
 
-            var neutralProjectFile = entity.NeutralProjectFile as DteProjectFile;
-
-            // VS will run the custom tool on the project item only if the document is open => Run the custom tool on any of the descendants, too.
-            // VS will not run the custom tool if just the file is saved in background, and no document is open => Run the custom tool on all descendants and self.
-            var projectItems = neutralProjectFile?.ProjectItems.SelectMany(projectItem => projectItem.GetIsOpen() ? projectItem.Descendants() : projectItem.DescendantsAndSelf());
-
-            _customToolRunner.Enqueue(projectItems);
+            var vsixCompatibility = ExportProvider.GetExportedValue<IVsixCompatibility>();
+            vsixCompatibility.RunCustomTool(entity);
         }
 
-        private bool AffectsResourceFile(string fileName)
+        private async Task<bool> AffectsResourceFileAsync(string? fileName)
         {
-            ThrowIfNotOnUIThread();
-
-            if (fileName == null)
-                return false;
-
-            var projectItem = Dte.Solution?.FindProjectItem(fileName);
-            if (projectItem == null)
-                return false;
-
-            return projectItem
-                .DescendantsAndSelf()
-                .Select(item => item.TryGetFileName())
-                .ExceptNullItems()
-                .Select(Path.GetExtension)
-                .Any(ProjectFileExtensions.IsSupportedFileExtension);
+            var vsixCompatibility = ExportProvider.GetExportedValue<IVsixCompatibility>();
+            return await vsixCompatibility.AffectsResourceFileAsync(fileName).ConfigureAwait(false);
         }
 
         [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Background)]

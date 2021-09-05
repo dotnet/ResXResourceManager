@@ -10,10 +10,10 @@
     [Export, Shared]
     public class CultureToDisplayNameConverter : IValueConverter
     {
-        private readonly Configuration _configuration;
+        private readonly IConfiguration _configuration;
 
         [ImportingConstructor]
-        public CultureToDisplayNameConverter(Configuration configuration)
+        public CultureToDisplayNameConverter(IConfiguration configuration)
         {
             _configuration = configuration;
         }

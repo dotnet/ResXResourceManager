@@ -28,10 +28,10 @@
     internal class MainViewModel : ObservableObject
     {
         private readonly ITracer _tracer;
-        private readonly Configuration _configuration;
+        private readonly IConfiguration _configuration;
 
         [ImportingConstructor]
-        public MainViewModel(ResourceManager resourceManager, Configuration configuration, ResourceViewModel resourceViewModel, ITracer tracer, SourceFilesProvider sourceFilesProvider)
+        public MainViewModel(ResourceManager resourceManager, IConfiguration configuration, ResourceViewModel resourceViewModel, ITracer tracer, SourceFilesProvider sourceFilesProvider)
         {
             ResourceManager = resourceManager;
             ResourceViewModel = resourceViewModel;
@@ -211,11 +211,11 @@
     [Shared]
     internal class SourceFilesProvider : ObservableObject, ISourceFilesProvider
     {
-        private readonly Configuration _configuration;
+        private readonly IConfiguration _configuration;
         private readonly PerformanceTracer _performanceTracer;
 
         [ImportingConstructor]
-        public SourceFilesProvider(Configuration configuration, PerformanceTracer performanceTracer)
+        public SourceFilesProvider(IConfiguration configuration, PerformanceTracer performanceTracer)
         {
             _configuration = configuration;
             _performanceTracer = performanceTracer;

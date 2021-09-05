@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29215.179
+VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8FE641FD-9430-4433-88D3-ABDD487E4397}"
 	ProjectSection(SolutionItems) = preProject
@@ -25,7 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.View", "ResXMan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.VSIX", "ResXManager.VSIX\ResXManager.VSIX.csproj", "{41E0911D-7C82-4B4F-B905-BF0B549BC9C4}"
 	ProjectSection(ProjectDependencies) = postProject
-		{7812E1AE-8AD7-42F1-ADD7-216BD28E4A88} = {7812E1AE-8AD7-42F1-ADD7-216BD28E4A88}
+		{C59E23B4-6ACD-43DC-BFC7-FCB667155EB3} = {C59E23B4-6ACD-43DC-BFC7-FCB667155EB3}
+		{330FADF0-80F3-4B2A-8F11-79F528AFA1DD} = {330FADF0-80F3-4B2A-8F11-79F528AFA1DD}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResXManager", "ResXManager\ResXManager.csproj", "{40BE4188-6658-4DAC-B44E-DE4B7D0EE3A2}"
@@ -114,7 +115,18 @@ Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "ResXManager.Package", "ResX
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.VSIX.Compatibility", "ResXManager.VSIX.Compatibility\ResXManager.VSIX.Compatibility.csproj", "{7812E1AE-8AD7-42F1-ADD7-216BD28E4A88}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ResXManager.VSIX.Compatibility.Shared", "ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.shproj", "{CC3F887F-9602-43F4-AA73-7557B7C6AB1D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.VSIX.Compatibility.x86", "ResXManager.VSIX.Compatibility.x86\ResXManager.VSIX.Compatibility.x86.csproj", "{C59E23B4-6ACD-43DC-BFC7-FCB667155EB3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.VSIX.Compatibility.x64", "ResXManager.VSIX.Compatibility.x64\ResXManager.VSIX.Compatibility.x64.csproj", "{330FADF0-80F3-4B2A-8F11-79F528AFA1DD}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{330fadf0-80f3-4b2a-8f11-79f528afa1dd}*SharedItemsImports = 5
+		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{c59e23b4-6acd-43dc-bfc7-fcb667155eb3}*SharedItemsImports = 5
+		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{cc3f887f-9602-43f4-aa73-7557b7c6ab1d}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -162,6 +174,14 @@ Global
 		{7812E1AE-8AD7-42F1-ADD7-216BD28E4A88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7812E1AE-8AD7-42F1-ADD7-216BD28E4A88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7812E1AE-8AD7-42F1-ADD7-216BD28E4A88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C59E23B4-6ACD-43DC-BFC7-FCB667155EB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C59E23B4-6ACD-43DC-BFC7-FCB667155EB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C59E23B4-6ACD-43DC-BFC7-FCB667155EB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C59E23B4-6ACD-43DC-BFC7-FCB667155EB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{330FADF0-80F3-4B2A-8F11-79F528AFA1DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{330FADF0-80F3-4B2A-8F11-79F528AFA1DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{330FADF0-80F3-4B2A-8F11-79F528AFA1DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{330FADF0-80F3-4B2A-8F11-79F528AFA1DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -28,7 +28,6 @@
     }
 
     [Export(typeof(IConfiguration))]
-    [Export(typeof(Configuration))]
     [Shared]
     public class StandaloneConfiguration : Configuration
     {

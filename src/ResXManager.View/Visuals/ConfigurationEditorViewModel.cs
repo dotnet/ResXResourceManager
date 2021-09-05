@@ -17,7 +17,7 @@
     internal class ConfigurationEditorViewModel : ObservableObject
     {
         [ImportingConstructor]
-        public ConfigurationEditorViewModel(ResourceManager resourceManager, Configuration configuration)
+        public ConfigurationEditorViewModel(ResourceManager resourceManager, IConfiguration configuration)
         {
             ResourceManager = resourceManager;
             Configuration = configuration;
@@ -25,7 +25,7 @@
 
         public ResourceManager ResourceManager { get; }
 
-        public Configuration Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         public ICommand SortNodesByKeyCommand => new DelegateCommand(SortNodesByKey);
 

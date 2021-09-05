@@ -22,6 +22,7 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
+    using ResXManager.VSIX.Compatibility;
     using ResXManager.VSIX.Visuals;
 
     using TomsToolbox.Composition;
@@ -39,9 +40,11 @@
     {
         private readonly ITracer _tracer;
 
-        private readonly Configuration _configuration;
+        private readonly IConfiguration _configuration;
 
         private readonly IExportProvider _exportProvider;
+
+        private readonly IVsixCompatibility _vsixCompatibility;
 
         private readonly ContentControl _contentWrapper = new()
         {
@@ -56,7 +59,7 @@
             : base(null)
         {
             // Set the window title reading it from the resources.
-            Caption = Resources.ToolWindowTitle;
+            Caption = Model.Properties.Resources.Title;
 
             // Set the image that will appear on the tab of the window frame when docked with an other window.
             // The resource ID correspond to the one defined in the resx file while the Index is the offset in the bitmap strip.
@@ -66,7 +69,8 @@
 
             var exportProvider = VsPackage.Instance.ExportProvider;
             _tracer = exportProvider.GetExportedValue<ITracer>();
-            _configuration = exportProvider.GetExportedValue<Configuration>();
+            _configuration = exportProvider.GetExportedValue<IConfiguration>();
+            _vsixCompatibility = exportProvider.GetExportedValue<IVsixCompatibility>();
 
             exportProvider.GetExportedValue<ResourceManager>().BeginEditing += ResourceManager_BeginEditing;
 
@@ -123,7 +127,7 @@
 
                 _contentWrapper.Content = view;
 
-                Dte.SetFontSize(view);
+                _vsixCompatibility.SetFontSize(view);
             }
             catch (Exception ex)
             {
@@ -136,17 +140,6 @@
         {
             VsPackage.Instance.ToolWindowUnloaded();
             _contentWrapper.Content = null;
-        }
-
-        private EnvDTE80.DTE2 Dte
-        {
-            get
-            {
-                ThrowIfNotOnUIThread();
-
-                var dte = (EnvDTE80.DTE2)GetService(typeof(EnvDTE.DTE));
-                return dte;
-            }
         }
 
         private static void Navigate_Click(object? sender, RoutedEventArgs e)
@@ -212,23 +205,12 @@
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(string.Format(CultureInfo.CurrentCulture, View.Properties.Resources.ErrorAddingNewResourceFile, ex), Resources.ToolWindowTitle);
+                    MessageBox.Show(string.Format(CultureInfo.CurrentCulture, View.Properties.Resources.ErrorAddingNewResourceFile, ex), Model.Properties.Resources.Title);
                 }
             }
 
-            var alreadyOpenItems = GetLanguagesOpenedInAnotherEditor(languages);
-
-            string message;
-
-            if (alreadyOpenItems.Any())
-            {
-                message = string.Format(CultureInfo.CurrentCulture, Resources.ErrorOpenFilesInEditor, FormatFileNames(alreadyOpenItems.Select(item => item.Item1)));
-                MessageBox.Show(message, Resources.ToolWindowTitle);
-
-                ActivateWindow(alreadyOpenItems.Select(item => item.Item2).FirstOrDefault());
-
+            if (_vsixCompatibility.ActivateAlreadyOpenEditor(languages))
                 return false;
-            }
 
             // if file is not read only, assume file is either 
             // - already checked out
@@ -248,60 +230,16 @@
             if (!lockedFiles.Any())
                 return true;
 
-            message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasReadOnlyFiles, FormatFileNames(lockedFiles));
-            MessageBox.Show(message, Resources.ToolWindowTitle);
+            var message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasReadOnlyFiles, FormatFileNames(lockedFiles));
+            MessageBox.Show(message, Model.Properties.Resources.Title);
             return false;
-        }
-
-        private static void ActivateWindow(EnvDTE.Window? window)
-        {
-            try
-            {
-                ThrowIfNotOnUIThread();
-
-                window?.Activate();
-            }
-            catch
-            {
-                // Something is wrong with the window, we can't do anything about this...
-            }
-        }
-
-        private Tuple<string, EnvDTE.Window>[] GetLanguagesOpenedInAnotherEditor(IEnumerable<ResourceLanguage> languages)
-        {
-            try
-            {
-                ThrowIfNotOnUIThread();
-
-#pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
-                var openDocuments = Dte.Windows?
-                    .OfType<EnvDTE.Window>()
-                    .Where(window => window.Visible && (window.Document != null))
-                    .ToDictionary(window => window.Document);
-
-                var items = from l in languages
-                            let file = l.FileName
-                            let projectFile = l.ProjectFile as DteProjectFile
-                            let documents = projectFile?.ProjectItems.Select(item => item.TryGetDocument()).Where(doc => doc != null)
-                            let window = documents?.Select(doc => openDocuments?.GetValueOrDefault(doc)).FirstOrDefault(win => win != null)
-                            where window != null
-                            select Tuple.Create(file, window);
-#pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
-
-                return items.ToArray();
-            }
-            catch
-            {
-                return Array.Empty<Tuple<string, EnvDTE.Window>>();
-            }
         }
 
         private bool QueryEditFiles(string[] lockedFiles)
         {
             ThrowIfNotOnUIThread();
 
-            var service = (IVsQueryEditQuerySave2)GetService(typeof(SVsQueryEditQuerySave));
-            if (service != null)
+            if (GetService(typeof(SVsQueryEditQuerySave)) is IVsQueryEditQuerySave2 service)
             {
                 if ((0 != service.QueryEditFiles(0, lockedFiles.Length, lockedFiles, null, null, out var editVerdict, out _))
                     || (editVerdict != (uint)tagVSQueryEditResult.QER_EditOK))
@@ -332,7 +270,7 @@
             {
                 var message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasNoResourceFile, culture.DisplayName);
 
-                if (MessageBox.Show(message, Resources.ToolWindowTitle, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                if (MessageBox.Show(message, Model.Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                     return false;
             }
 
@@ -348,52 +286,15 @@
                 File.WriteAllText(languageFileName, Model.Properties.Resources.EmptyResxTemplate);
             }
 
-            AddProjectItems(entity, neutralLanguage, languageFileName);
+            _vsixCompatibility.AddProjectItems(entity, neutralLanguage, languageFileName);
 
             return true;
         }
 
-        private void AddProjectItems(ResourceEntity entity, ResourceLanguage neutralLanguage, string languageFileName)
-        {
-            ThrowIfNotOnUIThread();
-
-            DteProjectFile? projectFile = null;
-
-            var projectItems = (neutralLanguage.ProjectFile as DteProjectFile)?.ProjectItems;
-            if (projectItems == null)
-            {
-                entity.AddLanguage(new ProjectFile(languageFileName, entity.Container.SolutionFolder ?? string.Empty, entity.ProjectName, null));
-                return;
-            }
-
-            foreach (var neutralLanguageProjectItem in projectItems)
-            {
-                var collection = neutralLanguageProjectItem.Collection;
-                var projectItem = collection.AddFromFile(languageFileName);
-                var containingProject = projectItem.ContainingProject;
-                var projectName = containingProject.Name;
-                if (projectFile == null)
-                {
-                    var solution = _exportProvider.GetExportedValue<DteSolution>();
-
-                    projectFile = new DteProjectFile(solution, solution.SolutionFolder, languageFileName, projectName, containingProject.UniqueName, projectItem);
-                }
-                else
-                {
-                    projectFile.AddProject(projectName, projectItem);
-                }
-            }
-
-            if (projectFile != null)
-            {
-                entity.AddLanguage(projectFile);
-            }
-        }
-
         [Localizable(false)]
-        private static string FormatFileNames(IEnumerable<string> lockedFiles)
+        private static string FormatFileNames(IEnumerable<string> fileNames)
         {
-            return string.Join("\n", lockedFiles.Select(x => "\xA0-\xA0" + x));
+            return string.Join("\n", fileNames.Select(x => "\xA0-\xA0" + x));
         }
 
         private void VisualComposition_Error(object? sender, TextEventArgs e)

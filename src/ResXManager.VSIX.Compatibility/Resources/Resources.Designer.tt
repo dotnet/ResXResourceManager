@@ -1,0 +1,2 @@
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ include file="$(SolutionDir)Resources.Designer.t4" #>

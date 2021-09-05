@@ -48,15 +48,9 @@
             _configuration = new XmlConfiguration(tracer);
         }
 
-        public abstract bool IsScopeSupported
-        {
-            get;
-        }
+        public abstract bool IsScopeSupported { get; }
 
-        public abstract ConfigurationScope Scope
-        {
-            get;
-        }
+        public abstract ConfigurationScope Scope { get; }
 
         [InterceptIgnore]
         protected ITracer Tracer { get; }
@@ -172,6 +166,7 @@
                 .GetCustomAttributes<TypeConverterAttribute>(false)
                 .Select(attr => attr.ConverterTypeName)
                 .Select(typeName => Type.GetType(typeName, true))
+                .ExceptNullItems()
                 .Where(type => typeof(TypeConverter).IsAssignableFrom(type))
                 .Select(type => (TypeConverter?)Activator.CreateInstance(type))
                 .FirstOrDefault();

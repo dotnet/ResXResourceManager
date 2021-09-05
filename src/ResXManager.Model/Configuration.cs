@@ -17,6 +17,16 @@
 
     public interface IConfiguration
     {
+        bool IsScopeSupported { get; }
+
+        ConfigurationScope Scope { get; }
+
+        CodeReferenceConfiguration CodeReferences { get; }
+
+        bool AutoCreateNewLanguageFiles { get; }
+
+        string? FileExclusionFilter { get; }
+
         bool SaveFilesImmediatelyUponChange { get; }
 
         bool RemoveEmptyEntries { get; }
@@ -28,6 +38,22 @@
         DuplicateKeyHandling DuplicateKeyHandling { get; }
 
         ResourceTableEntryRules Rules { get; }
+
+        bool SortFileContentOnSave { get; }
+
+        bool ConfirmAddLanguageFile { get; }
+
+        StringComparison ResXSortingComparison { get; }
+
+        public bool PrefixTranslations { get; }
+
+        public string? TranslationPrefix { get; }
+
+        public string? EffectiveTranslationPrefix { get; }
+
+        public ExcelExportMode ExcelExportMode { get; }
+
+        bool ShowPerformanceTraces { get; }
     }
 
     public abstract class Configuration : ConfigurationBase, IConfiguration

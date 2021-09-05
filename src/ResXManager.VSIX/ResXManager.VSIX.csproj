@@ -67,6 +67,9 @@
     <ProjectReference Include="..\ResXManager.View\ResXManager.View.csproj">
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3bDebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
+    <ProjectReference Include="..\ResXManager.VSIX.Compatibility\ResXManager.VSIX.Compatibility.csproj">
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3bDebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -78,7 +81,7 @@
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all">
       <Version>1.25.0</Version>
     </PackageReference>
-    <PackageReference Include="Community.VisualStudio.Toolkit" Version="15.0.75.149" />
+    <PackageReference Include="Community.VisualStudio.Toolkit" Version="15.0.76.268-pre" />
     <PackageReference Include="DataGridExtensions">
       <Version>2.5.11</Version>
     </PackageReference>
@@ -100,6 +103,7 @@
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all">
       <Version>3.4.0</Version>
     </PackageReference>
+    <PackageReference Include="Resourcer.Fody" Version="1.8.0" PrivateAssets="all" />
     <PackageReference Include="Throttle.Fody" PrivateAssets="all">
       <Version>1.7.0</Version>
     </PackageReference>
@@ -120,7 +124,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <VSIXSourceItem Include="..\ResXManager.VSIX.Compatibility\bin\$(Configuration)\$(TargetFramework)\ResXManager.VSIX.Compatibility.dll" />
+    <VSIXSourceItem Include="..\ResXManager.VSIX.Compatibility.x86\bin\$(Configuration)\$(TargetFramework)\ResXManager.VSIX.Compatibility.x86.dll" />
+    <VSIXSourceItem Include="..\ResXManager.VSIX.Compatibility.x64\bin\$(Configuration)\$(TargetFramework)\ResXManager.VSIX.Compatibility.x64.dll" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">
     <MakeDir Directories="$(SolutionDir)Deploy" />

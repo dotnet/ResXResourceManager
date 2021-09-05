@@ -16,7 +16,7 @@
     [Export, Shared]
     public class CultureToImageSourceConverter : IValueConverter
     {
-        private readonly Configuration _configuration;
+        private readonly IConfiguration _configuration;
 
         private static readonly string[] _existingFlags =
         {
@@ -35,7 +35,7 @@
         };
 
         [ImportingConstructor]
-        public CultureToImageSourceConverter(Configuration configuration)
+        public CultureToImageSourceConverter(IConfiguration configuration)
         {
             _configuration = configuration;
         }

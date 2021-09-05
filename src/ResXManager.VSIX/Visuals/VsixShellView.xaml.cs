@@ -9,6 +9,7 @@
     using ResXManager.Infrastructure;
     using ResXManager.View;
     using ResXManager.View.Themes;
+    using ResXManager.VSIX.Compatibility;
 
     using TomsToolbox.Composition;
     using TomsToolbox.Wpf;
@@ -23,7 +24,7 @@
         private readonly ThemeManager _themeManager;
 
         [ImportingConstructor]
-        public VsixShellView(IExportProvider exportProvider, ThemeManager themeManager, VsixShellViewModel viewModel)
+        public VsixShellView(IExportProvider exportProvider, ThemeManager themeManager, IVsixShellViewModel viewModel)
         {
             _themeManager = themeManager;
 

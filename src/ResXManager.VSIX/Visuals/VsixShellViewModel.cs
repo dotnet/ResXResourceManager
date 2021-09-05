@@ -9,6 +9,7 @@
 
     using ResXManager.Model;
     using ResXManager.View.Visuals;
+    using ResXManager.VSIX.Compatibility;
 
     using Throttle;
 
@@ -17,17 +18,19 @@
 
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
-    [Export]
-    public sealed class VsixShellViewModel : ObservableObject
+    [Export(typeof(IVsixShellViewModel))]
+    internal sealed class VsixShellViewModel : ObservableObject, IVsixShellViewModel
     {
         private readonly ResourceViewModel _resourceViewModel;
         private readonly ShellViewModel _shellViewModel;
+        private readonly IVsixCompatibility _vsixCompatibility;
 
         [ImportingConstructor]
-        public VsixShellViewModel(ResourceManager resourceManager, ResourceViewModel resourceViewModel, ShellViewModel shellViewModel)
+        public VsixShellViewModel(ResourceManager resourceManager, ResourceViewModel resourceViewModel, ShellViewModel shellViewModel, IVsixCompatibility vsixCompatibility)
         {
             _resourceViewModel = resourceViewModel;
             _shellViewModel = shellViewModel;
+            _vsixCompatibility = vsixCompatibility;
             resourceManager.Loaded += (_, __) => SelectedCodeGeneratorsChanged();
 
             resourceViewModel.SelectedEntities.CollectionChanged += (_, __) => SelectedCodeGeneratorsChanged();
@@ -63,13 +66,18 @@
 #pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
         }
 
+        public IMoveToResourceViewModel CreateMoveToResourceViewModel(ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text, string extension, string? className, string? functionName, string? fileName)
+        {
+            return new MoveToResourceViewModel(_vsixCompatibility, patterns, resourceEntities, text, extension, className, functionName, fileName);
+        }
+
         private IEnumerable<CodeGenerator> SelectedItemsCodeGenerators()
         {
             ThrowIfNotOnUIThread();
 
             return _resourceViewModel.SelectedEntities
                 .Select(x => x.NeutralProjectFile)
-                .OfType<DteProjectFile>()
+                .OfType<IDteProjectFile>()
                 .Select(pf => pf.CodeGenerator)
                 .Distinct();
         }
@@ -87,7 +95,7 @@
 
             _resourceViewModel.SelectedEntities
                 .Select(x => x.NeutralProjectFile)
-                .OfType<DteProjectFile>()
+                .OfType<IDteProjectFile>()
                 .ForEach(pf => pf.CodeGenerator = codeGenerator);
 
             SelectedCodeGeneratorsChanged();

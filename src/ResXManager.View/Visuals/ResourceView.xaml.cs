@@ -30,7 +30,7 @@
     public partial class ResourceView
     {
         private readonly ResourceManager _resourceManager;
-        private readonly Configuration _configuration;
+        private readonly IConfiguration _configuration;
         private readonly ResourceViewModel _resourceViewModel;
         private readonly ITracer _tracer;
 
@@ -39,7 +39,7 @@
         {
             _resourceManager = exportProvider.GetExportedValue<ResourceManager>();
             _resourceViewModel = exportProvider.GetExportedValue<ResourceViewModel>();
-            _configuration = exportProvider.GetExportedValue<Configuration>();
+            _configuration = exportProvider.GetExportedValue<IConfiguration>();
             _tracer = exportProvider.GetExportedValue<ITracer>();
             _resourceViewModel.ClearFiltersRequest += ResourceViewModel_ClearFiltersRequest;
 

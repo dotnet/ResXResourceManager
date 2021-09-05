@@ -161,6 +161,16 @@
     [Shared]
     public class Configuration : IConfiguration
     {
+        public bool IsScopeSupported { get; set; }
+
+        public ConfigurationScope Scope { get; set; }
+
+        public CodeReferenceConfiguration CodeReferences { get; } = new();
+
+        public bool AutoCreateNewLanguageFiles { get; set; }
+
+        public string? FileExclusionFilter { get; set; }
+
         public bool SaveFilesImmediatelyUponChange => false;
 
         public CultureInfo NeutralResourcesLanguage { get; set; } = new("en-US");
@@ -170,6 +180,22 @@
         public DuplicateKeyHandling DuplicateKeyHandling { get; set; }
 
         public ResourceTableEntryRules Rules { get; } = new();
+
+        public bool SortFileContentOnSave { get; set; }
+
+        public bool ConfirmAddLanguageFile { get; set; }
+
+        public StringComparison ResXSortingComparison { get; set; }
+
+        public bool PrefixTranslations { get; set; }
+
+        public string? TranslationPrefix { get; set; }
+
+        public string? EffectiveTranslationPrefix { get; set; }
+
+        public ExcelExportMode ExcelExportMode { get; set; }
+
+        public bool ShowPerformanceTraces { get; set; }
 
         public bool RemoveEmptyEntries { get; set; }
     }

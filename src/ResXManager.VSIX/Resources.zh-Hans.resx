@@ -135,21 +135,6 @@
   <data name="CodeGenerator_CommandTextTemplate" xml:space="preserve">
     <value>文本模板</value>
   </data>
-  <data name="CodeGenerator_Internal" xml:space="preserve">
-    <value>自定义工具代码生成器，内部访问。</value>
-  </data>
-  <data name="CodeGenerator_Public" xml:space="preserve">
-    <value>自定义工具代码生成器，公共访问。</value>
-  </data>
-  <data name="CodeGenerator_TextTemplate" xml:space="preserve">
-    <value>文本模板代码生成器。</value>
-  </data>
-  <data name="CodeGenerator_Unkown" xml:space="preserve">
-    <value>无效的代码生成器。</value>
-  </data>
-  <data name="CodeGenerator_WinForms" xml:space="preserve">
-    <value>WinForms 设计器</value>
-  </data>
   <data name="CodeHeader" xml:space="preserve">
     <value>代码：</value>
   </data>
@@ -161,11 +146,6 @@
   </data>
   <data name="Error" xml:space="preserve">
     <value>错误：</value>
-  </data>
-  <data name="ErrorOpenFilesInEditor" xml:space="preserve">
-    <value>某些文件已经在其它窗口打开。请关闭下列文件以进行更改：
-
-{0}</value>
   </data>
   <data name="ExtensionLoadingError" xml:space="preserve">
     <value>无法加载 ResX Manager 扩展: {0}。
@@ -206,17 +186,7 @@
   <data name="ResourceHeader" xml:space="preserve">
     <value>资源：</value>
   </data>
-  <data name="ResourceLoadingError" xml:space="preserve">
-    <value>加载资源文件失败：{0}。
-详情参见输出窗口。</value>
-  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Resources_Designer_t4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Resources.Designer.t4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Resources_Designer_tt" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Resources.Designer.tt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="ShowWhitespaceToolTip" xml:space="preserve">
     <value>显示空格和格式符号</value>
   </data>

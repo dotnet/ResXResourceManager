@@ -1,21 +1,44 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
+    <SolutionDir Condition="'$(SolutionDir)' == ''">..\.</SolutionDir>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\ResXManager.VSIX\ErrorListProviderService.cs" Link="ErrorListProviderService.cs" />
+    <None Update="Resources.Designer.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </None>
+    <None Update="Resources\Resources.Designer.tt">
+      <Generator></Generator>
+    </None>
+    <Compile Update="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.Designer.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" ExcludeAssets="runtime">
-      <Version>17.0.0-previews-1-31410-273</Version>
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="15.0.1" />
+    <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all">
+        <Version>3.4.0</Version>
+    </PackageReference>
+    <PackageReference Include="Fody" PrivateAssets="all">
+        <Version>6.5.2</Version>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
 </Project>

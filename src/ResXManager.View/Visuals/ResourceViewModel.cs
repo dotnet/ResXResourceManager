@@ -34,7 +34,7 @@
     [Shared]
     public sealed class ResourceViewModel : ObservableObject, IDisposable
     {
-        private readonly Configuration _configuration;
+        private readonly IConfiguration _configuration;
         private readonly ISourceFilesProvider _sourceFilesProvider;
         private readonly ITracer _tracer;
         private readonly CodeReferenceTracker _codeReferenceTracker;
@@ -43,7 +43,7 @@
         private CancellationTokenSource? _loadingCancellationTokenSource;
 
         [ImportingConstructor]
-        public ResourceViewModel(ResourceManager resourceManager, Configuration configuration, ISourceFilesProvider sourceFilesProvider, CodeReferenceTracker codeReferenceTracker, ITracer tracer, PerformanceTracer performanceTracer)
+        public ResourceViewModel(ResourceManager resourceManager, IConfiguration configuration, ISourceFilesProvider sourceFilesProvider, CodeReferenceTracker codeReferenceTracker, ITracer tracer, PerformanceTracer performanceTracer)
         {
             ResourceManager = resourceManager;
             _configuration = configuration;
@@ -523,7 +523,8 @@
             }
             finally
             {
-                if (Interlocked.CompareExchange(ref _loadingCancellationTokenSource, null, cancellationTokenSource) == cancellationTokenSource)
+                // ! Wrong nullability annotation in netcoreapp3.1
+                if (Interlocked.CompareExchange(ref _loadingCancellationTokenSource, null!, cancellationTokenSource) == cancellationTokenSource)
                 {
                     IsLoading = false;
                 }

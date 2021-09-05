@@ -9,9 +9,9 @@
 
     public abstract class LanguageColumnHeaderBase : ObservableObject, ILanguageColumnHeader
     {
-        private readonly Configuration _configuration;
+        private readonly IConfiguration _configuration;
 
-        protected LanguageColumnHeaderBase(Configuration configuration, CultureKey cultureKey)
+        protected LanguageColumnHeaderBase(IConfiguration configuration, CultureKey cultureKey)
         {
             _configuration = configuration;
             CultureKey = cultureKey;

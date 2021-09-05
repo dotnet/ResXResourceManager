@@ -14,7 +14,6 @@
     [Export(typeof(IErrorListProvider))]
     internal sealed class ErrorListProviderService : IErrorListProvider
     {
-        private bool _isDisabled;
         private readonly ErrorListProvider _errorListProvider;
         private readonly TaskProvider.TaskCollection _tasks;
 
@@ -34,21 +33,6 @@
         }
 
         public void SetEntries(ICollection<ResourceTableEntry> entries, ICollection<CultureKey> cultures, int errorCategory)
-        {
-            if (_isDisabled)
-                return;
-
-            try
-            {
-                SetInternal(entries, cultures, errorCategory);
-            }
-            catch (SystemException)
-            {
-                _isDisabled = true;
-            }
-        }
-
-        private void SetInternal(ICollection<ResourceTableEntry> entries, ICollection<CultureKey> cultures, int errorCategory)
         {
             _errorListProvider.SuspendRefresh();
 
@@ -71,7 +55,7 @@
                         // Bug in VS2022: : this is the call that is responsible for the exception: 'Could not load type 'Microsoft.VisualStudio.Shell.Task' from assembly 'Microsoft.VisualStudio.Shell.15.0, Version=17.0.0.0
                         var task = new ResourceErrorTask(entry)
                         {
-                            ErrorCategory = (TaskErrorCategory) errorCategory,
+                            ErrorCategory = (TaskErrorCategory)errorCategory,
                             Category = TaskCategory.BuildCompile,
                             Text = error,
                             Document = entry.Container.UniqueName,
@@ -90,21 +74,6 @@
 
         public void Remove(ResourceTableEntry entry)
         {
-            if (_isDisabled)
-                return;
-
-            try
-            {
-                RemoveInternal(entry);
-            }
-            catch (SystemException)
-            {
-                _isDisabled = true;
-            }
-        }
-
-        private void RemoveInternal(ResourceTableEntry entry)
-        {
             var task = _tasks.OfType<ResourceErrorTask>().FirstOrDefault(t => t.Entry == entry);
 
             if (task == null)
@@ -116,21 +85,6 @@
 
         public void Clear()
         {
-            if (_isDisabled)
-                return;
-
-            try
-            {
-                ClearInternal();
-            }
-            catch (SystemException)
-            {
-                _isDisabled = true;
-            }
-        }
-
-        private void ClearInternal()
-        {
             _tasks.Clear();
         }
 
@@ -138,7 +92,7 @@
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (!(sender is ResourceErrorTask task))
+            if (sender is not ResourceErrorTask task)
                 return;
 
             var entry = task.Entry;

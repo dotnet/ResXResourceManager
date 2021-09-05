@@ -13,11 +13,11 @@
     internal class MoveToResourceConfigurationViewModel : ObservableObject
     {
         [ImportingConstructor]
-        public MoveToResourceConfigurationViewModel(DteConfiguration configuration)
+        public MoveToResourceConfigurationViewModel(IDteConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public DteConfiguration Configuration { get; }
+        public IDteConfiguration Configuration { get; }
     }
 }

@@ -12,11 +12,11 @@
     internal class ShowErrorsConfigurationViewModel
     {
         [ImportingConstructor]
-        public ShowErrorsConfigurationViewModel(DteConfiguration configuration)
+        public ShowErrorsConfigurationViewModel(IDteConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public DteConfiguration Configuration { get; }
+        public IDteConfiguration Configuration { get; }
     }
 }

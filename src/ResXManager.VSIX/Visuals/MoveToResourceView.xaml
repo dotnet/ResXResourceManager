@@ -64,7 +64,7 @@
       </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
       <toms:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.CodeHeader}">
-        <ComboBox ItemsSource="{Binding Replacements}" SelectedItem="{Binding Replacement}" DisplayMemberPath="Value"
+        <ComboBox ItemsSource="{Binding Replacements}" SelectedItem="{Binding SelectedReplacement}" DisplayMemberPath="Value"
                   SelectedIndex="{Binding SelectedReplacementIndex}" Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}" />
       </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />

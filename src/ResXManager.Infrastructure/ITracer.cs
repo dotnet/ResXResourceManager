@@ -68,12 +68,14 @@
 
             var assemblyFileNames = Directory.EnumerateFiles(path, @"*.dll");
 
-            var assemblyNames = new HashSet<string>(assemblyFileNames.Select(Path.GetFileNameWithoutExtension));
+            // ! Annotation in netcoreapp3.1 is wrong, should have [NotNullIfNotNull]
+            var assemblyNames = new HashSet<string>(assemblyFileNames.Select(Path.GetFileNameWithoutExtension)!);
 
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 
+            // ! Annotation is wrong, ICollection.Contains accepts null.
             var assemblies = loadedAssemblies
-                .Where(a => assemblyNames.Contains(a.GetName().Name))
+                .Where(a => assemblyNames.Contains(a.GetName().Name!))
                 .ToList();
 
             var messages = assemblies

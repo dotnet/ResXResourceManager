@@ -8,7 +8,7 @@
 
     public class LanguageHeader : LanguageColumnHeaderBase
     {
-        public LanguageHeader(Configuration configuration, CultureKey cultureKey)
+        public LanguageHeader(IConfiguration configuration, CultureKey cultureKey)
             : base(configuration, cultureKey)
         {
         }

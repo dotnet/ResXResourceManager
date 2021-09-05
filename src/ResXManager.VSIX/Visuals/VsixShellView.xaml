@@ -9,6 +9,7 @@
              xmlns:visuals="clr-namespace:ResXManager.VSIX.Visuals"
              xmlns:vsix="clr-namespace:ResXManager.VSIX"
              xmlns:interactions="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:compatibility="clr-namespace:ResXManager.VSIX.Compatibility;assembly=ResXManager.VSIX.Compatibility"
              d:DataContext="{d:DesignInstance visuals:VsixShellViewModel}"
              Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
              Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
@@ -21,16 +22,16 @@
     <composition:ContentControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.Shell}" />
     <composition:CommandRoutingBehavior CommandSource="{x:Type vsix:ResXFileCodeGeneratorCommand}"
                                         CommandTarget="{Binding SetCodeProviderCommand}"
-                                        CommandParameter="{x:Static vsix:CodeGenerator.ResXFileCodeGenerator}"
-                                        IsChecked="{Binding SelectedCodeGenerators, Converter={x:Static toms:BinaryOperationConverter.Equality}, ConverterParameter={x:Static vsix:CodeGenerator.ResXFileCodeGenerator}}" />
+                                        CommandParameter="{x:Static compatibility:CodeGenerator.ResXFileCodeGenerator}"
+                                        IsChecked="{Binding SelectedCodeGenerators, Converter={x:Static toms:BinaryOperationConverter.Equality}, ConverterParameter={x:Static compatibility:CodeGenerator.ResXFileCodeGenerator}}" />
     <composition:CommandRoutingBehavior CommandSource="{x:Type vsix:PublicResXFileCodeGeneratorCommand}"
                                         CommandTarget="{Binding SetCodeProviderCommand}"
-                                        CommandParameter="{x:Static vsix:CodeGenerator.PublicResXFileCodeGenerator}"
-                                        IsChecked="{Binding SelectedCodeGenerators, Converter={x:Static toms:BinaryOperationConverter.Equality}, ConverterParameter={x:Static vsix:CodeGenerator.PublicResXFileCodeGenerator}}" />
+                                        CommandParameter="{x:Static compatibility:CodeGenerator.PublicResXFileCodeGenerator}"
+                                        IsChecked="{Binding SelectedCodeGenerators, Converter={x:Static toms:BinaryOperationConverter.Equality}, ConverterParameter={x:Static compatibility:CodeGenerator.PublicResXFileCodeGenerator}}" />
     <composition:CommandRoutingBehavior CommandSource="{x:Type vsix:TextTemplateCodeGeneratorCommand}"
                                         CommandTarget="{Binding SetCodeProviderCommand}"
-                                        CommandParameter="{x:Static vsix:CodeGenerator.TextTemplate}"
-                                        IsChecked="{Binding SelectedCodeGenerators, Converter={x:Static toms:BinaryOperationConverter.Equality}, ConverterParameter={x:Static vsix:CodeGenerator.TextTemplate}}" />
+                                        CommandParameter="{x:Static compatibility:CodeGenerator.TextTemplate}"
+                                        IsChecked="{Binding SelectedCodeGenerators, Converter={x:Static toms:BinaryOperationConverter.Equality}, ConverterParameter={x:Static compatibility:CodeGenerator.TextTemplate}}" />
 
   </interactions:Interaction.Behaviors>
 </UserControl>

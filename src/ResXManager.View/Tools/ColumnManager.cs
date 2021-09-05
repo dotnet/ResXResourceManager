@@ -59,7 +59,7 @@
         public static readonly DependencyProperty SelectedCellsProperty =
             DependencyProperty.RegisterAttached("SelectedCells", typeof(IList<DataGridCellInfo>), typeof(ColumnManager));
 
-        public static void SetupColumns(this DataGrid dataGrid, ResourceManager resourceManager, ResourceViewModel resourceViewModel, Configuration configuration)
+        public static void SetupColumns(this DataGrid dataGrid, ResourceManager resourceManager, ResourceViewModel resourceViewModel, IConfiguration configuration)
         {
             var dataGridEvents = dataGrid.GetAdditionalEvents();
 
@@ -97,7 +97,7 @@
             }
         }
 
-        public static void CreateNewLanguageColumn(this DataGrid dataGrid, Configuration configuration, CultureInfo? culture)
+        public static void CreateNewLanguageColumn(this DataGrid dataGrid, IConfiguration configuration, CultureInfo? culture)
         {
             var cultureKey = new CultureKey(culture);
 
@@ -120,7 +120,7 @@
             };
         }
 
-        private static DataGridTextColumn CreateIndexColumn(ResourceViewModel? resourceViewModel, Configuration? configuration)
+        private static DataGridTextColumn CreateIndexColumn(ResourceViewModel? resourceViewModel, IConfiguration? configuration)
         {
             var elementStyle = new Style(typeof(TextBlock))
             {
@@ -156,7 +156,7 @@
                 Bindings =
                 {
                     new Binding(nameof(ResourceViewModel.SelectedEntities) + ".Count") { Source = resourceViewModel, Converter = BinaryOperationConverter.Inequality, ConverterParameter = 1 },
-                    new Binding(nameof(Configuration.SortFileContentOnSave)) { Source = configuration }
+                    new Binding(nameof(IConfiguration.SortFileContentOnSave)) { Source = configuration }
                 }
             });
 
@@ -240,7 +240,7 @@
             return column;
         }
 
-        private static void AddLanguageColumn(this DataGrid dataGrid, Configuration configuration, CultureKey cultureKey)
+        private static void AddLanguageColumn(this DataGrid dataGrid, IConfiguration configuration, CultureKey cultureKey)
         {
             var columns = dataGrid.Columns;
             var key = cultureKey.ToString(NeutralCultureKeyString);

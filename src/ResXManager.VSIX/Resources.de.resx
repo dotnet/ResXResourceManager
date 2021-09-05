@@ -123,10 +123,6 @@ Möchten sie eine neue Ressourcedatei hinzufügen?</value>
     <value>Fehler beim Laden der Resx Manager Erweiterung: {0}.
 Mehr Details finden sich im Ausgabefenster.</value>
   </data>
-  <data name="ResourceLoadingError" xml:space="preserve">
-    <value>Fehler beim Laden von Ressourcen-Dateien: {0}.
-Mehr Details finden sich im Ausgabefenster.</value>
-  </data>
   <data name="AssemblyLocation" xml:space="preserve">
     <value>Installationsverzeichnis: {0}</value>
   </data>
@@ -138,18 +134,6 @@ Mehr Details finden sich im Ausgabefenster.</value>
   </data>
   <data name="OpenInResXManager" xml:space="preserve">
     <value>Im ResX Manager öffnen</value>
-  </data>
-  <data name="CodeGenerator_Unkown" xml:space="preserve">
-    <value>Unbekannter Code-Generator.</value>
-  </data>
-  <data name="CodeGenerator_Internal" xml:space="preserve">
-    <value>Custom-Tool Codegenerator (interner Zugriff).</value>
-  </data>
-  <data name="CodeGenerator_Public" xml:space="preserve">
-    <value>Custom-Tool Codegenerator (öffentlicher Zugriff).</value>
-  </data>
-  <data name="CodeGenerator_TextTemplate" xml:space="preserve">
-    <value>Text-Template Codegenerator.</value>
   </data>
   <data name="CodeGenerator_CommandGroup" xml:space="preserve">
     <value>Codegenerator</value>
@@ -181,9 +165,6 @@ Mehr Details finden sich im Ausgabefenster.</value>
   <data name="CommentHeader" xml:space="preserve">
     <value>Kommentar:</value>
   </data>
-  <data name="CodeGenerator_WinForms" xml:space="preserve">
-    <value>WinForms Designer</value>
-  </data>
   <data name="ShowWhitespaceToolTip" xml:space="preserve">
     <value>Leerzeichen und Formatierung anzeigen</value>
   </data>
@@ -195,11 +176,6 @@ Mehr Details finden sich im Ausgabefenster.</value>
   </data>
   <data name="KeyContainsInvalidCharacters" xml:space="preserve">
     <value>Der Schlüssel enthält ungültige Zeichen.</value>
-  </data>
-  <data name="ErrorOpenFilesInEditor" xml:space="preserve">
-    <value>Es sind Dateien in anderen Fenstern geöffnet. Bitte schließen sie die Dateien, um sie hier ändern zu können:
-
-{0}</value>
   </data>
   <data name="ShowErrorsConfiguration_Header" xml:space="preserve">
     <value>Fehlerausgabe</value>

@@ -32,7 +32,7 @@
         private readonly ResourceViewModel _resourceViewModel;
 
         [ImportingConstructor]
-        public TranslationsViewModel(TranslatorHost translatorHost, ResourceManager resourceManager, ResourceViewModel resourceViewModel, Configuration configuration)
+        public TranslationsViewModel(TranslatorHost translatorHost, ResourceManager resourceManager, ResourceViewModel resourceViewModel, IConfiguration configuration)
         {
             TranslatorHost = translatorHost;
             _resourceManager = resourceManager;
@@ -57,7 +57,7 @@
 
         public ObservableCollection<CultureKey> Cultures => _resourceManager.Cultures;
 
-        public Configuration Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         [OnChangedMethod(nameof(OnSourceCultureChanged))]
         public CultureKey? SourceCulture { get; set; }

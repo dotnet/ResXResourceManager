@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>cc3f887f-9602-43f4-aa73-7557b7c6ab1d</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ResXManager.VSIX.Compatibility.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CustomToolRunner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DteConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DteExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DteProjectFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DteSolution.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DteSourceFilesProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorListProviderService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ICustomToolRunner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Refactorings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VsixCompatibility.cs" />
+  </ItemGroup>
+</Project>

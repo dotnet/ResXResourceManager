@@ -17,11 +17,11 @@
     public class PerformanceTracer
     {
         private readonly ITracer _tracer;
-        private readonly Configuration _configuration;
+        private readonly IConfiguration _configuration;
         private int _index;
 
         [ImportingConstructor]
-        public PerformanceTracer(ITracer tracer, Configuration configuration)
+        public PerformanceTracer(ITracer tracer, IConfiguration configuration)
         {
             _tracer = tracer;
             _configuration = configuration;

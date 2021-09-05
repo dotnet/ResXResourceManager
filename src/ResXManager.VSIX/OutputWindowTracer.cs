@@ -24,14 +24,14 @@
         {
             ThrowIfNotOnUIThread();
 
-            if (!(_serviceProvider.GetService(typeof(SVsOutputWindow)) is IVsOutputWindow outputWindow))
+            if (_serviceProvider.GetService(typeof(SVsOutputWindow)) is not IVsOutputWindow outputWindow)
                 return;
 
             var errorCode = outputWindow.GetPane(ref _outputPaneGuid, out var pane);
 
             if (ErrorHandler.Failed(errorCode) || pane == null)
             {
-                outputWindow.CreatePane(ref _outputPaneGuid, Resources.ToolWindowTitle, Convert.ToInt32(true), Convert.ToInt32(false));
+                outputWindow.CreatePane(ref _outputPaneGuid, Model.Properties.Resources.Title, Convert.ToInt32(true), Convert.ToInt32(false));
                 outputWindow.GetPane(ref _outputPaneGuid, out pane);
             }
 

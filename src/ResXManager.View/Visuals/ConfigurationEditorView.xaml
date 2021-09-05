@@ -14,7 +14,7 @@
              xmlns:infrastructure="urn:ResXManager.Infrastructure"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              xmlns:composition="urn:TomsToolbox.Composition"
-             xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:interactions="http://schemas.microsoft.com/xaml/behaviors"
              d:DataContext="{d:DesignInstance visuals:ConfigurationEditorViewModel}">
   <UserControl.Resources>
 
@@ -194,9 +194,9 @@
             <DataGridCheckBoxColumn Header="{x:Static properties:Resources.CaseSensitive}" Binding="{Binding IsCaseSensitive}" Width="*" />
             <DataGridTextColumn Header="{x:Static properties:Resources.CommentToken}" Binding="{Binding SingleLineComment}" Width="2*" />
           </DataGrid.Columns>
-          <Interactions:Interaction.Behaviors>
+          <interactions:Interaction.Behaviors>
             <dgx:ExtendedStarSizeBehavior ColumnHeaderGripperToolTipStyle="{StaticResource {x:Static themes:ResourceKeys.ColumnHeaderGripperToolTipStyleKey}}" />
-          </Interactions:Interaction.Behaviors>
+          </interactions:Interaction.Behaviors>
         </DataGrid>
       </GroupBox>
 
@@ -222,9 +222,9 @@
             </StackPanel>
           </DataTemplate>
         </ItemsControl.ItemTemplate>
-        <Interactions:Interaction.Behaviors>
+        <interactions:Interaction.Behaviors>
           <composition:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.Configuration}" />
-        </Interactions:Interaction.Behaviors>
+        </interactions:Interaction.Behaviors>
       </ItemsControl>
 
     </StackPanel>

@@ -6,7 +6,7 @@
 
     public class CommentHeader : LanguageColumnHeaderBase
     {
-        public CommentHeader(Configuration configuration, CultureKey cultureKey)
+        public CommentHeader(IConfiguration configuration, CultureKey cultureKey)
             : base(configuration, cultureKey)
         {
         }

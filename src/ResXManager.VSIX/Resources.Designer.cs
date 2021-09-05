@@ -126,51 +126,6 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Custom tool code generator, internal access."
-        /// </summary>
-        public static string CodeGenerator_Internal {
-            get {
-                return ResourceManager.GetString("CodeGenerator_Internal", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Custom tool code generator, public access."
-        /// </summary>
-        public static string CodeGenerator_Public {
-            get {
-                return ResourceManager.GetString("CodeGenerator_Public", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "TextTemplate code generator."
-        /// </summary>
-        public static string CodeGenerator_TextTemplate {
-            get {
-                return ResourceManager.GetString("CodeGenerator_TextTemplate", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Unknown code generator."
-        /// </summary>
-        public static string CodeGenerator_Unkown {
-            get {
-                return ResourceManager.GetString("CodeGenerator_Unkown", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "WinForms Designer"
-        /// </summary>
-        public static string CodeGenerator_WinForms {
-            get {
-                return ResourceManager.GetString("CodeGenerator_WinForms", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Code:"
         /// </summary>
         public static string CodeHeader {
@@ -203,15 +158,6 @@ namespace ResXManager.VSIX {
         public static string Error {
             get {
                 return ResourceManager.GetString("Error", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Some files are open in another window. Please clos..."
-        /// </summary>
-        public static string ErrorOpenFilesInEditor {
-            get {
-                return ResourceManager.GetString("ErrorOpenFilesInEditor", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -306,35 +252,6 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Error loading resource files: {0}. &amp;#13;&amp;#..."
-        /// </summary>
-        public static string ResourceLoadingError {
-            get {
-                return ResourceManager.GetString("ResourceLoadingError", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        public static System.Byte[] Resources_Designer_t4 {
-            get {
-                object obj = ResourceManager.GetObject("Resources_Designer_t4", resourceCulture);
-                return ((System.Byte[])(obj));
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        public static System.Byte[] Resources_Designer_tt {
-            get {
-                object obj = ResourceManager.GetObject("Resources_Designer_tt", resourceCulture);
-                return ((System.Byte[])(obj));
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Error reporting"
         /// </summary>
         public static string ShowErrorsConfiguration_Header {
@@ -367,18 +284,6 @@ namespace ResXManager.VSIX {
         public static string ShowWhitespaceToolTip {
             get {
                 return ResourceManager.GetString("ShowWhitespaceToolTip", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "ResX Resource Manager"
-        /// </summary>
-        /// <remarks>
-        /// @Invariant
-        /// </remarks>
-        public static string ToolWindowTitle {
-            get {
-                return ResourceManager.GetString("ToolWindowTitle", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -442,26 +347,6 @@ namespace ResXManager.VSIX {
         /// </summary>
         CodeGenerator_CommandTextTemplate,
         /// <summary>
-        ///   Looks up a localized string similar to Custom tool code generator, internal access..
-        /// </summary>
-        CodeGenerator_Internal,
-        /// <summary>
-        ///   Looks up a localized string similar to Custom tool code generator, public access..
-        /// </summary>
-        CodeGenerator_Public,
-        /// <summary>
-        ///   Looks up a localized string similar to TextTemplate code generator..
-        /// </summary>
-        CodeGenerator_TextTemplate,
-        /// <summary>
-        ///   Looks up a localized string similar to Unknown code generator..
-        /// </summary>
-        CodeGenerator_Unkown,
-        /// <summary>
-        ///   Looks up a localized string similar to WinForms Designer.
-        /// </summary>
-        CodeGenerator_WinForms,
-        /// <summary>
         ///   Looks up a localized string similar to Code:.
         /// </summary>
         CodeHeader,
@@ -477,10 +362,6 @@ namespace ResXManager.VSIX {
         ///   Looks up a localized string similar to Error:.
         /// </summary>
         Error,
-        /// <summary>
-        ///   Looks up a localized string similar to Some files are open in another window. Please clos....
-        /// </summary>
-        ErrorOpenFilesInEditor,
         /// <summary>
         ///   Looks up a localized string similar to Error loading the ResX Manager extension: {0}.&amp....
         /// </summary>
@@ -522,10 +403,6 @@ namespace ResXManager.VSIX {
         /// </summary>
         ResourceHeader,
         /// <summary>
-        ///   Looks up a localized string similar to Error loading resource files: {0}. &amp;#13;&amp;#....
-        /// </summary>
-        ResourceLoadingError,
-        /// <summary>
         ///   Looks up a localized string similar to Error reporting.
         /// </summary>
         ShowErrorsConfiguration_Header,
@@ -541,13 +418,6 @@ namespace ResXManager.VSIX {
         ///   Looks up a localized string similar to Show white space and formatting symbols.
         /// </summary>
         ShowWhitespaceToolTip,
-        /// <summary>
-        ///   Looks up a localized string similar to ResX Resource Manager.
-        /// </summary>
-        /// <remarks>
-        /// @Invariant
-        /// </remarks>
-        ToolWindowTitle,
         /// <summary>
         ///   Looks up a localized string similar to Value:.
         /// </summary>
@@ -659,7 +529,8 @@ namespace ResXManager.VSIX {
     public sealed class LocalizedTextAttribute : global::TomsToolbox.Essentials.TextAttribute
     {
         // This code is generated by Resources.Designer.t4
-        // If you get compile errors because you don't use the TomsToolbox.Essentials NuGet package, remove this part in the Resources.Designer.t4 file. 
+        // If you get compile errors because you don't use the TomsToolbox.Essentials NuGet package, 
+        // either remove this part in the Resources.Designer.t4 file, or add a reference to the TomsToolbox.Essentials NuGet package.
         // Just search for this text and follow the instructions above.
 
         private readonly string _resourceKey;

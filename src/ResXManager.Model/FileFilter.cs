@@ -11,7 +11,7 @@
         private readonly string[] _extensions;
         private readonly Regex? _fileExclusionFilter;
 
-        public FileFilter(Configuration configuration)
+        public FileFilter(IConfiguration configuration)
         {
             _extensions = configuration.CodeReferences
                 .Items.SelectMany(item => item.ParseExtensions())
