@@ -5,7 +5,6 @@
     using System.ComponentModel.Design;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-    using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -19,6 +18,8 @@
     using Microsoft.VisualStudio.Shell.Interop;
 
     using Ninject;
+
+    using Resourcer;
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
@@ -99,11 +100,11 @@
 
             var loaderMessages = await Task.Run(FillCatalog, cancellationToken).ConfigureAwait(false);
 
+            await JoinableTaskFactory.SwitchToMainThreadAsync();
+
             _performanceTracer = ExportProvider.GetExportedValue<PerformanceTracer>();
 
-            var menuCommandService = await GetServiceAsync(typeof(IMenuCommandService)).ConfigureAwait(false);
-
-            await JoinableTaskFactory.SwitchToMainThreadAsync();
+            var menuCommandService = await GetServiceAsync(typeof(IMenuCommandService)).ConfigureAwait(true);
 
             SynchronizationContextThrottle.TaskFactory = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -179,21 +180,24 @@
             //    .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
             //    .ToList();
 
+            var is64BitProcess = Environment.Is64BitProcess;
+
+            using var resourceStream = is64BitProcess
+                ? Resource.AsStream("ResXManager.VSIX.Compatibility.x64.dll")
+                : Resource.AsStream("ResXManager.VSIX.Compatibility.x86.dll");
+
+            var length = resourceStream.Length;
+            var data = new byte[length];
+            resourceStream.Read(data, 0, (int)length);
+
+            var compatibilityLayer = System.Reflection.Assembly.Load(data);
+
             _kernel.BindExports(assembly,
                 typeof(Infrastructure.Properties.AssemblyKey).Assembly,
                 typeof(Model.Properties.AssemblyKey).Assembly,
                 typeof(Translators.Properties.AssemblyKey).Assembly,
-                typeof(View.Properties.AssemblyKey).Assembly);
-
-            try
-            {
-                var path = Path.Combine(Path.GetDirectoryName(assembly.Location), "ResXManager.VSIX.Compatibility.x64.dll");
-                _kernel.BindExports(System.Reflection.Assembly.LoadFrom(path));
-            }
-            catch
-            {
-                // ResXManager.VSIX.Compatibility.dll only loads in VS2022 and above, so ignore this
-            }
+                typeof(View.Properties.AssemblyKey).Assembly,
+                compatibilityLayer);
 
             _kernel.Bind<IExportProvider>().ToConstant(ExportProvider);
 

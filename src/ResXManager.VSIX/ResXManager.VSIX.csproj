@@ -124,8 +124,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <VSIXSourceItem Include="..\ResXManager.VSIX.Compatibility.x86\bin\$(Configuration)\$(TargetFramework)\ResXManager.VSIX.Compatibility.x86.dll" />
-    <VSIXSourceItem Include="..\ResXManager.VSIX.Compatibility.x64\bin\$(Configuration)\$(TargetFramework)\ResXManager.VSIX.Compatibility.x64.dll" />
+    <EmbeddedResource Include="..\ResXManager.VSIX.Compatibility.x86\bin\$(Configuration)\$(TargetFramework)\ResXManager.VSIX.Compatibility.x86.dll" />
+    <EmbeddedResource Include="..\ResXManager.VSIX.Compatibility.x64\bin\$(Configuration)\$(TargetFramework)\ResXManager.VSIX.Compatibility.x64.dll" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">
     <MakeDir Directories="$(SolutionDir)Deploy" />

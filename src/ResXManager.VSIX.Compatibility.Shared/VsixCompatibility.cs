@@ -100,11 +100,11 @@
             var neutralProjectFile = entity.NeutralProjectFile as DteProjectFile;
 
 #pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
-            // VS will run the custom tool on the project item only if the document is open => Run the custom tool on any of the descendants, too.
-            // VS will not run the custom tool if just the file is saved in background, and no document is open => Run the custom tool on all descendants and self.
-            IEnumerable<ProjectItem> GetDescendants(ProjectItem projectItem1)
+            static IEnumerable<ProjectItem> GetDescendants(ProjectItem projectItem)
             {
-                return projectItem1.GetIsOpen() ? projectItem1.Descendants() : projectItem1.DescendantsAndSelf();
+                // VS will run the custom tool on the project item only if the document is open => Run the custom tool on any of the descendants, too.
+                // VS will not run the custom tool if just the file is saved in background, and no document is open => Run the custom tool on all descendants and self.
+                return projectItem.GetIsOpen() ? projectItem.Descendants() : projectItem.DescendantsAndSelf();
             }
 #pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
 
@@ -232,8 +232,7 @@
         {
             ThrowIfNotOnUIThread();
 
-            var dte = ServiceProvider.GlobalProvider?.GetService(typeof(DTE)) as DTE2;
-            if (dte == null)
+            if (ServiceProvider.GlobalProvider?.GetService(typeof(DTE)) is not DTE2 dte)
                 return Array.Empty<Tuple<string, EnvDTE.Window>>();
 
             try
@@ -247,12 +246,12 @@
                     .ToDictionary(window => window.Document);
 
                 var items = from l in languages
-                    let file = l.FileName
-                    let projectFile = l.ProjectFile as DteProjectFile
-                    let documents = projectFile?.ProjectItems.Select(item => item.TryGetDocument()).Where(doc => doc != null)
-                    let window = documents?.Select(doc => openDocuments?.GetValueOrDefault(doc)).FirstOrDefault(win => win != null)
-                    where window != null
-                    select Tuple.Create(file, window);
+                            let file = l.FileName
+                            let projectFile = l.ProjectFile as DteProjectFile
+                            let documents = projectFile?.ProjectItems.Select(item => item.TryGetDocument()).Where(doc => doc != null)
+                            let window = documents?.Select(doc => openDocuments?.GetValueOrDefault(doc)).FirstOrDefault(win => win != null)
+                            where window != null
+                            select Tuple.Create(file, window);
 #pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
 
                 return items.ToArray();
