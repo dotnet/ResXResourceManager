@@ -18,7 +18,6 @@
              xmlns:themes="clr-namespace:ResXManager.View.Themes"
              xmlns:composition="urn:TomsToolbox.Composition"
              xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
-             x:Name="LayoutRoot"
              d:DataContext="{d:DesignInstance visuals:ResourceViewModel}"
              Padding="4">
   <UserControl.Resources>
@@ -77,11 +76,6 @@
     </Style>
 
   </UserControl.Resources>
-
-  <UserControl.InputBindings>
-    <KeyBinding Key="N" Modifiers="Control" Command="{composition:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}" />
-    <KeyBinding Key="Insert" Modifiers="Shift" Command="{composition:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}" />
-  </UserControl.InputBindings>
 
   <Grid FocusManager.FocusedElement="{Binding ElementName=DataGrid}">
 
@@ -283,7 +277,7 @@
             </Button>
             <Button ToolTip="{x:Static properties:Resources.AddKeyToolTip}"
                     Style="{StaticResource ToolbarCommandButtonStyle}"
-                    Command="{composition:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=LayoutRoot}">
+                    Command="{composition:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=DataGrid}">
               <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/add.png" />
             </Button>
             <Separator />
@@ -696,6 +690,11 @@
     </Grid>
 
   </Grid>
+
+  <UserControl.InputBindings>
+    <KeyBinding Key="N" Modifiers="Control" Command="{composition:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=DataGrid}" />
+    <KeyBinding Key="Insert" Modifiers="Shift" Command="{composition:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=DataGrid}" />
+  </UserControl.InputBindings>
 
   <Interactions:Interaction.Behaviors>
     <composition:CommandRoutingBehavior CommandSource="view:DeleteCommand"

@@ -4,6 +4,8 @@
     using System.Composition;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Threading;
 
     using ResXManager.View.Properties;
     using ResXManager.View.Visuals;
@@ -12,7 +14,7 @@
     using TomsToolbox.Wpf;
 
     [Export, Shared]
-    internal class AddNewKeyCommand : DelegateCommand<DependencyObject>
+    internal class AddNewKeyCommand : DelegateCommand<DataGrid>
     {
         private readonly ResourceViewModel _resourceViewModel;
         private readonly IExportProvider _exportProvider;
@@ -26,7 +28,7 @@
             ExecuteCallback = InternalExecute;
         }
 
-        private void InternalExecute(DependencyObject? parameter)
+        private void InternalExecute(DataGrid? dataGrid)
         {
             if (_resourceViewModel.SelectedEntities.Count != 1)
             {
@@ -47,7 +49,7 @@
 
             var application = Application.Current;
 
-            var owner = parameter != null ? Window.GetWindow(parameter) : application.MainWindow;
+            var owner = dataGrid != null ? Window.GetWindow(dataGrid) : application.MainWindow;
 
             var inputBox = new InputBox(_exportProvider)
             {
@@ -76,6 +78,29 @@
             try
             {
                 _resourceViewModel.AddNewKey(resourceFile, key);
+
+                dataGrid?.BeginInvoke(() =>
+                {
+                    var selectedItem = dataGrid.SelectedItem;
+                    dataGrid.ScrollIntoView(selectedItem);
+                    dataGrid?.BeginInvoke(DispatcherPriority.Background, () =>
+                    {
+                        var container = dataGrid.ItemContainerGenerator.ContainerFromItem(selectedItem);
+                        if (container == null)
+                            return;
+
+                        dataGrid?.BeginInvoke(DispatcherPriority.Background, () =>
+                        {
+                            var element = container
+                                .VisualDescendantsAndSelf()
+                                .OfType<UIElement>()
+                                .FirstOrDefault(item => item.Focusable);
+
+                            element?.Focus();
+                        });
+                    });
+                });
+
             }
             catch (Exception ex)
             {
