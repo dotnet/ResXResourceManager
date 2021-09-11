@@ -1,5 +1,6 @@
 ﻿namespace ResXManager
 {
+    using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Composition;
@@ -10,26 +11,14 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
-    using ResXManager.Properties;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
 
-    public enum ColorTheme
-    {
-        [LocalizedDisplayName(StringResourceKey.ColorTheme_System)]
-        System,
-
-        [LocalizedDisplayName(StringResourceKey.ColorTheme_Light)]
-        Light,
-
-        [LocalizedDisplayName(StringResourceKey.ColorTheme_Dark)]
-        Dark
-    }
-
     [Export(typeof(IConfiguration))]
+    [Export(typeof(IStandaloneConfiguration))]
     [Shared]
-    public class StandaloneConfiguration : Configuration
+    internal class StandaloneConfiguration : Configuration, IStandaloneConfiguration
     {
         private readonly Collection<ResourceDictionary> _colorThemeResourceContainer;
 
@@ -66,6 +55,8 @@
                 case ColorTheme.Dark:
                     _colorThemeResourceContainer.Add(new ResourceDictionary { Source = GetType().Assembly.GeneratePackUri("Themes/DarkTheme.xaml") });
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

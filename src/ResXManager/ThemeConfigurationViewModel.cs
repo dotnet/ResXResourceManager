@@ -13,11 +13,11 @@
     [Shared]
     internal class ColorThemeConfigurationViewModel : ObservableObject
     {
-        public ColorThemeConfigurationViewModel(StandaloneConfiguration configuration)
+        public ColorThemeConfigurationViewModel(IStandaloneConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public StandaloneConfiguration Configuration { get; }
+        public IStandaloneConfiguration Configuration { get; }
     }
 }
