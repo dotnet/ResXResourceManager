@@ -1,4 +1,8 @@
-﻿1.56
+﻿1.57
+- Fix #419: Adding a new key should focus the new item.
+- VS2022 improvements
+
+1.56
 - Add Arabic question mark to NormalizePunctuation method.
 - Fix #424: Broken resource files may crash application on launch
 - Improve DGX filtering experience. Ctrl+F jumps to filter, arrow down jumps back to grid. Fixes #420
