@@ -1,4 +1,7 @@
-﻿1.57
+﻿1.58
+- Fix #426: Cannot Load HtmlAgilityPack When Using Azure to Translate (VS once again fails to load dependencies.)
+
+1.57
 - Fix #419: Adding a new key should focus the new item.
 - VS2022 improvements
 
