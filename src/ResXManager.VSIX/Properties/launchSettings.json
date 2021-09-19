@@ -1,14 +1,1 @@
-{
-  "profiles": {
-    "VS2019": {
-      "commandName": "Executable",
-      "executablePath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional\\Common7\\IDE\\devenv.exe",
-      "commandLineArgs": "/RootSuffix Exp"
-    },
-    "VS2022": {
-      "commandName": "Executable",
-      "executablePath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Preview\\Common7\\IDE\\devenv.exe",
-      "commandLineArgs": "/RootSuffix Exp"
-    }
-  }
-}
+{}

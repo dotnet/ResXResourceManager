@@ -5,6 +5,9 @@
     <TargetFramework>net472</TargetFramework>
     <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
     <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
+    <StartAction>Program</StartAction>
+    <StartProgram Condition="'$(DevEnvDir)' != ''">$(DevEnvDir)devenv.exe</StartProgram>
+    <StartArguments>/rootsuffix Exp</StartArguments>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\Key.snk">
