@@ -2,8 +2,6 @@
 <#@ assembly name="System.Windows.Forms" #>
 <#@ assembly name="EnvDTE" #>
 <#@ assembly name="EnvDTE80" #>
-<# // You need to reference "Microsoft.VisualStudio.Interop to run it on VS2022: #>
-<# // @ assembly name="Microsoft.VisualStudio.Interop" #> 
 
 <#@ import namespace="EnvDTE" #>
 <#@ import namespace="EnvDTE80" #>
