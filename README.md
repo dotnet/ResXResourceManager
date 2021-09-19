@@ -36,7 +36,7 @@ This project is supported by the [.NET Foundation](https://dotnetfoundation.org)
 Can be found in the [Documentation folder](Documentation/Readme.md).
 
 ## Installation
-ResXResourceManager is available as VS2017-2019 extension and as a standalone executable to support VS2015 and older or users without Visual Studio at all.
+ResXResourceManager is available as VS2017-2022 extension and as a standalone executable to support VS2015 and older or users without Visual Studio at all.
 A scripting module is available as well, so you can easily automate resource tasks, e.g. export untranslated string during build.
 
 All versions can be downloaded from the [releases](../../releases) page.
