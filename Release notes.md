@@ -1,4 +1,7 @@
-﻿1.58
+﻿1.59
+- Fix #428: Move to resource does not work for .html files
+
+1.58
 - Fix #426: Cannot Load HtmlAgilityPack When Using Azure to Translate (VS once again fails to load dependencies.)
 
 1.57
