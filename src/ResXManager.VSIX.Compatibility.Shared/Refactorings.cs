@@ -44,9 +44,15 @@
             _dte = (DTE2)(ServiceProvider.GlobalProvider.GetService(typeof(DTE)) ?? throw new InvalidOperationException("Can't get DTE service"));
         }
 
-        public bool CanMoveToResource(string filePath)
+        public bool CanMoveToResource()
         {
             ThrowIfNotOnUIThread();
+
+            var document = _dte.ActiveDocument;
+            if (document == null)
+                return false;
+
+            var filePath = document.FullName;
 
             var extension = Path.GetExtension(filePath);
             if (extension == null)
@@ -58,10 +64,6 @@
                 .Where(item => item.ParseExtensions().Contains(extension, StringComparer.OrdinalIgnoreCase));
 
             if (!configurations.Any())
-                return false;
-
-            var document = GetDocument(filePath);
-            if (document == null)
                 return false;
 
             var selection = GetSelection(document);
@@ -78,23 +80,18 @@
             return s != null;
         }
 
-        private Document? GetDocument(string filePath)
-        {
-            ThrowIfNotOnUIThread();
-
-            var projectItem = _dte.Solution.FindProjectItem(filePath);
-            var window = projectItem?.Open();
-            var document = window?.Document;
-
-            return document;
-        }
-
-        public async Task<ResourceTableEntry?> MoveToResourceAsync(string filePath)
+        public async Task<ResourceTableEntry?> MoveToResourceAsync()
         {
             if (!CheckAccess())
             {
                 await JoinableTaskFactory.SwitchToMainThreadAsync();
             }
+
+            var document = _dte.ActiveDocument;
+            if (document == null)
+                return null;
+
+            var filePath = document.FullName;
 
             var extension = Path.GetExtension(filePath);
             if (extension == null)
@@ -108,10 +105,6 @@
                 .FirstOrDefault(item => item.ParseExtensions().Contains(extension, StringComparer.OrdinalIgnoreCase));
 
             if (configuration == null)
-                return null;
-
-            var document = GetDocument(filePath);
-            if (document == null)
                 return null;
 
             var selection = GetSelection(document);

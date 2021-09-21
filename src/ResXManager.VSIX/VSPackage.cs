@@ -379,14 +379,7 @@
             {
                 FindToolWindow();
 
-                var textDocument = await VS.Documents.GetActiveDocumentViewAsync().ConfigureAwait(false);
-                if (textDocument == null)
-                    return;
-                var filePath = textDocument.FilePath;
-                if (filePath == null)
-                    return;
-
-                var entry = await ExportProvider.GetExportedValue<IRefactorings>().MoveToResourceAsync(filePath).ConfigureAwait(true);
+                var entry = await ExportProvider.GetExportedValue<IRefactorings>().MoveToResourceAsync().ConfigureAwait(true);
                 if (entry == null)
                     return;
 
@@ -401,22 +394,15 @@
             }
         }
 
-        private async void TextEditorContextMenuCommand_BeforeQueryStatus(object? sender, EventArgs? e)
+        private void TextEditorContextMenuCommand_BeforeQueryStatus(object? sender, EventArgs? e)
         {
             if (sender is not OleMenuCommand menuCommand)
                 return;
 
             using (ExportProvider.GetExportedValue<PerformanceTracer>().Start("Can move to resource"))
             {
-                var textDocument = await VS.Documents.GetActiveDocumentViewAsync().ConfigureAwait(false);
-                if (textDocument == null)
-                    return;
-                var filePath = textDocument.FilePath;
-                if (filePath == null)
-                    return;
-
                 menuCommand.Text = Resources.MoveToResource;
-                menuCommand.Visible = ExportProvider.GetExportedValue<IRefactorings>().CanMoveToResource(filePath);
+                menuCommand.Visible = ExportProvider.GetExportedValue<IRefactorings>().CanMoveToResource();
             }
         }
 

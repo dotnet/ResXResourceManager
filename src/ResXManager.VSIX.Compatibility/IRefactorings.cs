@@ -6,8 +6,8 @@
 
     public interface IRefactorings
     {
-        bool CanMoveToResource(string filePath);
+        bool CanMoveToResource();
 
-        Task<ResourceTableEntry?> MoveToResourceAsync(string filePath);
+        Task<ResourceTableEntry?> MoveToResourceAsync();
     }
 }
