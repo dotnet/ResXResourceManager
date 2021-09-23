@@ -60,8 +60,13 @@
                 var typescript = new StringBuilder(TypescriptFileHeader);
                 var jsonObjects = new Dictionary<CultureKey, JObject>();
 
+                var filter = GetFilterRegex(config.Include);
+
                 foreach (var entity in _resourceManager.ResourceEntities)
                 {
+                    if (filter?.IsMatch(entity.DisplayName) == false)
+                        continue;
+
                     var formatTemplates = new HashSet<string>();
 
                     var entityName = entity.BaseName;
@@ -127,6 +132,21 @@
         private const string FormatTemplateSuffix = @"_TEMPLATE";
         private static readonly Regex _formatPlaceholderExpression = new(@"\$\{\s*(\w[.\w\d_]*)\s*\}");
 
+        private static Regex? GetFilterRegex(string? config)
+        {
+            if (config is null)
+                return null;
+
+            try
+            {
+                return new Regex(config, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         private static void AppendTypescript(ResourceNode node, StringBuilder typescript, HashSet<string> formatTemplates)
         {
             var text = node.Text ?? string.Empty;
@@ -167,6 +187,8 @@
             public string? JsonFileDir { get; set; }
             [JsonProperty("exportNeutralJson")]
             public bool ExportNeutralJson { get; set; }
+            [JsonProperty("include")]
+            public string? Include { get; set; }
         }
 
         private static JObject GenerateJsonObjectWithComment()
