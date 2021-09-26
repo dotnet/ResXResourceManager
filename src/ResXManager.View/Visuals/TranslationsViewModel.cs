@@ -74,7 +74,17 @@
         {
             var selectedCultures = AllTargetCultures.Except(UnselectedTargetCultures).OrderBy(c => c).ToArray();
 
-            Dispatcher.BeginInvoke(() => { SelectedTargetCultures.SynchronizeWith(selectedCultures); });
+            Dispatcher.BeginInvoke(() =>
+            {
+                try
+                {
+                    SelectedTargetCultures.SynchronizeWith(selectedCultures);
+                }
+                catch (InvalidOperationException)
+                {
+                    // collection is already changing...
+                }
+            });
         }
 
         public ICollection<CultureKey> SelectedTargetCultures { get; }
