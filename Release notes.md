@@ -1,4 +1,7 @@
-﻿1.59
+﻿1.60
+- Add possibility to filter resources for web export
+
+1.59
 - Fix #428: Move to resource does not work for .html files
 
 1.58
