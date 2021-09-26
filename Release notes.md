@@ -1,5 +1,6 @@
 ﻿1.60
 - Add possibility to filter resources for web export
+- Make web files export configuration available on configuration tab
 
 1.59
 - Fix #428: Move to resource does not work for .html files
