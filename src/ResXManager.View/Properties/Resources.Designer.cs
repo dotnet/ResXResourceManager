@@ -1025,6 +1025,60 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Export neutral resources as JSON"
+        /// </summary>
+        public static string WebProjectFileExport_ExportNeutralResourcesAsJSON {
+            get {
+                return ResourceManager.GetString("WebProjectFileExport_ExportNeutralResourcesAsJSON", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "JSON files target folder:"
+        /// </summary>
+        public static string WebProjectFileExport_JSONFilesTargetFolder {
+            get {
+                return ResourceManager.GetString("WebProjectFileExport_JSONFilesTargetFolder", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Resource file filter (RegEx):"
+        /// </summary>
+        public static string WebProjectFileExport_ResourceFileFilterRegEx {
+            get {
+                return ResourceManager.GetString("WebProjectFileExport_ResourceFileFilterRegEx", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Solution folder:"
+        /// </summary>
+        public static string WebProjectFileExport_SolutionFolder {
+            get {
+                return ResourceManager.GetString("WebProjectFileExport_SolutionFolder", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Web Project File Export"
+        /// </summary>
+        public static string WebProjectFileExport_Title {
+            get {
+                return ResourceManager.GetString("WebProjectFileExport_Title", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Typescript files target folder:"
+        /// </summary>
+        public static string WebProjectFileExport_TypescriptFilesTargetFolder {
+            get {
+                return ResourceManager.GetString("WebProjectFileExport_TypescriptFilesTargetFolder", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Wrap long lines"
         /// </summary>
         public static string WrapLongLinesToolTip {
@@ -1470,6 +1524,30 @@ namespace ResXManager.View.Properties {
         ///   Looks up a localized string similar to Unload Snapshot.
         /// </summary>
         UnloadSnapshot,
+        /// <summary>
+        ///   Looks up a localized string similar to Export neutral resources as JSON.
+        /// </summary>
+        WebProjectFileExport_ExportNeutralResourcesAsJSON,
+        /// <summary>
+        ///   Looks up a localized string similar to JSON files target folder:.
+        /// </summary>
+        WebProjectFileExport_JSONFilesTargetFolder,
+        /// <summary>
+        ///   Looks up a localized string similar to Resource file filter (RegEx):.
+        /// </summary>
+        WebProjectFileExport_ResourceFileFilterRegEx,
+        /// <summary>
+        ///   Looks up a localized string similar to Solution folder:.
+        /// </summary>
+        WebProjectFileExport_SolutionFolder,
+        /// <summary>
+        ///   Looks up a localized string similar to Web Project File Export.
+        /// </summary>
+        WebProjectFileExport_Title,
+        /// <summary>
+        ///   Looks up a localized string similar to Typescript files target folder:.
+        /// </summary>
+        WebProjectFileExport_TypescriptFilesTargetFolder,
         /// <summary>
         ///   Looks up a localized string similar to Wrap long lines.
         /// </summary>

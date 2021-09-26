@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ResXManager.View.Visuals"
-             xmlns:styles="urn:TomsToolbox.Wpf.Styles"
+             xmlns:properties="clr-namespace:ResXManager.View.Properties"
              mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance local:WebExportConfigurationViewModel}">
   <StackPanel>
@@ -14,27 +14,27 @@
       </Style>
     </StackPanel.Resources>
     <StackPanel Orientation="Horizontal">
-      <TextBlock Text="Solution folder:" />
+      <TextBlock Text="{x:Static properties:Resources.WebProjectFileExport_SolutionFolder}" />
       <Decorator Width="5" />
       <TextBlock Text="{Binding SolutionFolder}" />
     </StackPanel>
     <Decorator Height="5" />
-    <TextBlock Text="Typescript files target folder:" />
+    <TextBlock Text="{x:Static properties:Resources.WebProjectFileExport_TypescriptFilesTargetFolder}" />
     <TextBox Text="{Binding Configuration.TypeScriptFileDir, UpdateSourceTrigger=PropertyChanged}"
              IsEnabled="{Binding RelativeSource={RelativeSource Self}, Path=(local:WebExportConfigurationViewModel.IsConfigurationEnabled)}"
              Style="{DynamicResource {x:Type TextBox}}" />
     <Decorator Height="5" />
-    <TextBlock Text="JSON files target folder:" />
+    <TextBlock Text="{x:Static properties:Resources.WebProjectFileExport_JSONFilesTargetFolder}" />
     <TextBox Text="{Binding Configuration.JsonFileDir, UpdateSourceTrigger=PropertyChanged}"
              IsEnabled="{Binding RelativeSource={RelativeSource Self}, Path=(local:WebExportConfigurationViewModel.IsConfigurationEnabled)}"
              Style="{DynamicResource {x:Type TextBox}}" />
     <Decorator Height="5" />
-    <TextBlock Text="Resource file filter (RegEx):" />
+    <TextBlock Text="{x:Static properties:Resources.WebProjectFileExport_ResourceFileFilterRegEx}" />
     <TextBox Text="{Binding Configuration.Include, UpdateSourceTrigger=PropertyChanged}"
              IsEnabled="{Binding RelativeSource={RelativeSource Self}, Path=(local:WebExportConfigurationViewModel.IsConfigurationEnabled)}"
              Style="{DynamicResource {x:Type TextBox}}" />
     <Decorator Height="10" />
-    <CheckBox Content="Export neutral resources as JSON"
+    <CheckBox Content="{x:Static properties:Resources.WebProjectFileExport_ExportNeutralResourcesAsJSON}"
               IsEnabled="{Binding RelativeSource={RelativeSource Self}, Path=(local:WebExportConfigurationViewModel.IsConfigurationEnabled)}"
               IsChecked="{Binding Configuration.ExportNeutralJson}"
               Style="{DynamicResource {x:Type CheckBox}}" />

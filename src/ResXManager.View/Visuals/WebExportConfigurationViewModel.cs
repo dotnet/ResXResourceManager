@@ -5,6 +5,7 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
+    using ResXManager.View.Properties;
 
     using Throttle;
 
@@ -12,7 +13,7 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.AttributedModel;
 
-    [DisplayName("Web File Export")]
+    [LocalizedDisplayName(StringResourceKey.WebProjectFileExport_Title)]
     [VisualCompositionExport(RegionId.Configuration)]
     internal class WebExportConfigurationViewModel
     {

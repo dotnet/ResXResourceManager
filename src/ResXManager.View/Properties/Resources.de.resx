@@ -446,4 +446,22 @@ Ihr ResXManager-Team.
   <data name="AllComments" xml:space="preserve">
     <value>Alle Kommentare</value>
   </data>
+  <data name="WebProjectFileExport_ExportNeutralResourcesAsJSON" xml:space="preserve">
+    <value>Neutrale Ressourcen auch als JSON exportieren</value>
+  </data>
+  <data name="WebProjectFileExport_JSONFilesTargetFolder" xml:space="preserve">
+    <value>Zielordner für die JSON-Dateien:</value>
+  </data>
+  <data name="WebProjectFileExport_ResourceFileFilterRegEx" xml:space="preserve">
+    <value>Filter für Ressource-Dateien (RegEx):</value>
+  </data>
+  <data name="WebProjectFileExport_Title" xml:space="preserve">
+    <value>Export von Webprojektdateien</value>
+  </data>
+  <data name="WebProjectFileExport_SolutionFolder" xml:space="preserve">
+    <value>Ordner der Projektmappe:</value>
+  </data>
+  <data name="WebProjectFileExport_TypescriptFilesTargetFolder" xml:space="preserve">
+    <value>Zielordner für Typescript-Dateien:</value>
+  </data>
 </root>
