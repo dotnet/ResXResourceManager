@@ -8,7 +8,6 @@
     using System.Text;
     using System.Text.RegularExpressions;
 
-    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     using ResXManager.Infrastructure;
@@ -44,14 +43,10 @@
                 if (solutionFolder == null)
                     return;
 
-                var configFilePath = Path.Combine(solutionFolder, "resx-manager.webexport.config");
-                if (!File.Exists(configFilePath))
+                if (!WebFileExporterConfiguration.Load(solutionFolder, out var config))
                     return;
 
-                var config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(configFilePath));
-
                 var typeScriptFileDir = config.TypeScriptFileDir;
-
                 if (typeScriptFileDir.IsNullOrEmpty())
                     return;
 
@@ -177,18 +172,6 @@
                 .Distinct();
 
             return placeholders;
-        }
-
-        private class Configuration
-        {
-            [JsonProperty("typeScriptFileDir")]
-            public string? TypeScriptFileDir { get; set; }
-            [JsonProperty("jsonFileDir")]
-            public string? JsonFileDir { get; set; }
-            [JsonProperty("exportNeutralJson")]
-            public bool ExportNeutralJson { get; set; }
-            [JsonProperty("include")]
-            public string? Include { get; set; }
         }
 
         private static JObject GenerateJsonObjectWithComment()
