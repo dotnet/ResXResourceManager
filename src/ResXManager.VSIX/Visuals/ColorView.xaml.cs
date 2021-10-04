@@ -1,5 +1,6 @@
 namespace ResXManager.VSIX.Visuals
 {
+    using System.Globalization;
     using System.Linq;
     using System.Windows;
     using System.Windows.Input;
@@ -7,6 +8,7 @@ namespace ResXManager.VSIX.Visuals
 
     using Microsoft.VisualStudio.Shell;
 
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf.Composition.AttributedModel;
 
     public class ColorItemViewModel
@@ -27,7 +29,7 @@ namespace ResXManager.VSIX.Visuals
 
         public override string ToString()
         {
-            return Brush.Color.ToString();
+            return Brush.Color.ToString(CultureInfo.InvariantCulture);
         }
 
         private static double ToGray(Color color)
@@ -65,12 +67,16 @@ namespace ResXManager.VSIX.Visuals
 
         private ColorItemViewModel[] GetColors()
         {
-            return _resourceKeys.Select(ToItemViewModel).Concat(
-            typeof(VsColors).GetProperties()
+            var vsColors = typeof(VsColors).GetProperties()
                 .Select(p => ToItemViewModel((p.GetValue(null), p.Name)))
-                .Where(item => item != null)
-                .OrderBy(item => item!.Luminance))
-                .ToArray()!;
+                .ExceptNullItems()
+                .OrderBy(item => item.Luminance);
+
+            return _resourceKeys
+                .Select(ToItemViewModel)
+                .ExceptNullItems()
+                .Concat(vsColors)
+                .ToArray();
         }
 
         private static readonly (object Key, string name)[] _resourceKeys =
