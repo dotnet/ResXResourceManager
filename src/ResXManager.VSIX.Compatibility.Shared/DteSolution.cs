@@ -5,6 +5,7 @@
     using System.Composition;
     using System.IO;
     using System.Linq;
+    using System.Windows.Threading;
 
     using EnvDTE;
 
@@ -16,6 +17,7 @@
     using ResXManager.Model;
 
     using TomsToolbox.Essentials;
+    using TomsToolbox.Wpf;
 
     using VSLangProj;
 
@@ -269,6 +271,11 @@
                     else
                     {
                         items.Add(fileName, new DteProjectFile(this, SolutionFolder, fileName, project.Name, project.UniqueName, projectItem));
+
+                        if ((items.Count % 256) == 0)
+                        {
+                            Dispatcher.CurrentDispatcher.ProcessMessages();
+                        }
                     }
                 }
             }
