@@ -79,7 +79,7 @@
                 return e.Languages.Select(lang => lang.ProjectFile)
                     .OfType<DteProjectFile>()
                     .Any(projectFile => projectFile.ProjectItems.Any(p =>
-                        string.Equals(p.Document.FullName, fileName, StringComparison.OrdinalIgnoreCase)));
+                        string.Equals(p.Document?.FullName, fileName, StringComparison.OrdinalIgnoreCase)));
             }
 #pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
 

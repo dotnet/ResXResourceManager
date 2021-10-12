@@ -434,12 +434,19 @@
 
         private async void DocumentEvents_DocumentOpened(string fileName)
         {
-            using (_performanceTracer?.Start("DTE event: Document opened"))
+            try
             {
-                if (!await AffectsResourceFileAsync(fileName).ConfigureAwait(false))
-                    return;
+                using (_performanceTracer?.Start("DTE event: Document opened"))
+                {
+                    if (!await AffectsResourceFileAsync(fileName).ConfigureAwait(false))
+                        return;
 
-                ReloadSolution();
+                    ReloadSolution();
+                }
+            }
+            catch (Exception ex)
+            {
+                Tracer.TraceError(ex.ToString());
             }
         }
 
