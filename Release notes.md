@@ -1,4 +1,9 @@
-﻿1.60
+﻿1.61
+- Fix colors to better match VS2022
+- Fix #433: possible NullReferenceException
+- Avoid blocking of UI when iterating over a large project.
+
+1.60
 - Add possibility to filter resources for web export
 - Make web files export configuration available on configuration tab
 
