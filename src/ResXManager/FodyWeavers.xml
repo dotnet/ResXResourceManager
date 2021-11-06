@@ -2,5 +2,5 @@
 <Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd" VerifyAssembly="true" VerifyIgnoreCodes="0x801318F3">
   <AutoProperties />
   <PropertyChanged />
-  <ILMerge IncludeAssemblies="WindowsAPICodePack" />
+  <ILMerge IncludeAssemblies="WindowsAPICodePack" CompactMode="true" />
 </Weavers>

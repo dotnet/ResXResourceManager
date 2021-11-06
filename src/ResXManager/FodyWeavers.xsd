@@ -91,6 +91,11 @@
                   <xs:documentation>A switch to control whether to import the full assemblies or only the referenced types. Default is 'false'</xs:documentation>
                 </xs:annotation>
               </xs:element>
+              <xs:element name="CompactMode" type="xs:boolean" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                  <xs:documentation>A switch to control whether to compact the target assembly by skipping properties, events and unused methods. Default is 'true'</xs:documentation>
+                </xs:annotation>
+              </xs:element>
             </xs:all>
             <xs:attribute name="IncludeAssemblies" type="xs:string">
               <xs:annotation>
@@ -125,6 +130,11 @@
             <xs:attribute name="FullImport" type="xs:boolean">
               <xs:annotation>
                 <xs:documentation>A switch to control whether to import the full assemblies or only the referenced types. Default is 'false'</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="CompactMode" type="xs:boolean">
+              <xs:annotation>
+                <xs:documentation>A switch to control whether to compact the target assembly by skipping properties, events and unused methods. Default is 'true'</xs:documentation>
               </xs:annotation>
             </xs:attribute>
           </xs:complexType>

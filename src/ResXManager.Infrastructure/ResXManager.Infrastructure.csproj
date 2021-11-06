@@ -12,14 +12,14 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Fody" PrivateAssets="all">
-      <Version>6.5.2</Version>
+      <Version>6.6.0</Version>
     </PackageReference>
-    <PackageReference Include="HtmlAgilityPack" PrivateAssets="all" >
-      <Version>1.11.36</Version>
+    <PackageReference Include="HtmlAgilityPack" PrivateAssets="all">
+      <Version>1.11.37</Version>
     </PackageReference>
-    <PackageReference Include="ILMerge.Fody" Version="1.18.0" PrivateAssets="all" />
+    <PackageReference Include="ILMerge.Fody" Version="1.22.0" PrivateAssets="all" />
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all">
-      <Version>2021.2.0</Version>
+      <Version>2021.3.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02">
       <PrivateAssets>all</PrivateAssets>
@@ -32,7 +32,7 @@
       <Version>3.4.0</Version>
     </PackageReference>
     <PackageReference Include="TomsToolbox.Composition">
-      <Version>2.7.2</Version>
+      <Version>2.7.3</Version>
     </PackageReference>
   </ItemGroup>
 </Project>
