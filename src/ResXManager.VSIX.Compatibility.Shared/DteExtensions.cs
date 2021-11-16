@@ -313,5 +313,18 @@
             return null;
         }
 
+        public static EnvDTE.FileCodeModel? TryGetFileCodeModel(this EnvDTE.ProjectItem projectItem)
+        {
+            ThrowIfNotOnUIThread();
+
+            try
+            {
+                return projectItem.FileCodeModel;
+            }
+            catch (SystemException)
+            {
+                return null;
+            }
+        }
     }
 }

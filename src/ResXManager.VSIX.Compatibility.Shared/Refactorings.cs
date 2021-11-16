@@ -259,7 +259,7 @@
             if (line == null)
                 return null;
 
-            var fileCodeModel = document.ProjectItem?.FileCodeModel;
+            var fileCodeModel = document.ProjectItem?.TryGetFileCodeModel();
 
             return new Selection(textDocument, line, fileCodeModel);
         }
