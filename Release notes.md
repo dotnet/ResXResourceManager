@@ -1,4 +1,7 @@
-﻿1.61
+﻿1.62
+- Fix #435: .NET6 Unable to Move to Resource
+
+1.61
 - Fix colors to better match VS2022
 - Fix #433: possible NullReferenceException
 - Avoid blocking of UI when iterating over a large project.
