@@ -10,7 +10,7 @@
     /// <summary>
     /// Represents a file associated with a project.
     /// </summary>
-    public class ProjectFile : INotifyPropertyChanged
+    public class ProjectFile : XmlFile, INotifyPropertyChanged
     {
         private string? _fingerPrint;
 
@@ -22,19 +22,14 @@
         /// <param name="projectName">Name of the project.</param>
         /// <param name="uniqueProjectName">Unique name of the project file.</param>
         public ProjectFile(string filePath, string rootFolder, string? projectName, string? uniqueProjectName)
+            : base(filePath)
         {
-            FilePath = filePath;
             RelativeFilePath = GetRelativePath(rootFolder, filePath);
             Extension = Path.GetExtension(FilePath);
 
             ProjectName = projectName;
             UniqueProjectName = uniqueProjectName;
         }
-
-        /// <summary>
-        /// Gets the file name of the file.
-        /// </summary>
-        public string FilePath { get; }
 
         public string Extension { get; }
 
@@ -51,7 +46,7 @@
 
         public XDocument Load()
         {
-            var document = InternalLoad();
+            var document = LoadFromFile();
 
             _fingerPrint = document.ToString(SaveOptions.DisableFormatting);
 
@@ -60,21 +55,11 @@
             return document;
         }
 
-        private XDocument InternalLoad()
-        {
-            return XDocument.Load(FilePath);
-        }
-
         public void Changed(XDocument? document)
         {
             if (document == null)
                 return;
 
-            InternalChanged(document);
-        }
-
-        private void InternalChanged(XDocument document)
-        {
             HasChanges = _fingerPrint != document.ToString(SaveOptions.DisableFormatting);
         }
 
@@ -83,40 +68,11 @@
             if (document == null)
                 return;
 
-            InternalSave(document);
+            SaveToFile(document);
 
             HasChanges = false;
 
             _fingerPrint = document.ToString(SaveOptions.DisableFormatting);
-        }
-
-        private void InternalSave(XDocument document)
-        {
-            document.Save(FilePath);
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the file associated with this instance can be written.
-        /// </summary>
-        public bool IsWritable
-        {
-            get
-            {
-                try
-                {
-                    if ((File.GetAttributes(FilePath) & (FileAttributes.ReadOnly | FileAttributes.System)) != 0)
-                        return false;
-
-                    using (File.Open(FilePath, FileMode.Open, FileAccess.Write))
-                    {
-                        return true;
-                    }
-                }
-                catch (IOException) { }
-                catch (UnauthorizedAccessException) { }
-
-                return false;
-            }
         }
 
         public virtual bool IsWinFormsDesignerResource => false;

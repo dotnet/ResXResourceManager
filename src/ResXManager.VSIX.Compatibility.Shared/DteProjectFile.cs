@@ -113,7 +113,7 @@
                     var subType = parent?.GetProperty(@"SubType") as string;
 
                     // https://microsoft.public.de.german.entwickler.dotnet.vstudio.narkive.com/nL9BqJlj/aus-subtype-form-wird-subtype-component
-                    return (subType == @"Form") || (subType == @"UserControl") || (subType == @"Component");
+                    return subType is @"Form" or @"UserControl" or @"Component";
                 }
                 catch (ExternalException)
                 {
