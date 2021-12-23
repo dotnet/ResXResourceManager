@@ -49,11 +49,29 @@
 
         internal bool Update(ICollection<ProjectFile> files, CultureInfo neutralResourcesLanguage, DuplicateKeyHandling duplicateKeyHandling)
         {
-            if (!MergeItems(_languages, GetResourceLanguages(files, neutralResourcesLanguage, duplicateKeyHandling)))
+            if (!MergeItems(GetResourceLanguages(files, neutralResourcesLanguage, duplicateKeyHandling)))
                 return false; // nothing has changed, no need to continue
 
             var neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey(neutralResourcesLanguage) == CultureKey.Neutral);
 
+            UpdateResourceTableEntries();
+
+            NeutralProjectFile = neutralProjectFile;
+
+            return true;
+        }
+
+        internal bool Update(ProjectFile file, CultureInfo neutralResourcesLanguage, DuplicateKeyHandling duplicateKeyHandling)
+        {
+            if (!UpdateEntry(new ResourceLanguage(this, file.GetCultureKey(neutralResourcesLanguage), file, duplicateKeyHandling)))
+                return false;
+
+            UpdateResourceTableEntries();
+            return true;
+        }
+
+        private void UpdateResourceTableEntries()
+        {
             var unmatchedTableEntries = _resourceTableEntries.ToList();
 
             var keys = _languages.Values
@@ -80,10 +98,6 @@
             }
 
             _resourceTableEntries.RemoveRange(unmatchedTableEntries);
-
-            NeutralProjectFile = neutralProjectFile;
-
-            return true;
         }
 
         private static string GetRelativePath(ICollection<ProjectFile> files)
@@ -280,40 +294,40 @@
             return languages;
         }
 
-        private bool MergeItems(IDictionary<CultureKey, ResourceLanguage> targets, IDictionary<CultureKey, ResourceLanguage> sources)
+        private bool MergeItems(IDictionary<CultureKey, ResourceLanguage> sources)
         {
-            var removedLanguages = targets.Keys
+            var removedLanguages = _languages.Keys
                 .Except(sources.Keys)
                 .ToArray();
 
             removedLanguages
-                // ReSharper disable once ImplicitlyCapturedClosure
-                .ForEach(key => targets.Remove(key));
+                .ForEach(key => _languages.Remove(key));
 
-            var hasChanges = UpdateChangedEntries(targets, sources);
+            var hasChanges = UpdateChangedEntries(sources.Values);
 
-            var addedLanguages = sources.Keys.Except(targets.Keys)
-                .ToArray();
-
-            addedLanguages
-                .ForEach(key => targets.Add(key, sources[key]));
-
-            return removedLanguages.Any() || hasChanges || addedLanguages.Any();
+            return hasChanges || removedLanguages.Any();
         }
 
-        private bool UpdateChangedEntries(IDictionary<CultureKey, ResourceLanguage> targets, IDictionary<CultureKey, ResourceLanguage> sources)
+        private bool UpdateChangedEntries(IEnumerable<ResourceLanguage> sources)
         {
             var hasChanges = false;
 
-            foreach (var targetItem in targets.ToArray())
+            foreach (var source in sources)
             {
-                var cultureKey = targetItem.Key;
-                var target = targetItem.Value;
+                hasChanges |= UpdateEntry(source);
+            }
 
-                var source = sources[cultureKey];
+            return hasChanges;
+        }
 
+        private bool UpdateEntry(ResourceLanguage source)
+        {
+            var cultureKey = source.CultureKey;
+
+            if (_languages.TryGetValue(cultureKey, out var target))
+            {
                 if (target.IsContentEqual(source))
-                    continue;
+                    return false;
 
                 if (IsWinFormsDesignerResource)
                 {
@@ -322,12 +336,10 @@
                         source.SetComment(resourceKey, target.GetComment(resourceKey));
                     }
                 }
-
-                targets[cultureKey] = source;
-                hasChanges = true;
             }
 
-            return hasChanges;
+            _languages[cultureKey] = source;
+            return true;
         }
     }
 }

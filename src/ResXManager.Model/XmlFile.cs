@@ -21,27 +21,6 @@
             FilePath = filePath;
         }
 
-        protected XDocument LoadFromFile()
-        {
-            using var stream = File.OpenRead(FilePath);
-            using var reader = new StreamReader(stream, _utf8WithoutBom, true);
-            var result = XDocument.Load(reader);
-            Encoding = reader.CurrentEncoding;
-            FileTime = File.GetLastWriteTime(FilePath);
-            return result;
-        }
-
-        protected void SaveToFile(XDocument document)
-        {
-            using (var stream = File.OpenWrite(FilePath))
-            {
-                using var writer = new StreamWriter(stream, Encoding);
-                document.Save(writer);
-            }
-
-            FileTime = File.GetLastWriteTime(FilePath);
-        }
-
         public bool IsBufferOutdated => FileTime != File.GetLastWriteTime(FilePath);
 
         public bool IsWritable
@@ -63,6 +42,27 @@
 
                 return false;
             }
+        }
+
+        protected XDocument LoadFromFile()
+        {
+            using var stream = File.OpenRead(FilePath);
+            using var reader = new StreamReader(stream, _utf8WithoutBom, true);
+            var result = XDocument.Load(reader);
+            Encoding = reader.CurrentEncoding;
+            FileTime = File.GetLastWriteTime(FilePath);
+            return result;
+        }
+
+        protected void SaveToFile(XDocument document)
+        {
+            using (var stream = File.OpenWrite(FilePath))
+            {
+                using var writer = new StreamWriter(stream, Encoding);
+                document.Save(writer);
+            }
+
+            FileTime = File.GetLastWriteTime(FilePath);
         }
     }
 }
