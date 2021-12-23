@@ -61,8 +61,11 @@
             return true;
         }
 
-        internal bool Update(ProjectFile file, CultureInfo neutralResourcesLanguage, DuplicateKeyHandling duplicateKeyHandling)
+        public bool Update(ProjectFile file)
         {
+            var duplicateKeyHandling = Container.Configuration.DuplicateKeyHandling;
+            var neutralResourcesLanguage = Container.Configuration.NeutralResourcesLanguage;
+
             if (!UpdateEntry(new ResourceLanguage(this, file.GetCultureKey(neutralResourcesLanguage), file, duplicateKeyHandling)))
                 return false;
 
@@ -314,7 +317,10 @@
 
             foreach (var source in sources)
             {
-                hasChanges |= UpdateEntry(source);
+                if (UpdateEntry(source))
+                {
+                    hasChanges = true;
+                }
             }
 
             return hasChanges;
