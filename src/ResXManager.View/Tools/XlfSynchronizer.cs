@@ -1,0 +1,229 @@
+﻿namespace ResXManager.View.Tools
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Composition;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using ResXManager.Infrastructure;
+    using ResXManager.Model;
+
+    using Throttle;
+
+    using TomsToolbox.Essentials;
+    using TomsToolbox.Wpf;
+
+    [Export(typeof(IService)), Shared]
+    internal sealed class XlfSynchronizer : FileWatcher, IService
+    {
+        private readonly ResourceManager _resourceManager;
+        private readonly ITracer _tracer;
+
+        private IDictionary<string, XlfDocument>? _documentsByPath;
+
+        public XlfSynchronizer(ResourceManager resourceManager, ITracer tracer)
+        {
+            _resourceManager = resourceManager;
+            _tracer = tracer;
+
+            _resourceManager.SolutionFolderChanged += ResourceManager_SolutionFolderChanged;
+            _resourceManager.Loaded += ResourceManager_Loaded;
+            _resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
+        }
+
+        public void Start()
+        {
+            OnFilesChanged();
+        }
+
+        protected override bool IncludeFile(string fileName)
+        {
+            return string.Equals(Path.GetExtension(fileName), ".xlf", StringComparison.OrdinalIgnoreCase);
+        }
+
+        [Throttled(typeof(Throttle), 500)]
+        protected override void OnFilesChanged()
+        {
+            try
+            {
+                if (_resourceManager.IsLoading)
+                {
+                    OnFilesChanged();
+                    return;
+                }
+
+                var changedFilePaths = GetChangedFiles();
+
+                var documentsByPath = _documentsByPath;
+                if (documentsByPath == null)
+                    return;
+
+                var changedFilesByOriginal = changedFilePaths
+                    .Select(filePath => documentsByPath.TryGetValue(filePath, out var document) && document.IsBufferOutdated ? document.Reload() : null)
+                    .ExceptNullItems()
+                    .SelectMany(document => document.Files)
+                    .GroupBy(file => file.Original);
+
+                foreach (var xlfFiles in changedFilesByOriginal)
+                {
+                    var original = xlfFiles.Key;
+
+                    var entity = _resourceManager.ResourceEntities.FirstOrDefault(entity => string.Equals(GetOriginal(entity), original, StringComparison.OrdinalIgnoreCase));
+                    if (entity == null)
+                        continue;
+
+                    UpdateEntityFromXlf(entity, xlfFiles);
+                }
+            }
+            catch (Exception ex)
+            {
+                _tracer.TraceError("Error reading XLIF files: {0}", ex);
+            }
+        }
+
+        [Throttled(typeof(Throttle), 100)]
+        private async void UpdateFromXlf()
+        {
+            try
+            {
+                if (_resourceManager.IsLoading)
+                {
+                    UpdateFromXlf();
+                    return;
+                }
+
+                var solutionFolder = Folder;
+                if (string.IsNullOrEmpty(solutionFolder))
+                    return;
+
+                _documentsByPath = await Task.Run(() =>
+                {
+                    var documents = Directory.EnumerateFiles(solutionFolder, "*.xlf", SearchOption.AllDirectories)
+                        .Select(file => new XlfDocument(file))
+                        .ToDictionary(doc => doc.FilePath, StringComparer.OrdinalIgnoreCase);
+
+                    return documents;
+
+                }).ConfigureAwait(true);
+
+                var filesByOriginal = GetFilesByOriginal(_documentsByPath.Values);
+
+                foreach (var entity in _resourceManager.ResourceEntities)
+                {
+                    UpdateEntityFromXlf(entity, filesByOriginal);
+                }
+            }
+            catch (Exception ex)
+            {
+                _tracer.TraceError("Error reading XLIF files: {0}", ex);
+            }
+        }
+
+        private static void UpdateEntityFromXlf(ResourceEntity entity, IDictionary<string?, ICollection<XlfFile>> xlfFilesByOriginal)
+        {
+            var original = GetOriginal(entity);
+
+            if (!xlfFilesByOriginal.TryGetValue(original, out var xlfFiles))
+                return;
+
+            UpdateEntityFromXlf(entity, xlfFiles);
+        }
+
+        private static void UpdateEntityFromXlf(ResourceEntity entity, IEnumerable<XlfFile> xlfFiles)
+        {
+            var entriesByKey = entity.Entries.ToDictionary(entry => entry.Key);
+
+            foreach (var xlfFile in xlfFiles)
+            {
+                var targetLanguage = xlfFile.TargetLanguage;
+
+                var xlfNodes = xlfFile.ResourceNodes;
+
+                foreach (var node in xlfNodes)
+                {
+                    if (entriesByKey.TryGetValue(node.Key, out var entry))
+                    {
+                        entry.Values[targetLanguage] = node.Text;
+                    }
+                }
+            }
+        }
+
+        private static void UpdateXlfFile(ResourceEntity entity, ResourceLanguage language, ResourceLanguage neutralLanguage, IDictionary<string?, ICollection<XlfFile>> xlfFilesByOriginal)
+        {
+            var original = GetOriginal(entity);
+
+            if (!xlfFilesByOriginal.TryGetValue(original, out var xlfFiles))
+            {
+                // TODO: create new
+                return;
+            }
+
+            var xlfFile = xlfFiles.FirstOrDefault(file => file.TargetLanguage == language.Culture?.Name);
+
+            if (xlfFile == null)
+            {
+                // TODO: create new
+                return;
+            }
+
+            xlfFile.Update(neutralLanguage, language);
+        }
+
+        private static string? GetOriginal(ResourceEntity entity)
+        {
+            return entity.NeutralProjectFile?.RelativeFilePath
+                .Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                .ToUpperInvariant();
+        }
+
+        private static IDictionary<string?, ICollection<XlfFile>> GetFilesByOriginal(IEnumerable<XlfDocument> documents)
+        {
+            return documents
+                .SelectMany(doc => doc.Files)
+                .GroupBy(file => file.Original, StringComparer.OrdinalIgnoreCase)
+                .Where(group => !group.Key.IsNullOrEmpty())
+                .ToDictionary(group => group.Key, group => (ICollection<XlfFile>)group.ToArray(), StringComparer.OrdinalIgnoreCase);
+        }
+
+        private void ResourceManager_LanguageChanged(object sender, LanguageEventArgs e)
+        {
+            var documentsByPath = _documentsByPath;
+            if (documentsByPath == null)
+                return;
+
+            var language = e.Language;
+            var entity = language.Container;
+
+            var neutralLanguage = entity.Languages.FirstOrDefault(l => l.IsNeutralLanguage);
+            if (neutralLanguage == null)
+                return;
+
+            var filesByOriginal = GetFilesByOriginal(documentsByPath.Values);
+
+            if (language.IsNeutralLanguage)
+            {
+                foreach (var specificLanguage in entity.Languages.Where(l => !l.IsNeutralLanguage))
+                {
+                    UpdateXlfFile(entity, specificLanguage, language, filesByOriginal);
+                }
+            }
+            else
+            {
+                UpdateXlfFile(entity, language, neutralLanguage, filesByOriginal);
+            }
+        }
+
+        private void ResourceManager_Loaded(object? sender, EventArgs e)
+        {
+            UpdateFromXlf();
+        }
+
+        private void ResourceManager_SolutionFolderChanged(object? sender, TextEventArgs e)
+        {
+            Watch(e.Text);
+        }
+    }
+}
