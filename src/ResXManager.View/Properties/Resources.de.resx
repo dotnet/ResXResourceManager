@@ -464,4 +464,10 @@ Ihr ResXManager-Team.
   <data name="WebProjectFileExport_TypescriptFilesTargetFolder" xml:space="preserve">
     <value>Zielordner für Typescript-Dateien:</value>
   </data>
+  <data name="Configuration_XlifSupport" xml:space="preserve">
+    <value>XLIF Unterstützung</value>
+  </data>
+  <data name="Configuration_EnableXlifSynchronization" xml:space="preserve">
+    <value>XLIF Synchronisation aktiviert</value>
+  </data>
 </root>

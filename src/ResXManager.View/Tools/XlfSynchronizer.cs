@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Composition;
     using System.IO;
     using System.Linq;
@@ -20,17 +21,30 @@
     {
         private readonly ResourceManager _resourceManager;
         private readonly ITracer _tracer;
+        private readonly IConfiguration _configuration;
 
         private IDictionary<string, XlfDocument>? _documentsByPath;
 
-        public XlfSynchronizer(ResourceManager resourceManager, ITracer tracer)
+        public XlfSynchronizer(ResourceManager resourceManager, ITracer tracer, IConfiguration configuration)
         {
             _resourceManager = resourceManager;
             _tracer = tracer;
+            _configuration = configuration;
 
-            _resourceManager.SolutionFolderChanged += ResourceManager_SolutionFolderChanged;
-            _resourceManager.Loaded += ResourceManager_Loaded;
-            _resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
+            resourceManager.SolutionFolderChanged += ResourceManager_SolutionFolderChanged;
+            resourceManager.Loaded += ResourceManager_Loaded;
+            resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
+
+            configuration.PropertyChanged += Configuration_PropertyChanged;
+        }
+
+        private void Configuration_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(IConfiguration.EnableXlifSync))
+                return;
+
+            Watch(_configuration.EnableXlifSync ? _resourceManager.SolutionFolder : null);
+            ResourceManager_Loaded(_resourceManager, EventArgs.Empty);
         }
 
         public void Start()
@@ -190,6 +204,9 @@
 
         private void ResourceManager_LanguageChanged(object sender, LanguageEventArgs e)
         {
+            if (!_configuration.EnableXlifSync)
+                return;
+
             var documentsByPath = _documentsByPath;
             if (documentsByPath == null)
                 return;
@@ -218,11 +235,17 @@
 
         private void ResourceManager_Loaded(object? sender, EventArgs e)
         {
+            if (!_configuration.EnableXlifSync)
+                return;
+
             UpdateFromXlf();
         }
 
         private void ResourceManager_SolutionFolderChanged(object? sender, TextEventArgs e)
         {
+            if (!_configuration.EnableXlifSync)
+                return;
+
             Watch(e.Text);
         }
     }

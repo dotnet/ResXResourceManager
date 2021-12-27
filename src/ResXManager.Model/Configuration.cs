@@ -15,7 +15,7 @@
         Fail
     }
 
-    public interface IConfiguration
+    public interface IConfiguration : INotifyPropertyChanged
     {
         bool IsScopeSupported { get; }
 
@@ -54,6 +54,8 @@
         public ExcelExportMode ExcelExportMode { get; }
 
         bool ShowPerformanceTraces { get; }
+
+        bool EnableXlifSync { get; set; }
     }
 
     public abstract class Configuration : ConfigurationBase, IConfiguration
@@ -86,7 +88,7 @@
         [DefaultValue(StringComparison.OrdinalIgnoreCase)]
         public StringComparison ResXSortingComparison { get; set; }
 
-        public StringComparison? EffectiveResXSortingComparison => SortFileContentOnSave ? ResXSortingComparison : (StringComparison?)null;
+        public StringComparison? EffectiveResXSortingComparison => SortFileContentOnSave ? ResXSortingComparison : null;
 
         [DefaultValue(false)]
         public bool ConfirmAddLanguageFile { get; set; }
@@ -113,5 +115,8 @@
 
         [DefaultValue(false)]
         public bool ShowPerformanceTraces { get; set; }
+
+        [DefaultValue(false)]
+        public bool EnableXlifSync { get; set; }
     }
 }

@@ -474,4 +474,10 @@ Your ResXManager team.
   <data name="WebProjectFileExport_ExportNeutralResourcesAsJSON" xml:space="preserve">
     <value>Export neutral resources as JSON</value>
   </data>
+  <data name="Configuration_XlifSupport" xml:space="preserve">
+    <value>XLIF Support</value>
+  </data>
+  <data name="Configuration_EnableXlifSynchronization" xml:space="preserve">
+    <value>Enable XLIF synchronization</value>
+  </data>
 </root>

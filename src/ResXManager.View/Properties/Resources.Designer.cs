@@ -263,6 +263,15 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Enable XLIF synchronization"
+        /// </summary>
+        public static string Configuration_EnableXlifSynchronization {
+            get {
+                return ResourceManager.GetString("Configuration_EnableXlifSynchronization", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Excel export mode"
         /// </summary>
         public static string Configuration_ExcelExportModeHeader {
@@ -304,6 +313,15 @@ namespace ResXManager.View.Properties {
         public static string Configuration_Rules {
             get {
                 return ResourceManager.GetString("Configuration_Rules", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "XLIF Support"
+        /// </summary>
+        public static string Configuration_XlifSupport {
+            get {
+                return ResourceManager.GetString("Configuration_XlifSupport", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -1183,6 +1201,10 @@ namespace ResXManager.View.Properties {
         /// </summary>
         Configuration_EmptyValueHandlingHeader,
         /// <summary>
+        ///   Looks up a localized string similar to Enable XLIF synchronization.
+        /// </summary>
+        Configuration_EnableXlifSynchronization,
+        /// <summary>
         ///   Looks up a localized string similar to Excel export mode.
         /// </summary>
         Configuration_ExcelExportModeHeader,
@@ -1202,6 +1224,10 @@ namespace ResXManager.View.Properties {
         ///   Looks up a localized string similar to Consistency checks.
         /// </summary>
         Configuration_Rules,
+        /// <summary>
+        ///   Looks up a localized string similar to XLIF Support.
+        /// </summary>
+        Configuration_XlifSupport,
         /// <summary>
         ///   Looks up a localized string similar to Scope.
         /// </summary>

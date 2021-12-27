@@ -86,10 +86,10 @@
 
                 var state = transUnit.Value.GetTargetState();
                 var source = transUnitElement.GetSourceValue();
-                var target = transUnitElement.GetTargetValue();
-                var note = transUnitElement.GetNoteValue();
+                var target = transUnitElement.GetTargetValue() ?? string.Empty;
+                var note = transUnitElement.GetNoteValue() ?? string.Empty;
 
-                if (source != neutralNode.Text || (neutralNode.Comment != null && note != neutralNode.Comment) || target != targetNode?.Text)
+                if (source != (neutralNode.Text ?? string.Empty) || (!string.IsNullOrEmpty(neutralNode.Comment) && note != neutralNode.Comment) || target != (targetNode?.Text ?? string.Empty))
                 {
                     transUnitElement.SetSourceValue(neutralNode.Text ?? string.Empty);
                     if (neutralNode.Comment != null)

@@ -140,6 +140,14 @@
 
       <Decorator Height="5" />
 
+      <GroupBox Header="{x:Static properties:Resources.Configuration_XlifSupport}" Style="{StaticResource GroupStyle}">
+        <StackPanel Margin="10" KeyboardNavigation.TabNavigation="Local">
+          <CheckBox IsChecked="{Binding Configuration.EnableXlifSync}" Content="{x:Static properties:Resources.Configuration_EnableXlifSynchronization}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+        </StackPanel>
+      </GroupBox>
+
+      <Decorator Height="5" />
+
       <GroupBox Header="{x:Static properties:Resources.Configuration_DuplicateKeyHandling}" Style="{StaticResource GroupStyle}">
         <ListBox Margin="10" BorderThickness="0" Background="Transparent"
                  ItemsSource="{Binding Source={x:Type model:DuplicateKeyHandling}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
