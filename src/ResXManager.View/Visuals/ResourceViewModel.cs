@@ -39,12 +39,11 @@
         private readonly ITracer _tracer;
         private readonly CodeReferenceTracker _codeReferenceTracker;
         private readonly PerformanceTracer _performanceTracer;
-        private readonly FileWatcher _fileWatcher;
 
         private CancellationTokenSource? _loadingCancellationTokenSource;
 
         [ImportingConstructor]
-        public ResourceViewModel(ResourceManager resourceManager, IConfiguration configuration, ISourceFilesProvider sourceFilesProvider, CodeReferenceTracker codeReferenceTracker, ITracer tracer, PerformanceTracer performanceTracer, FileWatcher fileWatcher)
+        public ResourceViewModel(ResourceManager resourceManager, IConfiguration configuration, ISourceFilesProvider sourceFilesProvider, CodeReferenceTracker codeReferenceTracker, ITracer tracer, PerformanceTracer performanceTracer)
         {
             ResourceManager = resourceManager;
             _configuration = configuration;
@@ -52,7 +51,6 @@
             _codeReferenceTracker = codeReferenceTracker;
             _tracer = tracer;
             _performanceTracer = performanceTracer;
-            _fileWatcher = fileWatcher;
 
             ResourceTableEntries = SelectedEntities.ObservableSelectMany(entity => entity.Entries);
             ResourceTableEntries.CollectionChanged += (_, __) => ResourceTableEntries_CollectionChanged();
@@ -503,6 +501,8 @@
 
                 using (_performanceTracer.Start("ResourceManager.Load"))
                 {
+                    var solutionFolder = _sourceFilesProvider.SolutionFolder;
+
                     var sourceFiles = await _sourceFilesProvider.GetSourceFilesAsync(cancellationToken).ConfigureAwait(true);
 
                     if (cancellationToken.IsCancellationRequested)
@@ -510,9 +510,9 @@
 
                     _codeReferenceTracker.StopFind();
 
-                    _fileWatcher.Watch(_sourceFilesProvider.SolutionFolder);
+                    var hasChanged = await ResourceManager.ReloadAsync(solutionFolder, sourceFiles, cancellationToken).ConfigureAwait(true);
 
-                    if (await ResourceManager.ReloadAsync(sourceFiles, cancellationToken).ConfigureAwait(true) || forceFindCodeReferences)
+                    if (hasChanged || forceFindCodeReferences)
                     {
                         BeginFindCodeReferences();
                     }

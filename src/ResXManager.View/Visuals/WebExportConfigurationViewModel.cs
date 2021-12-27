@@ -17,9 +17,9 @@
     [VisualCompositionExport(RegionId.Configuration)]
     internal class WebExportConfigurationViewModel
     {
-        public WebExportConfigurationViewModel(ISourceFilesProvider sourceFilesProvider)
+        public WebExportConfigurationViewModel(ResourceManager resourceManager)
         {
-            SolutionFolder = sourceFilesProvider.SolutionFolder ?? string.Empty;
+            SolutionFolder = resourceManager.SolutionFolder ?? string.Empty;
 
             if (!WebFileExporterConfiguration.Load(SolutionFolder, out var configuration))
             {

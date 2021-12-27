@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Runtime.CompilerServices;
@@ -117,8 +116,7 @@
         /// <summary>
         /// Gets the key of the resource.
         /// </summary>
-        [NotNull, OnChangedMethod(nameof(OnKeyChanged))]
-        // ReSharper disable once MemberCanBePrivate.Global => Implicit bound to data grid.
+        [OnChangedMethod(nameof(OnKeyChanged))]
         public string Key { get; set; } = string.Empty;
         private void OnKeyChanged()
         {

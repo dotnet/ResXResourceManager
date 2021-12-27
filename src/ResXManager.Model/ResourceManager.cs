@@ -23,10 +23,8 @@
     /// Represents all resources found in a folder and it's sub folders.
     /// </summary>
     [Export, Shared]
-    [AddINotifyPropertyChangedInterface]
-    public sealed class ResourceManager
+    public sealed class ResourceManager : INotifyPropertyChanged
     {
-        private readonly ISourceFilesProvider _sourceFilesProvider;
         private string? _snapshot;
 
         public event EventHandler<ResourceBeginEditingEventArgs>? BeginEditing;
@@ -34,24 +32,20 @@
         public event EventHandler<EventArgs>? Loaded;
         public event EventHandler<LanguageEventArgs>? LanguageChanged;
         public event EventHandler<ProjectFileEventArgs>? ProjectFileSaved;
+        public event EventHandler<TextEventArgs>? SolutionFolderChanged;
 
         [ImportingConstructor]
-        public ResourceManager(ISourceFilesProvider sourceFilesProvider, IConfiguration configuration, ITracer tracer)
+        public ResourceManager(IConfiguration configuration, ITracer tracer)
         {
             Configuration = configuration;
-
-            _sourceFilesProvider = sourceFilesProvider;
             Tracer = tracer;
             TableEntries = ResourceEntities.ObservableSelectMany(entity => entity.Entries);
         }
 
         public IList<ProjectFile> AllSourceFiles { get; private set; } = Array.Empty<ProjectFile>();
 
-        /// <summary>
-        /// Loads all resources from the specified project files.
-        /// </summary>
-        /// <param name="allSourceFiles">All resource x files.</param>
-        /// <param name="cancellationToken"></param>
+        public bool IsLoading { get; private set; }
+
         private async Task<bool> LoadAsync(IList<ProjectFile> allSourceFiles, CancellationToken? cancellationToken)
         {
             AllSourceFiles = allSourceFiles;
@@ -107,7 +101,12 @@
 
         public bool IsSaving => ResourceEntities.SelectMany(entity => entity.Languages).Any(lang => lang.IsSaving);
 
-        public string? SolutionFolder => _sourceFilesProvider.SolutionFolder;
+        [OnChangedMethod(nameof(OnSolutionFolderChanged))]
+        public string? SolutionFolder { get; private set; }
+        private void OnSolutionFolderChanged()
+        {
+            SolutionFolderChanged?.Invoke(this, new TextEventArgs(SolutionFolder ?? string.Empty));
+        }
 
         public void ReloadSnapshot()
         {
@@ -115,14 +114,24 @@
                 ResourceEntities.LoadSnapshot(_snapshot);
         }
 
-        public async Task<bool> ReloadAsync(IList<ProjectFile> sourceFiles, CancellationToken? cancellationToken)
+        public async Task<bool> ReloadAsync(string? solutionFolder, IList<ProjectFile> sourceFiles, CancellationToken? cancellationToken)
         {
-            var args = new CancelEventArgs();
-            Reloading?.Invoke(this, args);
-            if (args.Cancel)
-                return false;
+            try
+            {
+                IsLoading = true;
 
-            return await LoadAsync(sourceFiles, cancellationToken).ConfigureAwait(false);
+                var args = new CancelEventArgs();
+                Reloading?.Invoke(this, args);
+                if (args.Cancel)
+                    return false;
+
+                return await LoadAsync(sourceFiles, cancellationToken).ConfigureAwait(false);
+            }
+            finally
+            {
+                IsLoading = false;
+                SolutionFolder = solutionFolder;
+            }
         }
 
         public bool CanEdit(ResourceEntity resourceEntity, CultureKey? cultureKey)
@@ -314,6 +323,13 @@
         public string CreateSnapshot()
         {
             return _snapshot = ResourceEntities.CreateSnapshot();
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

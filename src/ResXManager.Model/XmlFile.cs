@@ -56,7 +56,7 @@
 
         protected void SaveToFile(XDocument document)
         {
-            using (var stream = File.OpenWrite(FilePath))
+            using (var stream = File.Open(FilePath, FileMode.Create))
             {
                 using var writer = new StreamWriter(stream, Encoding);
                 document.Save(writer);

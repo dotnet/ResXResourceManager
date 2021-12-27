@@ -41,12 +41,12 @@
 
         public ResourceManager ResourceManager { get; }
 
-        public void Load(string? folder, string? exclusionFilter = @"Migrations\\\d{15}")
+        public void Load(string folder, string? exclusionFilter = @"Migrations\\\d{15}")
         {
             _sourceFilesProvider.SolutionFolder = folder;
             _sourceFilesProvider.ExclusionFilter = exclusionFilter;
 
-            var _ = ResourceManager.ReloadAsync(_sourceFilesProvider.EnumerateSourceFiles(), null).Result;
+            var _ = ResourceManager.ReloadAsync(folder, _sourceFilesProvider.EnumerateSourceFiles(), null).Result;
         }
 
         public void Save()
