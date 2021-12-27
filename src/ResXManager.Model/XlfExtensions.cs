@@ -6,8 +6,6 @@
 
     internal static class XlfExtensions
     {
-        private const string StateAttribute = "state";
-
         public static string? GetTargetValue(this XElement transUnitElement)
         {
             return transUnitElement.Element(TargetElement)?.Value;

@@ -116,7 +116,7 @@
                     new XElement(TransUnitElement,
                         new XAttribute(IdAttribute, neutralNode.Key),
                         new XElement(SourceElement, neutralNode.Text),
-                        new XElement(TargetElement, new XAttribute("state", "new"), string.Empty),
+                        new XElement(TargetElement, new XAttribute(StateAttribute, NewState), string.Empty),
                         new XElement(NoteElement, string.IsNullOrEmpty(neutralNode.Comment) ? null : neutralNode.Comment));
 
                 var nextElement = bodyElement

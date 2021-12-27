@@ -20,6 +20,7 @@
         public const string OriginalAttribute = "original";
         public const string SourceLanguageAttribute = "source-language";
         public const string TargetLanguageAttribute = "target-language";
+        public const string StateAttribute = "state";
 
         public const string NewState = "new";
         public const string TranslatedState = "translated";

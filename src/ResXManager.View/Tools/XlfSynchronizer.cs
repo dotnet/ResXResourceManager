@@ -202,7 +202,7 @@
                 .ToDictionary(group => group.Key, group => (ICollection<XlfFile>)group.ToArray(), StringComparer.OrdinalIgnoreCase);
         }
 
-        private void ResourceManager_LanguageChanged(object sender, LanguageEventArgs e)
+        private void ResourceManager_LanguageChanged(object? sender, LanguageEventArgs e)
         {
             if (!_configuration.EnableXlifSync)
                 return;

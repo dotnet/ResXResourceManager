@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Composition;
     using System.Globalization;
     using System.IO;
@@ -197,6 +198,10 @@
 
         public bool ShowPerformanceTraces { get; set; }
 
+        public bool EnableXlifSync { get; set; }
+
         public bool RemoveEmptyEntries { get; set; }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }
