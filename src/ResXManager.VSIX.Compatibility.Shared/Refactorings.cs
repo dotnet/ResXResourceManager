@@ -121,9 +121,12 @@
 
             var resourceViewModel = _exportProvider.GetExportedValue<ResourceViewModel>();
 
-            await resourceViewModel.ReloadAsync().ConfigureAwait(true);
-
             var resourceManager = _exportProvider.GetExportedValue<ResourceManager>();
+
+            if (!resourceManager.HasChanges)
+            {
+                await resourceViewModel.ReloadAsync().ConfigureAwait(true);
+            }
 
             var entities = resourceManager.ResourceEntities
                 .Where(entity => !entity.IsWinFormsDesignerResource)

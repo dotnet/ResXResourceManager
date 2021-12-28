@@ -201,7 +201,6 @@
             e.Cancel = true;
         }
 
-
         private bool CanEdit(ResourceEntity entity, CultureKey? cultureKey)
         {
             ThrowIfNotOnUIThread();

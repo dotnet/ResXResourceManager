@@ -9,8 +9,8 @@
             Key = key;
         }
 
-        public string Key { get;  }
-        public string? Text { get;  }
+        public string Key { get; }
+        public string? Text { get; }
         public string? Comment { get; }
     }
 }

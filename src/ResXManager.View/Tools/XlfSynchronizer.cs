@@ -136,11 +136,11 @@
             }
         }
 
-        private static void UpdateEntityFromXlf(ResourceEntity entity, IDictionary<string?, ICollection<XlfFile>> xlfFilesByOriginal)
+        private static void UpdateEntityFromXlf(ResourceEntity entity, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
         {
             var original = GetOriginal(entity);
 
-            if (!xlfFilesByOriginal.TryGetValue(original, out var xlfFiles))
+            if (original.IsNullOrEmpty() || !xlfFilesByOriginal.TryGetValue(original, out var xlfFiles))
                 return;
 
             UpdateEntityFromXlf(entity, xlfFiles);
@@ -166,9 +166,11 @@
             }
         }
 
-        private static void UpdateXlfFile(ResourceEntity entity, ResourceLanguage language, ResourceLanguage neutralLanguage, IDictionary<string?, ICollection<XlfFile>> xlfFilesByOriginal)
+        private static void UpdateXlfFile(ResourceEntity entity, ResourceLanguage language, ResourceLanguage neutralLanguage, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
         {
             var original = GetOriginal(entity);
+            if (original.IsNullOrEmpty())
+                return;
 
             if (!xlfFilesByOriginal.TryGetValue(original, out var xlfFiles))
             {
@@ -194,16 +196,17 @@
                 .ToUpperInvariant();
         }
 
-        private static IDictionary<string?, ICollection<XlfFile>> GetFilesByOriginal(IEnumerable<XlfDocument> documents)
+        private static IDictionary<string, ICollection<XlfFile>> GetFilesByOriginal(IEnumerable<XlfDocument> documents)
         {
+            // ! group.Key is checked in Where clause.
             return documents
                 .SelectMany(doc => doc.Files)
                 .GroupBy(file => file.Original, StringComparer.OrdinalIgnoreCase)
                 .Where(group => !group.Key.IsNullOrEmpty())
-                .ToDictionary(group => group.Key, group => (ICollection<XlfFile>)group.ToArray(), StringComparer.OrdinalIgnoreCase);
+                .ToDictionary(group => group.Key!, group => (ICollection<XlfFile>)group.ToArray(), StringComparer.OrdinalIgnoreCase);
         }
 
-        private void ResourceManager_ProjectFileSaved(object sender, ProjectFileEventArgs e)
+        private void ResourceManager_ProjectFileSaved(object? sender, ProjectFileEventArgs e)
         {
             if (!_configuration.EnableXlifSync)
                 return;
