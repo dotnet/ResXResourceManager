@@ -16,6 +16,8 @@
     using System.Windows.Input;
     using System.Windows.Media;
 
+    using Community.VisualStudio.Toolkit;
+
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.Win32;
@@ -30,6 +32,8 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.XamlExtensions;
 
+    using MessageBoxResult = Microsoft.VisualStudio.VSConstants.MessageBoxResult;
+
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
     /// <summary>
@@ -39,12 +43,10 @@
     public sealed class MyToolWindow : ToolWindowPane
     {
         private readonly ITracer _tracer;
-
         private readonly IConfiguration _configuration;
-
         private readonly IExportProvider _exportProvider;
-
         private readonly IVsixCompatibility _vsixCompatibility;
+        private readonly ResourceManager _resourceManager;
 
         private readonly ContentControl _contentWrapper = new()
         {
@@ -72,7 +74,9 @@
             _configuration = exportProvider.GetExportedValue<IConfiguration>();
             _vsixCompatibility = exportProvider.GetExportedValue<IVsixCompatibility>();
 
-            exportProvider.GetExportedValue<ResourceManager>().BeginEditing += ResourceManager_BeginEditing;
+            _resourceManager = exportProvider.GetExportedValue<ResourceManager>();
+            _resourceManager.BeginEditing += ResourceManager_BeginEditing;
+            _resourceManager.Reloading += ResourceManager_Reloading;
 
             _exportProvider = exportProvider;
 
@@ -111,7 +115,7 @@
             catch (Exception ex)
             {
                 _tracer.TraceError("MyToolWindow OnCreate failed: " + ex);
-                MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
+                VS.MessageBox.ShowError(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
             }
         }
 
@@ -132,7 +136,7 @@
             catch (Exception ex)
             {
                 _tracer.TraceError("ContentWrapper_Loaded failed: " + ex);
-                MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
+                VS.MessageBox.ShowError(string.Format(CultureInfo.CurrentCulture, Resources.ExtensionLoadingError, ex.Message));
             }
         }
 
@@ -186,6 +190,18 @@
             }
         }
 
+        private void ResourceManager_Reloading(object? sender, CancelEventArgs e)
+        {
+            if (!_resourceManager.HasChanges)
+                return;
+
+            if (MessageBoxResult.IDYES == VS.MessageBox.Show(View.Properties.Resources.Title, View.Properties.Resources.WarningUnsavedChanges, OLEMSGICON.OLEMSGICON_WARNING, OLEMSGBUTTON.OLEMSGBUTTON_YESNO, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_SECOND))
+                return;
+
+            e.Cancel = true;
+        }
+
+
         private bool CanEdit(ResourceEntity entity, CultureKey? cultureKey)
         {
             ThrowIfNotOnUIThread();
@@ -205,7 +221,7 @@
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(string.Format(CultureInfo.CurrentCulture, View.Properties.Resources.ErrorAddingNewResourceFile, ex), Model.Properties.Resources.Title);
+                    VS.MessageBox.ShowError(Model.Properties.Resources.Title, string.Format(CultureInfo.CurrentCulture, View.Properties.Resources.ErrorAddingNewResourceFile, ex));
                 }
             }
 
@@ -231,7 +247,7 @@
                 return true;
 
             var message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasReadOnlyFiles, FormatFileNames(lockedFiles));
-            MessageBox.Show(message, Model.Properties.Resources.Title);
+            VS.MessageBox.Show(Model.Properties.Resources.Title, message);
             return false;
         }
 
@@ -270,7 +286,7 @@
             {
                 var message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasNoResourceFile, culture.DisplayName);
 
-                if (MessageBox.Show(message, Model.Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                if (VS.MessageBox.Show(Model.Properties.Resources.Title, message, OLEMSGICON.OLEMSGICON_QUERY, OLEMSGBUTTON.OLEMSGBUTTON_YESNO) != MessageBoxResult.IDYES)
                     return false;
             }
 

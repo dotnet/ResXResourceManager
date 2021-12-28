@@ -470,4 +470,7 @@ Ihr ResXManager-Team.
   <data name="Configuration_EnableXlifSynchronization" xml:space="preserve">
     <value>XLIF Synchronisation aktiviert</value>
   </data>
+  <data name="WarningUnsavedChanges" xml:space="preserve">
+    <value>Es gibt noch ungesicherte Änderungen. Neu laden der Dateien wird alle Änderungen rückgängig machen. Wollen sie trotzdem fortfahren?</value>
+  </data>
 </root>

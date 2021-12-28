@@ -207,4 +207,7 @@ See output window for details.</value>
   <data name="ShowErrorsConfiguration_ShowAs" xml:space="preserve">
     <value>Show as</value>
   </data>
+  <data name="QuerySaveUnchangedResources" xml:space="preserve">
+    <value>You have unsaved changes in your resources. Do you want to save the changes?</value>
+  </data>
 </root>

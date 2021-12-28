@@ -134,6 +134,20 @@
             }
         }
 
+        public async Task ClearAsync()
+        {
+            try
+            {
+                IsLoading = true;
+                await LoadAsync(Array.Empty<ProjectFile>(), CancellationToken.None).ConfigureAwait(true);
+            }
+            finally
+            {
+                IsLoading = false;
+                SolutionFolder = null;
+            }
+        }
+
         public bool CanEdit(ResourceEntity resourceEntity, CultureKey? cultureKey)
         {
             var eventHandler = BeginEditing;

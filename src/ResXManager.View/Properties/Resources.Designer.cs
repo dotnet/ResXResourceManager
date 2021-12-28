@@ -1043,6 +1043,15 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "You have unsaved changes; reloading all resources ..."
+        /// </summary>
+        public static string WarningUnsavedChanges {
+            get {
+                return ResourceManager.GetString("WarningUnsavedChanges", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Export neutral resources as JSON"
         /// </summary>
         public static string WebProjectFileExport_ExportNeutralResourcesAsJSON {
@@ -1550,6 +1559,10 @@ namespace ResXManager.View.Properties {
         ///   Looks up a localized string similar to Unload Snapshot.
         /// </summary>
         UnloadSnapshot,
+        /// <summary>
+        ///   Looks up a localized string similar to You have unsaved changes; reloading all resources ....
+        /// </summary>
+        WarningUnsavedChanges,
         /// <summary>
         ///   Looks up a localized string similar to Export neutral resources as JSON.
         /// </summary>

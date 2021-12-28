@@ -482,9 +482,6 @@
 
         public async Task ReloadAsync()
         {
-            if (ResourceManager.HasChanges)
-                return;
-
             await ReloadAsync(false).ConfigureAwait(false);
         }
 

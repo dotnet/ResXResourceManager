@@ -122,7 +122,7 @@
             if (!ResourceManager.HasChanges)
                 return;
 
-            if (MessageBoxResult.Yes == MessageBox.Show(Resources.WarningUnsavedChanges, View.Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Hand, MessageBoxResult.No))
+            if (MessageBoxResult.Yes == MessageBox.Show(View.Properties.Resources.WarningUnsavedChanges, View.Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Hand, MessageBoxResult.No))
                 return;
 
             e.Cancel = true;

@@ -414,12 +414,32 @@
             }
         }
 
-        private void Solution_AfterClosing()
+        private async void Solution_AfterClosing()
         {
-            using (_performanceTracer?.Start("DTE event: Solution closed"))
+            try
             {
-                Invalidate();
-                ReloadSolution();
+                var resourceManager = _resourceManager;
+                if (resourceManager == null)
+                    return;
+
+                if (resourceManager.HasChanges)
+                {
+                    if (await VS.MessageBox.ShowAsync(View.Properties.Resources.Title, Resources.QuerySaveUnchangedResources, OLEMSGICON.OLEMSGICON_WARNING, OLEMSGBUTTON.OLEMSGBUTTON_YESNO).ConfigureAwait(true) == VSConstants.MessageBoxResult.IDYES)
+                    {
+                        resourceManager.Save();
+                    }
+                }
+
+                using (_performanceTracer?.Start("DTE event: Solution closed"))
+                {
+                    Invalidate();
+
+                    await resourceManager.ClearAsync().ConfigureAwait(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Tracer.TraceError(ex.ToString());
             }
         }
 

@@ -242,6 +242,15 @@ namespace ResXManager.VSIX {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "You have unsaved changes in your resources. Do you..."
+        /// </summary>
+        public static string QuerySaveUnchangedResources {
+            get {
+                return ResourceManager.GetString("QuerySaveUnchangedResources", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Resource:"
         /// </summary>
         public static string ResourceHeader {
@@ -397,6 +406,10 @@ namespace ResXManager.VSIX {
         ///   Looks up a localized string similar to Some files in your project are not writable. Make ....
         /// </summary>
         ProjectHasReadOnlyFiles,
+        /// <summary>
+        ///   Looks up a localized string similar to You have unsaved changes in your resources. Do you....
+        /// </summary>
+        QuerySaveUnchangedResources,
         /// <summary>
         ///   Looks up a localized string similar to Resource:.
         /// </summary>

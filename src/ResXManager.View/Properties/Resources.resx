@@ -480,4 +480,7 @@ Your ResXManager team.
   <data name="Configuration_EnableXlifSynchronization" xml:space="preserve">
     <value>Enable XLIF synchronization</value>
   </data>
+  <data name="WarningUnsavedChanges" xml:space="preserve">
+    <value>You have unsaved changes; reloading all resources will revert all your changes. Do you want to continue?</value>
+  </data>
 </root>

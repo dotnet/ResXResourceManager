@@ -186,4 +186,7 @@ Mehr Details finden sich im Ausgabefenster.</value>
   <data name="ShowErrorsConfiguration_ShowAs" xml:space="preserve">
     <value>Anzeigen als</value>
   </data>
+  <data name="QuerySaveUnchangedResources" xml:space="preserve">
+    <value>Sie haben Änderungen der Ressourcen noch nicht gespeichert. Möchten sie die Änderungen speichern?</value>
+  </data>
 </root>

@@ -17,7 +17,7 @@
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              xmlns:themes="clr-namespace:ResXManager.View.Themes"
              xmlns:composition="urn:TomsToolbox.Composition"
-             xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:interactions="http://schemas.microsoft.com/xaml/behaviors"
              d:DataContext="{d:DesignInstance visuals:ResourceViewModel}"
              Padding="4">
   <UserControl.Resources>
@@ -129,9 +129,9 @@
               </TextBlock>
               <Decorator Width="4" />
               <ContentControl Focusable="False">
-                <Interactions:Interaction.Behaviors>
+                <interactions:Interaction.Behaviors>
                   <composition:ContentControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListItemDecorator}" CompositionContext="{Binding}" />
-                </Interactions:Interaction.Behaviors>
+                </interactions:Interaction.Behaviors>
               </ContentControl>
             </StackPanel>
           </DataTemplate>
@@ -144,9 +144,9 @@
                   <Setter.Value>
                     <ControlTemplate TargetType="{x:Type GroupItem}">
                       <StackPanel Background="Transparent" d:DataContext="{d:DesignInstance GroupItem}">
-                        <Interactions:Interaction.Behaviors>
+                        <interactions:Interaction.Behaviors>
                           <toms:SelectGroupOnGroupHeaderClickBehavior />
-                        </Interactions:Interaction.Behaviors>
+                        </interactions:Interaction.Behaviors>
                         <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Margin="0,5,0,3" />
                         <ItemsPresenter Margin="4,0,0,0" />
                       </StackPanel>
@@ -159,15 +159,15 @@
         </ListBox.GroupStyle>
         <ListBox.ContextMenu>
           <ContextMenu Style="{DynamicResource {x:Static composition:ResourceKeys.CompositeContextMenuStyle}}">
-            <Interactions:Interaction.Behaviors>
+            <interactions:Interaction.Behaviors>
               <composition:ItemsControlCompositionBehavior RegionId="{x:Static infrastructure:RegionId.ProjectListContextMenu}" />
-            </Interactions:Interaction.Behaviors>
+            </interactions:Interaction.Behaviors>
           </ContextMenu>
         </ListBox.ContextMenu>
-        <Interactions:Interaction.Behaviors>
+        <interactions:Interaction.Behaviors>
           <behaviors:EntityFilter FilterText="{Binding Text, ElementName=EntityFilter}" />
           <behaviors:SelectAllBehavior x:Name="SelectAllBehavior" />
-        </Interactions:Interaction.Behaviors>
+        </interactions:Interaction.Behaviors>
       </ListBox>
     </Grid>
 
@@ -345,21 +345,21 @@
         <Popup IsOpen="{Binding Path=IsChecked, ElementName=ColumnChooserToggleButton, Mode=OneWay}"
                StaysOpen="False"
                Placement="Bottom" PlacementTarget="{Binding ElementName=ColumnChooserToggleButton}">
-          <Interactions:Interaction.Behaviors>
+          <interactions:Interaction.Behaviors>
             <toms:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=ColumnChooserToggleButton}" />
-          </Interactions:Interaction.Behaviors>
+          </interactions:Interaction.Behaviors>
           <Border Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}" Padding="8,4" BorderThickness="1" BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
             <DockPanel>
               <StackPanel DockPanel.Dock="Top">
                 <CheckBox Content="{x:Static properties:Resources.AllLanguages}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" Margin="2" >
-                  <Interactions:Interaction.Behaviors>
+                  <interactions:Interaction.Behaviors>
                     <behaviors:SelectAllColumnsBehavior ListBox="{Binding ElementName=SelectedColumns}" ColumnType="Language" />
-                  </Interactions:Interaction.Behaviors>
+                  </interactions:Interaction.Behaviors>
                 </CheckBox>
                 <CheckBox Content="{x:Static properties:Resources.AllComments}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" Margin="2" >
-                  <Interactions:Interaction.Behaviors>
+                  <interactions:Interaction.Behaviors>
                     <behaviors:SelectAllColumnsBehavior ListBox="{Binding ElementName=SelectedColumns}" ColumnType="Comment" />
-                  </Interactions:Interaction.Behaviors>
+                  </interactions:Interaction.Behaviors>
                 </CheckBox>
                 <Separator />
               </StackPanel>
@@ -405,10 +405,10 @@
         <toms:TextBoxVisibleWhiteSpaceDecorator WhiteSpaceColor="{Binding Foreground, ElementName=TextBox}" WhiteSpaceOpacity="0.4" WhiteSpaces="All">
           <TextBox x:Name="TextBox" AcceptsReturn="True" AcceptsTab="True" tools:Spellcheck.IsEnabled="True"
                    TextWrapping="Wrap" IsTabStop="False" BorderThickness="1" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}">
-            <Interactions:Interaction.Behaviors>
+            <interactions:Interaction.Behaviors>
               <toms:ZoomFontSizeOnMouseWheelBehavior />
               <behaviors:SynchronizeTextBoxWithDataGridCellBehavior DataGrid="{Binding ElementName=DataGrid}" />
-            </Interactions:Interaction.Behaviors>
+            </interactions:Interaction.Behaviors>
           </TextBox>
         </toms:TextBoxVisibleWhiteSpaceDecorator>
       </DockPanel>
@@ -512,13 +512,13 @@
                               <SelectiveScrollingGrid SelectiveScrollingOrientation="Vertical">
                                 <ContentControl>
                                   <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Margin="4" />
-                                  <Interactions:Interaction.Triggers>
-                                    <Interactions:EventTrigger EventName="MouseDoubleClick">
-                                      <Interactions:EventTrigger.Actions>
-                                        <Interactions:InvokeCommandAction Command="{Binding ElementName=DataGrid, Path=DataContext.SelectEntityCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding Name}" />
-                                      </Interactions:EventTrigger.Actions>
-                                    </Interactions:EventTrigger>
-                                  </Interactions:Interaction.Triggers>
+                                  <interactions:Interaction.Triggers>
+                                    <interactions:EventTrigger EventName="MouseDoubleClick">
+                                      <interactions:EventTrigger.Actions>
+                                        <interactions:InvokeCommandAction Command="{Binding ElementName=DataGrid, Path=DataContext.SelectEntityCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding Name}" />
+                                      </interactions:EventTrigger.Actions>
+                                    </interactions:EventTrigger>
+                                  </interactions:Interaction.Triggers>
                                 </ContentControl>
                               </SelectiveScrollingGrid>
                               <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource {x:Static styles:ResourceKeys.BorderBrush}}">
@@ -564,9 +564,9 @@
                         </ContextMenu.Style>
                       </ContextMenu>
                     </DataGridRowsPresenter.ContextMenu>
-                    <Interactions:Interaction.Behaviors>
+                    <interactions:Interaction.Behaviors>
                       <toms:ZoomFontSizeOnMouseWheelBehavior />
-                    </Interactions:Interaction.Behaviors>
+                    </interactions:Interaction.Behaviors>
                   </DataGridRowsPresenter>
                 </ItemsPanelTemplate>
               </DataGrid.ItemsPanel>
@@ -668,20 +668,20 @@
                 </Style>
               </DataGrid.Style>
 
-              <Interactions:Interaction.Behaviors>
+              <interactions:Interaction.Behaviors>
                 <dgx:BeginEditOnCtrlEnterBehavior />
                 <dgx:ExtendedStarSizeBehavior ColumnHeaderGripperToolTipStyle="{StaticResource {x:Static themes:ResourceKeys.ColumnHeaderGripperToolTipStyleKey}}" />
                 <behaviors:ShowErrorsOnlyBehavior x:Name="ShowErrorsOnlyBehavior" ToggleButton="{Binding ElementName=ErrorsOnlyFilterButton}" />
                 <behaviors:DataGridTryBeginEditBehavior />
-              </Interactions:Interaction.Behaviors>
+              </interactions:Interaction.Behaviors>
 
-              <Interactions:Interaction.Triggers>
-                <Interactions:PropertyChangedTrigger Binding="{Binding LoadedSnapshot}">
-                  <Interactions:PropertyChangedTrigger.Actions>
-                    <Interactions:CallMethodAction TargetObject="{Binding ElementName=ShowErrorsOnlyBehavior}" MethodName="Refresh" />
-                  </Interactions:PropertyChangedTrigger.Actions>
-                </Interactions:PropertyChangedTrigger>
-              </Interactions:Interaction.Triggers>
+              <interactions:Interaction.Triggers>
+                <interactions:PropertyChangedTrigger Binding="{Binding LoadedSnapshot}">
+                  <interactions:PropertyChangedTrigger.Actions>
+                    <interactions:CallMethodAction TargetObject="{Binding ElementName=ShowErrorsOnlyBehavior}" MethodName="Refresh" />
+                  </interactions:PropertyChangedTrigger.Actions>
+                </interactions:PropertyChangedTrigger>
+              </interactions:Interaction.Triggers>
             </DataGrid>
           </Grid>
         </DockPanel>
@@ -696,7 +696,7 @@
     <KeyBinding Key="Insert" Modifiers="Shift" Command="{composition:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=DataGrid}" />
   </UserControl.InputBindings>
 
-  <Interactions:Interaction.Behaviors>
+  <interactions:Interaction.Behaviors>
     <composition:CommandRoutingBehavior CommandSource="view:DeleteCommand"
                                         CommandTarget="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}"
                                         CommandParameter="{Binding ElementName=DataGrid}" />
@@ -741,12 +741,12 @@
                                         CommandParameter="{x:Static model:ResourceTableEntryRuleWhiteSpaceTail.Id}"
                                         IsChecked="{Binding Path=SelectedItem.IsRuleEnabled[WhiteSpaceTail], Mode=OneWay, ElementName=DataGrid}" />
     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-  </Interactions:Interaction.Behaviors>
+  </interactions:Interaction.Behaviors>
 
-  <Interactions:Interaction.Triggers>
-    <Interactions:EventTrigger EventName="Loaded">
-      <Interactions:InvokeCommandAction Command="{Binding BeginFindCodeReferencesCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" />
-    </Interactions:EventTrigger>
-  </Interactions:Interaction.Triggers>
+  <interactions:Interaction.Triggers>
+    <interactions:EventTrigger EventName="Loaded">
+      <interactions:InvokeCommandAction Command="{Binding BeginFindCodeReferencesCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" />
+    </interactions:EventTrigger>
+  </interactions:Interaction.Triggers>
 
 </UserControl>
