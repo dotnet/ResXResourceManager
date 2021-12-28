@@ -13,8 +13,6 @@
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
 
-    using Throttle;
-
     using TomsToolbox.Essentials;
 
     /// <summary>
@@ -42,8 +40,6 @@
         private readonly XName _commentNodeName;
 
         private readonly IConfiguration _configuration;
-
-        private bool _hasUncommittedChanges;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceLanguage" /> class.
@@ -129,16 +125,7 @@
         /// </summary>
         public IEnumerable<string> ResourceKeys => _nodes.Keys;
 
-        public bool HasChanges
-        {
-            get
-            {
-                if (_hasUncommittedChanges)
-                    CommitChanges();
-
-                return ProjectFile.HasChanges;
-            }
-        }
+        public bool HasChanges => ProjectFile.HasChanges;
 
         public bool IsSaving { get; private set; }
 
@@ -181,7 +168,8 @@
 
         internal bool SetValue(string key, string? value)
         {
-            return GetValue(key) == value || SetNodeData(key, node => node.Text = value);
+            var currentValue = GetValue(key);
+            return currentValue != value && SetNodeData(key, node => node.Text = value);
         }
 
         public void ForceValue(string key, string? value)
@@ -191,21 +179,6 @@
 
         private void OnChanged()
         {
-            _hasUncommittedChanges = true;
-
-            DeferredCommitChanges();
-        }
-
-        [Throttled(typeof(SynchronizationContextThrottle))]
-        private void DeferredCommitChanges()
-        {
-            CommitChanges();
-        }
-
-        private void CommitChanges()
-        {
-            _hasUncommittedChanges = false;
-
             ProjectFile.Changed(_document);
 
             Container.Container.OnLanguageChanged(this);

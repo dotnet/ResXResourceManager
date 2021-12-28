@@ -33,7 +33,7 @@
 
             resourceManager.SolutionFolderChanged += ResourceManager_SolutionFolderChanged;
             resourceManager.Loaded += ResourceManager_Loaded;
-            resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
+            resourceManager.ProjectFileSaved += ResourceManager_ProjectFileSaved;
 
             configuration.PropertyChanged += Configuration_PropertyChanged;
         }
@@ -50,6 +50,7 @@
         public void Start()
         {
             OnFilesChanged();
+            UpdateFromXlf();
         }
 
         protected override bool IncludeFile(string fileName)
@@ -202,7 +203,7 @@
                 .ToDictionary(group => group.Key, group => (ICollection<XlfFile>)group.ToArray(), StringComparer.OrdinalIgnoreCase);
         }
 
-        private void ResourceManager_LanguageChanged(object? sender, LanguageEventArgs e)
+        private void ResourceManager_ProjectFileSaved(object sender, ProjectFileEventArgs e)
         {
             if (!_configuration.EnableXlifSync)
                 return;

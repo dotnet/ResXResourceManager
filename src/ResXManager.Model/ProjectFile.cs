@@ -55,12 +55,11 @@
             return document;
         }
 
-        public void Changed(XDocument? document)
+        public bool Changed(XDocument document)
         {
-            if (document == null)
-                return;
-
             HasChanges = _fingerPrint != document.ToString(SaveOptions.DisableFormatting);
+
+            return HasChanges;
         }
 
         public void Save(XDocument? document)

@@ -125,7 +125,7 @@
                 if (args.Cancel)
                     return false;
 
-                return await LoadAsync(sourceFiles, cancellationToken).ConfigureAwait(false);
+                return await LoadAsync(sourceFiles, cancellationToken).ConfigureAwait(true);
             }
             finally
             {

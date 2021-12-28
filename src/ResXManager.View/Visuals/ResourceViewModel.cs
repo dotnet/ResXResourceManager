@@ -571,7 +571,7 @@
             var language = e.Language;
 
             // Defer save to avoid repeated file access
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
                 try
                 {
@@ -586,7 +586,7 @@
 
                     MessageBox.Show(ex.Message, Resources.Title);
                 }
-            }));
+            });
         }
 
         [Throttled(typeof(DispatcherThrottle))]
