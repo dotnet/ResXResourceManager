@@ -46,8 +46,7 @@
                 foreach (var transUnitElement in bodyElement.Descendants(TransUnitElement).ToList())
                 {
                     var id = transUnitElement.GetId();
-                    var state = transUnitElement.GetTargetState();
-                    var target = (state != NewState) ? transUnitElement.GetTargetValue() : null;
+                    var target = transUnitElement.GetTargetValue();
                     var note = transUnitElement.GetNoteValue();
 
                     yield return new ResourceNode(id, target, note);
@@ -89,16 +88,32 @@
                 var target = transUnitElement.GetTargetValue() ?? string.Empty;
                 var note = transUnitElement.GetNoteValue() ?? string.Empty;
 
-                if (source != (neutralNode.Text ?? string.Empty) || (!string.IsNullOrEmpty(neutralNode.Comment) && note != neutralNode.Comment) || target != (targetNode?.Text ?? string.Empty))
+                var neutralText = neutralNode.Text ?? string.Empty;
+                // TODO: Which comment to use? Maybe add multiple notes, one for neutral, one for culture specific?
+                var comment = targetNode?.Comment ?? neutralNode.Comment ?? string.Empty;
+                var targetText = targetNode?.Text ?? string.Empty;
+
+                if (source != neutralText)
                 {
-                    transUnitElement.SetSourceValue(neutralNode.Text ?? string.Empty);
-                    if (neutralNode.Comment != null)
+                    transUnitElement.SetSourceValue(neutralText);
+                    if (state == TranslatedState)
                     {
-                        transUnitElement.SetNoteValue(neutralNode.Comment);
+                        transUnitElement.SetTargetState(NeedsReviewState);
                     }
 
-                    transUnitElement.SetTargetValue(targetNode?.Text ?? string.Empty);
+                    changed = true;
+                }
 
+                if (!string.IsNullOrEmpty(comment) && note != comment)
+                {
+                    // TODO: change translation state if comment changes?
+                    transUnitElement.SetNoteValue(comment);
+                    changed = true;
+                }
+
+                if (target != targetText)
+                {
+                    transUnitElement.SetTargetValue(targetText);
                     if (state == TranslatedState)
                     {
                         transUnitElement.SetTargetState(NeedsReviewState);

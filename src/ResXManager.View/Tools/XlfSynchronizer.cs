@@ -160,7 +160,14 @@
                 {
                     if (entriesByKey.TryGetValue(node.Key, out var entry))
                     {
+                        // TODO: Maybe better clear the value if translation state is "new" and text equals the neutral value?
                         entry.Values[targetLanguage] = node.Text;
+
+                        // TODO: Import comments always? Which comments to import - neutral or specific or both?
+                        if (entry.Comment.IsNullOrEmpty())
+                        {
+                            entry.Comment = node.Comment;
+                        }
                     }
                 }
             }
@@ -218,7 +225,7 @@
             var language = e.Language;
             var entity = language.Container;
 
-            var neutralLanguage = entity.Languages.FirstOrDefault(l => l.IsNeutralLanguage);
+            var neutralLanguage = entity.Languages.FirstOrDefault();
             if (neutralLanguage == null)
                 return;
 
