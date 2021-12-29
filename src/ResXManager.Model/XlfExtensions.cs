@@ -3,6 +3,8 @@
     using System.Linq;
     using System.Xml.Linq;
 
+    using TomsToolbox.Essentials;
+
     using static XlfNames;
 
     internal static class XlfExtensions
@@ -72,6 +74,17 @@
         public static void SetNoteValue(this XElement transUnitElement, string from, string value)
         {
             var noteElement = transUnitElement.GetNoteElement(from);
+
+            if (value.IsNullOrEmpty())
+            {
+                if (noteElement?.PreviousNode is XText textNode)
+                {
+                    textNode.Remove();
+                }
+                noteElement?.Remove();
+                return;
+            }
+
             if (noteElement == null)
             {
                 var previousElement = transUnitElement.Element(TargetElement) ?? transUnitElement.Element(SourceElement);

@@ -105,14 +105,14 @@
                     changed = true;
                 }
 
-                if (!string.IsNullOrEmpty(neutralComment) && neutralComment != neutralNote)
+                if (neutralComment != neutralNote)
                 {
                     // TODO: change translation state if comment changes?
                     transUnitElement.SetNoteValue(FromResx, neutralComment);
                     changed = true;
                 }
 
-                if (!string.IsNullOrEmpty(specificComment) && specificComment != specificNote)
+                if (specificComment != specificNote)
                 {
                     // TODO: change translation state if comment changes?
                     transUnitElement.SetNoteValue(FromResxSpecific, specificComment);
@@ -135,12 +135,26 @@
 
             foreach (var neutralNode in neutralNodesById.Values)
             {
+                targetNodesById.TryGetValue(neutralNode.Key, out var targetNode);
+                var neutralComment = neutralNode.Comment ?? string.Empty;
+                var specificComment = targetNode?.Comment ?? string.Empty;
+                var targetText = targetNode?.Text ?? string.Empty;
+
                 var newTransUnit =
                     new XElement(TransUnitElement,
                         new XAttribute(IdAttribute, neutralNode.Key),
                         new XElement(SourceElement, neutralNode.Text),
-                        new XElement(TargetElement, new XAttribute(StateAttribute, NewState), string.Empty),
-                        new XElement(NoteElement, string.IsNullOrEmpty(neutralNode.Comment) ? null : neutralNode.Comment));
+                        new XElement(TargetElement, new XAttribute(StateAttribute, NewState), targetText));
+
+                if (!string.IsNullOrEmpty(neutralComment))
+                {
+                    newTransUnit.SetNoteValue(FromResx, neutralComment);
+                }
+
+                if (!string.IsNullOrEmpty(specificComment))
+                {
+                    newTransUnit.SetNoteValue(FromResxSpecific, specificComment);
+                }
 
                 var nextElement = bodyElement
                     .Descendants(TransUnitElement)
