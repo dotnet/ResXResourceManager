@@ -160,8 +160,8 @@
                 {
                     if (entriesByKey.TryGetValue(node.Key, out var entry))
                     {
-                        // TODO: Maybe better clear the value if translation state is "new" and text equals the neutral value?
                         entry.Values[targetLanguage] = node.Text;
+                        entry.Comments[targetLanguage] = node.Comment;
                     }
                 }
             }

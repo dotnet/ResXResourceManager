@@ -96,9 +96,9 @@
             noteElement.SelfCloseIfPossible();
         }
 
-        public static string GetId(this XElement transUnitElement)
+        public static string? GetId(this XElement transUnitElement)
         {
-            return transUnitElement.Attribute(IdAttribute).Value;
+            return transUnitElement.Attribute(IdAttribute)?.Value;
         }
 
         public static void SelfCloseIfPossible(this XElement element)

@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Xml.Linq;
 
+    using TomsToolbox.Essentials;
+
     using static XlfNames;
 
     public class XlfFile
@@ -46,10 +48,13 @@
                 foreach (var transUnitElement in bodyElement.Descendants(TransUnitElement).ToList())
                 {
                     var id = transUnitElement.GetId();
-                    var target = transUnitElement.GetTargetValue();
-                    var note = transUnitElement.GetNoteValue(FromResx);
+                    if (id.IsNullOrEmpty())
+                        continue;
 
-                    yield return new ResourceNode(id, target, note);
+                    var target = transUnitElement.GetTargetValue();
+                    var specificComment = transUnitElement.GetNoteValue(FromResxSpecific);
+
+                    yield return new ResourceNode(id, target, specificComment);
                 }
             }
         }
@@ -143,6 +148,8 @@
                 var newTransUnit =
                     new XElement(TransUnitElement,
                         new XAttribute(IdAttribute, neutralNode.Key),
+                        new XAttribute(TranslateAttribute, "yes"),
+                        new XAttribute(XNamespace.Xml.GetName(@"space"), "preserve"),
                         new XElement(SourceElement, neutralNode.Text),
                         new XElement(TargetElement, new XAttribute(StateAttribute, NewState), targetText));
 
