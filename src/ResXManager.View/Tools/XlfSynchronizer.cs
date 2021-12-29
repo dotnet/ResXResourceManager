@@ -162,12 +162,6 @@
                     {
                         // TODO: Maybe better clear the value if translation state is "new" and text equals the neutral value?
                         entry.Values[targetLanguage] = node.Text;
-
-                        // TODO: Import comments always? Which comments to import - neutral or specific or both?
-                        if (entry.Comment.IsNullOrEmpty())
-                        {
-                            entry.Comment = node.Comment;
-                        }
                     }
                 }
             }

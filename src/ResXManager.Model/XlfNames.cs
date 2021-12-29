@@ -21,9 +21,13 @@
         public const string SourceLanguageAttribute = "source-language";
         public const string TargetLanguageAttribute = "target-language";
         public const string StateAttribute = "state";
+        public const string FromAttribute = "from";
 
         public const string NewState = "new";
         public const string TranslatedState = "translated";
         public const string NeedsReviewState = "needs-review-translation";
+
+        public const string FromResx = "resx";
+        public const string FromResxSpecific = "resx-specific";
     }
 }

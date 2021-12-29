@@ -1,5 +1,6 @@
 ﻿namespace ResXManager.Model
 {
+    using System.Linq;
     using System.Xml.Linq;
 
     using static XlfNames;
@@ -57,19 +58,25 @@
             transUnitElement.Element(SourceElement).Value = value;
         }
 
-        public static string? GetNoteValue(this XElement transUnitElement)
+        public static string? GetNoteValue(this XElement transUnitElement, string from)
         {
-            return transUnitElement.Element(NoteElement)?.Value;
+            return GetNoteElement(transUnitElement, from)?.Value;
         }
 
-        public static void SetNoteValue(this XElement transUnitElement, string value)
+        private static XElement? GetNoteElement(this XElement transUnitElement, string from)
         {
-            var noteElement = transUnitElement.Element(NoteElement);
+            return transUnitElement.Elements(NoteElement)
+                .FirstOrDefault(element => element.Attribute(FromAttribute)?.Value == from);
+        }
+
+        public static void SetNoteValue(this XElement transUnitElement, string from, string value)
+        {
+            var noteElement = transUnitElement.GetNoteElement(from);
             if (noteElement == null)
             {
                 var previousElement = transUnitElement.Element(TargetElement) ?? transUnitElement.Element(SourceElement);
-                noteElement = new XElement(NoteElement);
-                previousElement.AddAfterSelf(noteElement);
+                noteElement = new XElement(NoteElement, new XAttribute(FromAttribute, from));
+                previousElement.AddAfterSelf(new XText("\n          "), noteElement);
             }
 
             noteElement.Value = value;

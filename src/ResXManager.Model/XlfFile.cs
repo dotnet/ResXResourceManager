@@ -47,7 +47,7 @@
                 {
                     var id = transUnitElement.GetId();
                     var target = transUnitElement.GetTargetValue();
-                    var note = transUnitElement.GetNoteValue();
+                    var note = transUnitElement.GetNoteValue(FromResx);
 
                     yield return new ResourceNode(id, target, note);
                 }
@@ -86,11 +86,12 @@
                 var state = transUnit.Value.GetTargetState();
                 var source = transUnitElement.GetSourceValue();
                 var target = transUnitElement.GetTargetValue() ?? string.Empty;
-                var note = transUnitElement.GetNoteValue() ?? string.Empty;
+                var neutralNote = transUnitElement.GetNoteValue(FromResx) ?? string.Empty;
+                var specificNote = transUnitElement.GetNoteValue(FromResxSpecific) ?? string.Empty;
 
                 var neutralText = neutralNode.Text ?? string.Empty;
-                // TODO: Which comment to use? Maybe add multiple notes, one for neutral, one for culture specific?
-                var comment = targetNode?.Comment ?? neutralNode.Comment ?? string.Empty;
+                var neutralComment = neutralNode.Comment ?? string.Empty;
+                var specificComment = targetNode?.Comment ?? string.Empty;
                 var targetText = targetNode?.Text ?? string.Empty;
 
                 if (source != neutralText)
@@ -104,10 +105,17 @@
                     changed = true;
                 }
 
-                if (!string.IsNullOrEmpty(comment) && note != comment)
+                if (!string.IsNullOrEmpty(neutralComment) && neutralComment != neutralNote)
                 {
                     // TODO: change translation state if comment changes?
-                    transUnitElement.SetNoteValue(comment);
+                    transUnitElement.SetNoteValue(FromResx, neutralComment);
+                    changed = true;
+                }
+
+                if (!string.IsNullOrEmpty(specificComment) && specificComment != specificNote)
+                {
+                    // TODO: change translation state if comment changes?
+                    transUnitElement.SetNoteValue(FromResxSpecific, specificComment);
                     changed = true;
                 }
 
