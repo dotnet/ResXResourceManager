@@ -239,7 +239,7 @@
             </Button>
             <ToggleButton ToolTip="{x:Static properties:Resources.FindCodeReferencesButtonToolTip}"
                           IsChecked="{Binding IsFindCodeReferencesEnabled, Source={x:Static model:Settings.Default}, Mode=TwoWay}"
-                          Command="{Binding ReloadCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
+                          Command="{Binding BeginFindCodeReferencesCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
               <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/references.png" />
             </ToggleButton>
             <ToggleButton ToolTip="{x:Static properties:Resources.IndexColumnToggleButtonToolTip}"

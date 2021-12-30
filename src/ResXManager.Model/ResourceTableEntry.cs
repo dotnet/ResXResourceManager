@@ -276,7 +276,7 @@
         [DependsOn(nameof(Key))]
         public bool IsDuplicateKey => _duplicateKeyExpression.Match(Key).Success;
 
-        public ReadOnlyCollection<CodeReference>? CodeReferences { get; internal set; }
+        public ReadOnlyCollection<CodeReference>? CodeReferences { get; set; }
 
         [OnChangedMethod(nameof(OnIndexChanged))]
         public double Index { get; set; }

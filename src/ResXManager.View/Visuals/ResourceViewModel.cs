@@ -55,7 +55,6 @@
             ResourceTableEntries = SelectedEntities.ObservableSelectMany(entity => entity.Entries);
             ResourceTableEntries.CollectionChanged += (_, __) => ResourceTableEntries_CollectionChanged();
 
-            resourceManager.TableEntries.CollectionChanged += (_, __) => BeginFindCodeReferences();
             resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
         }
 
@@ -508,8 +507,6 @@
                     _codeReferenceTracker.StopFind();
 
                     await ResourceManager.ReloadAsync(solutionFolder, sourceFiles, cancellationToken).ConfigureAwait(true);
-
-                    BeginFindCodeReferences();
                 }
             }
             catch (OperationCanceledException)
@@ -531,30 +528,9 @@
             }
         }
 
-        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.ContextIdle)]
         private void BeginFindCodeReferences()
         {
-            try
-            {
-                BeginFindCodeReferences(ResourceManager.AllSourceFiles);
-            }
-            catch (Exception ex)
-            {
-                _tracer.TraceError(ex.ToString());
-            }
-        }
-
-        private void BeginFindCodeReferences(IList<ProjectFile> allSourceFiles)
-        {
-            _codeReferenceTracker.StopFind();
-
-            if (Model.Properties.Settings.Default.IsFindCodeReferencesEnabled)
-            {
-                Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, () =>
-                {
-                    _codeReferenceTracker.BeginFind(allSourceFiles);
-                });
-            }
+            _codeReferenceTracker.BeginFind();
         }
 
         private void ResourceManager_LanguageChanged(object? sender, LanguageEventArgs e)

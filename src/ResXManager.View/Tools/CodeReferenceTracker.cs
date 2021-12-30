@@ -1,4 +1,4 @@
-﻿namespace ResXManager.Model
+﻿namespace ResXManager.View.Tools
 {
     using System;
     using System.Collections.Generic;
@@ -9,31 +9,39 @@
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Windows.Threading;
+
+    using DataGridExtensions.Framework;
 
     using ResXManager.Infrastructure;
+    using ResXManager.Model;
+
+    using Throttle;
 
     using TomsToolbox.Essentials;
+    using TomsToolbox.Wpf;
 
-    [Export, Shared]
-    public class CodeReferenceTracker
+    [Shared, Export, Export(typeof(IService))]
+    public class CodeReferenceTracker : IService
     {
         private readonly ResourceManager _resourceManager;
-        private readonly CodeReferenceConfiguration _configuration;
+        private readonly IConfiguration _configuration;
         private readonly ITracer _tracer;
 
         private Engine? _engine;
 
         [ImportingConstructor]
-        public CodeReferenceTracker(ResourceManager resourceManager, CodeReferenceConfiguration configuration, ITracer tracer)
+        public CodeReferenceTracker(ResourceManager resourceManager, IConfiguration configuration, ITracer tracer)
         {
             _resourceManager = resourceManager;
             _configuration = configuration;
             _tracer = tracer;
 
-            _resourceManager.Loaded += ResourceManager_Loaded;
+            resourceManager.Loaded += ResourceManager_Loaded;
+            resourceManager.TableEntries.CollectionChanged += (_, __) => BeginFind();
         }
 
-        private void ResourceManager_Loaded(object sender, EventArgs e)
+        public void Start()
         {
         }
 
@@ -46,7 +54,29 @@
             Interlocked.Exchange(ref _engine, null)?.Dispose();
         }
 
-        public void BeginFind(IEnumerable<ProjectFile> allSourceFiles)
+        [Throttled(typeof(Throttle), 500)]
+        public void BeginFind()
+        {
+            try
+            {
+                if (_resourceManager.IsLoading)
+                {
+                    BeginFind();
+                    return;
+                }
+
+                if (Model.Properties.Settings.Default.IsFindCodeReferencesEnabled)
+                {
+                    BeginFind(_resourceManager.AllSourceFiles);
+                }
+            }
+            catch (Exception ex)
+            {
+                _tracer.TraceError(ex.ToString());
+            }
+        }
+
+        private void BeginFind(IEnumerable<ProjectFile> allSourceFiles)
         {
             var sourceFiles = allSourceFiles.Where(item => !item.IsResourceFile() && !item.IsDesignerFile()).ToArray();
 
@@ -54,7 +84,12 @@
                 .Where(entity => !entity.IsWinFormsDesignerResource)
                 .SelectMany(entity => entity.Entries).ToArray();
 
-            Interlocked.Exchange(ref _engine, new Engine(_configuration, sourceFiles, resourceTableEntries, _tracer))?.Dispose();
+            Interlocked.Exchange(ref _engine, new Engine(_configuration.CodeReferences, sourceFiles, resourceTableEntries, _tracer))?.Dispose();
+        }
+
+        private void ResourceManager_Loaded(object? sender, EventArgs e)
+        {
+            BeginFind();
         }
 
         private sealed class Engine : IDisposable
@@ -65,7 +100,7 @@
             private long _total;
             private long _visited;
 
-            public int Progress => (int)(_total <= 0 ? 0 : Math.Max(1, 100 * _visited / _total));
+            public int Progress => (int)(_total <= 0 ? 100 : Math.Max(1, 100 * _visited / _total));
 
             public Engine(CodeReferenceConfiguration configuration, ICollection<ProjectFile> sourceFiles, ICollection<ResourceTableEntry> resourceTableEntries, ITracer tracer)
             {
@@ -287,22 +322,6 @@
                 }
             }
         }
-    }
-
-    public class CodeReference
-    {
-        internal CodeReference(ProjectFile projectFile, int lineNumber, IList<string> lineSegments)
-        {
-            ProjectFile = projectFile;
-            LineNumber = lineNumber;
-            LineSegments = lineSegments;
-        }
-
-        public int LineNumber { get; }
-
-        public ProjectFile? ProjectFile { get; }
-
-        public IList<string>? LineSegments { get; }
     }
 
     internal static class CodeReferenceExtensionMethods

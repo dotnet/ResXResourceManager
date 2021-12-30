@@ -7,13 +7,14 @@
          xmlns:toms="urn:TomsToolbox"
          xmlns:properties="clr-namespace:ResXManager.View.Properties"
          xmlns:composition="urn:TomsToolbox.Composition"
-         xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
+         xmlns:interactions="http://schemas.microsoft.com/xaml/behaviors"
+         xmlns:tools="clr-namespace:ResXManager.View.Tools"
          d:DataContext="{d:DesignInstance model:ResourceTableEntry}">
   <ToolTip.Template>
     <ControlTemplate TargetType="Control">
       <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
         <Grid Margin="{TemplateBinding Padding}">
-          <Grid DataContext="{composition:Import model:CodeReferenceTracker}" d:DataContext="{d:DesignInstance model:CodeReferenceTracker}">
+          <Grid DataContext="{composition:Import tools:CodeReferenceTracker}" d:DataContext="{d:DesignInstance tools:CodeReferenceTracker}">
             <ProgressBar x:Name="Progress" Maximum="100" BorderThickness="0" Background="Transparent" Visibility="Collapsed"
                          Value="{Binding Path=Progress, Mode=OneWay}" />
             <TextBlock x:Name="Text" MaxWidth="300" TextWrapping="Wrap" />
@@ -60,12 +61,12 @@
             </ItemsControl.ItemTemplate>
           </ItemsControl>
         </Grid>
-        <Interactions:Interaction.Triggers>
+        <interactions:Interaction.Triggers>
           <toms:TimerTrigger Interval="00:00:01">
             <toms:UpdatePropertyAction TargetName="Text" Property="{x:Static TextBlock.TextProperty}" />
             <toms:UpdatePropertyAction TargetName="Progress" Property="{x:Static ProgressBar.ValueProperty}" />
           </toms:TimerTrigger>
-        </Interactions:Interaction.Triggers>
+        </interactions:Interaction.Triggers>
       </Border>
       <ControlTemplate.Triggers>
         <DataTrigger Binding="{Binding ElementName=ItemsControl, Path=Items.Count}" Value="0">
@@ -73,7 +74,7 @@
         </DataTrigger>
         <DataTrigger Binding="{Binding CodeReferences}" Value="{x:Null}">
           <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-          <Setter TargetName="Text" Property="Text" Value="{Binding Path=Progress, Source={composition:Import model:CodeReferenceTracker}, StringFormat={x:Static properties:Resources.CodeReferenceTrackingInProgress}}" />
+          <Setter TargetName="Text" Property="Text" Value="{Binding Path=Progress, Source={composition:Import tools:CodeReferenceTracker}, StringFormat={x:Static properties:Resources.CodeReferenceTrackingInProgress}}" />
           <Setter TargetName="Progress" Property="Visibility" Value="Visible" />
         </DataTrigger>
         <MultiDataTrigger>
