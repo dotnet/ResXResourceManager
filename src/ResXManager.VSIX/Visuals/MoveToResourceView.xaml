@@ -24,11 +24,11 @@
         <StackPanel Orientation="Horizontal">
           <RadioButton Content="New entry"
                        Style="{DynamicResource {x:Static styles:ResourceKeys.RadioButtonStyle}}"
-                       IsChecked="{Binding ReuseExisiting, Converter={x:Static toms:UnaryOperationConverter.Negation}}" />
+                       IsChecked="{Binding ReuseExisting, Converter={x:Static toms:UnaryOperationConverter.Negation}}" />
           <Decorator Width="10" />
           <RadioButton Content="Reuse existing"
                        Style="{DynamicResource {x:Static styles:ResourceKeys.RadioButtonStyle}}"
-                       IsChecked="{Binding ReuseExisiting}"
+                       IsChecked="{Binding ReuseExisting}"
                        IsEnabled="{Binding ExistingEntries.Count, Converter={x:Static toms:BinaryOperationConverter.GreaterThan}, ConverterParameter=0}" />
         </StackPanel>
       </toms:SharedWidthHeaderedContentControl>
@@ -42,7 +42,7 @@
           <ComboBox ItemsSource="{Binding ExistingEntries}"
                     SelectedItem="{Binding SelectedResourceEntry, ValidatesOnDataErrors=True}"
                     Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}"
-                    Visibility="{Binding ReuseExisiting, Converter={x:Static toms:BooleanToVisibilityConverter.Default}}"
+                    Visibility="{Binding ReuseExisting, Converter={x:Static toms:BooleanToVisibilityConverter.Default}}"
                     DisplayMemberPath="Container.DisplayName" />
         </Grid>
       </toms:SharedWidthHeaderedContentControl>
@@ -53,7 +53,7 @@
             <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
               <Setter Property="Text" Value="{Binding Key, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
               <Style.Triggers>
-                <DataTrigger Binding="{Binding ReuseExisiting}" Value="True">
+                <DataTrigger Binding="{Binding ReuseExisting}" Value="True">
                   <Setter Property="Text" Value="{Binding SelectedResourceEntry.Key}" />
                   <Setter Property="IsEnabled" Value="False" />
                 </DataTrigger>
@@ -78,7 +78,7 @@
                 <Style TargetType="TextBox" BasedOn="{StaticResource {x:Static styles:ResourceKeys.TextBoxStyle}}">
                   <Setter Property="Text" Value="{Binding Value}" />
                   <Style.Triggers>
-                    <DataTrigger Binding="{Binding ReuseExisiting}" Value="True">
+                    <DataTrigger Binding="{Binding ReuseExisting}" Value="True">
                       <Setter Property="Text" Value="{Binding Path=SelectedResourceEntry.Values[.], Mode=OneWay}" />
                       <Setter Property="IsEnabled" Value="False" />
                     </DataTrigger>
@@ -110,7 +110,7 @@
                 <Style TargetType="TextBox" BasedOn="{StaticResource {x:Static styles:ResourceKeys.TextBoxStyle}}">
                   <Setter Property="Text" Value="{Binding Comment}" />
                   <Style.Triggers>
-                    <DataTrigger Binding="{Binding ReuseExisiting}" Value="True">
+                    <DataTrigger Binding="{Binding ReuseExisting}" Value="True">
                       <Setter Property="Text" Value="{Binding SelectedResourceEntry.Comment}" />
                       <Setter Property="IsEnabled" Value="False" />
                     </DataTrigger>

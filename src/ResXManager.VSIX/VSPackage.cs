@@ -350,15 +350,20 @@
 
         private async Task<IEnumerable<ResourceEntity>> GetResourceEntitiesAsync()
         {
+            await EnsureLoadedAsync().ConfigureAwait(false);
+
+            var resourceEntities = _resourceManager?.ResourceEntities;
+
+            return resourceEntities?.AsEnumerable() ?? Array.Empty<ResourceEntity>();
+        }
+
+        private async Task EnsureLoadedAsync()
+        {
             if (_isReloadRequestPending)
             {
                 await ExportProvider.GetExportedValue<ResourceViewModel>().ReloadAsync().ConfigureAwait(false);
                 _isReloadRequestPending = false;
             }
-
-            var resourceEntities = _resourceManager?.ResourceEntities;
-
-            return resourceEntities?.AsEnumerable() ?? Array.Empty<ResourceEntity>();
         }
 
         private static bool ContainsFile(ResourceEntity entity, string? fileName)
@@ -368,18 +373,20 @@
 
         private async void MoveToResource(object? sender, EventArgs? e)
         {
+            await EnsureLoadedAsync().ConfigureAwait(false);
+
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             try
             {
-                FindToolWindow();
-
                 var entry = await ExportProvider.GetExportedValue<IRefactorings>().MoveToResourceAsync().ConfigureAwait(true);
                 if (entry == null)
                     return;
 
                 if (!Properties.Settings.Default.MoveToResourceOpenInResXManager)
                     return;
+
+                ShowToolWindow();
 
                 ExportProvider.GetExportedValue<IVsixShellViewModel>().SelectEntry(entry);
             }
@@ -464,6 +471,7 @@
                 }
 
                 await ExportProvider.GetExportedValue<ResourceViewModel>().ReloadAsync().ConfigureAwait(false);
+                _isReloadRequestPending = false;
             }
             catch (Exception ex)
             {
@@ -477,16 +485,11 @@
             public IList<string> Errors { get; } = new List<string>();
         }
 
-        public void ToolWindowLoaded()
+        public async void ToolWindowLoaded()
         {
             _isToolWindowLoaded = true;
 
-            if (!_isReloadRequestPending)
-                return;
-
-            _isReloadRequestPending = false;
-
-            ReloadSolution();
+            await EnsureLoadedAsync().ConfigureAwait(false);
         }
 
         public void ToolWindowUnloaded()

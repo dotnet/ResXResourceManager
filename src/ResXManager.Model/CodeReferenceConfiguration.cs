@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Runtime.Serialization;
 
-    using ResXManager.Infrastructure;
     using TomsToolbox.Essentials;
 
     [DataContract]

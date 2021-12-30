@@ -29,9 +29,9 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.AttributedModel;
 
+    [Shared]
     [Export]
     [VisualCompositionExport(RegionId.Content, Sequence = 1)]
-    [Shared]
     public sealed class ResourceViewModel : ObservableObject, IDisposable
     {
         private readonly IConfiguration _configuration;

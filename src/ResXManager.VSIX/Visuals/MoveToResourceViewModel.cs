@@ -34,12 +34,12 @@
                 .SelectMany(entity => entity.Entries)
                 .Where(entry => entry.Values[null] == text)
                 .ToArray();
-            ReuseExisiting = ExistingEntries.Any();
+            ReuseExisting = ExistingEntries.Any();
 
             SelectedResourceEntry = ExistingEntries.FirstOrDefault();
             _extension = extension;
 
-            Replacements = patterns.Select(p => new Replacement(p, pattern => vsixCompatibility.EvaluateMoveToResourcePattern(pattern, Key, ReuseExisiting, SelectedResourceEntity, SelectedResourceEntry))).ToArray();
+            Replacements = patterns.Select(p => new Replacement(p, pattern => vsixCompatibility.EvaluateMoveToResourcePattern(pattern, Key, ReuseExisting, SelectedResourceEntity, SelectedResourceEntry))).ToArray();
             Keys = new[] { CreateKey(text, null, null), CreateKey(text, null, functionName), CreateKey(text, className ?? fileName, functionName) }.Distinct().ToArray();
             Key = Keys.Skip(SelectedKeyIndex).FirstOrDefault() ?? Keys.FirstOrDefault();
             Value = text;
@@ -55,7 +55,7 @@
         public ICollection<string> Keys { get; }
 
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = false)]
-        [DependsOn(nameof(ReuseExisiting), nameof(SelectedResourceEntity))] // must raise a change event for key, key validation is different when these change
+        [DependsOn(nameof(ReuseExisting), nameof(SelectedResourceEntity))] // must raise a change event for key, key validation is different when these change
         public string? Key { get; set; }
 
         public ICollection<Replacement> Replacements { get; }
@@ -70,7 +70,7 @@
 
         public string? Comment { get; set; }
 
-        public bool ReuseExisiting { get; set; }
+        public bool ReuseExisting { get; set; }
 
         public ICollection<ResourceTableEntry> ExistingEntries { get; }
 
@@ -92,7 +92,7 @@
 
         private string? GetKeyErrors(string? propertyName)
         {
-            if (ReuseExisiting)
+            if (ReuseExisting)
                 return null;
 
             if (!string.Equals(propertyName, nameof(Key), StringComparison.Ordinal))

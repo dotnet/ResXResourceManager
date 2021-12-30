@@ -22,7 +22,8 @@
     /// <summary>
     /// Represents all resources found in a folder and it's sub folders.
     /// </summary>
-    [Export, Shared]
+    [Shared]
+    [Export]
     public sealed class ResourceManager : INotifyPropertyChanged
     {
         private string? _snapshot;
@@ -103,6 +104,7 @@
 
         [OnChangedMethod(nameof(OnSolutionFolderChanged))]
         public string? SolutionFolder { get; private set; }
+
         private void OnSolutionFolderChanged()
         {
             SolutionFolderChanged?.Invoke(this, new TextEventArgs(SolutionFolder ?? string.Empty));

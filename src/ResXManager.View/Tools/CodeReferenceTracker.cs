@@ -9,9 +9,6 @@
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Windows.Threading;
-
-    using DataGridExtensions.Framework;
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
@@ -21,7 +18,9 @@
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
 
-    [Shared, Export, Export(typeof(IService))]
+    [Shared]
+    [Export]
+    [Export(typeof(IService))]
     public class CodeReferenceTracker : IService
     {
         private readonly ResourceManager _resourceManager;

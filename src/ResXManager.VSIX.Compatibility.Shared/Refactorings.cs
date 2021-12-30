@@ -119,14 +119,7 @@
 
             var patterns = configuration.ParsePatterns().ToArray();
 
-            var resourceViewModel = _exportProvider.GetExportedValue<ResourceViewModel>();
-
             var resourceManager = _exportProvider.GetExportedValue<ResourceManager>();
-
-            if (!resourceManager.HasChanges)
-            {
-                await resourceViewModel.ReloadAsync().ConfigureAwait(true);
-            }
 
             var entities = resourceManager.ResourceEntities
                 .Where(entity => !entity.IsWinFormsDesignerResource)
@@ -163,7 +156,7 @@
 
             ResourceTableEntry? entry = null;
 
-            if (!viewModel.ReuseExisiting)
+            if (!viewModel.ReuseExisting)
             {
                 var entity = _lastUsedEntity = viewModel.SelectedResourceEntity;
                 if (entity == null)
@@ -177,6 +170,10 @@
 
                 entry.Values[null] = viewModel.Value;
                 entry.Comment = viewModel.Comment;
+            }
+            else
+            {
+                entry = viewModel.SelectedResourceEntry;
             }
 
             selection.ReplaceWith(viewModel.ReplacementValue);
