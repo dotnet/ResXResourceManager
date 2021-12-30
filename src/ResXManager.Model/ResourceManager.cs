@@ -286,7 +286,7 @@
             LanguageChanged?.Invoke(this, new LanguageEventArgs(language));
         }
 
-        internal void OnProjectFileSaved(ResourceLanguage language, ProjectFile projectFile)
+        public void OnProjectFileSaved(ResourceLanguage language, ProjectFile projectFile)
         {
             ProjectFileSaved?.Invoke(this, new ProjectFileEventArgs(language, projectFile));
         }

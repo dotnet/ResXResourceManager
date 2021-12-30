@@ -106,7 +106,7 @@
 
         public ICommand ToggleConsistencyCheckCommand => new DelegateCommand<string>(CanToggleConsistencyCheck, ToggleConsistencyCheck);
 
-        public ICommand ReloadCommand => new DelegateCommand(async () => await ForceReloadAsync().ConfigureAwait(false));
+        public ICommand ReloadCommand => new DelegateCommand(Reload);
 
         public ICommand SaveCommand => new DelegateCommand(() => ResourceManager.HasChanges, () => ResourceManager.Save());
 
@@ -473,19 +473,19 @@
             changes.Apply();
         }
 
-        private async Task ForceReloadAsync()
+        private async void Reload()
         {
-            _sourceFilesProvider.Invalidate();
-
-            await ReloadAsync(true).ConfigureAwait(false);
+            try
+            {
+                await ReloadAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _tracer.TraceError(ex.ToString());
+            }
         }
 
         public async Task ReloadAsync()
-        {
-            await ReloadAsync(false).ConfigureAwait(false);
-        }
-
-        private async Task ReloadAsync(bool forceFindCodeReferences)
         {
             var cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = cancellationTokenSource.Token;
@@ -507,12 +507,9 @@
 
                     _codeReferenceTracker.StopFind();
 
-                    var hasChanged = await ResourceManager.ReloadAsync(solutionFolder, sourceFiles, cancellationToken).ConfigureAwait(true);
+                    await ResourceManager.ReloadAsync(solutionFolder, sourceFiles, cancellationToken).ConfigureAwait(true);
 
-                    if (hasChanged || forceFindCodeReferences)
-                    {
-                        BeginFindCodeReferences();
-                    }
+                    BeginFindCodeReferences();
                 }
             }
             catch (OperationCanceledException)
@@ -555,7 +552,7 @@
             {
                 Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, () =>
                 {
-                    _codeReferenceTracker.BeginFind(ResourceManager, _configuration.CodeReferences, allSourceFiles, _tracer);
+                    _codeReferenceTracker.BeginFind(allSourceFiles);
                 });
             }
         }

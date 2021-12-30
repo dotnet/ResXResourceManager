@@ -216,11 +216,6 @@
             solutionEvents.OnBeforeUnloadProject += _ => Solution_ContentChanged();
             solutionEvents.OnAfterRenameProject += _ => Solution_ContentChanged();
 
-            events.DocumentEvents.Saved += DocumentEvents_DocumentSaved;
-            var documentEvents = events.DocumentEvents;
-            documentEvents.Opened += DocumentEvents_DocumentOpened;
-            documentEvents.Saved += DocumentEvents_DocumentSaved;
-
             Solution_Opened();
         }
 
@@ -432,8 +427,6 @@
 
                 using (_performanceTracer?.Start("DTE event: Solution closed"))
                 {
-                    Invalidate();
-
                     await resourceManager.ClearAsync().ConfigureAwait(false);
                 }
             }
@@ -447,54 +440,7 @@
         {
             using (_performanceTracer?.Start("DTE event: Solution content changed"))
             {
-                Invalidate();
                 ReloadSolution();
-            }
-        }
-
-        private async void DocumentEvents_DocumentOpened(string fileName)
-        {
-            try
-            {
-                using (_performanceTracer?.Start("DTE event: Document opened"))
-                {
-                    if (!await AffectsResourceFileAsync(fileName).ConfigureAwait(false))
-                        return;
-
-                    ReloadSolution();
-                }
-            }
-            catch (Exception ex)
-            {
-                Tracer.TraceError(ex.ToString());
-            }
-        }
-
-        private async void DocumentEvents_DocumentSaved(string fileName)
-        {
-            await JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            try
-            {
-                using (_performanceTracer?.Start("DTE event: Document saved"))
-                {
-                    if (!await AffectsResourceFileAsync(fileName).ConfigureAwait(false))
-                        return;
-
-                    var resourceManager = _resourceManager;
-                    if (resourceManager == null || resourceManager.IsSaving)
-                        return;
-
-                    var vsixCompatibility = ExportProvider.GetExportedValue<IVsixCompatibility>();
-
-                    vsixCompatibility.RunCustomTool(await GetResourceEntitiesAsync().ConfigureAwait(true), fileName);
-
-                    ReloadSolution();
-                }
-            }
-            catch (Exception ex)
-            {
-                Tracer.TraceError(ex.ToString());
             }
         }
 
@@ -504,18 +450,6 @@
 
             var vsixCompatibility = ExportProvider.GetExportedValue<IVsixCompatibility>();
             vsixCompatibility.RunCustomTool(entity);
-        }
-
-        private async Task<bool> AffectsResourceFileAsync(string? fileName)
-        {
-            var vsixCompatibility = ExportProvider.GetExportedValue<IVsixCompatibility>();
-            return await vsixCompatibility.AffectsResourceFileAsync(fileName).ConfigureAwait(false);
-        }
-
-        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Background)]
-        private void Invalidate()
-        {
-            ExportProvider.GetExportedValue<ISourceFilesProvider>().Invalidate();
         }
 
         [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.ContextIdle)]
@@ -551,6 +485,7 @@
                 return;
 
             _isReloadRequestPending = false;
+
             ReloadSolution();
         }
 

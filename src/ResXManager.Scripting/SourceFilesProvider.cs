@@ -36,10 +36,6 @@ namespace ResXManager.Scripting
             return new DirectoryInfo(folder).GetAllSourceFiles(this, null);
         }
 
-        public void Invalidate()
-        {
-        }
-
         public bool IsSourceFile(ProjectFile file)
         {
             return false;

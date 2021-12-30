@@ -237,9 +237,5 @@
                 return await Task.Run(() => directoryInfo.GetAllSourceFiles(fileFilter, cancellationToken), cancellationToken ?? new CancellationToken()).ConfigureAwait(false);
             }
         }
-
-        public void Invalidate()
-        {
-        }
     }
 }

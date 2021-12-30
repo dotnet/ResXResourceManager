@@ -68,7 +68,10 @@
                 var projectFile = language.ProjectFile;
                 var entity = language.Container;
 
-                entity.Update(projectFile);
+                if (entity.Update(projectFile))
+                {
+                    _resourceManager.OnProjectFileSaved(language, projectFile);
+                }
             }
         }
     }

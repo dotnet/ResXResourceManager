@@ -9,7 +9,5 @@
         Task<IList<ProjectFile>> GetSourceFilesAsync(CancellationToken? cancellationToken);
 
         string? SolutionFolder { get; }
-
-        void Invalidate();
     }
 }

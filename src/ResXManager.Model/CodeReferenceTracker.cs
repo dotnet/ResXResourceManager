@@ -17,10 +17,23 @@
     [Export, Shared]
     public class CodeReferenceTracker
     {
+        private readonly ResourceManager _resourceManager;
+        private readonly CodeReferenceConfiguration _configuration;
+        private readonly ITracer _tracer;
+
         private Engine? _engine;
 
         [ImportingConstructor]
-        public CodeReferenceTracker()
+        public CodeReferenceTracker(ResourceManager resourceManager, CodeReferenceConfiguration configuration, ITracer tracer)
+        {
+            _resourceManager = resourceManager;
+            _configuration = configuration;
+            _tracer = tracer;
+
+            _resourceManager.Loaded += ResourceManager_Loaded;
+        }
+
+        private void ResourceManager_Loaded(object sender, EventArgs e)
         {
         }
 
@@ -33,15 +46,15 @@
             Interlocked.Exchange(ref _engine, null)?.Dispose();
         }
 
-        public void BeginFind(ResourceManager resourceManager, CodeReferenceConfiguration configuration, IEnumerable<ProjectFile> allSourceFiles, ITracer tracer)
+        public void BeginFind(IEnumerable<ProjectFile> allSourceFiles)
         {
             var sourceFiles = allSourceFiles.Where(item => !item.IsResourceFile() && !item.IsDesignerFile()).ToArray();
 
-            var resourceTableEntries = resourceManager.ResourceEntities
+            var resourceTableEntries = _resourceManager.ResourceEntities
                 .Where(entity => !entity.IsWinFormsDesignerResource)
                 .SelectMany(entity => entity.Entries).ToArray();
 
-            Interlocked.Exchange(ref _engine, new Engine(configuration, sourceFiles, resourceTableEntries, tracer))?.Dispose();
+            Interlocked.Exchange(ref _engine, new Engine(_configuration, sourceFiles, resourceTableEntries, _tracer))?.Dispose();
         }
 
         private sealed class Engine : IDisposable

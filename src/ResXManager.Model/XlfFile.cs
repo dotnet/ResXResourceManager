@@ -77,6 +77,9 @@
             foreach (var transUnit in transUnitsById)
             {
                 var id = transUnit.Key;
+                if (id.IsNullOrEmpty())
+                    continue;
+
                 var transUnitElement = transUnit.Value;
 
                 if (!neutralNodesById.TryGetValue(id, out var neutralNode))

@@ -31,7 +31,6 @@
         private readonly ITracer _tracer;
         private readonly DTE2 _dte;
 
-
         private IEnumerable<ProjectFile>? _projectFiles;
 
         [ImportingConstructor]
@@ -52,7 +51,7 @@
         {
             ThrowIfNotOnUIThread();
 
-            return _projectFiles ??= EnumerateProjectFiles(fileFilter) ?? new DirectoryInfo(SolutionFolder).GetAllSourceFiles(fileFilter, null);
+            return _projectFiles = EnumerateProjectFiles(fileFilter) ?? new DirectoryInfo(SolutionFolder).GetAllSourceFiles(fileFilter, null);
         }
 
         public IEnumerable<ProjectFile>? GetCachedProjectFiles()
@@ -172,11 +171,6 @@
             var solutionItemsProject = GetProjects().FirstOrDefault(IsSolutionItemsFolder) ?? Solution?.AddSolutionFolder(SolutionItemsFolderName);
 
             return solutionItemsProject?.AddFromFile(fullName);
-        }
-
-        public void Invalidate()
-        {
-            _projectFiles = null;
         }
 
         private static bool IsSolutionItemsFolder(Project? project)
