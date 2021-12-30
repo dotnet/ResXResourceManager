@@ -3,13 +3,11 @@
     using System;
     using System.IO;
     using System.Reflection;
-    using System.Threading.Tasks;
     using System.Windows;
 
     using Ninject;
 
     using ResXManager.Infrastructure;
-    using ResXManager.Model;
 
     using TomsToolbox.Composition;
     using TomsToolbox.Composition.Ninject;
@@ -34,8 +32,6 @@
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
-            SynchronizationContextThrottle.TaskFactory = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
 
             var assembly = GetType().Assembly;
 

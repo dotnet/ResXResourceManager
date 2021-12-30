@@ -348,7 +348,7 @@
             OnValuesChanged();
         }
 
-        [Throttled(typeof(SynchronizationContextThrottle))]
+        [Throttled(typeof(AsyncThrottle))]
         private void OnValuesChanged()
         {
             OnPropertyChanged(nameof(Values));
@@ -364,7 +364,7 @@
             OnCommentsChanged();
         }
 
-        [Throttled(typeof(SynchronizationContextThrottle))]
+        [Throttled(typeof(AsyncThrottle))]
         private void OnCommentsChanged()
         {
             OnPropertyChanged(nameof(Comment));

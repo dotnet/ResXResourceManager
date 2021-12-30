@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -61,13 +62,17 @@
             return true;
         }
 
-        public bool Update(ProjectFile file)
+        public bool Update(ProjectFile file, [NotNullWhen(true)] out ResourceLanguage? updatedLanguage)
         {
             var duplicateKeyHandling = Container.Configuration.DuplicateKeyHandling;
             var neutralResourcesLanguage = Container.Configuration.NeutralResourcesLanguage;
 
-            if (!UpdateEntry(new ResourceLanguage(this, file.GetCultureKey(neutralResourcesLanguage), file, duplicateKeyHandling)))
+            updatedLanguage = new ResourceLanguage(this, file.GetCultureKey(neutralResourcesLanguage), file, duplicateKeyHandling);
+            if (!UpdateEntry(updatedLanguage))
+            {
+                updatedLanguage = null;
                 return false;
+            }
 
             UpdateResourceTableEntries();
             return true;
