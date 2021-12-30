@@ -1,7 +1,9 @@
-﻿# Define file locations
+﻿# If script can't be started: Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
+
+# Define file locations
 $snapshotFileName = 'D:\Temp\1.snapshot'
 $excelFileName = 'd:\Temp\Test.xlsx'
-$solutionFolder = '..\..\..'
+$solutionFolder = '..\..\..\..\'
 
 # Create the scripting host of ResXManager:
 Add-Type -Path 'ResXManager.Scripting.dll'
