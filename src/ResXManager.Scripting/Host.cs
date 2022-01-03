@@ -20,7 +20,8 @@
     public sealed class Host : IDisposable
     {
         private readonly IKernel _kernel = new StandardKernel();
-        private readonly SourceFilesProvider _sourceFilesProvider;
+
+        private string? _solutionFolder;
 
         public Host()
         {
@@ -32,8 +33,6 @@
 
             IExportProvider exportProvider = new ExportProvider(_kernel);
 
-            _sourceFilesProvider = exportProvider.GetExportedValue<SourceFilesProvider>();
-
             ResourceManager = exportProvider.GetExportedValue<ResourceManager>();
             ResourceManager.BeginEditing += ResourceManager_BeginEditing;
 
@@ -44,10 +43,11 @@
 
         public void Load(string folder, string? exclusionFilter = @"Migrations\\\d{15}")
         {
-            _sourceFilesProvider.SolutionFolder = folder;
-            _sourceFilesProvider.ExclusionFilter = exclusionFilter;
+            _solutionFolder = folder;
 
-            var _ = ResourceManager.ReloadAsync(folder, _sourceFilesProvider.EnumerateSourceFiles(), null).Result;
+            var sourceFilesProvider = new SourceFilesProvider(folder, exclusionFilter);
+
+            var _ = ResourceManager.ReloadAsync(folder, sourceFilesProvider.EnumerateSourceFiles(), null).Result;
         }
 
         public void Save()
@@ -104,7 +104,7 @@
 
         public void Dispose()
         {
-            _kernel?.Dispose();
+            _kernel.Dispose();
         }
 
         private void ResourceManager_BeginEditing(object? sender, ResourceBeginEditingEventArgs e)
@@ -120,7 +120,7 @@
             if (cultureKey == null)
                 return true;
 
-            var rootFolder = _sourceFilesProvider.SolutionFolder;
+            var rootFolder = _solutionFolder;
             if (rootFolder.IsNullOrEmpty())
                 return false;
 
@@ -203,5 +203,10 @@
         public bool RemoveEmptyEntries { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

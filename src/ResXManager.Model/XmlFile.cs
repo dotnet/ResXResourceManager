@@ -16,7 +16,7 @@
 
         public string FilePath { get; }
 
-        public string Directory => Path.GetDirectoryName(FilePath);
+        public string Directory => Path.GetDirectoryName(FilePath) ?? string.Empty;
 
         protected XmlFile(string filePath)
         {

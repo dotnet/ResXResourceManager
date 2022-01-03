@@ -186,9 +186,19 @@
             if (!xlfFilesByOriginal.TryGetValue(original, out var xlfFiles) || (xlfFile = xlfFiles?.FirstOrDefault(file => file.TargetLanguage == targetCulture.Name)) == null)
             {
                 var documentsByPath = _documentsByPath;
-                var directory = xlfFiles?.FirstOrDefault()?.Document.Directory
-                                ?? Path.Combine(entity.Container.SolutionFolder, Path.GetDirectoryName(neutralProjectFile.UniqueProjectName), "MultilingualResources");
-                var filePath = Path.Combine(directory, Path.ChangeExtension(Path.GetFileName(neutralProjectFile.UniqueProjectName), targetCulture.Name + ".xlf"));
+                var uniqueProjectName = neutralProjectFile.UniqueProjectName;
+                var directoryName = Path.GetDirectoryName(uniqueProjectName);
+                var solutionFolder = entity.Container.SolutionFolder;
+
+                if (uniqueProjectName.IsNullOrEmpty() || directoryName.IsNullOrEmpty() || solutionFolder.IsNullOrEmpty())
+                    return;
+
+                var fileName = Path.ChangeExtension(Path.GetFileName(uniqueProjectName), targetCulture.Name + ".xlf");
+
+                var directory = xlfFiles?.FirstOrDefault()?.Document.Directory;
+                directory ??= Path.Combine(solutionFolder, directoryName, "MultilingualResources");
+
+                var filePath = Path.Combine(directory, fileName);
 
                 if (!documentsByPath.TryGetValue(filePath, out var document))
                 {
@@ -199,13 +209,13 @@
 
                 var neutralResourcesLanguage = entity.NeutralResourcesLanguage;
 
+                xlfFiles ??= Array.Empty<XlfFile>();
                 xlfFile = document.Files.FirstOrDefault(file => file.TargetLanguage == targetCulture.Name);
 
                 if (xlfFile == null)
                 {
                     xlfFile = document.AddFile(original, neutralResourcesLanguage.Name, targetCulture.Name);
-
-                    xlfFilesByOriginal[original] = (xlfFiles ?? Array.Empty<XlfFile>()).Concat(new[] { xlfFile }).ToArray();
+                    xlfFilesByOriginal[original] = xlfFiles.Append(xlfFile).ToArray();
                 }
 
                 document.Save();
