@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Threading;
 
+    using ResXManager.Infrastructure;
+
     using TomsToolbox.Essentials;
 
     /// <summary>
@@ -21,7 +23,7 @@
 
             var solutionFolderLength = solutionFolder.FullName.Length + 1;
 
-            var fileInfos = solutionFolder.EnumerateFiles("*.*", SearchOption.AllDirectories);
+            var fileInfos = solutionFolder.EnumerateSourceFiles();
 
             var allProjectFiles = fileInfos
                 .Select(item => item.Intercept(_ => EnumerationShouldContinue()))

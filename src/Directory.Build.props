@@ -6,7 +6,7 @@
     <Product>ResXManager</Product>
     <Copyright>Copyright (c) .NET Foundation and Contributors.</Copyright>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <DebugType>embedded</DebugType>
     <DebugSymbols>true</DebugSymbols>

@@ -20,6 +20,8 @@
     [Export(typeof(IService)), Shared]
     internal sealed class XlfSynchronizer : FileWatcher, IService
     {
+        private static readonly HashSet<string> _supportedExtension = new(new[] { ".xlf", ".xliff" }, StringComparer.OrdinalIgnoreCase);
+
         private readonly ResourceManager _resourceManager;
         private readonly ITracer _tracer;
         private readonly IConfiguration _configuration;
@@ -114,8 +116,9 @@
 
                 _documentsByPath = await Task.Run(() =>
                 {
-                    var documents = Directory.EnumerateFiles(solutionFolder, "*.xlf", SearchOption.AllDirectories)
-                        .Select(file => new XlfDocument(file))
+                    var documents = new DirectoryInfo(solutionFolder).EnumerateSourceFiles()
+                        .Where(file => _supportedExtension.Contains(file.Extension))
+                        .Select(file => new XlfDocument(file.FullName))
                         .ToDictionary(doc => doc.FilePath, StringComparer.OrdinalIgnoreCase);
 
                     return documents;

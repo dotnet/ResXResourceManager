@@ -518,8 +518,7 @@
             }
             finally
             {
-                // ! Wrong nullability annotation in netcoreapp3.1
-                if (Interlocked.CompareExchange(ref _loadingCancellationTokenSource, null!, cancellationTokenSource) == cancellationTokenSource)
+                if (Interlocked.CompareExchange(ref _loadingCancellationTokenSource, null, cancellationTokenSource) == cancellationTokenSource)
                 {
                     IsLoading = false;
                 }

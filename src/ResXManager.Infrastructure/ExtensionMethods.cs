@@ -1,7 +1,9 @@
 ﻿namespace ResXManager.Infrastructure
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
 
@@ -83,5 +85,26 @@
             return doc.DocumentNode.Descendants().Any(n => n.NodeType != HtmlNodeType.Text);
         }
 
+        private static readonly HashSet<string> _excludedDirectories = new(new[] { "bin", "obj", "node_modules" }, StringComparer.OrdinalIgnoreCase);
+
+        public static IEnumerable<FileInfo> EnumerateSourceFiles(this DirectoryInfo directory)
+        {
+            foreach (var file in directory.EnumerateFiles())
+            {
+                yield return file;
+            }
+
+            foreach (var subDirectory in directory.EnumerateDirectories())
+            {
+                var name = subDirectory.Name;
+                if (name.StartsWith(".", StringComparison.Ordinal) || _excludedDirectories.Contains(name))
+                    continue;
+
+                foreach (var file in EnumerateSourceFiles(subDirectory))
+                {
+                    yield return file;
+                }
+            }
+        }
     }
 }

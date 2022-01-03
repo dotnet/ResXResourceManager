@@ -1,12 +1,11 @@
 ﻿namespace ResXManager.Infrastructure
 {
+#if NETFRAMEWORK
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     public static class StringExtensions
     {
-        #if NETFRAMEWORK
 
         public static string Replace(this string target, string oldValue, string? newValue, StringComparison _)
         {
@@ -18,6 +17,6 @@
             return target.Contains(value);
         }
 
-        #endif
-    }
+}
+#endif
 }

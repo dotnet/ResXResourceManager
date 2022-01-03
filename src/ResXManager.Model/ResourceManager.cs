@@ -127,6 +127,11 @@
                 if (args.Cancel)
                     return false;
 
+                if (!string.Equals(solutionFolder, SolutionFolder, StringComparison.OrdinalIgnoreCase))
+                {
+                    ResourceEntities.Clear();
+                }
+
                 SolutionFolder = solutionFolder;
                 return await LoadAsync(sourceFiles, cancellationToken).ConfigureAwait(true);
             }
