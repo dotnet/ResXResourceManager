@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
     using ResXManager.Infrastructure;
@@ -28,7 +27,6 @@
 
         public T? this[string? cultureKey]
         {
-            [return: MaybeNull]
             get => GetValue(cultureKey);
             set => SetValue(cultureKey, value);
         }

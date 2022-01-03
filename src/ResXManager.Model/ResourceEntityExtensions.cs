@@ -113,30 +113,20 @@
                 if (!snapshot.TryGetValue(culture, out var data) || (data == null))
                     return null;
 
-                switch (columnKind)
+                return columnKind switch
                 {
-                    case ColumnKind.Text:
-                        return data.Text;
-
-                    case ColumnKind.Comment:
-                        return data.Comment;
-
-                    default:
-                        throw new InvalidOperationException("Invalid Column Kind");
-                }
+                    ColumnKind.Text => data.Text,
+                    ColumnKind.Comment => data.Comment,
+                    _ => throw new InvalidOperationException("Invalid Column Kind")
+                };
             }
 
-            switch (columnKind)
+            return columnKind switch
             {
-                case ColumnKind.Text:
-                    return entry.Values.GetValue(culture);
-
-                case ColumnKind.Comment:
-                    return entry.Comments.GetValue(culture);
-
-                default:
-                    throw new InvalidOperationException("Invalid Column Kind");
-            }
+                ColumnKind.Text => entry.Values.GetValue(culture),
+                ColumnKind.Comment => entry.Comments.GetValue(culture),
+                _ => throw new InvalidOperationException("Invalid Column Kind")
+            };
         }
 
         private static bool SetEntryData(this ResourceTableEntry entry, CultureInfo? culture, ColumnKind columnKind, string? text)
@@ -147,14 +137,18 @@
             switch (columnKind)
             {
                 case ColumnKind.Text:
-                    return entry.Values.SetValue(culture, text);
+                    entry.Values.SetValue(culture, text);
+                    break;
 
                 case ColumnKind.Comment:
-                    return entry.Comments.SetValue(culture, text);
+                    entry.Comments.SetValue(culture, text);
+                    break;
 
                 default:
                     throw new InvalidOperationException("Invalid Column Kind");
             }
+
+            return true;
         }
 
         /// <summary>
