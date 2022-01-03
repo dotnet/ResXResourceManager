@@ -24,6 +24,10 @@ stages:
          $version | File-PatchVersion "src\ResXManager\Properties\AssemblyInfo.cs"
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
+    - task: NuGetToolInstaller@1
+      inputs:
+        versionSpec: '>= 5.8'
+
     - task: NuGetCommand@2
       inputs:
         command: 'restore'
