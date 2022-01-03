@@ -127,12 +127,12 @@
                 if (args.Cancel)
                     return false;
 
+                SolutionFolder = solutionFolder;
                 return await LoadAsync(sourceFiles, cancellationToken).ConfigureAwait(true);
             }
             finally
             {
                 IsLoading = false;
-                SolutionFolder = solutionFolder;
             }
         }
 
@@ -202,6 +202,7 @@
             var existingEntities = ResourceEntities.ToDictionary(entity => GenerateKey(entity.ProjectName, entity.BaseName, entity.DirectoryName), StringComparer.OrdinalIgnoreCase);
             var newEntities = new List<ResourceEntity>();
             var entitiesToUpdate = new List<Tuple<ResourceEntity, ProjectFile[]>>();
+
             var duplicateKeyHandling = Configuration.DuplicateKeyHandling;
             var neutralResourcesLanguage = Configuration.NeutralResourcesLanguage;
 

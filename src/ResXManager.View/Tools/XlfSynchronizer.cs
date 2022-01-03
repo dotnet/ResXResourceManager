@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Composition;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -23,7 +24,7 @@
         private readonly ITracer _tracer;
         private readonly IConfiguration _configuration;
 
-        private IDictionary<string, XlfDocument>? _documentsByPath;
+        private IDictionary<string, XlfDocument> _documentsByPath = new Dictionary<string, XlfDocument>();
 
         public XlfSynchronizer(ResourceManager resourceManager, ITracer tracer, IConfiguration configuration)
         {
@@ -72,8 +73,6 @@
                 var changedFilePaths = GetChangedFiles();
 
                 var documentsByPath = _documentsByPath;
-                if (documentsByPath == null)
-                    return;
 
                 var changedFilesByOriginal = changedFilePaths
                     .Select(filePath => documentsByPath.TryGetValue(filePath, out var document) && document.IsBufferOutdated ? document.Reload() : null)
@@ -167,24 +166,46 @@
             }
         }
 
-        private static void UpdateXlfFile(ResourceEntity entity, ResourceLanguage language, ResourceLanguage neutralLanguage, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
+        private void UpdateXlfFile(ResourceEntity entity, ResourceLanguage language, ResourceLanguage neutralLanguage, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
         {
-            var original = GetOriginal(entity);
-            if (original.IsNullOrEmpty())
+            var neutralProjectFile = entity.NeutralProjectFile;
+            if (neutralProjectFile == null)
                 return;
 
-            if (!xlfFilesByOriginal.TryGetValue(original, out var xlfFiles))
+            var original = GetOriginal(neutralProjectFile);
+
+            var targetCulture = language.Culture;
+            if (targetCulture == null)
+                return;
+
+            XlfFile? xlfFile;
+
+            if (!xlfFilesByOriginal.TryGetValue(original, out var xlfFiles) || (xlfFile = xlfFiles?.FirstOrDefault(file => file.TargetLanguage == targetCulture.Name)) == null)
             {
-                // TODO: create new
-                return;
-            }
+                var documentsByPath = _documentsByPath;
+                var directory = xlfFiles?.FirstOrDefault()?.Document.Directory
+                                ?? Path.Combine(entity.Container.SolutionFolder, Path.GetDirectoryName(neutralProjectFile.UniqueProjectName), "MultilingualResources");
+                var filePath = Path.Combine(directory, Path.ChangeExtension(Path.GetFileName(neutralProjectFile.UniqueProjectName), targetCulture.Name + ".xlf"));
 
-            var xlfFile = xlfFiles.FirstOrDefault(file => file.TargetLanguage == language.Culture?.Name);
+                if (!documentsByPath.TryGetValue(filePath, out var document))
+                {
+                    Directory.CreateDirectory(directory);
+                    document = new XlfDocument(filePath);
+                    documentsByPath.Add(filePath, document);
+                }
 
-            if (xlfFile == null)
-            {
-                // TODO: create new
-                return;
+                var neutralResourcesLanguage = entity.NeutralResourcesLanguage;
+
+                xlfFile = document.Files.FirstOrDefault(file => file.TargetLanguage == targetCulture.Name);
+
+                if (xlfFile == null)
+                {
+                    xlfFile = document.AddFile(original, neutralResourcesLanguage.Name, targetCulture.Name);
+
+                    xlfFilesByOriginal[original] = (xlfFiles ?? Array.Empty<XlfFile>()).Concat(new[] { xlfFile }).ToArray();
+                }
+
+                document.Save();
             }
 
             xlfFile.Update(neutralLanguage, language);
@@ -192,7 +213,13 @@
 
         private static string? GetOriginal(ResourceEntity entity)
         {
-            return entity.NeutralProjectFile?.RelativeFilePath
+            return GetOriginal(entity.NeutralProjectFile);
+        }
+
+        [return: NotNullIfNotNull("projectFile")]
+        private static string? GetOriginal(ProjectFile? projectFile)
+        {
+            return projectFile?.RelativeFilePath
                 .Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
                 .ToUpperInvariant();
         }
@@ -213,8 +240,7 @@
                 return;
 
             var documentsByPath = _documentsByPath;
-            if (documentsByPath == null)
-                return;
+            var filesByOriginal = GetFilesByOriginal(documentsByPath.Values);
 
             var language = e.Language;
             var entity = language.Container;
@@ -222,8 +248,6 @@
             var neutralLanguage = entity.Languages.FirstOrDefault();
             if (neutralLanguage == null)
                 return;
-
-            var filesByOriginal = GetFilesByOriginal(documentsByPath.Values);
 
             if (language.IsNeutralLanguage)
             {
@@ -238,12 +262,31 @@
             }
         }
 
+        private void UpdateXlfFiles()
+        {
+            var documentsByPath = _documentsByPath;
+            var filesByOriginal = GetFilesByOriginal(documentsByPath.Values);
+
+            foreach (var entity in _resourceManager.ResourceEntities)
+            {
+                var neutralLanguage = entity.Languages.FirstOrDefault();
+                if (neutralLanguage == null)
+                    continue;
+
+                foreach (var language in entity.Languages.Skip(1))
+                {
+                    UpdateXlfFile(entity, language, neutralLanguage, filesByOriginal);
+                }
+            }
+        }
+
         private void ResourceManager_Loaded(object? sender, EventArgs e)
         {
             if (!_configuration.EnableXlifSync)
                 return;
 
             UpdateFromXlf();
+            UpdateXlfFiles();
         }
 
         private void ResourceManager_SolutionFolderChanged(object? sender, TextEventArgs e)

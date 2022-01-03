@@ -32,10 +32,7 @@
 
         private string? Convert(CultureInfo? culture)
         {
-            if (culture == null)
-            {
-                culture = _configuration.NeutralResourcesLanguage;
-            }
+            culture ??= _configuration.NeutralResourcesLanguage;
 
             return culture.DisplayName;
         }

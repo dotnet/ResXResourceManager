@@ -186,7 +186,13 @@
                     }
                     else
                     {
-                        bodyElement.Add(newTransUnit);
+                        var groupElement = bodyElement.Element(GroupElement);
+                        if (groupElement == null)
+                        {
+                            groupElement = new XElement(GroupElement, new XAttribute(IdAttribute, Original), new XAttribute(DataTypeAttribute, "resx"));
+                            bodyElement.Add(groupElement);
+                        }
+                        groupElement.Add(newTransUnit);
                     }
                 }
 
@@ -198,16 +204,6 @@
                 Document.Save();
             }
             return changed;
-        }
-
-        internal static XElement CreateEmpty(string original, string sourceLanguage, string targetLanguage)
-        {
-            return new XElement(FileElement,
-                new XAttribute(DataTypeAttribute, "xml"),
-                new XAttribute(SourceLanguageAttribute, sourceLanguage),
-                new XAttribute(TargetLanguageAttribute, targetLanguage),
-                new XAttribute(OriginalAttribute, original), // placeholder will be replaced on first update
-                new XElement(BodyElement));
         }
     }
 }

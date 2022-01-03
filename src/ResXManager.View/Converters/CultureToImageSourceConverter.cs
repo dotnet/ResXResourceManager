@@ -54,10 +54,7 @@
 
         internal ImageSource? Convert(CultureInfo? culture)
         {
-            if (culture == null)
-            {
-                culture = _configuration.NeutralResourcesLanguage;
-            }
+            culture ??= _configuration.NeutralResourcesLanguage;
 
             var cultureName = culture.Name;
 

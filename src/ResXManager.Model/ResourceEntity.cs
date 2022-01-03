@@ -37,6 +37,7 @@
             DisplayName = projectName + @" - " + RelativePath + baseName;
 
             NeutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey(neutralResourcesLanguage) == CultureKey.Neutral);
+            NeutralResourcesLanguage = neutralResourcesLanguage;
 
             var entriesQuery = _languages.Values
                 .SelectMany(language => language.ResourceKeys)
@@ -50,6 +51,8 @@
 
         internal bool Update(ICollection<ProjectFile> files, CultureInfo neutralResourcesLanguage, DuplicateKeyHandling duplicateKeyHandling)
         {
+            NeutralResourcesLanguage = neutralResourcesLanguage;
+
             if (!MergeItems(GetResourceLanguages(files, neutralResourcesLanguage, duplicateKeyHandling)))
                 return false; // nothing has changed, no need to continue
 
@@ -65,9 +68,8 @@
         public bool Update(ProjectFile file, [NotNullWhen(true)] out ResourceLanguage? updatedLanguage)
         {
             var duplicateKeyHandling = Container.Configuration.DuplicateKeyHandling;
-            var neutralResourcesLanguage = Container.Configuration.NeutralResourcesLanguage;
 
-            updatedLanguage = new ResourceLanguage(this, file.GetCultureKey(neutralResourcesLanguage), file, duplicateKeyHandling);
+            updatedLanguage = new ResourceLanguage(this, file.GetCultureKey(NeutralResourcesLanguage), file, duplicateKeyHandling);
             if (!UpdateEntry(updatedLanguage))
             {
                 updatedLanguage = null;
@@ -161,6 +163,8 @@
 
         public ProjectFile? NeutralProjectFile { get; private set; }
 
+        public CultureInfo NeutralResourcesLanguage { get; private set; }
+
         public bool IsWinFormsDesignerResource => NeutralProjectFile?.IsWinFormsDesignerResource ?? false;
 
         /// <summary>
@@ -212,7 +216,7 @@
         /// <param name="file">The file.</param>
         public void AddLanguage(ProjectFile file)
         {
-            var cultureKey = file.GetCultureKey(Container.Configuration.NeutralResourcesLanguage);
+            var cultureKey = file.GetCultureKey(NeutralResourcesLanguage);
             var resourceLanguage = new ResourceLanguage(this, cultureKey, file, Container.Configuration.DuplicateKeyHandling);
 
             _languages.Add(cultureKey, resourceLanguage);
