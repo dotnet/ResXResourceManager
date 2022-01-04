@@ -1,4 +1,4 @@
-﻿namespace ResXManager.VSIX
+﻿namespace ResXManager.VSIX.Compatibility
 {
     using Microsoft.VisualStudio.Shell;
 
@@ -7,7 +7,9 @@
     public interface IDteConfiguration : IConfiguration
     {
         TaskErrorCategory TaskErrorCategory { get; set; }
+
         bool ShowErrorsInErrorList { get; set; }
+
         MoveToResourceConfiguration MoveToResources { get; }
     }
 }

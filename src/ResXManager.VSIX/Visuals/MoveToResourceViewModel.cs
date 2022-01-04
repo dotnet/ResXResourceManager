@@ -19,8 +19,6 @@
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
 
-    using Resources = ResXManager.VSIX.Resources;
-
     internal sealed class MoveToResourceViewModel : INotifyPropertyChanged, IDataErrorInfo, IMoveToResourceViewModel
     {
         private readonly string _extension;

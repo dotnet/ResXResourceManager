@@ -3,6 +3,7 @@
     using System.Composition;
 
     using ResXManager.Infrastructure;
+    using ResXManager.VSIX.Properties;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf.Composition;

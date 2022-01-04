@@ -3,6 +3,8 @@
     using System.Composition;
 
     using ResXManager.Infrastructure;
+    using ResXManager.VSIX.Compatibility;
+    using ResXManager.VSIX.Compatibility.Properties;
 
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.AttributedModel;

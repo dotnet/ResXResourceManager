@@ -8,6 +8,7 @@
 
     using ResXManager.Model;
     using ResXManager.VSIX.Compatibility;
+    using ResXManager.VSIX.Compatibility.Properties;
 
     using TomsToolbox.Essentials;
 

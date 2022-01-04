@@ -1,5 +1,7 @@
 namespace ResXManager.VSIX.Compatibility
 {
+    using ResXManager.VSIX.Compatibility.Properties;
+
     using TomsToolbox.Essentials;
 
     public enum CodeGenerator

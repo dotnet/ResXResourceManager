@@ -24,6 +24,7 @@
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
     using Settings = View.Properties.Settings;
+    using Resources = Compatibility.Properties.Resources;
 
     [Export(typeof(IRefactorings))]
     internal class Refactorings : IRefactorings
@@ -147,14 +148,14 @@
                 }
             }
 
-            IMoveToResourceViewModel viewModel = _shellViewModel.CreateMoveToResourceViewModel(patterns, entities, text, extension, selection.ClassName, selection.FunctionName, fileName);
+            var viewModel = _shellViewModel.CreateMoveToResourceViewModel(patterns, entities, text, extension, selection.ClassName, selection.FunctionName, fileName);
 
             var confirmed = ConfirmationDialog.Show(_exportProvider, viewModel, Resources.MoveToResource, null).GetValueOrDefault();
 
             if (!confirmed || viewModel.Key == null || string.IsNullOrEmpty(viewModel.Key))
                 return null;
 
-            ResourceTableEntry? entry = null;
+            ResourceTableEntry? entry;
 
             if (!viewModel.ReuseExisting)
             {

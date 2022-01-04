@@ -21,6 +21,7 @@
         private const string FileName = "Configuration.xml";
 
         private static readonly string _directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "tom-englert.de", "ResXManager");
+
         private readonly string _filePath;
         private readonly XmlConfiguration _configuration;
         private readonly Dictionary<string, object> _cachedObjects = new();
@@ -34,11 +35,11 @@
             {
                 Directory.CreateDirectory(_directory);
 
-                using (var reader = new StreamReader(File.OpenRead(_filePath)))
-                {
-                    _configuration = new XmlConfiguration(tracer, reader);
-                    return;
-                }
+                using var reader = new StreamReader(File.OpenRead(_filePath));
+
+                _configuration = new XmlConfiguration(tracer, reader);
+
+                return;
             }
             catch
             {
@@ -113,10 +114,9 @@
             {
                 _configuration.SetValue(key, ConvertToString(value));
 
-                using (var writer = new StreamWriter(File.Create(_filePath)))
-                {
-                    _configuration.Save(writer);
-                }
+                using var writer = new StreamWriter(File.Create(_filePath));
+
+                _configuration.Save(writer);
             }
             catch (Exception ex)
             {
@@ -184,8 +184,11 @@
             };
         }
 
-#pragma warning disable CS0067
         public event PropertyChangedEventHandler? PropertyChanged;
-#pragma warning restore CS0067
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

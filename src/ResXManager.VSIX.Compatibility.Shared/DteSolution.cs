@@ -15,6 +15,7 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
+    using ResXManager.VSIX.Compatibility;
 
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;

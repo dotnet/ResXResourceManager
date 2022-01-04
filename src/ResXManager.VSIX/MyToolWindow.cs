@@ -35,6 +35,7 @@
     using MessageBoxResult = Microsoft.VisualStudio.VSConstants.MessageBoxResult;
 
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
+    using ResXManager.VSIX.Properties;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.

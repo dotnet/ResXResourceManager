@@ -119,10 +119,10 @@
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Resources_Designer_t4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Resources.Designer.t4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Resources\Resources.Designer.t4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="Resources_Designer_tt" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Resources.Designer.tt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Resources\Resources.Designer.tt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="CodeGenerator_Unkown" xml:space="preserve">
     <value>Unknown code generator.</value>

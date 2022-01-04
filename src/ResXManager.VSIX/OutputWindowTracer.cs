@@ -6,6 +6,7 @@
     using Microsoft.VisualStudio.Shell.Interop;
 
     using ResXManager.Infrastructure;
+    using ResXManager.VSIX.Properties;
 
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
 

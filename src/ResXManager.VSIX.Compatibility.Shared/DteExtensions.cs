@@ -16,6 +16,7 @@
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
     using ResXManager.View;
+    using ResXManager.VSIX.Compatibility;
 
     internal static class DteExtensions
     {

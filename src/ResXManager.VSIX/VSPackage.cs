@@ -38,6 +38,7 @@
     using MessageBox = System.Windows.MessageBox;
 
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
+    using ResXManager.VSIX.Properties;
 
 
 #pragma warning disable VSTHRD100 // Avoid async void methods

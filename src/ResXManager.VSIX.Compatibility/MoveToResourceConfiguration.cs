@@ -1,4 +1,4 @@
-﻿namespace ResXManager.VSIX
+﻿namespace ResXManager.VSIX.Compatibility
 {
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -6,6 +6,7 @@
     using System.Runtime.Serialization;
 
     using ResXManager.Model;
+
     using TomsToolbox.Essentials;
 
     [DataContract]

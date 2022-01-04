@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:ResXManager.VSIX.Visuals"
              xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:toms="urn:TomsToolbox"
-             xmlns:properties="clr-namespace:ResXManager.VSIX"
+             xmlns:properties="clr-namespace:ResXManager.VSIX.Properties"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              d:DataContext="{d:DesignInstance local:ShowErrorsConfigurationViewModel}">
   <StackPanel>

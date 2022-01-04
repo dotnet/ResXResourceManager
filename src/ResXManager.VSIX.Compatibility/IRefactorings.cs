@@ -1,4 +1,4 @@
-﻿namespace ResXManager.VSIX
+﻿namespace ResXManager.VSIX.Compatibility
 {
     using System.Threading.Tasks;
 

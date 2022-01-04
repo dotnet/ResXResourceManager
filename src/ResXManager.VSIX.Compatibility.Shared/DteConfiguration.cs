@@ -8,9 +8,11 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
+    using ResXManager.VSIX.Compatibility;
 
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
+    [Shared]
     [Export(typeof(IConfiguration))]
     [Export(typeof(IDteConfiguration))]
     internal class DteConfiguration : Configuration, IDteConfiguration

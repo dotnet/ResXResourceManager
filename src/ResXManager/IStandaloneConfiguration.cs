@@ -1,5 +1,6 @@
 ﻿namespace ResXManager
 {
+    using ResXManager.Model;
     using ResXManager.Properties;
 
     public enum ColorTheme
@@ -14,7 +15,7 @@
         Dark
     }
 
-    public interface IStandaloneConfiguration
+    public interface IStandaloneConfiguration : IConfiguration
     {
         ColorTheme ColorTheme { get; set; }
     }

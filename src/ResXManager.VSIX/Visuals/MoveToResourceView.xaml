@@ -15,7 +15,7 @@
       <Setter Property="Content" Value="¶" />
       <Setter Property="VerticalAlignment" Value="Top" />
       <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" />
-      <Setter Property="ToolTip" Value="{x:Static local:Resources.ShowWhitespaceToolTip}" />
+      <Setter Property="ToolTip" Value="{x:Static properties:Resources.ShowWhitespaceToolTip}" />
     </Style>
   </UserControl.Resources>
   <StackPanel Margin="10" Width="600">
@@ -33,7 +33,7 @@
         </StackPanel>
       </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="15" />
-      <toms:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.ResourceHeader}">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.ResourceHeader}">
         <Grid>
           <ComboBox ItemsSource="{Binding ResourceEntities}"
                     SelectedItem="{Binding SelectedResourceEntity, ValidatesOnDataErrors=True}"
@@ -47,7 +47,7 @@
         </Grid>
       </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
-      <toms:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.KeyHeader}">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.KeyHeader}">
         <ComboBox SelectedIndex="{Binding SelectedKeyIndex}" ItemsSource="{Binding Keys}" IsEditable="True">
           <ComboBox.Style>
             <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
@@ -63,12 +63,12 @@
         </ComboBox>
       </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
-      <toms:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.CodeHeader}">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.CodeHeader}">
         <ComboBox ItemsSource="{Binding Replacements}" SelectedItem="{Binding SelectedReplacement}" DisplayMemberPath="Value"
                   SelectedIndex="{Binding SelectedReplacementIndex}" Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}" />
       </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
-      <toms:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.ValueHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.ValueHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
         <DockPanel>
           <ToggleButton x:Name="ValueShowWhiteSpaces" Style="{StaticResource ToggleWhiteSpaceButtonStyle}" IsChecked="{Binding MoveToResourceValueShowWhitespace, Source={x:Static properties:Settings.Default}}" />
           <Decorator DockPanel.Dock="Right" Width="5" />
@@ -100,7 +100,7 @@
         </DockPanel>
       </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
-      <toms:SharedWidthHeaderedContentControl Header="{x:Static local:Resources.CommentHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
+      <toms:SharedWidthHeaderedContentControl Header="{x:Static properties:Resources.CommentHeader}" VerticalContentAlignment="Top" HeaderPadding="0,2">
         <DockPanel>
           <ToggleButton x:Name="CommentShowWhiteSpaces" Style="{StaticResource ToggleWhiteSpaceButtonStyle}" IsChecked="{Binding MoveToResourceCommentShowWhitespace, Source={x:Static properties:Settings.Default}}" />
           <Decorator DockPanel.Dock="Right" Width="5" />
@@ -133,7 +133,7 @@
       </toms:SharedWidthHeaderedContentControl>
       <Decorator Height="10" />
       <toms:SharedWidthHeaderedContentControl>
-        <CheckBox Content="{x:Static local:Resources.MoveToResourceEditNewEntry}"
+        <CheckBox Content="{x:Static properties:Resources.MoveToResourceEditNewEntry}"
                   Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
                   IsChecked="{Binding MoveToResourceOpenInResXManager, Source={x:Static properties:Settings.Default}}" />
       </toms:SharedWidthHeaderedContentControl>

@@ -26,6 +26,7 @@
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
     using MessageBox = System.Windows.MessageBox;
+    using Resources = Properties.Resources;
 
     [Export(typeof(IVsixCompatibility))]
     internal class VsixCompatibility : IVsixCompatibility
