@@ -48,6 +48,7 @@ The standalone version can be installed as click-once application [here](https:/
 
 ### Visual Studio Extension:
 ![Visual Studio Extension](Assets/VisualStudioMainScreen.png)
+![MoveToResource](Documentation/Topics/MoveToResource.gif)
 
 ### Standalone Application:
 ![Standalone Application](Assets/StandaloneMainScreen.png)

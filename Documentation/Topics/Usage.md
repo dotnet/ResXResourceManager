@@ -30,6 +30,7 @@ This project has integrated the [Data Grid Extensions](https://github.com/tom-en
 - [Custom Code Generator](Custom-Code-Generator.md)
 - [Detect Code References](Detect-Code-References.md)
 - [Invariant Strings](Invariant-Strings.md)
+- [Move to Resource](MoveToResource.md)
 - [Scripting](Scripting.md)
 - [Snapshots](Snapshots.md)
 - [Spell Checker](Spell-Checker.md)
