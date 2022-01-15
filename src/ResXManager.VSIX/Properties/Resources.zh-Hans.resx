@@ -148,7 +148,7 @@
     <value>错误：</value>
   </data>
   <data name="ExtensionLoadingError" xml:space="preserve">
-    <value>无法加载 ResX Manager 扩展: {0}。
+    <value>无法加载 ResX Resource Manager 扩展: {0}。
 详情参见输出窗口。</value>
   </data>
   <data name="IntroMessage" xml:space="preserve">

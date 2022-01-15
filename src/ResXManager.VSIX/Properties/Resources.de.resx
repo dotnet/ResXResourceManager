@@ -120,7 +120,7 @@ Möchten sie eine neue Ressourcedatei hinzufügen?</value>
 {0}</value>
   </data>
   <data name="ExtensionLoadingError" xml:space="preserve">
-    <value>Fehler beim Laden der Resx Manager Erweiterung: {0}.
+    <value>Fehler beim Laden der Resx Resource Manager Erweiterung: {0}.
 Mehr Details finden sich im Ausgabefenster.</value>
   </data>
   <data name="AssemblyLocation" xml:space="preserve">

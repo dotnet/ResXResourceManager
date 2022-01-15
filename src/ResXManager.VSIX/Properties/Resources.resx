@@ -140,7 +140,7 @@ Do you want to add the resource file to the project?</value>
     <value>Error:</value>
   </data>
   <data name="ExtensionLoadingError" xml:space="preserve">
-    <value>Error loading the ResX Manager extension: {0}.
+    <value>Error loading the ResX Resource Manager extension: {0}.
 See output window for details.</value>
   </data>
   <data name="AssemblyLocation" xml:space="preserve">

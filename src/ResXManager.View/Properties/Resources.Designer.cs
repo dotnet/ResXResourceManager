@@ -452,7 +452,7 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Your are editing the default configuration. If you..."
+        ///   Looks up a localized string similar to "You are editing the default configuration. If you ..."
         /// </summary>
         public static string EditDefaultConfigurationNotification {
             get {
@@ -1294,7 +1294,7 @@ namespace ResXManager.View.Properties {
         /// </summary>
         DonateButtonToolTip,
         /// <summary>
-        ///   Looks up a localized string similar to Your are editing the default configuration. If you....
+        ///   Looks up a localized string similar to You are editing the default configuration. If you ....
         /// </summary>
         EditDefaultConfigurationNotification,
         /// <summary>

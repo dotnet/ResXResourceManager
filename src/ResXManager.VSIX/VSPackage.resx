@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="110" xml:space="preserve">
-    <value>ResXManager</value>
+    <value>ResX Resource Manager</value>
   <comment>@Invariant</comment></data>
   <data name="112" xml:space="preserve">
-    <value>Manage localization of all ResX-Based resources in one place. Shows all resources of a solution and let's you edit the strings and their localizations in a well-arranged data grid.</value>
+    <value>Manage localization of all ResX-based resources in one place. Shows all resources of a solution and lets you edit the strings and their localizations in a well-arranged data grid.</value>
   <comment>@Invariant</comment></data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">

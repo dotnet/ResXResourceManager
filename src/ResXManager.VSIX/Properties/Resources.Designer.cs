@@ -161,7 +161,7 @@ namespace ResXManager.VSIX.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Error loading the ResX Manager extension: {0}.&amp..."
+        ///   Looks up a localized string similar to "Error loading the ResX Resource Manager extension:..."
         /// </summary>
         public static string ExtensionLoadingError {
             get {
@@ -371,7 +371,7 @@ namespace ResXManager.VSIX.Properties {
         /// </summary>
         Error,
         /// <summary>
-        ///   Looks up a localized string similar to Error loading the ResX Manager extension: {0}.&amp....
+        ///   Looks up a localized string similar to Error loading the ResX Resource Manager extension:....
         /// </summary>
         ExtensionLoadingError,
         /// <summary>
