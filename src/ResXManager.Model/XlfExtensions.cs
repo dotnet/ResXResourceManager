@@ -38,9 +38,30 @@
             }
         }
 
-        public static string GetTargetState(this XElement transUnitElement)
+        public static TranslationState GetTargetState(this XElement transUnitElement)
         {
-            return transUnitElement.Element(TargetElement)?.Attribute(StateAttribute)?.Value ?? NewState;
+            var targetState = transUnitElement.Element(TargetElement)?.Attribute(StateAttribute)?.Value;
+
+            return targetState switch
+            {
+                NeedsReviewState => TranslationState.NeedsReview,
+                TranslatedState => TranslationState.Approved,
+                _ => TranslationState.New
+            };
+        }
+
+        public static void SetTargetState(this XElement transUnitElement, TranslationState? state)
+        {
+#pragma warning disable IDE0072 // Add missing cases
+            var value = state switch
+#pragma warning restore IDE0072 // Add missing cases
+            {
+                TranslationState.NeedsReview => NeedsReviewState,
+                TranslationState.Approved => TranslatedState,
+                _ => NewState
+            };
+
+            SetTargetState(transUnitElement, value);
         }
 
         public static void SetTargetState(this XElement transUnitElement, string value)

@@ -160,26 +160,40 @@
 
                 foreach (var node in xlfNodes)
                 {
-                    if (entriesByKey.TryGetValue(node.Key, out var entry))
+                    if (!entriesByKey.TryGetValue(node.Key, out var entry))
+                        continue;
+
+                    entry.Values[targetLanguage] = node.Text;
+                    entry.SetCommentText(CultureKey.Parse(targetLanguage), node.Comment);
+
+                    var state = entry.TranslationState[targetLanguage];
+
+                    if (!state.HasValue)
                     {
-                        entry.Values[targetLanguage] = node.Text;
-                        entry.Comments[targetLanguage] = node.Comment;
+                        if (node.TranslationState == TranslationState.New)
+                            continue;
                     }
+                    else if (state.Value == node.TranslationState)
+                    {
+                        continue;
+                    }
+
+                    entry.TranslationState[targetLanguage] = node.TranslationState;
                 }
             }
         }
 
-        private void UpdateXlfFile(ResourceEntity entity, ResourceLanguage language, ResourceLanguage neutralLanguage, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
+        private bool UpdateXlfFile(ResourceEntity entity, ResourceLanguage language, ResourceLanguage neutralLanguage, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
         {
             var neutralProjectFile = entity.NeutralProjectFile;
             if (neutralProjectFile == null)
-                return;
+                return false;
 
             var original = GetOriginal(neutralProjectFile);
 
             var targetCulture = language.Culture;
             if (targetCulture == null)
-                return;
+                return false;
 
             XlfFile? xlfFile;
 
@@ -191,7 +205,7 @@
                 var solutionFolder = entity.Container.SolutionFolder;
 
                 if (uniqueProjectName.IsNullOrEmpty() || directoryName.IsNullOrEmpty() || solutionFolder.IsNullOrEmpty())
-                    return;
+                    return false;
 
                 var fileName = Path.ChangeExtension(Path.GetFileName(uniqueProjectName), targetCulture.Name + ".xlf");
 
@@ -221,7 +235,7 @@
                 document.Save();
             }
 
-            xlfFile.Update(neutralLanguage, language);
+            return xlfFile.Update(neutralLanguage, language);
         }
 
         private static string? GetOriginal(ResourceEntity entity)
@@ -262,16 +276,23 @@
             if (neutralLanguage == null)
                 return;
 
+            var changed = false;
+
             if (language.IsNeutralLanguage)
             {
                 foreach (var specificLanguage in entity.Languages.Where(l => !l.IsNeutralLanguage))
                 {
-                    UpdateXlfFile(entity, specificLanguage, language, filesByOriginal);
+                    changed |= UpdateXlfFile(entity, specificLanguage, language, filesByOriginal);
                 }
             }
             else
             {
-                UpdateXlfFile(entity, language, neutralLanguage, filesByOriginal);
+                changed |= UpdateXlfFile(entity, language, neutralLanguage, filesByOriginal);
+            }
+
+            if (changed)
+            {
+                UpdateFromXlf();
             }
         }
 

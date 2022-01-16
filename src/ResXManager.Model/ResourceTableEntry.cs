@@ -27,6 +27,9 @@
     {
         private const string InvariantKey = "@Invariant";
 
+        private static readonly Regex StateCommentRegex = new(@"@State\((\w+)\)");
+        private const string StateCommentFormat = @"@State({0})";
+
         private static readonly Regex _duplicateKeyExpression = new(@"_Duplicate\[\d+\]$");
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
 
@@ -77,6 +80,7 @@
             CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
 
             IsItemInvariant = new ResourceTableValues<bool>(_languages, lang => GetIsInvariant(lang.CultureKey), (lang, value) => SetIsInvariant(lang.CultureKey, value));
+            TranslationState = new ResourceTableValues<TranslationState?>(_languages, lang => GetTranslationState(lang.CultureKey), (lang, value) => SetTranslationState(lang.CultureKey, value));
 
             IsRuleEnabled = new DelegateIndexer<string, bool>(GetIsRuleEnabled, SetIsRuleEnabled);
         }
@@ -100,6 +104,7 @@
             CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
 
             IsItemInvariant = new ResourceTableValues<bool>(_languages, lang => GetIsInvariant(lang.CultureKey), (lang, value) => SetIsInvariant(lang.CultureKey, value));
+            TranslationState = new ResourceTableValues<TranslationState?>(_languages, lang => GetTranslationState(lang.CultureKey), (lang, value) => SetTranslationState(lang.CultureKey, value));
         }
 
         internal void Update(int index)
@@ -189,6 +194,10 @@
         [DependsOn(nameof(Comment))]
         public ICollection<CultureKey> Languages => _languages.Keys;
 
+        public ResourceTableValues<bool> IsItemInvariant { get; private set; }
+
+        public ResourceTableValues<TranslationState?> TranslationState { get; private set; }
+
         [DependsOn(nameof(Comment))]
         public DelegateIndexer<string, bool> IsRuleEnabled { get; }
 
@@ -239,8 +248,6 @@
             Refresh();
         }
 
-        public ResourceTableValues<bool> IsItemInvariant { get; private set; }
-
         [DependsOn(nameof(Comment))]
         public bool IsInvariant
         {
@@ -250,27 +257,109 @@
 
         private bool GetIsInvariant(CultureKey culture)
         {
-            return Comments.GetValue(culture)?.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0;
+            return GetIsInvariant(Comments.GetValue(culture));
         }
 
         private bool SetIsInvariant(CultureKey culture, bool value)
         {
             var comment = Comments.GetValue(culture);
+            var result = SetIsInvariant(comment, value);
 
+            if (string.Equals(comment, result, StringComparison.Ordinal))
+                return false;
+
+            Comments.SetValue(culture, result);
+            Refresh();
+            return true;
+        }
+
+        public static bool GetIsInvariant(string? comment)
+        {
+            return comment?.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static string? SetIsInvariant(string? comment, bool value)
+        {
             if (value)
             {
-                if (comment?.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0)
-                    return false;
-
-                Comments.SetValue(culture, comment + InvariantKey);
+                if (!(comment?.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0))
+                {
+                    return comment + InvariantKey;
+                }
             }
             else
             {
-                Comments.SetValue(culture, comment?.Replace(InvariantKey, string.Empty, StringComparison.Ordinal));
+                return comment?.Replace(InvariantKey, string.Empty, StringComparison.Ordinal);
             }
 
+            return comment;
+        }
+
+        private TranslationState? GetTranslationState(CultureKey culture)
+        {
+            var comment = Comments.GetValue(culture);
+
+            return GetTranslationState(comment);
+        }
+
+        public static TranslationState? GetTranslationState(string? comment)
+        {
+            var match = StateCommentRegex.Match(comment ?? string.Empty);
+            if (!match.Success)
+                return null;
+
+            if (!Enum.TryParse<TranslationState>(match.Groups[1].Value, out var value))
+                return null;
+
+            return value;
+        }
+
+        private bool SetTranslationState(CultureKey culture, TranslationState? value)
+        {
+            var originalComment = Comments.GetValue(culture) ?? string.Empty;
+
+            var comment = SetTranslationState(originalComment, value);
+
+            if (string.Equals(comment, originalComment, StringComparison.Ordinal))
+                return false;
+
+            Comments.SetValue(culture, comment);
             Refresh();
             return true;
+
+        }
+
+        private static string? SetTranslationState(string? originalComment, TranslationState? value)
+        {
+            var comment = originalComment == null ? null : StateCommentRegex.Replace(originalComment, string.Empty).Trim();
+
+            if (value != null)
+            {
+                comment += " " + string.Format(CultureInfo.InvariantCulture, StateCommentFormat, value);
+            }
+
+            return comment;
+        }
+
+        public static string? GetCommentText(string? comment)
+        {
+            return comment == null ? null : StateCommentRegex.Replace(comment.Replace(InvariantKey, string.Empty, StringComparison.Ordinal), string.Empty).Trim();
+        }
+
+        public void SetCommentText(CultureKey culture, string? value)
+        {
+            var comment = Comments.GetValue(culture);
+            var isInvariant = GetIsInvariant(comment);
+            var state = GetTranslationState(comment);
+
+            value = SetIsInvariant(value, isInvariant);
+            value = SetTranslationState(value, state);
+            value = value?.Trim();
+
+            if (string.Equals(comment, value, StringComparison.Ordinal))
+                return;
+
+            Comments.SetValue(culture, value);
         }
 
         [DependsOn(nameof(Key))]
@@ -373,6 +462,7 @@
             OnPropertyChanged(nameof(IsItemInvariant));
             OnPropertyChanged(nameof(CommentAnnotations));
             OnPropertyChanged(nameof(IsRuleEnabled));
+            OnPropertyChanged(nameof(TranslationState));
         }
 
         private ICollection<string> GetValueAnnotations(ResourceLanguage language)

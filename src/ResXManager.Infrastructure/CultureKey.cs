@@ -170,20 +170,13 @@
             if (item == null)
                 return new CultureKey(string.Empty);
 
-            switch (item)
+            return item switch
             {
-                case string stringValue:
-                    return new CultureKey(stringValue);
-
-                case CultureInfo cultureInfo:
-                    return new CultureKey(cultureInfo);
-
-                case CultureKey cultureKey:
-                    return cultureKey;
-
-                default:
-                    throw new InvalidOperationException("Unable to cast object to culture key: " + item);
-            }
+                string stringValue => new CultureKey(stringValue),
+                CultureInfo cultureInfo => new CultureKey(cultureInfo),
+                CultureKey cultureKey => cultureKey,
+                _ => throw new InvalidOperationException("Unable to cast object to culture key: " + item)
+            };
         }
     }
 }

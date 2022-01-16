@@ -44,17 +44,14 @@
         {
             element.SetValue(CellAnnotationsProperty, value);
         }
-        /// <summary>
-        /// Identifies the CellAnnotations attached property
-        /// </summary>
         public static readonly DependencyProperty CellAnnotationsProperty =
             DependencyProperty.RegisterAttached("CellAnnotations", typeof(ICollection<string>), typeof(ColumnManager), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
-        /// <summary>
-        /// Identifies the IsCellInvariant attached property
-        /// </summary>
         public static readonly DependencyProperty IsCellInvariantProperty =
             DependencyProperty.RegisterAttached("IsCellInvariant", typeof(bool), typeof(ColumnManager), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits, IsCellInvariant_Changed));
+
+        public static readonly DependencyProperty TranslationStateProperty =
+            DependencyProperty.RegisterAttached("TranslationState", typeof(TranslationState?), typeof(ColumnManager), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits, TranslationState_Changed));
 
         public static readonly DependencyProperty SelectedCellsProperty =
             DependencyProperty.RegisterAttached("SelectedCells", typeof(IList<DataGridCellInfo>), typeof(ColumnManager));
@@ -284,6 +281,7 @@
                 {
                     new Setter(CellAnnotationsProperty, new Binding(@"ValueAnnotations[" + key + @"]")),
                     new Setter(IsCellInvariantProperty, new Binding(@"IsItemInvariant[" + key + @"]")),
+                    new Setter(TranslationStateProperty, new Binding(@"TranslationState["+ key + @"]"))
                 }
             };
 
@@ -364,7 +362,7 @@
 
         private static void DataGrid_CurrentCellChanged(object? sender, EventArgs eventArgs)
         {
-            if (!(sender is DataGrid dataGrid))
+            if (sender is not DataGrid dataGrid)
                 return;
 
             // postpone update, SelectedCells is updates *after* the current cell has changed.
@@ -375,6 +373,16 @@
         }
 
         private static void IsCellInvariant_Changed(DependencyObject? d, DependencyPropertyChangedEventArgs e)
+        {
+            ForceCurrentCellUpdate(d);
+        }
+
+        private static void TranslationState_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ForceCurrentCellUpdate(d);
+        }
+
+        private static void ForceCurrentCellUpdate(DependencyObject? d)
         {
             var dataGrid = d?.TryFindAncestorOrSelf<DataGrid>();
 

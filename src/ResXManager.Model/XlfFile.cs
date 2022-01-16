@@ -9,6 +9,17 @@
 
     using static XlfNames;
 
+    public class XlfResourceNode : ResourceNode
+    {
+        public XlfResourceNode(string key, string? text, string? comment, TranslationState translationState)
+            : base(key, text, comment)
+        {
+            TranslationState = translationState;
+        }
+
+        public TranslationState TranslationState { get; }
+    }
+
     public class XlfFile
     {
         private readonly XElement _fileElement;
@@ -39,7 +50,7 @@
             set => _fileElement.SetAttributeValue(TargetLanguageAttribute, value);
         }
 
-        public IEnumerable<ResourceNode> ResourceNodes
+        public IEnumerable<XlfResourceNode> ResourceNodes
         {
             get
             {
@@ -53,8 +64,9 @@
 
                     var target = transUnitElement.GetTargetValue();
                     var specificComment = transUnitElement.GetNoteValue(FromResxSpecific);
+                    var state = transUnitElement.GetTargetState();
 
-                    yield return new ResourceNode(id, target, specificComment);
+                    yield return new XlfResourceNode(id, target, specificComment, state);
                 }
             }
         }
@@ -99,13 +111,17 @@
 
                 var neutralText = neutralNode.Text ?? string.Empty;
                 var neutralComment = neutralNode.Comment ?? string.Empty;
-                var specificComment = targetNode?.Comment ?? string.Empty;
+                var specificComment = targetNode?.Comment;
                 var targetText = targetNode?.Text ?? string.Empty;
+
+                var translationState = ResourceTableEntry.GetTranslationState(specificComment);
+
+                specificComment = ResourceTableEntry.GetCommentText(specificComment) ?? string.Empty;
 
                 if (source != neutralText)
                 {
                     transUnitElement.SetSourceValue(neutralText);
-                    if (state == TranslatedState)
+                    if (state == TranslationState.Approved)
                     {
                         transUnitElement.SetTargetState(NeedsReviewState);
                     }
@@ -130,9 +146,19 @@
                 if (target != targetText)
                 {
                     transUnitElement.SetTargetValue(targetText);
-                    if (state == TranslatedState)
+                    if (state == TranslationState.Approved)
                     {
                         transUnitElement.SetTargetState(NeedsReviewState);
+                    }
+
+                    changed = true;
+                }
+
+                if (translationState.HasValue)
+                {
+                    if (state != translationState.Value)
+                    {
+                        transUnitElement.SetTargetState(translationState.Value);
                     }
 
                     changed = true;
