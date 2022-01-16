@@ -278,6 +278,33 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Both"
+        /// </summary>
+        public static string PrefixFieldTypeBoth {
+            get {
+                return ResourceManager.GetString("PrefixFieldTypeBoth", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Comment"
+        /// </summary>
+        public static string PrefixFieldTypeComment {
+            get {
+                return ResourceManager.GetString("PrefixFieldTypeComment", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Value"
+        /// </summary>
+        public static string PrefixFieldTypeValue {
+            get {
+                return ResourceManager.GetString("PrefixFieldTypeValue", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Item is invariant but contains a value"
         /// </summary>
         public static string ResourceTableEntry_Error_InvariantWithValue {
@@ -623,6 +650,18 @@ namespace ResXManager.Model.Properties {
         ///   Looks up a localized string similar to Not all resource files are editable.
         /// </summary>
         NotAllLanguagesAreEditable,
+        /// <summary>
+        ///   Looks up a localized string similar to Both.
+        /// </summary>
+        PrefixFieldTypeBoth,
+        /// <summary>
+        ///   Looks up a localized string similar to Comment.
+        /// </summary>
+        PrefixFieldTypeComment,
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        PrefixFieldTypeValue,
         /// <summary>
         ///   Looks up a localized string similar to Item is invariant but contains a value.
         /// </summary>

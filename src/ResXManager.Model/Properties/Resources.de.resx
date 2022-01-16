@@ -265,4 +265,13 @@
   <data name="ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected" xml:space="preserve">
     <value>Am Ende des Eintrages wurden keine Satzzeichen erwartet.</value>
   </data>
+  <data name="PrefixFieldTypeBoth">
+    <value>Beide</value>
+  </data>
+  <data name="PrefixFieldTypeComment">
+    <value>Kommentar</value>
+  </data>
+  <data name="PrefixFieldTypeValue">
+    <value>Wert</value>
+  </data>
 </root>

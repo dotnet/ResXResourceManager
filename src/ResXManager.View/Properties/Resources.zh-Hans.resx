@@ -450,4 +450,7 @@ ResXManager 团队
   <data name="WarningUnsavedChanges" xml:space="preserve">
     <value>你有未保存的更改，重新加载所有资源将放弃所有更改，你确定要继续吗？</value>
   </data>
+  <data name="AppendPrefixValueFieldTypeLabel" xml:space="preserve">
+    <value>将翻译前缀附加到</value>
+  </data>
 </root>

@@ -141,7 +141,7 @@
     <value>保存文件“{0}”时出错：
 {1}
 </value>
-
+  
   </data>
   <data name="ImportColumnMismatchError" xml:space="preserve">
     <value>预期至少三个列。</value>
@@ -192,7 +192,7 @@
     <value>名称 {0} 已经存在</value>
   </data>
   <data name="ResourceTableEntry_Error_MissingTranslation" xml:space="preserve">
-      <value>缺少翻译</value>
+     <value>缺少翻译</value>
   </data>
   <data name="ResourceTableEntry_Error_InvariantWithValue" xml:space="preserve">
     <value>项目无效但包含值</value>
@@ -265,5 +265,14 @@
   </data>
   <data name="ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected" xml:space="preserve">
     <value>预期的尾标点序列为：{0}</value>
+  </data>
+  <data name="PrefixFieldTypeBoth" xml:space="preserve">
+    <value>两个都</value>
+  </data>
+  <data name="PrefixFieldTypeComment" xml:space="preserve">
+    <value>评论</value>
+  </data>
+  <data name="PrefixFieldTypeValue" xml:space="preserve">
+    <value>价值</value>
   </data>
 </root>

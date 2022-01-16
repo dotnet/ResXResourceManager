@@ -194,6 +194,8 @@
 
         public string? EffectiveTranslationPrefix { get; set; }
 
+        public PrefixFieldType PrefixFieldType { get; set; }
+
         public ExcelExportMode ExcelExportMode { get; set; }
 
         public bool ShowPerformanceTraces { get; set; }

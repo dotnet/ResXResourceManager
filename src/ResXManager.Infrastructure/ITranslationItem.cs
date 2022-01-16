@@ -12,6 +12,6 @@
 
         string? Translation { get; }
 
-        bool Apply(string? prefix);
+        bool Apply(string? valuePrefix, string? commentPrefix);
     }
 }
