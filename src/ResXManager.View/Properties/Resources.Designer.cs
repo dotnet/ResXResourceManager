@@ -116,6 +116,15 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Append the translation prefix to"
+        /// </summary>
+        public static string AppendPrefixValueFieldTypeLabel {
+            get {
+                return ResourceManager.GetString("AppendPrefixValueFieldTypeLabel", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Authentication"
         /// </summary>
         public static string Authentication {
@@ -1142,6 +1151,10 @@ namespace ResXManager.View.Properties {
         ///   Looks up a localized string similar to All languages.
         /// </summary>
         AllLanguages,
+        /// <summary>
+        ///   Looks up a localized string similar to Append the translation prefix to.
+        /// </summary>
+        AppendPrefixValueFieldTypeLabel,
         /// <summary>
         ///   Looks up a localized string similar to Authentication.
         /// </summary>

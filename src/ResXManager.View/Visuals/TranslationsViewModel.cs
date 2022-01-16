@@ -122,9 +122,12 @@
         {
             var prefix = Configuration.EffectiveTranslationPrefix;
 
+            var valuePrefix = Configuration.PrefixFieldType.HasFlag(PrefixFieldType.Value) ? prefix : null;
+            var commentPrefix = Configuration.PrefixFieldType.HasFlag(PrefixFieldType.Comment) ? prefix : null;
+
             foreach (var item in items.Where(item => !string.IsNullOrEmpty(item.Translation)).ToArray())
             {
-                if (!item.Apply(prefix))
+                if (!item.Apply(valuePrefix, commentPrefix))
                     break;
 
                 Items.Remove(item);

@@ -273,4 +273,13 @@
   <data name="ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected" xml:space="preserve">
     <value>The expected trailing punctuation sequence is: {0}</value>
   </data>
+  <data name="PrefixFieldTypeComment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="PrefixFieldTypeValue" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="PrefixFieldTypeBoth" xml:space="preserve">
+    <value>Both</value>
+  </data>
 </root>

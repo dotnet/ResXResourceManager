@@ -44,12 +44,35 @@ namespace ResXManager.View.Visuals
             set => _translation = value;
         }
 
-        public bool Apply(string? prefix)
+        public bool Apply(string? valuePrefix, string? commentPrefix)
         {
             if (!_entry.CanEdit(TargetCulture))
                 return false;
 
-            return _entry.Values.SetValue(TargetCulture, prefix + Translation);
+            // Update the value whether we have a valuePrefix or not so that it gets the new Translation value
+            var newValue = valuePrefix != null ? valuePrefix + Translation : Translation;
+
+            var updatedValueSuccessfully = _entry.Values.SetValue(TargetCulture, newValue);
+
+            if (commentPrefix == null)
+                return updatedValueSuccessfully;
+
+            // We only need to update the comment if a commentPrefix gets passed in
+            bool updatedCommentSuccessfully;
+
+            if (!_entry.CanEdit(_entry.NeutralLanguage.CultureKey))
+                return false;
+
+            var existingComment = _entry.Comment ?? string.Empty;
+            if (existingComment != null && existingComment.StartsWith(commentPrefix, System.StringComparison.CurrentCulture))
+                return true;
+            else
+                updatedCommentSuccessfully = _entry.Comments.SetValue(_entry.NeutralLanguage.CultureKey, commentPrefix + existingComment);
+
+            if (valuePrefix == null)
+                return updatedCommentSuccessfully;
+            else
+                return updatedValueSuccessfully && updatedCommentSuccessfully;
         }
 
         private static ICollectionView CreateOrderedResults(IList results)

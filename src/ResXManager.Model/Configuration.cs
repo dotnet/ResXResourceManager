@@ -15,6 +15,17 @@
         Fail
     }
 
+    [Flags]
+    public enum PrefixFieldType
+    {
+        [LocalizedDisplayName(StringResourceKey.PrefixFieldTypeValue)]
+        Value = 1,
+        [LocalizedDisplayName(StringResourceKey.PrefixFieldTypeComment)]
+        Comment = 2,
+        [LocalizedDisplayName(StringResourceKey.PrefixFieldTypeBoth)]
+        Both = Value | Comment
+    }
+
     public interface IConfiguration : INotifyPropertyChanged
     {
         bool IsScopeSupported { get; }
@@ -50,6 +61,8 @@
         public string? TranslationPrefix { get; }
 
         public string? EffectiveTranslationPrefix { get; }
+
+        public PrefixFieldType PrefixFieldType { get; }
 
         public ExcelExportMode ExcelExportMode { get; }
 
@@ -103,6 +116,9 @@
         public string? TranslationPrefix { get; set; }
 
         public string? EffectiveTranslationPrefix => PrefixTranslations ? TranslationPrefix : string.Empty;
+
+        [DefaultValue(PrefixFieldType.Value)]
+        public PrefixFieldType PrefixFieldType { get; set; }
 
         [DefaultValue(default(ExcelExportMode))]
         public ExcelExportMode ExcelExportMode { get; set; }

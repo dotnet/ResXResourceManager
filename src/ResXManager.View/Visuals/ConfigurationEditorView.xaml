@@ -88,6 +88,12 @@
               </ComboBox.ItemTemplate>
             </ComboBox>
           </StackPanel>
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{x:Static properties:Resources.AppendPrefixValueFieldTypeLabel}" VerticalAlignment="Center" />
+            <Decorator Width="8" />
+            <ComboBox Width="175" ItemsSource="{Binding Source={x:Type model:PrefixFieldType}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
+                     Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}" SelectedValue="{Binding Configuration.PrefixFieldType}"/>
+          </StackPanel>
         </StackPanel>
       </GroupBox>
 
