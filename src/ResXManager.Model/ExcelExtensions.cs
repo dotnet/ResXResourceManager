@@ -134,14 +134,17 @@
 
         public static IList<EntryChange> ImportExcelFile(this ResourceManager resourceManager, string filePath)
         {
-            var content = File.ReadAllText(filePath);
+            using var spreadsheetStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var reader = new StreamReader(spreadsheetStream);
+            var content = reader.ReadToEnd();
 
             if (content.StartsWith(string.Join("\t", _singleSheetFixedColumnHeaders), StringComparison.OrdinalIgnoreCase))
             {
                 return ImportSingleSheet(resourceManager, content.ParseTable()).ToArray();
             }
 
-            using (var package = SpreadsheetDocument.Open(filePath, false))
+            spreadsheetStream.Position = 0;
+            using (var package = SpreadsheetDocument.Open(spreadsheetStream, false))
             {
                 var workbookPart = package.WorkbookPart;
                 var workbook = workbookPart?.Workbook;
