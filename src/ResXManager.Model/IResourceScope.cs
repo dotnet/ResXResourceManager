@@ -1,24 +1,23 @@
-﻿namespace ResXManager.Model
+﻿namespace ResXManager.Model;
+
+using System.Collections.Generic;
+
+using ResXManager.Infrastructure;
+
+public interface IResourceScope
 {
-    using System.Collections.Generic;
-
-    using ResXManager.Infrastructure;
-
-    public interface IResourceScope
+    IEnumerable<ResourceTableEntry> Entries
     {
-        IEnumerable<ResourceTableEntry> Entries
-        {
-            get;
-        }
+        get;
+    }
 
-        IEnumerable<CultureKey> Languages
-        {
-            get;
-        }
+    IEnumerable<CultureKey> Languages
+    {
+        get;
+    }
 
-        IEnumerable<CultureKey> Comments
-        {
-            get;
-        }
+    IEnumerable<CultureKey> Comments
+    {
+        get;
     }
 }

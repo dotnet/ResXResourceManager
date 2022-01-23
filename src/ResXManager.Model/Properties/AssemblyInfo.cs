@@ -6,9 +6,8 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition("urn:ResXManager.Model", "ResXManager.Model")]
 [assembly: XmlnsDefinition("urn:ResXManager.Model", "ResXManager.Model.Properties")]
 
-namespace ResXManager.Model.Properties
+namespace ResXManager.Model.Properties;
+
+public static class AssemblyKey
 {
-    public static class AssemblyKey
-    {
-    }
 }

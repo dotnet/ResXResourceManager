@@ -1,17 +1,16 @@
-﻿namespace ResXManager.Infrastructure
+﻿namespace ResXManager.Infrastructure;
+
+using System.Collections.Generic;
+
+public interface ITranslationItem
 {
-    using System.Collections.Generic;
+    string Source { get; }
 
-    public interface ITranslationItem
-    {
-        string Source { get; }
+    IList<ITranslationMatch> Results { get; }
 
-        IList<ITranslationMatch> Results { get; }
+    CultureKey TargetCulture { get; }
 
-        CultureKey TargetCulture { get; }
+    string? Translation { get; }
 
-        string? Translation { get; }
-
-        bool Apply(string? valuePrefix, string? commentPrefix);
-    }
+    bool Apply(string? valuePrefix, string? commentPrefix);
 }

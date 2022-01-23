@@ -1,28 +1,27 @@
-﻿namespace ResXManager.Infrastructure
+﻿namespace ResXManager.Infrastructure;
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading.Tasks;
+
+public interface ITranslator : INotifyPropertyChanged
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Threading.Tasks;
+    string Id { get; }
 
-    public interface ITranslator : INotifyPropertyChanged
-    {
-        string Id { get; }
+    string DisplayName { get; }
 
-        string DisplayName { get; }
+    Uri? Uri { get; }
 
-        Uri? Uri { get; }
+    bool IsEnabled { get; set; }
 
-        bool IsEnabled { get; set; }
+    bool IsActive { get; }
 
-        bool IsActive { get; }
+    bool SaveCredentials { get; set; }
 
-        bool SaveCredentials { get; set; }
+    double Ranking { get; set; }
 
-        double Ranking { get; set; }
+    Task Translate(ITranslationSession translationSession);
 
-        Task Translate(ITranslationSession translationSession);
-
-        IList<ICredentialItem> Credentials { get; }
-    }
+    IList<ICredentialItem> Credentials { get; }
 }

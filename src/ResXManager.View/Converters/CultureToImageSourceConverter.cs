@@ -1,25 +1,25 @@
-﻿namespace ResXManager.View.Converters
+﻿namespace ResXManager.View.Converters;
+
+using System;
+using System.Composition;
+using System.Globalization;
+using System.Linq;
+using System.Windows.Data;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+
+using ResXManager.Model;
+using ResXManager.View.Tools;
+
+using TomsToolbox.Essentials;
+
+[Export, Shared]
+public class CultureToImageSourceConverter : IValueConverter
 {
-    using System;
-    using System.Composition;
-    using System.Globalization;
-    using System.Linq;
-    using System.Windows.Data;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
+    private readonly IConfiguration _configuration;
 
-    using ResXManager.Model;
-    using ResXManager.View.Tools;
-
-    using TomsToolbox.Essentials;
-
-    [Export, Shared]
-    public class CultureToImageSourceConverter : IValueConverter
+    private static readonly string[] _existingFlags =
     {
-        private readonly IConfiguration _configuration;
-
-        private static readonly string[] _existingFlags =
-        {
             "ad", "ae", "af", "ag", "ai", "al", "am", "an", "ao", "ar", "as", "at", "au", "aw", "ax", "az", "ba", "bb", "bd", "be", "bf",
             "bg", "bh", "bi", "bj", "bm", "bn", "bo", "br", "bs", "bt", "bv", "bw", "by", "bz", "ca", "cc", "cd", "cf", "cg", "ch", "ci",
             "ck", "cl", "cm", "cn", "co", "cr", "cs", "cu", "cv", "cx", "cy", "cz", "de", "dj", "dk", "dm", "do", "dz", "ec", "ee", "eg",
@@ -34,68 +34,67 @@
             "vi", "vn", "vu", "wf", "ws", "ye", "yt", "za", "zm", "zw"
         };
 
-        [ImportingConstructor]
-        public CultureToImageSourceConverter(IConfiguration configuration)
+    [ImportingConstructor]
+    public CultureToImageSourceConverter(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
+    /// <summary>
+    /// Converts a value.
+    /// </summary>
+    /// <returns>
+    /// A converted value. If the method returns null, the valid null value is used.
+    /// </returns>
+    /// <param name="value">The value produced by the binding source.</param><param name="targetType">The type of the binding target property.</param><param name="parameter">The converter parameter to use.</param><param name="culture">The culture to use in the converter.</param>
+    public object? Convert(object? value, Type? targetType, object? parameter, CultureInfo? culture)
+    {
+        return Convert(value as CultureInfo);
+    }
+
+    internal ImageSource? Convert(CultureInfo? culture)
+    {
+        culture ??= _configuration.NeutralResourcesLanguage;
+
+        var cultureName = culture.Name;
+
+        if (culture.IsNeutralCulture)
         {
-            _configuration = configuration;
-        }
+            var countryOverride = NeutralCultureCountryOverrides.Default[culture];
 
-        /// <summary>
-        /// Converts a value.
-        /// </summary>
-        /// <returns>
-        /// A converted value. If the method returns null, the valid null value is used.
-        /// </returns>
-        /// <param name="value">The value produced by the binding source.</param><param name="targetType">The type of the binding target property.</param><param name="parameter">The converter parameter to use.</param><param name="culture">The culture to use in the converter.</param>
-        public object? Convert(object? value, Type? targetType, object? parameter, CultureInfo? culture)
-        {
-            return Convert(value as CultureInfo);
-        }
-
-        internal ImageSource? Convert(CultureInfo? culture)
-        {
-            culture ??= _configuration.NeutralResourcesLanguage;
-
-            var cultureName = culture.Name;
-
-            if (culture.IsNeutralCulture)
+            if (countryOverride != null)
             {
-                var countryOverride = NeutralCultureCountryOverrides.Default[culture];
-
-                if (countryOverride != null)
-                {
-                    culture = countryOverride;
-                    cultureName = culture.Name;
-                }
+                culture = countryOverride;
+                cultureName = culture.Name;
             }
-
-            var cultureParts = cultureName.Split('-');
-            if (!cultureParts.Any())
-                return null;
-
-            var key = cultureParts.Last();
-
-            if (Array.BinarySearch(_existingFlags, key, StringComparer.OrdinalIgnoreCase) < 0)
-            {
-                return culture.GetDescendants().Select(Convert).FirstOrDefault(item => item != null);
-            }
-
-            var resourcePath = string.Format(CultureInfo.InvariantCulture, @"/ResXManager.View;component/Flags/{0}.gif", key);
-            var imageSource = new BitmapImage(new Uri(resourcePath, UriKind.RelativeOrAbsolute));
-
-            return imageSource;
         }
 
-        /// <summary>
-        /// Converts a value.
-        /// </summary>
-        /// <returns>
-        /// A converted value. If the method returns null, the valid null value is used.
-        /// </returns>
-        /// <param name="value">The value that is produced by the binding target.</param><param name="targetType">The type to convert to.</param><param name="parameter">The converter parameter to use.</param><param name="culture">The culture to use in the converter.</param>
-        public object? ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo? culture)
+        var cultureParts = cultureName.Split('-');
+        if (!cultureParts.Any())
+            return null;
+
+        var key = cultureParts.Last();
+
+        if (Array.BinarySearch(_existingFlags, key, StringComparer.OrdinalIgnoreCase) < 0)
         {
-            throw new NotImplementedException();
+            return culture.GetDescendants().Select(Convert).FirstOrDefault(item => item != null);
         }
+
+        var resourcePath = string.Format(CultureInfo.InvariantCulture, @"/ResXManager.View;component/Flags/{0}.gif", key);
+        var imageSource = new BitmapImage(new Uri(resourcePath, UriKind.RelativeOrAbsolute));
+
+        return imageSource;
+    }
+
+    /// <summary>
+    /// Converts a value.
+    /// </summary>
+    /// <returns>
+    /// A converted value. If the method returns null, the valid null value is used.
+    /// </returns>
+    /// <param name="value">The value that is produced by the binding target.</param><param name="targetType">The type to convert to.</param><param name="parameter">The converter parameter to use.</param><param name="culture">The culture to use in the converter.</param>
+    public object? ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo? culture)
+    {
+        throw new NotImplementedException();
     }
 }

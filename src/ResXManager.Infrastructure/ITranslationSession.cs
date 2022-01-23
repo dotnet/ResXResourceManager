@@ -1,35 +1,34 @@
-﻿namespace ResXManager.Infrastructure
+﻿namespace ResXManager.Infrastructure;
+
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
+
+public interface ITranslationSession : IDisposable
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Threading;
-    using System.Threading.Tasks;
+    bool IsActive { get; }
 
-    public interface ITranslationSession : IDisposable
-    {
-        bool IsActive { get; }
+    bool IsCanceled { get; }
 
-        bool IsCanceled { get; }
+    bool IsComplete { get; }
 
-        bool IsComplete { get; }
+    CancellationToken CancellationToken { get; }
 
-        CancellationToken CancellationToken { get; }
+    void Cancel();
 
-        void Cancel();
+    ICollection<ITranslationItem> Items { get; }
 
-        ICollection<ITranslationItem> Items { get; }
+    IList<string> Messages { get; }
 
-        IList<string> Messages { get; }
+    CultureInfo NeutralResourcesLanguage { get; }
 
-        CultureInfo NeutralResourcesLanguage { get; }
+    int Progress { get; set; }
 
-        int Progress { get; set; }
+    CultureInfo SourceLanguage { get; }
 
-        CultureInfo SourceLanguage { get; }
+    TaskFactory MainThread { get; }
 
-        TaskFactory MainThread { get; }
-
-        void AddMessage(string text);
-    }
+    void AddMessage(string text);
 }

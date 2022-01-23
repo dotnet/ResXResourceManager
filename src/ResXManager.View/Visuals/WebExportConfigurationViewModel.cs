@@ -1,62 +1,61 @@
-﻿namespace ResXManager.View.Visuals
+﻿namespace ResXManager.View.Visuals;
+
+using System.ComponentModel;
+using System.Windows;
+
+using ResXManager.Infrastructure;
+using ResXManager.Model;
+using ResXManager.View.Properties;
+
+using Throttle;
+
+using TomsToolbox.Essentials;
+using TomsToolbox.Wpf;
+using TomsToolbox.Wpf.Composition.AttributedModel;
+
+[LocalizedDisplayName(StringResourceKey.WebProjectFileExport_Title)]
+[VisualCompositionExport(RegionId.Configuration)]
+internal class WebExportConfigurationViewModel
 {
-    using System.ComponentModel;
-    using System.Windows;
-
-    using ResXManager.Infrastructure;
-    using ResXManager.Model;
-    using ResXManager.View.Properties;
-
-    using Throttle;
-
-    using TomsToolbox.Essentials;
-    using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition.AttributedModel;
-
-    [LocalizedDisplayName(StringResourceKey.WebProjectFileExport_Title)]
-    [VisualCompositionExport(RegionId.Configuration)]
-    internal class WebExportConfigurationViewModel
+    public WebExportConfigurationViewModel(ResourceManager resourceManager)
     {
-        public WebExportConfigurationViewModel(ResourceManager resourceManager)
+        SolutionFolder = resourceManager.SolutionFolder ?? string.Empty;
+
+        if (!WebFileExporterConfiguration.Load(SolutionFolder, out var configuration))
         {
-            SolutionFolder = resourceManager.SolutionFolder ?? string.Empty;
-
-            if (!WebFileExporterConfiguration.Load(SolutionFolder, out var configuration))
-            {
-                configuration = new WebFileExporterConfiguration();
-            }
-
-            Configuration = configuration;
-            configuration.PropertyChanged += Configuration_PropertyChanged;
+            configuration = new WebFileExporterConfiguration();
         }
 
-        public WebFileExporterConfiguration Configuration { get; }
+        Configuration = configuration;
+        configuration.PropertyChanged += Configuration_PropertyChanged;
+    }
 
-        public string? SolutionFolder { get; }
+    public WebFileExporterConfiguration Configuration { get; }
 
-        public static void SetIsConfigurationEnabled(DependencyObject element, bool value)
-        {
-            element.SetValue(IsConfigurationEnabledProperty, value);
-        }
-        public static bool GetIsConfigurationEnabled(DependencyObject element)
-        {
-            return (bool)element.GetValue(IsConfigurationEnabledProperty);
-        }
-        public static readonly DependencyProperty IsConfigurationEnabledProperty = DependencyProperty.RegisterAttached(
-            "IsConfigurationEnabled", typeof(bool), typeof(WebExportConfigurationViewModel), new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.Inherits));
+    public string? SolutionFolder { get; }
 
-        private void Configuration_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            SaveChanges();
-        }
+    public static void SetIsConfigurationEnabled(DependencyObject element, bool value)
+    {
+        element.SetValue(IsConfigurationEnabledProperty, value);
+    }
+    public static bool GetIsConfigurationEnabled(DependencyObject element)
+    {
+        return (bool)element.GetValue(IsConfigurationEnabledProperty);
+    }
+    public static readonly DependencyProperty IsConfigurationEnabledProperty = DependencyProperty.RegisterAttached(
+        "IsConfigurationEnabled", typeof(bool), typeof(WebExportConfigurationViewModel), new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.Inherits));
 
-        [Throttled(typeof(Throttle), 500)]
-        private void SaveChanges()
+    private void Configuration_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        SaveChanges();
+    }
+
+    [Throttled(typeof(Throttle), 500)]
+    private void SaveChanges()
+    {
+        if (!SolutionFolder.IsNullOrEmpty())
         {
-            if (!SolutionFolder.IsNullOrEmpty())
-            {
-                Configuration.Save(SolutionFolder);
-            }
+            Configuration.Save(SolutionFolder);
         }
     }
 }

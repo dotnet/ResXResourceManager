@@ -1,70 +1,69 @@
-﻿namespace ResXManager.VSIX
+﻿namespace ResXManager.VSIX;
+
+using System;
+
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell.Interop;
+
+using ResXManager.Infrastructure;
+using ResXManager.VSIX.Properties;
+
+using static Microsoft.VisualStudio.Shell.ThreadHelper;
+
+public class OutputWindowTracer : ITracer
 {
-    using System;
+    private readonly IServiceProvider _serviceProvider;
 
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell.Interop;
+    private static Guid _outputPaneGuid = new("{C49C2D45-A34D-4255-9382-40CE2BDAD575}");
 
-    using ResXManager.Infrastructure;
-    using ResXManager.VSIX.Properties;
-
-    using static Microsoft.VisualStudio.Shell.ThreadHelper;
-
-    public class OutputWindowTracer : ITracer
+    public OutputWindowTracer(IServiceProvider serviceProvider)
     {
-        private readonly IServiceProvider _serviceProvider;
+        _serviceProvider = serviceProvider;
+    }
 
-        private static Guid _outputPaneGuid = new("{C49C2D45-A34D-4255-9382-40CE2BDAD575}");
+    private void LogMessageToOutputWindow(string? value)
+    {
+        ThrowIfNotOnUIThread();
 
-        public OutputWindowTracer(IServiceProvider serviceProvider)
+        if (_serviceProvider.GetService(typeof(SVsOutputWindow)) is not IVsOutputWindow outputWindow)
+            return;
+
+        var errorCode = outputWindow.GetPane(ref _outputPaneGuid, out var pane);
+
+        if (ErrorHandler.Failed(errorCode) || pane == null)
         {
-            _serviceProvider = serviceProvider;
+            outputWindow.CreatePane(ref _outputPaneGuid, Model.Properties.Resources.Title, Convert.ToInt32(true), Convert.ToInt32(false));
+            outputWindow.GetPane(ref _outputPaneGuid, out pane);
         }
 
-        private void LogMessageToOutputWindow(string? value)
-        {
-            ThrowIfNotOnUIThread();
-
-            if (_serviceProvider.GetService(typeof(SVsOutputWindow)) is not IVsOutputWindow outputWindow)
-                return;
-
-            var errorCode = outputWindow.GetPane(ref _outputPaneGuid, out var pane);
-
-            if (ErrorHandler.Failed(errorCode) || pane == null)
-            {
-                outputWindow.CreatePane(ref _outputPaneGuid, Model.Properties.Resources.Title, Convert.ToInt32(true), Convert.ToInt32(false));
-                outputWindow.GetPane(ref _outputPaneGuid, out pane);
-            }
-
-            pane?.OutputString(value);
-        }
+        pane?.OutputString(value);
+    }
 
 #pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.
 
-        public void TraceError(string value)
-        {
-            WriteLine(string.Concat(Resources.Error, @" ", value));
-        }
+    public void TraceError(string value)
+    {
+        WriteLine(string.Concat(Resources.Error, @" ", value));
+    }
 
-        public void TraceWarning(string value)
-        {
-            WriteLine(string.Concat(Resources.Warning, @" ", value));
-        }
+    public void TraceWarning(string value)
+    {
+        WriteLine(string.Concat(Resources.Warning, @" ", value));
+    }
 
-        public void WriteLine(string value)
+    public void WriteLine(string value)
+    {
+        if (!CheckAccess())
         {
-            if (!CheckAccess())
-            {
 #pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
-                Generic.BeginInvoke(() => LogMessageToOutputWindow(value + Environment.NewLine));
+            Generic.BeginInvoke(() => LogMessageToOutputWindow(value + Environment.NewLine));
 #pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
-            }
-            else
-            {
-                LogMessageToOutputWindow(value + Environment.NewLine);
-            }
         }
+        else
+        {
+            LogMessageToOutputWindow(value + Environment.NewLine);
+        }
+    }
 
 #pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
-    }
 }

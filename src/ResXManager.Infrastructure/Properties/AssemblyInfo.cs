@@ -5,9 +5,8 @@ using System.Windows.Markup;
 
 [assembly: XmlnsDefinition("urn:ResXManager.Infrastructure", "ResXManager.Infrastructure")]
 
-namespace ResXManager.Infrastructure.Properties
+namespace ResXManager.Infrastructure.Properties;
+
+public static class AssemblyKey
 {
-    public static class AssemblyKey
-    {
-    }
 }

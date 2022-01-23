@@ -1,8 +1,7 @@
-﻿namespace ResXManager.Model
+﻿namespace ResXManager.Model;
+
+public enum ConfigurationScope
 {
-    public enum ConfigurationScope
-    {
-        Global,
-        Solution
-    }
+    Global,
+    Solution
 }

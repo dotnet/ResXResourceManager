@@ -1,6 +1,5 @@
-﻿namespace ResXManager.Translators.Properties
+﻿namespace ResXManager.Translators.Properties;
+
+public static class AssemblyKey
 {
-    public static class AssemblyKey
-    {
-    }
 }

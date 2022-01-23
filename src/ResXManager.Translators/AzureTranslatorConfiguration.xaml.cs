@@ -1,16 +1,15 @@
-﻿namespace ResXManager.Translators
-{
-    using TomsToolbox.Wpf.Composition.AttributedModel;
+﻿namespace ResXManager.Translators;
 
-    /// <summary>
-    /// Interaction logic for AzureTranslatorConfiguration.xaml
-    /// </summary>
-    [DataTemplate(typeof(AzureTranslator))]
-    public partial class AzureTranslatorConfiguration
+using TomsToolbox.Wpf.Composition.AttributedModel;
+
+/// <summary>
+/// Interaction logic for AzureTranslatorConfiguration.xaml
+/// </summary>
+[DataTemplate(typeof(AzureTranslator))]
+public partial class AzureTranslatorConfiguration
+{
+    public AzureTranslatorConfiguration()
     {
-        public AzureTranslatorConfiguration()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

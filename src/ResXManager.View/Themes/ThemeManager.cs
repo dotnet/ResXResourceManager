@@ -1,12 +1,11 @@
-﻿namespace ResXManager.View.Themes
+﻿namespace ResXManager.View.Themes;
+
+using System.Composition;
+
+using TomsToolbox.Wpf;
+
+[Export, Shared]
+public class ThemeManager : ObservableObject
 {
-    using System.Composition;
-
-    using TomsToolbox.Wpf;
-
-    [Export, Shared]
-    public class ThemeManager : ObservableObject
-    {
-        public bool IsDarkTheme { get; set; }
-    }
+    public bool IsDarkTheme { get; set; }
 }

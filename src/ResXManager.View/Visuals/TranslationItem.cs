@@ -1,76 +1,75 @@
-namespace ResXManager.View.Visuals
+namespace ResXManager.View.Visuals;
+
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows.Data;
+
+using ResXManager.Infrastructure;
+using ResXManager.Model;
+
+using TomsToolbox.Wpf;
+
+public class TranslationItem : ObservableObject, ITranslationItem
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Windows.Data;
+    private readonly ObservableCollection<ITranslationMatch> _results = new();
+    private readonly ResourceTableEntry _entry;
 
-    using ResXManager.Infrastructure;
-    using ResXManager.Model;
+    private ICollectionView? _orderedResults;
 
-    using TomsToolbox.Wpf;
+    private string? _translation;
 
-    public class TranslationItem : ObservableObject, ITranslationItem
+    public TranslationItem(ResourceTableEntry entry, string source, CultureKey targetCulture)
     {
-        private readonly ObservableCollection<ITranslationMatch> _results = new();
-        private readonly ResourceTableEntry _entry;
+        _entry = entry;
+        Source = source;
 
-        private ICollectionView? _orderedResults;
+        TargetCulture = targetCulture;
+        _results.CollectionChanged += (_, __) => OnPropertyChanged(() => Translation);
+    }
 
-        private string? _translation;
+    public string Source { get; }
 
-        public TranslationItem(ResourceTableEntry entry, string source, CultureKey targetCulture)
-        {
-            _entry = entry;
-            Source = source;
+    public CultureKey TargetCulture { get; }
 
-            TargetCulture = targetCulture;
-            _results.CollectionChanged += (_, __) => OnPropertyChanged(() => Translation);
-        }
+    public IList<ITranslationMatch> Results => _results;
 
-        public string Source { get; }
+    public ICollectionView OrderedResults => _orderedResults ??= CreateOrderedResults(_results);
 
-        public CultureKey TargetCulture { get; }
+    public string? Translation
+    {
+        get => _translation ?? _results.OrderByDescending(r => r.Rating).Select(r => r.TranslatedText).FirstOrDefault();
+        set => _translation = value;
+    }
 
-        public IList<ITranslationMatch> Results => _results;
+    public bool Apply(string? valuePrefix, string? commentPrefix)
+    {
+        if (!_entry.CanEdit(null))
+            return false;
 
-        public ICollectionView OrderedResults => _orderedResults ??= CreateOrderedResults(_results);
+        _entry.Values.SetValue(TargetCulture, valuePrefix + Translation);
 
-        public string? Translation
-        {
-            get => _translation ?? _results.OrderByDescending(r => r.Rating).Select(r => r.TranslatedText).FirstOrDefault();
-            set => _translation = value;
-        }
-
-        public bool Apply(string? valuePrefix, string? commentPrefix)
-        {
-            if (!_entry.CanEdit(null))
-                return false;
-
-            _entry.Values.SetValue(TargetCulture, valuePrefix + Translation);
-
-            if (commentPrefix == null)
-                return true;
-
-            var existingComment = _entry.Comment;
-            if (existingComment != null && existingComment.StartsWith(commentPrefix, System.StringComparison.Ordinal))
-                return true;
-
-            _entry.Comments.SetValue(_entry.NeutralLanguage.CultureKey, commentPrefix + existingComment);
-
+        if (commentPrefix == null)
             return true;
-        }
 
-        private static ICollectionView CreateOrderedResults(IList results)
-        {
-            var orderedResults = new ListCollectionView(results);
+        var existingComment = _entry.Comment;
+        if (existingComment != null && existingComment.StartsWith(commentPrefix, System.StringComparison.Ordinal))
+            return true;
 
-            orderedResults.SortDescriptions.Add(new SortDescription(nameof(ITranslationMatch.Rating), ListSortDirection.Descending));
-            orderedResults.SortDescriptions.Add(new SortDescription(nameof(ITranslationMatch.Translator) + "." + nameof(ITranslator.DisplayName), ListSortDirection.Ascending));
+        _entry.Comments.SetValue(_entry.NeutralLanguage.CultureKey, commentPrefix + existingComment);
 
-            return orderedResults;
-        }
+        return true;
+    }
+
+    private static ICollectionView CreateOrderedResults(IList results)
+    {
+        var orderedResults = new ListCollectionView(results);
+
+        orderedResults.SortDescriptions.Add(new SortDescription(nameof(ITranslationMatch.Rating), ListSortDirection.Descending));
+        orderedResults.SortDescriptions.Add(new SortDescription(nameof(ITranslationMatch.Translator) + "." + nameof(ITranslator.DisplayName), ListSortDirection.Ascending));
+
+        return orderedResults;
     }
 }

@@ -1,10 +1,9 @@
-﻿namespace ResXManager.Model.Properties
+﻿namespace ResXManager.Model.Properties;
+
+public sealed partial class Settings
 {
-    public sealed partial class Settings
+    static Settings()
     {
-        static Settings()
-        {
-            Default.PropertyChanged += (sender, _) => ((Settings)sender).Save();
-        }
+        Default.PropertyChanged += (sender, _) => ((Settings)sender).Save();
     }
 }

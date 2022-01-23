@@ -1,34 +1,33 @@
-﻿namespace ResXManager.Model
+﻿namespace ResXManager.Model;
+
+using System.Collections.Generic;
+using System.Linq;
+
+using ResXManager.Infrastructure;
+using ResXManager.Model.Properties;
+using TomsToolbox.Essentials;
+
+[LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleWhiteSpaceTail_Name)]
+[LocalizedDescription(StringResourceKey.ResourceTableEntryRuleWhiteSpaceTail_Description)]
+public sealed class ResourceTableEntryRuleWhiteSpaceTail : ResourceTableEntryRuleWhiteSpace
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    public const string Id = "WhiteSpaceTail";
 
-    using ResXManager.Infrastructure;
-    using ResXManager.Model.Properties;
-    using TomsToolbox.Essentials;
+    public override string RuleId => Id;
 
-    [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRuleWhiteSpaceTail_Name)]
-    [LocalizedDescription(StringResourceKey.ResourceTableEntryRuleWhiteSpaceTail_Description)]
-    public sealed class ResourceTableEntryRuleWhiteSpaceTail : ResourceTableEntryRuleWhiteSpace
+    protected override IEnumerable<char> GetCharIterator(string? value) => value?.Reverse() ?? Enumerable.Empty<char>();
+
+    protected override string GetErrorMessage(IEnumerable<string> reference)
     {
-        public const string Id = "WhiteSpaceTail";
+        var whiteSpaceSeq = string.Join("][", reference.Reverse());
 
-        public override string RuleId => Id;
+        var intro = Resources.ResourceTableEntryRuleWhiteSpaceTail_Error_Intro;
+        if (whiteSpaceSeq.IsNullOrEmpty())
+            return intro + " " + Resources.ResourceTableEntryRuleWhiteSpaceTail_Error_NoWhiteSpaceExpected;
 
-        protected override IEnumerable<char> GetCharIterator(string? value) => value?.Reverse() ?? Enumerable.Empty<char>();
-
-        protected override string GetErrorMessage(IEnumerable<string> reference)
-        {
-            var whiteSpaceSeq = string.Join("][", reference.Reverse());
-
-            var intro = Resources.ResourceTableEntryRuleWhiteSpaceTail_Error_Intro;
-            if (whiteSpaceSeq.IsNullOrEmpty())
-                return intro + " " + Resources.ResourceTableEntryRuleWhiteSpaceTail_Error_NoWhiteSpaceExpected;
-
-            whiteSpaceSeq = "[" + whiteSpaceSeq + "]";
-            return intro + " " + string.Format(Resources.Culture,
-                Resources.ResourceTableEntryRuleWhiteSpaceTail_Error_WhiteSpaceSeqExpected,
-                whiteSpaceSeq);
-        }
+        whiteSpaceSeq = "[" + whiteSpaceSeq + "]";
+        return intro + " " + string.Format(Resources.Culture,
+            Resources.ResourceTableEntryRuleWhiteSpaceTail_Error_WhiteSpaceSeqExpected,
+            whiteSpaceSeq);
     }
 }

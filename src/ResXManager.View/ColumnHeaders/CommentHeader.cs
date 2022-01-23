@@ -1,21 +1,20 @@
-﻿namespace ResXManager.View.ColumnHeaders
+﻿namespace ResXManager.View.ColumnHeaders;
+
+using ResXManager.Infrastructure;
+using ResXManager.Model;
+using ResXManager.View.Properties;
+
+public class CommentHeader : LanguageColumnHeaderBase
 {
-    using ResXManager.Infrastructure;
-    using ResXManager.Model;
-    using ResXManager.View.Properties;
-
-    public class CommentHeader : LanguageColumnHeaderBase
+    public CommentHeader(IConfiguration configuration, CultureKey cultureKey)
+        : base(configuration, cultureKey)
     {
-        public CommentHeader(IConfiguration configuration, CultureKey cultureKey)
-            : base(configuration, cultureKey)
-        {
-        }
+    }
 
-        public override ColumnType ColumnType => ColumnType.Comment;
+    public override ColumnType ColumnType => ColumnType.Comment;
 
-        public override string ToString()
-        {
-            return Resources.Comment;
-        }
+    public override string ToString()
+    {
+        return Resources.Comment;
     }
 }

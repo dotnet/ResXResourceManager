@@ -1,120 +1,119 @@
-﻿namespace ResXManager.View.Behaviors
+﻿namespace ResXManager.View.Behaviors;
+
+using System;
+using System.Collections.Specialized;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
+
+using Microsoft.Xaml.Behaviors;
+
+using ResXManager.View.Properties;
+using ResXManager.View.Tools;
+
+using Throttle;
+
+using TomsToolbox.Wpf;
+using TomsToolbox.Wpf.Composition;
+
+public class SelectAllBehavior : Behavior<ListBox>
 {
-    using System;
-    using System.Collections.Specialized;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Threading;
+    private bool _isListBoxUpdating;
+    private PerformanceTracer? _performanceTracer;
 
-    using Microsoft.Xaml.Behaviors;
-
-    using ResXManager.View.Properties;
-    using ResXManager.View.Tools;
-
-    using Throttle;
-
-    using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition;
-
-    public class SelectAllBehavior : Behavior<ListBox>
+    public bool? AreAllFilesSelected
     {
-        private bool _isListBoxUpdating;
-        private PerformanceTracer? _performanceTracer;
+        get => (bool?)GetValue(AreAllFilesSelectedProperty);
+        set => SetValue(AreAllFilesSelectedProperty, value);
+    }
+    /// <summary>
+    /// Identifies the <see cref="AreAllFilesSelected"/> dependency property
+    /// </summary>
+    public static readonly DependencyProperty AreAllFilesSelectedProperty =
+        DependencyProperty.Register("AreAllFilesSelected", typeof(bool?), typeof(SelectAllBehavior), new FrameworkPropertyMetadata(Settings.Default.AreAllFilesSelected, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (sender, e) => ((SelectAllBehavior)sender).AreAllFilesSelected_Changed((bool?)e.NewValue)));
 
-        public bool? AreAllFilesSelected
+    protected override void OnAttached()
+    {
+        base.OnAttached();
+
+        var listBox = AssociatedObject;
+        if (listBox == null)
+            return;
+
+        listBox.SelectAll();
+
+        listBox.SelectionChanged += ListBox_SelectionChanged;
+        ((INotifyCollectionChanged)listBox.Items).CollectionChanged += (_, __) => ListBox_CollectionChanged();
+
+        _performanceTracer = listBox.GetExportProvider().GetExportedValue<PerformanceTracer>();
+    }
+
+    private void ListBox_SelectionChanged(object? sender, EventArgs e)
+    {
+        var listBox = AssociatedObject;
+        if (listBox == null)
+            return;
+
+        try
         {
-            get => (bool?)GetValue(AreAllFilesSelectedProperty);
-            set => SetValue(AreAllFilesSelectedProperty, value);
-        }
-        /// <summary>
-        /// Identifies the <see cref="AreAllFilesSelected"/> dependency property
-        /// </summary>
-        public static readonly DependencyProperty AreAllFilesSelectedProperty =
-            DependencyProperty.Register("AreAllFilesSelected", typeof(bool?), typeof(SelectAllBehavior), new FrameworkPropertyMetadata(Settings.Default.AreAllFilesSelected, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (sender, e) => ((SelectAllBehavior)sender).AreAllFilesSelected_Changed((bool?)e.NewValue)));
+            _isListBoxUpdating = true;
 
-        protected override void OnAttached()
-        {
-            base.OnAttached();
-
-            var listBox = AssociatedObject;
-            if (listBox == null)
-                return;
-
-            listBox.SelectAll();
-
-            listBox.SelectionChanged += ListBox_SelectionChanged;
-            ((INotifyCollectionChanged)listBox.Items).CollectionChanged += (_, __) => ListBox_CollectionChanged();
-
-            _performanceTracer = listBox.GetExportProvider().GetExportedValue<PerformanceTracer>();
-        }
-
-        private void ListBox_SelectionChanged(object? sender, EventArgs e)
-        {
-            var listBox = AssociatedObject;
-            if (listBox == null)
-                return;
-
-            try
+            if (listBox.Items.Count == listBox.SelectedItems.Count)
             {
-                _isListBoxUpdating = true;
-
-                if (listBox.Items.Count == listBox.SelectedItems.Count)
-                {
-                    AreAllFilesSelected = true;
-                }
-                else if (listBox.SelectedItems.Count == 0)
-                {
-                    AreAllFilesSelected = false;
-                }
-                else
-                {
-                    AreAllFilesSelected = null;
-                }
+                AreAllFilesSelected = true;
             }
-            finally
+            else if (listBox.SelectedItems.Count == 0)
             {
-                _isListBoxUpdating = false;
-            }
-        }
-
-        [Throttled(typeof(DispatcherThrottle))]
-        private void ListBox_CollectionChanged()
-        {
-            var listBox = AssociatedObject;
-
-            if (!AreAllFilesSelected.GetValueOrDefault())
-                return;
-
-            _performanceTracer?.Start("ListBox.SelectAll", DispatcherPriority.Input);
-
-            listBox?.SelectAll();
-        }
-
-        private void AreAllFilesSelected_Changed(bool? newValue)
-        {
-            Settings.Default.AreAllFilesSelected = newValue ?? false;
-
-            var listBox = AssociatedObject;
-            if (listBox == null)
-                return;
-
-            if (_isListBoxUpdating)
-                return;
-
-            if (newValue == null)
-            {
-                Dispatcher?.BeginInvoke(DispatcherPriority.Normal, () => AreAllFilesSelected = false);
-                return;
-            }
-
-            if (newValue.GetValueOrDefault())
-            {
-                listBox.SelectAll();
+                AreAllFilesSelected = false;
             }
             else
             {
-                listBox.SelectedIndex = -1;
+                AreAllFilesSelected = null;
             }
+        }
+        finally
+        {
+            _isListBoxUpdating = false;
+        }
+    }
+
+    [Throttled(typeof(DispatcherThrottle))]
+    private void ListBox_CollectionChanged()
+    {
+        var listBox = AssociatedObject;
+
+        if (!AreAllFilesSelected.GetValueOrDefault())
+            return;
+
+        _performanceTracer?.Start("ListBox.SelectAll", DispatcherPriority.Input);
+
+        listBox?.SelectAll();
+    }
+
+    private void AreAllFilesSelected_Changed(bool? newValue)
+    {
+        Settings.Default.AreAllFilesSelected = newValue ?? false;
+
+        var listBox = AssociatedObject;
+        if (listBox == null)
+            return;
+
+        if (_isListBoxUpdating)
+            return;
+
+        if (newValue == null)
+        {
+            Dispatcher?.BeginInvoke(DispatcherPriority.Normal, () => AreAllFilesSelected = false);
+            return;
+        }
+
+        if (newValue.GetValueOrDefault())
+        {
+            listBox.SelectAll();
+        }
+        else
+        {
+            listBox.SelectedIndex = -1;
         }
     }
 }

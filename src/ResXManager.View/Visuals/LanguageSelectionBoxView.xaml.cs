@@ -1,33 +1,32 @@
-﻿namespace ResXManager.View.Visuals
+﻿namespace ResXManager.View.Visuals;
+
+using System;
+using System.Composition;
+
+using ResXManager.Infrastructure;
+
+using TomsToolbox.Composition;
+using TomsToolbox.Wpf.Composition;
+using TomsToolbox.Wpf.Composition.AttributedModel;
+
+/// <summary>
+/// Interaction logic for LanguageSelectionBoxView.xaml
+/// </summary>
+[DataTemplate(typeof(LanguageSelectionBoxViewModel))]
+public partial class LanguageSelectionBoxView
 {
-    using System;
-    using System.Composition;
-
-    using ResXManager.Infrastructure;
-
-    using TomsToolbox.Composition;
-    using TomsToolbox.Wpf.Composition;
-    using TomsToolbox.Wpf.Composition.AttributedModel;
-
-    /// <summary>
-    /// Interaction logic for LanguageSelectionBoxView.xaml
-    /// </summary>
-    [DataTemplate(typeof(LanguageSelectionBoxViewModel))]
-    public partial class LanguageSelectionBoxView
+    [ImportingConstructor]
+    public LanguageSelectionBoxView(IExportProvider exportProvider)
     {
-        [ImportingConstructor]
-        public LanguageSelectionBoxView(IExportProvider exportProvider)
+        try
         {
-            try
-            {
-                this.SetExportProvider(exportProvider);
+            this.SetExportProvider(exportProvider);
 
-                InitializeComponent();
-            }
-            catch (Exception ex)
-            {
-                exportProvider.TraceXamlLoaderError(ex);
-            }
+            InitializeComponent();
+        }
+        catch (Exception ex)
+        {
+            exportProvider.TraceXamlLoaderError(ex);
         }
     }
 }

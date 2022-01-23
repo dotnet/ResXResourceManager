@@ -1,15 +1,14 @@
-﻿namespace ResXManager.Model
-{
-    public interface IExportParameters
-    {
-        IResourceScope? Scope
-        {
-            get;
-        }
+﻿namespace ResXManager.Model;
 
-        string? FileName
-        {
-            get;
-        }
+public interface IExportParameters
+{
+    IResourceScope? Scope
+    {
+        get;
+    }
+
+    string? FileName
+    {
+        get;
     }
 }

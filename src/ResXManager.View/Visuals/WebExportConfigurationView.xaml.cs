@@ -1,16 +1,15 @@
-﻿namespace ResXManager.View.Visuals
-{
-    using TomsToolbox.Wpf.Composition.AttributedModel;
+﻿namespace ResXManager.View.Visuals;
 
-    /// <summary>
-    /// Interaction logic for WebExportConfigurationView.xaml
-    /// </summary>
-    [DataTemplate(typeof(WebExportConfigurationViewModel))]
-    public partial class WebExportConfigurationView
+using TomsToolbox.Wpf.Composition.AttributedModel;
+
+/// <summary>
+/// Interaction logic for WebExportConfigurationView.xaml
+/// </summary>
+[DataTemplate(typeof(WebExportConfigurationViewModel))]
+public partial class WebExportConfigurationView
+{
+    public WebExportConfigurationView()
     {
-        public WebExportConfigurationView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

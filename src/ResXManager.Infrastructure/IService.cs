@@ -1,7 +1,6 @@
-﻿namespace ResXManager.Infrastructure
+﻿namespace ResXManager.Infrastructure;
+
+public interface IService
 {
-    public interface IService
-    {
-        void Start();
-    }
+    void Start();
 }

@@ -1,9 +1,8 @@
-﻿namespace ResXManager.Model
-{
-    public interface IFileFilter
-    {
-        bool IsSourceFile(ProjectFile file);
+﻿namespace ResXManager.Model;
 
-        bool IncludeFile(ProjectFile file);
-    }
+public interface IFileFilter
+{
+    bool IsSourceFile(ProjectFile file);
+
+    bool IncludeFile(ProjectFile file);
 }
