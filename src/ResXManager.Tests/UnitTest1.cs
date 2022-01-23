@@ -52,5 +52,17 @@ namespace ResXManager.Tests
                 Assert.Equal(expectedMessage, message);
             }
         }
+
+        [Fact]
+        public void StringConcatBehavior()
+        {
+            const string? s1 = default;
+            const string? s2 = default;
+            const string s3 = "Test";
+
+            Assert.Equal(string.Empty, s1 + s2);
+            Assert.Equal(s3, s1 + s3);
+            Assert.Equal(s3, s1 + s3 + s2);
+        }
     }
 }
