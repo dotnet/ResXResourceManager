@@ -168,8 +168,11 @@
 
         internal bool SetValue(string key, string? value)
         {
-            var currentValue = GetValue(key);
-            return currentValue != value && SetNodeData(key, node => node.Text = value);
+            if ((GetValue(key) ?? string.Empty) == (value ?? string.Empty))
+                return false;
+
+            SetNodeData(key, node => node.Text = value);
+            return true;
         }
 
         public void ForceValue(string key, string? value)
@@ -293,16 +296,18 @@
 
         internal bool SetComment(string key, string? value)
         {
-            if (GetComment(key) == value)
-                return true;
+            if ((GetComment(key) ?? string.Empty) == (value ?? string.Empty))
+                return false;
 
-            return SetNodeData(key, node => node.Comment = value);
+            SetNodeData(key, node => node.Comment = value);
+
+            return true;
         }
 
-        private bool SetNodeData(string key, Action<Node> updateCallback)
+        private void SetNodeData(string key, Action<Node> updateCallback)
         {
             if (!CanEdit())
-                return false;
+                throw new InvalidOperationException("Language file can't be edited right now: " + FileName);
 
             try
             {
@@ -323,7 +328,6 @@
                 }
 
                 OnChanged();
-                return true;
             }
             catch (Exception ex)
             {

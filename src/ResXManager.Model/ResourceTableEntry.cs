@@ -243,8 +243,10 @@
 
             var newComment = ResourceTableEntryRules.SetMutedRuleIds(comment, mutedRuleIds);
 
-            if (!Comments.SetValue(culture, newComment))
+            if (!CanEdit(culture))
                 return;
+
+            Comments.SetValue(culture, newComment);
 
             Refresh();
         }

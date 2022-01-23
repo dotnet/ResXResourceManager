@@ -46,41 +46,29 @@ namespace ResXManager.View.Visuals
 
         public bool Apply(string? valuePrefix, string? commentPrefix)
         {
-            if (!_entry.CanEdit(TargetCulture))
+            if (!_entry.CanEdit(null))
                 return false;
 
-            // Update the value whether we have a valuePrefix or not so that it gets the new Translation value
-            var newValue = valuePrefix != null ? valuePrefix + Translation : Translation;
-
-            var updatedValueSuccessfully = _entry.Values.SetValue(TargetCulture, newValue);
+            _entry.Values.SetValue(TargetCulture, valuePrefix + Translation);
 
             if (commentPrefix == null)
-                return updatedValueSuccessfully;
-
-            // We only need to update the comment if a commentPrefix gets passed in
-            bool updatedCommentSuccessfully;
-
-            if (!_entry.CanEdit(_entry.NeutralLanguage.CultureKey))
-                return false;
-
-            var existingComment = _entry.Comment ?? string.Empty;
-            if (existingComment != null && existingComment.StartsWith(commentPrefix, System.StringComparison.CurrentCulture))
                 return true;
-            else
-                updatedCommentSuccessfully = _entry.Comments.SetValue(_entry.NeutralLanguage.CultureKey, commentPrefix + existingComment);
 
-            if (valuePrefix == null)
-                return updatedCommentSuccessfully;
-            else
-                return updatedValueSuccessfully && updatedCommentSuccessfully;
+            var existingComment = _entry.Comment;
+            if (existingComment != null && existingComment.StartsWith(commentPrefix, System.StringComparison.Ordinal))
+                return true;
+
+            _entry.Comments.SetValue(_entry.NeutralLanguage.CultureKey, commentPrefix + existingComment);
+
+            return true;
         }
 
         private static ICollectionView CreateOrderedResults(IList results)
         {
             var orderedResults = new ListCollectionView(results);
 
-            orderedResults.SortDescriptions.Add(new SortDescription("Rating", ListSortDirection.Descending));
-            orderedResults.SortDescriptions.Add(new SortDescription("Translator.DisplayName", ListSortDirection.Ascending));
+            orderedResults.SortDescriptions.Add(new SortDescription(nameof(ITranslationMatch.Rating), ListSortDirection.Descending));
+            orderedResults.SortDescriptions.Add(new SortDescription(nameof(ITranslationMatch.Translator) + "." + nameof(ITranslator.DisplayName), ListSortDirection.Ascending));
 
             return orderedResults;
         }
