@@ -111,10 +111,9 @@
 
                 var neutralText = neutralNode.Text ?? string.Empty;
                 var neutralComment = neutralNode.Comment ?? string.Empty;
-                var specificComment = targetNode?.Comment ?? string.Empty;
                 var targetText = targetNode?.Text ?? string.Empty;
 
-                ResourceTableEntry.ExtractCommentTokens(ref specificComment, out var translationState, out _);
+                (targetNode?.Comment).DecomposeCommentTokens(out var specificCommentText, out var translationState, out _);
 
                 if (translationState.HasValue)
                 {
@@ -144,10 +143,10 @@
                     changed = true;
                 }
 
-                if (specificComment != specificNote)
+                if (specificCommentText != specificNote)
                 {
                     // TODO: change translation state if comment changes?
-                    transUnitElement.SetNoteValue(FromResxSpecific, specificComment);
+                    transUnitElement.SetNoteValue(FromResxSpecific, specificCommentText);
                     changed = true;
                 }
 
@@ -162,11 +161,9 @@
                     changed = true;
                 }
 
-                translationState = GetEffectiveXlfTranslationState(translationState, targetText);
-
                 if (state != translationState)
                 {
-                    transUnitElement.SetTargetState(translationState.Value);
+                    transUnitElement.SetTargetState(translationState);
                     changed = true;
                 }
 
@@ -177,10 +174,9 @@
             {
                 targetNodesById.TryGetValue(neutralNode.Key, out var targetNode);
                 var neutralComment = neutralNode.Comment ?? string.Empty;
-                var specificComment = targetNode?.Comment ?? string.Empty;
                 var targetText = targetNode?.Text ?? string.Empty;
 
-                ResourceTableEntry.ExtractCommentTokens(ref specificComment, out var translationState, out _);
+                (targetNode?.Comment).DecomposeCommentTokens(out var specificCommentText, out var translationState, out _);
 
                 var newTransUnit =
                     new XElement(TransUnitElement,
@@ -200,9 +196,9 @@
                     newTransUnit.SetNoteValue(FromResx, neutralComment);
                 }
 
-                if (!string.IsNullOrEmpty(specificComment))
+                if (!string.IsNullOrEmpty(specificCommentText))
                 {
-                    newTransUnit.SetNoteValue(FromResxSpecific, specificComment);
+                    newTransUnit.SetNoteValue(FromResxSpecific, specificCommentText);
                 }
 
                 var nextElement = bodyElement
@@ -243,16 +239,6 @@
                 Document.Save();
             }
             return changed;
-        }
-
-        public static TranslationState GetEffectiveXlfTranslationState(TranslationState? state, string? value)
-        {
-            if (state == null)
-            {
-                return string.IsNullOrEmpty(value) ? TranslationState.New : TranslationState.Approved;
-            }
-
-            return state.Value;
         }
     }
 }

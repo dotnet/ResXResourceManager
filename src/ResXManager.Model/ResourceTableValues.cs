@@ -38,7 +38,7 @@
             return !_languages.TryGetValue(cultureKey, out var language) ? default : _getter(language);
         }
 
-        public void SetValue(object? culture, T? value)
+        public bool SetValue(object? culture, T? value)
         {
             var cultureKey = CultureKey.Parse(culture);
 
@@ -46,9 +46,10 @@
                 throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.LanguageNotDefinedError, cultureKey.Culture?.DisplayName ?? Resources.Neutral));
 
             if (!_setter(language, value))
-                return;
+                return false;
 
             OnValueChanged();
+            return true;
         }
 
         public event EventHandler? ValueChanged;

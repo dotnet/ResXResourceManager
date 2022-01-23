@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Runtime.CompilerServices;
@@ -26,11 +25,6 @@
     /// </summary>
     public sealed class ResourceTableEntry : INotifyPropertyChanged, IDataErrorInfo
     {
-        private const string InvariantKey = "@Invariant";
-
-        private static readonly Regex StateCommentRegex = new(@"@State\((\w+)\)");
-        private const string StateCommentFormat = @"@State({0})";
-
         private static readonly Regex _duplicateKeyExpression = new(@"_Duplicate\[\d+\]$");
         private readonly IDictionary<CultureKey, ResourceLanguage> _languages;
 
@@ -72,16 +66,16 @@
             Comments = new ResourceTableValues<string?>(_languages, lang => lang.GetComment(Key), (lang, value) => lang.SetComment(Key, value));
             Comments.ValueChanged += Comments_ValueChanged;
 
-            FileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
+            FileExists = new ResourceTableValues<bool>(_languages, _ => true, (_, _) => false);
 
-            SnapshotValues = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text, (lang, value) => false);
-            SnapshotComments = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment, (lang, value) => false);
+            SnapshotValues = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text, (_, _) => false);
+            SnapshotComments = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment, (_, _) => false);
 
-            ValueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
-            CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
+            ValueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (_, _) => false);
+            CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (_, _) => false);
 
             IsItemInvariant = new ResourceTableValues<bool>(_languages, lang => GetIsInvariant(lang.CultureKey), (lang, value) => SetIsInvariant(lang.CultureKey, value));
-            TranslationState = new ResourceTableValues<TranslationState?>(_languages, lang => GetTranslationState(lang.CultureKey), (lang, value) => SetTranslationState(lang.CultureKey, value));
+            TranslationState = new ResourceTableValues<TranslationState>(_languages, lang => GetTranslationState(lang.CultureKey), (lang, value) => SetTranslationState(lang.CultureKey, value));
 
             IsRuleEnabled = new DelegateIndexer<string, bool>(GetIsRuleEnabled, SetIsRuleEnabled);
         }
@@ -96,16 +90,16 @@
             Comments = new ResourceTableValues<string?>(_languages, lang => lang.GetComment(Key), (lang, value) => lang.SetComment(Key, value));
             Comments.ValueChanged += Comments_ValueChanged;
 
-            FileExists = new ResourceTableValues<bool>(_languages, lang => true, (lang, value) => false);
+            FileExists = new ResourceTableValues<bool>(_languages, _ => true, (_, _) => false);
 
-            SnapshotValues = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text, (lang, value) => false);
-            SnapshotComments = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment, (lang, value) => false);
+            SnapshotValues = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Text, (_, _) => false);
+            SnapshotComments = new ResourceTableValues<string?>(_languages, lang => Snapshot?.GetValueOrDefault(lang.CultureKey)?.Comment, (_, _) => false);
 
-            ValueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (lang, value) => false);
-            CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (lang, value) => false);
+            ValueAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetValueAnnotations, (_, _) => false);
+            CommentAnnotations = new ResourceTableValues<ICollection<string>>(_languages, GetCommentAnnotations, (_, _) => false);
 
             IsItemInvariant = new ResourceTableValues<bool>(_languages, lang => GetIsInvariant(lang.CultureKey), (lang, value) => SetIsInvariant(lang.CultureKey, value));
-            TranslationState = new ResourceTableValues<TranslationState?>(_languages, lang => GetTranslationState(lang.CultureKey), (lang, value) => SetTranslationState(lang.CultureKey, value));
+            TranslationState = new ResourceTableValues<TranslationState>(_languages, lang => GetTranslationState(lang.CultureKey), (lang, value) => SetTranslationState(lang.CultureKey, value));
         }
 
         internal void Update(int index)
@@ -197,7 +191,7 @@
 
         public ResourceTableValues<bool> IsItemInvariant { get; private set; }
 
-        public ResourceTableValues<TranslationState?> TranslationState { get; private set; }
+        public ResourceTableValues<TranslationState> TranslationState { get; private set; }
 
         [DependsOn(nameof(Comment))]
         public DelegateIndexer<string, bool> IsRuleEnabled { get; }
@@ -260,127 +254,71 @@
 
         private bool GetIsInvariant(CultureKey culture)
         {
-            return GetIsInvariant(Comments.GetValue(culture));
+            return Comments.GetValue(culture).GetIsInvariant();
         }
 
         private bool SetIsInvariant(CultureKey culture, bool value)
         {
-            var comment = Comments.GetValue(culture);
-            var result = SetIsInvariant(comment, value);
+            var comment = Comments.GetValue(culture).WithIsInvariant(value);
 
-            if (string.Equals(comment, result, StringComparison.Ordinal))
+            if (!Comments.SetValue(culture, comment))
                 return false;
 
-            Comments.SetValue(culture, result);
             Refresh();
             return true;
         }
 
-        public static bool GetIsInvariant(string? comment)
+        private TranslationState GetTranslationState(CultureKey culture)
         {
-            return comment?.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
-
-        private static string? SetIsInvariant(string? comment, bool value)
-        {
-            if (value)
-            {
-                if (!(comment?.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0))
-                {
-                    return comment + InvariantKey;
-                }
-            }
-            else
-            {
-                return comment?.Replace(InvariantKey, string.Empty, StringComparison.Ordinal);
-            }
-
-            return comment;
-        }
-
-        private TranslationState? GetTranslationState(CultureKey culture)
-        {
+            var value = Values.GetValue(culture);
             var comment = Comments.GetValue(culture);
 
-            return GetTranslationState(comment);
+            return GetTranslationState(value, comment);
         }
 
-        public static TranslationState? GetTranslationState(string? comment)
+        private static TranslationState GetTranslationState(string? value, string? comment)
         {
-            var match = StateCommentRegex.Match(comment ?? string.Empty);
-            if (!match.Success)
-                return null;
+            var state = comment.GetTranslationState();
 
-            if (!Enum.TryParse<TranslationState>(match.Groups[1].Value, out var value))
-                return null;
-
-            return value;
+            return state ?? (string.IsNullOrEmpty(value) ? Model.TranslationState.New : Model.TranslationState.Approved);
         }
 
-        private bool SetTranslationState(CultureKey culture, TranslationState? value)
+        private bool SetTranslationState(CultureKey culture, TranslationState? state)
         {
-            var originalComment = Comments.GetValue(culture) ?? string.Empty;
+            var value = Values.GetValue(culture);
+            var comment = Comments.GetValue(culture) ?? string.Empty;
 
-            var comment = SetTranslationState(originalComment, value);
+            if (state == Model.TranslationState.New)
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    state = null;
+                }
+            }
+            else if (state == Model.TranslationState.Approved)
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    state = null;
+                }
+            }
 
-            if (string.Equals(comment, originalComment, StringComparison.Ordinal))
+            var newComment = comment.WithTranslationState(state);
+
+            if (!Comments.SetValue(culture, newComment))
                 return false;
 
-            Comments.SetValue(culture, comment);
             Refresh();
             return true;
-        }
-
-        private static string? SetTranslationState(string? originalComment, TranslationState? value)
-        {
-            var comment = originalComment == null ? null : StateCommentRegex.Replace(originalComment, string.Empty).Trim();
-
-            if (value != null)
-            {
-                comment += " " + string.Format(CultureInfo.InvariantCulture, StateCommentFormat, value);
-            }
-
-            return comment;
-        }
-
-        public static void ExtractCommentTokens([NotNullIfNotNull("comment")] ref string? comment, out TranslationState? translationState, out bool isInvariant)
-        {
-            isInvariant = false;
-            translationState = default;
-
-            if (comment == default)
-                return;
-
-            var match = StateCommentRegex.Match(comment);
-            if (match.Success)
-            {
-                if (Enum.TryParse<TranslationState>(match.Groups[1].Value, out var value))
-                {
-                    translationState = value;
-                }
-
-                comment = match.Result(string.Empty);
-            }
-
-#pragma warning disable CA2249 // Consider using 'string.Contains' instead of 'string.IndexOf' => not available in NETFRAMEWORK
-            if (comment.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                isInvariant = true;
-                comment = comment.Replace(InvariantKey, string.Empty, StringComparison.Ordinal);
-            }
-
-            comment = comment.Trim();
         }
 
         public void SetCommentText(CultureKey culture, string? value)
         {
             var comment = Comments.GetValue(culture);
 
-            ExtractCommentTokens(ref comment, out var state, out var isInvariant);
+            comment.DecomposeCommentTokens(out _, out var state, out var isInvariant);
 
-            value = SetIsInvariant(value, isInvariant);
-            value = SetTranslationState(value, state);
-            value = value?.Trim();
+            value = value.WithIsInvariant(isInvariant).WithTranslationState(state)?.Trim();
 
             Comments.SetValue(culture, value);
         }

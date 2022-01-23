@@ -166,7 +166,7 @@
             if ((e.Property != ForegroundProperty) && (e.Property != BackgroundProperty))
                 return;
 
-            var foreground =((Foreground as SolidColorBrush)?.Color).ToGray();
+            var foreground = ((Foreground as SolidColorBrush)?.Color).ToGray();
             var background = ((Background as SolidColorBrush)?.Color).ToGray();
 
             _themeManager.IsDarkTheme = background < foreground;

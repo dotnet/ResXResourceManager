@@ -168,31 +168,15 @@
                     entry.Values[targetLanguage] = value;
                     entry.SetCommentText(CultureKey.Parse(targetLanguage), node.Comment);
 
-                    var resxState = XlfFile.GetEffectiveXlfTranslationState(entry.TranslationState[targetLanguage], value);
-                    TranslationState? xlfState = node.TranslationState;
+                    var resxState = entry.TranslationState[targetLanguage];
+                    var xlfState = node.TranslationState;
 
                     if (resxState == xlfState)
                         continue;
 
-                    entry.TranslationState[targetLanguage] = GetEffectiveResxTranslationState(xlfState, value);
+                    entry.TranslationState[targetLanguage] = xlfState;
                 }
             }
-        }
-
-        private static TranslationState? GetEffectiveResxTranslationState(TranslationState? state, string? value)
-        {
-            if (state == TranslationState.New)
-            {
-                if (string.IsNullOrEmpty(value))
-                    return null;
-            }
-            else if (state == TranslationState.Approved)
-            {
-                if (!string.IsNullOrEmpty(value))
-                    return null;
-            }
-
-            return state;
         }
 
         private bool UpdateXlfFile(ResourceEntity entity, ResourceLanguage language, ResourceLanguage neutralLanguage, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
