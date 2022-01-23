@@ -111,12 +111,20 @@
 
                 var neutralText = neutralNode.Text ?? string.Empty;
                 var neutralComment = neutralNode.Comment ?? string.Empty;
-                var specificComment = targetNode?.Comment;
+                var specificComment = targetNode?.Comment ?? string.Empty;
                 var targetText = targetNode?.Text ?? string.Empty;
 
-                var translationState = ResourceTableEntry.GetTranslationState(specificComment);
+                ResourceTableEntry.ExtractCommentTokens(ref specificComment, out var translationState, out _);
 
-                specificComment = ResourceTableEntry.GetCommentText(specificComment) ?? string.Empty;
+                if (translationState.HasValue)
+                {
+                    if (state != translationState.Value)
+                    {
+                        transUnitElement.SetTargetState(translationState.Value);
+                    }
+
+                    changed = true;
+                }
 
                 if (source != neutralText)
                 {
@@ -154,13 +162,11 @@
                     changed = true;
                 }
 
-                if (translationState.HasValue)
-                {
-                    if (state != translationState.Value)
-                    {
-                        transUnitElement.SetTargetState(translationState.Value);
-                    }
+                translationState = GetEffectiveXlfTranslationState(translationState, targetText);
 
+                if (state != translationState)
+                {
+                    transUnitElement.SetTargetState(translationState.Value);
                     changed = true;
                 }
 
@@ -174,6 +180,8 @@
                 var specificComment = targetNode?.Comment ?? string.Empty;
                 var targetText = targetNode?.Text ?? string.Empty;
 
+                ResourceTableEntry.ExtractCommentTokens(ref specificComment, out var translationState, out _);
+
                 var newTransUnit =
                     new XElement(TransUnitElement,
                         new XAttribute(IdAttribute, neutralNode.Key),
@@ -181,6 +189,11 @@
                         new XAttribute(XNamespace.Xml.GetName(@"space"), "preserve"),
                         new XElement(SourceElement, neutralNode.Text),
                         new XElement(TargetElement, new XAttribute(StateAttribute, NewState), targetText));
+
+                if (translationState.HasValue)
+                {
+                    newTransUnit.SetTargetState(translationState.Value);
+                }
 
                 if (!string.IsNullOrEmpty(neutralComment))
                 {
@@ -230,6 +243,16 @@
                 Document.Save();
             }
             return changed;
+        }
+
+        public static TranslationState GetEffectiveXlfTranslationState(TranslationState? state, string? value)
+        {
+            if (state == null)
+            {
+                return string.IsNullOrEmpty(value) ? TranslationState.New : TranslationState.Approved;
+            }
+
+            return state.Value;
         }
     }
 }

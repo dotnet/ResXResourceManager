@@ -306,7 +306,7 @@
 
             try
             {
-                if (!_nodes.TryGetValue(key, out var node) || (node == null))
+                if (!_nodes.TryGetValue(key, out var node))
                 {
                     node = CreateNode(key);
                 }

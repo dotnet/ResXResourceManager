@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Runtime.CompilerServices;
@@ -326,7 +327,6 @@
             Comments.SetValue(culture, comment);
             Refresh();
             return true;
-
         }
 
         private static string? SetTranslationState(string? originalComment, TranslationState? value)
@@ -341,23 +341,44 @@
             return comment;
         }
 
-        public static string? GetCommentText(string? comment)
+        public static void ExtractCommentTokens([NotNullIfNotNull("comment")] ref string? comment, out TranslationState? translationState, out bool isInvariant)
         {
-            return comment == null ? null : StateCommentRegex.Replace(comment.Replace(InvariantKey, string.Empty, StringComparison.Ordinal), string.Empty).Trim();
+            isInvariant = false;
+            translationState = default;
+
+            if (comment == default)
+                return;
+
+            var match = StateCommentRegex.Match(comment);
+            if (match.Success)
+            {
+                if (Enum.TryParse<TranslationState>(match.Groups[1].Value, out var value))
+                {
+                    translationState = value;
+                }
+
+                comment = match.Result(string.Empty);
+            }
+
+#pragma warning disable CA2249 // Consider using 'string.Contains' instead of 'string.IndexOf' => not available in NETFRAMEWORK
+            if (comment.IndexOf(InvariantKey, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                isInvariant = true;
+                comment = comment.Replace(InvariantKey, string.Empty, StringComparison.Ordinal);
+            }
+
+            comment = comment.Trim();
         }
 
         public void SetCommentText(CultureKey culture, string? value)
         {
             var comment = Comments.GetValue(culture);
-            var isInvariant = GetIsInvariant(comment);
-            var state = GetTranslationState(comment);
+
+            ExtractCommentTokens(ref comment, out var state, out var isInvariant);
 
             value = SetIsInvariant(value, isInvariant);
             value = SetTranslationState(value, state);
             value = value?.Trim();
-
-            if (string.Equals(comment, value, StringComparison.Ordinal))
-                return;
 
             Comments.SetValue(culture, value);
         }

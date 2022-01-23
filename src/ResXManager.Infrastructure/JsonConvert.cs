@@ -8,7 +8,7 @@
         }
 
         public static T? DeserializeObject<T>(string value)
-            where T:class
+            where T : class
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(value);
         }

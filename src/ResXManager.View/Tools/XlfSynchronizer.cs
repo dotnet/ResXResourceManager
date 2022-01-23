@@ -163,24 +163,36 @@
                     if (!entriesByKey.TryGetValue(node.Key, out var entry))
                         continue;
 
-                    entry.Values[targetLanguage] = node.Text;
+                    var value = node.Text;
+
+                    entry.Values[targetLanguage] = value;
                     entry.SetCommentText(CultureKey.Parse(targetLanguage), node.Comment);
 
-                    var state = entry.TranslationState[targetLanguage];
+                    var resxState = XlfFile.GetEffectiveXlfTranslationState(entry.TranslationState[targetLanguage], value);
+                    TranslationState? xlfState = node.TranslationState;
 
-                    if (!state.HasValue)
-                    {
-                        if (node.TranslationState == TranslationState.New)
-                            continue;
-                    }
-                    else if (state.Value == node.TranslationState)
-                    {
+                    if (resxState == xlfState)
                         continue;
-                    }
 
-                    entry.TranslationState[targetLanguage] = node.TranslationState;
+                    entry.TranslationState[targetLanguage] = GetEffectiveResxTranslationState(xlfState, value);
                 }
             }
+        }
+
+        private static TranslationState? GetEffectiveResxTranslationState(TranslationState? state, string? value)
+        {
+            if (state == TranslationState.New)
+            {
+                if (string.IsNullOrEmpty(value))
+                    return null;
+            }
+            else if (state == TranslationState.Approved)
+            {
+                if (!string.IsNullOrEmpty(value))
+                    return null;
+            }
+
+            return state;
         }
 
         private bool UpdateXlfFile(ResourceEntity entity, ResourceLanguage language, ResourceLanguage neutralLanguage, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
