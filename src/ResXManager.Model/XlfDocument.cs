@@ -1,9 +1,12 @@
 ﻿namespace ResXManager.Model
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Xml.Linq;
+
+    using TomsToolbox.Essentials;
 
     using static XlfNames;
 
@@ -18,6 +21,10 @@
             _document = File.Exists(filePath)
                 ? LoadFromFile()
                 : CreateEmpty();
+
+            if (_document.Root.GetAttribute("version") != "1.2")
+                throw new InvalidOperationException("Only XLIFF version 1.2 is supported: " + filePath);
+
             _files = _document.Root.Elements(FileElement)
                 .Select(file => new XlfFile(this, file))
                 .ToList();

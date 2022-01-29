@@ -1,5 +1,6 @@
 ﻿namespace ResXManager.Model
 {
+    using System.Collections.Generic;
     using System.Xml.Linq;
 
     internal static class XlfNames
@@ -25,8 +26,8 @@
         public const string TranslateAttribute = "translate";
 
         public const string NewState = "new";
-        public const string TranslatedState = "translated";
-        public const string NeedsReviewState = "needs-review-translation";
+        public static readonly HashSet<string> ApprovedStates = new(new[] { "translated", "final", "signed-off" });
+        public static readonly HashSet<string> NeedsReviewStates = new(new[] { "needs-review-translation", "needs-translation", "needs-review-l10n", "needs-l10n", "needs-review-adaptation" });
 
         public const string FromResx = "resx";
         public const string FromResxSpecific = "resx-specific";

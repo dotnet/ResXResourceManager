@@ -42,22 +42,29 @@
         {
             var targetState = transUnitElement.Element(TargetElement)?.Attribute(StateAttribute)?.Value;
 
-            return targetState switch
-            {
-                NeedsReviewState => TranslationState.NeedsReview,
-                TranslatedState => TranslationState.Approved,
-                _ => TranslationState.New
-            };
+            if (targetState == null)
+                return TranslationState.New;
+
+            if (NeedsReviewStates.Contains(targetState))
+                return TranslationState.NeedsReview;
+
+            if (ApprovedStates.Contains(targetState))
+                return TranslationState.Approved;
+
+            return TranslationState.New;
         }
 
-        public static void SetTargetState(this XElement transUnitElement, TranslationState? state)
+        public static void SetTargetState(this XElement transUnitElement, TranslationState state)
         {
+            if (GetTargetState(transUnitElement) == state)
+                return;
+
 #pragma warning disable IDE0072 // Add missing cases
             var value = state switch
 #pragma warning restore IDE0072 // Add missing cases
             {
-                TranslationState.NeedsReview => NeedsReviewState,
-                TranslationState.Approved => TranslatedState,
+                TranslationState.NeedsReview => NeedsReviewStates.First(),
+                TranslationState.Approved => ApprovedStates.First(),
                 _ => NewState
             };
 

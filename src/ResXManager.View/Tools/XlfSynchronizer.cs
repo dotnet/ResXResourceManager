@@ -163,9 +163,7 @@
                     if (!entriesByKey.TryGetValue(node.Key, out var entry))
                         continue;
 
-                    var value = node.Text;
-
-                    entry.Values[targetLanguage] = value;
+                    entry.Values[targetLanguage] = node.Text;
                     entry.SetCommentText(CultureKey.Parse(targetLanguage), node.Comment);
 
                     var resxState = entry.TranslationState[targetLanguage];
@@ -179,7 +177,7 @@
             }
         }
 
-        private bool UpdateXlfFile(ResourceEntity entity, ResourceLanguage language, ResourceLanguage neutralLanguage, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
+        private bool UpdateXlfFile(ResourceEntity entity, CultureKey language, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
         {
             var neutralProjectFile = entity.NeutralProjectFile;
             if (neutralProjectFile == null)
@@ -231,7 +229,7 @@
                 document.Save();
             }
 
-            return xlfFile.Update(neutralLanguage, language);
+            return xlfFile.Update(entity, language);
         }
 
         private static string? GetOriginal(ResourceEntity entity)
@@ -278,35 +276,17 @@
             {
                 foreach (var specificLanguage in entity.Languages.Where(l => !l.IsNeutralLanguage))
                 {
-                    changed |= UpdateXlfFile(entity, specificLanguage, language, filesByOriginal);
+                    changed |= UpdateXlfFile(entity, specificLanguage.CultureKey, filesByOriginal);
                 }
             }
             else
             {
-                changed |= UpdateXlfFile(entity, language, neutralLanguage, filesByOriginal);
+                changed |= UpdateXlfFile(entity, language.CultureKey, filesByOriginal);
             }
 
             if (changed)
             {
                 UpdateFromXlf();
-            }
-        }
-
-        private void UpdateXlfFiles()
-        {
-            var documentsByPath = _documentsByPath;
-            var filesByOriginal = GetFilesByOriginal(documentsByPath.Values);
-
-            foreach (var entity in _resourceManager.ResourceEntities)
-            {
-                var neutralLanguage = entity.Languages.FirstOrDefault();
-                if (neutralLanguage == null)
-                    continue;
-
-                foreach (var language in entity.Languages.Skip(1))
-                {
-                    UpdateXlfFile(entity, language, neutralLanguage, filesByOriginal);
-                }
             }
         }
 
@@ -316,7 +296,6 @@
                 return;
 
             UpdateFromXlf();
-            UpdateXlfFiles();
         }
 
         private void ResourceManager_SolutionFolderChanged(object? sender, TextEventArgs e)

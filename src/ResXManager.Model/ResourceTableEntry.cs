@@ -312,6 +312,15 @@
             return true;
         }
 
+        public string? GetCommentText(CultureKey culture)
+        {
+            var comment = Comments.GetValue(culture);
+
+            comment.DecomposeCommentTokens(out var text, out _, out _);
+
+            return text;
+        }
+
         public void SetCommentText(CultureKey culture, string? value)
         {
             var comment = Comments.GetValue(culture);

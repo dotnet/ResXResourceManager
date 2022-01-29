@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Xml.Linq;
 
+    using ResXManager.Infrastructure;
+
     using TomsToolbox.Essentials;
 
     using static XlfNames;
@@ -71,11 +73,9 @@
             }
         }
 
-        public bool Update(ResourceLanguage neutralLanguage, ResourceLanguage targetLanguage)
+        public bool Update(ResourceEntity entity, CultureKey language)
         {
             var changed = false;
-            var neutralNodesById = neutralLanguage.GetNodes().ToDictionary(node => node.Key);
-            var targetNodesById = targetLanguage.GetNodes().ToDictionary(node => node.Key);
 
             var bodyElement = _fileElement
                 .Element(BodyElement);
@@ -86,6 +86,8 @@
                 .Where(group => !string.IsNullOrEmpty(group.Key) && group.Any())
                 .ToDictionary(group => group.Key, group => group.First());
 
+            var tableEntriesById = entity.Entries.ToDictionary(entry => entry.Key);
+
             foreach (var transUnit in transUnitsById)
             {
                 var id = transUnit.Key;
@@ -94,14 +96,12 @@
 
                 var transUnitElement = transUnit.Value;
 
-                if (!neutralNodesById.TryGetValue(id, out var neutralNode))
+                if (!tableEntriesById.TryGetValue(id, out var tableEntry))
                 {
                     transUnit.Value.Remove();
                     changed = true;
                     continue;
                 }
-
-                targetNodesById.TryGetValue(id, out var targetNode);
 
                 var state = transUnit.Value.GetTargetState();
                 var source = transUnitElement.GetSourceValue();
@@ -109,28 +109,18 @@
                 var neutralNote = transUnitElement.GetNoteValue(FromResx) ?? string.Empty;
                 var specificNote = transUnitElement.GetNoteValue(FromResxSpecific) ?? string.Empty;
 
-                var neutralText = neutralNode.Text ?? string.Empty;
-                var neutralComment = neutralNode.Comment ?? string.Empty;
-                var targetText = targetNode?.Text ?? string.Empty;
-
-                (targetNode?.Comment).DecomposeCommentTokens(out var specificCommentText, out var translationState, out _);
-
-                if (translationState.HasValue)
-                {
-                    if (state != translationState.Value)
-                    {
-                        transUnitElement.SetTargetState(translationState.Value);
-                    }
-
-                    changed = true;
-                }
+                var neutralText = tableEntry.Values.GetValue(CultureKey.Neutral) ?? string.Empty;
+                var neutralComment = tableEntry.GetCommentText(CultureKey.Neutral) ?? string.Empty;
+                var targetText = tableEntry.Values.GetValue(language) ?? string.Empty;
+                var specificCommentText = tableEntry.GetCommentText(language) ?? string.Empty;
+                var translationState = tableEntry.TranslationState.GetValue(language);
 
                 if (source != neutralText)
                 {
                     transUnitElement.SetSourceValue(neutralText);
                     if (state == TranslationState.Approved)
                     {
-                        transUnitElement.SetTargetState(NeedsReviewState);
+                        transUnitElement.SetTargetState(NeedsReviewStates.First());
                     }
 
                     changed = true;
@@ -155,7 +145,7 @@
                     transUnitElement.SetTargetValue(targetText);
                     if (state == TranslationState.Approved)
                     {
-                        transUnitElement.SetTargetState(NeedsReviewState);
+                        transUnitElement.SetTargetState(NeedsReviewStates.First());
                     }
 
                     changed = true;
@@ -167,29 +157,26 @@
                     changed = true;
                 }
 
-                neutralNodesById.Remove(id);
+                tableEntriesById.Remove(id);
             }
 
-            foreach (var neutralNode in neutralNodesById.Values)
+            foreach (var tableEntry in tableEntriesById.Values)
             {
-                targetNodesById.TryGetValue(neutralNode.Key, out var targetNode);
-                var neutralComment = neutralNode.Comment ?? string.Empty;
-                var targetText = targetNode?.Text ?? string.Empty;
-
-                (targetNode?.Comment).DecomposeCommentTokens(out var specificCommentText, out var translationState, out _);
+                var neutralText = tableEntry.Values.GetValue(CultureKey.Neutral) ?? string.Empty;
+                var neutralComment = tableEntry.GetCommentText(CultureKey.Neutral) ?? string.Empty;
+                var targetText = tableEntry.Values.GetValue(language) ?? string.Empty;
+                var specificCommentText = tableEntry.GetCommentText(language) ?? string.Empty;
+                var translationState = tableEntry.TranslationState.GetValue(language);
 
                 var newTransUnit =
                     new XElement(TransUnitElement,
-                        new XAttribute(IdAttribute, neutralNode.Key),
+                        new XAttribute(IdAttribute, tableEntry.Key),
                         new XAttribute(TranslateAttribute, "yes"),
                         new XAttribute(XNamespace.Xml.GetName(@"space"), "preserve"),
-                        new XElement(SourceElement, neutralNode.Text),
+                        new XElement(SourceElement, neutralText),
                         new XElement(TargetElement, new XAttribute(StateAttribute, NewState), targetText));
 
-                if (translationState.HasValue)
-                {
-                    newTransUnit.SetTargetState(translationState.Value);
-                }
+                newTransUnit.SetTargetState(translationState);
 
                 if (!string.IsNullOrEmpty(neutralComment))
                 {
@@ -203,7 +190,7 @@
 
                 var nextElement = bodyElement
                     .Descendants(TransUnitElement)
-                    .FirstOrDefault(element => StringComparer.Ordinal.Compare(neutralNode.Key, element.GetId()) < 0);
+                    .FirstOrDefault(element => StringComparer.Ordinal.Compare(tableEntry.Key, element.GetId()) < 0);
 
                 if (nextElement != null)
                 {
