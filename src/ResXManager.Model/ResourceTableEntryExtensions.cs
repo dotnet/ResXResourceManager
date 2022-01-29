@@ -76,7 +76,7 @@ public static class ResourceTableEntryExtensions
                 translationState = value;
             }
 
-            commentText = match.Result(string.Empty);
+            commentText = commentText.Substring(0, match.Index) + commentText.Substring(match.Index + match.Length);
         }
 
 #pragma warning disable CA2249 // Consider using 'string.Contains' instead of 'string.IndexOf' => not available in NETFRAMEWORK
