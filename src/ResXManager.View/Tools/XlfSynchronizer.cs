@@ -166,13 +166,15 @@
                     entry.Values[targetLanguage] = node.Text;
                     entry.SetCommentText(CultureKey.Parse(targetLanguage), node.Comment);
 
-                    var resxState = entry.TranslationState[targetLanguage];
-                    var xlfState = node.TranslationState;
+                    /* TODO: Enable configurable translation state tracking
+                        var resxState = entry.TranslationState[targetLanguage];
+                        var xlfState = node.TranslationState;
 
-                    if (resxState == xlfState)
-                        continue;
+                        if (resxState == xlfState)
+                            continue;
 
-                    entry.TranslationState[targetLanguage] = xlfState;
+                        entry.TranslationState[targetLanguage] = xlfState;
+                    */
                 }
             }
         }
@@ -270,23 +272,16 @@
             if (neutralLanguage == null)
                 return;
 
-            var changed = false;
-
             if (language.IsNeutralLanguage)
             {
                 foreach (var specificLanguage in entity.Languages.Where(l => !l.IsNeutralLanguage))
                 {
-                    changed |= UpdateXlfFile(entity, specificLanguage.CultureKey, filesByOriginal);
+                    UpdateXlfFile(entity, specificLanguage.CultureKey, filesByOriginal);
                 }
             }
             else
             {
-                changed |= UpdateXlfFile(entity, language.CultureKey, filesByOriginal);
-            }
-
-            if (changed)
-            {
-                UpdateFromXlf();
+                UpdateXlfFile(entity, language.CultureKey, filesByOriginal);
             }
         }
 

@@ -14,12 +14,14 @@
         private readonly FileSystemWatcher _watcher = new()
         {
             IncludeSubdirectories = true,
-            NotifyFilter = NotifyFilters.LastWrite
+            NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.Attributes | NotifyFilters.DirectoryName | NotifyFilters.Size | NotifyFilters.CreationTime | NotifyFilters.LastAccess
         };
 
         protected FileWatcher()
         {
             _watcher.Changed += File_Changed;
+            _watcher.Renamed += File_Changed;
+            _watcher.Created += File_Changed;
         }
 
         public string? Folder { get; private set; }

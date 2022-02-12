@@ -151,11 +151,13 @@
                     changed = true;
                 }
 
+                /* TODO: Enable configurable translation state tracking
                 if (state != translationState)
                 {
                     transUnitElement.SetTargetState(translationState);
                     changed = true;
                 }
+                */
 
                 tableEntriesById.Remove(id);
             }
@@ -176,7 +178,9 @@
                         new XElement(SourceElement, neutralText),
                         new XElement(TargetElement, new XAttribute(StateAttribute, NewState), targetText));
 
+                /* TODO: Enable configurable translation state tracking
                 newTransUnit.SetTargetState(translationState);
+                */
 
                 if (!string.IsNullOrEmpty(neutralComment))
                 {
