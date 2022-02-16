@@ -208,4 +208,7 @@
   <data name="ShowErrorsConfiguration_ShowAs" xml:space="preserve">
     <value>显示为</value>
   </data>
+  <data name="QuerySaveUnchangedResources" xml:space="preserve">
+    <value>你的资源中还有未保存的修改。你要保存修改吗？</value>
+  </data>
 </root>
