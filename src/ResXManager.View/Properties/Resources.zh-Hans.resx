@@ -453,4 +453,28 @@ ResXManager 团队
   <data name="AppendPrefixValueFieldTypeLabel" xml:space="preserve">
     <value>将翻译前缀附加到</value>
   </data>
+  <data name="Configuration_XlifSupport" xml:space="preserve">
+    <value>XLIF 支持</value>
+  </data>
+  <data name="WebProjectFileExport_SolutionFolder" xml:space="preserve">
+    <value>解决方案文件夹：</value>
+  </data>
+  <data name="WebProjectFileExport_TypescriptFilesTargetFolder" xml:space="preserve">
+    <value>Typescript 文件目标文件夹：</value>
+  </data>
+  <data name="WebProjectFileExport_ResourceFileFilterRegEx" xml:space="preserve">
+    <value>资源文件筛选（正则表达式）：</value>
+  </data>
+  <data name="Configuration_EnableXlifSynchronization" xml:space="preserve">
+    <value>启用 XLIF 同步</value>
+  </data>
+  <data name="WebProjectFileExport_ExportNeutralResourcesAsJSON" xml:space="preserve">
+    <value>将中立资源导出为 JSON</value>
+  </data>
+  <data name="WebProjectFileExport_JSONFilesTargetFolder" xml:space="preserve">
+    <value>JSON 文件目标文件夹：</value>
+  </data>
+  <data name="WebProjectFileExport_Title" xml:space="preserve">
+    <value>Web 项目文件导出</value>
+  </data>
 </root>
