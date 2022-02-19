@@ -1,4 +1,11 @@
-﻿1.62
+﻿1.63
+- Fix #233: Automatically added the BOM 
+- Support XLIFF
+- #446: Add an option to set #TODO flag in the comment field, instead of on the value field
+- Fix #452: Not installable in VS 2017
+- Fix #460: ArgumentException when trying to enter text for any key for language Ewe (ee) 
+
+1.62
 - Fix #435: .NET6 Unable to Move to Resource
 
 1.61
