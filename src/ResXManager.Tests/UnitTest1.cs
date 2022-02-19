@@ -1,5 +1,9 @@
 namespace ResXManager.Tests
 {
+    using System.Globalization;
+    using System.Linq;
+
+    using ResXManager.Infrastructure;
     using ResXManager.Model;
 
     using Xunit;
@@ -9,6 +13,7 @@ namespace ResXManager.Tests
         [Theory]
         [InlineData("de-DE", true)]
         [InlineData("en", true)]
+        [InlineData("ee", true)]
         [InlineData("en-GB-dev", true)]
         [InlineData("ab-cd", false)]
         [InlineData("xy-ab", false)]
@@ -18,7 +23,17 @@ namespace ResXManager.Tests
         [InlineData("qps-ploc", true)] // pseudo locale
         public void IsValidLanguageNameTest(string cultureName, bool expected)
         {
-            Assert.Equal(expected, ResourceManager.IsValidLanguageName(cultureName));
+            Assert.Equal(expected, CultureHelper.IsValidCultureName(cultureName));
+        }
+
+        [Fact]
+        public void AllExistingCulturesAreValid()
+        {
+            foreach (var cultureInfo in CultureInfo.GetCultures(CultureTypes.AllCultures).Where(c => !string.IsNullOrEmpty(c.ToString())))
+            {
+                Assert.True(CultureHelper.IsValidCultureName(cultureInfo.Name), cultureInfo.ToString());
+                Assert.True(CultureHelper.IsValidCultureName(cultureInfo.IetfLanguageTag), cultureInfo.ToString());
+            }
         }
 
         [Theory]

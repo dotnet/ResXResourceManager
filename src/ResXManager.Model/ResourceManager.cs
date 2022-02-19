@@ -89,11 +89,6 @@
         /// </summary>
         public ObservableCollection<CultureKey> Cultures { get; } = new();
 
-        /// <summary>
-        /// Gets all system specific cultures.
-        /// </summary>
-        public static IEnumerable<CultureInfo> SpecificCultures { get; } = GetSpecificCultures();
-
         public ITracer Tracer { get; }
 
         public IConfiguration Configuration { get; }
@@ -297,42 +292,6 @@
         public void OnProjectFileSaved(ResourceLanguage language, ProjectFile projectFile)
         {
             ProjectFileSaved?.Invoke(this, new ProjectFileEventArgs(language, projectFile));
-        }
-
-        public static bool IsValidLanguageName(string? languageName)
-        {
-            try
-            {
-                if (languageName.IsNullOrEmpty())
-                    return false;
-
-                // pseudo-locales:
-                if (languageName.StartsWith("qps-", StringComparison.Ordinal))
-                    return true;
-
-                var culture = new CultureInfo(languageName);
-
-                while (!culture.IsNeutralCulture)
-                {
-                    culture = culture.Parent;
-                }
-
-                return culture.LCID != 4096;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private static CultureInfo[] GetSpecificCultures()
-        {
-            var specificCultures = CultureInfo.GetCultures(CultureTypes.AllCultures)
-                .Where(c => c.GetAncestors().Any())
-                .OrderBy(c => c.DisplayName)
-                .ToArray();
-
-            return specificCultures;
         }
 
         public void LoadSnapshot(string? value)

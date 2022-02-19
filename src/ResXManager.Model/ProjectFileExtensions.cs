@@ -41,7 +41,7 @@
 
             var languageName = Path.GetFileName(Path.GetDirectoryName(filePath));
 
-            return ResourceManager.IsValidLanguageName(languageName);
+            return CultureHelper.IsValidCultureName(languageName);
         }
 
         public static bool IsResourceFile(this ProjectFile projectFile)
@@ -65,7 +65,7 @@
                 if (cultureName.IsNullOrEmpty())
                     return CultureKey.Neutral;
 
-                if (!ResourceManager.IsValidLanguageName(cultureName))
+                if (!CultureHelper.IsValidCultureName(cultureName))
                     return CultureKey.Neutral;
 
                 return new CultureKey(cultureName);
@@ -75,7 +75,7 @@
             {
                 var cultureName = Path.GetFileName(Path.GetDirectoryName(filePath));
 
-                if (!ResourceManager.IsValidLanguageName(cultureName))
+                if (!CultureHelper.IsValidCultureName(cultureName))
                     throw new ArgumentException(@"Invalid file. File name does not conform to the pattern '.\<cultureName>\<basename>.resw'");
 
                 var culture = cultureName.ToCulture();
@@ -98,7 +98,7 @@
             var innerExtension = Path.GetExtension(name);
             var languageName = innerExtension.TrimStart('.');
 
-            return ResourceManager.IsValidLanguageName(languageName) ? Path.GetFileNameWithoutExtension(name) : name;
+            return CultureHelper.IsValidCultureName(languageName) ? Path.GetFileNameWithoutExtension(name) : name;
         }
 
         public static string GetLanguageFileName(this ProjectFile projectFile, CultureInfo culture)

@@ -75,7 +75,7 @@
           <StackPanel Orientation="Horizontal">
             <TextBlock Text="{x:Static properties:Resources.NeutralResourceLanguageHeader}" VerticalAlignment="Center" />
             <Decorator Width="5" />
-            <ComboBox Width="175" ItemsSource="{Binding Source={x:Static Member=model:ResourceManager.SpecificCultures}}"
+            <ComboBox Width="175" ItemsSource="{Binding Source={x:Static Member=infrastructure:CultureHelper.SpecificCultures}}"
                       SelectedItem="{Binding Configuration.NeutralResourcesLanguage}" Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
               <ComboBox.ItemTemplate>
                 <DataTemplate DataType="globalization:CultureInfo">

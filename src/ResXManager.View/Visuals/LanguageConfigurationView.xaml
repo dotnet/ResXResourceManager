@@ -9,6 +9,7 @@
              xmlns:visuals="clr-namespace:ResXManager.View.Visuals"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              xmlns:composition="urn:TomsToolbox.Composition"
+             xmlns:infrastructure="urn:ResXManager.Infrastructure"
              d:DataContext="{d:DesignInstance visuals:LanguageConfigurationViewModel}">
   <UserControl.Resources>
 
@@ -34,7 +35,7 @@
       </Border>
     </DataTemplate>
 
-    <CollectionViewSource x:Key="CollectionViewSource" Source="{x:Static model:ResourceManager.SpecificCultures}">
+    <CollectionViewSource x:Key="CollectionViewSource" Source="{x:Static infrastructure:CultureHelper.SpecificCultures}">
       <CollectionViewSource.GroupDescriptions>
         <visuals:CultureInfoGroupDescription />
       </CollectionViewSource.GroupDescriptions>
