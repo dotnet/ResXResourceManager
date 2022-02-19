@@ -14,6 +14,7 @@ Select a topic to start with:
 - [Scripting](Topics/Scripting.md)
 - [Snapshots](Topics/Snapshots.md)
 - [Spell Checker](Topics/Spell-Checker.md)
+- [XLIFF Support](Topics/Xliff.md)
 
 ### [Troubleshooting](Topics/Troubleshooting.md)
 

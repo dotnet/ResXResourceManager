@@ -17,6 +17,6 @@
             return target.Contains(value);
         }
 
-}
+    }
 #endif
 }

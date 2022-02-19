@@ -103,6 +103,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Topics", "Topics", "{E3F92F
 		..\Documentation\Topics\TextTemplateCodeGenerator.png = ..\Documentation\Topics\TextTemplateCodeGenerator.png
 		..\Documentation\Topics\Troubleshooting.md = ..\Documentation\Topics\Troubleshooting.md
 		..\Documentation\Topics\Usage.md = ..\Documentation\Topics\Usage.md
+		..\Documentation\Topics\Xliff.md = ..\Documentation\Topics\Xliff.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.Tests", "ResXManager.Tests\ResXManager.Tests.csproj", "{0C11F826-3F3D-4F55-91E4-331A9DE159A5}"
