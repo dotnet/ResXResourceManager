@@ -4,7 +4,7 @@ ResX Resource Manager supports synchronisation between `ResX` and `Xliff` resour
 
 This can be useful if your translation service accepts `Xliff` files as a translation source.
 
-You can also complement or replace the [Multilingua lApp Toolkit (MAT)](https://marketplace.visualstudio.com/items?itemName=MultilingualAppToolkit.MultilingualAppToolkit-18308)
+You can also complement or replace the [Multilingual App Toolkit (MAT)](https://marketplace.visualstudio.com/items?itemName=MultilingualAppToolkit.MultilingualAppToolkit-18308)
 
 ### Configuration
 
