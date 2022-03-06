@@ -17,8 +17,8 @@
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
 
-    [Export(typeof(IService)), Shared]
-    internal sealed class XlfSynchronizer : FileWatcher, IService
+    [Export, Export(typeof(IService)), Shared]
+    public sealed class XlfSynchronizer : FileWatcher, IService
     {
         private static readonly HashSet<string> _supportedExtension = new(new[] { ".xlf", ".xliff" }, StringComparer.OrdinalIgnoreCase);
 
@@ -27,6 +27,8 @@
         private readonly IConfiguration _configuration;
 
         private IDictionary<string, XlfDocument> _documentsByPath = new Dictionary<string, XlfDocument>();
+
+        private bool _isUpdateRunning;
 
         public XlfSynchronizer(ResourceManager resourceManager, ITracer tracer, IConfiguration configuration)
         {
@@ -110,6 +112,23 @@
                     return;
                 }
 
+                await UpdateFromXlfAsync();
+            }
+            catch (Exception ex)
+            {
+                _tracer.TraceError("Error reading XLIF files: {0}", ex);
+            }
+        }
+
+        public async Task UpdateFromXlfAsync()
+        {
+            if (_isUpdateRunning)
+                return;
+
+            _isUpdateRunning = true;
+
+            try
+            {
                 var solutionFolder = Folder;
                 if (string.IsNullOrEmpty(solutionFolder))
                     return;
@@ -122,7 +141,6 @@
                         .ToDictionary(doc => doc.FilePath, StringComparer.OrdinalIgnoreCase);
 
                     return documents;
-
                 }).ConfigureAwait(true);
 
                 var filesByOriginal = GetFilesByOriginal(_documentsByPath.Values);
@@ -132,9 +150,9 @@
                     UpdateEntityFromXlf(entity, filesByOriginal);
                 }
             }
-            catch (Exception ex)
+            finally
             {
-                _tracer.TraceError("Error reading XLIF files: {0}", ex);
+                _isUpdateRunning = false;
             }
         }
 

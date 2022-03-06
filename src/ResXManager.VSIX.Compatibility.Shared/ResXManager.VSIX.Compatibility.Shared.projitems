@@ -16,7 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DteSolution.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DteSourceFilesProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorListProviderService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PreBuildService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ICustomToolRunner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Refactorings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VsixCompatibility.cs" />
