@@ -29,7 +29,7 @@
         public static readonly HashSet<string> ApprovedStates = new(new[] { "translated", "final", "signed-off" });
         public static readonly HashSet<string> NeedsReviewStates = new(new[] { "needs-review-translation", "needs-translation", "needs-review-l10n", "needs-l10n", "needs-review-adaptation" });
 
-        public const string FromResx = "resx";
-        public const string FromResxSpecific = "resx-specific";
+        public const string FromResx = "MultilingualBuild";
+        public const string FromResxSpecific = "resx";
     }
 }
