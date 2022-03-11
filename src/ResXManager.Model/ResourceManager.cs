@@ -5,7 +5,6 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Composition;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -275,12 +274,16 @@
             return hasChanged;
         }
 
-        internal void LanguageAdded(CultureKey cultureKey)
+        internal void LanguageAdded(ResourceLanguage language, ProjectFile projectFile)
         {
+            var cultureKey = language.CultureKey;
+
             if (!Cultures.Contains(cultureKey))
             {
                 Cultures.Add(cultureKey);
             }
+
+            OnProjectFileSaved(language, projectFile);
         }
 
         [SuppressPropertyChangedWarnings]
