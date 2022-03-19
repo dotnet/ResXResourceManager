@@ -7,6 +7,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using ResXManager.Infrastructure;
@@ -28,7 +29,8 @@
 
         private IDictionary<string, XlfDocument> _documentsByPath = new Dictionary<string, XlfDocument>();
 
-        private bool _isUpdateRunning;
+        private int _isUpdateFromXlfRunning;
+        private int _isUpdateFromResXRunning;
 
         public XlfSynchronizer(ResourceManager resourceManager, ITracer tracer, IConfiguration configuration)
         {
@@ -122,10 +124,10 @@
 
         public async Task UpdateFromXlfAsync()
         {
-            if (_isUpdateRunning)
+            if (_isUpdateFromResXRunning > 0)
                 return;
 
-            _isUpdateRunning = true;
+            Interlocked.Increment(ref _isUpdateFromXlfRunning);
 
             try
             {
@@ -152,11 +154,11 @@
             }
             finally
             {
-                _isUpdateRunning = false;
+                Interlocked.Increment(ref _isUpdateFromXlfRunning);
             }
         }
 
-        private static void UpdateEntityFromXlf(ResourceEntity entity, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
+        private void UpdateEntityFromXlf(ResourceEntity entity, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
         {
             var original = GetOriginal(entity);
 
@@ -166,34 +168,50 @@
             UpdateEntityFromXlf(entity, xlfFiles);
         }
 
-        private static void UpdateEntityFromXlf(ResourceEntity entity, IEnumerable<XlfFile> xlfFiles)
+        private void UpdateEntityFromXlf(ResourceEntity entity, IEnumerable<XlfFile> xlfFiles)
         {
-            var entriesByKey = entity.Entries.ToDictionary(entry => entry.Key);
+            if (_isUpdateFromResXRunning > 0)
+                return;
 
-            foreach (var xlfFile in xlfFiles)
+            Interlocked.Increment(ref _isUpdateFromXlfRunning);
+
+            try
             {
-                var targetLanguage = xlfFile.TargetLanguage;
+                var entriesByKey = entity.Entries.ToDictionary(entry => entry.Key);
 
-                var xlfNodes = xlfFile.ResourceNodes;
-
-                foreach (var node in xlfNodes)
+                foreach (var xlfFile in xlfFiles)
                 {
-                    if (!entriesByKey.TryGetValue(node.Key, out var entry))
-                        continue;
+                    var targetLanguage = xlfFile.TargetLanguage;
+                    var targetCultureKey = CultureKey.Parse(targetLanguage);
 
-                    entry.Values[targetLanguage] = node.Text;
-                    entry.SetCommentText(CultureKey.Parse(targetLanguage), node.Comment);
+                    var xlfNodes = xlfFile.ResourceNodes;
 
-                    /* TODO: Enable configurable translation state tracking
-                        var resxState = entry.TranslationState[targetLanguage];
-                        var xlfState = node.TranslationState;
-
-                        if (resxState == xlfState)
+                    foreach (var node in xlfNodes)
+                    {
+                        if (!entriesByKey.TryGetValue(node.Key, out var entry))
                             continue;
 
-                        entry.TranslationState[targetLanguage] = xlfState;
-                    */
+                        if (!entry.CanEdit(targetCultureKey))
+                            continue;
+
+                        entry.Values[targetLanguage] = node.Text;
+                        entry.SetCommentText(targetCultureKey, node.Comment);
+
+                        /* TODO: Enable configurable translation state tracking
+                            var resxState = entry.TranslationState[targetLanguage];
+                            var xlfState = node.TranslationState;
+    
+                            if (resxState == xlfState)
+                                continue;
+    
+                            entry.TranslationState[targetLanguage] = xlfState;
+                        */
+                    }
                 }
+            }
+            finally
+            {
+                Interlocked.Decrement(ref _isUpdateFromXlfRunning);
             }
         }
 
@@ -280,26 +298,38 @@
             if (!_configuration.EnableXlifSync)
                 return;
 
-            var documentsByPath = _documentsByPath;
-            var filesByOriginal = GetFilesByOriginal(documentsByPath.Values);
-
-            var language = e.Language;
-            var entity = language.Container;
-
-            var neutralLanguage = entity.Languages.FirstOrDefault();
-            if (neutralLanguage == null)
+            if (_isUpdateFromXlfRunning > 0)
                 return;
 
-            if (language.IsNeutralLanguage)
+            Interlocked.Increment(ref _isUpdateFromResXRunning);
+
+            try
             {
-                foreach (var specificLanguage in entity.Languages.Where(l => !l.IsNeutralLanguage))
+                var documentsByPath = _documentsByPath;
+                var filesByOriginal = GetFilesByOriginal(documentsByPath.Values);
+
+                var language = e.Language;
+                var entity = language.Container;
+
+                var neutralLanguage = entity.Languages.FirstOrDefault();
+                if (neutralLanguage == null)
+                    return;
+
+                if (language.IsNeutralLanguage)
                 {
-                    UpdateXlfFile(entity, specificLanguage.CultureKey, filesByOriginal);
+                    foreach (var specificLanguage in entity.Languages.Where(l => !l.IsNeutralLanguage))
+                    {
+                        UpdateXlfFile(entity, specificLanguage.CultureKey, filesByOriginal);
+                    }
+                }
+                else
+                {
+                    UpdateXlfFile(entity, language.CultureKey, filesByOriginal);
                 }
             }
-            else
+            finally
             {
-                UpdateXlfFile(entity, language.CultureKey, filesByOriginal);
+                Interlocked.Decrement(ref _isUpdateFromResXRunning);
             }
         }
 

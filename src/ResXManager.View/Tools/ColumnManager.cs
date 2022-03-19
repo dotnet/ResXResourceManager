@@ -98,7 +98,10 @@
         {
             var cultureKey = new CultureKey(culture);
 
-            dataGrid.AddLanguageColumn(configuration, cultureKey);
+            if (!dataGrid.Columns.Any(col => Equals(col?.GetCultureKey(), cultureKey)))
+            {
+                dataGrid.AddLanguageColumn(configuration, cultureKey);
+            }
 
             var key = cultureKey.ToString(NeutralCultureKeyString);
 

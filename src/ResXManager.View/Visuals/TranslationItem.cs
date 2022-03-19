@@ -46,7 +46,7 @@ namespace ResXManager.View.Visuals
 
         public bool Apply(string? valuePrefix, string? commentPrefix)
         {
-            if (!_entry.CanEdit(null))
+            if (!_entry.CanEdit(TargetCulture))
                 return false;
 
             _entry.Values.SetValue(TargetCulture, valuePrefix + Translation);
@@ -57,6 +57,9 @@ namespace ResXManager.View.Visuals
             var existingComment = _entry.Comment;
             if (existingComment != null && existingComment.StartsWith(commentPrefix, System.StringComparison.Ordinal))
                 return true;
+
+            if (!_entry.CanEdit(_entry.NeutralLanguage.CultureKey))
+                return false;
 
             _entry.Comments.SetValue(_entry.NeutralLanguage.CultureKey, commentPrefix + existingComment);
 

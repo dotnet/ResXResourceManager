@@ -222,7 +222,7 @@
             _languages.Add(cultureKey, resourceLanguage);
             _resourceTableEntries.ForEach(entry => entry.Refresh());
 
-            Container.LanguageAdded(resourceLanguage, file);
+            Container.OnLanguageAdded(resourceLanguage, file);
         }
 
         public override string ToString()

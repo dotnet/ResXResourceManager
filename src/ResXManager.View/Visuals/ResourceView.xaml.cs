@@ -48,6 +48,7 @@
                 this.SetExportProvider(exportProvider);
 
                 _resourceManager.Loaded += ResourceManager_Loaded;
+                _resourceManager.LanguageAdded += ResourceManager_LanguageAdded;
 
                 InitializeComponent();
 
@@ -75,6 +76,11 @@
         private void ResourceManager_Loaded(object? sender, EventArgs e)
         {
             DataGrid?.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
+        }
+
+        private void ResourceManager_LanguageAdded(object sender, LanguageEventArgs e)
+        {
+            DataGrid.CreateNewLanguageColumn(_configuration, e.Language.Culture);
         }
 
         private void AddLanguage_Click(object? sender, RoutedEventArgs e)
