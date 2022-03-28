@@ -4,6 +4,11 @@
       "commandName": "Executable",
       "executablePath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\Common7\\IDE\\devenv.exe",
       "commandLineArgs": "/RootSuffix Exp"
+    },
+    "VS 2022 Preview": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Preview\\Common7\\IDE\\devenv.exe",
+      "commandLineArgs": "/RootSuffix Exp"
     }
   }
 }

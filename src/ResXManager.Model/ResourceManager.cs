@@ -141,12 +141,13 @@
             try
             {
                 IsLoading = true;
+
+                SolutionFolder = null;
                 await LoadAsync(Array.Empty<ProjectFile>(), CancellationToken.None).ConfigureAwait(true);
             }
             finally
             {
                 IsLoading = false;
-                SolutionFolder = null;
             }
         }
 
