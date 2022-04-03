@@ -1,4 +1,11 @@
-﻿1.63
+﻿1.64
+- #444: Xliff comments from MAT are not synchronized.
+- Run Xliff synchronization before build.
+- Fix #465: Adding a new language should create missing .xlf files if sync is enabled.
+- Fix #467: Applying translation fails when language file does not exist.
+- Closing solution clears web-export
+
+1.63
 - Fix #233: Automatically added the BOM 
 - Support XLIFF
 - #446: Add an option to set #TODO flag in the comment field, instead of on the value field
