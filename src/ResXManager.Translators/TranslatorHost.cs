@@ -29,6 +29,16 @@
             _translators = translators;
 
             var settings = Settings.Default;
+
+            if (settings.upgradeNeeded)
+            {
+                settings.Upgrade();
+                settings.Save();
+                settings.Reload();
+                settings.upgradeNeeded = false;
+                settings.Save();
+            }
+
             var configuration = settings.Configuration;
 
             LoadConfiguration(translators, configuration);
