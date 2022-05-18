@@ -44,7 +44,18 @@
 
             try
             {
-                var folder = Settings.Default.StartupFolder;
+                var settings = Settings.Default;
+
+                if (settings.upgradeNeeded)
+                {
+                    settings.Upgrade();
+                    settings.Save();
+                    settings.Reload();
+                    settings.upgradeNeeded = false;
+                    settings.Save();
+                }
+
+                var folder = settings.StartupFolder;
 
                 if (folder.IsNullOrEmpty())
                     return;

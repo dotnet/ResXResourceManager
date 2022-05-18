@@ -111,6 +111,7 @@
 
             Settings.StartupLocation = _lastKnownLocation;
             Settings.StartupSize = _lastKnownSize;
+            Settings.Save();
         }
 
         private static Settings Settings => Settings.Default;

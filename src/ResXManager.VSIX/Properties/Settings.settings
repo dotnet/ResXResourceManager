@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="tomenglertde.ResXManager.VSIX.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ResXManager.VSIX.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="MoveToResourceValueShowWhitespace" Type="System.Boolean" Scope="User">
@@ -16,6 +16,9 @@
     </Setting>
     <Setting Name="MoveToResourcePreferedKeyPatterns" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="upgradeNeeded" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>
