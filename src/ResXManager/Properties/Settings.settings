@@ -11,5 +11,8 @@
     <Setting Name="StartupLocation" Type="System.Windows.Vector" Scope="User">
       <Value Profile="(Default)">50,50</Value>
     </Setting>
+    <Setting Name="upgradeNeeded" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

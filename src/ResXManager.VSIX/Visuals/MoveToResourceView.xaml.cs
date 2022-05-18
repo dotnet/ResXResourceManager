@@ -20,6 +20,16 @@
         {
             try
             {
+                var settings = Properties.Settings.Default;
+                if (settings.upgradeNeeded)
+                {
+                    settings.Upgrade();
+                    settings.Save();
+                    settings.Reload();
+                    settings.upgradeNeeded = false;
+                    settings.Save();
+                }
+
                 this.SetExportProvider(exportProvider);
 
                 InitializeComponent();
