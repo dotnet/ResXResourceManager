@@ -32,11 +32,8 @@
 
             if (settings.upgradeNeeded)
             {
-                settings.Upgrade();
-                settings.Save();
-                settings.Reload();
+                settings.MigrateSettings();
                 settings.upgradeNeeded = false;
-                settings.Save();
             }
 
             var configuration = settings.Configuration;

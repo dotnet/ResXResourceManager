@@ -106,5 +106,16 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Migrate app settings if needed (after upgrade of VS or a new build of the standalone app).
+        /// </summary>
+        /// <param name="settings"></param>
+        public static void MigrateSettings(this System.Configuration.ApplicationSettingsBase settings)
+        {
+            settings.Upgrade();
+            settings.Save();
+            settings.Reload();
+        }
     }
 }
