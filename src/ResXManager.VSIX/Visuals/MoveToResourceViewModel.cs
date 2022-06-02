@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Text;
@@ -26,8 +27,10 @@
         public MoveToResourceViewModel(IVsixCompatibility vsixCompatibility, ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text, string extension, string? className, string? functionName, string? fileName)
         {
             ResourceEntities = resourceEntities;
-            SelectedResourceEntity = resourceEntities
-                .FirstOrDefault(x => (fileName ?? string.Empty).StartsWith(x.BaseName, StringComparison.OrdinalIgnoreCase))
+            var baseFileName = BaseFileName(fileName);
+            SelectedResourceEntity =
+                resourceEntities.FirstOrDefault(x => (baseFileName ?? string.Empty).Equals(x.BaseName, StringComparison.Ordinal))
+                ?? resourceEntities.FirstOrDefault(x => (baseFileName ?? string.Empty).StartsWith(x.BaseName, StringComparison.OrdinalIgnoreCase))
                 ?? resourceEntities.FirstOrDefault();
 
             ExistingEntries = resourceEntities
@@ -43,6 +46,17 @@
             Keys = new[] { CreateKey(text, null, null), CreateKey(text, null, functionName), CreateKey(text, className ?? fileName, functionName) }.Distinct().ToArray();
             Key = Keys.Skip(SelectedKeyIndex).FirstOrDefault() ?? Keys.FirstOrDefault();
             Value = text;
+        }
+
+        private static string? BaseFileName(string? fileName)
+        {
+            while (fileName is not null)
+            {
+                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+                if (fileName == fileNameWithoutExtension) break;
+                fileName = fileNameWithoutExtension;
+            }
+            return fileName;
         }
 
         public ICollection<ResourceEntity> ResourceEntities { get; }
