@@ -26,7 +26,9 @@
         public MoveToResourceViewModel(IVsixCompatibility vsixCompatibility, ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text, string extension, string? className, string? functionName, string? fileName)
         {
             ResourceEntities = resourceEntities;
-            SelectedResourceEntity = resourceEntities.FirstOrDefault();
+            SelectedResourceEntity = resourceEntities
+                .FirstOrDefault(x => (fileName ?? string.Empty).StartsWith(x.BaseName, StringComparison.OrdinalIgnoreCase))
+                ?? resourceEntities.FirstOrDefault();
 
             ExistingEntries = resourceEntities
                 .SelectMany(entity => entity.Entries)
