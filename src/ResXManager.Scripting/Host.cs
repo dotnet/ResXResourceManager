@@ -204,6 +204,8 @@
 
         public bool RemoveEmptyEntries { get; set; }
 
+        public string? TranslatorConfiguration { get; set; }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)

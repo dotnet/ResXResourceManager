@@ -28,7 +28,7 @@
         private static readonly Uri _uri = new("https://fanyi-api.baidu.com/product/11");
         private static readonly IList<ICredentialItem> _credentialItems = new ICredentialItem[]
         {
-            new CredentialItem("AppId", "API Id"),
+            new CredentialItem("AppId", "App Id"),
             new CredentialItem("SecretKey", "Secret Key"),
             new CredentialItem("ApiUrl", "Api Url", false),
             new CredentialItem("Domain", "Domain", false),
@@ -75,17 +75,19 @@
         }
 
         private string? AppId => Credentials[0].Value;
+        private string? SecretKey => Credentials[1].Value;
+
 
         protected override async Task Translate(ITranslationSession translationSession)
         {
             if (AppId.IsNullOrEmpty())
             {
-                translationSession.AddMessage("Baidu Translator requires AppId.");
+                translationSession.AddMessage("Baidu Translator requires App Id.");
                 return;
             }
-            if (SerializedSecretKey.IsNullOrEmpty())
+            if (SecretKey.IsNullOrEmpty())
             {
-                translationSession.AddMessage("Baidu Translator requires SecretKey.");
+                translationSession.AddMessage("Baidu Translator requires Secret Key.");
                 return;
             }
             foreach (var languageGroup in translationSession.Items.GroupBy(item => item.TargetCulture))
@@ -95,65 +97,65 @@
 
                 var targetCulture = languageGroup.Key.Culture ?? translationSession.NeutralResourcesLanguage;
 
-                using (var itemsEnumerator = languageGroup.GetEnumerator())
+                using var itemsEnumerator = languageGroup.GetEnumerator();
+
+                while (true)
                 {
-                    while (true)
+                    var sourceItems = itemsEnumerator.Take(numberOfItems: 1);
+                    if (translationSession.IsCanceled || !sourceItems.Any())
+                        break;
+
+                    // Build  parameters
+                    var parameters = new List<string?>(30);
+                    Random rd = new();
+                    var salt = rd.Next(100000).ToString(CultureInfo.CurrentCulture);
+                    var q = sourceItems[0].Source;
+                    string sign;
+
+                    if (Domain.IsNullOrWhiteSpace())
                     {
-                        var sourceItems = itemsEnumerator.Take(numberOfItems: 1);
-                        if (translationSession.IsCanceled || !sourceItems.Any())
-                            break;
-
-                        // Build  parameters
-                        var parameters = new List<string?>(30);
-                        Random rd = new();
-                        string salt = rd.Next(100000).ToString(CultureInfo.CurrentCulture);
-                        string q = sourceItems[0].Source;
-                        string sign = "";
-                        if (Domain.IsNullOrWhiteSpace())
-                        {
-                            sign = EncryptString(AppId + q + salt + SerializedSecretKey);
-                        }
-                        else
-                        {
-                            sign = EncryptString(AppId + q + salt + Domain + SerializedSecretKey);
-                            parameters.AddRange(new[] { "domain", Domain });
-                        }
-                        parameters.AddRange(new[]
-                        {
-                                "q", q,
-                                "from", translationSession.SourceLanguage.TwoLetterISOLanguageName,
-                                "to", targetCulture.TwoLetterISOLanguageName,
-                                "appid", AppId,
-                                "salt",salt,
-                                "sign",sign,
-                            });
-
-                        var apiUrl = ApiUrl;
-                        if (apiUrl.IsNullOrWhiteSpace())
-                        {
-                            apiUrl = "https://fanyi-api.baidu.com/api/trans/vip/translate";
-                        }
-
-                        // Call the Baidu API
-                        var response = await GetHttpResponse<BaiduTranslationResponse>(
-                            apiUrl,
-                            parameters,
-                            translationSession.CancellationToken).ConfigureAwait(false);
-
-                        if (!string.IsNullOrEmpty(response.ErrorCode) && !string.IsNullOrEmpty(response.ErrorMsg))
-                        {
-                            translationSession.AddMessage(response.ErrorMsg);
-                            return;
-                        }
-                        await translationSession.MainThread.StartNew(() =>
-                        {
-                            if (response.TransResult == null) return;
-                            foreach (var tuple in sourceItems.Zip(response.TransResult, (a, b) => new Tuple<ITranslationItem, string?>(a, b.Dst)))
-                            {
-                                tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2, Ranking));
-                            }
-                        }).ConfigureAwait(false);
+                        sign = EncryptString(AppId + q + salt + SerializedSecretKey);
                     }
+                    else
+                    {
+                        sign = EncryptString(AppId + q + salt + Domain + SerializedSecretKey);
+                        parameters.AddRange(new[] { "domain", Domain });
+                    }
+                    parameters.AddRange(new[]
+                    {
+                        "q", q,
+                        "from", translationSession.SourceLanguage.TwoLetterISOLanguageName,
+                        "to", targetCulture.TwoLetterISOLanguageName,
+                        "appid", AppId,
+                        "salt", salt,
+                        "sign", sign,
+                    });
+
+                    var apiUrl = ApiUrl;
+                    if (apiUrl.IsNullOrWhiteSpace())
+                    {
+                        apiUrl = "https://fanyi-api.baidu.com/api/trans/vip/translate";
+                    }
+
+                    // Call the Baidu API
+                    var response = await GetHttpResponse<BaiduTranslationResponse>(
+                        apiUrl,
+                        parameters,
+                        translationSession.CancellationToken).ConfigureAwait(false);
+
+                    if (!response.ErrorCode.IsNullOrEmpty() && !response.ErrorMsg.IsNullOrEmpty())
+                    {
+                        translationSession.AddMessage(response.ErrorMsg);
+                        return;
+                    }
+                    await translationSession.MainThread.StartNew(() =>
+                    {
+                        if (response.TransResult == null) return;
+                        foreach (var tuple in sourceItems.Zip(response.TransResult, (a, b) => new Tuple<ITranslationItem, string?>(a, b.Dst)))
+                        {
+                            tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2, Ranking));
+                        }
+                    }).ConfigureAwait(false);
                 }
             }
 
@@ -161,19 +163,17 @@
         }
         public static string EncryptString(string str)
         {
-#pragma warning disable CA5351 
-            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+#pragma warning disable CA5351
+            using var md5 = System.Security.Cryptography.MD5.Create();
+            var byteOld = Encoding.UTF8.GetBytes(str);
+            var byteNew = md5.ComputeHash(byteOld);
+            StringBuilder sb = new();
+            foreach (var b in byteNew)
             {
-                byte[] byteOld = Encoding.UTF8.GetBytes(str);
-                byte[] byteNew = md5.ComputeHash(byteOld);
-                StringBuilder sb = new();
-                foreach (byte b in byteNew)
-                {
-                    sb.Append(value: b.ToString("x2", CultureInfo.CurrentCulture));
-                }
-                return sb.ToString();
+                sb.Append(value: b.ToString("x2", CultureInfo.CurrentCulture));
             }
-#pragma warning restore CA5351 
+            return sb.ToString();
+#pragma warning restore CA5351
         }
 
         private static async Task<T> GetHttpResponse<T>(string baseUrl, ICollection<string?> parameters, CancellationToken cancellationToken)
@@ -181,36 +181,30 @@
         {
             var url = BuildUrl(baseUrl, parameters);
 
-            using (var httpClient = new HttpClient())
-            {
-                //httpClient.Timeout = TimeSpan.FromMilliseconds(2000);
-                var response = await httpClient.GetAsync(new Uri(url), cancellationToken).ConfigureAwait(false);
+            using var httpClient = new HttpClient();
+            //httpClient.Timeout = TimeSpan.FromMilliseconds(2000);
+            var response = await httpClient.GetAsync(new Uri(url), cancellationToken).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode();
 
-                using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                {
-                    return JsonConverter<T>(stream) ?? throw new InvalidOperationException("Empty response.");
-                }
-            }
+            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            return JsonConverter<T>(stream) ?? throw new InvalidOperationException("Empty response.");
         }
 
         private static T? JsonConverter<T>(Stream stream)
             where T : class
         {
-            using (var reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
-            }
+            using var reader = new StreamReader(stream, Encoding.UTF8);
+            return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
         }
 
         [DataContract]
         private class TranslateResult
         {
             [DataMember(Name = "src")]
-            public string Src { get; set; }
+            public string? Src { get; set; }
             [DataMember(Name = "dst")]
-            public string Dst { get; set; }
+            public string? Dst { get; set; }
         }
 
         [DataContract]
