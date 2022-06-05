@@ -16,10 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.Model", "ResXManager.Model\ResXManager.Model.csproj", "{6AF977DB-2C9F-4D9C-8C2D-CFDDF7E022FC}"
-	ProjectSection(ProjectDependencies) = postProject
-		{D8B0B04F-4273-45DB-AE2D-5A91C89E1225} = {D8B0B04F-4273-45DB-AE2D-5A91C89E1225}
-		{A20586DF-CBE9-4A6F-807C-10960D13E848} = {A20586DF-CBE9-4A6F-807C-10960D13E848}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.View", "ResXManager.View\ResXManager.View.csproj", "{32935FC5-1F28-419C-B67F-12D2014F8A8B}"
 EndProject
