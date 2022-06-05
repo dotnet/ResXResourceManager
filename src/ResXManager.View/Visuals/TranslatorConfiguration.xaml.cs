@@ -7,7 +7,7 @@
     using ResXManager.Infrastructure;
 
     /// <summary>
-    ///     Interaction logic for TranslatorConfiguration.xaml
+    /// Interaction logic for TranslatorConfiguration.xaml
     /// </summary>
     public partial class TranslatorConfiguration
     {

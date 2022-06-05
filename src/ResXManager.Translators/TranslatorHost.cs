@@ -9,6 +9,7 @@
     using System.Threading.Tasks;
 
     using ResXManager.Infrastructure;
+    using ResXManager.Model;
     using ResXManager.Translators.Properties;
 
     using Throttle;
@@ -19,19 +20,20 @@
     public sealed class TranslatorHost : IDisposable
     {
         private readonly ITranslator[] _translators;
+        private readonly IConfiguration _configuration;
         private readonly TaskFactory _mainThread = new(TaskScheduler.FromCurrentSynchronizationContext());
 
         private ITranslationSession? _activeSession;
 
         [ImportingConstructor]
-        public TranslatorHost([ImportMany] ITranslator[] translators)
+        public TranslatorHost([ImportMany] ITranslator[] translators, IConfiguration configuration)
         {
             _translators = translators;
+            _configuration = configuration;
 
-            var settings = Settings.Default;
-            var configuration = settings.Configuration;
+            var translatorConfiguration = configuration.TranslatorConfiguration;
 
-            LoadConfiguration(translators, configuration);
+            LoadConfiguration(translators, translatorConfiguration ?? Settings.Default.Configuration);
 
             RegisterChangeEvents(translators);
         }
@@ -71,8 +73,6 @@
         [Throttled(typeof(Throttle), 1000)]
         private void SaveConfiguration()
         {
-            var settings = Settings.Default;
-
             var values = new Dictionary<string, string>();
 
             foreach (var translator in _translators)
@@ -81,7 +81,7 @@
                 values[translator.Id] = json;
             }
 
-            settings.Configuration = JsonConvert.SerializeObject(values);
+            _configuration.TranslatorConfiguration = JsonConvert.SerializeObject(values);
         }
 
         private static void LoadConfiguration(ITranslator[] translators, string? configuration)
