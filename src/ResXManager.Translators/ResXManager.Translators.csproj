@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ResXManager.Infrastructure\ResXManager.Infrastructure.csproj" />
+    <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Fody" PrivateAssets="all">
