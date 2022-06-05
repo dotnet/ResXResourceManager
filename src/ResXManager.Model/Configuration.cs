@@ -69,6 +69,8 @@
         bool ShowPerformanceTraces { get; }
 
         bool EnableXlifSync { get; set; }
+
+        string? TranslatorConfiguration { get; set; }
     }
 
     public abstract class Configuration : ConfigurationBase, IConfiguration
@@ -134,5 +136,8 @@
 
         [DefaultValue(false)]
         public bool EnableXlifSync { get; set; }
+
+        [DefaultValue(null)]
+        public string? TranslatorConfiguration { get; set; }
     }
 }
