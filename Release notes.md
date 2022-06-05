@@ -1,4 +1,8 @@
-﻿1.64
+﻿1.65
+- #480: Add Baidu Translator 
+- Fix #441: do not store translator properties in settings, but in configuration
+
+1.64
 - #444: Xliff comments from MAT are not synchronized.
 - Run Xliff synchronization before build.
 - Fix #465: Adding a new language should create missing .xlf files if sync is enabled.
