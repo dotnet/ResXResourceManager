@@ -5,6 +5,7 @@
 
 <#@ import namespace="EnvDTE" #>
 <#@ import namespace="EnvDTE80" #>
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.IO" #>
@@ -381,7 +382,7 @@ namespace <#= localNamespace #> {
     ProjectItem GetResxProjectItem()
     {
         var serviceProvider = (IServiceProvider)Host;
-        var dte = (DTE2)serviceProvider.GetService(typeof(DTE));
+        var dte = (DTE2)serviceProvider.GetCOMService(typeof(DTE));
         var ttItem = dte.Solution.FindProjectItem(Host.TemplateFile);
         return (ProjectItem)ttItem.Collection.Parent;        
     }

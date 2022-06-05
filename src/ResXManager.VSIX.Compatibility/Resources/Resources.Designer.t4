@@ -2,10 +2,10 @@
 <#@ assembly name="System.Windows.Forms" #>
 <#@ assembly name="EnvDTE" #>
 <#@ assembly name="EnvDTE80" #>
-<# // You need to reference "Microsoft.VisualStudio.Interop to run it on VS2022: #>
-<# // @ assembly name="Microsoft.VisualStudio.Interop" #> 
+
 <#@ import namespace="EnvDTE" #>
 <#@ import namespace="EnvDTE80" #>
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.IO" #>
@@ -382,7 +382,7 @@ namespace <#= localNamespace #> {
     ProjectItem GetResxProjectItem()
     {
         var serviceProvider = (IServiceProvider)Host;
-        var dte = (DTE2)serviceProvider.GetService(typeof(DTE));
+        var dte = (DTE2)serviceProvider.GetCOMService(typeof(DTE));
         var ttItem = dte.Solution.FindProjectItem(Host.TemplateFile);
         return (ProjectItem)ttItem.Collection.Parent;        
     }
@@ -450,7 +450,7 @@ namespace <#= localNamespace #> {
     {
         value = XmlEscape(value);
         if (value.Length <= maxLen)
-            return value;        
+            return value;
         
         return value.Substring(0, maxLen) + "...";
     }
