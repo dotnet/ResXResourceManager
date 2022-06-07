@@ -114,11 +114,11 @@
 
                     if (Domain.IsNullOrWhiteSpace())
                     {
-                        sign = EncryptString(AppId + q + salt + SerializedSecretKey);
+                        sign = EncryptString(AppId + q + salt + SecretKey);
                     }
                     else
                     {
-                        sign = EncryptString(AppId + q + salt + Domain + SerializedSecretKey);
+                        sign = EncryptString(AppId + q + salt + Domain + SecretKey);
                         parameters.AddRange(new[] { "domain", Domain });
                     }
                     parameters.AddRange(new[]
