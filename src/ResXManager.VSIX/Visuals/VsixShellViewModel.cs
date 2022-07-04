@@ -66,7 +66,7 @@
 #pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
         }
 
-        public IMoveToResourceViewModel CreateMoveToResourceViewModel(ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text, string extension, string? className, string? functionName, string? fileName)
+        public IMoveToResourceViewModel CreateMoveToResourceViewModel(ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text, string extension, string? className, string? functionName, string fileName)
         {
             return new MoveToResourceViewModel(_vsixCompatibility, patterns, resourceEntities, text, extension, className, functionName, fileName);
         }

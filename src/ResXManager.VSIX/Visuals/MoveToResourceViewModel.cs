@@ -24,13 +24,13 @@
     {
         private readonly string _extension;
 
-        public MoveToResourceViewModel(IVsixCompatibility vsixCompatibility, ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text, string extension, string? className, string? functionName, string? fileName)
+        public MoveToResourceViewModel(IVsixCompatibility vsixCompatibility, ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text, string extension, string? className, string? functionName, string fileName)
         {
             ResourceEntities = resourceEntities;
             var baseFileName = BaseFileName(fileName);
             SelectedResourceEntity =
-                resourceEntities.FirstOrDefault(x => (baseFileName ?? string.Empty).Equals(x.BaseName, StringComparison.Ordinal))
-                ?? resourceEntities.FirstOrDefault(x => (baseFileName ?? string.Empty).StartsWith(x.BaseName, StringComparison.OrdinalIgnoreCase))
+                resourceEntities.FirstOrDefault(x => baseFileName.Equals(x.BaseName, StringComparison.OrdinalIgnoreCase))
+                ?? resourceEntities.FirstOrDefault(x => baseFileName.StartsWith(x.BaseName, StringComparison.OrdinalIgnoreCase))
                 ?? resourceEntities.FirstOrDefault();
 
             ExistingEntries = resourceEntities
@@ -48,15 +48,16 @@
             Value = text;
         }
 
-        private static string? BaseFileName(string? fileName)
+        private static string BaseFileName(string fileName)
         {
-            while (fileName is not null)
+            while (true)
             {
                 var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
-                if (fileName == fileNameWithoutExtension) break;
+                if (fileName == fileNameWithoutExtension)
+                    return fileName;
+
                 fileName = fileNameWithoutExtension;
             }
-            return fileName;
         }
 
         public ICollection<ResourceEntity> ResourceEntities { get; }

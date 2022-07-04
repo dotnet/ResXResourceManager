@@ -10,6 +10,6 @@
 
         IMoveToResourceViewModel CreateMoveToResourceViewModel(ICollection<string> patterns,
             ICollection<ResourceEntity> resourceEntities, string text, string extension, string? className,
-            string? functionName, string? fileName);
+            string? functionName, string fileName);
     }
 }
