@@ -1,4 +1,8 @@
-﻿1.65
+﻿1.66
+- #482: Preselect resource entity on "Move to Resource"
+- Json export: tslint is deprecated, has been replaced by eslint.
+
+1.65
 - #480: Add Baidu Translator 
 - Fix #441: do not store translator properties in settings, but in configuration
 
