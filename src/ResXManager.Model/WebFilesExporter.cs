@@ -199,6 +199,7 @@ function formatString(template: string, args: any): string {
   return result;
 }
 
+// noinspection JSUnusedGlobalSymbols,SpellCheckingInspection
 ";
     }
 }
