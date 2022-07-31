@@ -97,7 +97,7 @@ namespace ResXManager.Translators
 
                             using (var reader = new StreamReader(stream, Encoding.UTF8))
                             {
-                                var translations = JsonConvert.DeserializeObject<List<AzureTranslationResponse>>(reader.ReadToEnd());
+                                var translations = JsonConvert.DeserializeObject<List<AzureTranslationResponse>>(await reader.ReadToEndAsync().ConfigureAwait(false));
                                 if (translations != null)
                                 {
                                     await translationSession.MainThread.StartNew(() => ReturnResults(sourceItems, translations)).ConfigureAwait(false);

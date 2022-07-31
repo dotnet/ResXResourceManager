@@ -118,7 +118,7 @@
 
             using (var reader = new StreamReader(await response.Content.ReadAsStreamAsync().ConfigureAwait(false), Encoding.UTF8))
             {
-                var json = reader.ReadToEnd();
+                var json = await reader.ReadToEndAsync().ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<Response>(json);
             }
         }

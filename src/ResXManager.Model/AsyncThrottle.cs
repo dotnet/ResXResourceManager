@@ -27,7 +27,7 @@
             {
                 Interlocked.Increment(ref _counter);
 
-                await Task.Delay(250);
+                await Task.Delay(250).ConfigureAwait(true);
 
                 if (Interlocked.Decrement(ref _counter) != 0)
                     return;

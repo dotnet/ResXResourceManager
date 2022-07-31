@@ -27,10 +27,10 @@
             if (Extensions.IsNullOrEmpty())
                 return Enumerable.Empty<string>();
 
-            return Extensions?.Split(',')
-                       .Select(ext => ext.Trim())
-                       .Where(ext => !ext.IsNullOrEmpty())
-                   ?? Enumerable.Empty<string>();
+            return Extensions
+                .Split(',')
+                .Select(ext => ext.Trim())
+                .Where(ext => !ext.IsNullOrEmpty());
         }
 
 #pragma warning disable CS0067

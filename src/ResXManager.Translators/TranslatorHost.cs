@@ -91,7 +91,7 @@
 
             try
             {
-                var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(configuration ?? string.Empty);
+                var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(configuration);
                 if (values == null)
                     return;
 

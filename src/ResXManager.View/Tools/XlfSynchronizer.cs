@@ -114,7 +114,7 @@
                     return;
                 }
 
-                await UpdateFromXlfAsync();
+                await UpdateFromXlfAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {

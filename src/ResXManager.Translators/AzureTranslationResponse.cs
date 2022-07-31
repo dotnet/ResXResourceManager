@@ -3,6 +3,7 @@
     using System.Collections.Generic;
 
 #pragma warning disable CA2227 // Collection properties should be read only => serialized DTOs!
+#pragma warning disable CA1002 // Do not expose generic lists => serialized DTOs!
 
     public class AzureTranslationResponse
     {

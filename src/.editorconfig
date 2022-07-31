@@ -1,11 +1,10 @@
 [*]
 indent_style = space
 trim_trailing_whitespace = true
+indent_size = 2
 
 [*.cs]
 indent_size = 4
-
-dotnet_analyzer_diagnostic.severity = error
 
 # CA1031: Do not catch general exception types
 dotnet_diagnostic.CA1031.severity = none
@@ -55,9 +54,11 @@ dotnet_diagnostic.CA1845.severity = suggestion
 # IDE0079: Remove unnecessary suppression
 dotnet_diagnostic.IDE0079.severity = none
 
-[*.xaml]
-indent_size = 2
+# CA1014: Mark assemblies with CLSCompliant
+dotnet_diagnostic.CA1014.severity = none
 
-[*.xml]
-indent_size = 2
+# CA1056: URI-like properties should not be strings
+dotnet_diagnostic.CA1056.severity = silent
 
+# CA5394: Do not use insecure randomness
+dotnet_diagnostic.CA5394.severity = none

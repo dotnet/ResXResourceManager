@@ -53,7 +53,9 @@
                 return collection.Clear();
             });
 
+#pragma warning disable CA1508 // Avoid dead conditional code => changed files is set in lambda above.
             return changedFiles ?? Array.Empty<string>();
+#pragma warning restore CA1508 // Avoid dead conditional code
         }
 
         private void File_Changed(object sender, FileSystemEventArgs e)
