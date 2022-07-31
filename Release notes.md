@@ -1,4 +1,10 @@
-﻿1.66
+﻿1.68
+- #490: Save Credentials API Key doesn't save => Translator configuration should not be saved in solution specific storage.
+
+1.67
+- WebFilesExporter: allow numbers to be passed as arguments for placeholders
+
+1.66
 - #482: Preselect resource entity on "Move to Resource"
 - Json export: tslint is deprecated, has been replaced by eslint.
 
