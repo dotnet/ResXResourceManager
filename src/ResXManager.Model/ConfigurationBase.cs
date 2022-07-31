@@ -13,6 +13,11 @@
 
     using TomsToolbox.Essentials;
 
+    [AttributeUsage(AttributeTargets.Property)]
+    public sealed class ForceGlobalAttribute : Attribute
+    {
+    }
+
     /// <summary>
     /// Handle global persistence.
     /// </summary>
@@ -57,7 +62,7 @@
         protected ITracer Tracer { get; }
 
         [GetInterceptor]
-        protected T? GetProperty<T>(string key, PropertyInfo? propertyInfo)
+        protected T? GetProperty<T>(string key, PropertyInfo propertyInfo)
         {
             if (!typeof(INotifyChanged).IsAssignableFrom(typeof(T)))
             {
@@ -76,7 +81,7 @@
 
             ((INotifyChanged)value).Changed += (sender, e) =>
             {
-                SetValue((T?)sender, key);
+                SetValue((T?)sender, key, propertyInfo);
             };
 
             _cachedObjects.Add(key, value);
@@ -103,12 +108,14 @@
         }
 
         [SetInterceptor]
-        protected void SetValue<T>(T? value, string key)
+        protected void SetValue<T>(T? value, string key, PropertyInfo property)
         {
-            InternalSetValue(value, key);
+            var forceGlobal = property.GetCustomAttributes<ForceGlobalAttribute>().Any();
+
+            InternalSetValue(value, key, forceGlobal);
         }
 
-        protected virtual void InternalSetValue<T>(T? value, string key)
+        protected virtual void InternalSetValue<T>(T? value, string key, bool forceGlobal)
         {
             try
             {

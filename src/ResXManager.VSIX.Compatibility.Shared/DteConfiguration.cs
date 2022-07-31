@@ -56,19 +56,19 @@
             return TryGetValue(GetKey(key), defaultValue, out var value) ? value : base.InternalGetValue(defaultValue, key);
         }
 
-        protected override void InternalSetValue<T>(T? value, string key) where T : default
+        protected override void InternalSetValue<T>(T? value, string key, bool forceGlobal) where T : default
         {
             ThrowIfNotOnUIThread();
 
             var globals = _solution.Globals;
 
-            if (globals != null)
+            if (globals != null && !forceGlobal)
             {
                 TrySetValue(globals, GetKey(key), value);
             }
             else
             {
-                base.InternalSetValue(value, key);
+                base.InternalSetValue(value, key, forceGlobal);
             }
         }
 

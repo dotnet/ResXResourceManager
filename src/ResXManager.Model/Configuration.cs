@@ -138,6 +138,7 @@
         public bool EnableXlifSync { get; set; }
 
         [DefaultValue(null)]
+        [ForceGlobal]
         public string? TranslatorConfiguration { get; set; }
     }
 }
