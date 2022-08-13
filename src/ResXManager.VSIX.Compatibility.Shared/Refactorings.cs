@@ -32,8 +32,8 @@
         private readonly DTE2 _dte;
         private readonly IExportProvider _exportProvider;
         private readonly IVsixShellViewModel _shellViewModel;
-        private ResourceEntity? _lastUsedEntity;
-        private bool _isLastUsedEntityInSameProject;
+        private static ResourceEntity? _lastUsedEntity;
+        private static bool _isLastUsedEntityInSameProject;
 
         [ImportingConstructor]
         public Refactorings(IExportProvider exportProvider, IVsixShellViewModel shellViewModel)
@@ -143,8 +143,9 @@
             {
                 if (!_isLastUsedEntityInSameProject || IsInProject(_lastUsedEntity, document))
                 {
-                    entities.Remove(_lastUsedEntity);
-                    entities.Insert(0, _lastUsedEntity);
+                    var entityExists = entities.Remove(_lastUsedEntity);
+                    if(entityExists) // don't insert entity if it doesn't already exist
+                        entities.Insert(0, _lastUsedEntity);
                 }
             }
 
