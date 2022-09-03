@@ -93,7 +93,7 @@
               </xs:element>
               <xs:element name="CompactMode" type="xs:boolean" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
-                  <xs:documentation>A switch to control whether to compact the target assembly by skipping properties, events and unused methods. Default is 'false'</xs:documentation>
+                  <xs:documentation>A switch to enable compacting of the target assembly by skipping properties, events and unused methods. Default is 'false'</xs:documentation>
                 </xs:annotation>
               </xs:element>
             </xs:all>
@@ -134,7 +134,7 @@
             </xs:attribute>
             <xs:attribute name="CompactMode" type="xs:boolean">
               <xs:annotation>
-                <xs:documentation>A switch to control whether to compact the target assembly by skipping properties, events and unused methods. Default is 'false'</xs:documentation>
+                <xs:documentation>A switch to enable compacting of the target assembly by skipping properties, events and unused methods. Default is 'false'</xs:documentation>
               </xs:annotation>
             </xs:attribute>
           </xs:complexType>

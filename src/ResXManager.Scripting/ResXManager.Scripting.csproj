@@ -19,7 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
-    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.7.3" />
+    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.8.0" />
   </ItemGroup>
   <Target Name="CompressFiles" Condition="'$(Configuration)' == 'Release'" AfterTargets="CopyFilesToOutputDirectory" Outputs="..\Deploy\Scripting.zip">
     <ItemGroup>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -215,13 +215,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all" Version="1.25.0" />
-    <PackageReference Include="Fody" PrivateAssets="all" Version="6.6.0" />
-    <PackageReference Include="ILMerge.Fody" PrivateAssets="all" Version="1.22.0" />
+    <PackageReference Include="Fody" PrivateAssets="all" Version="6.6.3" />
+    <PackageReference Include="ILMerge.Fody" PrivateAssets="all" Version="1.23.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
-    <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="3.4.0" />
-    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.7.3" />
-    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.7.3" />
-    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.7.3" />
+    <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.0.1" />
+    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.8.0" />
+    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.8.0" />
+    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.8.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" PrivateAssets="All" Version="1.1.1" />
   </ItemGroup>
   <ItemGroup />
