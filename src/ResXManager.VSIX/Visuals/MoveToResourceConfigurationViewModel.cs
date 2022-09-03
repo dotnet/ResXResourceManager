@@ -1,5 +1,6 @@
 ﻿namespace ResXManager.VSIX.Visuals
 {
+    using System.ComponentModel;
     using System.Composition;
 
     using ResXManager.Infrastructure;
@@ -12,7 +13,7 @@
     [LocalizedDisplayName(StringResourceKey.MoveToResource)]
     [VisualCompositionExport(RegionId.Configuration)]
     [Shared]
-    internal class MoveToResourceConfigurationViewModel : ObservableObject
+    internal partial class MoveToResourceConfigurationViewModel : INotifyPropertyChanged
     {
         [ImportingConstructor]
         public MoveToResourceConfigurationViewModel(IDteConfiguration configuration)

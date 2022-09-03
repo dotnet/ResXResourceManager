@@ -1,5 +1,6 @@
 ﻿namespace ResXManager.View.Visuals
 {
+    using System.ComponentModel;
     using System.Composition;
     using System.Linq;
     using System.Windows.Input;
@@ -14,7 +15,7 @@
 
     [VisualCompositionExport(RegionId.Content, Sequence = 3)]
     [Shared]
-    internal class ConfigurationEditorViewModel : ObservableObject
+    internal partial class ConfigurationEditorViewModel : INotifyPropertyChanged
     {
         [ImportingConstructor]
         public ConfigurationEditorViewModel(ResourceManager resourceManager, IConfiguration configuration)

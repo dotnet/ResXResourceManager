@@ -1,11 +1,12 @@
 ﻿namespace ResXManager.View.Themes
 {
+    using System.ComponentModel;
     using System.Composition;
 
     using TomsToolbox.Wpf;
 
     [Export, Shared]
-    public class ThemeManager : ObservableObject
+    public partial class ThemeManager : INotifyPropertyChanged
     {
         public bool IsDarkTheme { get; set; }
     }

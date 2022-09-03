@@ -4,9 +4,11 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
+    using System.ComponentModel;
     using System.Composition;
     using System.Linq;
     using System.Windows.Input;
+    using System.Windows.Threading;
 
     using PropertyChanged;
 
@@ -24,10 +26,11 @@
 
     [VisualCompositionExport(RegionId.Content, Sequence = 2)]
     [Shared]
-    internal class TranslationsViewModel : ObservableObject
+    internal partial class TranslationsViewModel : INotifyPropertyChanged
     {
         public TranslatorHost TranslatorHost { get; }
 
+        private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
         private readonly ResourceManager _resourceManager;
         private readonly ResourceViewModel _resourceViewModel;
 
@@ -48,7 +51,7 @@
             selectedTargetCultures.CollectionChanged += SelectedTargetCultures_CollectionChanged;
             SelectedTargetCultures = selectedTargetCultures;
 
-            TranslatorHost.SessionStateChanged += (_, __) => Dispatcher.BeginInvoke(() =>
+            TranslatorHost.SessionStateChanged += (_, __) => _dispatcher.BeginInvoke(() =>
             {
                 OnPropertyChanged(nameof(TranslatorHost));
                 CommandManager.InvalidateRequerySuggested();
@@ -74,7 +77,7 @@
         {
             var selectedCultures = AllTargetCultures.Except(UnselectedTargetCultures).OrderBy(c => c).ToArray();
 
-            Dispatcher.BeginInvoke(() =>
+            _dispatcher.BeginInvoke(() =>
             {
                 try
                 {
@@ -240,7 +243,7 @@
         private void SelectedTargetCultures_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             UpdateTargetList();
-            Dispatcher.BeginInvoke(() => UnselectedTargetCultures = AllTargetCultures.Concat(UnselectedTargetCultures).Distinct().Except(SelectedTargetCultures));
+            _dispatcher.BeginInvoke(() => UnselectedTargetCultures = AllTargetCultures.Concat(UnselectedTargetCultures).Distinct().Except(SelectedTargetCultures));
         }
 
         public override string ToString()

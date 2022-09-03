@@ -12,7 +12,7 @@ namespace ResXManager.View.Visuals
 
     using TomsToolbox.Wpf;
 
-    public class TranslationItem : ObservableObject, ITranslationItem
+    public partial class TranslationItem : INotifyPropertyChanged, ITranslationItem
     {
         private readonly ObservableCollection<ITranslationMatch> _results = new();
         private readonly ResourceTableEntry _entry;
@@ -27,7 +27,7 @@ namespace ResXManager.View.Visuals
             Source = source;
 
             TargetCulture = targetCulture;
-            _results.CollectionChanged += (_, __) => OnPropertyChanged(() => Translation);
+            _results.CollectionChanged += (_, __) => OnPropertyChanged(nameof(Translation));
         }
 
         public string Source { get; }

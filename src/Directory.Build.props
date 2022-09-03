@@ -25,4 +25,17 @@
     </PackageReference>
   </ItemGroup>
 
+  <Target Name="RemoveDuplicateAnalyzers" BeforeTargets="CoreCompile">
+    <!-- see https://github.com/dotnet/wpf/pull/6680 -->
+    <RemoveDuplicates Inputs="@(Analyzer)">
+      <Output
+        TaskParameter="Filtered"
+        ItemName="FilteredAnalyzer"/>
+    </RemoveDuplicates>
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" />
+      <Analyzer Include="@(FilteredAnalyzer)" />
+    </ItemGroup>
+  </Target>
+
 </Project>

@@ -1,5 +1,6 @@
 ﻿namespace ResXManager.View.ColumnHeaders
 {
+    using System.ComponentModel;
     using System.Globalization;
 
     using ResXManager.Infrastructure;
@@ -7,7 +8,7 @@
 
     using TomsToolbox.Wpf;
 
-    public abstract class LanguageColumnHeaderBase : ObservableObject, ILanguageColumnHeader
+    public abstract partial class LanguageColumnHeaderBase : INotifyPropertyChanged, ILanguageColumnHeader
     {
         private readonly IConfiguration _configuration;
 

@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Composition;
     using System.IO;
     using System.Linq;
@@ -32,8 +33,9 @@
     [Shared]
     [Export]
     [VisualCompositionExport(RegionId.Content, Sequence = 1)]
-    public sealed class ResourceViewModel : ObservableObject, IDisposable
+    public sealed partial class ResourceViewModel : INotifyPropertyChanged, IDisposable
     {
+        private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
         private readonly IConfiguration _configuration;
         private readonly ISourceFilesProvider _sourceFilesProvider;
         private readonly ITracer _tracer;
@@ -540,7 +542,7 @@
             var language = e.Language;
 
             // Defer save to avoid repeated file access
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+            _dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
                 try
                 {

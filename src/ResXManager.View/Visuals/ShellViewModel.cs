@@ -1,6 +1,7 @@
 ﻿namespace ResXManager.View.Visuals
 {
     using System.Collections.Specialized;
+    using System.ComponentModel;
     using System.Composition;
     using System.Windows.Threading;
 
@@ -14,8 +15,10 @@
 
     [Export, Shared]
     [VisualCompositionExport(RegionId.Shell)]
-    public class ShellViewModel : ObservableObject
+    public partial class ShellViewModel : INotifyPropertyChanged
     {
+        private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
+
         [ImportingConstructor]
         public ShellViewModel(ResourceViewModel resourceViewModel)
         {
@@ -34,7 +37,7 @@
         {
             SelectedTabIndex = 0;
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
+            _dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
             {
                 ResourceViewModel.SelectEntry(entry);
             });
@@ -48,7 +51,7 @@
 
             try
             {
-                Dispatcher.ProcessMessages(DispatcherPriority.Render);
+                _dispatcher.ProcessMessages(DispatcherPriority.Render);
             }
             catch
             {

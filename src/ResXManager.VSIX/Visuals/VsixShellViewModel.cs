@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Composition;
     using System.Linq;
     using System.Windows.Input;
@@ -19,8 +20,9 @@
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
     [Export(typeof(IVsixShellViewModel))]
-    internal sealed class VsixShellViewModel : ObservableObject, IVsixShellViewModel
+    internal sealed partial class VsixShellViewModel : INotifyPropertyChanged, IVsixShellViewModel
     {
+        private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
         private readonly ResourceViewModel _resourceViewModel;
         private readonly ShellViewModel _shellViewModel;
         private readonly IVsixCompatibility _vsixCompatibility;
@@ -62,7 +64,7 @@
 
 #pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
             // Must defer selection until tool window is fully shown!
-            Dispatcher.BeginInvoke(DispatcherPriority.Background, () => _shellViewModel.SelectEntry(entry));
+            _dispatcher.BeginInvoke(DispatcherPriority.Background, () => _shellViewModel.SelectEntry(entry));
 #pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
         }
 

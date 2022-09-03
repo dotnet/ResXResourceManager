@@ -1,5 +1,6 @@
 ﻿namespace ResXManager.View.Visuals
 {
+    using System.ComponentModel;
     using System.Composition;
 
     using ResXManager.Infrastructure;
@@ -10,7 +11,7 @@
 
     [VisualCompositionExport(RegionId.Content, Sequence = 4)]
     [Shared]
-    internal class LanguageConfigurationViewModel : ObservableObject
+    internal partial class LanguageConfigurationViewModel : INotifyPropertyChanged
     {
         public override string ToString()
         {

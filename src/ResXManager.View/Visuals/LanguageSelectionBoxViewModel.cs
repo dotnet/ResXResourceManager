@@ -1,13 +1,14 @@
 ﻿namespace ResXManager.View.Visuals
 {
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using System.Linq;
 
     using TomsToolbox.Wpf;
 
-    public class LanguageSelectionBoxViewModel : ObservableObject
+    public partial class LanguageSelectionBoxViewModel : INotifyPropertyChanged
     {
         public LanguageSelectionBoxViewModel(IEnumerable<CultureInfo> existingLanguages)
         {
