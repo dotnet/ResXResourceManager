@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <UseWPF>true</UseWPF>
@@ -11,28 +11,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Fody" PrivateAssets="all">
-      <Version>6.6.0</Version>
-    </PackageReference>
-    <PackageReference Include="HtmlAgilityPack" PrivateAssets="all">
-      <Version>1.11.38</Version>
-    </PackageReference>
+    <PackageReference Include="Fody" PrivateAssets="all" Version="6.6.0" />
+    <PackageReference Include="HtmlAgilityPack" PrivateAssets="all" Version="1.11.38" />
     <PackageReference Include="ILMerge.Fody" Version="1.22.0" PrivateAssets="all" />
-    <PackageReference Include="JetBrains.Annotations" PrivateAssets="all">
-      <Version>2021.3.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>9.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all">
-      <Version>3.4.0</Version>
-    </PackageReference>
-    <PackageReference Include="TomsToolbox.Composition">
-      <Version>2.7.3</Version>
-    </PackageReference>
+    <PackageReference Include="JetBrains.Annotations" PrivateAssets="all" Version="2021.3.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="3.4.0" />
+    <PackageReference Include="TomsToolbox.Composition" Version="2.7.3" />
   </ItemGroup>
 </Project>
