@@ -86,7 +86,21 @@
                 solutionFolder += Path.DirectorySeparatorChar;
             }
 
-            return filePath.StartsWith(solutionFolder, StringComparison.OrdinalIgnoreCase) ? filePath.Substring(solutionFolder.Length) : filePath;
+            if (filePath.StartsWith(solutionFolder, StringComparison.OrdinalIgnoreCase))
+                return filePath.Substring(solutionFolder.Length);
+
+            var solutionPathElements = solutionFolder.Split(Path.DirectorySeparatorChar);
+            var filePathElements = filePath.Split(Path.DirectorySeparatorChar);
+            int sameStartElements = 0, maxSameStartElements = Math.Min(solutionPathElements.Length, filePathElements.Length);
+            while (sameStartElements < maxSameStartElements
+                && solutionPathElements[sameStartElements].Equals(filePathElements[sameStartElements], StringComparison.OrdinalIgnoreCase))
+                sameStartElements++;
+
+            if (sameStartElements > 0)
+                return Path.Combine(Enumerable.Repeat("..", solutionPathElements.Length - sameStartElements - 1)
+                    .Concat(filePathElements.Skip(sameStartElements)).ToArray());
+
+            return filePath;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
