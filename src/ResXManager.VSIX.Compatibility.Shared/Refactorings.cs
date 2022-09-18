@@ -27,6 +27,7 @@
     using Resources = Compatibility.Properties.Resources;
 
     [Export(typeof(IRefactorings))]
+    [Shared]
     internal class Refactorings : IRefactorings
     {
         private readonly DTE2 _dte;
@@ -143,8 +144,10 @@
             {
                 if (!_isLastUsedEntityInSameProject || IsInProject(_lastUsedEntity, document))
                 {
-                    entities.Remove(_lastUsedEntity);
-                    entities.Insert(0, _lastUsedEntity);
+                    if (entities.Remove(_lastUsedEntity))
+                    {
+                        entities.Insert(0, _lastUsedEntity);
+                    }
                 }
             }
 
