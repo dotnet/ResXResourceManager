@@ -1,4 +1,7 @@
-﻿1.68
+﻿1.69
+- #494: Resource Files with duplicate Project, File, and Key 
+
+1.68
 - #490: Save Credentials API Key doesn't save => Translator configuration should not be saved in solution specific storage.
 
 1.67
