@@ -26,6 +26,10 @@
     public class BaiduTranslator : TranslatorBase
     {
         private static readonly Uri _uri = new("https://fanyi-api.baidu.com/product/11");
+        private static readonly Dictionary<string, string> _baiduCultureMap = new Dictionary<string, string>
+        {
+            { "ja", "jp"}
+        };
         private static readonly IList<ICredentialItem> _credentialItems = new ICredentialItem[]
         {
             new CredentialItem("AppId", "App Id"),
@@ -124,8 +128,8 @@
                     parameters.AddRange(new[]
                     {
                         "q", q,
-                        "from", translationSession.SourceLanguage.TwoLetterISOLanguageName,
-                        "to", targetCulture.TwoLetterISOLanguageName,
+                        "from", GetCultureLang(translationSession.SourceLanguage),
+                        "to", GetCultureLang(targetCulture),
                         "appid", AppId,
                         "salt", salt,
                         "sign", sign,
@@ -158,9 +162,13 @@
                     }).ConfigureAwait(false);
                 }
             }
-
-
         }
+
+        private static string GetCultureLang(CultureInfo targetCulture)
+        {
+            return _baiduCultureMap.TryGetValue(targetCulture.TwoLetterISOLanguageName, out var langName) ? langName : targetCulture.TwoLetterISOLanguageName;
+        }
+
         public static string EncryptString(string str)
         {
 #pragma warning disable CA5351
