@@ -1,4 +1,7 @@
-﻿1.69
+﻿1.70
+- #497: Baidu Translator failed to translate chinses to japanese
+
+1.69
 - #494: Resource Files with duplicate Project, File, and Key 
 - #491: Move to Resource window should remember last selected resource
 
