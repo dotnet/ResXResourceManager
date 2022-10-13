@@ -6,7 +6,7 @@ The engine does not fully parse the source code, but is using a simple text look
 On the other hand it will not find indirect references like {"ResourceFile["ResourceKey"](_ResourceKey_) or even ResourceFile["Resource" + "Key"](_Resource_-+-_Key_)."} So be aware that a count of zero is no guarantee that this resource is not used; e.g. resources of localized WinForms controls always have a count of zero!
 
 The patterns the algorithm is looking for are configurable on the configuration tab:
-![](Detect Code References_DetectCodeReferencesConfig.png)
+![](Detect%20Code%20References_DetectCodeReferencesConfig.png)
 
 Only patterns that appear on a single line are detected. Patterns that span more than one line are not detected.
 
