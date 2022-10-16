@@ -45,7 +45,7 @@
         public static readonly DependencyProperty IsConfigurationEnabledProperty = DependencyProperty.RegisterAttached(
             "IsConfigurationEnabled", typeof(bool), typeof(WebExportConfigurationViewModel), new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.Inherits));
 
-        private void Configuration_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Configuration_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             SaveChanges();
         }

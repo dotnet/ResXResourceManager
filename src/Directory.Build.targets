@@ -1,0 +1,41 @@
+<Project>
+
+  <ItemGroup>
+
+    <Compile Update="Properties\Resources.Designer.cs" Condition="Exists('Properties\Resources.Designer.cs')">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.Designer.tt</DependentUpon>
+    </Compile>
+    <None Update="Properties\Resources.Designer.tt" Condition="Exists('Properties\Resources.Designer.tt')">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </None>
+
+    <None Update="Properties\Settings.settings" Condition="Exists('Properties\Settings.settings')">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Update="Properties\Settings.Designer.cs" Condition="Exists('Properties\Settings.Designer.cs')">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+
+  </ItemGroup>
+
+  <Target Name="RemoveDuplicateAnalyzers" BeforeTargets="CoreCompile">
+    <!-- see https://github.com/dotnet/wpf/pull/6680 -->
+    <RemoveDuplicates Inputs="@(Analyzer)">
+      <Output
+        TaskParameter="Filtered"
+        ItemName="FilteredAnalyzer"/>
+    </RemoveDuplicates>
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" />
+      <Analyzer Include="@(FilteredAnalyzer)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

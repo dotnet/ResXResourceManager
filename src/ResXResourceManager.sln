@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\azure-pipelines.yml = ..\azure-pipelines.yml
 		..\CODE-OF-CONDUCT.md = ..\CODE-OF-CONDUCT.md
 		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
 		..\README.md = ..\README.md
 		..\Release notes.md = ..\Release notes.md
 		Resources.Designer.t4 = Resources.Designer.t4
@@ -121,11 +122,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.VSIX.Compatibility.x64", "ResXManager.VSIX.Compatibility.x64\ResXManager.VSIX.Compatibility.x64.csproj", "{330FADF0-80F3-4B2A-8F11-79F528AFA1DD}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{330fadf0-80f3-4b2a-8f11-79f528afa1dd}*SharedItemsImports = 5
-		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{c59e23b4-6acd-43dc-bfc7-fcb667155eb3}*SharedItemsImports = 5
-		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{cc3f887f-9602-43f4-aa73-7557b7c6ab1d}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -186,5 +182,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {04A160C5-3AA5-4A9E-9D73-A227A07E3EE4}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{330fadf0-80f3-4b2a-8f11-79f528afa1dd}*SharedItemsImports = 5
+		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{c59e23b4-6acd-43dc-bfc7-fcb667155eb3}*SharedItemsImports = 5
+		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{cc3f887f-9602-43f4-aa73-7557b7c6ab1d}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

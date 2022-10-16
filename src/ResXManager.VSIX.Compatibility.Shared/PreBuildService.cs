@@ -79,7 +79,7 @@
             Dispatcher.PushFrame(frame);
         }
 
-        private void BuildEvents_SolutionBuildStarted(object sender, EventArgs e)
+        private void BuildEvents_SolutionBuildStarted(object? sender, EventArgs e)
         {
             if (!_configuration.EnableXlifSync && !_configuration.ShowErrorsInErrorList)
                 return;

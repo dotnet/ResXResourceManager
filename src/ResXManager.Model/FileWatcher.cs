@@ -58,7 +58,7 @@
 #pragma warning restore CA1508 // Avoid dead conditional code
         }
 
-        private void File_Changed(object sender, FileSystemEventArgs e)
+        private void File_Changed(object? sender, FileSystemEventArgs e)
         {
             if (!IncludeFile(e.Name))
                 return;

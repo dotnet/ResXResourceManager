@@ -43,7 +43,7 @@
             }
         }
 
-        private void DataGrid_ColumnsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void DataGrid_ColumnsChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             var textBox = TextBox;
             if (textBox == null)

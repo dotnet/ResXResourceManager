@@ -12,7 +12,7 @@ namespace ResXManager.View.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.6.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.3.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -128,6 +128,30 @@ namespace ResXManager.View.Properties {
             }
             set {
                 this["IsOpenSourceMessageConfirmed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsFindCodeReferencesEnabled {
+            get {
+                return ((bool)(this["IsFindCodeReferencesEnabled"]));
+            }
+            set {
+                this["IsFindCodeReferencesEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TranslationUnselectedTargetCultures {
+            get {
+                return ((string)(this["TranslationUnselectedTargetCultures"]));
+            }
+            set {
+                this["TranslationUnselectedTargetCultures"] = value;
             }
         }
     }

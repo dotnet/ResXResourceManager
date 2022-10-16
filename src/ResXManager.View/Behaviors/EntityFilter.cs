@@ -43,7 +43,7 @@
             try
             {
                 var regex = new Regex(value, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                return item => regex.Match(item.ToString()).Success;
+                return item => regex.Match(item.ToString() ?? string.Empty).Success;
             }
             catch (ArgumentException)
             {
@@ -52,7 +52,7 @@
             try
             {
                 var regex = new Regex(value.Replace(@"\", @"\\", StringComparison.Ordinal), RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                return item => regex.Match(item.ToString()).Success;
+                return item => regex.Match(item.ToString() ?? string.Empty).Success;
             }
             catch (ArgumentException)
             {

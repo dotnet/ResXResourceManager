@@ -262,7 +262,6 @@
             catch (Exception ex)
             {
                 ResourceEntities.Clear();
-                MessageBox.Show(ex.Message, Application.Current?.MainWindow?.Title ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Tracer.TraceError(ex.ToString());
                 return true;
             }

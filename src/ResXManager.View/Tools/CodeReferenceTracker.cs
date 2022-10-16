@@ -64,7 +64,7 @@
                     return;
                 }
 
-                if (Model.Properties.Settings.Default.IsFindCodeReferencesEnabled)
+                if (Properties.Settings.Default.IsFindCodeReferencesEnabled)
                 {
                     BeginFind(_resourceManager.AllSourceFiles);
                 }

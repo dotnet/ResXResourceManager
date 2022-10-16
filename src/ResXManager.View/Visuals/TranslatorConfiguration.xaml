@@ -6,7 +6,7 @@
              xmlns:wpf="urn:TomsToolbox"
              xmlns:properties="clr-namespace:ResXManager.View.Properties"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
-             xmlns:infrastructure="urn:ResXManager.Infrastructure"
+             xmlns:infrastructure="clr-namespace:ResXManager.Infrastructure;assembly=ResXManager.Infrastructure"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
   <TabControl TabStripPlacement="Left" Loaded="TabControl_Loaded"
               HorizontalContentAlignment="Stretch"

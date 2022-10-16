@@ -22,8 +22,6 @@
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.AttributedModel;
 
-    using Settings = Model.Properties.Settings;
-
     [VisualCompositionExport(RegionId.Content, Sequence = 2)]
     [Shared]
     internal partial class TranslationsViewModel : INotifyPropertyChanged
@@ -51,7 +49,7 @@
             selectedTargetCultures.CollectionChanged += SelectedTargetCultures_CollectionChanged;
             SelectedTargetCultures = selectedTargetCultures;
 
-            TranslatorHost.SessionStateChanged += (_, __) => _dispatcher.BeginInvoke(() =>
+            TranslatorHost.SessionStateChanged += (_, _) => _dispatcher.BeginInvoke(() =>
             {
                 OnPropertyChanged(nameof(TranslatorHost));
                 CommandManager.InvalidateRequerySuggested();
@@ -215,12 +213,13 @@
                 .ToArray();
 
             // #4: apply existing translations
+            // ! item.Source is checked in #1
             foreach (var targetCulture in targetCultures)
             {
                 var itemsWithTranslations = allEntries.AsParallel()
                     .Where(item => item.TargetCulture == targetCulture)
                     .Where(item => HasTranslation(item.Target))
-                    .GroupBy(item => item.Source)
+                    .GroupBy(item => item.Source!)
                     .ToDictionary(item => item.Key);
 
                 itemsToTranslate.AsParallel()

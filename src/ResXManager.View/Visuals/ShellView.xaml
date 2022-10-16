@@ -5,7 +5,7 @@
              xmlns:visuals="clr-namespace:ResXManager.View.Visuals"
              xmlns:properties="clr-namespace:ResXManager.View.Properties"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
-             xmlns:infrastructure="urn:ResXManager.Infrastructure"
+             xmlns:infrastructure="clr-namespace:ResXManager.Infrastructure;assembly=ResXManager.Infrastructure"
              xmlns:composition="urn:TomsToolbox.Composition"
              xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:toms="urn:TomsToolbox"

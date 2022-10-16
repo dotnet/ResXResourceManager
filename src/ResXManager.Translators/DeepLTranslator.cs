@@ -107,7 +107,7 @@
 
                         await translationSession.MainThread.StartNew(() =>
                         {
-                            foreach (var tuple in sourceItems.Zip(response.Translations,
+                            foreach (var tuple in sourceItems.Zip(response.Translations ?? Array.Empty<Translation>(),
                                 (a, b) => new Tuple<ITranslationItem, string?>(a, b.Text)))
                             {
                                 tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2, Ranking));
@@ -162,7 +162,7 @@
         private class TranslationRootObject
         {
             [DataMember(Name = "translations")]
-            public List<Translation>? Translations { get; set; }
+            public Translation[]? Translations { get; set; }
         }
 
         /// <summary>Builds the URL from a base, method name, and name/value paired parameters. All parameters are encoded.</summary>

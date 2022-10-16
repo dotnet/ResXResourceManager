@@ -93,7 +93,7 @@
 
                         await translationSession.MainThread.StartNew(() =>
                         {
-                            foreach (var tuple in sourceItems.Zip(response.Data?.Translations, (a, b) => new Tuple<ITranslationItem, Translation>(a, b)))
+                            foreach (var tuple in sourceItems.Zip(response.Data?.Translations ?? Array.Empty<Translation>(), (a, b) => new Tuple<ITranslationItem, Translation>(a, b)))
                             {
                                 tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2.TranslatedText, Ranking));
                             }
@@ -156,7 +156,7 @@
         private class Data
         {
             [DataMember(Name = "translations")]
-            public List<Translation>? Translations { get; set; }
+            public Translation[]? Translations { get; set; }
         }
 
         [DataContract]

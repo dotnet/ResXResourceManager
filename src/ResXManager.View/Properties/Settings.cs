@@ -4,7 +4,7 @@
     {
         static Settings()
         {
-            Default.PropertyChanged += (sender, _) => ((Settings)sender).Save();
+            Default.PropertyChanged += (sender, _) => (sender as Settings)?.Save();
         }
     }
 }

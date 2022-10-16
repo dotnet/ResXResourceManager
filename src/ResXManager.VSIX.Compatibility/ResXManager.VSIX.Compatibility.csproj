@@ -6,18 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <None Update="Properties\Resources.Designer.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </None>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.Designer.tt</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="[15.0.1]" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.0.1" />
     <PackageReference Include="Fody" PrivateAssets="all" Version="6.6.3" />

@@ -57,7 +57,7 @@
                     if (response != null)
                     {
                         var matches = response
-                            .SelectMany(match => match?.Translations?.Select(trans => new TranslationMatch(this, trans?.TranslatedText, Ranking * match.ConfidenceLevel / 100.0)))
+                            .SelectMany(match => match?.Translations?.Select(trans => new TranslationMatch(this, trans?.TranslatedText, Ranking * match.ConfidenceLevel / 100.0)) ?? Array.Empty<TranslationMatch>())
                             .Where(m => m?.TranslatedText != null)
                             .Distinct(TranslationMatch.TextComparer);
 

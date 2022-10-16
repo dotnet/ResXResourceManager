@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
              xmlns:toms="urn:TomsToolbox"
              xmlns:composition="urn:TomsToolbox.Composition"
-             xmlns:infrastructure="urn:ResXManager.Infrastructure"
+             xmlns:infrastructure="clr-namespace:ResXManager.Infrastructure;assembly=ResXManager.Infrastructure"
              xmlns:visuals="clr-namespace:ResXManager.VSIX.Visuals"
              xmlns:vsix="clr-namespace:ResXManager.VSIX"
              xmlns:interactions="http://schemas.microsoft.com/xaml/behaviors"

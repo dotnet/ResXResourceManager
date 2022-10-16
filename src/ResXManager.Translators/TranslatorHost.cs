@@ -33,7 +33,7 @@
 
             var translatorConfiguration = configuration.TranslatorConfiguration;
 
-            LoadConfiguration(translators, translatorConfiguration ?? Settings.Default.Configuration);
+            LoadConfiguration(translators, translatorConfiguration);
 
             RegisterChangeEvents(translators);
         }

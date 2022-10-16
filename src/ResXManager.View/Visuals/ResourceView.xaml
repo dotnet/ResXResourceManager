@@ -4,14 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="800"
              xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-             xmlns:model="urn:ResXManager.Model"
+             xmlns:model="clr-namespace:ResXManager.Model;assembly=ResXManager.Model"
              xmlns:toms="urn:TomsToolbox"
              xmlns:properties="clr-namespace:ResXManager.View.Properties"
              xmlns:converters="clr-namespace:ResXManager.View.Converters"
              xmlns:columnHeaders="clr-namespace:ResXManager.View.ColumnHeaders"
              xmlns:behaviors="clr-namespace:ResXManager.View.Behaviors"
              xmlns:tools="clr-namespace:ResXManager.View.Tools"
-             xmlns:infrastructure="urn:ResXManager.Infrastructure"
+             xmlns:infrastructure="clr-namespace:ResXManager.Infrastructure;assembly=ResXManager.Infrastructure"
              xmlns:visuals="clr-namespace:ResXManager.View.Visuals"
              xmlns:view="clr-namespace:ResXManager.View"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
@@ -238,7 +238,7 @@
               <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/addColumns.png" />
             </Button>
             <ToggleButton ToolTip="{x:Static properties:Resources.FindCodeReferencesButtonToolTip}"
-                          IsChecked="{Binding IsFindCodeReferencesEnabled, Source={x:Static model:Settings.Default}, Mode=TwoWay}"
+                          IsChecked="{Binding IsFindCodeReferencesEnabled, Source={x:Static properties:Settings.Default}, Mode=TwoWay}"
                           Command="{Binding BeginFindCodeReferencesCommand, Converter={StaticResource ErrorHandlerCommandConverter}}">
               <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/references.png" />
             </ToggleButton>
