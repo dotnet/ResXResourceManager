@@ -35,7 +35,7 @@
   </Target>
   <Target Name="_CompressFiles" Condition="'$(Configuration)'=='Release' AND '$(IsInnerBuild)'!='true'" AfterTargets="Build" Outputs="..\Deploy\Scripting.zip">
     <MakeDir Directories="..\Deploy" />
-    <Exec Command="PowerShell -command Compress-Archive -Path $(BaseOutputPath)$(Configuration)\* -DestinationPath '..\Deploy\Scripting.zip' -Force" />
+    <ZipDirectory SourceDirectory="$(BaseOutputPath)$(Configuration)" DestinationFile="..\Deploy\Scripting.zip" Overwrite="true" />
     <Message Text="Updated ..\Deploy\Scripting.zip" />
   </Target>
 </Project>
