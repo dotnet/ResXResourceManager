@@ -23,6 +23,8 @@
 
         private string? _solutionFolder;
 
+        private static void Main() { }
+
         public Host()
         {
             var assembly = GetType().Assembly;
