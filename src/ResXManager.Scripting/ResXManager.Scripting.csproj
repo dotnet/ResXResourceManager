@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType Condition="'$(TargetFramework)' != 'net472'">Exe</OutputType>
     <TargetFrameworks>net472;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -22,13 +22,7 @@
     <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
-  <Target Name="_CustomClean" AfterTargets="Clean">
-    <Delete Files="$(OutDir)$(ProjectName).dll" />
-  </Target>
-  <Target Name="_RenameTarget" AfterTargets="CopyFilesToOutputDirectory">
-    <Copy SourceFiles="$(OutDir)$(ProjectName).exe" DestinationFiles="$(OutDir)$(ProjectName).dll" Condition="!Exists('$(OutDir)$(ProjectName).dll')"/>
-  </Target>
-  <Target Name="_CleanupOutDir" AfterTargets="_RenameTarget">
+  <Target Name="_CleanupOutDir" AfterTargets="CopyFilesToOutputDirectory">
     <ItemGroup>
       <ExtraFiles Include="$(OutDir)*.exe" />
       <ExtraFiles Include="$(OutDir)*.config" />
