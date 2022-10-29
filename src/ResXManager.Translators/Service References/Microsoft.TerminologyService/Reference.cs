@@ -45,7 +45,7 @@ namespace ResXManager.Translators.Microsoft.TerminologyService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.CollectionDataContractAttribute(Name="TranslationSources", Namespace="http://api.terminology.microsoft.com/terminology", ItemName="TranslationSource")]
+    [System.Runtime.Serialization.CollectionDataContractAttribute(Name="TranslationSources", Namespace="https://api.terminology.microsoft.com/terminology", ItemName="TranslationSource")]
     [System.SerializableAttribute()]
     internal class TranslationSources : System.Collections.Generic.List<ResXManager.Translators.Microsoft.TerminologyService.TranslationSource> {
     }
@@ -64,14 +64,14 @@ namespace ResXManager.Translators.Microsoft.TerminologyService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Products", Namespace="http://api.terminology.microsoft.com/terminology", ItemName="Product")]
+    [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Products", Namespace="https://api.terminology.microsoft.com/terminology", ItemName="Product")]
     [System.SerializableAttribute()]
     internal class Products : System.Collections.Generic.List<ResXManager.Translators.Microsoft.TerminologyService.Product> {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Product", Namespace="http://api.terminology.microsoft.com/terminology")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Product", Namespace="https://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
     internal partial class Product : ResXManager.Translators.Microsoft.TerminologyService.EntityBase {
         
@@ -126,7 +126,7 @@ namespace ResXManager.Translators.Microsoft.TerminologyService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="EntityBase", Namespace="http://api.terminology.microsoft.com/terminology")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="EntityBase", Namespace="https://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.Version))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.Language))]
@@ -158,7 +158,7 @@ namespace ResXManager.Translators.Microsoft.TerminologyService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Version", Namespace="http://api.terminology.microsoft.com/terminology")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Version", Namespace="https://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
     internal partial class Version : ResXManager.Translators.Microsoft.TerminologyService.EntityBase {
         
@@ -197,7 +197,7 @@ namespace ResXManager.Translators.Microsoft.TerminologyService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Language", Namespace="http://api.terminology.microsoft.com/terminology")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Language", Namespace="https://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
     internal partial class Language : ResXManager.Translators.Microsoft.TerminologyService.EntityBase {
         
@@ -220,21 +220,21 @@ namespace ResXManager.Translators.Microsoft.TerminologyService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Versions", Namespace="http://api.terminology.microsoft.com/terminology", ItemName="Version")]
+    [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Versions", Namespace="https://api.terminology.microsoft.com/terminology", ItemName="Version")]
     [System.SerializableAttribute()]
     internal class Versions : System.Collections.Generic.List<ResXManager.Translators.Microsoft.TerminologyService.Version> {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Matches", Namespace="http://api.terminology.microsoft.com/terminology", ItemName="Match")]
+    [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Matches", Namespace="https://api.terminology.microsoft.com/terminology", ItemName="Match")]
     [System.SerializableAttribute()]
     internal class Matches : System.Collections.Generic.List<ResXManager.Translators.Microsoft.TerminologyService.Match> {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Match", Namespace="http://api.terminology.microsoft.com/terminology")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Match", Namespace="https://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
     internal partial class Match : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
@@ -391,14 +391,14 @@ namespace ResXManager.Translators.Microsoft.TerminologyService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Translations", Namespace="http://api.terminology.microsoft.com/terminology", ItemName="Translation")]
+    [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Translations", Namespace="https://api.terminology.microsoft.com/terminology", ItemName="Translation")]
     [System.SerializableAttribute()]
     internal class Translations : System.Collections.Generic.List<ResXManager.Translators.Microsoft.TerminologyService.Translation> {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Translation", Namespace="http://api.terminology.microsoft.com/terminology")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Translation", Namespace="https://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
     internal partial class Translation : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
@@ -459,7 +459,7 @@ namespace ResXManager.Translators.Microsoft.TerminologyService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="BaseFault", Namespace="http://api.terminology.microsoft.com/terminology")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="BaseFault", Namespace="https://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.MissingParameter))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.InvalidParameters))]
@@ -507,7 +507,7 @@ namespace ResXManager.Translators.Microsoft.TerminologyService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="MissingParameter", Namespace="http://api.terminology.microsoft.com/terminology")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="MissingParameter", Namespace="https://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
     internal partial class MissingParameter : ResXManager.Translators.Microsoft.TerminologyService.BaseFault {
         
@@ -530,14 +530,14 @@ namespace ResXManager.Translators.Microsoft.TerminologyService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="InvalidParameters", Namespace="http://api.terminology.microsoft.com/terminology")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="InvalidParameters", Namespace="https://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
     internal partial class InvalidParameters : ResXManager.Translators.Microsoft.TerminologyService.BaseFault {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Unexpected", Namespace="http://api.terminology.microsoft.com/terminology")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Unexpected", Namespace="https://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
     internal partial class Unexpected : ResXManager.Translators.Microsoft.TerminologyService.BaseFault {
         
@@ -560,14 +560,14 @@ namespace ResXManager.Translators.Microsoft.TerminologyService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Languages", Namespace="http://api.terminology.microsoft.com/terminology", ItemName="Language")]
+    [System.Runtime.Serialization.CollectionDataContractAttribute(Name="Languages", Namespace="https://api.terminology.microsoft.com/terminology", ItemName="Language")]
     [System.SerializableAttribute()]
     internal class Languages : System.Collections.Generic.List<ResXManager.Translators.Microsoft.TerminologyService.Language> {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Capability", Namespace="http://api.terminology.microsoft.com/terminology")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Capability", Namespace="https://api.terminology.microsoft.com/terminology")]
     [System.SerializableAttribute()]
     internal partial class Capability : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
@@ -649,11 +649,11 @@ namespace ResXManager.Translators.Microsoft.TerminologyService {
         [System.ServiceModel.OperationContractAttribute(Action="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslations", ReplyAction="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslationsRespo" +
             "nse")]
         [System.ServiceModel.FaultContractAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.Unexpected), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslationsUnexp" +
-            "ectedFault", Name="Unexpected")]
+            "ectedFault", Name="Unexpected", Namespace="https://api.terminology.microsoft.com/terminology")]
         [System.ServiceModel.FaultContractAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.MissingParameter), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslationsMissi" +
-            "ngParameterFault", Name="MissingParameter")]
+            "ngParameterFault", Name="MissingParameter", Namespace="https://api.terminology.microsoft.com/terminology")]
         [System.ServiceModel.FaultContractAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.InvalidParameters), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslationsInval" +
-            "idParametersFault", Name="InvalidParameters")]
+            "idParametersFault", Name="InvalidParameters", Namespace="https://api.terminology.microsoft.com/terminology")]
         ResXManager.Translators.Microsoft.TerminologyService.Matches GetTranslations(string text, string from, string to, ResXManager.Translators.Microsoft.TerminologyService.SearchStringComparison sensitivity, ResXManager.Translators.Microsoft.TerminologyService.SearchOperator searchOperator, ResXManager.Translators.Microsoft.TerminologyService.TranslationSources sources, System.Nullable<bool> unique, int maxTranslations, bool includeDefinitions, ResXManager.Translators.Microsoft.TerminologyService.Products products);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslations", ReplyAction="http://api.terminology.microsoft.com/terminology/Terminology/GetTranslationsRespo" +
@@ -663,7 +663,7 @@ namespace ResXManager.Translators.Microsoft.TerminologyService {
         [System.ServiceModel.OperationContractAttribute(Action="http://api.terminology.microsoft.com/terminology/Terminology/GetLanguages", ReplyAction="http://api.terminology.microsoft.com/terminology/Terminology/GetLanguagesResponse" +
             "")]
         [System.ServiceModel.FaultContractAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.Unexpected), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetLanguagesUnexpect" +
-            "edFault", Name="Unexpected")]
+            "edFault", Name="Unexpected", Namespace="https://api.terminology.microsoft.com/terminology")]
         ResXManager.Translators.Microsoft.TerminologyService.Languages GetLanguages();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://api.terminology.microsoft.com/terminology/Terminology/GetLanguages", ReplyAction="http://api.terminology.microsoft.com/terminology/Terminology/GetLanguagesResponse" +
@@ -672,7 +672,7 @@ namespace ResXManager.Translators.Microsoft.TerminologyService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://api.terminology.microsoft.com/terminology/Terminology/GetProducts", ReplyAction="http://api.terminology.microsoft.com/terminology/Terminology/GetProductsResponse")]
         [System.ServiceModel.FaultContractAttribute(typeof(ResXManager.Translators.Microsoft.TerminologyService.Unexpected), Action="http://api.terminology.microsoft.com/terminology/Terminology/GetProductsUnexpecte" +
-            "dFault", Name="Unexpected")]
+            "dFault", Name="Unexpected", Namespace="https://api.terminology.microsoft.com/terminology")]
         ResXManager.Translators.Microsoft.TerminologyService.Products GetProducts();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://api.terminology.microsoft.com/terminology/Terminology/GetProducts", ReplyAction="http://api.terminology.microsoft.com/terminology/Terminology/GetProductsResponse")]

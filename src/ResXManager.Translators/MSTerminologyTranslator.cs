@@ -22,8 +22,8 @@
     [Export(typeof(ITranslator)), Shared]
     public class MSTerminologyTranslator : TranslatorBase
     {
-        private static readonly BasicHttpBinding _binding = new();
-        private static readonly EndpointAddress _endpoint = new("http://api.terminology.microsoft.com/Terminology.svc");
+        private static readonly BasicHttpBinding _binding = new(BasicHttpSecurityMode.Transport);
+        private static readonly EndpointAddress _endpoint = new("https://api.terminology.microsoft.com/Terminology.svc");
         private static readonly Uri _uri = new("https://www.microsoft.com/en-us/language/default.aspx");
 
         public MSTerminologyTranslator()
