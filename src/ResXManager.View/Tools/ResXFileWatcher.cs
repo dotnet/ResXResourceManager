@@ -65,6 +65,12 @@
                 if (language.HasChanges)
                     continue;
 
+                var config = _resourceManager.Configuration;
+                if (config.SortFileContentOnSave)
+                {
+                    language.SortNodes(config.ResXSortingComparison, config.DuplicateKeyHandling);
+                }
+
                 var projectFile = language.ProjectFile;
                 var entity = language.Container;
 
