@@ -1,4 +1,10 @@
-﻿1.70
+﻿1.71
+- Scripting module has binaries for various target frameworks, to support e.g. PS 7
+- Fix #502: Microsoft Terminology does not work
+- PR #503: Apply sort node on save when resx file is changed
+- Fix #505: update toolbox to fix occasionally crashes
+
+1.70
 - #497: Baidu Translator failed to translate chinses to japanese
 
 1.69
