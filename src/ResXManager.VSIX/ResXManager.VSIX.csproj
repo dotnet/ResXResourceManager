@@ -73,10 +73,10 @@
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.0.5" />
     <PackageReference Include="Resourcer.Fody" Version="1.8.0" PrivateAssets="all" />
     <PackageReference Include="Throttle.Fody" PrivateAssets="all" Version="1.7.0" />
-    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.8.4" />
-    <PackageReference Include="TomsToolbox.Wpf.Composition" Version="2.8.4" />
-    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.8.4" />
-    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.8.4" />
+    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.8.5" />
+    <PackageReference Include="TomsToolbox.Wpf.Composition" Version="2.8.5" />
+    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.8.5" />
+    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.8.5" />
     <PackageReference Include="VSIX-SdkProjectAdapter" Version="3.0.0" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
