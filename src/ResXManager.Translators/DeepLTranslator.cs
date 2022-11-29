@@ -70,50 +70,48 @@
 
                 var targetCulture = languageGroup.Key.Culture ?? translationSession.NeutralResourcesLanguage;
 
-                using (var itemsEnumerator = languageGroup.GetEnumerator())
+                using var itemsEnumerator = languageGroup.GetEnumerator();
+                while (true)
                 {
-                    while (true)
+                    var sourceItems = itemsEnumerator.Take(10);
+                    if (translationSession.IsCanceled || !sourceItems.Any())
+                        break;
+
+                    // Build out list of parameters
+                    var parameters = new List<string?>(30);
+                    foreach (var item in sourceItems)
                     {
-                        var sourceItems = itemsEnumerator.Take(10);
-                        if (translationSession.IsCanceled || !sourceItems.Any())
-                            break;
-
-                        // Build out list of parameters
-                        var parameters = new List<string?>(30);
-                        foreach (var item in sourceItems)
-                        {
-                            // ReSharper disable once PossibleNullReferenceException
-                            parameters.AddRange(new[] { "text", RemoveKeyboardShortcutIndicators(item.Source) });
-                        }
-
-                        parameters.AddRange(new[]
-                        {
-                            "target_lang", DeepLLangCode(targetCulture),
-                            "source_lang", DeepLLangCode(translationSession.SourceLanguage),
-                            "auth_key", ApiKey
-                        });
-
-                        var apiUrl = ApiUrl;
-                        if (apiUrl.IsNullOrWhiteSpace())
-                        {
-                            apiUrl = "https://api.deepl.com/v2/translate";
-                        }
-
-                        // Call the DeepL API
-                        var response = await GetHttpResponse<TranslationRootObject>(
-                            apiUrl,
-                            parameters,
-                            translationSession.CancellationToken).ConfigureAwait(false);
-
-                        await translationSession.MainThread.StartNew(() =>
-                        {
-                            foreach (var tuple in sourceItems.Zip(response.Translations ?? Array.Empty<Translation>(),
-                                (a, b) => new Tuple<ITranslationItem, string?>(a, b.Text)))
-                            {
-                                tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2, Ranking));
-                            }
-                        }).ConfigureAwait(false);
+                        // ReSharper disable once PossibleNullReferenceException
+                        parameters.AddRange(new[] { "text", RemoveKeyboardShortcutIndicators(item.Source) });
                     }
+
+                    parameters.AddRange(new[]
+                    {
+                        "target_lang", DeepLLangCode(targetCulture),
+                        "source_lang", DeepLLangCode(translationSession.SourceLanguage),
+                        "auth_key", ApiKey
+                    });
+
+                    var apiUrl = ApiUrl;
+                    if (apiUrl.IsNullOrWhiteSpace())
+                    {
+                        apiUrl = "https://api.deepl.com/v2/translate";
+                    }
+
+                    // Call the DeepL API
+                    var response = await GetHttpResponse<TranslationRootObject>(
+                        apiUrl,
+                        parameters,
+                        translationSession.CancellationToken).ConfigureAwait(false);
+
+                    await translationSession.MainThread.StartNew(() =>
+                    {
+                        foreach (var tuple in sourceItems.Zip(response.Translations ?? Array.Empty<Translation>(),
+                                     (a, b) => new Tuple<ITranslationItem, string?>(a, b.Text)))
+                        {
+                            tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2, Ranking));
+                        }
+                    }).ConfigureAwait(false);
                 }
             }
         }
@@ -129,26 +127,21 @@
         {
             var url = BuildUrl(baseUrl, parameters);
 
-            using (var httpClient = new HttpClient())
-            {
-                var response = await httpClient.GetAsync(new Uri(url), cancellationToken).ConfigureAwait(false);
+            using var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(new Uri(url), cancellationToken).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode();
 
-                using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                {
-                    return JsonConverter<T>(stream) ?? throw new InvalidOperationException("Empty response.");
-                }
-            }
+#pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods => not available in NetFramework
+            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            return JsonConverter<T>(stream) ?? throw new InvalidOperationException("Empty response.");
         }
 
         private static T? JsonConverter<T>(Stream stream)
             where T : class
         {
-            using (var reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
-            }
+            using var reader = new StreamReader(stream, Encoding.UTF8);
+            return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
         }
 
         [DataContract]

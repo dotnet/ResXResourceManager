@@ -59,47 +59,45 @@
 
                 var targetCulture = languageGroup.Key.Culture ?? translationSession.NeutralResourcesLanguage;
 
-                using (var itemsEnumerator = languageGroup.GetEnumerator())
+                using var itemsEnumerator = languageGroup.GetEnumerator();
+                while (true)
                 {
-                    while (true)
+                    var sourceItems = itemsEnumerator.Take(10);
+                    if (translationSession.IsCanceled || !sourceItems.Any())
+                        break;
+
+                    // Build out list of parameters
+                    var parameters = new List<string?>(30);
+                    foreach (var item in sourceItems)
                     {
-                        var sourceItems = itemsEnumerator.Take(10);
-                        if (translationSession.IsCanceled || !sourceItems.Any())
-                            break;
-
-                        // Build out list of parameters
-                        var parameters = new List<string?>(30);
-                        foreach (var item in sourceItems)
-                        {
-                            // ReSharper disable once PossibleNullReferenceException
-                            parameters.AddRange(new[] { "q", RemoveKeyboardShortcutIndicators(item.Source) });
-                        }
-
-                        parameters.AddRange(new[]
-                        {
-                            "target", GoogleLangCode(targetCulture),
-                            "format", "text",
-                            "source", GoogleLangCode(translationSession.SourceLanguage),
-                            "model", "nmt",
-                            "key", ApiKey
-                        });
-
-                        // Call the Google API
-                        // ReSharper disable once AssignNullToNotNullAttribute
-                        var response = await GetHttpResponse<TranslationRootObject>(
-                            "https://translation.googleapis.com/language/translate/v2",
-                            parameters,
-                            translationSession.CancellationToken).ConfigureAwait(false);
-
-                        await translationSession.MainThread.StartNew(() =>
-                        {
-                            foreach (var tuple in sourceItems.Zip(response.Data?.Translations ?? Array.Empty<Translation>(), (a, b) => new Tuple<ITranslationItem, Translation>(a, b)))
-                            {
-                                tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2.TranslatedText, Ranking));
-                            }
-                        }).ConfigureAwait(false);
-
+                        // ReSharper disable once PossibleNullReferenceException
+                        parameters.AddRange(new[] { "q", RemoveKeyboardShortcutIndicators(item.Source) });
                     }
+
+                    parameters.AddRange(new[]
+                    {
+                        "target", GoogleLangCode(targetCulture),
+                        "format", "text",
+                        "source", GoogleLangCode(translationSession.SourceLanguage),
+                        "model", "nmt",
+                        "key", ApiKey
+                    });
+
+                    // Call the Google API
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    var response = await GetHttpResponse<TranslationRootObject>(
+                        "https://translation.googleapis.com/language/translate/v2",
+                        parameters,
+                        translationSession.CancellationToken).ConfigureAwait(false);
+
+                    await translationSession.MainThread.StartNew(() =>
+                    {
+                        foreach (var tuple in sourceItems.Zip(response.Data?.Translations ?? Array.Empty<Translation>(), (a, b) => new Tuple<ITranslationItem, Translation>(a, b)))
+                        {
+                            tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2.TranslatedText, Ranking));
+                        }
+                    }).ConfigureAwait(false);
+
                 }
             }
         }
@@ -123,26 +121,21 @@
         {
             var url = BuildUrl(baseUrl, parameters);
 
-            using (var httpClient = new HttpClient())
-            {
-                var response = await httpClient.GetAsync(new Uri(url), cancellationToken).ConfigureAwait(false);
+            using var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(new Uri(url), cancellationToken).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode();
 
-                using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                {
-                    return JsonConverter<T>(stream) ?? throw new InvalidOperationException("Empty response.");
-                }
-            }
+#pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods => not available in NetFramework
+            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            return JsonConverter<T>(stream) ?? throw new InvalidOperationException("Empty response.");
         }
 
         private static T? JsonConverter<T>(Stream stream)
             where T : class
         {
-            using (var reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
-            }
+            using var reader = new StreamReader(stream, Encoding.UTF8);
+            return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
         }
 
         [DataContract]

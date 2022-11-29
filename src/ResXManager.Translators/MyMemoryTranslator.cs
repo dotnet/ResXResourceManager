@@ -116,11 +116,11 @@
 
             response.EnsureSuccessStatusCode();
 
-            using (var reader = new StreamReader(await response.Content.ReadAsStreamAsync().ConfigureAwait(false), Encoding.UTF8))
-            {
-                var json = await reader.ReadToEndAsync().ConfigureAwait(false);
-                return JsonConvert.DeserializeObject<Response>(json);
-            }
+#pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods => not available in NetFramework
+            using var reader = new StreamReader(await response.Content.ReadAsStreamAsync().ConfigureAwait(false), Encoding.UTF8);
+
+            var json = await reader.ReadToEndAsync().ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<Response>(json);
         }
 
         [DataContract]

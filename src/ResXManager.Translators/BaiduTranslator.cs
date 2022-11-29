@@ -195,6 +195,7 @@
 
             response.EnsureSuccessStatusCode();
 
+#pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods => not available in NetFramework
             using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             return JsonConverter<T>(stream) ?? throw new InvalidOperationException("Empty response.");
         }

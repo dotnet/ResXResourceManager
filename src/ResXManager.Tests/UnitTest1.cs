@@ -75,7 +75,9 @@ namespace ResXManager.Tests
             const string? s2 = default;
             const string s3 = "Test";
 
+#pragma warning disable xUnit2000 // Constants and literals should be the expected argument
             Assert.Equal(string.Empty, s1 + s2);
+#pragma warning restore xUnit2000 // Constants and literals should be the expected argument
             Assert.Equal(s3, s1 + s3);
             Assert.Equal(s3, s1 + s3 + s2);
         }

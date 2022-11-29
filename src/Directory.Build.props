@@ -16,6 +16,8 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
+    <NoWarn>MSB3277;CVSTBLD002;NU1608;CS8002</NoWarn>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
