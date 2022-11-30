@@ -18,8 +18,55 @@
         {
             var extension = projectFile.Extension;
             var filePath = projectFile.FilePath;
+            var directoryName = Path.GetDirectoryName(Resw.Equals(extension, StringComparison.OrdinalIgnoreCase) ? Path.GetDirectoryName(filePath) : filePath);
+
+            directoryName = projectFile.GetBaseLanguageDirectory();
+
+            return directoryName ?? throw new InvalidOperationException();
+        }
+
+        /// <summary>
+        /// Returns a subdirectory path relative to the language path.
+        /// Example:
+        /// D:\\myProject\\strings\\en-US\\subdir\\myview.resw
+        /// </summary>
+        /// <param name="projectFile"></param>
+        /// <returns></returns>
+        public static string GetSubDirectory(this ProjectFile projectFile)
+        {
+            var extension = projectFile.Extension;
+            var filePath = projectFile.FilePath;
+
+            var directoryName = Path.GetDirectoryName(filePath);
+            var languageDirectoryName = projectFile.GetBaseLanguageDirectory();
+            directoryName = directoryName.TrimEnd(Path.DirectorySeparatorChar);
+            languageDirectoryName = languageDirectoryName.TrimEnd(Path.DirectorySeparatorChar);
+
+            directoryName = directoryName.Replace(Path.Combine(languageDirectoryName, GetLanguageName(filePath)),"");
+
+            return directoryName;
+        }
+        /// <summary>
+        /// Please only use for resw files
+        /// Get the directory that contains language directories like "en-US" 
+        /// </summary>
+        /// <param name="projectFile"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public static string GetBaseLanguageDirectory(this ProjectFile projectFile)
+        {
+            var extension = projectFile.Extension;
+            var filePath = projectFile.FilePath;
 
             var directoryName = Path.GetDirectoryName(Resw.Equals(extension, StringComparison.OrdinalIgnoreCase) ? Path.GetDirectoryName(filePath) : filePath);
+
+            String directory = Path.GetDirectoryName(filePath);
+            String? languageName = Path.GetDirectoryName(filePath).Split(Path.DirectorySeparatorChar).FirstOrDefault(item => CultureHelper.IsValidCultureName(item));
+
+            if (languageName != null)
+            {
+                return directory.Substring(0, directory.IndexOf(languageName));
+            }
 
             return directoryName ?? throw new InvalidOperationException();
         }
@@ -39,9 +86,27 @@
             if (!Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            var languageName = Path.GetFileName(Path.GetDirectoryName(filePath));
+            var languageName = GetLanguageName(filePath);
 
             return CultureHelper.IsValidCultureName(languageName);
+        }
+
+        /// <summary>
+        /// Returns the language key from the path.
+        /// result is like en-US or empty 
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static String GetLanguageName(string filePath)
+        {
+            String directory = Path.GetDirectoryName(filePath);
+            String? languageName = Path.GetDirectoryName(filePath).Split(Path.DirectorySeparatorChar).FirstOrDefault(item => CultureHelper.IsValidCultureName(item));
+
+            if (languageName != null)
+            {
+                return languageName;
+            }
+            return "";
         }
 
         public static bool IsResourceFile(this ProjectFile projectFile)
@@ -73,7 +138,7 @@
 
             if (Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
             {
-                var cultureName = Path.GetFileName(Path.GetDirectoryName(filePath));
+                var cultureName = GetLanguageName(filePath);
 
                 if (!CultureHelper.IsValidCultureName(cultureName))
                     throw new ArgumentException(@"Invalid file. File name does not conform to the pattern '.\<cultureName>\<basename>.resw'");
@@ -113,7 +178,7 @@
 
             if (Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
             {
-                var languageFileName = Path.Combine(projectFile.GetBaseDirectory(), culture.ToString(), Path.GetFileName(filePath));
+                var languageFileName = Path.Combine(projectFile.GetBaseLanguageDirectory(), culture.ToString(), projectFile.GetSubDirectory(), Path.GetFileName(filePath));
                 return languageFileName;
             }
 

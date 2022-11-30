@@ -33,7 +33,7 @@
             BaseName = baseName;
             DirectoryName = directoryName;
             _languages = GetResourceLanguages(files, neutralResourcesLanguage, duplicateKeyHandling);
-            RelativePath = GetRelativePath(files);
+            RelativePath = GetDisplayRelativePath(files);
             DisplayName = projectName + @" - " + RelativePath + baseName;
 
             NeutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey(neutralResourcesLanguage) == CultureKey.Neutral);
@@ -108,6 +108,37 @@
             }
 
             _resourceTableEntries.RemoveRange(unmatchedTableEntries);
+        }
+
+        /// <summary>
+        /// Create a relative path where a language code (en-US) is removed in case
+        /// the file ends with resw.
+        /// In all other cases return GetRelativePath
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        private static string GetDisplayRelativePath(ICollection<ProjectFile> files)
+        {
+            if (files.Any())
+            {
+                ProjectFile firstFile = files.First();
+                if (firstFile.Extension.Equals(".resw"))
+                {
+
+                    String subDirs = firstFile.GetSubDirectory();
+                    String relativeFileDirectory = firstFile.GetBaseLanguageDirectory();
+                    var relativeProjectDirectory = Path.GetDirectoryName(firstFile.UniqueProjectName);
+                    if ((relativeFileDirectory.Length > relativeProjectDirectory.Length)
+                        && relativeFileDirectory.Contains(relativeProjectDirectory))
+                    {
+                        Int32 cutPoint = relativeFileDirectory.IndexOf(relativeProjectDirectory) + relativeProjectDirectory.Length;
+                        return relativeFileDirectory.Substring(cutPoint) + subDirs.TrimStart('\\') + "\\";
+                    }
+                }
+                    
+            }
+
+            return GetRelativePath(files);
         }
 
         private static string GetRelativePath(ICollection<ProjectFile> files)
@@ -300,10 +331,9 @@
                 let cultureKey = file.GetCultureKey(neutralResourcesLanguage)
                 orderby cultureKey
                 select new ResourceLanguage(this, cultureKey, file, duplicateKeyHandling);
-
             var languages = languageQuery.ToDictionary(language => language.CultureKey);
-
             return languages;
+
         }
 
         private bool MergeItems(IDictionary<CultureKey, ResourceLanguage> sources)
