@@ -1,4 +1,7 @@
-﻿1.71
+﻿1.72
+- Fix #512, #511: Loading errors in VS2017/2019
+
+1.71
 - Scripting module has binaries for various target frameworks, to support e.g. PS 7
 - Fix #502: Microsoft Terminology does not work
 - PR #503: Apply sort node on save when resx file is changed
