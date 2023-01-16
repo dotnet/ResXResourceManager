@@ -12,6 +12,12 @@
           <note from="resx">Choice will be shown after this</note>
           <note from="MultilingualBuild" annotates="source" priority="2">Choice will be shown after this</note>
         </trans-unit>
+        <trans-unit id="MyProject.AnotherResource" translate="yes" xml:space="preserve">
+          <source>Continue to\nnext item</source>
+          <target state="new">Continue to\nnext item</target>
+          <note from="resx">\n = new line</note>
+          <note from="MultilingualBuild" annotates="source" priority="2">\n = new line</note>
+        </trans-unit>
       </group>
     </body>
   </file>
