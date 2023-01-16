@@ -15,6 +15,12 @@
         private XDocument _document;
         private List<XlfFile> _files;
 
+        private XlfDocument()
+            : base(string.Empty)
+        {
+
+        }
+
         public XlfDocument(string filePath)
             : base(filePath)
         {
@@ -22,12 +28,33 @@
                 ? LoadFromFile()
                 : CreateEmpty();
 
+            Initialize();
+        }
+
+        private void Initialize()
+        {
             if (_document.Root.GetAttribute("version") != "1.2")
-                throw new InvalidOperationException("Only XLIFF version 1.2 is supported: " + filePath);
+                throw new InvalidOperationException($"Only XLIFF version 1.2 is supported: '{FilePath}'");
 
             _files = _document.Root.Elements(FileElement)
                 .Select(file => new XlfFile(this, file))
                 .ToList();
+        }
+
+        internal static XlfDocument Parse(string content)
+        {
+            var instance = new XlfDocument();
+
+            instance._document = CreateFromContent(content);
+            instance.Initialize();
+
+            return instance;
+        }
+
+        internal static XDocument CreateFromContent(string content)
+        {
+            var document = XDocument.Parse(content);
+            return document;
         }
 
         private static XDocument CreateEmpty()

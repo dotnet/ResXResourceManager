@@ -158,7 +158,7 @@
             }
         }
 
-        private void UpdateEntityFromXlf(ResourceEntity entity, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
+        internal void UpdateEntityFromXlf(ResourceEntity entity, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
         {
             var original = GetOriginal(entity);
 
@@ -168,7 +168,7 @@
             UpdateEntityFromXlf(entity, xlfFiles);
         }
 
-        private void UpdateEntityFromXlf(ResourceEntity entity, IEnumerable<XlfFile> xlfFiles)
+        internal void UpdateEntityFromXlf(ResourceEntity entity, IEnumerable<XlfFile> xlfFiles)
         {
             if (_isUpdateFromResXRunning > 0)
                 return;
