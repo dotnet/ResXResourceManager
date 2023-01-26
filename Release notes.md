@@ -1,4 +1,7 @@
-﻿1.72
+﻿1.73
+- Fix #522: crashing Visual Studio on malformed files
+
+1.72
 - Fix #512, #511: Loading errors in VS2017/2019
 
 1.71
