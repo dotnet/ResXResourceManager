@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Xml;
     using System.Xml.Linq;
 
     using TomsToolbox.Essentials;
@@ -18,9 +19,7 @@
         public XlfDocument(string filePath)
             : base(filePath)
         {
-            _document = File.Exists(filePath)
-                ? LoadFromFile()
-                : CreateEmpty();
+            _document = TryLoadFromFile() ?? CreateEmpty();
 
             if (_document.Root.GetAttribute("version") != "1.2")
                 throw new InvalidOperationException("Only XLIFF version 1.2 is supported: " + filePath);
@@ -67,7 +66,8 @@
 
         public XlfDocument Reload()
         {
-            _document = LoadFromFile();
+            _document = TryLoadFromFile() ?? CreateEmpty();
+
             _files = _document.Root.Elements(FileElement).Select(file => new XlfFile(this, file)).ToList();
 
             return this;

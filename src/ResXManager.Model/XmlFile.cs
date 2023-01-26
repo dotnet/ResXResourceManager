@@ -56,6 +56,21 @@
             return result;
         }
 
+        protected XDocument? TryLoadFromFile()
+        {
+            try
+            {
+                if (File.Exists(FilePath))
+                    return LoadFromFile();
+            }
+            catch
+            {
+                // load failed, just return null.
+            }
+
+            return null;
+        }
+
         protected void SaveToFile(XDocument document)
         {
             using (var stream = File.Open(FilePath, FileMode.Create))

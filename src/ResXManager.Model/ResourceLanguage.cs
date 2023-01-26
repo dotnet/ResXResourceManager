@@ -62,7 +62,7 @@
             {
                 _document = file.Load();
             }
-            catch (XmlException ex)
+            catch (Exception ex)
             {
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileError, file.FilePath), ex);
             }
