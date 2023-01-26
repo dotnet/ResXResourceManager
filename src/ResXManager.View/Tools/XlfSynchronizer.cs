@@ -327,6 +327,10 @@
                     UpdateXlfFile(entity, language.CultureKey, filesByOriginal);
                 }
             }
+            catch (Exception ex)
+            {
+                _tracer.TraceError("UpdateXlfFile for project file {0} failed: {1}", e.ProjectFile.FilePath, ex);
+            }
             finally
             {
                 Interlocked.Decrement(ref _isUpdateFromResXRunning);
