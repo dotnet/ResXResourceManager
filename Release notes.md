@@ -1,4 +1,7 @@
-﻿1.73
+﻿1.74
+- Fix #526: Crash when switching to text template
+
+1.73
 - Fix #522: crashing Visual Studio on malformed files
 
 1.72
