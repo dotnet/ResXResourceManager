@@ -470,8 +470,10 @@
                 return;
 
             var changes = ResourceManager.ImportExcelFile(fileName);
-
             changes.Apply();
+
+            if (ResourceManager.Configuration.Scope == ConfigurationScope.Global && !string.IsNullOrEmpty(ResourceManager.SolutionFolder))
+                Reload();
         }
 
         private async void Reload()

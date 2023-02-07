@@ -6,11 +6,13 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
-
+    using System.Resources;
+    using System.Threading;
+    using AutoProperties;
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Spreadsheet;
-
+    using DocumentFormat.OpenXml.Vml.Spreadsheet;
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
     using TomsToolbox.Essentials;
@@ -225,7 +227,7 @@
             var entities = GetMultipleSheetEntities(resourceManager).ToArray();
 
             var changes = sheets.OfType<Sheet>()
-                .SelectMany(sheet => FindResourceEntity(entities, sheet).ImportTable(_fixedColumnHeaders, sheet.GetTable(workbookPart, sharedStrings)));
+                .SelectMany(sheet => FindResourceEntity(entities, sheet, resourceManager).ImportTable(_fixedColumnHeaders, sheet.GetTable(workbookPart, sharedStrings)));
 
             return changes;
         }
@@ -260,7 +262,7 @@
             return worksheetPart.Worksheet.ChildElements.OfType<SheetData>().FirstOrDefault()?.OfType<Row>() ?? Enumerable.Empty<Row>();
         }
 
-        private static ResourceEntity FindResourceEntity(this IEnumerable<MultipleSheetEntity> entities, Sheet sheet)
+        private static ResourceEntity FindResourceEntity(this IEnumerable<MultipleSheetEntity> entities, Sheet sheet, ResourceManager resourceManager)
         {
             var name = sheet.Name?.Value;
 
@@ -269,9 +271,108 @@
                 .FirstOrDefault();
 
             if (entity == null)
-                throw new ImportException(string.Format(CultureInfo.CurrentCulture, Resources.ImportMapSheetError, name));
+            {
+                if (resourceManager.Configuration.Scope == ConfigurationScope.Global && !string.IsNullOrEmpty(resourceManager.SolutionFolder))
+                {
+                    string[] sheetNameParts = sheet.Name!.Value!.Split('|');
+                    string projectName;
+                    string baseName;
+                    if (sheetNameParts.Length > 1)
+                    {
+                        projectName = sheetNameParts[0];
+                        baseName = sheetNameParts[1];
+                    }
+                    else
+                    {
+                        projectName = string.Empty;
+                        baseName = sheetNameParts[0];
+                    }
+
+                    string filePath = Path.Combine(resourceManager.SolutionFolder, $"{baseName}.resx");
+                    if (!File.Exists(filePath))
+                    {
+                        var writer = File.CreateText(filePath);
+                        writer.Write(EmptyResxContent());
+                        writer.Close();
+                    }
+
+                    var fileFilter = new FileFilter(resourceManager.Configuration);
+                    var directoryInfo = new DirectoryInfo(resourceManager.SolutionFolder);
+                    var sourceFiles = directoryInfo.GetAllSourceFiles(fileFilter, null);
+                    var projectFiles = sourceFiles
+                        .Where(file => file.IsResourceFile() && file.GetBaseName() == baseName)
+                        .ToList();
+
+                    entity = new ResourceEntity(
+                        resourceManager,
+                        projectName,
+                        baseName,
+                        resourceManager.SolutionFolder!,
+                        projectFiles,
+                        resourceManager.Configuration.NeutralResourcesLanguage,
+                        resourceManager.Configuration.DuplicateKeyHandling);
+                }
+                else
+                {
+                    throw new ImportException(string.Format(CultureInfo.CurrentCulture, Resources.ImportMapSheetError, name));
+                }
+            }
 
             return entity;
+        }
+
+        private static string EmptyResxContent()
+        {
+            return
+@"<?xml version=""1.0"" encoding=""utf-8""?>
+<root>
+  <xsd:schema id=""root"" xmlns="""" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:msdata=""urn:schemas-microsoft-com:xml-msdata"">
+    <xsd:import namespace=""http://www.w3.org/XML/1998/namespace"" />
+    <xsd:element name=""root"" msdata:IsDataSet=""true"">
+      <xsd:complexType>
+        <xsd:choice maxOccurs=""unbounded"">
+          <xsd:element name=""metadata"">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name=""value"" type=""xsd:string"" minOccurs=""0"" />
+              </xsd:sequence>
+              <xsd:attribute name=""name"" use=""required"" type=""xsd:string"" />
+              <xsd:attribute name=""type"" type=""xsd:string"" />
+              <xsd:attribute name=""mimetype"" type=""xsd:string"" />
+              <xsd:attribute ref=""xml:space"" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name=""assembly"">
+            <xsd:complexType>
+              <xsd:attribute name=""alias"" type=""xsd:string"" />
+              <xsd:attribute name=""name"" type=""xsd:string"" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name=""data"">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name=""value"" type=""xsd:string"" minOccurs=""0"" msdata:Ordinal=""1"" />
+                <xsd:element name=""comment"" type=""xsd:string"" minOccurs=""0"" msdata:Ordinal=""2"" />
+              </xsd:sequence>
+              <xsd:attribute name=""name"" type=""xsd:string"" use=""required"" msdata:Ordinal=""1"" />
+              <xsd:attribute name=""type"" type=""xsd:string"" msdata:Ordinal=""3"" />
+              <xsd:attribute name=""mimetype"" type=""xsd:string"" msdata:Ordinal=""4"" />
+              <xsd:attribute ref=""xml:space"" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name=""resheader"">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name=""value"" type=""xsd:string"" minOccurs=""0"" msdata:Ordinal=""1"" />
+              </xsd:sequence>
+              <xsd:attribute name=""name"" type=""xsd:string"" use=""required"" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+</root>";
         }
 
         private class DataAppender
