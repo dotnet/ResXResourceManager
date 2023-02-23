@@ -52,7 +52,7 @@
                 if ((items.Length == 1) && Enum.IsDefined(typeof(CodeGenerator), generator))
                     return generator;
 
-                return CodeGenerator.None;
+                return CodeGenerator.Unknown;
             }
         }
 
@@ -88,7 +88,7 @@
         {
             ThrowIfNotOnUIThread();
 
-            return SelectedItemsCodeGenerators().All(g => g != CodeGenerator.None);
+            return SelectedItemsCodeGenerators().All(g => g is not CodeGenerator.Unknown and not CodeGenerator.WinForms);
         }
 
         private void SetCodeProvider(CodeGenerator codeGenerator)

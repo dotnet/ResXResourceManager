@@ -137,7 +137,7 @@
                 var containingProject = projectItem.ContainingProject;
 
                 if ((containingProject == null) || (containingProject.Kind != ItemKind.CSharpProject))
-                    return CodeGenerator.None;
+                    return CodeGenerator.Unknown;
 
                 var customTool = projectItem.GetCustomTool();
 
@@ -186,8 +186,6 @@
                         case CodeGenerator.None:
                         case CodeGenerator.Unknown:
                         case CodeGenerator.WinForms:
-                            break;
-                        default:
                             break;
                     }
                 }
