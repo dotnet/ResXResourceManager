@@ -61,8 +61,14 @@ namespace ResXManager.View.Visuals
             if (!_entry.CanEdit(_entry.NeutralLanguage.CultureKey))
                 return false;
 
-            _entry.Comments.SetValue(_entry.NeutralLanguage.CultureKey, commentPrefix + existingComment);
-
+            foreach (var languageKey in _entry.Languages)
+            {
+                if (!_entry.CanEdit(languageKey))
+                    continue;
+                if (languageKey == _entry.NeutralLanguage.CultureKey)
+                    continue;
+                _entry.Comments.SetValue(languageKey, commentPrefix + existingComment);
+            }
             return true;
         }
 
