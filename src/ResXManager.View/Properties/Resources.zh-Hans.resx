@@ -450,9 +450,6 @@ ResXManager 团队
   <data name="WarningUnsavedChanges" xml:space="preserve">
     <value>你有未保存的更改，重新加载所有资源将放弃所有更改，你确定要继续吗？</value>
   </data>
-  <data name="AppendPrefixValueFieldTypeLabel" xml:space="preserve">
-    <value>将翻译前缀附加到</value>
-  </data>
   <data name="Configuration_XlifSupport" xml:space="preserve">
     <value>XLIF 支持</value>
   </data>
@@ -476,5 +473,14 @@ ResXManager 团队
   </data>
   <data name="WebProjectFileExport_Title" xml:space="preserve">
     <value>Web 项目文件导出</value>
+  </data>
+  <data name="Configuration_PrefixValue" xml:space="preserve">
+    <value>值</value>
+  </data>
+  <data name="Configuration_PrefixNeutral" xml:space="preserve">
+    <value>中立的评论</value>
+  </data>
+  <data name="Configuration_PrefixTarget" xml:space="preserve">
+    <value>目标评论（每种语言)</value>
   </data>
 </root>

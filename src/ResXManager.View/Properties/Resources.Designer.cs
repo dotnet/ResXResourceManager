@@ -116,15 +116,6 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Append the translation prefix to"
-        /// </summary>
-        public static string AppendPrefixValueFieldTypeLabel {
-            get {
-                return ResourceManager.GetString("AppendPrefixValueFieldTypeLabel", resourceCulture) ?? string.Empty;
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Authentication"
         /// </summary>
         public static string Authentication {
@@ -313,6 +304,39 @@ namespace ResXManager.View.Properties {
         public static string Configuration_LoadSaveHeader {
             get {
                 return ResourceManager.GetString("Configuration_LoadSaveHeader", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Neutral Comment"
+        /// </summary>
+        public static string Configuration_PrefixNeutral
+        {
+            get
+            {
+                return ResourceManager.GetString("Configuration_PrefixNeutral", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Target Comment (per language)"
+        /// </summary>
+        public static string Configuration_PrefixTarget
+        {
+            get
+            {
+                return ResourceManager.GetString("Configuration_PrefixTarget", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Value"
+        /// </summary>
+        public static string Configuration_PrefixValue
+        {
+            get
+            {
+                return ResourceManager.GetString("Configuration_PrefixValue", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -1152,10 +1176,6 @@ namespace ResXManager.View.Properties {
         /// </summary>
         AllLanguages,
         /// <summary>
-        ///   Looks up a localized string similar to Append the translation prefix to.
-        /// </summary>
-        AppendPrefixValueFieldTypeLabel,
-        /// <summary>
         ///   Looks up a localized string similar to Authentication.
         /// </summary>
         Authentication,
@@ -1242,6 +1262,18 @@ namespace ResXManager.View.Properties {
         ///   Looks up a localized string similar to Load &amp; Save.
         /// </summary>
         Configuration_LoadSaveHeader,
+        /// <summary>
+        ///   Looks up a localized string similar to Neutral Comment.
+        /// </summary>
+        Configuration_PrefixNeutral,
+        /// <summary>
+        ///   Looks up a localized string similar to Target Comment (per language).
+        /// </summary>
+        Configuration_PrefixTarget,
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        Configuration_PrefixValue,
         /// <summary>
         ///   Looks up a localized string similar to Consistency checks.
         /// </summary>

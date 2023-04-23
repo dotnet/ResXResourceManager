@@ -473,7 +473,13 @@ Ihr ResXManager-Team.
   <data name="WarningUnsavedChanges" xml:space="preserve">
     <value>Es gibt noch ungesicherte Änderungen. Neu laden der Dateien wird alle Änderungen rückgängig machen. Wollen sie trotzdem fortfahren?</value>
   </data>
-  <data name="AppendPrefixValueFieldTypeLabel" xml:space="preserve">
-    <value>Hängen Sie das Übersetzungspräfix an an</value>
+  <data name="Configuration_PrefixValue" xml:space="preserve">
+    <value>Wert</value>
+  </data>
+  <data name="Configuration_PrefixNeutral" xml:space="preserve">
+    <value>Neutraler Kommentar</value>
+  </data>
+  <data name="Configuration_PrefixTarget" xml:space="preserve">
+    <value>Zielkommentar (pro Sprache)</value>
   </data>
 </root>

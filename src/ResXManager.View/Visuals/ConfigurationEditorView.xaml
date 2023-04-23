@@ -88,13 +88,37 @@
               </ComboBox.ItemTemplate>
             </ComboBox>
           </StackPanel>
-          <StackPanel Orientation="Horizontal">
-            <TextBlock Text="{x:Static properties:Resources.AppendPrefixValueFieldTypeLabel}" VerticalAlignment="Center" />
-            <Decorator Width="8" />
-            <ComboBox Width="175" ItemsSource="{Binding Source={x:Type model:PrefixFieldType}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
-                     Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}" SelectedValue="{Binding Configuration.PrefixFieldType}"/>
-          </StackPanel>
         </StackPanel>
+      </GroupBox>
+
+      <Decorator Height="5" />
+
+      <GroupBox Header="Translations" Style="{StaticResource GroupStyle}">
+        <Grid Margin="10" KeyboardNavigation.TabNavigation="Local">
+          <StackPanel>
+            <StackPanel Orientation="Horizontal">
+              <CheckBox Content="{x:Static properties:Resources.TranslationsPrefixHeader}"
+                                IsChecked="{Binding Configuration.PrefixTranslations}"
+                                TabIndex="0"
+                                Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+              <TextBox Margin="4,0" IsReadOnly="True" Text="{Binding Configuration.TranslationPrefix}"/>
+            </StackPanel>
+            <StackPanel Margin="8,4" IsEnabled="{Binding Configuration.PrefixTranslations}">
+              <CheckBox IsChecked="{Binding Configuration.AddPrefixToValue}" TabIndex="0"
+                      Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
+                      Margin="4,2"
+                      Content="{x:Static properties:Resources.Configuration_PrefixValue}"/>
+              <CheckBox IsChecked="{Binding Configuration.AddPrefixToNeutralComment}" TabIndex="0"
+                      Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
+                        Margin="4,2"
+                      Content="{x:Static properties:Resources.Configuration_PrefixNeutral}"/>
+              <CheckBox IsChecked="{Binding Configuration.AddPrefixToTargetComment}" TabIndex="0"
+                      Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}"
+                        Margin="4,2"
+                      Content="{x:Static properties:Resources.Configuration_PrefixTarget}"/>
+            </StackPanel>
+          </StackPanel>
+        </Grid>
       </GroupBox>
 
       <Decorator Height="5" />

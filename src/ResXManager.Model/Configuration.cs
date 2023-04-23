@@ -16,6 +16,7 @@
     }
 
     [Flags]
+    [Obsolete("This enum value has been replaced with boolean flags on the Configuration")]
     public enum PrefixFieldType
     {
         [LocalizedDisplayName(StringResourceKey.PrefixFieldTypeValue)]
@@ -62,7 +63,14 @@
 
         public string? EffectiveTranslationPrefix { get; }
 
-        public PrefixFieldType PrefixFieldType { get; }
+        [Obsolete("This property is no longer used, and should not be relied upon to determine the current state. Replaced with boolean values instead")]
+        public PrefixFieldType? PrefixFieldType { get; }
+
+        public bool AddPrefixToValue { get; set; }
+
+        public bool AddPrefixToNeutralComment { get; set; }
+
+        public bool AddPrefixToTargetComment { get; set; }
 
         public ExcelExportMode ExcelExportMode { get; }
 
@@ -80,6 +88,7 @@
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
             : base(tracer)
         {
+            MapOldPrefixValuesToNew();
         }
 
         [DefaultValue(CodeReferenceConfiguration.Default)]
@@ -119,8 +128,17 @@
 
         public string? EffectiveTranslationPrefix => PrefixTranslations ? TranslationPrefix : string.Empty;
 
-        [DefaultValue(PrefixFieldType.Value)]
-        public PrefixFieldType PrefixFieldType { get; set; }
+        [Obsolete]
+        public PrefixFieldType? PrefixFieldType { get; set; }
+
+        [DefaultValue(true)]
+        public bool AddPrefixToValue { get; set; }
+
+        [DefaultValue(true)]
+        public bool AddPrefixToNeutralComment { get; set; }
+
+        [DefaultValue(false)]
+        public bool AddPrefixToTargetComment { get; set; }
 
         [DefaultValue(default(ExcelExportMode))]
         public ExcelExportMode ExcelExportMode { get; set; }
@@ -140,5 +158,35 @@
         [DefaultValue(null)]
         [ForceGlobal]
         public string? TranslatorConfiguration { get; set; }
+
+        /// <summary>
+        /// Map deprecated property to current state (for backwards compatibility)
+        /// </summary>
+        private void MapOldPrefixValuesToNew()
+        {
+#pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
+            if (PrefixFieldType == Model.PrefixFieldType.Value)
+            {
+                AddPrefixToNeutralComment = false;
+                AddPrefixToTargetComment = false;
+                AddPrefixToValue = true;
+            }
+            else if (PrefixFieldType == Model.PrefixFieldType.Comment)
+            {
+                AddPrefixToNeutralComment = true;
+                AddPrefixToTargetComment = false;
+                AddPrefixToNeutralComment = false;
+            }
+            else if (PrefixFieldType == Model.PrefixFieldType.Both)
+            {
+                AddPrefixToNeutralComment = true;
+                AddPrefixToTargetComment = false;
+                AddPrefixToNeutralComment = true;
+            }
+            PrefixFieldType = null;
+#pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning restore CS0612 // Type or member is obsolete
+        }
     }
 }

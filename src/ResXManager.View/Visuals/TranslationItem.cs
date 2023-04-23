@@ -44,26 +44,44 @@ namespace ResXManager.View.Visuals
             set => _translation = value;
         }
 
-        public bool Apply(string? valuePrefix, string? commentPrefix)
+        public bool UpdateTranslation(string? prefix = "")
         {
             if (!_entry.CanEdit(TargetCulture))
                 return false;
 
-            _entry.Values.SetValue(TargetCulture, valuePrefix + Translation);
-
-            if (commentPrefix == null)
-                return true;
-
-            var existingComment = _entry.Comment;
-            if (existingComment != null && existingComment.StartsWith(commentPrefix, System.StringComparison.Ordinal))
-                return true;
-
-            if (!_entry.CanEdit(_entry.NeutralLanguage.CultureKey))
-                return false;
-
-            _entry.Comments.SetValue(_entry.NeutralLanguage.CultureKey, commentPrefix + existingComment);
-
+            _entry.Values.SetValue(TargetCulture, prefix + Translation);
             return true;
+        }
+
+        public bool UpdateComment(string? prefix, bool useNeutralLanguage, bool useTargetLanguage)
+        {
+            if (string.IsNullOrEmpty(prefix))
+                return true;
+            if (!useNeutralLanguage && !useTargetLanguage)
+                return true;
+
+            var error = false;
+            if (useNeutralLanguage)
+            {
+                error |= !Apply(_entry.NeutralLanguage.CultureKey);
+            }
+            if (useTargetLanguage)
+            {
+                error |= !Apply(TargetCulture);
+            }
+
+            return !error;
+
+            bool Apply(CultureKey cultureKey)
+            {
+                if (!_entry.CanEdit(cultureKey))
+                    return false;
+                var existingComment = _entry.Comments.GetValue(cultureKey);
+                if (existingComment != null && existingComment.StartsWith(prefix, System.StringComparison.Ordinal))
+                    return true;
+                _entry.Comments.SetValue(cultureKey, prefix + existingComment);
+                return true;
+            }
         }
 
         private static ICollectionView CreateOrderedResults(IList results)

@@ -483,7 +483,13 @@ Your ResXManager team.
   <data name="WarningUnsavedChanges" xml:space="preserve">
     <value>You have unsaved changes; reloading all resources will revert all your changes. Do you want to continue?</value>
   </data>
-  <data name="AppendPrefixValueFieldTypeLabel" xml:space="preserve">
-    <value>Append the translation prefix to</value>
+  <data name="Configuration_PrefixValue" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="Configuration_PrefixNeutral" xml:space="preserve">
+    <value>Neutral Comment</value>
+  </data>
+  <data name="Configuration_PrefixTarget" xml:space="preserve">
+    <value>Target Comment (per language)</value>
   </data>
 </root>
