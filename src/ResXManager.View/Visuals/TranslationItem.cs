@@ -17,6 +17,9 @@ namespace ResXManager.View.Visuals
         private readonly ObservableCollection<ITranslationMatch> _results = new();
         private readonly ResourceTableEntry _entry;
 
+        // for tooltip in TranslationsView.xaml
+        public ResourceTableEntry Entry => _entry;
+
         private ICollectionView? _orderedResults;
 
         private string? _translation;
