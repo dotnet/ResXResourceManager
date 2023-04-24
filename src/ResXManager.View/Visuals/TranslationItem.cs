@@ -25,6 +25,14 @@ namespace ResXManager.View.Visuals
         {
             _entry = entry;
             Source = source;
+            AllSources = entry.Languages
+                .Select(l => (CultureKey: l, Text: entry.Values.GetValue(l)))
+                .Where(s => !string.IsNullOrWhiteSpace(s.Text))
+                .ToList();
+            AllComments = entry.Languages
+                .Select(l => (CultureKey: l, Text: entry.Comments.GetValue(l)))
+                .Where(s => !string.IsNullOrWhiteSpace(s.Text))
+                .ToList();
 
             TargetCulture = targetCulture;
             _results.CollectionChanged += (_, __) => OnPropertyChanged(nameof(Translation));
@@ -33,6 +41,10 @@ namespace ResXManager.View.Visuals
         public string Source { get; }
 
         public CultureKey TargetCulture { get; }
+
+        public IList<(CultureKey, string?)> AllSources { get; }
+
+        public IList<(CultureKey, string?)> AllComments { get; }
 
         public IList<ITranslationMatch> Results => _results;
 

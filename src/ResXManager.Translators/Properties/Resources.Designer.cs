@@ -80,11 +80,38 @@ namespace ResXManager.Translators.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Include comments in prompt"
+        /// </summary>
+        public static string IncludeCommentsInPrompt {
+            get {
+                return ResourceManager.GetString("IncludeCommentsInPrompt", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Max characters per minute"
         /// </summary>
         public static string MaxCharactersPerMinute {
             get {
                 return ResourceManager.GetString("MaxCharactersPerMinute", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Max tokens"
+        /// </summary>
+        public static string MaxTokens {
+            get {
+                return ResourceManager.GetString("MaxTokens", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Temperature"
+        /// </summary>
+        public static string Temperature {
+            get {
+                return ResourceManager.GetString("Temperature", resourceCulture) ?? string.Empty;
             }
         }
     }
@@ -101,9 +128,21 @@ namespace ResXManager.Translators.Properties {
         /// </summary>
         AutoDetectHtml,
         /// <summary>
+        ///   Looks up a localized string similar to Include comments in prompt.
+        /// </summary>
+        IncludeCommentsInPrompt,
+        /// <summary>
         ///   Looks up a localized string similar to Max characters per minute.
         /// </summary>
         MaxCharactersPerMinute,
+        /// <summary>
+        ///   Looks up a localized string similar to Max tokens.
+        /// </summary>
+        MaxTokens,
+        /// <summary>
+        ///   Looks up a localized string similar to Temperature.
+        /// </summary>
+        Temperature,
     }
 
     /// <summary>

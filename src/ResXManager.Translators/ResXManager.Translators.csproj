@@ -50,6 +50,7 @@
     <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.5" />
     <PackageReference Include="Fody" PrivateAssets="all" Version="6.6.4" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.0.5" />
