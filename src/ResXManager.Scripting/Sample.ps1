@@ -72,7 +72,7 @@ if ("Y", "y" -contains $input)
 {
 	"Updating snaphot " + $snapshotFileName
 	$snapshot = $myhost.CreateSnapshot()
-	Set-Content $snapshotFileName $snapshot
+	Set-Content $snapshotFileName $snapshot -Encoding UTF8
 }
 
 Read-Host "Done" | Out-Null

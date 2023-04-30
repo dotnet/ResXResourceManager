@@ -45,6 +45,8 @@
 
         public void Load(string folder, string? exclusionFilter = @"Migrations\\\d{15}")
         {
+            folder = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
             _solutionFolder = folder;
 
             var sourceFilesProvider = new SourceFilesProvider(folder, exclusionFilter);
