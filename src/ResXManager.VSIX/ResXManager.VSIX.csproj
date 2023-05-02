@@ -69,7 +69,7 @@
     <PackageReference Include="Fody" PrivateAssets="all" Version="6.6.4" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.SDK" ExcludeAssets="runtime" Version="[15.0.1]" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.5.4074" PrivateAssets="all" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.0.5" />
     <PackageReference Include="Resourcer.Fody" Version="1.8.0" PrivateAssets="all" />
     <PackageReference Include="Throttle.Fody" PrivateAssets="all" Version="1.7.0" />
@@ -82,6 +82,7 @@
   <ItemGroup>
     <EmbeddedResource Include="..\ResXManager.VSIX.Compatibility.x86\bin\$(Configuration)\$(TargetFramework)\ResXManager.VSIX.Compatibility.x86.dll" />
     <EmbeddedResource Include="..\ResXManager.VSIX.Compatibility.x64\bin\$(Configuration)\$(TargetFramework)\ResXManager.VSIX.Compatibility.x64.dll" />
+    <EmbeddedResource Include="..\ResXManager.VSIX.Compatibility.arm64\bin\$(Configuration)\$(TargetFramework)\ResXManager.VSIX.Compatibility.arm64.dll" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">
     <MakeDir Directories="$(SolutionDir)Deploy" />
