@@ -2,6 +2,7 @@ namespace ResXManager.Translators
 {
     using Azure;
     using Azure.AI.OpenAI;
+    using global::Microsoft.DeepDev;
     using ResXManager.Infrastructure;
     using System;
     using System.Collections.Generic;
@@ -12,11 +13,17 @@ namespace ResXManager.Translators
     using System.Threading.Tasks;
     using TomsToolbox.Essentials;
 
+    using BatchList = System.Collections.Generic.List<(Infrastructure.ITranslationItem item, string prompt)>;
+
     [Export(typeof(ITranslator)), Shared]
     public class AzureOpenAITranslator : TranslatorBase
     {
         public AzureOpenAITranslator()
-            : base("AzureOpenAI", "AzureOpenAI", null, GetCredentials())
+            : base(
+                  "AzureOpenAI", "AzureOpenAI",
+                  new Uri("https://azure.microsoft.com/en-us/products/cognitive-services/openai-service/"),
+                  GetCredentials()
+                  )
         {
         }
 
@@ -24,13 +31,18 @@ namespace ResXManager.Translators
         public bool IncludeCommentsInPrompt { get; set; } = true;
 
         [DataMember]
-        public int MaxTokens { get; set; } = 1024;
+        // max tokens for "text-davinci-003" model (4096) divided by half to allow for response tokens
+        public int MaxTokens { get; set; } = 4096 / 2;
 
         [DataMember]
-        public float Temperature { get; set; } = 0.3f;
+        // increase this (up to 2.0) to make the AI more creative
+        public float Temperature { get; set; } = 0f;
 
         [DataMember]
         public string CustomPrompt { get; set; } = "";
+
+        // this translator is currently adapted for the "text-davinci-003" model
+        private const string ModelName = "text-davinci-003";
 
         protected override async Task Translate(ITranslationSession translationSession)
         {
@@ -48,7 +60,7 @@ namespace ResXManager.Translators
 
             if (ModelDeploymentName.IsNullOrWhiteSpace())
             {
-                translationSession.AddMessage("Azure OpenAI Translator requires name of the model deployment (text-davinci-003 recommended).");
+                translationSession.AddMessage($"Azure OpenAI Translator requires name of the model deployment for \"{ModelName}\".");
                 return;
             };
 
@@ -59,12 +71,32 @@ namespace ResXManager.Translators
 
             var retries = 0;
 
-            foreach (var translationItem in translationSession.Items)
+            foreach (var batch in PackPromptsIntoBatches(translationSession))
             {
-retry:
+            retry:
                 try
                 {
-                    await TranslateItem(translationSession, client, translationItem).ConfigureAwait(false);
+                    // call Azure OpenAI API with all prompts in batch
+                    var options = new CompletionsOptions()
+                    {
+                        Temperature = Temperature,
+                        MaxTokens = MaxTokens,
+                        StopSequences = { "\n" },
+                    };
+                    options.Prompts.AddRange(batch.Select(b => b.prompt));
+                    var completionsResponse = await client.GetCompletionsAsync(
+                        deploymentOrModelName: ModelDeploymentName,
+                        options, translationSession.CancellationToken
+                    ).ConfigureAwait(false);
+
+                    if (completionsResponse.HasValue)
+                    {
+                        await translationSession.MainThread.StartNew(() => ReturnResults(batch, completionsResponse.Value)).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("No response from Azure OpenAI API.");
+                    }
                 }
                 catch (RequestFailedException e)
                 {
@@ -84,68 +116,90 @@ retry:
             }
         }
 
-        private async Task TranslateItem(ITranslationSession translationSession, OpenAIClient client, ITranslationItem translationItem)
+        private IEnumerable<BatchList> PackPromptsIntoBatches(ITranslationSession translationSession)
         {
-            if (translationItem != null && translationItem.AllSources.Any())
+            var batch = new BatchList();
+            var batchTokens = 0;
+            var tokenizer = TokenizerBuilder.CreateByModelName(ModelName);
+
+            foreach (var item in translationSession.Items)
             {
-                var promptBuilder = new StringBuilder();
-                promptBuilder.Append("You are a professional translator fluent in all languages, able to understand and convey both literal and nuanced meanings. You can write well in the target language, adapting the style and tone to different types of texts.\n");
-
-                // optionally add custom prompt
-                if (!CustomPrompt.IsNullOrWhiteSpace())
+                var prompt = GeneratePromptForTranslation(translationSession, item);
+                if (prompt is null)
                 {
-                    promptBuilder.Append(CustomPrompt);
-                    promptBuilder.Append('\n');
+                    translationSession.AddMessage($"No prompt were generated for resource: {item.Source.Substring(0, 20)}...");
+                    continue;
                 }
 
-                // optionally add comments to prompt
-                var comments = translationItem.AllComments
-                        .Where(s => !s.Item2.IsNullOrWhiteSpace());
-                if (IncludeCommentsInPrompt && comments.Any())
+                var tokens = tokenizer.Encode(prompt, new List<string>()).Count;
+
+                if (tokens > MaxTokens)
                 {
-                    promptBuilder.Append("CONTEXT:\n");
-                    comments
-                        .Select(s => $"{(s.Item1.Culture ?? translationSession.NeutralResourcesLanguage).Name}: {s.Item2}\n")
-                        .ForEach(s => promptBuilder.Append(s));
+                    translationSession.AddMessage($"Prompt for resource would exceed {MaxTokens} tokens: {item.Source.Substring(0, 20)}...");
+                    continue;
                 }
 
-                // target language for translation
-                var targetCulture = (translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage).Name;
+                if ((batchTokens + tokens) > MaxTokens)
+                {
+                    yield return batch;
+                    batch = new BatchList();
+                    batchTokens = 0;
+                }
 
-                promptBuilder.Append($"Here is a list of words or sentences with the same meaning in different languages. Continue the list of translations for the target language \"{targetCulture}\".\n");
-                promptBuilder.Append("TRANSLATIONS:\n");
+                batch.Add((item, prompt));
+                batchTokens += tokens;
+            }
 
-                // add all existing translations to prompt
-                translationItem.AllSources
-                    .Where(s => !s.Item2.IsNullOrWhiteSpace())
+            yield return batch;
+        }
+
+        private string? GeneratePromptForTranslation(ITranslationSession translationSession, ITranslationItem translationItem)
+        {
+            if (translationItem is null || !translationItem.AllSources.Any())
+            {
+                return null;
+            }
+
+            var promptBuilder = new StringBuilder();
+            promptBuilder.Append("You are a professional translator fluent in all languages, able to understand and convey both literal and nuanced meanings. You are an expert in the target language, adapting the style and tone to different types of texts.\n");
+
+            // optionally add custom prompt
+            if (!CustomPrompt.IsNullOrWhiteSpace())
+            {
+                promptBuilder.Append(CustomPrompt);
+                promptBuilder.Append('\n');
+            }
+
+            // optionally add comments to prompt
+            var comments = translationItem.AllComments
+                    .Where(s => !s.Item2.IsNullOrWhiteSpace());
+            if (IncludeCommentsInPrompt && comments.Any())
+            {
+                promptBuilder.Append("CONTEXT:\n");
+                comments
                     .Select(s => $"{(s.Item1.Culture ?? translationSession.NeutralResourcesLanguage).Name}: {s.Item2}\n")
                     .ForEach(s => promptBuilder.Append(s));
-
-                // the target language is the last language in the prompt, note that the prompt must not end with a space due to tokenization issues
-                promptBuilder.Append($"{targetCulture}:");
-
-                // call Azure OpenAI API with prompt
-                var completionsResponse = await client.GetCompletionsAsync(
-                    deploymentOrModelName: ModelDeploymentName,
-                    new CompletionsOptions()
-                    {
-                        Temperature = Temperature,
-                        MaxTokens = MaxTokens,
-                        StopSequences = { "\n" },
-                        Prompts = { promptBuilder.ToString() }
-                    },
-                    translationSession.CancellationToken
-                ).ConfigureAwait(false);
-
-                if (completionsResponse.HasValue)
-                {
-                    await translationSession.MainThread.StartNew(() => ReturnResults(translationItem, completionsResponse.Value)).ConfigureAwait(false);
-                }
-                else
-                {
-                    throw new InvalidOperationException("No response from Azure OpenAI API.");
-                }
             }
+
+            // target language for translation
+            var targetCulture = (translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage).Name;
+
+#pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple string concatenation
+            promptBuilder.Append($"Here is a list of words or sentences with the same meaning in different languages. Continue the list of translations for the target language \"{targetCulture}\".\n");
+#pragma warning restore CA1305 // Specify IFormatProvider not necessary due to simple string concatenation
+            promptBuilder.Append("TRANSLATIONS:\n");
+
+            // add all existing translations to prompt
+            translationItem.AllSources
+                .Where(s => !s.Item2.IsNullOrWhiteSpace())
+                .Select(s => $"{(s.Item1.Culture ?? translationSession.NeutralResourcesLanguage).Name}: {s.Item2}\n")
+                .ForEach(s => promptBuilder.Append(s));
+
+#pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple string concatenation
+            // the target language is the last language in the prompt, note that the prompt must not end with a space due to tokenization issues
+            promptBuilder.Append($"{targetCulture}:");
+#pragma warning restore CA1305 // Specify IFormatProvider not necessary due to simple string concatenation
+            return promptBuilder.ToString();
         }
 
         [DataMember(Name = "AuthenticationKey")]
@@ -171,16 +225,24 @@ retry:
 
         private string? AuthenticationKey => Credentials[0].Value;
 
-        private void ReturnResults(ITranslationItem item, Completions completions)
+        private void ReturnResults(BatchList batch, Completions completions)
         {
-            if (completions.Choices[0] is { FinishReason: null or "stop" } choice &&
-                !choice.Text.IsNullOrWhiteSpace())
+            if (batch.Count != completions.Choices.Count)
             {
-                item.Results.Add(new TranslationMatch(this, choice.Text, Ranking));
+                throw new InvalidOperationException("Azure OpenAI API returned a different number of results than requested.");
             }
-            else
+
+            for (var i = 0; i < batch.Count; i++)
             {
-                // todo: log the unsuccessful finish reason somewhere for the user to see why this translation failed?
+                if (completions.Choices[i] is { FinishReason: null or "stop" } choice &&
+                    !choice.Text.IsNullOrWhiteSpace())
+                {
+                    batch[i].item.Results.Add(new TranslationMatch(this, choice.Text, Ranking));
+                }
+                else
+                {
+                    // todo: log the unsuccessful finish reason somewhere for the user to see why this translation failed?
+                }
             }
         }
 
