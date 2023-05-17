@@ -28,21 +28,25 @@ namespace ResXManager.Translators
         }
 
         [DataMember]
+        // embeds comments inside prompt for further AI guidance per language
         public bool IncludeCommentsInPrompt { get; set; } = true;
 
         [DataMember]
-        // max tokens for "text-davinci-003" model (4096) divided by half to allow for response tokens
-        public int MaxTokens { get; set; } = 4096 / 2;
+        // max tokens for "text-davinci-003" model
+        public int MaxTokens { get; set; } = 4096;
+
+        // use half of the tokens for prompting
+        private int PromptTokens => MaxTokens / 2;
+        // .. and the rest for for completion
+        private int CompletionTokens => MaxTokens - PromptTokens;
 
         [DataMember]
         // increase this (up to 2.0) to make the AI more creative
         public float Temperature { get; set; } = 0f;
 
         [DataMember]
+        // additional text to be embedded into the prompt for all translations
         public string CustomPrompt { get; set; } = "";
-
-        // this translator is currently adapted for the "text-davinci-003" model
-        private const string ModelName = "text-davinci-003";
 
         protected override async Task Translate(ITranslationSession translationSession)
         {
@@ -54,13 +58,19 @@ namespace ResXManager.Translators
 
             if (Url.IsNullOrWhiteSpace())
             {
-                translationSession.AddMessage("Azure OpenAI Translator requires URL to resource.");
+                translationSession.AddMessage("Azure OpenAI Translator requires URL to the Azure resource endpoint.");
+                return;
+            };
+
+            if (ModelName.IsNullOrWhiteSpace())
+            {
+                translationSession.AddMessage($"Azure OpenAI Translator requires name of the model used in the deployment.");
                 return;
             };
 
             if (ModelDeploymentName.IsNullOrWhiteSpace())
             {
-                translationSession.AddMessage($"Azure OpenAI Translator requires name of the model deployment for \"{ModelName}\".");
+                translationSession.AddMessage($"Azure OpenAI Translator requires name of the deployment for \"{ModelName}\".");
                 return;
             };
 
@@ -80,7 +90,7 @@ namespace ResXManager.Translators
                     var options = new CompletionsOptions()
                     {
                         Temperature = Temperature,
-                        MaxTokens = MaxTokens,
+                        MaxTokens = CompletionTokens,
                         StopSequences = { "\n" },
                     };
                     options.Prompts.AddRange(batch.Select(b => b.prompt));
@@ -120,7 +130,7 @@ namespace ResXManager.Translators
         {
             var batch = new BatchList();
             var batchTokens = 0;
-            var tokenizer = TokenizerBuilder.CreateByModelName(ModelName);
+            var tokenizer = TokenizerBuilder.CreateByModelName(ModelName ?? throw new InvalidOperationException("No model name provided in configuration!"));
 
             foreach (var item in translationSession.Items)
             {
@@ -133,13 +143,13 @@ namespace ResXManager.Translators
 
                 var tokens = tokenizer.Encode(prompt, new List<string>()).Count;
 
-                if (tokens > MaxTokens)
+                if (tokens > PromptTokens)
                 {
-                    translationSession.AddMessage($"Prompt for resource would exceed {MaxTokens} tokens: {item.Source.Substring(0, 20)}...");
+                    translationSession.AddMessage($"Prompt for resource would exceed {PromptTokens} tokens: {item.Source.Substring(0, 20)}...");
                     continue;
                 }
 
-                if ((batchTokens + tokens) > MaxTokens)
+                if ((batchTokens + tokens) > PromptTokens)
                 {
                     yield return batch;
                     batch = new BatchList();
@@ -223,6 +233,14 @@ namespace ResXManager.Translators
             set => Credentials[2].Value = value;
         }
 
+        // this translator is currently adapted to work the best with the "text-davinci-003" model
+        [DataMember(Name = "ModelName")]
+        public string? ModelName
+        {
+            get => Credentials[3].Value;
+            set => Credentials[3].Value = value;
+        }
+
         private string? AuthenticationKey => Credentials[0].Value;
 
         private void ReturnResults(BatchList batch, Completions completions)
@@ -242,6 +260,7 @@ namespace ResXManager.Translators
                 else
                 {
                     // todo: log the unsuccessful finish reason somewhere for the user to see why this translation failed?
+                    // expected reasons to get here are "content_filter" or empty response
                 }
             }
         }
@@ -253,6 +272,7 @@ namespace ResXManager.Translators
                 new CredentialItem("AuthenticationKey", "Key"),
                 new CredentialItem("Url", "Endpoint Url", false),
                 new CredentialItem("ModelDeploymentName", "Model Deployment Name", false),
+                new CredentialItem("ModelName", "Model Name", false),
             };
         }
     }
