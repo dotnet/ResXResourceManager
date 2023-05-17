@@ -134,6 +134,15 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Automatically add existing translations for matchi..."
+        /// </summary>
+        public static string AutoApplyExistingTranslations {
+            get {
+                return ResourceManager.GetString("AutoApplyExistingTranslations", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Create all resource files when adding a new resour..."
         /// </summary>
         public static string AutoCreateNewLanguageFiles {
@@ -1159,6 +1168,10 @@ namespace ResXManager.View.Properties {
         ///   Looks up a localized string similar to Authentication.
         /// </summary>
         Authentication,
+        /// <summary>
+        ///   Looks up a localized string similar to Automatically add existing translations for matchi....
+        /// </summary>
+        AutoApplyExistingTranslations,
         /// <summary>
         ///   Looks up a localized string similar to Create all resource files when adding a new resour....
         /// </summary>

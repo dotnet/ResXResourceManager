@@ -29,6 +29,9 @@ namespace ResXManager.Translators
         [DataMember]
         public float Temperature { get; set; } = 0.3f;
 
+        [DataMember]
+        public string CustomPrompt { get; set; } = "";
+
         protected override async Task Translate(ITranslationSession translationSession)
         {
             if (AuthenticationKey.IsNullOrWhiteSpace())
@@ -86,34 +89,42 @@ retry:
             if (translationItem != null && translationItem.AllSources.Any())
             {
                 var promptBuilder = new StringBuilder();
-                promptBuilder.Append("You are a professional translator fluent in all languages, able to understand and convey both literal and nuanced meanings. You can write well in the target language, adapting the style and tone to different types of texts. Respond with the target language only. Do not add any text before or after the translation.\n");
+                promptBuilder.Append("You are a professional translator fluent in all languages, able to understand and convey both literal and nuanced meanings. You can write well in the target language, adapting the style and tone to different types of texts.\n");
+
+                // optionally add custom prompt
+                if (!CustomPrompt.IsNullOrWhiteSpace())
+                {
+                    promptBuilder.Append(CustomPrompt);
+                    promptBuilder.Append('\n');
+                }
 
                 // optionally add comments to prompt
                 var comments = translationItem.AllComments
-                        .Where(s => s.Item1.Culture is not null && !s.Item2.IsNullOrWhiteSpace());
+                        .Where(s => !s.Item2.IsNullOrWhiteSpace());
                 if (IncludeCommentsInPrompt && comments.Any())
                 {
                     promptBuilder.Append("CONTEXT:\n");
                     comments
-                        // ! already filtered for null culture
-                        .Select(s => $"{s.Item1.Culture!.Name}: {s.Item2}\n")
+                        .Select(s => $"{(s.Item1.Culture ?? translationSession.NeutralResourcesLanguage).Name}: {s.Item2}\n")
                         .ForEach(s => promptBuilder.Append(s));
                 }
 
+                // target language for translation
+                var targetCulture = (translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage).Name;
+
+                promptBuilder.Append($"Here is a list of words or sentences with the same meaning in different languages. Continue the list of translations for the target language \"{targetCulture}\".\n");
                 promptBuilder.Append("TRANSLATIONS:\n");
 
+                // add all existing translations to prompt
                 translationItem.AllSources
-                    .Where(s => s.Item1.Culture is not null && !s.Item2.IsNullOrWhiteSpace())
-                    // ! already filtered for null culture
-                    .Select(s => $"{s.Item1.Culture!.Name}: {s.Item2}\n")
+                    .Where(s => !s.Item2.IsNullOrWhiteSpace())
+                    .Select(s => $"{(s.Item1.Culture ?? translationSession.NeutralResourcesLanguage).Name}: {s.Item2}\n")
                     .ForEach(s => promptBuilder.Append(s));
 
-                // add language to translate into
-                var targetCulture = (translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage).Name;
-#pragma warning disable CA1305 // Specify IFormatProvider
-                promptBuilder.Append($"{targetCulture}: ");
-#pragma warning restore CA1305 // Specify IFormatProvider
+                // the target language is the last language in the prompt, note that the prompt must not end with a space due to tokenization issues
+                promptBuilder.Append($"{targetCulture}:");
 
+                // call Azure OpenAI API with prompt
                 var completionsResponse = await client.GetCompletionsAsync(
                     deploymentOrModelName: ModelDeploymentName,
                     new CompletionsOptions()
@@ -132,7 +143,7 @@ retry:
                 }
                 else
                 {
-                    throw new ApplicationException("No response from Azure OpenAI API.");
+                    throw new InvalidOperationException("No response from Azure OpenAI API.");
                 }
             }
         }
@@ -162,10 +173,14 @@ retry:
 
         private void ReturnResults(ITranslationItem item, Completions completions)
         {
-            if (completions.Choices[0] is { FinishReason: "stop" } choice &&
+            if (completions.Choices[0] is { FinishReason: null or "stop" } choice &&
                 !choice.Text.IsNullOrWhiteSpace())
             {
                 item.Results.Add(new TranslationMatch(this, choice.Text, Ranking));
+            }
+            else
+            {
+                // todo: log the unsuccessful finish reason somewhere for the user to see why this translation failed?
             }
         }
 

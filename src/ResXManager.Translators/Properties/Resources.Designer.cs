@@ -80,6 +80,15 @@ namespace ResXManager.Translators.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Custom prompt to append to all translation request..."
+        /// </summary>
+        public static string CustomPrompt {
+            get {
+                return ResourceManager.GetString("CustomPrompt", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Include comments in prompt"
         /// </summary>
         public static string IncludeCommentsInPrompt {
@@ -127,6 +136,10 @@ namespace ResXManager.Translators.Properties {
         ///   Looks up a localized string similar to Automatically detect HTML.
         /// </summary>
         AutoDetectHtml,
+        /// <summary>
+        ///   Looks up a localized string similar to Custom prompt to append to all translation request....
+        /// </summary>
+        CustomPrompt,
         /// <summary>
         ///   Looks up a localized string similar to Include comments in prompt.
         /// </summary>

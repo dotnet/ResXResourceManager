@@ -120,6 +120,9 @@
   <data name="AutoDetectHtml" xml:space="preserve">
     <value>Automatically detect HTML</value>
   </data>
+  <data name="CustomPrompt" xml:space="preserve">
+    <value>Custom prompt to append to all translation requests</value>
+  </data>
   <data name="IncludeCommentsInPrompt" xml:space="preserve">
     <value>Include comments in prompt</value>
   </data>
