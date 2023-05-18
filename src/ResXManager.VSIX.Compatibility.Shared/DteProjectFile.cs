@@ -17,7 +17,7 @@
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
 
-    internal class DteProjectFile : ProjectFile, IDteProjectFile
+    internal sealed class DteProjectFile : ProjectFile, IDteProjectFile
     {
         public const string T4FileName = "Resources.Designer.t4";
 
@@ -239,6 +239,8 @@
             try
             {
                 const string dataAnnotations = "System.ComponentModel.DataAnnotations";
+
+                ThrowIfNotOnUIThread();
 
                 var vsProject = projectItem.ContainingProject?.Object as VSLangProj.VSProject;
                 var references = vsProject?.References;

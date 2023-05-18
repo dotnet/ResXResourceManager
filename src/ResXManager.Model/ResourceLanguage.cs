@@ -496,7 +496,7 @@
             return Culture?.DisplayName ?? Resources.Neutral;
         }
 
-        private class Node
+        private sealed class Node
         {
             private readonly ResourceLanguage _owner;
 

@@ -25,7 +25,7 @@
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
     [Export]
-    internal class DteSolution
+    internal sealed class DteSolution
     {
         private const string SolutionItemsFolderName = "Solution Items";
 

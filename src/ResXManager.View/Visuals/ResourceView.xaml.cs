@@ -230,7 +230,7 @@
             _tracer.TraceError(ex.ToString());
         }
 
-        private class ExportParameters : IExportParameters
+        private sealed class ExportParameters : IExportParameters
         {
             public ExportParameters(string? fileName, IResourceScope? scope)
             {

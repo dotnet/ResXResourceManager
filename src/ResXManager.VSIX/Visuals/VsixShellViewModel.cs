@@ -63,8 +63,10 @@
             VsPackage.Instance.ShowToolWindow();
 
 #pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
+#pragma warning disable VSTHRD110 // Observe result of async calls
             // Must defer selection until tool window is fully shown!
             _dispatcher.BeginInvoke(DispatcherPriority.Background, () => _shellViewModel.SelectEntry(entry));
+#pragma warning restore VSTHRD110 // Observe result of async calls
 #pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
         }
 

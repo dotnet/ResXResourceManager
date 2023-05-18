@@ -26,7 +26,7 @@
             throw new NotImplementedException();
         }
 
-        private class DataGridSelectionScope : IResourceScope, IExportParameters
+        private sealed class DataGridSelectionScope : IResourceScope, IExportParameters
         {
             private readonly DataGrid? _dataGrid;
 

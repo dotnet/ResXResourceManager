@@ -2,8 +2,6 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
-    <LangVersion>9.0</LangVersion>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <Import Project="..\ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems" Label="Shared" />
   <ItemGroup>

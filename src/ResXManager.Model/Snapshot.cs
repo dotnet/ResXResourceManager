@@ -81,7 +81,7 @@
         }
 
         [DataContract]
-        private class EntitySnapshot
+        private sealed class EntitySnapshot
         {
             [DataMember]
             public string? ProjectName
@@ -106,7 +106,7 @@
         }
 
         [DataContract]
-        private class EntrySnapshot
+        private sealed class EntrySnapshot
         {
             [DataMember]
             public string? Key
@@ -124,7 +124,7 @@
         }
 
         [DataContract]
-        private class DataSnapshot
+        private sealed class DataSnapshot
         {
             [DataMember(Name = "L", EmitDefaultValue = false)]
             public string? Language

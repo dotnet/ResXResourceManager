@@ -168,7 +168,7 @@
             }
         }
 
-        private class CodeMatch
+        private sealed class CodeMatch
         {
             public CodeMatch(string line, string key, Regex? regex, StringComparison stringComparison, string? singleLineComment)
             {
@@ -235,7 +235,7 @@
             public IList<string> Segments { get; } = Array.Empty<string>();
         }
 
-        private class FileInfo
+        private sealed class FileInfo
         {
             private static readonly Regex _regex = new(@"\W+", RegexOptions.Compiled);
             private readonly ProjectFile _projectFile;

@@ -14,7 +14,7 @@
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
     [Shared, Export(typeof(ISourceFilesProvider))]
-    internal class DteSourceFilesProvider : ISourceFilesProvider
+    internal sealed class DteSourceFilesProvider : ISourceFilesProvider
     {
         private readonly PerformanceTracer _performanceTracer;
         private readonly IConfiguration _configuration;

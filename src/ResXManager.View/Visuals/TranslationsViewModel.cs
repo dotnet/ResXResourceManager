@@ -24,7 +24,7 @@
 
     [VisualCompositionExport(RegionId.Content, Sequence = 2)]
     [Shared]
-    internal partial class TranslationsViewModel : INotifyPropertyChanged
+    internal sealed partial class TranslationsViewModel : INotifyPropertyChanged
     {
         public TranslatorHost TranslatorHost { get; }
 

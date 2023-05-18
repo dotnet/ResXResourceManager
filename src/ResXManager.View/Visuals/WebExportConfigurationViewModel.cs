@@ -15,7 +15,7 @@
 
     [LocalizedDisplayName(StringResourceKey.WebProjectFileExport_Title)]
     [VisualCompositionExport(RegionId.Configuration)]
-    internal class WebExportConfigurationViewModel
+    internal sealed class WebExportConfigurationViewModel
     {
         public WebExportConfigurationViewModel(ResourceManager resourceManager)
         {

@@ -15,7 +15,7 @@
     [Shared]
     [Export(typeof(IConfiguration))]
     [Export(typeof(IDteConfiguration))]
-    internal class DteConfiguration : Configuration, IDteConfiguration
+    internal sealed class DteConfiguration : Configuration, IDteConfiguration
     {
         private readonly DteSolution _solution;
 

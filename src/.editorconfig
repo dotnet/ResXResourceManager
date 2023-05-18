@@ -62,3 +62,6 @@ dotnet_diagnostic.CA1056.severity = silent
 
 # CA5394: Do not use insecure randomness
 dotnet_diagnostic.CA5394.severity = none
+
+# CA1003: Use generic event handler instances
+dotnet_diagnostic.CA1003.severity = suggestion

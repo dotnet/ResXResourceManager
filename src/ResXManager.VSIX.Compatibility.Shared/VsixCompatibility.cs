@@ -29,7 +29,7 @@
     using Resources = Properties.Resources;
 
     [Export(typeof(IVsixCompatibility))]
-    internal class VsixCompatibility : IVsixCompatibility
+    internal sealed class VsixCompatibility : IVsixCompatibility
     {
         private readonly ICustomToolRunner _customToolRunner;
         private readonly DteSolution _solution;

@@ -58,6 +58,7 @@
 
         private void Self_Loaded(object? sender, RoutedEventArgs e)
         {
+#pragma warning disable VSTHRD110 // Observe result of async calls
             this.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {
                 if (Content != null)
@@ -67,6 +68,7 @@
 
                 exportProvider.TraceXamlLoaderError(null);
             });
+#pragma warning restore VSTHRD110 // Observe result of async calls
         }
     }
 }

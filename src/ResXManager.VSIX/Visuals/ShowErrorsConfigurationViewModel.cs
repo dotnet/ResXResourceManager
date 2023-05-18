@@ -11,7 +11,7 @@
     [LocalizedDisplayName(StringResourceKey.ShowErrorsConfiguration_Header)]
     [VisualCompositionExport(RegionId.Configuration)]
     [Shared]
-    internal class ShowErrorsConfigurationViewModel
+    internal sealed class ShowErrorsConfigurationViewModel
     {
         [ImportingConstructor]
         public ShowErrorsConfigurationViewModel(IDteConfiguration configuration)

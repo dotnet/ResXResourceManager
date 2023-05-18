@@ -101,7 +101,7 @@
             Navigate?.Invoke(entry);
         }
 
-        private class ResourceErrorTask : ErrorTask
+        private sealed class ResourceErrorTask : ErrorTask
         {
             public ResourceErrorTask(ResourceTableEntry entry)
             {

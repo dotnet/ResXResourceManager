@@ -483,7 +483,7 @@
             }
         }
 
-        private class LoaderMessages
+        private sealed class LoaderMessages
         {
             public IList<string> Messages { get; } = new List<string>();
             public IList<string> Errors { get; } = new List<string>();

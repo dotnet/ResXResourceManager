@@ -202,7 +202,7 @@ namespace ResXManager.Translators
             yield return chunk;
         }
 
-        private class Throttle
+        private sealed class Throttle
         {
             private readonly int _maxCharactersPerMinute;
             private readonly CancellationToken _cancellationToken;

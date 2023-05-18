@@ -396,7 +396,7 @@
             }
         }
 
-        private class IsRightToLeftToFlowDirectionConverter : IValueConverter
+        private sealed class IsRightToLeftToFlowDirectionConverter : IValueConverter
         {
             public static readonly IValueConverter Default = new IsRightToLeftToFlowDirectionConverter();
 
