@@ -1,4 +1,9 @@
-﻿1.74
+﻿1.75
+- Fix #531: Changing the a Custom Tool is greyed out if none is set
+- Fix #547: relative path in scripting is wrong when folder name ends with a backslash
+- Fix #551: Add VSIX support for arm64
+
+1.74
 - Fix #526: Crash when switching to text template
 
 1.73
