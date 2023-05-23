@@ -6,9 +6,9 @@
     {
         string Source { get; }
 
-        IList<(CultureKey, string?)> AllSources { get; }
+        IList<(CultureKey Key, string Text)> AllSources { get; }
 
-        IList<(CultureKey, string?)> AllComments { get; }
+        IList<(CultureKey Key, string Text)> AllComments { get; }
 
         IList<ITranslationMatch> Results { get; }
 

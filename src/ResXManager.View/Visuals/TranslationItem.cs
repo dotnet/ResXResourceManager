@@ -9,7 +9,7 @@ namespace ResXManager.View.Visuals
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
-
+    using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
 
     public partial class TranslationItem : INotifyPropertyChanged, ITranslationItem
@@ -28,13 +28,15 @@ namespace ResXManager.View.Visuals
         {
             _entry = entry;
             Source = source;
+            // ! value is filtered in Where clause
             AllSources = entry.Languages
-                .Select(l => (CultureKey: l, Text: entry.Values.GetValue(l)))
-                .Where(s => !string.IsNullOrWhiteSpace(s.Text))
+                .Where(l => !entry.Values.GetValue(l).IsNullOrWhiteSpace())
+                .Select(l => (CultureKey: l, Text: entry.Values.GetValue(l)!))
                 .ToList();
+            // ! value is filtered in Where clause
             AllComments = entry.Languages
-                .Select(l => (CultureKey: l, Text: entry.Comments.GetValue(l)))
-                .Where(s => !string.IsNullOrWhiteSpace(s.Text))
+                .Where(l => !entry.Comments.GetValue(l).IsNullOrWhiteSpace())
+                .Select(l => (CultureKey: l, Text: entry.Comments.GetValue(l)!))
                 .ToList();
 
             TargetCulture = targetCulture;
@@ -45,9 +47,9 @@ namespace ResXManager.View.Visuals
 
         public CultureKey TargetCulture { get; }
 
-        public IList<(CultureKey, string?)> AllSources { get; }
+        public IList<(CultureKey Key, string Text)> AllSources { get; }
 
-        public IList<(CultureKey, string?)> AllComments { get; }
+        public IList<(CultureKey Key, string Text)> AllComments { get; }
 
         public IList<ITranslationMatch> Results => _results;
 

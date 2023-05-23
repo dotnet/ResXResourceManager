@@ -216,18 +216,15 @@ namespace ResXManager.Translators
 
             // generate a list of items to be translated
             var sources = items.Select(i => i.AllSources
-                .Where(s => !s.Item2.IsNullOrWhiteSpace())
                 .Select(s => {
-                    // ! already checked items for null Item2 values
                     var source = new Dictionary<string, string?>()
                     {
-                        { (s.Item1.Culture ?? translationSession.NeutralResourcesLanguage).Name, s.Item2! },
+                        { (s.Key.Culture ?? translationSession.NeutralResourcesLanguage).Name, s.Text },
                     };
                     if (IncludeCommentsInPrompt &&
-                        i.AllComments.SingleOrDefault(c => c.Item1 == i.TargetCulture) is { Item2: string } comment)
+                        i.AllComments.SingleOrDefault(c => c.Key == i.TargetCulture) is { Text: string } comment)
                     {
-                        // ! already tested for null Item2 value
-                        source.Add("Context", comment.Item2!);
+                        source.Add("Context", comment.Text);
                     }
                     return source;
                 })
@@ -408,13 +405,11 @@ namespace ResXManager.Translators
             }
 
             // optionally add comments to prompt
-            var comments = translationItem.AllComments
-                    .Where(s => !s.Item2.IsNullOrWhiteSpace());
-            if (IncludeCommentsInPrompt && comments.Any())
+            if (IncludeCommentsInPrompt && translationItem.AllComments.Any())
             {
                 promptBuilder.Append("CONTEXT:\n");
-                comments
-                    .Select(s => $"{(s.Item1.Culture ?? translationSession.NeutralResourcesLanguage).Name}: {s.Item2}\n")
+                translationItem.AllComments
+                    .Select(s => $"{(s.Key.Culture ?? translationSession.NeutralResourcesLanguage).Name}: {s.Text}\n")
                     .ForEach(s => promptBuilder.Append(s));
             }
 
@@ -425,8 +420,7 @@ namespace ResXManager.Translators
 
             // add all existing translations to prompt
             translationItem.AllSources
-                .Where(s => !s.Item2.IsNullOrWhiteSpace())
-                .Select(s => $"{(s.Item1.Culture ?? translationSession.NeutralResourcesLanguage).Name}: {s.Item2}\n")
+                .Select(s => $"{(s.Key.Culture ?? translationSession.NeutralResourcesLanguage).Name}: {s.Text}\n")
                 .ForEach(s => promptBuilder.Append(s));
 
 #pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple string concatenation
