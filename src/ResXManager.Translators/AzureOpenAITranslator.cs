@@ -50,6 +50,10 @@ namespace ResXManager.Translators
         // additional text to be embedded into the prompt for all translations
         public string CustomPrompt { get; set; } = "";
 
+        [DataMember]
+        // toggles batching of requests on/off
+        public bool BatchRequests { get; set; } = true;
+
         protected override async Task Translate(ITranslationSession translationSession)
         {
             if (AuthenticationKey.IsNullOrWhiteSpace())
@@ -154,43 +158,49 @@ namespace ResXManager.Translators
             var batchItems = new List<ITranslationItem>();
             var batchTokens = 0;
             var tokenizer = TokenizerBuilder.CreateByModelName(ModelName ?? throw new InvalidOperationException("No model name provided in configuration!"));
-            ChatMessage? message = null;
+            ChatMessage? batchMessage = null;
 
             foreach (var item in items)
             {
-                batchItems.Add(item);
+                var currentBatch = batchItems.Concat(new[] { item }).ToList();
 
-                message = GenerateMessageForTranslations(translationSession, batchItems, targetCulture);
-                if (message is null)
+                var currentMessage = GenerateMessageForTranslations(translationSession, currentBatch, targetCulture);
+                if (currentMessage is null)
                 {
                     translationSession.AddMessage($"No prompt were generated for resource: {item.Source.Substring(0, 20)}...");
                     continue;
                 }
 
-                var tokens = tokenizer.Encode(message.Content, new List<string>()).Count;
-
+                var tokens = tokenizer.Encode(currentMessage.Content, new List<string>()).Count;
                 if (tokens > PromptTokens)
                 {
                     translationSession.AddMessage($"Prompt for resource would exceed {PromptTokens} tokens: {item.Source.Substring(0, 20)}...");
                     continue;
                 }
 
-                if ((batchTokens + tokens) > PromptTokens)
+                if (!BatchRequests)
                 {
-                    yield return (message, batchItems);
+                    yield return (currentMessage, currentBatch);
+                    continue;
+                }
+
+                if (batchMessage is not null && (batchTokens + tokens) > PromptTokens)
+                {
+                    yield return (batchMessage, batchItems);
+
+                    batchMessage = null;
                     batchItems = new List<ITranslationItem>();
                     batchTokens = 0;
-                    message = null;
                 }
-                else
-                {
-                    batchTokens += tokens;
-                }
+
+                batchMessage = currentMessage;
+                batchItems.Add(item);
+                batchTokens += tokens;
             }
 
-            if (message is not null)
+            if (batchMessage is not null && batchItems.Any())
             {
-                yield return (message, batchItems);
+                yield return (batchMessage, batchItems);
             }
         }
 
@@ -347,7 +357,7 @@ namespace ResXManager.Translators
 
         private IEnumerable<PromptList> PackPromptsIntoBatches(ITranslationSession translationSession)
         {
-            var batch = new PromptList();
+            var batchItems = new PromptList();
             var batchTokens = 0;
             var tokenizer = TokenizerBuilder.CreateByModelName(ModelName ?? throw new InvalidOperationException("No model name provided in configuration!"));
 
@@ -368,18 +378,28 @@ namespace ResXManager.Translators
                     continue;
                 }
 
+                if (!BatchRequests)
+                {
+                    yield return new PromptList { (item, prompt) };
+                    continue;
+                }
+
                 if ((batchTokens + tokens) > PromptTokens)
                 {
-                    yield return batch;
-                    batch = new PromptList();
+                    yield return batchItems;
+
+                    batchItems = new PromptList();
                     batchTokens = 0;
                 }
 
-                batch.Add((item, prompt));
+                batchItems.Add((item, prompt));
                 batchTokens += tokens;
             }
 
-            yield return batch;
+            if (batchItems.Any())
+            {
+                yield return batchItems;
+            }
         }
 
         private string? GeneratePromptForTranslation(ITranslationSession translationSession, ITranslationItem translationItem)

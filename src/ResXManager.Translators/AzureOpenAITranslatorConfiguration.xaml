@@ -19,7 +19,9 @@
     <TextBlock Text="{x:Static properties:Resources.Temperature}" VerticalAlignment="Center" />
     <Decorator Width="5" />
     <TextBox Text="{Binding Temperature}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
-  </StackPanel>
+    <Decorator Width="20" />
+    <CheckBox Content="{x:Static properties:Resources.BatchRequests}" IsChecked="{Binding BatchRequests}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center" />
+    </StackPanel>
   <StackPanel Orientation="Vertical">
       <TextBlock Text="{x:Static properties:Resources.CustomPrompt}" VerticalAlignment="Center" />
       <TextBox Text="{Binding CustomPrompt}" AcceptsReturn="True" MinLines="3" />

@@ -120,6 +120,9 @@
   <data name="AutoDetectHtml" xml:space="preserve">
     <value>Automatically detect HTML</value>
   </data>
+  <data name="BatchRequests" xml:space="preserve">
+    <value>Batch requests</value>
+  </data>
   <data name="CustomPrompt" xml:space="preserve">
     <value>Custom prompt to append to all translation requests</value>
   </data>

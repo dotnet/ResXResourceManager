@@ -80,6 +80,15 @@ namespace ResXManager.Translators.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Batch requests"
+        /// </summary>
+        public static string BatchRequests {
+            get {
+                return ResourceManager.GetString("BatchRequests", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Custom prompt to append to all translation request..."
         /// </summary>
         public static string CustomPrompt {
@@ -136,6 +145,10 @@ namespace ResXManager.Translators.Properties {
         ///   Looks up a localized string similar to Automatically detect HTML.
         /// </summary>
         AutoDetectHtml,
+        /// <summary>
+        ///   Looks up a localized string similar to Batch requests.
+        /// </summary>
+        BatchRequests,
         /// <summary>
         ///   Looks up a localized string similar to Custom prompt to append to all translation request....
         /// </summary>
