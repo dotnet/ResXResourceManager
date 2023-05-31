@@ -34,7 +34,7 @@ namespace ResXManager.Translators
         public bool IncludeCommentsInPrompt { get; set; } = true;
 
         [DataMember]
-        // max tokens for "text-davinci-003" model
+        // default to max tokens for "text-davinci-003" model
         public int MaxTokens { get; set; } = 4096;
 
         // use half of the tokens for prompting
@@ -107,7 +107,7 @@ namespace ResXManager.Translators
                 var cultureKey = languageGroup.Key;
                 var targetCulture = cultureKey.Culture ?? translationSession.NeutralResourcesLanguage;
 
-                foreach (var batch in PackMessagesIntoBatches(translationSession, languageGroup.ToList(), targetCulture))
+                foreach (var (message, items) in PackMessagesIntoBatches(translationSession, languageGroup.ToList(), targetCulture))
                 {
                 retry:
                     try
@@ -117,7 +117,7 @@ namespace ResXManager.Translators
                         {
                             Temperature = Temperature,
                             MaxTokens = CompletionTokens,
-                            Messages = { batch.message }
+                            Messages = { message }
                         };
                         var completionsResponse = await client.GetChatCompletionsAsync(
                             deploymentOrModelName: ModelDeploymentName,
@@ -126,7 +126,7 @@ namespace ResXManager.Translators
 
                         if (completionsResponse.HasValue)
                         {
-                            await translationSession.MainThread.StartNew(() => ReturnResults(batch.items, completionsResponse.Value)).ConfigureAwait(false);
+                            await translationSession.MainThread.StartNew(() => ReturnResults(items, completionsResponse.Value)).ConfigureAwait(false);
                         }
                         else
                         {
@@ -226,7 +226,8 @@ namespace ResXManager.Translators
 
             // generate a list of items to be translated
             var sources = items.Select(i => i.AllSources
-                .Select(s => {
+                .Select(s =>
+                {
                     var source = new Dictionary<string, string?>()
                     {
                         { (s.Key.Culture ?? translationSession.NeutralResourcesLanguage).Name, s.Text },
@@ -493,15 +494,26 @@ namespace ResXManager.Translators
             set => Credentials[2].Value = value;
         }
 
-        // this translator is currently adapted to work the best with the "text-davinci-003" model
+        // this translator is currently adapted to work the best with "text-davinci-003" or "gpt-3.5-turbo"
         [DataMember(Name = "ModelName")]
         public string? ModelName
         {
-            get => Credentials[3].Value;
+            get => ExpandModelNameAliases(Credentials[3].Value);
             set => Credentials[3].Value = value;
         }
 
         private string? AuthenticationKey => Credentials[0].Value;
+
+        private static string? ExpandModelNameAliases(string? modelName)
+        {
+            // expand alternative model names to known model names
+
+            return modelName switch
+            {
+                "gpt-35-turbo" => "gpt-3.5-turbo",
+                _ => modelName,
+            };
+        }
 
         private static IList<ICredentialItem> GetCredentials()
         {
