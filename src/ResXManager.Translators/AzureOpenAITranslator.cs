@@ -233,7 +233,7 @@ namespace ResXManager.Translators
                         { (s.Key.Culture ?? translationSession.NeutralResourcesLanguage).Name, s.Text },
                     };
                     if (IncludeCommentsInPrompt &&
-                        i.AllComments.SingleOrDefault(c => c.Key == i.TargetCulture) is { Text: string } comment)
+                        i.AllComments.SingleOrDefault(c => c.Key == s.Key) is { Text: string } comment)
                     {
                         source.Add("Context", comment.Text);
                     }
@@ -244,7 +244,7 @@ namespace ResXManager.Translators
             if (sources.Count > 1)
             {
 #pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple integer
-                contentBuilder.Append($"Each item in the following JSON array contains a list of words or sentences with the same meaning in different languages. Translate the {sources.Count} items in the array into the target language \"{targetCulture.Name}\".\n\n");
+                contentBuilder.Append($"Each item in the following JSON array contains a list of words or sentences with the same meaning in different languages. Translate the {sources.Count} items in the array into the target language \"{targetCulture.Name}\". Use the Context property if provided for guidance.\n\n");
 #pragma warning restore CA1305 // Specify IFormatProvider
 
                 // serialize into JSON
@@ -255,13 +255,13 @@ namespace ResXManager.Translators
                 contentBuilder.Append("\n\n");
 
 #pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple integer
-                contentBuilder.Append($"Respond only with a flat JSON string array of translations to the target language \"{targetCulture.Name}\" of the {sources.Count} items from the source array. Keep the same order of the items as in the source array. Do not include the target language property, only respond with a flat string array with {sources.Count} items.\n\n");
+                contentBuilder.Append($"Respond only with a flat JSON string array of translations to the target language \"{targetCulture.Name}\" of the {sources.Count} items from the source array. Do not translate the Context if provided. Keep the same order of the items as in the source array. Do not include the target language property, only respond with a flat string array with {sources.Count} items.\n\n");
 #pragma warning restore CA1305 // Specify IFormatProvider
             }
             else
             {
 #pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple integer
-                contentBuilder.Append($"The following JSON object describes a list of words or sentences with the same meaning in different languages. Translate into the target language \"{targetCulture.Name}\".\n\n");
+                contentBuilder.Append($"The following JSON object describes a list of words or sentences with the same meaning in different languages. Translate into the target language \"{targetCulture.Name}\". Use the Context property if provided for guidance.\n\n");
 #pragma warning restore CA1305 // Specify IFormatProvider
 
                 // serialize into JSON
@@ -272,7 +272,7 @@ namespace ResXManager.Translators
                 contentBuilder.Append("\n\n");
 
 #pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple integer
-                contentBuilder.Append($"Respond only with flat JSON string array containing the single translation to the target language \"{targetCulture.Name}\" of the source object. Do not include the target language property, only respond with a flat string array containing a single item.\n\n");
+                contentBuilder.Append($"Respond only with flat JSON string array containing the single translation to the target language \"{targetCulture.Name}\" of the source object. Do not translate the Context if provided. Do not include the target language property, only respond with a flat string array containing a single item.\n\n");
 #pragma warning restore CA1305 // Specify IFormatProvider
             }
 
