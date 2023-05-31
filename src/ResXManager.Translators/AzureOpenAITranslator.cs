@@ -225,26 +225,27 @@ namespace ResXManager.Translators
             }
 
             // generate a list of items to be translated
-            var sources = items.Select(i => i.AllSources
-                .Select(s =>
-                {
-                    var source = new Dictionary<string, string?>()
+            var sources = items.Select(i =>
+            {
+                var source = new Dictionary<string, string?>();
+                i.AllSources
+                    .ForEach(s =>
                     {
-                        { (s.Key.Culture ?? translationSession.NeutralResourcesLanguage).Name, s.Text },
-                    };
-                    if (IncludeCommentsInPrompt &&
-                        i.AllComments.SingleOrDefault(c => c.Key == s.Key) is { Text: string } comment)
-                    {
-                        source.Add("Context", comment.Text);
-                    }
-                    return source;
-                })
-            ).ToList();
+                        var languageName = (s.Key.Culture ?? translationSession.NeutralResourcesLanguage).Name;
+                        source.Add(languageName, s.Text);
+                        if (IncludeCommentsInPrompt &&
+                            i.AllComments.SingleOrDefault(c => c.Key == s.Key) is { Text: string } comment)
+                        {
+                            source.Add($"{languageName}-comment", comment.Text);
+                        }
+                    });
+                return source;
+            }).ToList();
 
             if (sources.Count > 1)
             {
 #pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple integer
-                contentBuilder.Append($"Each item in the following JSON array contains a list of words or sentences with the same meaning in different languages. Translate the {sources.Count} items in the array into the target language \"{targetCulture.Name}\". Use the Context property if provided for guidance.\n\n");
+                contentBuilder.Append($"Translate the {sources.Count} items described by the following JSON array into the target language \"{targetCulture.Name}\". Follow any guidance in comments if provided.\n\n");
 #pragma warning restore CA1305 // Specify IFormatProvider
 
                 // serialize into JSON
@@ -255,13 +256,13 @@ namespace ResXManager.Translators
                 contentBuilder.Append("\n\n");
 
 #pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple integer
-                contentBuilder.Append($"Respond only with a flat JSON string array of translations to the target language \"{targetCulture.Name}\" of the {sources.Count} items from the source array. Do not translate the Context if provided. Keep the same order of the items as in the source array. Do not include the target language property, only respond with a flat string array with {sources.Count} items.\n\n");
+                contentBuilder.Append($"Respond only with a JSON string array of translations to the target language \"{targetCulture.Name}\" of the {sources.Count} source items. Keep the same order of the items as in the source array. Do not include the target language property, only respond with a flat JSON array with {sources.Count} string items.\n\n");
 #pragma warning restore CA1305 // Specify IFormatProvider
             }
             else
             {
 #pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple integer
-                contentBuilder.Append($"The following JSON object describes a list of words or sentences with the same meaning in different languages. Translate into the target language \"{targetCulture.Name}\". Use the Context property if provided for guidance.\n\n");
+                contentBuilder.Append($"Translate the item described by the following JSON object into the target language \"{targetCulture.Name}\". Follow any guidance in comments if provided.\n\n");
 #pragma warning restore CA1305 // Specify IFormatProvider
 
                 // serialize into JSON
@@ -272,7 +273,7 @@ namespace ResXManager.Translators
                 contentBuilder.Append("\n\n");
 
 #pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple integer
-                contentBuilder.Append($"Respond only with flat JSON string array containing the single translation to the target language \"{targetCulture.Name}\" of the source object. Do not translate the Context if provided. Do not include the target language property, only respond with a flat string array containing a single item.\n\n");
+                contentBuilder.Append($"Respond only with a JSON string array containing the single translation to the target language \"{targetCulture.Name}\" of the source item. Do not include the target language property, only respond with a flat JSON array containing a single string item.\n\n");
 #pragma warning restore CA1305 // Specify IFormatProvider
             }
 
@@ -290,7 +291,7 @@ namespace ResXManager.Translators
                 choice.Message is { Role.Label: "assistant" } message)
             {
                 // deserialize the message content from JSON
-                var results = JsonConvert.DeserializeObject<List<string>>(message.Content)
+                var results = JsonConvert.DeserializeObject<List<string>>(FixJsonArray(message.Content))
                     ?? throw new InvalidOperationException("Azure OpenAI API returned an empty result.");
 
                 if (batchItems.Count != results.Count)
@@ -305,6 +306,23 @@ namespace ResXManager.Translators
                 // todo: log the unsuccessful finish reason somewhere for the user to see why this translation failed?
                 // expected reasons to get here are "content_filter" or empty response
             }
+        }
+
+        // fix broken JSON by adding missing brackets around arrays
+        private static string FixJsonArray(string json)
+        {
+            var sb = new StringBuilder(json);
+
+            if (!json.StartsWith("[", StringComparison.InvariantCulture))
+            {
+                sb.Insert(0, '[');
+            }
+            if (!json.EndsWith("]", StringComparison.InvariantCulture))
+            {
+                sb.Append(']');
+            }
+
+            return sb.ToString();
         }
 
         private async Task TranslateUsingCompletionsModel(ITranslationSession translationSession, OpenAIClient client)
