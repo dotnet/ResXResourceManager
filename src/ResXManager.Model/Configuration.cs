@@ -71,6 +71,8 @@
         bool EnableXlifSync { get; set; }
 
         string? TranslatorConfiguration { get; set; }
+
+        bool AutoApplyExistingTranslations { get; }
     }
 
     public abstract class Configuration : ConfigurationBase, IConfiguration
@@ -140,5 +142,8 @@
         [DefaultValue(null)]
         [ForceGlobal]
         public string? TranslatorConfiguration { get; set; }
+
+        [DefaultValue(true)]
+        public bool AutoApplyExistingTranslations { get; set; }
     }
 }

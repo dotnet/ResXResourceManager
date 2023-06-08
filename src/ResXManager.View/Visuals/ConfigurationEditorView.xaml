@@ -94,6 +94,9 @@
             <ComboBox Width="175" ItemsSource="{Binding Source={x:Type model:PrefixFieldType}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
                      Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}" SelectedValue="{Binding Configuration.PrefixFieldType}"/>
           </StackPanel>
+          <StackPanel Orientation="Horizontal">
+            <CheckBox IsChecked="{Binding Configuration.AutoApplyExistingTranslations}" Content="{x:Static properties:Resources.AutoApplyExistingTranslations}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+          </StackPanel>
         </StackPanel>
       </GroupBox>
 

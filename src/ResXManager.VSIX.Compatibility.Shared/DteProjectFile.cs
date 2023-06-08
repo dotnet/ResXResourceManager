@@ -238,6 +238,8 @@
         {
             try
             {
+                ThrowIfNotOnUIThread();
+                
                 const string dataAnnotations = "System.ComponentModel.DataAnnotations";
 
                 ThrowIfNotOnUIThread();
