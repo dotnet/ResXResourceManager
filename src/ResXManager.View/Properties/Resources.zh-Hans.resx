@@ -131,9 +131,6 @@
   <data name="AutoCreateNewLanguageFiles" xml:space="preserve">
     <value>添加新的资源语言时创建所有资源文件</value>
   </data>
-  <data name="AutoApplyExistingTranslations" xml:space="preserve">
-    <value>Automatically add existing translations for matching strings</value>
-  </data>
   <data name="AddLanguageToolTip" xml:space="preserve">
     <value>添加新语言</value>
   </data>

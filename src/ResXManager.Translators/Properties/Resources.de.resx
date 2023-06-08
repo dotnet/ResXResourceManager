@@ -120,22 +120,7 @@
   <data name="AutoDetectHtml" xml:space="preserve">
     <value>Html automatisch erkennen</value>
   </data>
-  <data name="BatchRequests" xml:space="preserve">
-    <value>Batch requests</value>
-  </data>
-  <data name="CustomPrompt" xml:space="preserve">
-    <value>Custom prompt to append to all translation requests</value>
-  </data>
-  <data name="IncludeCommentsInPrompt" xml:space="preserve">
-    <value>Include comments in prompt</value>
-  </data>
   <data name="MaxCharactersPerMinute" xml:space="preserve">
     <value>Max. Zeichen pro Minute</value>
-  </data>
-  <data name="MaxTokens" xml:space="preserve">
-    <value>Max tokens</value>
-  </data>
-  <data name="Temperature" xml:space="preserve">
-    <value>Temperature</value>
   </data>
 </root>

@@ -133,9 +133,6 @@ Wollen Sie trotzdem einen neuen Eintrag hinzufügen?</value>
   <data name="AutoCreateNewLanguageFiles" xml:space="preserve">
     <value>Alle Ressourcendateien sofort erstellen, wenn eine neue Ressourcensprache hinzugefügt wird</value>
   </data>
-  <data name="AutoApplyExistingTranslations" xml:space="preserve">
-    <value>Automatically add existing translations for matching strings</value>
-  </data>
   <data name="CellSelection" xml:space="preserve">
     <value>Einzelne Zellen markieren</value>
   </data>
