@@ -4,13 +4,14 @@ namespace ResXManager.View.Visuals
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Globalization;
     using System.Linq;
     using System.Windows.Data;
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
+
     using TomsToolbox.Essentials;
-    using TomsToolbox.Wpf;
 
     public partial class TranslationItem : INotifyPropertyChanged, ITranslationItem
     {
@@ -28,28 +29,22 @@ namespace ResXManager.View.Visuals
         {
             _entry = entry;
             Source = source;
-            // ! value is filtered in Where clause
-            AllSources = entry.Languages
-                .Where(l => !entry.Values.GetValue(l).IsNullOrWhiteSpace())
-                .Select(l => (CultureKey: l, Text: entry.Values.GetValue(l)!))
-                .ToList();
-            // ! value is filtered in Where clause
-            AllComments = entry.Languages
-                .Where(l => !entry.Comments.GetValue(l).IsNullOrWhiteSpace())
-                .Select(l => (CultureKey: l, Text: entry.Comments.GetValue(l)!))
-                .ToList();
-
             TargetCulture = targetCulture;
-            _results.CollectionChanged += (_, __) => OnPropertyChanged(nameof(Translation));
+            _results.CollectionChanged += (_, _) => OnPropertyChanged(nameof(Translation));
         }
 
         public string Source { get; }
 
         public CultureKey TargetCulture { get; }
 
-        public IList<(CultureKey Key, string Text)> AllSources { get; }
-
-        public IList<(CultureKey Key, string Text)> AllComments { get; }
+        public IList<(CultureInfo Culture, string Text, string? Comment)> GetAllItems(CultureInfo neutralCulture)
+        {
+            // ! Text is checked in Where clause
+            return _entry.Languages
+                .Select(cultureKey => (cultureKey.Culture ?? neutralCulture, Text: _entry.Values.GetValue(cultureKey), Comment: _entry.Comments.GetValue(cultureKey)))
+                .Where(item => !item.Text.IsNullOrWhiteSpace())
+                .ToList()!;
+        }
 
         public IList<ITranslationMatch> Results => _results;
 

@@ -238,6 +238,8 @@
         {
             try
             {
+                ThrowIfNotOnUIThread();
+                
                 const string dataAnnotations = "System.ComponentModel.DataAnnotations";
 
                 var vsProject = projectItem.ContainingProject?.Object as VSLangProj.VSProject;

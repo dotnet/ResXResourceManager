@@ -17,6 +17,8 @@ namespace ResXManager.Translators
     using JsonConvert = Newtonsoft.Json.JsonConvert;
     using PromptList = System.Collections.Generic.List<(Infrastructure.ITranslationItem item, string prompt)>;
 
+#pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple string/int concatenations
+
     [Export(typeof(ITranslator)), Shared]
     public class AzureOpenAITranslator : TranslatorBase
     {
@@ -44,7 +46,7 @@ namespace ResXManager.Translators
 
         [DataMember]
         // increase this (up to 2.0) to make the AI more creative
-        public float Temperature { get; set; } = 0f;
+        public float Temperature { get; set; }
 
         [DataMember]
         // additional text to be embedded into the prompt for all translations
@@ -66,24 +68,21 @@ namespace ResXManager.Translators
             {
                 translationSession.AddMessage("Azure OpenAI Translator requires URL to the Azure resource endpoint.");
                 return;
-            };
+            }
 
             if (ModelName.IsNullOrWhiteSpace())
             {
                 translationSession.AddMessage($"Azure OpenAI Translator requires name of the model used in the deployment.");
                 return;
-            };
+            }
 
             if (ModelDeploymentName.IsNullOrWhiteSpace())
             {
                 translationSession.AddMessage($"Azure OpenAI Translator requires name of the deployment for \"{ModelName}\".");
                 return;
-            };
+            }
 
-            var client = new OpenAIClient(
-                new Uri(Url),
-                new AzureKeyCredential(AuthenticationKey)
-                );
+            var client = new OpenAIClient(new Uri(Url), new AzureKeyCredential(AuthenticationKey));
 
             // determine if we are using a chat model
             if (ModelName.StartsWith("gpt-", true, CultureInfo.InvariantCulture))
@@ -105,55 +104,60 @@ namespace ResXManager.Translators
             foreach (var languageGroup in itemsByLanguage)
             {
                 var cultureKey = languageGroup.Key;
-                var targetCulture = cultureKey.Culture ?? translationSession.NeutralResourcesLanguage;
+                var neutralResourcesLanguage = translationSession.NeutralResourcesLanguage;
+                var targetCulture = cultureKey.Culture ?? neutralResourcesLanguage;
+                var cancellationToken = translationSession.CancellationToken;
 
-                foreach (var (message, items) in PackMessagesIntoBatches(translationSession, languageGroup.ToList(), targetCulture))
+                foreach (var (message, items) in PackChatModelMessagesIntoBatches(translationSession, languageGroup.ToList(), targetCulture))
                 {
-                retry:
-                    try
+                    while (true)
                     {
-                        // call Azure OpenAI API with all prompts in batch
-                        var options = new ChatCompletionsOptions()
+                        try
                         {
-                            Temperature = Temperature,
-                            MaxTokens = CompletionTokens,
-                            Messages = { message }
-                        };
-                        var completionsResponse = await client.GetChatCompletionsAsync(
-                            deploymentOrModelName: ModelDeploymentName,
-                            options, translationSession.CancellationToken
-                        ).ConfigureAwait(false);
+                            // call Azure OpenAI API with all prompts in batch
+                            var options = new ChatCompletionsOptions()
+                            {
+                                Temperature = Temperature,
+                                MaxTokens = CompletionTokens,
+                                Messages = { message }
+                            };
 
-                        if (completionsResponse.HasValue)
-                        {
-                            await translationSession.MainThread.StartNew(() => ReturnResults(items, completionsResponse.Value)).ConfigureAwait(false);
+                            var completionsResponse = await client.GetChatCompletionsAsync(ModelDeploymentName, options, cancellationToken).ConfigureAwait(false);
+
+                            if (completionsResponse.HasValue)
+                            {
+                                await translationSession.MainThread.StartNew(() => ReturnResults(items, completionsResponse.Value), cancellationToken).ConfigureAwait(false);
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException("No response from Azure OpenAI API.");
+                            }
+
+                            break;
                         }
-                        else
+                        catch (RequestFailedException e)
                         {
-                            throw new InvalidOperationException("No response from Azure OpenAI API.");
-                        }
-                    }
-                    catch (RequestFailedException e)
-                    {
-                        if (e.Status == 429)
-                        {
-                            var backoffSeconds = 1 << retries++;
-                            translationSession.AddMessage($"Azure OpenAI call failed with too many requests. Retrying in {backoffSeconds} second(s).");
-                            await Task.Delay(backoffSeconds * 1000).ConfigureAwait(false);
-                            goto retry;
-                        }
-                        else
-                        {
-                            translationSession.AddMessage($"Azure OpenAI call failed with {e.Message}");
-                            return;
+                            if (e.Status == 429)
+                            {
+                                var backOffSeconds = 1 << retries++;
+                                translationSession.AddMessage($"Azure OpenAI call failed with too many requests. Retrying in {backOffSeconds} second(s).");
+                                await Task.Delay(backOffSeconds * 1000, cancellationToken).ConfigureAwait(false);
+
+                                if (cancellationToken.IsCancellationRequested)
+                                    return;
+                            }
+                            else
+                            {
+                                translationSession.AddMessage($"Azure OpenAI call failed with {e.Message}");
+                                return;
+                            }
                         }
                     }
                 }
             }
         }
 
-        private IEnumerable<(ChatMessage message, List<ITranslationItem> items)> PackMessagesIntoBatches(ITranslationSession translationSession,
-            List<ITranslationItem> items, CultureInfo targetCulture)
+        private IEnumerable<(ChatMessage message, ICollection<ITranslationItem> items)> PackChatModelMessagesIntoBatches(ITranslationSession translationSession, IEnumerable<ITranslationItem> items, CultureInfo targetCulture)
         {
             var batchItems = new List<ITranslationItem>();
             var batchTokens = 0;
@@ -164,7 +168,7 @@ namespace ResXManager.Translators
             {
                 var currentBatch = batchItems.Concat(new[] { item }).ToList();
 
-                var currentMessage = GenerateMessageForTranslations(translationSession, currentBatch, targetCulture);
+                var currentMessage = GenerateChatModelMessageForTranslations(translationSession, currentBatch, targetCulture);
                 if (currentMessage is null)
                 {
                     translationSession.AddMessage($"No prompt were generated for resource: {item.Source.Substring(0, 20)}...");
@@ -188,7 +192,6 @@ namespace ResXManager.Translators
                 {
                     yield return (batchMessage, batchItems);
 
-                    batchMessage = null;
                     batchItems = new List<ITranslationItem>();
                     batchTokens = 0;
                 }
@@ -204,18 +207,15 @@ namespace ResXManager.Translators
             }
         }
 
-        private ChatMessage? GenerateMessageForTranslations(ITranslationSession translationSession,
-            IEnumerable<ITranslationItem> items, CultureInfo targetCulture)
+        private ChatMessage? GenerateChatModelMessageForTranslations(ITranslationSession translationSession, ICollection<ITranslationItem> items, CultureInfo targetCulture)
         {
             if (!items.Any())
-            {
                 return null;
-            }
+
+            var neutralResourcesLanguage = translationSession.NeutralResourcesLanguage;
 
             var contentBuilder = new StringBuilder();
-#pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple string concatenation
             contentBuilder.Append($"You are a professional translator fluent in all languages, able to understand and convey both literal and nuanced meanings. You are an expert in the target language \"{targetCulture.Name}\", adapting the style and tone to different types of texts.\n");
-#pragma warning restore CA1305 // Specify IFormatProvider
 
             // optionally add custom prompt
             if (!CustomPrompt.IsNullOrWhiteSpace())
@@ -225,28 +225,27 @@ namespace ResXManager.Translators
             }
 
             // generate a list of items to be translated
-            var sources = items.Select(i =>
+            var sources = items.Select(translationItem =>
             {
                 var source = new Dictionary<string, string?>();
-                i.AllSources
-                    .ForEach(s =>
+                var allItems = translationItem.GetAllItems(neutralResourcesLanguage);
+
+                allItems.ForEach(item =>
+                {
+                    var languageName = item.Culture.Name;
+                    source.Add(languageName, item.Text);
+                    if (IncludeCommentsInPrompt && item.Comment is { } comment)
                     {
-                        var languageName = (s.Key.Culture ?? translationSession.NeutralResourcesLanguage).Name;
-                        source.Add(languageName, s.Text);
-                        if (IncludeCommentsInPrompt &&
-                            i.AllComments.SingleOrDefault(c => c.Key == s.Key) is { Text: string } comment)
-                        {
-                            source.Add($"{languageName}-comment", comment.Text);
-                        }
-                    });
+                        source.Add($"{languageName}-comment", comment);
+                    }
+                });
+
                 return source;
             }).ToList();
 
             if (sources.Count > 1)
             {
-#pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple integer
                 contentBuilder.Append($"Translate the {sources.Count} items described by the following JSON array into the target language \"{targetCulture.Name}\". Follow any guidance in comments if provided.\n\n");
-#pragma warning restore CA1305 // Specify IFormatProvider
 
                 // serialize into JSON
                 contentBuilder.Append(JsonConvert.SerializeObject(sources, Formatting.Indented, new JsonSerializerSettings
@@ -255,15 +254,11 @@ namespace ResXManager.Translators
                 }));
                 contentBuilder.Append("\n\n");
 
-#pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple integer
                 contentBuilder.Append($"Respond only with a JSON string array of translations to the target language \"{targetCulture.Name}\" of the {sources.Count} source items. Keep the same order of the items as in the source array. Do not include the target language property, only respond with a flat JSON array with {sources.Count} string items.\n\n");
-#pragma warning restore CA1305 // Specify IFormatProvider
             }
             else
             {
-#pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple integer
                 contentBuilder.Append($"Translate the item described by the following JSON object into the target language \"{targetCulture.Name}\". Follow any guidance in comments if provided.\n\n");
-#pragma warning restore CA1305 // Specify IFormatProvider
 
                 // serialize into JSON
                 contentBuilder.Append(JsonConvert.SerializeObject(sources.Single(), Formatting.Indented, new JsonSerializerSettings
@@ -272,23 +267,20 @@ namespace ResXManager.Translators
                 }));
                 contentBuilder.Append("\n\n");
 
-#pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple integer
                 contentBuilder.Append($"Respond only with a JSON string array containing the single translation to the target language \"{targetCulture.Name}\" of the source item. Do not include the target language property, only respond with a flat JSON array containing a single string item.\n\n");
-#pragma warning restore CA1305 // Specify IFormatProvider
             }
 
             return new ChatMessage(ChatRole.User, contentBuilder.ToString());
         }
 
-        private void ReturnResults(List<ITranslationItem> batchItems, ChatCompletions completions)
+        private void ReturnResults(ICollection<ITranslationItem> batchItems, ChatCompletions completions)
         {
             if (!completions.Choices.Any())
             {
                 throw new InvalidOperationException("Azure OpenAI API returned no results.");
             }
 
-            if (completions.Choices[0] is { FinishReason: null or "stop" } choice &&
-                choice.Message is { Role.Label: "assistant" } message)
+            if (completions.Choices[0] is { FinishReason: null or "stop", Message: { Role.Label: "assistant" } message })
             {
                 // deserialize the message content from JSON
                 var results = JsonConvert.DeserializeObject<List<string>>(FixJsonArray(message.Content))
@@ -329,52 +321,59 @@ namespace ResXManager.Translators
         {
             var retries = 0;
 
-            foreach (var batch in PackPromptsIntoBatches(translationSession))
-            {
-            retry:
-                try
-                {
-                    // call Azure OpenAI API with all prompts in batch
-                    var options = new CompletionsOptions()
-                    {
-                        Temperature = Temperature,
-                        MaxTokens = CompletionTokens,
-                        StopSequences = { "\n" },
-                    };
-                    options.Prompts.AddRange(batch.Select(b => b.prompt));
-                    var completionsResponse = await client.GetCompletionsAsync(
-                        deploymentOrModelName: ModelDeploymentName,
-                        options, translationSession.CancellationToken
-                    ).ConfigureAwait(false);
+            var cancellationToken = translationSession.CancellationToken;
 
-                    if (completionsResponse.HasValue)
-                    {
-                        await translationSession.MainThread.StartNew(() => ReturnResults(batch, completionsResponse.Value)).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("No response from Azure OpenAI API.");
-                    }
-                }
-                catch (RequestFailedException e)
+            foreach (var batch in PackCompletionModelPromptsIntoBatches(translationSession))
+            {
+                while (true)
                 {
-                    if (e.Status == 429)
+                    try
                     {
-                        var backoffSeconds = 1 << retries++;
-                        translationSession.AddMessage($"Azure OpenAI call failed with too many requests. Retrying in {backoffSeconds} second(s).");
-                        await Task.Delay(backoffSeconds * 1000).ConfigureAwait(false);
-                        goto retry;
+                        // call Azure OpenAI API with all prompts in batch
+                        var options = new CompletionsOptions()
+                        {
+                            Temperature = Temperature,
+                            MaxTokens = CompletionTokens,
+                            StopSequences = { "\n" },
+                        };
+
+                        options.Prompts.AddRange(batch.Select(b => b.prompt));
+
+                        var completionsResponse = await client.GetCompletionsAsync(ModelDeploymentName, options, cancellationToken).ConfigureAwait(false);
+
+                        if (completionsResponse.HasValue)
+                        {
+                            await translationSession.MainThread.StartNew(() => ReturnResults(batch, completionsResponse.Value), cancellationToken).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("No response from Azure OpenAI API.");
+                        }
+
+                        break;
                     }
-                    else
+                    catch (RequestFailedException e)
                     {
-                        translationSession.AddMessage($"Azure OpenAI call failed with {e.Message}");
-                        return;
+                        if (e.Status == 429)
+                        {
+                            var backOffSeconds = 1 << retries++;
+                            translationSession.AddMessage($"Azure OpenAI call failed with too many requests. Retrying in {backOffSeconds} second(s).");
+                            await Task.Delay(backOffSeconds * 1000, cancellationToken).ConfigureAwait(false);
+
+                            if (cancellationToken.IsCancellationRequested)
+                                return;
+                        }
+                        else
+                        {
+                            translationSession.AddMessage($"Azure OpenAI call failed with {e.Message}");
+                            return;
+                        }
                     }
                 }
             }
         }
 
-        private IEnumerable<PromptList> PackPromptsIntoBatches(ITranslationSession translationSession)
+        private IEnumerable<PromptList> PackCompletionModelPromptsIntoBatches(ITranslationSession translationSession)
         {
             var batchItems = new PromptList();
             var batchTokens = 0;
@@ -382,7 +381,7 @@ namespace ResXManager.Translators
 
             foreach (var item in translationSession.Items)
             {
-                var prompt = GeneratePromptForTranslation(translationSession, item);
+                var prompt = GenerateCompletionModelPromptForTranslation(translationSession, item);
                 if (prompt is null)
                 {
                     translationSession.AddMessage($"No prompt were generated for resource: {item.Source.Substring(0, 20)}...");
@@ -421,20 +420,20 @@ namespace ResXManager.Translators
             }
         }
 
-        private string? GeneratePromptForTranslation(ITranslationSession translationSession, ITranslationItem translationItem)
+        private string? GenerateCompletionModelPromptForTranslation(ITranslationSession translationSession, ITranslationItem translationItem)
         {
-            if (translationItem is null || !translationItem.AllSources.Any())
-            {
+            var neutralResourcesLanguage = translationSession.NeutralResourcesLanguage;
+
+            var allItems = translationItem.GetAllItems(neutralResourcesLanguage);
+
+            if (!allItems.Any())
                 return null;
-            }
 
             // target language for translation
-            var targetCulture = (translationItem.TargetCulture.Culture ?? translationSession.NeutralResourcesLanguage).Name;
+            var targetCulture = (translationItem.TargetCulture.Culture ?? neutralResourcesLanguage).Name;
 
             var promptBuilder = new StringBuilder();
-#pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple string concatenation
             promptBuilder.Append($"You are a professional translator fluent in all languages, able to understand and convey both literal and nuanced meanings. You are an expert in the target language \"{targetCulture}\", adapting the style and tone to different types of texts.\n");
-#pragma warning restore CA1305 // Specify IFormatProvider
 
             // optionally add custom prompt
             if (!CustomPrompt.IsNullOrWhiteSpace())
@@ -444,28 +443,29 @@ namespace ResXManager.Translators
             }
 
             // optionally add comments to prompt
-            if (IncludeCommentsInPrompt && translationItem.AllComments.Any())
+            var allComments = allItems
+                .Select(item => (item.Culture, item.Comment))
+                .Where(item => !item.Comment.IsNullOrWhiteSpace())
+                .ToArray();
+
+            if (IncludeCommentsInPrompt && allComments.Any())
             {
                 promptBuilder.Append("CONTEXT:\n");
-                translationItem.AllComments
-                    .Select(s => $"{(s.Key.Culture ?? translationSession.NeutralResourcesLanguage).Name}: {s.Text}\n")
+                allComments
+                    .Select(s => $"{s.Culture.Name}: {s.Comment}\n")
                     .ForEach(s => promptBuilder.Append(s));
             }
 
-#pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple string concatenation
             promptBuilder.Append($"Here is a list of words or sentences with the same meaning in different languages. Continue the list of translations for the target language \"{targetCulture}\".\n");
-#pragma warning restore CA1305 // Specify IFormatProvider
             promptBuilder.Append("TRANSLATIONS:\n");
 
             // add all existing translations to prompt
-            translationItem.AllSources
-                .Select(s => $"{(s.Key.Culture ?? translationSession.NeutralResourcesLanguage).Name}: {s.Text}\n")
+            allItems.Select(s => $"{s.Culture.Name}: {s.Text}\n")
                 .ForEach(s => promptBuilder.Append(s));
 
-#pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple string concatenation
             // the target language is the last language in the prompt, note that the prompt must not end with a space due to tokenization issues
             promptBuilder.Append($"{targetCulture}:");
-#pragma warning restore CA1305 // Specify IFormatProvider
+
             return promptBuilder.ToString();
         }
 
