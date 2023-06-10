@@ -1,3 +1,4 @@
+#if AzureOpenAI
 namespace ResXManager.Translators
 {
     using Azure;
@@ -545,3 +546,4 @@ namespace ResXManager.Translators
         }
     }
 }
+#endif
