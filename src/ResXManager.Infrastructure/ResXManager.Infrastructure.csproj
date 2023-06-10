@@ -17,6 +17,6 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
     <PackageReference Include="Newtonsoft.Json" Version="[9.0.1]" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.1.0" />
-    <PackageReference Include="TomsToolbox.Composition" Version="2.8.5" />
+    <PackageReference Include="TomsToolbox.Composition" Version="2.8.9" />
   </ItemGroup>
 </Project>

@@ -31,8 +31,8 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.1.0" />
     <PackageReference Include="Throttle.Fody" PrivateAssets="all" Version="1.7.0" />
-    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.8.5" />
-    <PackageReference Include="TomsToolbox.Wpf.Composition.Styles" Version="2.8.5" />
-    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.8.5" />
+    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.8.9" />
+    <PackageReference Include="TomsToolbox.Wpf.Composition.Styles" Version="2.8.9" />
+    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.8.9" />
   </ItemGroup>
 </Project>
