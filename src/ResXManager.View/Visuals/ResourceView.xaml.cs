@@ -75,6 +75,7 @@
 
         private void ResourceManager_Loaded(object? sender, EventArgs e)
         {
+            DataGrid.GetFilter().Clear();
             DataGrid?.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
         }
 
