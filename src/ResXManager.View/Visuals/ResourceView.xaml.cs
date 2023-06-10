@@ -76,7 +76,7 @@
         private void ResourceManager_Loaded(object? sender, EventArgs e)
         {
             DataGrid.GetFilter().Clear();
-            DataGrid?.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
+            DataGrid.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
         }
 
         private void ResourceManager_LanguageAdded(object? sender, LanguageEventArgs e)
