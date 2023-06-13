@@ -3,8 +3,6 @@
   <PropertyGroup>
     <UseWPF>true</UseWPF>
     <TargetFrameworks>net472;net60-windows</TargetFrameworks>
-    <AzureOpenAI>false</AzureOpenAI>
-    <DefineConstants Condition="'$(AzureOpenAI)'=='true'">$(DefineConstants);AzureOpenAI</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\Key.snk">
@@ -52,7 +50,6 @@
     <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.5" Condition="'$(AzureOpenAI)'=='true'" />
     <PackageReference Include="Fody" PrivateAssets="all" Version="6.7.0" />
     <PackageReference Include="Microsoft.DeepDev.TokenizerLib" Version="1.3.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />

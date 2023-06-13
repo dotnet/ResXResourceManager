@@ -1,5 +1,4 @@
-﻿#if AzureOpenAI
-namespace ResXManager.Translators
+﻿namespace ResXManager.Translators
 {
     using TomsToolbox.Wpf.Composition.AttributedModel;
 
@@ -15,4 +14,3 @@ namespace ResXManager.Translators
         }
     }
 }
-#endif
