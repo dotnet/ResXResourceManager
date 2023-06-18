@@ -1,4 +1,9 @@
-﻿1.75
+﻿1.76
+- Fix #560: Crash when resx file becomes invalid
+- Fix #559: Clear filter when reloading view
+- Fix #549: Add Azure OpenAI translator
+
+1.75
 - Fix #531: Changing the a Custom Tool is greyed out if none is set
 - Fix #547: relative path in scripting is wrong when folder name ends with a backslash
 - Fix #551: Add VSIX support for arm64
