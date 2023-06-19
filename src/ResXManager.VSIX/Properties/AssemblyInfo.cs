@@ -23,3 +23,6 @@ using Microsoft.VisualStudio.Shell;
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\DataGridExtensions.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\DocumentFormat.OpenXml.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.Xaml.Behaviors.dll")]
+
+[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Azure.AI.OpenAI.dll")]
+[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Azure.Core.dll")]
