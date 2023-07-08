@@ -15,7 +15,7 @@ All results can be reviewed by opening the combo box in the target column. The r
 
 ### Azure Open AI
 
-The Azure Open AI service requires some extended settings
+The Azure Open AI service requires some special settings
 
 #### Configuration
 
