@@ -1,7 +1,7 @@
 ﻿1.76
 - Fix #560: Crash when resx file becomes invalid
 - Fix #559: Clear filter when reloading view
-- Fix #549: Add Azure OpenAI translator
+- Fix #549: Add Azure OpenAI translator (special thanks to [Joakim Riedel](https://github.com/joakimriedel))
 
 1.75
 - Fix #531: Changing the a Custom Tool is greyed out if none is set
