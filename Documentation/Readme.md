@@ -5,7 +5,7 @@ Select a topic to start with:
 ### [Usage](Topics/Usage.md)
 
 ### Features
-- [Automatic Translations](Topics/Automatic-Translations.md)
+- [Automated Translations](Topics/Automatic-Translations.md)
 - [Configure Visible Columns](Topics/Configure-Visible-Columns.md)
 - [Copy, Paste, Export and Import](Topics/Copy,-Paste,-Export-and-Import.md)
 - [Custom Code Generator](Topics/Custom-Code-Generator.md)
