@@ -28,7 +28,14 @@
         private static readonly Uri _uri = new("https://fanyi-api.baidu.com/product/11");
         private static readonly Dictionary<string, string> _baiduCultureMap = new Dictionary<string, string>
         {
-            { "ja", "jp"}
+            { "ja-JP", "jp"},
+            { "zh-Hant","cht"},
+            { "zh-CHT","cht"},
+            { "zh-TW","cht"},
+            { "zh-HK","cht"},
+            { "zh-MO","cht"},
+            { "zh-Hans","zh"},
+            { "zh-CN","zh"}
         };
         private static readonly IList<ICredentialItem> _credentialItems = new ICredentialItem[]
         {
@@ -166,7 +173,7 @@
 
         private static string GetCultureLang(CultureInfo targetCulture)
         {
-            return _baiduCultureMap.TryGetValue(targetCulture.TwoLetterISOLanguageName, out var langName) ? langName : targetCulture.TwoLetterISOLanguageName;
+            return _baiduCultureMap.TryGetValue(targetCulture.Name, out var langName) ? langName : targetCulture.TwoLetterISOLanguageName;
         }
 
         public static string EncryptString(string str)
