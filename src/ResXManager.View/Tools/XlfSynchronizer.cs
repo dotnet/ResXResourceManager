@@ -154,7 +154,7 @@
             }
             finally
             {
-                Interlocked.Increment(ref _isUpdateFromXlfRunning);
+                Interlocked.Decrement(ref _isUpdateFromXlfRunning);
             }
         }
 
