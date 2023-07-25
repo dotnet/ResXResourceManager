@@ -1,4 +1,8 @@
-﻿1.76
+﻿1.77
+- Fix #568: baidutranslator failed to translate zh-Hans to zh-Hant 
+- Fix #572: Xliff file not working 
+
+1.76
 - Fix #560: Crash when resx file becomes invalid
 - Fix #559: Clear filter when reloading view
 - Fix #549: Add Azure OpenAI translator (special thanks to [Joakim Riedel](https://github.com/joakimriedel))
