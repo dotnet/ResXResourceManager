@@ -34,8 +34,8 @@
                 var fileNameToVerify = Path.Combine(directory, $"MyProject.{languageToVerify}.resx");
                 var xlfDocumentPath = Path.Combine(directory, $"MyProject.{languageToVerify}.xlf");
 
-                // Synchronize 3 times to see if generates the same file
-                for (int i = 0; i < 3; i++)
+                // Synchronize several times to see if generates the same file
+                for (int i = 0; i < 6; i++)
                 {
                     var resourceManager = new ResourceManager(configurationMock.Object, tracerMock.Object);
 

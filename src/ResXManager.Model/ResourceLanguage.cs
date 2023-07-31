@@ -555,7 +555,17 @@
 
                     if (string.IsNullOrWhiteSpace(value))
                     {
-                        commentElement?.Remove();
+                        if (commentElement is not null)
+                        {
+                            // Note: if the comment is being removed, remove the indentation as well since
+                            // preserve whitespace is enabled
+                            while (commentElement.PreviousNode is XText textNode)
+                            {
+                                textNode.Remove();
+                            }
+
+                            commentElement.Remove();
+                        }
                     }
                     else
                     {
