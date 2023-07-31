@@ -24,7 +24,7 @@
 
     [VisualCompositionExport(RegionId.Content, Sequence = 2)]
     [Shared]
-    internal partial class TranslationsViewModel : INotifyPropertyChanged
+    internal sealed partial class TranslationsViewModel : INotifyPropertyChanged
     {
         public TranslatorHost TranslatorHost { get; }
 
@@ -178,7 +178,7 @@
             TranslatorHost.StartSession(sourceCulture.Culture, Configuration.NeutralResourcesLanguage, itemsToTranslate);
         }
 
-        private static ICollection<ITranslationItem> GetItemsToTranslate(IEnumerable<ResourceTableEntry> resourceTableEntries, CultureKey? sourceCulture, ICollection<CultureKey> targetCultures, string? translationPrefix)
+        private ICollection<ITranslationItem> GetItemsToTranslate(IEnumerable<ResourceTableEntry> resourceTableEntries, CultureKey? sourceCulture, ICollection<CultureKey> targetCultures, string? translationPrefix)
         {
             // #1: all entries that are not invariant and have a valid value in the source culture
             var allEntriesWithSourceValue = resourceTableEntries
@@ -212,28 +212,31 @@
                 .Select(item => new TranslationItem(item.Entry, item.Source!, item.TargetCulture))
                 .ToArray();
 
-            // #4: apply existing translations
-            // ! item.Source is checked in #1
-            foreach (var targetCulture in targetCultures)
+            if (Configuration.AutoApplyExistingTranslations)
             {
-                var itemsWithTranslations = allEntries.AsParallel()
-                    .Where(item => item.TargetCulture == targetCulture)
-                    .Where(item => HasTranslation(item.Target))
-                    .GroupBy(item => item.Source!)
-                    .ToDictionary(item => item.Key);
+                // #4: apply existing translations
+                // ! item.Source is checked in #1
+                foreach (var targetCulture in targetCultures)
+                {
+                    var itemsWithTranslations = allEntries.AsParallel()
+                        .Where(item => item.TargetCulture == targetCulture)
+                        .Where(item => HasTranslation(item.Target))
+                        .GroupBy(item => item.Source!)
+                        .ToDictionary(item => item.Key);
 
-                itemsToTranslate.AsParallel()
-                    .Where(item => item.TargetCulture == targetCulture)
-                    .ForAll(item =>
-                    {
-                        if (!itemsWithTranslations.TryGetValue(item.Source, out var translations))
-                            return;
-
-                        foreach (var translation in translations.GroupBy(t => t.Target))
+                    itemsToTranslate.AsParallel()
+                        .Where(item => item.TargetCulture == targetCulture)
+                        .ForAll(item =>
                         {
-                            item.Results.Add(new TranslationMatch(null, translation.Key, translation.Count()));
-                        }
-                    });
+                            if (!itemsWithTranslations.TryGetValue(item.Source, out var translations))
+                                return;
+
+                            foreach (var translation in translations.GroupBy(t => t.Target))
+                            {
+                                item.Results.Add(new TranslationMatch(null, translation.Key, translation.Count()));
+                            }
+                        });
+                }
             }
 
             return itemsToTranslate;

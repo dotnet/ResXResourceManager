@@ -13,7 +13,7 @@
     [LocalizedDisplayName(StringResourceKey.MoveToResource)]
     [VisualCompositionExport(RegionId.Configuration)]
     [Shared]
-    internal partial class MoveToResourceConfigurationViewModel : INotifyPropertyChanged
+    internal sealed partial class MoveToResourceConfigurationViewModel : INotifyPropertyChanged
     {
         [ImportingConstructor]
         public MoveToResourceConfigurationViewModel(IDteConfiguration configuration)

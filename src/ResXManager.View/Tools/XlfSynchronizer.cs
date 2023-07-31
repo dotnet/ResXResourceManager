@@ -154,7 +154,7 @@
             }
             finally
             {
-                Interlocked.Increment(ref _isUpdateFromXlfRunning);
+                Interlocked.Decrement(ref _isUpdateFromXlfRunning);
             }
         }
 
@@ -326,6 +326,10 @@
                 {
                     UpdateXlfFile(entity, language.CultureKey, filesByOriginal);
                 }
+            }
+            catch (Exception ex)
+            {
+                _tracer.TraceError("UpdateXlfFile for project file {0} failed: {1}", e.ProjectFile.FilePath, ex);
             }
             finally
             {

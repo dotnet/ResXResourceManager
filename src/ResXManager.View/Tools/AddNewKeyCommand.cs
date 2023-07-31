@@ -14,7 +14,7 @@
     using TomsToolbox.Wpf;
 
     [Export, Shared]
-    internal class AddNewKeyCommand : DelegateCommand<DataGrid>
+    internal sealed class AddNewKeyCommand : DelegateCommand<DataGrid>
     {
         private readonly ResourceViewModel _resourceViewModel;
         private readonly IExportProvider _exportProvider;

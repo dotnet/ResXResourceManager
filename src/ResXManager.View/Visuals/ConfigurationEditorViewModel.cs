@@ -15,7 +15,7 @@
 
     [VisualCompositionExport(RegionId.Content, Sequence = 3)]
     [Shared]
-    internal partial class ConfigurationEditorViewModel : INotifyPropertyChanged
+    internal sealed partial class ConfigurationEditorViewModel : INotifyPropertyChanged
     {
         [ImportingConstructor]
         public ConfigurationEditorViewModel(ResourceManager resourceManager, IConfiguration configuration)

@@ -25,11 +25,10 @@
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
     [Export]
-    internal class DteSolution
+    internal sealed class DteSolution
     {
         private const string SolutionItemsFolderName = "Solution Items";
 
-        private readonly ITracer _tracer;
         private readonly DTE2 _dte;
 
         private IEnumerable<ProjectFile>? _projectFiles;
@@ -39,9 +38,11 @@
         {
             ThrowIfNotOnUIThread();
 
-            _tracer = tracer;
+            Tracer = tracer;
             _dte = (DTE2)(ServiceProvider.GlobalProvider.GetService(typeof(DTE)) ?? throw new InvalidOperationException("Can't get DTE service"));
         }
+
+        public ITracer Tracer { get; }
 
         /// <summary>
         /// Gets all files of all project in the solution.
@@ -90,13 +91,13 @@
                     }
                     catch (Exception ex)
                     {
-                        _tracer.TraceWarning("Error loading project {0}[{1}]: {2}", name, index, ex);
+                        Tracer.TraceWarning("Error loading project {0}[{1}]: {2}", name, index, ex);
                     }
                 }
             }
             catch (Exception ex)
             {
-                _tracer.TraceError("Error loading projects: {0}", ex);
+                Tracer.TraceError("Error loading projects: {0}", ex);
             }
 
             var files = items.Values;
@@ -204,7 +205,7 @@
                 }
                 catch
                 {
-                    _tracer.TraceError("Error loading project #" + i);
+                    Tracer.TraceError("Error loading project #" + i);
                     continue;
                 }
 
@@ -232,7 +233,7 @@
                     }
                     catch
                     {
-                        _tracer.TraceError("Error loading project item #{0} in project {1}.", index, projectName ?? "unknown");
+                        Tracer.TraceError("Error loading project item #{0} in project {1}.", index, projectName ?? "unknown");
                     }
 
                     index += 1;
@@ -240,7 +241,7 @@
             }
             catch
             {
-                _tracer.TraceError("Error loading a project item in project {0}.", projectName ?? "unknown");
+                Tracer.TraceError("Error loading a project item in project {0}.", projectName ?? "unknown");
             }
         }
 
@@ -305,7 +306,7 @@
             }
             catch (ArgumentException)
             {
-                _tracer.TraceWarning("Can't get filename for project item: {0} - {1}", name, projectItem.Kind);
+                Tracer.TraceWarning("Can't get filename for project item: {0} - {1}", name, projectItem.Kind);
             }
 
             return null;

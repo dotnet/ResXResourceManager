@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="ResXManager.Translators.AzureOpenAITranslatorConfiguration"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
+             xmlns:local="clr-namespace:ResXManager.Translators"
+             xmlns:properties="clr-namespace:ResXManager.Translators.Properties"
+             xmlns:styles="urn:TomsToolbox.Wpf.Styles"
+             d:DataContext="{d:DesignInstance local:AzureOpenAITranslator}"
+             d:DesignWidth="500">
+  <StackPanel>
+    <StackPanel Orientation="Horizontal">
+    <CheckBox Content="{x:Static properties:Resources.IncludeCommentsInPrompt}" IsChecked="{Binding IncludeCommentsInPrompt}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center" />
+    <Decorator Width="20" />
+    <TextBlock Text="{x:Static properties:Resources.MaxTokens}" VerticalAlignment="Center" />
+    <Decorator Width="5" />
+    <TextBox Text="{Binding MaxTokens}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
+    <Decorator Width="20" />
+    <TextBlock Text="{x:Static properties:Resources.Temperature}" VerticalAlignment="Center" />
+    <Decorator Width="5" />
+    <TextBox Text="{Binding Temperature}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
+    <Decorator Width="20" />
+    <CheckBox Content="{x:Static properties:Resources.BatchRequests}" IsChecked="{Binding BatchRequests}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center" />
+    </StackPanel>
+  <StackPanel Orientation="Vertical">
+      <TextBlock Text="{x:Static properties:Resources.CustomPrompt}" VerticalAlignment="Center" />
+      <TextBox Text="{Binding CustomPrompt}" AcceptsReturn="True" MinLines="3" />
+  </StackPanel>
+  </StackPanel>
+</UserControl>

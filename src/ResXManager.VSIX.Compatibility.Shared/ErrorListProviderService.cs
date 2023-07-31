@@ -52,7 +52,6 @@
                         if (++errorCount >= 200)
                             return;
 
-                        // Bug in VS2022: : this is the call that is responsible for the exception: 'Could not load type 'Microsoft.VisualStudio.Shell.Task' from assembly 'Microsoft.VisualStudio.Shell.15.0, Version=17.0.0.0
                         var task = new ResourceErrorTask(entry)
                         {
                             ErrorCategory = (TaskErrorCategory)errorCategory,
@@ -102,7 +101,7 @@
             Navigate?.Invoke(entry);
         }
 
-        private class ResourceErrorTask : ErrorTask
+        private sealed class ResourceErrorTask : ErrorTask
         {
             public ResourceErrorTask(ResourceTableEntry entry)
             {

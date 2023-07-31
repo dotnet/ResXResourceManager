@@ -57,6 +57,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ResXManager.VSIX.Compatibility.arm64\ResXManager.VSIX.Compatibility.arm64.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\ResXManager.VSIX.Compatibility.x64\ResXManager.VSIX.Compatibility.x64.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\ResXManager.VSIX.Compatibility.x86\ResXManager.VSIX.Compatibility.x86.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
@@ -66,22 +71,23 @@
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all" Version="1.25.0" />
     <PackageReference Include="Community.VisualStudio.Toolkit" Version="15.0.76.309" />
     <PackageReference Include="DataGridExtensions" Version="2.5.14" />
-    <PackageReference Include="Fody" PrivateAssets="all" Version="6.6.4" />
+    <PackageReference Include="Fody" PrivateAssets="all" Version="6.7.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.SDK" ExcludeAssets="runtime" Version="[15.0.1]" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232" PrivateAssets="all" />
-    <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.0.5" />
-    <PackageReference Include="Resourcer.Fody" Version="1.8.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.5.4074" PrivateAssets="all" />
+    <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.1.0" />
+    <PackageReference Include="Resourcer.Fody" Version="1.8.1" PrivateAssets="all" />
     <PackageReference Include="Throttle.Fody" PrivateAssets="all" Version="1.7.0" />
-    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.8.5" />
-    <PackageReference Include="TomsToolbox.Wpf.Composition" Version="2.8.5" />
-    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.8.5" />
-    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.8.5" />
+    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.8.9" />
+    <PackageReference Include="TomsToolbox.Wpf.Composition" Version="2.8.9" />
+    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.8.9" />
+    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.8.9" />
     <PackageReference Include="VSIX-SdkProjectAdapter" Version="3.0.0" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\ResXManager.VSIX.Compatibility.x86\bin\$(Configuration)\$(TargetFramework)\ResXManager.VSIX.Compatibility.x86.dll" />
     <EmbeddedResource Include="..\ResXManager.VSIX.Compatibility.x64\bin\$(Configuration)\$(TargetFramework)\ResXManager.VSIX.Compatibility.x64.dll" />
+    <EmbeddedResource Include="..\ResXManager.VSIX.Compatibility.arm64\bin\$(Configuration)\$(TargetFramework)\ResXManager.VSIX.Compatibility.arm64.dll" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">
     <MakeDir Directories="$(SolutionDir)Deploy" />

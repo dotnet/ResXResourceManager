@@ -357,7 +357,9 @@
             OnPropertyChanged(nameof(Index));
         }
 
+#pragma warning disable CA2227 // Collection properties should be read only
         public IDictionary<CultureKey, ResourceData>? Snapshot { get; set; }
+#pragma warning restore CA2227 // Collection properties should be read only
 
         public bool CanEdit(CultureKey? cultureKey)
         {

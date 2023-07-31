@@ -6,6 +6,8 @@
     using System.Linq;
     using System.Runtime.InteropServices;
 
+    using EnvDTE;
+
     using ResXManager.Model;
     using ResXManager.VSIX.Compatibility;
     using ResXManager.VSIX.Compatibility.Properties;
@@ -15,7 +17,7 @@
     using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
 
-    internal class DteProjectFile : ProjectFile, IDteProjectFile
+    internal sealed class DteProjectFile : ProjectFile, IDteProjectFile
     {
         public const string T4FileName = "Resources.Designer.t4";
 
@@ -116,8 +118,9 @@
                     // https://microsoft.public.de.german.entwickler.dotnet.vstudio.narkive.com/nL9BqJlj/aus-subtype-form-wird-subtype-component
                     return subType is @"Form" or @"UserControl" or @"Component";
                 }
-                catch (ExternalException)
+                catch (Exception ex)
                 {
+                    _solution.Tracer.TraceError(ex.ToString());
                 }
 
                 return false;
@@ -134,7 +137,7 @@
                 var containingProject = projectItem.ContainingProject;
 
                 if ((containingProject == null) || (containingProject.Kind != ItemKind.CSharpProject))
-                    return CodeGenerator.None;
+                    return CodeGenerator.Unknown;
 
                 var customTool = projectItem.GetCustomTool();
 
@@ -148,8 +151,9 @@
 
                 return Enum.TryParse(customTool, out CodeGenerator codeGenerator) ? codeGenerator : CodeGenerator.Unknown;
             }
-            catch (ExternalException)
+            catch (Exception ex)
             {
+                _solution.Tracer.TraceError(ex.ToString());
             }
 
             return CodeGenerator.Unknown;
@@ -183,13 +187,12 @@
                         case CodeGenerator.Unknown:
                         case CodeGenerator.WinForms:
                             break;
-                        default:
-                            break;
                     }
                 }
             }
-            catch (ExternalException)
+            catch (Exception ex)
             {
+                _solution.Tracer.TraceError(ex.ToString());
             }
         }
 
@@ -216,10 +219,7 @@
             }
 
             // Ensure DataAnnotations is referenced, used by TT generated code.
-            const string dataAnnotations = "System.ComponentModel.DataAnnotations";
-
-            var vsProject = projectItem.ContainingProject?.Object as VSLangProj.VSProject;
-            vsProject?.References?.Add(dataAnnotations);
+            ReferenceDataAnnotations(projectItem);
 
             var fileName = Path.ChangeExtension(FilePath, "Designer.tt");
 
@@ -232,6 +232,29 @@
             item.SetProperty(@"BuildAction", 0);
             item.SetProperty(@"DependentUpon", projectItem.Name);
             item.RunCustomTool();
+        }
+
+        private static void ReferenceDataAnnotations(ProjectItem projectItem)
+        {
+            try
+            {
+                ThrowIfNotOnUIThread();
+                
+                const string dataAnnotations = "System.ComponentModel.DataAnnotations";
+
+                ThrowIfNotOnUIThread();
+
+                var vsProject = projectItem.ContainingProject?.Object as VSLangProj.VSProject;
+                var references = vsProject?.References;
+                if ((references == null) || (references.Find(dataAnnotations) != null))
+                    return;
+
+                references.Add(dataAnnotations);
+            }
+            catch
+            {
+                // just go without annotations, can be added manually.
+            }
         }
 
         private static void SetCustomToolCodeGenerator(EnvDTE.ProjectItem projectItem, CodeGenerator value)

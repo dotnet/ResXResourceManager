@@ -75,7 +75,8 @@
 
         private void ResourceManager_Loaded(object? sender, EventArgs e)
         {
-            DataGrid?.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
+            DataGrid.GetFilter().Clear();
+            DataGrid.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
         }
 
         private void ResourceManager_LanguageAdded(object? sender, LanguageEventArgs e)
@@ -230,7 +231,7 @@
             _tracer.TraceError(ex.ToString());
         }
 
-        private class ExportParameters : IExportParameters
+        private sealed class ExportParameters : IExportParameters
         {
             public ExportParameters(string? fileName, IResourceScope? scope)
             {

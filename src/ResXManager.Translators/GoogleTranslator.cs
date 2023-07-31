@@ -139,21 +139,21 @@
         }
 
         [DataContract]
-        private class Translation
+        private sealed class Translation
         {
             [DataMember(Name = "translatedText")]
             public string? TranslatedText { get; set; }
         }
 
         [DataContract]
-        private class Data
+        private sealed class Data
         {
             [DataMember(Name = "translations")]
             public Translation[]? Translations { get; set; }
         }
 
         [DataContract]
-        private class TranslationRootObject
+        private sealed class TranslationRootObject
         {
             [DataMember(Name = "data")]
             public Data? Data { get; set; }

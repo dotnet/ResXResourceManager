@@ -274,7 +274,7 @@
             return entity;
         }
 
-        private class DataAppender
+        private sealed class DataAppender
         {
             private readonly int _numberOfFixedColumns;
 
@@ -508,7 +508,7 @@
                 .Select((entity, index) => new MultipleSheetEntity(entity, index, uniqueNames));
         }
 
-        private class MultipleSheetEntity
+        private sealed class MultipleSheetEntity
         {
             private const int MaxSheetNameLength = 31;
 
@@ -579,7 +579,7 @@
             }
         }
 
-        private class FullScope : IResourceScope
+        private sealed class FullScope : IResourceScope
         {
             public FullScope(ICollection<ResourceEntity> entities)
             {

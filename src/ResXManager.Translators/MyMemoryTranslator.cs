@@ -124,7 +124,7 @@
         }
 
         [DataContract]
-        private class ResponseData
+        private sealed class ResponseData
         {
             [DataMember(Name = "translatedText")]
             public string? TranslatedText
@@ -142,7 +142,7 @@
         }
 
         [DataContract]
-        private class MatchData
+        private sealed class MatchData
         {
             [DataMember(Name = "translation")]
             public string? Translation
@@ -167,7 +167,7 @@
         }
 
         [DataContract]
-        private class Response
+        private sealed class Response
         {
             [DataMember(Name = "responseData")]
             public ResponseData? ResponseData

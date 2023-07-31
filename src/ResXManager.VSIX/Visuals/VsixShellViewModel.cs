@@ -52,7 +52,7 @@
                 if ((items.Length == 1) && Enum.IsDefined(typeof(CodeGenerator), generator))
                     return generator;
 
-                return CodeGenerator.None;
+                return CodeGenerator.Unknown;
             }
         }
 
@@ -63,8 +63,10 @@
             VsPackage.Instance.ShowToolWindow();
 
 #pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
+#pragma warning disable VSTHRD110 // Observe result of async calls
             // Must defer selection until tool window is fully shown!
             _dispatcher.BeginInvoke(DispatcherPriority.Background, () => _shellViewModel.SelectEntry(entry));
+#pragma warning restore VSTHRD110 // Observe result of async calls
 #pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
         }
 
@@ -88,7 +90,7 @@
         {
             ThrowIfNotOnUIThread();
 
-            return SelectedItemsCodeGenerators().All(g => g != CodeGenerator.None);
+            return SelectedItemsCodeGenerators().All(g => g is not CodeGenerator.Unknown and not CodeGenerator.WinForms);
         }
 
         private void SetCodeProvider(CodeGenerator codeGenerator)

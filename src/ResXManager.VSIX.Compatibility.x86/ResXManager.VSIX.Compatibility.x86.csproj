@@ -2,15 +2,13 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
-    <LangVersion>9.0</LangVersion>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <Import Project="..\ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems" Label="Shared" />
   <ItemGroup>
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all" Version="1.25.0" />
     <PackageReference Include="Community.VisualStudio.Toolkit" Version="15.0.76.309" />
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="[15.0.1]" />
-    <PackageReference Include="Fody" PrivateAssets="all" Version="6.6.4" />
+    <PackageReference Include="Fody" PrivateAssets="all" Version="6.7.0" />
     <PackageReference Include="Throttle.Fody" PrivateAssets="all" Version="1.7.0" />
   </ItemGroup>
   <ItemGroup>

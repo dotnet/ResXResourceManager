@@ -180,9 +180,14 @@
             //    .ToList();
 
             var is64BitProcess = Environment.Is64BitProcess;
+            var isArmArchitecture = RuntimeInformation.ProcessArchitecture == Architecture.Arm64;
 
             using var resourceStream = is64BitProcess
-                ? Resource.AsStream("ResXManager.VSIX.Compatibility.x64.dll")
+                ? (
+                    isArmArchitecture
+                    ? Resource.AsStream("ResXManager.VSIX.Compatibility.arm64.dll")
+                    : Resource.AsStream("ResXManager.VSIX.Compatibility.x64.dll")
+                    )
                 : Resource.AsStream("ResXManager.VSIX.Compatibility.x86.dll");
 
             var length = resourceStream.Length;
@@ -478,7 +483,7 @@
             }
         }
 
-        private class LoaderMessages
+        private sealed class LoaderMessages
         {
             public IList<string> Messages { get; } = new List<string>();
             public IList<string> Errors { get; } = new List<string>();

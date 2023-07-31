@@ -8,7 +8,7 @@
     using ResXManager.Infrastructure;
     using ResXManager.Model;
 
-    internal class ResourceScope : IResourceScope
+    internal sealed class ResourceScope : IResourceScope
     {
         public ResourceScope(object entries, object languages, object comments)
         {

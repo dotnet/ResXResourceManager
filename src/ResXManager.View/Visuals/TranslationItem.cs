@@ -4,18 +4,22 @@ namespace ResXManager.View.Visuals
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Globalization;
     using System.Linq;
     using System.Windows.Data;
 
     using ResXManager.Infrastructure;
     using ResXManager.Model;
 
-    using TomsToolbox.Wpf;
+    using TomsToolbox.Essentials;
 
     public partial class TranslationItem : INotifyPropertyChanged, ITranslationItem
     {
         private readonly ObservableCollection<ITranslationMatch> _results = new();
         private readonly ResourceTableEntry _entry;
+
+        // for tooltip in TranslationsView.xaml
+        public ResourceTableEntry Entry => _entry;
 
         private ICollectionView? _orderedResults;
 
@@ -25,14 +29,22 @@ namespace ResXManager.View.Visuals
         {
             _entry = entry;
             Source = source;
-
             TargetCulture = targetCulture;
-            _results.CollectionChanged += (_, __) => OnPropertyChanged(nameof(Translation));
+            _results.CollectionChanged += (_, _) => OnPropertyChanged(nameof(Translation));
         }
 
         public string Source { get; }
 
         public CultureKey TargetCulture { get; }
+
+        public IList<(CultureInfo Culture, string Text, string? Comment)> GetAllItems(CultureInfo neutralCulture)
+        {
+            // ! Text is checked in Where clause
+            return _entry.Languages
+                .Select(cultureKey => (cultureKey.Culture ?? neutralCulture, Text: _entry.Values.GetValue(cultureKey), Comment: _entry.Comments.GetValue(cultureKey)))
+                .Where(item => !item.Text.IsNullOrWhiteSpace())
+                .ToList()!;
+        }
 
         public IList<ITranslationMatch> Results => _results;
 

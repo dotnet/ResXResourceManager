@@ -10,7 +10,7 @@ namespace ResXManager.Scripting
 
     using TomsToolbox.Essentials;
 
-    internal class SourceFilesProvider : IFileFilter
+    internal sealed class SourceFilesProvider : IFileFilter
     {
         private readonly Regex? _fileExclusionFilter;
         private readonly string? _folder;

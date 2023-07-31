@@ -36,7 +36,7 @@
                 outputWindow.GetPane(ref _outputPaneGuid, out pane);
             }
 
-            pane?.OutputString(value);
+            pane?.OutputStringThreadSafe(value);
         }
 
 #pragma warning disable VSTHRD010 // Accessing ... should only be done on the main thread.

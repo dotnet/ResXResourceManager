@@ -134,6 +134,9 @@ Do you want to add a new entry anyway?</value>
   <data name="AutoCreateNewLanguageFiles" xml:space="preserve">
     <value>Create all resource files when adding a new resource language</value>
   </data>
+  <data name="AutoApplyExistingTranslations" xml:space="preserve">
+    <value>Automatically add existing translations for matching strings</value>
+  </data>
   <data name="CaseSensitive" xml:space="preserve">
     <value>Case Sens.</value>
     <comment>@Invariant</comment>

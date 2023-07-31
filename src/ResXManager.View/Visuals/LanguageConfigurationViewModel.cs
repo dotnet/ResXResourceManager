@@ -11,7 +11,7 @@
 
     [VisualCompositionExport(RegionId.Content, Sequence = 4)]
     [Shared]
-    internal partial class LanguageConfigurationViewModel : INotifyPropertyChanged
+    internal sealed partial class LanguageConfigurationViewModel : INotifyPropertyChanged
     {
         public override string ToString()
         {
