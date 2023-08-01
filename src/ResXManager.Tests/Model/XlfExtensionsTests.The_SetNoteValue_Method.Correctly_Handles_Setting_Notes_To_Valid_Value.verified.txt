@@ -1,0 +1,6 @@
+﻿<trans-unit id="MyProject.MyResource" translate="yes" xml:space="preserve" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <source>Last time I did something fun</source>
+  <target state="translated">De laatste keer dat ik iets leuks deed</target>
+  <note from="resx">test2</note>
+  <note from="MultilingualBuild" annotates="source" priority="2">test1</note>
+</trans-unit>

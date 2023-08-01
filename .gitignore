@@ -25,3 +25,4 @@
 src/.migration/
 msbuild.binlog
 *.cache
+*.received.*
