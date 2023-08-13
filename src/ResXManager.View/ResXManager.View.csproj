@@ -26,13 +26,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all" Version="1.25.0" />
-    <PackageReference Include="DataGridExtensions" Version="2.5.14" />
-    <PackageReference Include="Fody" PrivateAssets="all" Version="6.7.0" />
+    <PackageReference Include="DataGridExtensions" Version="2.5.15" />
+    <PackageReference Include="Fody" PrivateAssets="all" Version="6.8.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.1.0" />
     <PackageReference Include="Throttle.Fody" PrivateAssets="all" Version="1.7.0" />
-    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.8.9" />
-    <PackageReference Include="TomsToolbox.Wpf.Composition.Styles" Version="2.8.9" />
-    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.8.9" />
+    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.8.10" />
+    <PackageReference Include="TomsToolbox.Wpf.Composition.Styles" Version="2.8.10" />
+    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.8.10" />
   </ItemGroup>
 </Project>
