@@ -1,4 +1,8 @@
-﻿1.77
+﻿1.78
+- Add translator: Google Lite
+- Fix empty lines generation during xlf synchronization (PR #519)
+
+1.77
 - Fix #568: baidutranslator failed to translate zh-Hans to zh-Hant 
 - Fix #572: Xliff file not working 
 
