@@ -1,6 +1,6 @@
 ﻿namespace ResXManager.View.Tools.Tests
 {
-    using Moq;
+    using NSubstitute;
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.Tests;
@@ -24,8 +24,8 @@
 
                 FileHelper.CopyDirectory(@".\Resources\Files\GH0504", directory);
 
-                var configurationMock = new Mock<IConfiguration>();
-                var tracerMock = new Mock<ITracer>();
+                var configurationMock = Substitute.For<IConfiguration>();
+                var tracerMock = Substitute.For<ITracer>();
 
                 var projectFileName = Path.Combine(directory, "MyProject.resx");
                 var projectFrFileName = Path.Combine(directory, "MyProject.fr.resx");
@@ -37,7 +37,7 @@
                 // Synchronize several times to see if generates the same file
                 for (int i = 0; i < 6; i++)
                 {
-                    var resourceManager = new ResourceManager(configurationMock.Object, tracerMock.Object);
+                    var resourceManager = new ResourceManager(configurationMock, tracerMock);
 
                     var projectFiles = new[]
                     {
@@ -53,7 +53,7 @@
 
                     var xlfDocument = new XlfDocument(xlfDocumentPath);
 
-                    using (var xlfSynchronizer = new XlfSynchronizer(resourceManager, tracerMock.Object, configurationMock.Object))
+                    using (var xlfSynchronizer = new XlfSynchronizer(resourceManager, tracerMock, configurationMock))
                     {
                         xlfSynchronizer.UpdateEntityFromXlf(resourceEntity, xlfDocument.Files);
                     }
