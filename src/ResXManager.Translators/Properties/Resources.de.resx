@@ -123,4 +123,19 @@
   <data name="MaxCharactersPerMinute" xml:space="preserve">
     <value>Max. Zeichen pro Minute</value>
   </data>
+  <data name="BatchRequests" xml:space="preserve">
+    <value>Anfragen zu Batches zusammenfassen</value>
+  </data>
+  <data name="CustomPrompt" xml:space="preserve">
+    <value>Benutzerdefinierter Prompt, der allen Übersetzungsanfragen angehängt wird</value>
+  </data>
+  <data name="IncludeCommentsInPrompt" xml:space="preserve">
+    <value>Kommentare in Prompt einbeziehen</value>
+  </data>
+  <data name="MaxTokens" xml:space="preserve">
+    <value>Max. Tokens</value>
+  </data>
+  <data name="Temperature" xml:space="preserve">
+    <value>Temperatur</value>
+  </data>
 </root>

@@ -99,7 +99,7 @@
                 .FirstOrDefault(element => element.Attribute(FromAttribute)?.Value == from);
         }
 
-        public static void SetNoteValue(this XElement transUnitElement, string from, string value)
+        public static void SetNoteValue(this XElement transUnitElement, string from, string? value)
         {
             var noteElement = transUnitElement.GetNoteElement(from);
 

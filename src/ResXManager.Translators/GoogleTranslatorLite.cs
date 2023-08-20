@@ -104,7 +104,7 @@
 #pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods => not available in .NET Framework
             var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             // Using string.Substring => System.Index or System.Range not available in .NET Framework
-            result = result.Substring(4, result.IndexOf("\",\"", 4) - 4);
+            result = result.Substring(4, result.IndexOf("\",\"", 4, StringComparison.Ordinal) - 4);
             return Regex.Unescape(result);
         }
 

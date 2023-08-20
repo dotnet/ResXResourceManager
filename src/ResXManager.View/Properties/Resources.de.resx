@@ -476,4 +476,7 @@ Ihr ResXManager-Team.
   <data name="AppendPrefixValueFieldTypeLabel" xml:space="preserve">
     <value>Hängen Sie das Übersetzungspräfix an an</value>
   </data>
+  <data name="AutoApplyExistingTranslations" xml:space="preserve">
+    <value>Automatisch vorhandene Übersetzungen für übereinstimmende Zeichenfolgen hinzufügen</value>
+  </data>
 </root>

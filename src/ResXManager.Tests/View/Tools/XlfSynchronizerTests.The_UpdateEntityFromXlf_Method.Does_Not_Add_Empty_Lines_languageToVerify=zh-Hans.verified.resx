@@ -117,12 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="MyProject.MyResource" xml:space="preserve">
+    <value>De laatste keer dat ik iets leuks deed</value>
+    <comment>Choice will be shown after this, don't use \n in this one@Invariant</comment>
+  </data>
   <data name="MyProject.AnotherResource" xml:space="preserve">
     <value>Continue to\nnext item</value>
     <comment>\n = new line@Invariant</comment>
-  </data>
-  <data name="MyProject.MyResource" xml:space="preserve">
-    <value>Last time I did something fun</value>
-    <comment>Choice will be shown after this, don't use \n in this one</comment>
   </data>
 </root>

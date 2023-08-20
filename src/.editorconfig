@@ -65,3 +65,6 @@ dotnet_diagnostic.CA5394.severity = none
 
 # CA1003: Use generic event handler instances
 dotnet_diagnostic.CA1003.severity = suggestion
+
+# IDE0057: Use range operator => not available in NetFramework
+dotnet_diagnostic.IDE0057.severity = silent
