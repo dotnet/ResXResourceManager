@@ -2,9 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
-    using System.Xml;
     using System.Xml.Linq;
 
     using TomsToolbox.Essentials;
@@ -16,44 +14,34 @@
         private XDocument _document;
         private List<XlfFile> _files;
 
-        private XlfDocument()
+        private XlfDocument(XDocument document)
             : base(string.Empty)
         {
-
+            _document = document;
+            _files = Initialize();
         }
 
         public XlfDocument(string filePath)
             : base(filePath)
         {
             _document = TryLoadFromFile() ?? CreateEmpty();
-
-            Initialize();
+            _files = Initialize();
         }
 
-        private void Initialize()
+
+        private List<XlfFile> Initialize()
         {
             if (_document.Root.GetAttribute("version") != "1.2")
                 throw new InvalidOperationException($"Only XLIFF version 1.2 is supported: '{FilePath}'");
 
-            _files = _document.Root.Elements(FileElement)
+            return _document.Root.Elements(FileElement)
                 .Select(file => new XlfFile(this, file))
                 .ToList();
         }
 
         internal static XlfDocument Parse(string content)
         {
-            var instance = new XlfDocument();
-
-            instance._document = CreateFromContent(content);
-            instance.Initialize();
-
-            return instance;
-        }
-
-        internal static XDocument CreateFromContent(string content)
-        {
-            var document = XDocument.Parse(content);
-            return document;
+            return new XlfDocument(XDocument.Parse(content));
         }
 
         private static XDocument CreateEmpty()
