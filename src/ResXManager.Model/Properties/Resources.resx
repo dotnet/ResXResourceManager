@@ -279,7 +279,13 @@
   <data name="PrefixFieldTypeValue" xml:space="preserve">
     <value>Value</value>
   </data>
-  <data name="PrefixFieldTypeBoth" xml:space="preserve">
-    <value>Both</value>
+  <data name="PrefixFieldTypeValueAndNeutralComment" xml:space="preserve">
+    <value>Value and Neutral Comment</value>
+  </data>
+  <data name="PrefixFieldTypeTargetComment" xml:space="preserve">
+    <value>Target Comment</value>
+  </data>
+  <data name="PrefixFieldTypeAll" xml:space="preserve">
+    <value>All</value>
   </data>
 </root>

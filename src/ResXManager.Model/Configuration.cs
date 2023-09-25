@@ -20,10 +20,20 @@
     {
         [LocalizedDisplayName(StringResourceKey.PrefixFieldTypeValue)]
         Value = 1,
+        /// <summary>
+        /// Comment of neutral language
+        /// </summary>
         [LocalizedDisplayName(StringResourceKey.PrefixFieldTypeComment)]
         Comment = 2,
-        [LocalizedDisplayName(StringResourceKey.PrefixFieldTypeBoth)]
-        Both = Value | Comment
+        /// <summary>
+        /// Both value and neutral language comment
+        /// </summary>
+        [LocalizedDisplayName(StringResourceKey.PrefixFieldTypeValueAndNeutralComment)]
+        ValueAndNeutralComment = Value | Comment,
+        [LocalizedDisplayName(StringResourceKey.PrefixFieldTypeTargetComment)]
+        TargetComment = 4,
+        [LocalizedDisplayName(StringResourceKey.PrefixFieldTypeAll)]
+        All = Value | Comment | TargetComment
     }
 
     public interface IConfiguration : INotifyPropertyChanged
