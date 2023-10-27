@@ -42,10 +42,12 @@
         {
             switch ((int)value)
             {
+                case 0x037E: return '?'; // GREEK QUESTION MARK
                 case 0x055C: return '!'; // ARMENIAN EXCLAMATION MARK
                 case 0x055D: return ','; // ARMENIAN COMMA
                 case 0x055E: return '?'; // ARMENIAN QUESTION MARK
                 case 0x0589: return '.'; // ARMENIAN FULL STOP
+                case 0x061F: return '?'; // ARABIC QUESTION MARK
                 case 0x07F8: return ','; // NKO COMMA
                 case 0x07F9: return '!'; // NKO EXCLAMATION MARK
                 case 0x1944: return '!'; // LIMBU EXCLAMATION MARK
@@ -58,7 +60,6 @@
                 case 0xFF1A: return ':'; // FULLWIDTH COLON
                 case 0xFF1B: return ';'; // FULLWIDTH SEMICOLON
                 case 0xFF1F: return '?'; // FULLWIDTH QUESTION MARK
-                case 0x061F: return '?'; // ARABIC QUESTION MARK
                 default: return value;
             }
         }
