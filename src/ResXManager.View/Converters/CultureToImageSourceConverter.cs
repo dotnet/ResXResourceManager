@@ -56,35 +56,30 @@
         {
             culture ??= _configuration.NeutralResourcesLanguage;
 
-            var key = culture.Name;
+            var cultureName = culture.Name;
 
-            if (!ExactCultureOverrides.Exact.HasCustomFlag(culture))
+            if (culture.IsNeutralCulture)
             {
-                var cultureName = culture.Name;
+                var countryOverride = NeutralCultureCountryOverrides.Default[culture];
 
-                if (culture.IsNeutralCulture)
+                if (countryOverride != null)
                 {
-                    var countryOverride = NeutralCultureCountryOverrides.Default[culture];
-
-                    if (countryOverride != null)
-                    {
-                        culture = countryOverride;
-                        cultureName = culture.Name;
-                    }
+                    culture = countryOverride;
+                    cultureName = culture.Name;
                 }
-
-                var cultureParts = cultureName.Split('-');
-                if (!cultureParts.Any())
-                    return null;
-
-                key = cultureParts.Last();
             }
+
+            var cultureParts = cultureName.Split('-');
+            if (!cultureParts.Any())
+                return null;
+
+            var key = ExactCultureOverrides.Exact.HasCustomFlag(culture) ? cultureName : cultureParts.Last();
 
             if (Array.BinarySearch(_existingFlags, key, StringComparer.OrdinalIgnoreCase) < 0)
             {
                 return culture.GetDescendants().Select(Convert).FirstOrDefault(item => item != null);
             }
-
+            
             var resourcePath = string.Format(CultureInfo.InvariantCulture, @"/ResXManager.View;component/Flags/{0}.gif", key);
             var imageSource = new BitmapImage(new Uri(resourcePath, UriKind.RelativeOrAbsolute));
 
