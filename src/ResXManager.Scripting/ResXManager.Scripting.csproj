@@ -18,9 +18,9 @@
     <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
-    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.8.10" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
+    <PackageReference Include="TomsToolbox.Composition.Ninject" />
+    <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
   <Target Name="_CleanupOutDir" AfterTargets="CopyFilesToOutputDirectory">
     <ItemGroup>
