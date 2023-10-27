@@ -12,10 +12,12 @@
     <PackageVersion Include="ILMerge.Fody" Version="1.24.0" />
     <PackageVersion Include="JetBrains.Annotations" Version="2023.2.0" />
     <PackageVersion Include="Microsoft.DeepDev.TokenizerLib" Version="1.3.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.7.1" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     <PackageVersion Include="Microsoft.VisualStudio.SDK" Version="[15.0.1]" />
     <PackageVersion Include="Microsoft.VSSDK.BuildTools" Version="17.6.2164" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageVersion Include="NSubstitute" Version="5.0.0" />
     <PackageVersion Include="Nullable.Extended.Analyzer" Version="1.10.4539" />
     <PackageVersion Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageVersion Include="Resourcer.Fody" Version="1.8.1" />
@@ -30,13 +32,18 @@
     <PackageVersion Include="Throttle.Fody" Version="1.7.0" />
     <PackageVersion Include="TomsToolbox.Composition" Version="2.8.10" />
     <PackageVersion Include="TomsToolbox.Composition.Ninject" Version="2.8.10" />
+    <PackageVersion Include="TomsToolbox.Essentials" Version="2.8.10" />
     <PackageVersion Include="TomsToolbox.ObservableCollections" Version="2.8.10" />
     <PackageVersion Include="TomsToolbox.Wpf" Version="2.8.10" />
     <PackageVersion Include="TomsToolbox.Wpf.Composition" Version="2.8.10" />
     <PackageVersion Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.8.10" />
     <PackageVersion Include="TomsToolbox.Wpf.Composition.Styles" Version="2.8.10" />
     <PackageVersion Include="TomsToolbox.Wpf.Styles" Version="2.8.10" />
+    <PackageVersion Include="Verify.Xunit" Version="20.8.0" />
     <PackageVersion Include="VSIX-SdkProjectAdapter" Version="3.0.0" />
     <PackageVersion Include="WindowsAPICodePack-Shell" Version="1.1.1" />
+    <PackageVersion Include="xunit" Version="2.5.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.0" />
   </ItemGroup>
 </Project>
+
