@@ -68,7 +68,7 @@
 
             var assemblyFileNames = Directory.EnumerateFiles(path, @"*.dll");
 
-            var assemblyNames = new HashSet<string>(assemblyFileNames.Select(Path.GetFileNameWithoutExtension));
+            var assemblyNames = new HashSet<string?>(assemblyFileNames.Select(Path.GetFileNameWithoutExtension));
 
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 

@@ -20,6 +20,10 @@
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Label="License">
+    <IsDeploymentTarget>true</IsDeploymentTarget>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Nullable.Extended.Analyzer" Version="1.10.4539" PrivateAssets="All" />
   </ItemGroup>
