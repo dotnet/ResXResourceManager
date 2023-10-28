@@ -70,14 +70,14 @@
             return allProjectFiles;
         }
 
-        private static FileInfo? FindProject(DirectoryInfo directory, string solutionFolder)
+        private static FileInfo? FindProject(DirectoryInfo? directory, string solutionFolder)
         {
-            while ((directory != null) && (directory.FullName.Length >= solutionFolder.Length))
+            while ((directory is not null) && (directory.FullName.Length >= solutionFolder.Length))
             {
                 var projectFiles = directory.EnumerateFiles(@"*.*proj", SearchOption.TopDirectoryOnly);
 
                 var project = projectFiles.FirstOrDefault();
-                if (project != null)
+                if (project is not null)
                 {
                     return project;
                 }

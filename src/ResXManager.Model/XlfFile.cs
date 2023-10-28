@@ -57,6 +57,8 @@
             get
             {
                 var bodyElement = _fileElement.Element(BodyElement);
+                if (bodyElement is null)
+                    yield break;
 
                 foreach (var transUnitElement in bodyElement.Descendants(TransUnitElement).ToList())
                 {
@@ -80,11 +82,19 @@
             var bodyElement = _fileElement
                 .Element(BodyElement);
 
+            if (bodyElement is null)
+                return false;
+
+            var original = Original;
+            if (original is null)
+                return false;
+
+            // ! group.Key is checked in .Where:
             var transUnitsById = bodyElement
                 .Descendants(TransUnitElement)
                 .GroupBy(element => element.GetId())
                 .Where(group => !string.IsNullOrEmpty(group.Key) && group.Any())
-                .ToDictionary(group => group.Key, group => group.First());
+                .ToDictionary(group => group.Key!, group => group.First());
 
             var tableEntriesById = entity.Entries.ToDictionary(entry => entry.Key);
 
@@ -215,7 +225,7 @@
                         var groupElement = bodyElement.Element(GroupElement);
                         if (groupElement == null)
                         {
-                            groupElement = new XElement(GroupElement, new XAttribute(IdAttribute, Original), new XAttribute(DataTypeAttribute, "resx"));
+                            groupElement = new XElement(GroupElement, new XAttribute(IdAttribute, original), new XAttribute(DataTypeAttribute, "resx"));
                             bodyElement.Add(groupElement);
                         }
                         groupElement.Add(newTransUnit);

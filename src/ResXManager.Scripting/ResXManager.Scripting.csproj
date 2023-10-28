@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType Condition="'$(TargetFramework)' != 'net472'">Exe</OutputType>
-    <TargetFrameworks>net472;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net472;net6.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
@@ -19,7 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
-    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.8.10" />
+    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.9.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <Target Name="_CleanupOutDir" AfterTargets="CopyFilesToOutputDirectory">

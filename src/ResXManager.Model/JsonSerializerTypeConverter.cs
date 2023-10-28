@@ -43,7 +43,7 @@
         /// <returns>
         /// true if this converter can perform the conversion; otherwise, false.
         /// </returns>
-        public override bool CanConvertTo(ITypeDescriptorContext? context, Type destinationType)
+        public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
         {
             return destinationType == typeof(string);
         }
@@ -58,7 +58,7 @@
         /// An <see cref="object"/> that represents the converted value.
         /// </returns>
         /// <exception cref="NotSupportedException">The conversion cannot be performed. </exception>
-        public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo culture, object? value)
+        public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object? value)
         {
             if (value is not string stringValue)
                 return null;
@@ -96,7 +96,7 @@
         /// </returns>
         /// <exception cref="ArgumentNullException">The <paramref name="destinationType"/> parameter is null. </exception>
         /// <exception cref="NotSupportedException">The conversion cannot be performed. </exception>
-        public override object ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object value, Type? destinationType)
+        public override object ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type? destinationType)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));

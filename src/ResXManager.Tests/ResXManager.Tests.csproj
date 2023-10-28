@@ -3,16 +3,20 @@
     <TargetFramework>net472</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-  
+
+  <PropertyGroup Label="License">
+    <IsDeploymentTarget>false</IsDeploymentTarget>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Include="Newtonsoft.Json" Version="[9.0.1]" />
-    <PackageReference Include="NSubstitute" Version="5.0.0" />
-    <PackageReference Include="TomsToolbox.Essentials" Version="2.8.10" />
-    <PackageReference Include="TomsToolbox.Composition" Version="2.8.10" />
-    <PackageReference Include="Verify.Xunit" Version="20.8.0" />
-    <PackageReference Include="xunit" Version="2.5.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.0" PrivateAssets="all" />
+    <PackageReference Include="NSubstitute" Version="5.1.0" />
+    <PackageReference Include="TomsToolbox.Essentials" Version="2.9.1" />
+    <PackageReference Include="TomsToolbox.Composition" Version="2.9.1" />
+    <PackageReference Include="Verify.Xunit" Version="22.1.4" />
+    <PackageReference Include="xunit" Version="2.5.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" PrivateAssets="all" />
   </ItemGroup>
   
   <ItemGroup>

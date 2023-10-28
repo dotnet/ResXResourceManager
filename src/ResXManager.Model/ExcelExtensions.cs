@@ -176,7 +176,9 @@
 
         private static IEnumerable<EntryChange> ImportSingleSheet(ResourceManager resourceManager, IList<IList<string>>? data)
         {
-            var firstRow = data?.FirstOrDefault();
+            if (data is null)
+                yield break;
+            var firstRow = data.FirstOrDefault();
             if (firstRow == null)
                 yield break;
 
@@ -268,10 +270,7 @@
                 .Select(item => item.ResourceEntity)
                 .FirstOrDefault();
 
-            if (entity == null)
-                throw new ImportException(string.Format(CultureInfo.CurrentCulture, Resources.ImportMapSheetError, name));
-
-            return entity;
+            return entity ?? throw new ImportException(string.Format(CultureInfo.CurrentCulture, Resources.ImportMapSheetError, name));
         }
 
         private sealed class DataAppender
@@ -411,7 +410,7 @@
             }
         }
 
-        private static IEnumerable<string>? GetLanguageColumnHeaders(this CultureKey language, IResourceScope? scope)
+        private static IEnumerable<string> GetLanguageColumnHeaders(this CultureKey language, IResourceScope? scope)
         {
             var cultureKeyName = language.ToString();
 
@@ -422,7 +421,7 @@
                 yield return cultureKeyName;
         }
 
-        private static IEnumerable<string>? GetLanguageDataColumns(this ResourceTableEntry entry, CultureKey language, IResourceScope? scope)
+        private static IEnumerable<string> GetLanguageDataColumns(this ResourceTableEntry entry, CultureKey language, IResourceScope? scope)
         {
             if ((scope == null) || scope.Comments.Contains(language))
                 yield return entry.Comments.GetValue(language) ?? string.Empty;
@@ -486,7 +485,7 @@
             return languages.SelectMany(l => entry.GetLanguageDataColumns(l, scope));
         }
 
-        [return: NotNullIfNotNull("container")]
+        [return: NotNullIfNotNull(nameof(container))]
         public static TContainer? AppendItem<TContainer, TItem>(this TContainer? container, TItem? item)
             where TContainer : OpenXmlElement
             where TItem : OpenXmlElement

@@ -69,19 +69,19 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all" Version="1.25.0" />
-    <PackageReference Include="Community.VisualStudio.Toolkit" Version="15.0.76.309" />
+    <PackageReference Include="Community.VisualStudio.Toolkit" Version="[15.0.76.309]" />
     <PackageReference Include="DataGridExtensions" Version="2.5.15" />
     <PackageReference Include="Fody" PrivateAssets="all" Version="6.8.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.SDK" ExcludeAssets="runtime" Version="[15.0.1]" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.6.2164" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="[17.6.2164]" PrivateAssets="all" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.1.0" />
     <PackageReference Include="Resourcer.Fody" Version="1.8.1" PrivateAssets="all" />
     <PackageReference Include="Throttle.Fody" PrivateAssets="all" Version="1.7.0" />
-    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.8.10" />
-    <PackageReference Include="TomsToolbox.Wpf.Composition" Version="2.8.10" />
-    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.8.10" />
-    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.8.10" />
+    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.9.1" />
+    <PackageReference Include="TomsToolbox.Wpf.Composition" Version="2.9.1" />
+    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.9.1" />
+    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.9.1" />
     <PackageReference Include="VSIX-SdkProjectAdapter" Version="3.0.0" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>

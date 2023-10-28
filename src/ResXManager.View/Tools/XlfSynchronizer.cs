@@ -76,7 +76,7 @@
                     return;
                 }
 
-                var changedFilePaths = GetChangedFiles();
+                var changedFilePaths = FetchChangedFiles();
 
                 var documentsByPath = _documentsByPath;
 
@@ -233,10 +233,10 @@
             {
                 var documentsByPath = _documentsByPath;
                 var uniqueProjectName = neutralProjectFile.UniqueProjectName;
-                var directoryName = Path.GetDirectoryName(uniqueProjectName);
+                var directoryName = Path.GetDirectoryName(uniqueProjectName) ?? string.Empty;
                 var solutionFolder = entity.Container.SolutionFolder;
 
-                if (uniqueProjectName.IsNullOrEmpty() || directoryName.IsNullOrEmpty() || solutionFolder.IsNullOrEmpty())
+                if (uniqueProjectName.IsNullOrEmpty() || solutionFolder.IsNullOrEmpty())
                     return false;
 
                 var fileName = Path.ChangeExtension(Path.GetFileName(uniqueProjectName), targetCulture.Name + ".xlf");
@@ -275,7 +275,7 @@
             return GetOriginal(entity.NeutralProjectFile);
         }
 
-        [return: NotNullIfNotNull("projectFile")]
+        [return: NotNullIfNotNull(nameof(projectFile))]
         private static string? GetOriginal(ProjectFile? projectFile)
         {
             return projectFile?.RelativeFilePath

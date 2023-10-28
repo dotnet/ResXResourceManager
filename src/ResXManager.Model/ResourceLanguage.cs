@@ -30,8 +30,7 @@
 
         private readonly XDocument _document;
 
-        // ReSharper disable once AssignNullToNotNullAttribute
-        private XElement DocumentRoot => _document.Root;
+        private XElement DocumentRoot => _document.Root ?? throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileError, ProjectFile.FilePath));
 
         private IDictionary<string, Node> _nodes = new Dictionary<string, Node>();
 
@@ -66,9 +65,6 @@
             {
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileError, file.FilePath), ex);
             }
-
-            if (DocumentRoot == null)
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileError, file.FilePath));
 
             var defaultNamespace = DocumentRoot.GetDefaultNamespace();
 
@@ -595,9 +591,7 @@
 
             private string LoadComment()
             {
-                var entry = Element;
-
-                var commentElement = entry.Element(_owner._commentNodeName);
+                var commentElement = Element.Element(_owner._commentNodeName);
 
                 return commentElement?.FirstNode is XText textNode ? textNode.Value : string.Empty;
             }
@@ -605,12 +599,8 @@
             private XAttribute GetNameAttribute(XElement entry)
             {
                 var nameAttribute = entry.Attribute(_nameAttributeName);
-                if (nameAttribute == null)
-                {
-                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileNameAttributeMissingError, _owner.ProjectFile.FilePath));
-                }
 
-                return nameAttribute;
+                return nameAttribute ?? throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidResourceFileNameAttributeMissingError, _owner.ProjectFile.FilePath));
             }
         }
     }

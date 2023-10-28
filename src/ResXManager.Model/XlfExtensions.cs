@@ -17,12 +17,12 @@
         public static XElement GetOrAddTargetElement(this XElement transUnitElement)
         {
             var targetElement = transUnitElement.Element(TargetElement);
-            if (targetElement == null)
-            {
-                var sourceElement = transUnitElement.Element(SourceElement);
-                targetElement = new XElement(TargetElement, new XAttribute(StateAttribute, NewState));
-                sourceElement.AddAfterSelf(targetElement);
-            }
+            if (targetElement != null)
+                return targetElement;
+
+            var sourceElement = transUnitElement.Element(SourceElement);
+            targetElement = new XElement(TargetElement, new XAttribute(StateAttribute, NewState));
+            sourceElement?.AddAfterSelf(targetElement);
 
             return targetElement;
         }
@@ -78,14 +78,16 @@
             targetElement.SetAttributeValue(StateAttribute, value);
         }
 
-        public static string GetSourceValue(this XElement transUnitElement)
+        public static string? GetSourceValue(this XElement transUnitElement)
         {
-            return transUnitElement.Element(SourceElement).Value;
+            return transUnitElement.Element(SourceElement)?.Value;
         }
 
         public static void SetSourceValue(this XElement transUnitElement, string value)
         {
-            transUnitElement.Element(SourceElement).Value = value;
+            var element = transUnitElement.Element(SourceElement);
+            if (element is not null)
+                element.Value = value;
         }
 
         public static string? GetNoteValue(this XElement transUnitElement, string from)
@@ -117,7 +119,7 @@
             {
                 var previousElement = transUnitElement.Element(TargetElement) ?? transUnitElement.Element(SourceElement);
                 noteElement = new XElement(NoteElement, new XAttribute(FromAttribute, from));
-                previousElement.AddAfterSelf(new XText("\n          "), noteElement);
+                previousElement?.AddAfterSelf(new XText("\n          "), noteElement);
             }
 
             noteElement.Value = value;

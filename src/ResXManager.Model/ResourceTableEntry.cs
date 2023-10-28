@@ -554,8 +554,8 @@
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        string? IDataErrorInfo.this[string? columnName] => columnName != nameof(Key) ? null : _keyValidationError;
+        string IDataErrorInfo.this[string? columnName] => (columnName != nameof(Key) ? null : _keyValidationError) ?? string.Empty;
 
-        string? IDataErrorInfo.Error => null;
+        string IDataErrorInfo.Error => string.Empty;
     }
 }
