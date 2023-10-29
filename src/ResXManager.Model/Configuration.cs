@@ -94,5 +94,8 @@
 
         [DefaultValue(true)]
         public bool AutoApplyExistingTranslations { get; set; }
+
+        [DefaultValue("")]
+        public string? CultureCountyOverrides { get; set; }
     }
 }

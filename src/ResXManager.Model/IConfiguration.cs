@@ -64,4 +64,6 @@ public interface IConfiguration : INotifyPropertyChanged
     string? TranslatorConfiguration { get; set; }
 
     bool AutoApplyExistingTranslations { get; }
+
+    string? CultureCountyOverrides { get; set; }
 }
