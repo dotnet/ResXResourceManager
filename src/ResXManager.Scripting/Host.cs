@@ -198,7 +198,11 @@
 
         public string? EffectiveTranslationPrefix { get; set; }
 
-        public PrefixFieldType PrefixFieldType { get; set; }
+        public bool PrefixValue { get; set; }
+
+        public bool PrefixNeutralComment { get; set; }
+
+        public bool PrefixTargetComment { get; set; }
 
         public ExcelExportMode ExcelExportMode { get; set; }
 

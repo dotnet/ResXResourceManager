@@ -15,6 +15,6 @@
 
         string? Translation { get; }
 
-        bool Apply(string? valuePrefix, string? commentPrefix);
+        bool Apply();
     }
 }
