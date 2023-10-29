@@ -2,6 +2,9 @@
 
 using System;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 using NSubstitute;
@@ -10,14 +13,38 @@ using ResXManager.Model;
 using ResXManager.View.Converters;
 using ResXManager.View.Tools;
 
+using VerifyXunit;
+
 using Xunit;
 
 #pragma warning disable CA1707 // Identifiers should not contain underscores
 
 public static class CultureToImageSourceConverterTests
 {
-    public class The_Convert_Method
+    [UsesVerify]
+    public sealed class The_Convert_Method
     {
+        private readonly IConfiguration _configurationMock = Substitute.For<IConfiguration>();
+        private CultureCountryOverrides? _cultureCountryOverrides;
+        private CultureToImageSourceConverter? _converter;
+
+        private CultureCountryOverrides CultureCountryOverrides => _cultureCountryOverrides ??= new CultureCountryOverrides(_configurationMock);
+
+        private CultureToImageSourceConverter Converter => _converter ??= new CultureToImageSourceConverter(_configurationMock, CultureCountryOverrides);
+
+        [Fact]
+        public async Task Should_Produce_Correct_Default_Image_For_Every_Culture()
+        {
+            var images = CultureInfo
+                .GetCultures(CultureTypes.AllCultures)
+                .Where(culture => culture.LCID != 127)
+                .Select(culture => new { Culture = culture, Image = GetImageFileName(culture) })
+                .Select(value => $"{value.Culture} => {value.Image}")
+                .ToArray();
+
+            await Verifier.Verify(string.Join("\n", images));
+        }
+
         [Theory]
         [InlineData("en", "us.gif")]
         [InlineData("fy", "fy.gif")]
@@ -25,36 +52,40 @@ public static class CultureToImageSourceConverterTests
         [InlineData("de-DE", "de.gif")]
         [InlineData("de-AT", "at.gif")]
         [InlineData("sv", "se.gif")]
-        public void Should_Produce_Image_For_Exact_And_Overriden_Culture_Match(string culture, string expectedImageName)
+        [InlineData("ca-ES", "es.gif")]
+        [InlineData("ca-ES-valencia", "es.gif")]
+        public void Should_Use_Region_As_Primary_Source_For_Flags(string culture, string expectedImageName)
         {
-            var configurationMock = Substitute.For<IConfiguration>();
-            var converter = new CultureToImageSourceConverter(configurationMock);
+            var imageName = GetImageFileName(CultureInfo.GetCultureInfo(culture));
 
-            var cultureImage = converter.Convert(CultureInfo.GetCultureInfo(culture)) as BitmapImage;
-
-            Assert.NotNull(cultureImage);
-            Assert.EndsWith(expectedImageName, cultureImage.UriSource.OriginalString, StringComparison.OrdinalIgnoreCase);
+            Assert.NotNull(imageName);
+            Assert.Equal(expectedImageName, imageName, StringComparer.OrdinalIgnoreCase);
         }
 
         [Theory]
-        [InlineData("", "", "fr", "fr.gif")]
-        [InlineData("", "", "fr-CD", "cd.gif")]
-        [InlineData("ar", "ar-SA", "ar", "sa.gif")]
-        [InlineData("ms", "ms-BN", "ms-BN", "bn.gif")]
-        public void Should_Produce_Overriden_Culture_Image_If_Overriden_With_Settings(string cultureFrom, string cultureTo,
-            string culture, string expectedImageName)
+        [InlineData("ar=ar-SA", "ar", "sa.gif")]
+        [InlineData("ms=ms-BN", "ms-BN", "bn.gif")]
+        // Overriding a specific language does not override parent
+        [InlineData("ca-ES-valencia=sa", "ca-ES", "es.gif")]
+        // It's possible to override specific culture if s.o. does not like the defaults
+        [InlineData("ca-ES-valencia=sa", "ca-ES-valencia", "sa.gif")]
+        [InlineData("fy-NL=fy", "fy-NL", "fy.gif")]
+        public void Should_Produce_Overriden_Culture_Image_If_Overriden_With_Settings(string overrides, string culture, string expectedImageName)
         {
-            var configurationMock = Substitute.For<IConfiguration>();
-            if (!string.IsNullOrEmpty(cultureFrom) && !string.IsNullOrEmpty(cultureTo) )
-            {
-                NeutralCultureCountryOverrides.Default[CultureInfo.GetCultureInfo(cultureFrom)] = CultureInfo.GetCultureInfo(cultureTo);
-            }
+            _configurationMock.CultureCountyOverrides = overrides;
 
-            var converter = new CultureToImageSourceConverter(configurationMock);
-            var cultureImage = converter.Convert(CultureInfo.GetCultureInfo(culture)) as BitmapImage;
+            var imageName = GetImageFileName(CultureInfo.GetCultureInfo(culture));
 
-            Assert.NotNull(cultureImage);
-            Assert.EndsWith(expectedImageName, cultureImage.UriSource.OriginalString, StringComparison.OrdinalIgnoreCase);
+            Assert.NotNull(imageName);
+            Assert.Equal(expectedImageName, imageName, StringComparer.OrdinalIgnoreCase);
+        }
+
+        private string? GetImageFileName(CultureInfo culture)
+        {
+            var image = Converter.Convert(culture) as BitmapImage;
+            var fileName = Path.GetFileName(image?.UriSource.ToString());
+
+            return fileName;
         }
     }
 }

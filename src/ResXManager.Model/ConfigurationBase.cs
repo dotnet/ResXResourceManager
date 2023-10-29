@@ -11,6 +11,8 @@
 
     using ResXManager.Infrastructure;
 
+    using Throttle;
+
     using TomsToolbox.Essentials;
 
     [AttributeUsage(AttributeTargets.Property)]
@@ -121,13 +123,26 @@
             {
                 _configuration.SetValue(key, ConvertToString(value));
 
+                Save();
+            }
+            catch (Exception ex)
+            {
+                Tracer.TraceError($"Error converting configuration value: {key} - {ex.Message}");
+            }
+        }
+
+        [Throttled(typeof(AsyncThrottle))]
+        private void Save()
+        {
+            try
+            {
                 using var writer = new StreamWriter(File.Create(_filePath));
 
                 _configuration.Save(writer);
             }
             catch (Exception ex)
             {
-                Tracer.TraceError("Fatal error writing configuration file: " + _filePath + " - " + ex.Message);
+                Tracer.TraceError($"Fatal error writing configuration file: {_filePath} - {ex.Message}");
             }
         }
 

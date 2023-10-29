@@ -17,6 +17,7 @@
     public class CultureToImageSourceConverter : IValueConverter
     {
         private readonly IConfiguration _configuration;
+        private readonly CultureCountryOverrides _cultureCountryOverrides;
 
         private static readonly string[] _existingFlags =
         {
@@ -35,9 +36,10 @@
         };
 
         [ImportingConstructor]
-        public CultureToImageSourceConverter(IConfiguration configuration)
+        public CultureToImageSourceConverter(IConfiguration configuration, CultureCountryOverrides cultureCountryOverrides)
         {
             _configuration = configuration;
+            _cultureCountryOverrides = cultureCountryOverrides;
         }
 
         /// <summary>
@@ -56,17 +58,19 @@
         {
             culture ??= _configuration.NeutralResourcesLanguage;
 
+            return Convert(culture, 0);
+        }
+
+        private ImageSource? Convert(CultureInfo culture, int recursionCounter)
+        {
             var cultureName = culture.Name;
 
-            if (culture.IsNeutralCulture)
-            {
-                var countryOverride = NeutralCultureCountryOverrides.Default[culture];
+            var countryOverride = _cultureCountryOverrides[culture];
 
-                if (countryOverride != null)
-                {
-                    culture = countryOverride;
-                    cultureName = culture.Name;
-                }
+            if (countryOverride != null)
+            {
+                culture = countryOverride;
+                cultureName = culture.Name;
             }
 
             var cultureParts = cultureName.Split('-');
@@ -77,7 +81,16 @@
 
             if (Array.BinarySearch(_existingFlags, key, StringComparer.OrdinalIgnoreCase) < 0)
             {
-                return culture.GetDescendants().Select(Convert).FirstOrDefault(item => item != null);
+                var bestMatch = culture.GetDescendants()
+                    .Select(item => Convert(item, recursionCounter))
+                    .FirstOrDefault(item => item != null);
+
+                if (bestMatch is null && recursionCounter < 3 && !culture.IsNeutralCulture)
+                {
+                    return Convert(culture.Parent, recursionCounter + 1);
+                }
+
+                return bestMatch;
             }
 
             var resourcePath = string.Format(CultureInfo.InvariantCulture, @"/ResXManager.View;component/Flags/{0}.gif", key);
@@ -93,7 +106,7 @@
         /// A converted value. If the method returns null, the valid null value is used.
         /// </returns>
         /// <param name="value">The value that is produced by the binding target.</param><param name="targetType">The type to convert to.</param><param name="parameter">The converter parameter to use.</param><param name="culture">The culture to use in the converter.</param>
-        public object? ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo? culture)
+        public object ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo? culture)
         {
             throw new NotImplementedException();
         }

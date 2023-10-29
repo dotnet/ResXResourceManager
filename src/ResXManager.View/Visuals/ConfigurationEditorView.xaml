@@ -46,6 +46,7 @@
         </Setter.Value>
       </Setter>
     </Style>
+
   </UserControl.Resources>
 
   <ScrollViewer Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Width="800" HorizontalAlignment="Left" VerticalScrollBarVisibility="Auto">
@@ -73,7 +74,7 @@
       <GroupBox Header="{x:Static properties:Resources.Configuration_General}" Style="{StaticResource GroupStyle}">
         <StackPanel Margin="10">
           <StackPanel Orientation="Horizontal">
-            <TextBlock Text="{x:Static properties:Resources.NeutralResourceLanguageHeader}" VerticalAlignment="Center" />
+            <Label Content="{x:Static properties:Resources.NeutralResourceLanguageHeader}" VerticalAlignment="Center" />
             <Decorator Width="5" />
             <ComboBox Width="175" ItemsSource="{Binding Source={x:Static Member=infrastructure:CultureHelper.SpecificCultures}}"
                       SelectedItem="{Binding Configuration.NeutralResourcesLanguage}" Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
@@ -82,7 +83,7 @@
                   <StackPanel Orientation="Horizontal">
                     <Image Stretch="None" Source="{Binding Converter={composition:Import converters:CultureToImageSourceConverter}}" />
                     <Decorator Width="5" />
-                    <TextBlock Text="{Binding Path=DisplayName}" VerticalAlignment="Center" />
+                    <Label Content="{Binding Path=DisplayName}" VerticalAlignment="Center" />
                   </StackPanel>
                 </DataTemplate>
               </ComboBox.ItemTemplate>
@@ -106,7 +107,7 @@
             <Decorator Height="5" />
             <StackPanel Orientation="Horizontal">
               <Decorator Width="22" />
-              <TextBlock Text="{x:Static properties:Resources.SortBy}" VerticalAlignment="Center" />
+              <Label Content="{x:Static properties:Resources.SortBy}" VerticalAlignment="Center" />
               <Decorator Width="8" />
               <ComboBox Width="175" ItemsSource="{Binding Source={x:Type system:StringComparison}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
                         SelectedItem="{Binding Configuration.ResXSortingComparison}" Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}" />
@@ -144,11 +145,12 @@
                       Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
             <Decorator Width="4"></Decorator>
             <TextBox Text="{Binding Configuration.TranslationPrefix}"
-                     IsEnabled="{Binding Configuration.PrefixTranslations}"
+                     IsEnabled="{Binding Configuration.PrefixTranslations, UpdateSourceTrigger=PropertyChanged}"
+                     Width="100"
                      Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" VerticalAlignment="Center" />
           </StackPanel>
           <Decorator Height="5" />
-          <TextBlock Text="{x:Static properties:Resources.AppendPrefixValueFieldTypeLabel}" />
+          <Label Content="{x:Static properties:Resources.AppendPrefixValueFieldTypeLabel}" />
           <StackPanel Margin="10,5"
                       IsEnabled="{Binding Configuration.PrefixTranslations}">
             <CheckBox Content="{Binding Source={x:Static model:PrefixFieldType.Value}, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
@@ -171,6 +173,18 @@
                  ItemsSource="{Binding Source={x:Type model:ExcelExportMode}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
                  SelectedItem="{Binding Configuration.ExcelExportMode}"
                  ItemContainerStyle="{StaticResource EnumSelectorItemContainerStyle}" />
+      </GroupBox>
+
+      <Decorator Height="5" />
+
+      <GroupBox Header="{x:Static properties:Resources.ShellTabHeader_Languages}" Style="{StaticResource GroupStyle}">
+        <StackPanel Orientation="Horizontal" Margin="10">
+          <Label Content="Flag mapping overrides" />
+          <TextBox Text="{Binding Configuration.CultureCountyOverrides, UpdateSourceTrigger=PropertyChanged}"
+                   Width="300"
+                   Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" VerticalAlignment="Center" />
+          <Label Content="e.g. fy-NL=fy,..." Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+        </StackPanel>
       </GroupBox>
 
       <Decorator Height="5" />

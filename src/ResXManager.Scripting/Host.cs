@@ -216,6 +216,8 @@
 
         public bool AutoApplyExistingTranslations { get; set; }
 
+        public string? CultureCountyOverrides { get; set; }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)
