@@ -97,6 +97,8 @@
 
         public ICommand PasteCommand => new DelegateCommand<DataGrid>(CanPaste, Paste);
 
+        public ICommand TrimCommand => new DelegateCommand<DataGrid>(CanTrim, Trim);
+
         public ICommand ExportExcelCommand => new DelegateCommand<IExportParameters>(CanExportExcel, ExportExcel);
 
         public ICommand ImportExcelCommand => new DelegateCommand<string>(ImportExcel);
@@ -359,6 +361,55 @@
 
             if (!dataGrid.PasteCells(table))
                 throw new ImportException(Resources.PasteSelectionSizeMismatch);
+        }
+
+        private bool CanTrim(DataGrid? dataGrid)
+        {
+            if (dataGrid == null)
+                return false;
+
+            if (dataGrid.GetIsEditing())
+                return false;
+
+            if (Settings.IsCellSelectionEnabled)
+                return dataGrid.GetSelectedVisibleCells().Any();
+
+            return SelectedTableEntries.Any();
+        }
+
+        private void Trim(DataGrid? dataGrid)
+        {
+            if (dataGrid == null)
+                return;
+
+            var affectedEntries = new List<ResourceTableEntry>();
+            foreach (var cellInfo in dataGrid.GetSelectedVisibleCells().ToArray())
+            {
+                if (!cellInfo.IsOfColumnType(ColumnType.Comment, ColumnType.Language))
+                    continue;
+
+                var cellContext = cellInfo.Column.GetCellContent(cellInfo.Item);
+                if (cellContext is TextBlock textBlock)
+                {
+                    var trimmedText = textBlock.Text.Trim();
+                    if (textBlock.Text != trimmedText)
+                    {
+                        cellInfo.Column?.OnPastingCellClipboardContent(cellInfo.Item, trimmedText);
+
+                        if (cellInfo.Item is ResourceTableEntry resourceTableEntry)
+                        {
+                            affectedEntries.Add(resourceTableEntry);
+                        }
+                    }
+                }
+            }
+
+            dataGrid.CommitEdit();
+
+            foreach (var entry in affectedEntries)
+            {
+                entry?.Refresh();
+            }
         }
 
         private void ToggleInvariant()

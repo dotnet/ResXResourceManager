@@ -1052,6 +1052,16 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Trim whitespace characters (Ctrl+T)"
+        /// </summary>
+        public static string TrimToolTip
+        {
+            get {
+                return ResourceManager.GetString("TrimToolTip", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Unload Snapshot"
         /// </summary>
         public static string UnloadSnapshot {
@@ -1581,6 +1591,10 @@ namespace ResXManager.View.Properties {
         ///   Looks up a localized string similar to Save credentials (Credentials will be stored as cl....
         /// </summary>
         TranslatorConfiguration_SaveCredentials,
+        /// <summary>
+        ///   Looks up a localized string similar to Trim whitespace characters (Ctrl+T).
+        /// </summary>
+        TrimToolTip,
         /// <summary>
         ///   Looks up a localized string similar to Unload Snapshot.
         /// </summary>
