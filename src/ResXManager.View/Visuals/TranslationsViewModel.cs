@@ -121,18 +121,9 @@
 
         private void Apply(IEnumerable<ITranslationItem> items)
         {
-            var prefix = Configuration.EffectiveTranslationPrefix;
-
             foreach (var item in items.Where(item => !string.IsNullOrEmpty(item.Translation)).ToArray())
             {
-                if (!item.UpdateTranslation(Configuration.PrefixFieldType.HasFlag(PrefixFieldType.Value) ? prefix : null))
-                    break;
-
-                if (!item.UpdateComment(
-                    prefix,
-                    Configuration.PrefixFieldType.HasFlag(PrefixFieldType.Comment),
-                    Configuration.PrefixFieldType.HasFlag(PrefixFieldType.TargetComment))
-                )
+                if (!item.Apply())
                     break;
 
                 Items.Remove(item);

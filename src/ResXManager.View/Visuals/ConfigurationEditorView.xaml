@@ -88,15 +88,6 @@
               </ComboBox.ItemTemplate>
             </ComboBox>
           </StackPanel>
-          <StackPanel Orientation="Horizontal">
-            <TextBlock Text="{x:Static properties:Resources.AppendPrefixValueFieldTypeLabel}" VerticalAlignment="Center" />
-            <Decorator Width="8" />
-            <ComboBox Width="175" ItemsSource="{Binding Source={x:Type model:PrefixFieldType}, Converter={x:Static toms:EnumToValuesConverter.Default}}"
-                     Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}" SelectedValue="{Binding Configuration.PrefixFieldType}"/>
-          </StackPanel>
-          <StackPanel Orientation="Horizontal">
-            <CheckBox IsChecked="{Binding Configuration.AutoApplyExistingTranslations}" Content="{x:Static properties:Resources.AutoApplyExistingTranslations}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
-          </StackPanel>
         </StackPanel>
       </GroupBox>
 
@@ -135,6 +126,41 @@
           <CheckBox IsChecked="{Binding Configuration.AutoCreateNewLanguageFiles}" Content="{x:Static properties:Resources.AutoCreateNewLanguageFiles}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
           <Decorator Height="5" />
           <CheckBox IsChecked="{Binding Configuration.ConfirmAddLanguageFile}" Content="{x:Static properties:Resources.ConfirmAddLanguage}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+        </StackPanel>
+      </GroupBox>
+
+      <Decorator Height="5" />
+
+      <GroupBox Header="{x:Static properties:Resources.ShellTabHeader_Translate}" Style="{StaticResource GroupStyle}">
+        <StackPanel Margin="10" KeyboardNavigation.TabNavigation="Local">
+          <StackPanel Orientation="Horizontal">
+            <CheckBox IsChecked="{Binding Configuration.AutoApplyExistingTranslations}" Content="{x:Static properties:Resources.AutoApplyExistingTranslations}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+          </StackPanel>
+          <Decorator Height="5" />
+          <StackPanel Orientation="Horizontal">
+            <CheckBox Content="{x:Static properties:Resources.TranslationsPrefixHeader}"
+                      IsChecked="{Binding Configuration.PrefixTranslations}"
+                      VerticalAlignment="Center"
+                      Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+            <Decorator Width="4"></Decorator>
+            <TextBox Text="{Binding Configuration.TranslationPrefix}"
+                     IsEnabled="{Binding Configuration.PrefixTranslations}"
+                     Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" VerticalAlignment="Center" />
+          </StackPanel>
+          <Decorator Height="5" />
+          <TextBlock Text="{x:Static properties:Resources.AppendPrefixValueFieldTypeLabel}" />
+          <StackPanel Margin="10,5"
+                      IsEnabled="{Binding Configuration.PrefixTranslations}">
+            <CheckBox Content="{Binding Source={x:Static model:PrefixFieldType.Value}, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
+                      IsChecked="{Binding Configuration.PrefixValue}"
+                      Margin="0,2"/>
+            <CheckBox Content="{Binding Source={x:Static model:PrefixFieldType.Comment}, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
+                      IsChecked="{Binding Configuration.PrefixNeutralComment}"
+                      Margin="0,2"/>
+            <CheckBox Content="{Binding Source={x:Static model:PrefixFieldType.TargetComment}, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
+                      IsChecked="{Binding Configuration.PrefixTargetComment}"
+                      Margin="0,2"/>
+          </StackPanel>
         </StackPanel>
       </GroupBox>
 

@@ -1,5 +1,6 @@
 namespace ResXManager.View.Visuals
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -56,42 +57,36 @@ namespace ResXManager.View.Visuals
             set => _translation = value;
         }
 
-        public bool UpdateTranslation(string? prefix = "")
+        public bool Apply()
         {
             if (!_entry.CanEdit(TargetCulture))
                 return false;
 
-            _entry.Values.SetValue(TargetCulture, prefix + Translation);
-            return true;
+            var configuration = _entry.Container.Container.Configuration;
+
+            var prefix = configuration.EffectiveTranslationPrefix;
+            var valuePrefix = configuration.PrefixValue ? prefix : null;
+
+            _entry.Values.SetValue(TargetCulture, $"{valuePrefix}{Translation}");
+
+            return prefix.IsNullOrEmpty()
+                   || ((!configuration.PrefixNeutralComment || UpdateCommentPrefix(_entry.NeutralLanguage.CultureKey, prefix))
+                       && (!configuration.PrefixTargetComment) || UpdateCommentPrefix(TargetCulture, prefix));
         }
 
-        public bool UpdateComment(string? prefix, bool useNeutralLanguage, bool useTargetLanguage)
+        private bool UpdateCommentPrefix(CultureKey cultureKey, string prefix)
         {
-            if (string.IsNullOrEmpty(prefix))
-                return true;
-            if (!useNeutralLanguage && !useTargetLanguage)
+            if (!_entry.CanEdit(cultureKey))
+                return false;
+
+            var existingComment = _entry.Comments.GetValue(cultureKey);
+
+            if (existingComment?.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) is true)
                 return true;
 
-            var error = false;
-            if (useNeutralLanguage)
-            {
-                error |= !Apply(_entry.NeutralLanguage.CultureKey);
-            }
-            if (useTargetLanguage)
-            {
-                error |= !Apply(TargetCulture);
-            }
+            _entry.Comments.SetValue(cultureKey, $"{prefix}{existingComment}");
 
-            return !error;
-
-            bool Apply(CultureKey cultureKey)
-            {
-                if (!_entry.CanEdit(cultureKey))
-                    return false;
-                var existingComment = _entry.Comments.GetValue(cultureKey);
-                _entry.Comments.SetValue(cultureKey, prefix + existingComment);
-                return true;
-            }
+            return true;
         }
 
         private static ICollectionView CreateOrderedResults(IList results)
