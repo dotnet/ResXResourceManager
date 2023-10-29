@@ -12,7 +12,7 @@
 
     public class NeutralCultureCountryOverrides
     {
-        private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,";
+        private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,fy=fy,";
 
         private static readonly IEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>> _comparer = new DelegateEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>>(item => item.Key);
         private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
