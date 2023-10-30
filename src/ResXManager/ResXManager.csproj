@@ -3,6 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net472</TargetFramework>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <Nullable>enable</Nullable>
     <PublishUrl>publish\</PublishUrl>
@@ -28,7 +29,8 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors.</Copyright>
     <Version>0.0.0.0</Version>
     <FileVersion>0.0.0.0</FileVersion>
-  </PropertyGroup>
+  
+</PropertyGroup>
   <PropertyGroup Condition="Exists('$(USERPROFILE)\tom-englert.de')">
     <DefineConstants>$(DefineConstants);TEST_L10N</DefineConstants>
   </PropertyGroup>
@@ -70,11 +72,11 @@
     <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.8.10" />
     <PackageReference Include="WindowsAPICodePack-Shell" PrivateAssets="All" Version="1.1.1" />
   </ItemGroup>
-  <Target Name="AfterPublish">
+  <Target Name="CompressFiles" AfterTargets="Publish">
     <ItemGroup>
       <ZipFiles Include="$(PublishDir)*.*" />
     </ItemGroup>
-    <MakeDir Directories="$(SolutionDir)Deploy" />
-    <Exec Command="PowerShell -command Compress-Archive -Path '$(PublishDir)Application Files',@(ZipFiles, ',') -DestinationPath '$(SolutionDir)Deploy\Publish.zip' -Force" />
+    <MakeDir Directories="$(ProjectDir)..\Deploy" />
+    <Exec Command="PowerShell -command Compress-Archive -Path '$(ProjectDir)$(PublishDir)',@(ZipFiles, ',') -DestinationPath '$(ProjectDir)..\Deploy\Publish.zip' -Force" />
   </Target>
 </Project>
