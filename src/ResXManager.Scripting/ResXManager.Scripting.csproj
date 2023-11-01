@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType Condition="'$(TargetFramework)' != 'net472'">Exe</OutputType>
-    <TargetFrameworks>net472;net6.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Sample.ps1" />
@@ -35,7 +35,7 @@
   </Target>
   <Target Name="_CompressFiles" Condition="'$(Configuration)'=='Release' AND '$(IsInnerBuild)'!='true'" AfterTargets="Build" Outputs="..\Deploy\Scripting.zip">
     <MakeDir Directories="..\Deploy" />
-    <ZipDirectory SourceDirectory="$(BaseOutputPath)$(Configuration)" DestinationFile="..\Deploy\Scripting.zip" Overwrite="true" />
+    <ZipDirectory SourceDirectory="$(OutputPath)" DestinationFile="..\Deploy\Scripting.zip" Overwrite="true" />
     <Message Text="Updated ..\Deploy\Scripting.zip" />
   </Target>
 </Project>
