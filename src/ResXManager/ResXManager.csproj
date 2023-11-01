@@ -219,9 +219,9 @@
     <PackageReference Include="ILMerge.Fody" PrivateAssets="all" Version="1.24.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.1.0" />
-    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.9.1" />
-    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.9.1" />
-    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.9.1" />
+    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.10.0" />
+    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.10.0" />
+    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.10.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" PrivateAssets="All" Version="1.1.1" />
   </ItemGroup>
   <ItemGroup />

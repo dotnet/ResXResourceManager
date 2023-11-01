@@ -17,7 +17,9 @@ using VerifyXunit;
 
 using Xunit;
 
+// ReSharper disable InconsistentNaming
 #pragma warning disable CA1707 // Identifiers should not contain underscores
+#pragma warning disable CA1034 // Nested types should not be visible
 
 public static class CultureToImageSourceConverterTests
 {
