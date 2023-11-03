@@ -8,17 +8,22 @@
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              xmlns:visuals="clr-namespace:ResXManager.View.Visuals"
              xmlns:composition="urn:TomsToolbox.Composition"
+             xmlns:controls="clr-namespace:ResXManager.View.Controls"
              FocusManager.FocusedElement="{Binding ElementName=ComboBox}"
              d:DataContext="{d:DesignInstance visuals:LanguageSelectionBoxViewModel}">
   <StackPanel Margin="10,20" Width="300">
     <TextBlock Text="{x:Static properties:Resources.NewLanguageIdPrompt}" TextWrapping="Wrap" />
     <Decorator Height="10" />
-    <ComboBox x:Name="ComboBox" IsEditable="True"
-              ItemsSource="{Binding Languages}"
-              HorizontalAlignment="Stretch"
-              SelectedItem="{Binding SelectedLanguage, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-              Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
-      <ComboBox.ItemTemplate>
+    <controls:AutoSuggestBox x:Name="ComboBox" IsEditable="True"
+                ItemsSource="{Binding Languages}"
+                HorizontalAlignment="Stretch"
+                SelectedItem="{Binding SelectedLanguage, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}"
+                IsTextSearchEnabled="False"
+                StaysOpenOnEdit="True"
+                Text="{Binding LanguageFilter, UpdateSourceTrigger=PropertyChanged}"
+    >
+      <controls:AutoSuggestBox.ItemTemplate>
         <DataTemplate>
           <StackPanel Orientation="Horizontal">
             <Image Source="{Binding Converter={composition:Import converters:CultureToImageSourceConverter}}" />
@@ -28,7 +33,14 @@
             <TextBlock Text="{Binding DisplayName}" />
           </StackPanel>
         </DataTemplate>
-      </ComboBox.ItemTemplate>
-    </ComboBox>
+      </controls:AutoSuggestBox.ItemTemplate>
+
+      <controls:AutoSuggestBox.ItemsPanel>
+        <ItemsPanelTemplate>
+          <VirtualizingStackPanel />
+        </ItemsPanelTemplate>
+      </controls:AutoSuggestBox.ItemsPanel>
+
+    </controls:AutoSuggestBox>
   </StackPanel>
 </UserControl>
