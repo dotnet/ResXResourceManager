@@ -21,7 +21,6 @@
               StaysOpenOnEdit="True"
               Loaded="ComboBox_Loaded"
               DropDownOpened="ComboBox_OnDropDownOpened"
-              DropDownClosed="ComboBox_OnDropDownClosed"
               Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
       <ComboBox.ItemTemplate>
         <DataTemplate>
