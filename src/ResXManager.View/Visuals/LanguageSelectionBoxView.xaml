@@ -8,15 +8,19 @@
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              xmlns:visuals="clr-namespace:ResXManager.View.Visuals"
              xmlns:composition="urn:TomsToolbox.Composition"
-             FocusManager.FocusedElement="{Binding ElementName=ComboBox}"
              d:DataContext="{d:DesignInstance visuals:LanguageSelectionBoxViewModel}">
-  <StackPanel Margin="10,20" Width="300">
+  <StackPanel Margin="10,20" Width="300" FocusManager.FocusedElement="{Binding ElementName=ComboBox}">
     <TextBlock Text="{x:Static properties:Resources.NewLanguageIdPrompt}" TextWrapping="Wrap" />
     <Decorator Height="10" />
     <ComboBox x:Name="ComboBox" IsEditable="True"
               ItemsSource="{Binding Languages}"
               HorizontalAlignment="Stretch"
               SelectedItem="{Binding SelectedLanguage, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+              Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+              IsTextSearchEnabled="False"
+              StaysOpenOnEdit="True"
+              Loaded="ComboBox_Loaded"
+              DropDownOpened="ComboBox_OnDropDownOpened"
               Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
       <ComboBox.ItemTemplate>
         <DataTemplate>
@@ -29,6 +33,11 @@
           </StackPanel>
         </DataTemplate>
       </ComboBox.ItemTemplate>
+      <ComboBox.ItemsPanel>
+        <ItemsPanelTemplate>
+          <VirtualizingStackPanel />
+        </ItemsPanelTemplate>
+      </ComboBox.ItemsPanel>
     </ComboBox>
   </StackPanel>
 </UserControl>
