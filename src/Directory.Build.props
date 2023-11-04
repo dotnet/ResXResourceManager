@@ -14,7 +14,8 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <AnalysisLevel>latest-All</AnalysisLevel>
+    <AnalysisMode>All</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <NoWarn>MSB3277;CVSTBLD002;NU1608;CS8002;VSIXCompatibility1001</NoWarn>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
