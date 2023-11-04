@@ -51,7 +51,6 @@ stages:
         msbuildArguments: '/target:publish'
         logProjectEvents: true
         createLogFile: true
-      condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
 
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(build.artifactstagingdirectory)'

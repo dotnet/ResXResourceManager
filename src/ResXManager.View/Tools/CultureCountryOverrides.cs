@@ -32,7 +32,7 @@
             _configuration.PropertyChanged += Configuration_PropertyChanged;
         }
 
-        private void Configuration_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Configuration_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(IConfiguration.CultureCountyOverrides))
             {
