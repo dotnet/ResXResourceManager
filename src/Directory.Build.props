@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
-    <Version>1.78.0.0</Version>
+    <Version>1.79.0.0</Version>
     <Company>tom-englert.de</Company>
     <Product>ResXManager</Product>
     <Copyright>Copyright (c) .NET Foundation and Contributors.</Copyright>
@@ -14,10 +14,15 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <AnalysisLevel>latest-All</AnalysisLevel>
+    <AnalysisMode>All</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
-    <NoWarn>MSB3277;CVSTBLD002;NU1608;CS8002;VSIXCompatibility1001</NoWarn>
-    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <NoWarn>CVSTBLD002;NU1608;CS8002;VSIXCompatibility1001</NoWarn>
+    <SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)</SolutionDir>
+  </PropertyGroup>
+
+  <PropertyGroup Label="License">
+    <IsDeploymentTarget>true</IsDeploymentTarget>
   </PropertyGroup>
 
   <ItemGroup>

@@ -112,7 +112,12 @@
                                 Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
                       <StackPanel Orientation="Horizontal" MinWidth="40">
                         <TextBlock Text=" &quot;" VerticalAlignment="Center" />
-                        <TextBox Text="{Binding Configuration.TranslationPrefix}" BorderThickness="0" Padding="-1" Background="Transparent" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" VerticalAlignment="Center" />
+                        <TextBox Text="{Binding Configuration.TranslationPrefix}"
+                                 IsEnabled="{Binding Configuration.PrefixTranslations}"
+                                 BorderThickness="0"
+                                 Padding="-1"
+                                 Background="Transparent"
+                                 Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" VerticalAlignment="Center" />
                         <TextBlock Text="&quot;" VerticalAlignment="Center" />
                       </StackPanel>
                     </StackPanel>

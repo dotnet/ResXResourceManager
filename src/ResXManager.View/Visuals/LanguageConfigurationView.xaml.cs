@@ -22,9 +22,13 @@
     [DataTemplate(typeof(LanguageConfigurationViewModel))]
     public partial class LanguageConfigurationView
     {
+        private readonly CultureCountryOverrides _cultureCountryOverrides;
+
         [ImportingConstructor]
-        public LanguageConfigurationView(IExportProvider exportProvider)
+        public LanguageConfigurationView(IExportProvider exportProvider, CultureCountryOverrides cultureCountryOverrides)
         {
+            _cultureCountryOverrides = cultureCountryOverrides;
+
             try
             {
                 this.SetExportProvider(exportProvider);
@@ -39,13 +43,13 @@
 
         private void Language_MouseDoubleClick(object? sender, MouseButtonEventArgs e)
         {
-            var specificCulture = (sender as FrameworkElement)?.DataContext as CultureInfo;
-            if (specificCulture == null)
+            if ((sender as FrameworkElement)?.DataContext is not CultureInfo specificCulture)
                 return;
 
             var neutralCulture = specificCulture.Parent;
 
-            NeutralCultureCountryOverrides.Default[neutralCulture] = specificCulture;
+            _cultureCountryOverrides[neutralCulture] = specificCulture;
+
             ListBox.Items.Refresh();
         }
     }

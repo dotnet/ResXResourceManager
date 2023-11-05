@@ -1,5 +1,6 @@
 namespace ResXManager.View.Visuals
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -56,24 +57,34 @@ namespace ResXManager.View.Visuals
             set => _translation = value;
         }
 
-        public bool Apply(string? valuePrefix, string? commentPrefix)
+        public bool Apply()
         {
             if (!_entry.CanEdit(TargetCulture))
                 return false;
 
-            _entry.Values.SetValue(TargetCulture, valuePrefix + Translation);
+            var configuration = _entry.Container.Container.Configuration;
 
-            if (commentPrefix == null)
-                return true;
+            var prefix = configuration.EffectiveTranslationPrefix;
+            var valuePrefix = configuration.PrefixValue ? prefix : null;
 
-            var existingComment = _entry.Comment;
-            if (existingComment != null && existingComment.StartsWith(commentPrefix, System.StringComparison.Ordinal))
-                return true;
+            _entry.Values.SetValue(TargetCulture, $"{valuePrefix}{Translation}");
 
-            if (!_entry.CanEdit(_entry.NeutralLanguage.CultureKey))
+            return prefix.IsNullOrEmpty()
+                   || ((!configuration.PrefixNeutralComment || UpdateCommentPrefix(_entry.NeutralLanguage.CultureKey, prefix))
+                       && (!configuration.PrefixTargetComment) || UpdateCommentPrefix(TargetCulture, prefix));
+        }
+
+        private bool UpdateCommentPrefix(CultureKey cultureKey, string prefix)
+        {
+            if (!_entry.CanEdit(cultureKey))
                 return false;
 
-            _entry.Comments.SetValue(_entry.NeutralLanguage.CultureKey, commentPrefix + existingComment);
+            var existingComment = _entry.Comments.GetValue(cultureKey);
+
+            if (existingComment?.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) is true)
+                return true;
+
+            _entry.Comments.SetValue(cultureKey, $"{prefix}{existingComment}");
 
             return true;
         }

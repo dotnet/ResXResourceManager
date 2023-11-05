@@ -5,75 +5,6 @@
     using System.Globalization;
 
     using ResXManager.Infrastructure;
-    using ResXManager.Model.Properties;
-
-    public enum DuplicateKeyHandling
-    {
-        [LocalizedDisplayName(StringResourceKey.DuplicateKeyHandling_Rename)]
-        Rename,
-        [LocalizedDisplayName(StringResourceKey.DuplicateKeyHandling_Fail)]
-        Fail
-    }
-
-    [Flags]
-    public enum PrefixFieldType
-    {
-        [LocalizedDisplayName(StringResourceKey.PrefixFieldTypeValue)]
-        Value = 1,
-        [LocalizedDisplayName(StringResourceKey.PrefixFieldTypeComment)]
-        Comment = 2,
-        [LocalizedDisplayName(StringResourceKey.PrefixFieldTypeBoth)]
-        Both = Value | Comment
-    }
-
-    public interface IConfiguration : INotifyPropertyChanged
-    {
-        bool IsScopeSupported { get; }
-
-        ConfigurationScope Scope { get; }
-
-        CodeReferenceConfiguration CodeReferences { get; }
-
-        bool AutoCreateNewLanguageFiles { get; }
-
-        string? FileExclusionFilter { get; }
-
-        bool SaveFilesImmediatelyUponChange { get; }
-
-        bool RemoveEmptyEntries { get; }
-
-        CultureInfo NeutralResourcesLanguage { get; }
-
-        StringComparison? EffectiveResXSortingComparison { get; }
-
-        DuplicateKeyHandling DuplicateKeyHandling { get; }
-
-        ResourceTableEntryRules Rules { get; }
-
-        bool SortFileContentOnSave { get; }
-
-        bool ConfirmAddLanguageFile { get; }
-
-        StringComparison ResXSortingComparison { get; }
-
-        public bool PrefixTranslations { get; }
-
-        public string? TranslationPrefix { get; }
-
-        public string? EffectiveTranslationPrefix { get; }
-
-        public PrefixFieldType PrefixFieldType { get; }
-
-        public ExcelExportMode ExcelExportMode { get; }
-
-        bool ShowPerformanceTraces { get; }
-
-        bool EnableXlifSync { get; set; }
-
-        string? TranslatorConfiguration { get; set; }
-
-        bool AutoApplyExistingTranslations { get; }
-    }
 
     public abstract class Configuration : ConfigurationBase, IConfiguration
     {
@@ -124,6 +55,24 @@
         [DefaultValue(PrefixFieldType.Value)]
         public PrefixFieldType PrefixFieldType { get; set; }
 
+        public bool PrefixValue
+        {
+            get => PrefixFieldType.IsFlagSet(PrefixFieldType.Value);
+            set => PrefixFieldType = PrefixFieldType.WithFlag(PrefixFieldType.Value, value);
+        }
+
+        public bool PrefixNeutralComment
+        {
+            get => PrefixFieldType.IsFlagSet(PrefixFieldType.Comment);
+            set => PrefixFieldType = PrefixFieldType.WithFlag(PrefixFieldType.Comment, value);
+        }
+
+        public bool PrefixTargetComment
+        {
+            get => PrefixFieldType.IsFlagSet(PrefixFieldType.TargetComment);
+            set => PrefixFieldType = PrefixFieldType.WithFlag(PrefixFieldType.TargetComment, value);
+        }
+
         [DefaultValue(default(ExcelExportMode))]
         public ExcelExportMode ExcelExportMode { get; set; }
 
@@ -145,5 +94,8 @@
 
         [DefaultValue(true)]
         public bool AutoApplyExistingTranslations { get; set; }
+
+        [DefaultValue("")]
+        public string? CultureCountyOverrides { get; set; }
     }
 }

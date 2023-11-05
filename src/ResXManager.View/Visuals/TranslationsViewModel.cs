@@ -121,14 +121,9 @@
 
         private void Apply(IEnumerable<ITranslationItem> items)
         {
-            var prefix = Configuration.EffectiveTranslationPrefix;
-
-            var valuePrefix = Configuration.PrefixFieldType.HasFlag(PrefixFieldType.Value) ? prefix : null;
-            var commentPrefix = Configuration.PrefixFieldType.HasFlag(PrefixFieldType.Comment) ? prefix : null;
-
             foreach (var item in items.Where(item => !string.IsNullOrEmpty(item.Translation)).ToArray())
             {
-                if (!item.Apply(valuePrefix, commentPrefix))
+                if (!item.Apply())
                     break;
 
                 Items.Remove(item);
@@ -221,7 +216,7 @@
                     var itemsWithTranslations = allEntries.AsParallel()
                         .Where(item => item.TargetCulture == targetCulture)
                         .Where(item => HasTranslation(item.Target))
-                        .GroupBy(item => item.Source!)
+                        .GroupBy(item => item.Source)
                         .ToDictionary(item => item.Key);
 
                     itemsToTranslate.AsParallel()

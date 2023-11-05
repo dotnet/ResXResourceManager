@@ -1,4 +1,12 @@
-﻿1.78
+﻿1.79
+- #589: add Greek Question Mark to NormalizePunctuation
+- #582: Add configuration option to append translation prefix to comment of target language(s)
+- #555: Flag for Frisian language
+- #599: Scripting module is not Netstandard2.0, so it can run in any environment.
+- #264: Improve UX when selecting a new language in the add language dialog
+- #596: Add "Trim translations" command 
+
+1.78
 - Add translator: Google Lite
 - Fix empty lines generation during xlf synchronization (PR #519)
 

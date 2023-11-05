@@ -2,24 +2,47 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
+    using ResXManager.Model;
     using ResXManager.View.Properties;
 
     using TomsToolbox.Essentials;
 
-    public class NeutralCultureCountryOverrides
+    [Export]
+    public class CultureCountryOverrides
     {
-        private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,";
+        private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,fy=fy,";
 
         private static readonly IEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>> _comparer = new DelegateEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>>(item => item.Key);
-        private readonly Dictionary<CultureInfo, CultureInfo> _overrides = new(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
-        public static readonly NeutralCultureCountryOverrides Default = new();
+        private static readonly IEnumerable<KeyValuePair<CultureInfo, CultureInfo>> _defaultOverrides = ReadSettings(DefaultOverrides);
 
-        private NeutralCultureCountryOverrides()
+        private readonly IConfiguration _configuration;
+        private Dictionary<CultureInfo, CultureInfo> _overrides;
+
+        [ImportingConstructor]
+        public CultureCountryOverrides(IConfiguration configuration)
         {
+            _configuration = configuration;
+            _overrides = LoadOverrides();
+            _configuration.PropertyChanged += Configuration_PropertyChanged;
+        }
+
+        private void Configuration_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IConfiguration.CultureCountyOverrides))
+            {
+                _overrides = LoadOverrides();
+            }
+        }
+
+        private Dictionary<CultureInfo, CultureInfo> LoadOverrides()
+        {
+            return new Dictionary<CultureInfo, CultureInfo>(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
         }
 
 #pragma warning disable CA1043 // Use Integral Or String Argument For Indexers
@@ -29,10 +52,13 @@
         {
             get
             {
-                if (!_overrides.TryGetValue(neutralCulture, out var specificCulture))
-                {
-                    specificCulture = GetDefaultSpecificCulture(neutralCulture);
-                }
+                if (_overrides.TryGetValue(neutralCulture, out var specificCulture))
+                    return specificCulture;
+
+                if (!neutralCulture.IsNeutralCulture)
+                    return specificCulture;
+
+                specificCulture = GetDefaultSpecificCulture(neutralCulture);
 
                 return specificCulture;
             }
@@ -69,11 +95,19 @@
             return specificCulture;
         }
 
-        private static IEnumerable<KeyValuePair<CultureInfo, CultureInfo>> ReadSettings()
+        private IEnumerable<KeyValuePair<CultureInfo, CultureInfo>> ReadSettings()
         {
-            var neutralCultureCountryOverrides = (DefaultOverrides + Settings.Default.NeutralCultureCountyOverrides).Split(',');
+            var settings = DefaultOverrides + _configuration.CultureCountyOverrides;
 
-            foreach (var item in neutralCultureCountryOverrides)
+            foreach (var keyValuePair in ReadSettings(settings))
+                yield return keyValuePair;
+        }
+
+        private static IEnumerable<KeyValuePair<CultureInfo, CultureInfo>> ReadSettings(string settings)
+        {
+            var cultureCountryOverrides = settings.Split(',');
+
+            foreach (var item in cultureCountryOverrides)
             {
                 CultureInfo neutralCulture;
                 CultureInfo specificCulture;
@@ -98,10 +132,13 @@
 
         private void WriteSettings()
         {
-            var items = _overrides.Select(item => string.Join("=", item.Key, item.Value));
+            var items = _overrides
+                .Except(_defaultOverrides)
+                .Select(item => string.Join("=", item.Key, item.Value));
+
             var settings = string.Join(",", items);
 
-            Settings.Default.NeutralCultureCountyOverrides = settings;
+            _configuration.CultureCountyOverrides = settings;
         }
     }
 }

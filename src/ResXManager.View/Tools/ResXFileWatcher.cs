@@ -49,7 +49,7 @@
                 return;
             }
 
-            var changedFiles = GetChangedFiles();
+            var changedFiles = FetchChangedFiles();
             if (changedFiles.Count == 0)
             {
                 return;

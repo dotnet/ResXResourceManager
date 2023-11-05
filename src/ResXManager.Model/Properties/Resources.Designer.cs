@@ -278,11 +278,11 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Both"
+        ///   Looks up a localized string similar to "All"
         /// </summary>
-        public static string PrefixFieldTypeBoth {
+        public static string PrefixFieldTypeAll {
             get {
-                return ResourceManager.GetString("PrefixFieldTypeBoth", resourceCulture) ?? string.Empty;
+                return ResourceManager.GetString("PrefixFieldTypeAll", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -296,11 +296,29 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Target Comment"
+        /// </summary>
+        public static string PrefixFieldTypeTargetComment {
+            get {
+                return ResourceManager.GetString("PrefixFieldTypeTargetComment", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Value"
         /// </summary>
         public static string PrefixFieldTypeValue {
             get {
                 return ResourceManager.GetString("PrefixFieldTypeValue", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Value and Neutral Comment"
+        /// </summary>
+        public static string PrefixFieldTypeValueAndNeutralComment {
+            get {
+                return ResourceManager.GetString("PrefixFieldTypeValueAndNeutralComment", resourceCulture) ?? string.Empty;
             }
         }
 
@@ -651,17 +669,25 @@ namespace ResXManager.Model.Properties {
         /// </summary>
         NotAllLanguagesAreEditable,
         /// <summary>
-        ///   Looks up a localized string similar to Both.
+        ///   Looks up a localized string similar to All.
         /// </summary>
-        PrefixFieldTypeBoth,
+        PrefixFieldTypeAll,
         /// <summary>
         ///   Looks up a localized string similar to Comment.
         /// </summary>
         PrefixFieldTypeComment,
         /// <summary>
+        ///   Looks up a localized string similar to Target Comment.
+        /// </summary>
+        PrefixFieldTypeTargetComment,
+        /// <summary>
         ///   Looks up a localized string similar to Value.
         /// </summary>
         PrefixFieldTypeValue,
+        /// <summary>
+        ///   Looks up a localized string similar to Value and Neutral Comment.
+        /// </summary>
+        PrefixFieldTypeValueAndNeutralComment,
         /// <summary>
         ///   Looks up a localized string similar to Item is invariant but contains a value.
         /// </summary>

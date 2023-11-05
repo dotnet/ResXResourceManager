@@ -28,13 +28,14 @@
             _files = Initialize();
         }
 
+        private XElement Root => _document.Root ?? throw new InvalidOperationException("Invalid document");
 
         private List<XlfFile> Initialize()
         {
-            if (_document.Root.GetAttribute("version") != "1.2")
+            if (Root.GetAttribute("version") != "1.2")
                 throw new InvalidOperationException($"Only XLIFF version 1.2 is supported: '{FilePath}'");
 
-            return _document.Root.Elements(FileElement)
+            return Root.Elements(FileElement)
                 .Select(file => new XlfFile(this, file))
                 .ToList();
         }
@@ -65,7 +66,7 @@
                 new XAttribute(OriginalAttribute, original),
                 new XElement(BodyElement));
 
-            _document.Root.Add(fileElement);
+            Root.Add(fileElement);
 
             var file = new XlfFile(this, fileElement);
 
@@ -83,7 +84,7 @@
         {
             _document = TryLoadFromFile() ?? CreateEmpty();
 
-            _files = _document.Root.Elements(FileElement).Select(file => new XlfFile(this, file)).ToList();
+            _files = Root.Elements(FileElement).Select(file => new XlfFile(this, file)).ToList();
 
             return this;
         }

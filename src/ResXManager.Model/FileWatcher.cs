@@ -2,14 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.IO;
 
     using TomsToolbox.Essentials;
 
     public abstract class FileWatcher : IDisposable
     {
-        private ImmutableHashSet<string> _changedFiles = ImmutableHashSet<string>.Empty.WithComparer(StringComparer.OrdinalIgnoreCase);
+        private readonly object _semaphore = new ();
+        private HashSet<string> _changedFiles = new(StringComparer.OrdinalIgnoreCase);
 
         private readonly FileSystemWatcher _watcher = new()
         {
@@ -43,28 +43,29 @@
 
         protected abstract bool IncludeFile(string fileName);
 
-        protected ICollection<string> GetChangedFiles()
+        protected ICollection<string> FetchChangedFiles()
         {
-            var changedFiles = default(ICollection<string>);
+            ICollection<string> changedFiles;
 
-            ImmutableInterlocked.Update(ref _changedFiles, collection =>
+            lock (_semaphore)
             {
-                changedFiles = collection;
-                return collection.Clear();
-            });
+                changedFiles = _changedFiles;
+                _changedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            }
 
-#pragma warning disable CA1508 // Avoid dead conditional code => changed files is set in lambda above.
-            return changedFiles ?? Array.Empty<string>();
-#pragma warning restore CA1508 // Avoid dead conditional code
+            return changedFiles;
         }
 
         private void File_Changed(object? sender, FileSystemEventArgs e)
         {
-            if (!IncludeFile(e.Name))
+            var fileName = e.Name;
+            if (fileName is null || !IncludeFile(fileName))
                 return;
 
-            ImmutableInterlocked.Update(ref _changedFiles, (collection, item) => collection.Add(item), e.FullPath);
-
+            lock (_semaphore)
+            {
+                _changedFiles.Add(e.FullPath);
+            }
             OnFilesChanged();
         }
 

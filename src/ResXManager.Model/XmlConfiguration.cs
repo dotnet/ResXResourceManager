@@ -80,7 +80,10 @@
                 document = new XDocument(root);
             }
 
-            _document = document ?? new XDocument();
+            if (document?.Root is null)
+                throw new InvalidOperationException("Invalid document");
+
+            _document = document;
             _root = _document.Root;
             _keyName = XName.Get("Key");
             _valueName = XName.Get("Value", @namespace.NamespaceName);

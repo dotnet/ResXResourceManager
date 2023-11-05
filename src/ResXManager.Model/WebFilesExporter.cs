@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Composition;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -69,6 +70,7 @@
                     if (neutralLanguage == null)
                         continue;
 
+#pragma warning disable CA1305 // Specify IFormatProvider
                     typescript.AppendLine($@"export class {entityName} {{");
 
                     foreach (var node in neutralLanguage.GetNodes())
