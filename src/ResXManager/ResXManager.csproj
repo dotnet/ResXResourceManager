@@ -38,7 +38,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <Target Name="CompressFiles" AfterTargets="Publish">
-    <MakeDir Directories="$(ProjectDir)..\Deploy" />
-    <ZipDirectory DestinationFile="$(ProjectDir)..\Deploy\Publish.zip" Overwrite="True" SourceDirectory="$(ClickOncePublishDir)" />
+  <Target Name="CompressFiles" AfterTargets="Publish" Condition="'$(Configuration)'=='Release'" Outputs="$(SolutionDir)Deploy\Publish.zip">
+    <MakeDir Directories="$(SolutionDir)Deploy" />
+    <ZipDirectory DestinationFile="$(SolutionDir)Deploy\Publish.zip" Overwrite="True" SourceDirectory="$(ClickOncePublishDir)" />
   </Target></Project>

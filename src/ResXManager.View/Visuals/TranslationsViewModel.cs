@@ -216,7 +216,7 @@
                     var itemsWithTranslations = allEntries.AsParallel()
                         .Where(item => item.TargetCulture == targetCulture)
                         .Where(item => HasTranslation(item.Target))
-                        .GroupBy(item => item.Source!)
+                        .GroupBy(item => item.Source)
                         .ToDictionary(item => item.Key);
 
                     itemsToTranslate.AsParallel()

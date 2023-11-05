@@ -94,7 +94,7 @@
                 .Descendants(TransUnitElement)
                 .GroupBy(element => element.GetId())
                 .Where(group => !string.IsNullOrEmpty(group.Key) && group.Any())
-                .ToDictionary(group => group.Key!, group => group.First());
+                .ToDictionary(group => group.Key, group => group.First());
 
             var tableEntriesById = entity.Entries.ToDictionary(entry => entry.Key);
 

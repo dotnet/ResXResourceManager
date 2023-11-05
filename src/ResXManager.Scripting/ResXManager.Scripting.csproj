@@ -34,8 +34,8 @@
     <RemoveDir Directories="@(ExtraDirs)" />
   </Target>
   <Target Name="_CompressFiles" Condition="'$(Configuration)'=='Release' AND '$(IsInnerBuild)'!='true'" AfterTargets="Build" Outputs="..\Deploy\Scripting.zip">
-    <MakeDir Directories="..\Deploy" />
-    <ZipDirectory SourceDirectory="$(OutputPath)" DestinationFile="..\Deploy\Scripting.zip" Overwrite="true" />
-    <Message Text="Updated ..\Deploy\Scripting.zip" />
+    <MakeDir Directories="$(SolutionDir)Deploy" />
+    <ZipDirectory SourceDirectory="$(OutputPath)" DestinationFile="$(SolutionDir)Deploy\Scripting.zip" Overwrite="true" />
+    <Message Text="Updated $(SolutionDir)Deploy\Scripting.zip" />
   </Target>
 </Project>
