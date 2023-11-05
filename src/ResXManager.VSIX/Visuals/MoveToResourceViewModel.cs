@@ -6,7 +6,6 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Text;
 
     using PropertyChanged;
@@ -20,7 +19,9 @@
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
 
-    internal sealed class MoveToResourceViewModel : INotifyPropertyChanged, IDataErrorInfo, IMoveToResourceViewModel
+    using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribute;
+
+    internal sealed partial class MoveToResourceViewModel : INotifyPropertyChanged, IDataErrorInfo, IMoveToResourceViewModel
     {
         private readonly string _extension;
 
@@ -46,6 +47,8 @@
             Keys = new[] { CreateKey(text, null, null), CreateKey(text, null, functionName), CreateKey(text, className ?? fileName, functionName) }.Distinct().ToArray();
             Key = Keys.Skip(SelectedKeyIndex).FirstOrDefault() ?? Keys.FirstOrDefault();
             Value = text;
+
+            PropertyChanged += ((_, _) => Update());
         }
 
         private static string BaseFileName(string fileName)
@@ -62,25 +65,25 @@
 
         public ICollection<ResourceEntity> ResourceEntities { get; }
 
-        [System.ComponentModel.DataAnnotations.Required]
+        [Required]
         public ResourceEntity? SelectedResourceEntity { get; set; }
 
         public ResourceTableEntry? SelectedResourceEntry { get; set; }
 
         public ICollection<string> Keys { get; }
 
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = false)]
+        [Required(AllowEmptyStrings = false)]
         [DependsOn(nameof(ReuseExisting), nameof(SelectedResourceEntity))] // must raise a change event for key, key validation is different when these change
         public string? Key { get; set; }
 
         public ICollection<Replacement> Replacements { get; }
 
-        [System.ComponentModel.DataAnnotations.Required]
+        [Required]
         public Replacement? SelectedReplacement { get; set; }
 
         public string? ReplacementValue => SelectedReplacement?.Value;
 
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = false)]
+        [Required(AllowEmptyStrings = false)]
         public string? Value { get; set; }
 
         public string? Comment { get; set; }
@@ -178,14 +181,6 @@
         private static bool IsCharValidForSymbolStart(char c)
         {
             return (c == '_') || char.IsLetter(c);
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            Update();
         }
 
         string? IDataErrorInfo.this[string? columnName] => GetKeyErrors(columnName);
