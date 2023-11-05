@@ -22,7 +22,6 @@
     <PackageReference Include="Fody" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" />
-    <PackageReference Include="System.Collections.Immutable" />
     <PackageReference Include="System.ComponentModel.Annotations" />
     <PackageReference Include="System.Composition.AttributedModel" />
     <PackageReference Include="Throttle.Fody" PrivateAssets="all" />

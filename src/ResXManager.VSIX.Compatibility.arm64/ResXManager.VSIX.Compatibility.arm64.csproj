@@ -8,7 +8,7 @@
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all" />
     <PackageReference Include="Community.VisualStudio.Toolkit" />
     <PackageReference Include="Microsoft.VisualStudio.SDK" />
-    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Newtonsoft.Json" VersionOverride="[13.0.1]" />
     <PackageReference Include="Fody" PrivateAssets="all" />
     <PackageReference Include="Throttle.Fody" PrivateAssets="all" />
   </ItemGroup>
