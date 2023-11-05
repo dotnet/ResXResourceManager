@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <UseWPF>true</UseWPF>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFrameworks>net472;net7.0-windows</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\Key.snk">
