@@ -30,15 +30,15 @@
     <PackageVersion Include="System.ServiceModel.Primitives" Version="4.10.2" />
     <PackageVersion Include="System.ServiceModel.Http" Version="4.10.2" />
     <PackageVersion Include="Throttle.Fody" Version="1.7.0" />
-    <PackageVersion Include="TomsToolbox.Composition" Version="2.8.10" />
-    <PackageVersion Include="TomsToolbox.Composition.Ninject" Version="2.8.10" />
-    <PackageVersion Include="TomsToolbox.Essentials" Version="2.8.10" />
-    <PackageVersion Include="TomsToolbox.ObservableCollections" Version="2.8.10" />
-    <PackageVersion Include="TomsToolbox.Wpf" Version="2.8.10" />
-    <PackageVersion Include="TomsToolbox.Wpf.Composition" Version="2.8.10" />
-    <PackageVersion Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.8.10" />
-    <PackageVersion Include="TomsToolbox.Wpf.Composition.Styles" Version="2.8.10" />
-    <PackageVersion Include="TomsToolbox.Wpf.Styles" Version="2.8.10" />
+    <PackageVersion Include="TomsToolbox.Composition" Version="2.10.0" />
+    <PackageVersion Include="TomsToolbox.Composition.Ninject" Version="2.10.0" />
+    <PackageVersion Include="TomsToolbox.Essentials" Version="2.10.0" />
+    <PackageVersion Include="TomsToolbox.ObservableCollections" Version="2.10.0" />
+    <PackageVersion Include="TomsToolbox.Wpf" Version="2.10.0" />
+    <PackageVersion Include="TomsToolbox.Wpf.Composition" Version="2.10.0" />
+    <PackageVersion Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.10.0" />
+    <PackageVersion Include="TomsToolbox.Wpf.Composition.Styles" Version="2.10.0" />
+    <PackageVersion Include="TomsToolbox.Wpf.Styles" Version="2.10.0" />
     <PackageVersion Include="Verify.Xunit" Version="20.8.0" />
     <PackageVersion Include="VSIX-SdkProjectAdapter" Version="3.0.0" />
     <PackageVersion Include="WindowsAPICodePack-Shell" Version="1.1.1" />
