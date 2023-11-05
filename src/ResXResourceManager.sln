@@ -26,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.VSIX", "ResXMan
 		{330FADF0-80F3-4B2A-8F11-79F528AFA1DD} = {330FADF0-80F3-4B2A-8F11-79F528AFA1DD}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResXManager", "ResXManager\ResXManager.csproj", "{40BE4188-6658-4DAC-B44E-DE4B7D0EE3A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager", "ResXManager\ResXManager.csproj", "{40BE4188-6658-4DAC-B44E-DE4B7D0EE3A2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.Translators", "ResXManager.Translators\ResXManager.Translators.csproj", "{D8B0B04F-4273-45DB-AE2D-5A91C89E1225}"
 EndProject

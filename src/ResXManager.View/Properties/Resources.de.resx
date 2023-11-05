@@ -479,4 +479,7 @@ Ihr ResXManager-Team.
   <data name="AutoApplyExistingTranslations" xml:space="preserve">
     <value>Automatisch vorhandene Übersetzungen für übereinstimmende Zeichenfolgen hinzufügen</value>
   </data>
+  <data name="TrimToolTip" xml:space="preserve">
+    <value>Äußere Leerzeichen in ausgewählten Zellen entfernen (Strg+T)</value>
+  </data>
 </root>

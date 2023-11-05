@@ -97,6 +97,8 @@
 
         public ICommand PasteCommand => new DelegateCommand<DataGrid>(CanPaste, Paste);
 
+        public ICommand TrimCommand => new DelegateCommand<DataGrid>(CanTrim, Trim);
+
         public ICommand ExportExcelCommand => new DelegateCommand<IExportParameters>(CanExportExcel, ExportExcel);
 
         public ICommand ImportExcelCommand => new DelegateCommand<string>(ImportExcel);
@@ -359,6 +361,57 @@
 
             if (!dataGrid.PasteCells(table))
                 throw new ImportException(Resources.PasteSelectionSizeMismatch);
+        }
+
+        private bool CanTrim(DataGrid? dataGrid)
+        {
+            if (dataGrid is null || dataGrid.GetIsEditing())
+                return false;
+
+            return Settings.IsCellSelectionEnabled
+                ? dataGrid.GetSelectedVisibleCells().Any()
+                : SelectedTableEntries.Any();
+        }
+
+        private static void Trim(DataGrid? dataGrid)
+        {
+            if (dataGrid is null)
+                return;
+
+            var affectedEntries = new List<ResourceTableEntry>();
+
+            foreach (var cellInfo in dataGrid.GetSelectedVisibleCells().ToArray())
+            {
+                var column = cellInfo.Column;
+
+                if (column.Header is not ILanguageColumnHeader languageColumnHeader)
+                    continue;
+
+                if (languageColumnHeader.ColumnType is not (ColumnType.Comment or ColumnType.Language))
+                    continue;
+
+                if (cellInfo.Item is not ResourceTableEntry row)
+                    continue;
+
+                if (!row.CanEdit(languageColumnHeader.CultureKey))
+                    continue;
+
+                var cellContent = column.OnCopyingCellClipboardContent(row);
+                if (cellContent is not string cellText)
+                    continue;
+
+                var trimmedText = cellText.Trim();
+                if (cellText.Length == trimmedText.Length)
+                    continue;
+
+                column.OnPastingCellClipboardContent(row, trimmedText);
+
+                affectedEntries.Add(row);
+            }
+
+            dataGrid.CommitEdit();
+
+            affectedEntries.ForEach(entry => entry.Refresh());
         }
 
         private void ToggleInvariant()

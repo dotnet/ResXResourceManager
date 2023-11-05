@@ -275,6 +275,11 @@
                     Command="{Binding Path=PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}">
               <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/paste.png" />
             </Button>
+            <Button ToolTip="{x:Static properties:Resources.TrimToolTip}"
+                    Style="{StaticResource ToolbarCommandButtonStyle}"
+                    Command="{Binding Path=TrimCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}">
+              <Image SnapsToDevicePixels="True" Source="/ResXManager.View;component/Assets/trim.png" />
+            </Button>
             <Button ToolTip="{x:Static properties:Resources.AddKeyToolTip}"
                     Style="{StaticResource ToolbarCommandButtonStyle}"
                     Command="{composition:Import tools:AddNewKeyCommand}" CommandParameter="{Binding ElementName=DataGrid}">
@@ -544,6 +549,7 @@
                 <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
                 <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
+                <KeyBinding Key="T" Modifiers="Control" Command="{Binding TrimCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
               </DataGrid.InputBindings>
 
               <DataGrid.ItemsPanel>
