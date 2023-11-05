@@ -412,7 +412,7 @@ Use e.g. ".* - (?!Migrations)" to hide EF migrations.</value>
     <value>Save credentials (Credentials will be stored as clear text in your local profile!)</value>
   </data>
   <data name="TrimToolTip" xml:space="preserve">
-    <value>Trim whitespace characters (Ctrl+T)</value>
+    <value>Trim whitespace characters in selected cells (Ctrl+T)</value>
   </data>
   <data name="UnloadSnapshot" xml:space="preserve">
     <value>Unload Snapshot</value>

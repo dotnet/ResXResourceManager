@@ -1052,10 +1052,9 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Trim whitespace characters (Ctrl+T)"
+        ///   Looks up a localized string similar to "Trim whitespace characters in selected cells (Ctrl..."
         /// </summary>
-        public static string TrimToolTip
-        {
+        public static string TrimToolTip {
             get {
                 return ResourceManager.GetString("TrimToolTip", resourceCulture) ?? string.Empty;
             }
@@ -1592,7 +1591,7 @@ namespace ResXManager.View.Properties {
         /// </summary>
         TranslatorConfiguration_SaveCredentials,
         /// <summary>
-        ///   Looks up a localized string similar to Trim whitespace characters (Ctrl+T).
+        ///   Looks up a localized string similar to Trim whitespace characters in selected cells (Ctrl....
         /// </summary>
         TrimToolTip,
         /// <summary>
