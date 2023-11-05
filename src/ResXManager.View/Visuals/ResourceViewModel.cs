@@ -365,51 +365,53 @@
 
         private bool CanTrim(DataGrid? dataGrid)
         {
-            if (dataGrid == null)
+            if (dataGrid is null || dataGrid.GetIsEditing())
                 return false;
 
-            if (dataGrid.GetIsEditing())
-                return false;
-
-            if (Settings.IsCellSelectionEnabled)
-                return dataGrid.GetSelectedVisibleCells().Any();
-
-            return SelectedTableEntries.Any();
+            return Settings.IsCellSelectionEnabled
+                ? dataGrid.GetSelectedVisibleCells().Any()
+                : SelectedTableEntries.Any();
         }
 
-        private void Trim(DataGrid? dataGrid)
+        private static void Trim(DataGrid? dataGrid)
         {
-            if (dataGrid == null)
+            if (dataGrid is null)
                 return;
 
             var affectedEntries = new List<ResourceTableEntry>();
+
             foreach (var cellInfo in dataGrid.GetSelectedVisibleCells().ToArray())
             {
-                if (!cellInfo.IsOfColumnType(ColumnType.Comment, ColumnType.Language))
+                var column = cellInfo.Column;
+
+                if (column.Header is not ILanguageColumnHeader languageColumnHeader)
                     continue;
 
-                var cellContext = cellInfo.Column.GetCellContent(cellInfo.Item);
-                if (cellContext is TextBlock textBlock)
-                {
-                    var trimmedText = textBlock.Text.Trim();
-                    if (textBlock.Text != trimmedText)
-                    {
-                        cellInfo.Column?.OnPastingCellClipboardContent(cellInfo.Item, trimmedText);
+                if (languageColumnHeader.ColumnType is not (ColumnType.Comment or ColumnType.Language))
+                    continue;
 
-                        if (cellInfo.Item is ResourceTableEntry resourceTableEntry)
-                        {
-                            affectedEntries.Add(resourceTableEntry);
-                        }
-                    }
-                }
+                if (cellInfo.Item is not ResourceTableEntry row)
+                    continue;
+
+                if (!row.CanEdit(languageColumnHeader.CultureKey))
+                    continue;
+
+                var cellContent = column.OnCopyingCellClipboardContent(row);
+                if (cellContent is not string cellText)
+                    continue;
+
+                var trimmedText = cellText.Trim();
+                if (cellText.Length == trimmedText.Length)
+                    continue;
+
+                column.OnPastingCellClipboardContent(row, trimmedText);
+
+                affectedEntries.Add(row);
             }
 
             dataGrid.CommitEdit();
 
-            foreach (var entry in affectedEntries)
-            {
-                entry?.Refresh();
-            }
+            affectedEntries.ForEach(entry => entry.Refresh());
         }
 
         private void ToggleInvariant()
