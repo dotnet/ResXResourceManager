@@ -492,4 +492,13 @@ Your ResXManager team.
   <data name="AppendPrefixValueFieldTypeLabel" xml:space="preserve">
     <value>Append the translation prefix to</value>
   </data>
+  <data name="PrefixFieldTypeNeutralComment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="PrefixFieldTypeValue" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="PrefixFieldTypeTargetComment" xml:space="preserve">
+    <value>Target Comment</value>
+  </data>
 </root>

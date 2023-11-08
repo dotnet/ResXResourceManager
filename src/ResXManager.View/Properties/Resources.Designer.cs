@@ -812,6 +812,33 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Comment"
+        /// </summary>
+        public static string PrefixFieldTypeNeutralComment {
+            get {
+                return ResourceManager.GetString("PrefixFieldTypeNeutralComment", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Target Comment"
+        /// </summary>
+        public static string PrefixFieldTypeTargetComment {
+            get {
+                return ResourceManager.GetString("PrefixFieldTypeTargetComment", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Value"
+        /// </summary>
+        public static string PrefixFieldTypeValue {
+            get {
+                return ResourceManager.GetString("PrefixFieldTypeValue", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Ranking:"
         /// </summary>
         public static string Ranking {
@@ -1480,6 +1507,18 @@ namespace ResXManager.View.Properties {
         ///   Looks up a localized string similar to Patterns.
         /// </summary>
         Patterns,
+        /// <summary>
+        ///   Looks up a localized string similar to Comment.
+        /// </summary>
+        PrefixFieldTypeNeutralComment,
+        /// <summary>
+        ///   Looks up a localized string similar to Target Comment.
+        /// </summary>
+        PrefixFieldTypeTargetComment,
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        PrefixFieldTypeValue,
         /// <summary>
         ///   Looks up a localized string similar to Ranking:.
         /// </summary>

@@ -482,4 +482,13 @@ Ihr ResXManager-Team.
   <data name="TrimToolTip" xml:space="preserve">
     <value>Äußere Leerzeichen in ausgewählten Zellen entfernen (Strg+T)</value>
   </data>
+  <data name="PrefixFieldTypeNeutralComment">
+    <value>Kommentar</value>
+  </data>
+  <data name="PrefixFieldTypeValue">
+    <value>Wert</value>
+  </data>
+  <data name="PrefixFieldTypeTargetComment" xml:space="preserve">
+    <value>Zielkommentar</value>
+  </data>
 </root>

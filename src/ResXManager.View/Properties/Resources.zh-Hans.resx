@@ -477,4 +477,13 @@ ResXManager 团队
   <data name="WebProjectFileExport_Title" xml:space="preserve">
     <value>Web 项目文件导出</value>
   </data>
+  <data name="PrefixFieldTypeNeutralComment" xml:space="preserve">
+    <value>评论</value>
+  </data>
+  <data name="PrefixFieldTypeValue" xml:space="preserve">
+    <value>价值</value>
+  </data>
+  <data name="PrefixFieldTypeTargetComment" xml:space="preserve">
+    <value>目标注释</value>
+  </data>
 </root>

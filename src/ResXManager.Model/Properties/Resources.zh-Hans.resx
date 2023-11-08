@@ -266,19 +266,4 @@
   <data name="ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected" xml:space="preserve">
     <value>预期的尾标点序列为：{0}</value>
   </data>
-  <data name="PrefixFieldTypeComment" xml:space="preserve">
-    <value>评论</value>
-  </data>
-  <data name="PrefixFieldTypeValue" xml:space="preserve">
-    <value>价值</value>
-  </data>
-  <data name="PrefixFieldTypeTargetComment" xml:space="preserve">
-    <value>目标注释</value>
-  </data>
-  <data name="PrefixFieldTypeValueAndNeutralComment" xml:space="preserve">
-    <value>价值和中性评论</value>
-  </data>
-  <data name="PrefixFieldTypeAll" xml:space="preserve">
-    <value>全部</value>
-  </data>
 </root>

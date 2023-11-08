@@ -153,13 +153,13 @@
           <Label Content="{x:Static properties:Resources.AppendPrefixValueFieldTypeLabel}" />
           <StackPanel Margin="10,5"
                       IsEnabled="{Binding Configuration.PrefixTranslations}">
-            <CheckBox Content="{Binding Source={x:Static model:PrefixFieldType.Value}, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
+            <CheckBox Content="{x:Static properties:Resources.PrefixFieldTypeValue}"
                       IsChecked="{Binding Configuration.PrefixValue}"
                       Margin="0,2"/>
-            <CheckBox Content="{Binding Source={x:Static model:PrefixFieldType.Comment}, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
+            <CheckBox Content="{x:Static properties:Resources.PrefixFieldTypeNeutralComment}"
                       IsChecked="{Binding Configuration.PrefixNeutralComment}"
                       Margin="0,2"/>
-            <CheckBox Content="{Binding Source={x:Static model:PrefixFieldType.TargetComment}, Converter={x:Static toms:ObjectToDisplayNameConverter.Default}}"
+            <CheckBox Content="{x:Static properties:Resources.PrefixFieldTypeTargetComment}"
                       IsChecked="{Binding Configuration.PrefixTargetComment}"
                       Margin="0,2"/>
           </StackPanel>

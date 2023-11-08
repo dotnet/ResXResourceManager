@@ -52,26 +52,14 @@
 
         public string? EffectiveTranslationPrefix => PrefixTranslations ? TranslationPrefix : string.Empty;
 
-        [DefaultValue(PrefixFieldType.Value)]
-        public PrefixFieldType PrefixFieldType { get; set; }
+        [DefaultValue(true)]
+        public bool PrefixValue { get; set; }
 
-        public bool PrefixValue
-        {
-            get => PrefixFieldType.IsFlagSet(PrefixFieldType.Value);
-            set => PrefixFieldType = PrefixFieldType.WithFlag(PrefixFieldType.Value, value);
-        }
+        [DefaultValue(false)]
+        public bool PrefixNeutralComment { get; set; }
 
-        public bool PrefixNeutralComment
-        {
-            get => PrefixFieldType.IsFlagSet(PrefixFieldType.Comment);
-            set => PrefixFieldType = PrefixFieldType.WithFlag(PrefixFieldType.Comment, value);
-        }
-
-        public bool PrefixTargetComment
-        {
-            get => PrefixFieldType.IsFlagSet(PrefixFieldType.TargetComment);
-            set => PrefixFieldType = PrefixFieldType.WithFlag(PrefixFieldType.TargetComment, value);
-        }
+        [DefaultValue(false)]
+        public bool PrefixTargetComment { get; set; }
 
         [DefaultValue(default(ExcelExportMode))]
         public ExcelExportMode ExcelExportMode { get; set; }
