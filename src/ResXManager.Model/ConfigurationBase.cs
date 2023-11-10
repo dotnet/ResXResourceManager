@@ -97,8 +97,9 @@
             {
                 return InternalGetValue(defaultValue, key);
             }
-            catch (InvalidCastException)
+            catch (Exception)
             {
+                // input value is invalid, ignore and just go with the default.
             }
 
             return defaultValue;
@@ -157,8 +158,9 @@
                     return obj == null ? defaultValue : (T)obj;
                 }
             }
-            catch (NotSupportedException)
+            catch (Exception)
             {
+                // input value is invalid, ignore and just go with the default.
             }
 
             return defaultValue;
