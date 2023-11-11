@@ -433,14 +433,18 @@
                   <DataTemplate DataType="{x:Type model:ResourceEntity}">
                     <TextBlock>
                       <Run Text="{Binding Path=BaseName, Mode=OneWay}" FontWeight="Bold" />
-                      (<Run Text="{Binding Path=DirectoryName, Mode=OneWay}" />)
+                      <Hyperlink NavigateUri="{Binding Path= DirectoryName}" >
+                        <TextBlock Text="{Binding Path=DirectoryName, Mode=OneWay}"/>
+                      </Hyperlink>
                     </TextBlock>
                   </DataTemplate>
                   <DataTemplate DataType="{x:Type model:ResourceTableEntry}">
                     <TextBlock>
                       <Run Text="{Binding Path=Key, Mode=OneWay}" Foreground="Black" />:
                       <Run Text="{Binding Path=Container.BaseName, Mode=OneWay}" FontWeight="Bold" />
-                      (<Run Text="{Binding Path=Container.DirectoryName, Mode=OneWay}" />)
+                      <Hyperlink NavigateUri="{Binding Path= Container.DirectoryName}" >
+                        <TextBlock Text="{Binding Path=Container.DirectoryName, Mode=OneWay}"/>
+                      </Hyperlink>
                     </TextBlock>
                   </DataTemplate>
                 </Control.Resources>
