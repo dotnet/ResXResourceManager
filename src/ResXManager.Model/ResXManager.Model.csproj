@@ -17,15 +17,15 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AutoProperties.Fody" PrivateAssets="all" Version="1.25.0" />
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
-    <PackageReference Include="Fody" PrivateAssets="all" Version="6.8.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
-    <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.1.0" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="System.Composition.AttributedModel" Version="[1.4.1]" />
-    <PackageReference Include="Throttle.Fody" PrivateAssets="all" Version="1.7.0" />
-    <PackageReference Include="TomsToolbox.Composition" Version="2.10.0" />
-    <PackageReference Include="TomsToolbox.ObservableCollections" Version="2.10.0" />
+    <PackageReference Include="AutoProperties.Fody" PrivateAssets="all" />
+    <PackageReference Include="DocumentFormat.OpenXml" />
+    <PackageReference Include="Fody" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
+    <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" />
+    <PackageReference Include="System.ComponentModel.Annotations" />
+    <PackageReference Include="System.Composition.AttributedModel" />
+    <PackageReference Include="Throttle.Fody" PrivateAssets="all" />
+    <PackageReference Include="TomsToolbox.Composition" />
+    <PackageReference Include="TomsToolbox.ObservableCollections" />
   </ItemGroup>
 </Project>

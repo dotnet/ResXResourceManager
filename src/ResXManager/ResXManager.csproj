@@ -22,18 +22,18 @@
     <ProjectReference Include="..\ResXManager.View\ResXManager.View.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AutoProperties.Fody" PrivateAssets="all" Version="1.25.0" />
-    <PackageReference Include="Fody" PrivateAssets="all" Version="6.8.0" />
-    <PackageReference Include="ILMerge.Fody" PrivateAssets="all" Version="1.24.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
-    <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.1.0" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="TomsToolbox.Composition.Ninject" Version="2.10.0" />
-    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.10.0" />
-    <PackageReference Include="TomsToolbox.Wpf.Styles" Version="2.10.0" />
-    <PackageReference Include="WindowsAPICodePack-Shell" PrivateAssets="All" Version="1.1.1" />
+    <PackageReference Include="AutoProperties.Fody" PrivateAssets="all" />
+    <PackageReference Include="Fody" PrivateAssets="all" />
+    <PackageReference Include="ILMerge.Fody" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CSharp" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
+    <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" />
+    <PackageReference Include="System.ComponentModel.Annotations" />
+    <PackageReference Include="System.Data.DataSetExtensions" />
+    <PackageReference Include="TomsToolbox.Composition.Ninject" />
+    <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" />
+    <PackageReference Include="TomsToolbox.Wpf.Styles" />
+    <PackageReference Include="WindowsAPICodePack-Shell" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
