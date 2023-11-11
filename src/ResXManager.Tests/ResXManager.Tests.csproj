@@ -9,16 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="[9.0.1]" />
-    <PackageReference Include="NSubstitute" Version="5.1.0" />
-    <PackageReference Include="TomsToolbox.Essentials" Version="2.10.0" />
-    <PackageReference Include="TomsToolbox.Composition" Version="2.10.0" />
-    <PackageReference Include="Verify.Xunit" Version="22.1.4" />
-    <PackageReference Include="xunit" Version="2.6.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="TomsToolbox.Essentials" />
+    <PackageReference Include="TomsToolbox.Composition" />
+    <PackageReference Include="Verify.Xunit" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj" />
     <ProjectReference Include="..\ResXManager.View\ResXManager.View.csproj" />
@@ -30,5 +30,5 @@
     <Content Include="Resources\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>  
+  </ItemGroup>
 </Project>

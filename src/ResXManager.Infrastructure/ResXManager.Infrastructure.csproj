@@ -10,13 +10,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Fody" PrivateAssets="all" Version="6.8.0" />
-    <PackageReference Include="HtmlAgilityPack" PrivateAssets="all" Version="1.11.54" />
-    <PackageReference Include="ILMerge.Fody" Version="1.24.0" PrivateAssets="all" />
-    <PackageReference Include="JetBrains.Annotations" PrivateAssets="all" Version="2023.2.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
-    <PackageReference Include="Newtonsoft.Json" Version="[9.0.1]" />
-    <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" Version="4.1.0" />
-    <PackageReference Include="TomsToolbox.Composition" Version="2.10.0" />
+    <PackageReference Include="Fody" PrivateAssets="all" />
+    <PackageReference Include="HtmlAgilityPack" PrivateAssets="all" />
+    <PackageReference Include="ILMerge.Fody" PrivateAssets="all" />
+    <PackageReference Include="JetBrains.Annotations" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" VersionOverride="[9.0.1]" />
+    <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" />
+    <PackageReference Include="TomsToolbox.Composition" />
   </ItemGroup>
 </Project>
