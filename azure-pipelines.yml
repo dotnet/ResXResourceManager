@@ -35,7 +35,7 @@ stages:
 
     - task: NuGetToolInstaller@1
       inputs:
-        versionSpec: '>= 5.8'
+        versionSpec: '6.7.0'
 
     - task: NuGetCommand@2
       inputs:
