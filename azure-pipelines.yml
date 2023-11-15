@@ -15,6 +15,9 @@ stages:
     - script: '"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\msbuild.exe" -version'
       displayName: 'log msbuild version'
 
+    - script: 'dotnet --info'
+      displayName: 'log dotnet version'
+
     - task: PowerShell@1
       displayName: 'Set build version'
       inputs:
