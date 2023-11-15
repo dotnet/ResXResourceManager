@@ -12,6 +12,9 @@ stages:
       BuildConfiguration: 'release'
 
     steps:
+    - script: '"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\msbuild.exe" -version'
+      displayName: 'log msbuild version'
+
     - task: PowerShell@1
       displayName: 'Set build version'
       inputs:
