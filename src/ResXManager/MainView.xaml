@@ -17,6 +17,16 @@
           </TextBlock>
         </MenuItem.Header>
         <MenuItem Header="Browse" Command="{Binding BrowseCommand}" />
+        <Separator />
+        <MenuItem Header="Recent" ItemsSource="{Binding Configuration.RecentFolders.Items, Mode=OneWay}">
+          <MenuItem.ItemTemplate>
+            <DataTemplate>
+              <TextBlock>
+                <Run Text="{Binding Folder, Mode=OneWay}" />
+              </TextBlock>
+            </DataTemplate>
+          </MenuItem.ItemTemplate>
+        </MenuItem>
       </MenuItem>
     </Menu>
 

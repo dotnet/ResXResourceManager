@@ -28,15 +28,14 @@
     internal class MainViewModel : ObservableObject
     {
         private readonly ITracer _tracer;
-        private readonly IConfiguration _configuration;
 
         [ImportingConstructor]
-        public MainViewModel(ResourceManager resourceManager, IConfiguration configuration, ResourceViewModel resourceViewModel, ITracer tracer, SourceFilesProvider sourceFilesProvider)
+        public MainViewModel(ResourceManager resourceManager, IStandaloneConfiguration configuration, ResourceViewModel resourceViewModel, ITracer tracer, SourceFilesProvider sourceFilesProvider)
         {
             ResourceManager = resourceManager;
             ResourceViewModel = resourceViewModel;
             _tracer = tracer;
-            _configuration = configuration;
+            Configuration = configuration;
             SourceFilesProvider = sourceFilesProvider;
 
             resourceManager.BeginEditing += ResourceManager_BeginEditing;
@@ -70,6 +69,8 @@
         public ResourceViewModel ResourceViewModel { get; }
 
         public SourceFilesProvider SourceFilesProvider { get; }
+
+        public IStandaloneConfiguration Configuration { get; }
 
         private void Browse()
         {
@@ -154,7 +155,7 @@
                     if (culture == null)
                         return false; // no neutral culture => this should never happen.
 
-                    if (_configuration.ConfirmAddLanguageFile)
+                    if (Configuration.ConfirmAddLanguageFile)
                     {
                         message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasNoResourceFile, culture.DisplayName);
 
@@ -211,17 +212,27 @@
     [Shared]
     internal class SourceFilesProvider : ObservableObject, ISourceFilesProvider
     {
-        private readonly IConfiguration _configuration;
+        private readonly IStandaloneConfiguration _configuration;
         private readonly PerformanceTracer _performanceTracer;
 
         [ImportingConstructor]
-        public SourceFilesProvider(IConfiguration configuration, PerformanceTracer performanceTracer)
+        public SourceFilesProvider(IStandaloneConfiguration configuration, PerformanceTracer performanceTracer)
         {
             _configuration = configuration;
             _performanceTracer = performanceTracer;
         }
 
-        public string? SolutionFolder { get; set; }
+        private string? _solutionFolder;
+        public string? SolutionFolder
+        {
+            get => _solutionFolder;
+            set
+            {
+                _solutionFolder = value;
+                if (value != null)
+                    _configuration.RecentFolders.Add(value);
+            }
+        }
 
         public async Task<IList<ProjectFile>> GetSourceFilesAsync(CancellationToken? cancellationToken)
         {
