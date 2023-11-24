@@ -13,7 +13,6 @@
     using ResXManager.Model;
 
     using TomsToolbox.Essentials;
-    using TomsToolbox.Wpf;
 
     [Export(typeof(IConfiguration))]
     [Export(typeof(IStandaloneConfiguration))]
@@ -40,6 +39,9 @@
         [DefaultValue(nameof(ColorTheme.Light))]
         [OnChangedMethod(nameof(OnColorThemeChanged))]
         public ColorTheme ColorTheme { get; set; }
+
+        [DefaultValue(RecentFolderConfiguration.Default)]
+        public RecentFolderConfiguration RecentFolders { get; }
 
         private void OnColorThemeChanged()
         {

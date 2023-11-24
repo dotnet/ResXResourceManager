@@ -8,6 +8,9 @@
     using TomsToolbox.Essentials;
     using TomsToolbox.ObservableCollections;
 
+    /// <summary>
+    /// Tracks properties of items
+    /// </summary>
     [DataContract]
     public abstract class ItemTrackingCollectionHost<T> : INotifyChanged
         where T : class, INotifyPropertyChanged

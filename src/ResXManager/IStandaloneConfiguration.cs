@@ -18,5 +18,7 @@
     public interface IStandaloneConfiguration : IConfiguration
     {
         ColorTheme ColorTheme { get; set; }
+
+        RecentFolderConfiguration RecentFolders { get; }
     }
 }
