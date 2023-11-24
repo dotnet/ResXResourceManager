@@ -19,9 +19,15 @@
         <MenuItem Header="Browse" Command="{Binding BrowseCommand}" />
         <Separator />
         <MenuItem Header="Recent" ItemsSource="{Binding Configuration.RecentFolders.Items, Mode=OneWay}">
+          <MenuItem.ItemContainerStyle>
+            <Style TargetType="MenuItem">
+              <Setter Property="Command" Value="{Binding Path=DataContext.SetSolutionFolderCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}" />
+              <Setter Property="CommandParameter" Value="{Binding}" />
+            </Style>
+          </MenuItem.ItemContainerStyle>
           <MenuItem.ItemTemplate>
             <DataTemplate>
-              <TextBlock>
+              <TextBlock Margin="3">
                 <Run Text="{Binding Folder, Mode=OneWay}" />
               </TextBlock>
             </DataTemplate>

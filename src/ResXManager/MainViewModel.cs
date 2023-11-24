@@ -64,6 +64,8 @@
 
         public ICommand BrowseCommand => new DelegateCommand(Browse);
 
+        public ICommand SetSolutionFolderCommand => new DelegateCommand<RecentFolderConfigurationItem>(SetSolutionFolder);
+
         public ResourceManager ResourceManager { get; }
 
         public ResourceViewModel ResourceViewModel { get; }
@@ -100,6 +102,16 @@
                     return;
 
                 SourceFilesProvider.SolutionFolder = Settings.Default.StartupFolder = dlg.SelectedPath;
+
+                Load();
+            }
+        }
+
+        private void SetSolutionFolder(RecentFolderConfigurationItem item)
+        {
+            if (Directory.Exists(item.Folder))
+            {
+                SourceFilesProvider.SolutionFolder = item.Folder;
 
                 Load();
             }
