@@ -14,6 +14,8 @@
 
     using Microsoft.WindowsAPICodePack.Dialogs;
 
+    using PropertyChanged;
+
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.Properties;
@@ -64,7 +66,7 @@
 
         public ICommand BrowseCommand => new DelegateCommand(Browse);
 
-        public ICommand SetSolutionFolderCommand => new DelegateCommand<RecentFolderConfigurationItem>(SetSolutionFolder);
+        public ICommand SetSolutionFolderCommand => new DelegateCommand<string>(SetSolutionFolder);
 
         public ResourceManager ResourceManager { get; }
 
@@ -80,16 +82,20 @@
 
             try
             {
-                using (var dlg = new CommonOpenFileDialog { IsFolderPicker = true, InitialDirectory = settings.StartupFolder, EnsurePathExists = true })
+                using var dlg = new CommonOpenFileDialog
                 {
-                    if (dlg.ShowDialog() != CommonFileDialogResult.Ok)
-                        return;
+                    IsFolderPicker = true,
+                    InitialDirectory = settings.StartupFolder,
+                    EnsurePathExists = true
+                };
 
-                    SourceFilesProvider.SolutionFolder = settings.StartupFolder = dlg.FileName;
-
-                    Load();
+                if (dlg.ShowDialog() != CommonFileDialogResult.Ok)
                     return;
-                }
+
+                SourceFilesProvider.SolutionFolder = settings.StartupFolder = dlg.FileName;
+
+                Load();
+                return;
             }
             catch (NotSupportedException)
             {
@@ -107,14 +113,13 @@
             }
         }
 
-        private void SetSolutionFolder(RecentFolderConfigurationItem item)
+        private void SetSolutionFolder(string folder)
         {
-            if (Directory.Exists(item.Folder))
-            {
-                SourceFilesProvider.SolutionFolder = item.Folder;
+            if (!Directory.Exists(folder))
+                return;
 
-                Load();
-            }
+            SourceFilesProvider.SolutionFolder = folder;
+            Load();
         }
 
         private async void Load()
@@ -234,15 +239,16 @@
             _performanceTracer = performanceTracer;
         }
 
-        private string? _solutionFolder;
-        public string? SolutionFolder
+        [OnChangedMethod(nameof(OnSolutionFolderChanged))]
+        public string? SolutionFolder { get; set; }
+
+        private void OnSolutionFolderChanged()
         {
-            get => _solutionFolder;
-            set
+            var solutionFolder = SolutionFolder;
+
+            if (Directory.Exists(solutionFolder))
             {
-                _solutionFolder = value;
-                if (value != null)
-                    _configuration.RecentFolders.Add(value);
+                Settings.Default.AddStartupFolder(solutionFolder);
             }
         }
 

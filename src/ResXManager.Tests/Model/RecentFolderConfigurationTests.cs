@@ -1,15 +1,16 @@
 ﻿namespace ResXManager.Tests.Model;
 
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
-
-using ResXManager.Model;
 
 using Xunit;
 
 // ReSharper disable InconsistentNaming
 #pragma warning disable CA1707 // Identifiers should not contain underscores
 #pragma warning disable CA1034 // Nested types should not be visible
+
+using static Properties.Settings;
 
 public static class RecentFolderConfigurationTests
 {
@@ -18,15 +19,16 @@ public static class RecentFolderConfigurationTests
         [Fact]
         public void Should_Not_Contain_Duplicates()
         {
-            var configuration = new RecentFolderConfiguration();
-            for (int i = 0; i < 10; i++)
+            var items = new StringCollection();
+
+            for (var i = 0; i < 10; i++)
             {
-                configuration.Add(i.ToString(CultureInfo.InvariantCulture));
+                items = AddStartupFolder(items, i.ToString(CultureInfo.InvariantCulture));
             }
 
-            configuration.Add("5");
+            items = AddStartupFolder(items, "5");
 
-            Assert.Equal(10, configuration.Items.Select(item => item.Folder).Distinct().Count());
+            Assert.Equal(10, items.Cast<string>().Distinct().Count());
         }
 
         [Theory]
@@ -34,15 +36,16 @@ public static class RecentFolderConfigurationTests
         [InlineData("2")]
         public void Should_Have_The_Most_Recent_On_Top(string newValue)
         {
-            var configuration = new RecentFolderConfiguration();
-            for (int i = 0; i < 10; i++)
+            var items = new StringCollection();
+
+            for (var i = 0; i < 10; i++)
             {
-                configuration.Add(i.ToString(CultureInfo.InvariantCulture));
+                items = AddStartupFolder(items, i.ToString(CultureInfo.InvariantCulture));
             }
 
-            configuration.Add(newValue);
+            items = AddStartupFolder(items, newValue);
 
-            Assert.Equal(newValue, configuration.Items[0].Folder);
+            Assert.Equal(newValue, items[0]);
         }
 
         [Theory]
@@ -50,15 +53,16 @@ public static class RecentFolderConfigurationTests
         [InlineData("2", "")]
         public void Should_Remove_Items_To_Keep_Total_Less_Or_Equal_Than_10(string newValue, string shouldNotContainValue)
         {
-            var configuration = new RecentFolderConfiguration();
-            for (int i = 0; i < 10; i++)
+            var items = new StringCollection();
+
+            for (var i = 0; i < 10; i++)
             {
-                configuration.Add(i.ToString(CultureInfo.InvariantCulture));
+                items = AddStartupFolder(items, i.ToString(CultureInfo.InvariantCulture));
             }
 
-            configuration.Add(newValue);
+            items = AddStartupFolder(items, newValue);
 
-            Assert.DoesNotContain(shouldNotContainValue, configuration.Items.Select(item => item.Folder));
+            Assert.DoesNotContain(shouldNotContainValue, items.Cast<string>());
         }
     }
 }

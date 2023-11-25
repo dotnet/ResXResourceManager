@@ -40,9 +40,6 @@
         [OnChangedMethod(nameof(OnColorThemeChanged))]
         public ColorTheme ColorTheme { get; set; }
 
-        [DefaultValue(RecentFolderConfiguration.Default)]
-        public RecentFolderConfiguration RecentFolders { get; }
-
         private void OnColorThemeChanged()
         {
             _colorThemeResourceContainer.Clear();
