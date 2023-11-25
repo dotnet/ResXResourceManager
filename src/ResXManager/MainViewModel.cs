@@ -14,6 +14,8 @@
 
     using Microsoft.WindowsAPICodePack.Dialogs;
 
+    using PropertyChanged;
+
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.Properties;
@@ -28,15 +30,14 @@
     internal class MainViewModel : ObservableObject
     {
         private readonly ITracer _tracer;
-        private readonly IConfiguration _configuration;
 
         [ImportingConstructor]
-        public MainViewModel(ResourceManager resourceManager, IConfiguration configuration, ResourceViewModel resourceViewModel, ITracer tracer, SourceFilesProvider sourceFilesProvider)
+        public MainViewModel(ResourceManager resourceManager, IStandaloneConfiguration configuration, ResourceViewModel resourceViewModel, ITracer tracer, SourceFilesProvider sourceFilesProvider)
         {
             ResourceManager = resourceManager;
             ResourceViewModel = resourceViewModel;
             _tracer = tracer;
-            _configuration = configuration;
+            Configuration = configuration;
             SourceFilesProvider = sourceFilesProvider;
 
             resourceManager.BeginEditing += ResourceManager_BeginEditing;
@@ -65,11 +66,15 @@
 
         public ICommand BrowseCommand => new DelegateCommand(Browse);
 
+        public ICommand SetSolutionFolderCommand => new DelegateCommand<string>(SetSolutionFolder);
+
         public ResourceManager ResourceManager { get; }
 
         public ResourceViewModel ResourceViewModel { get; }
 
         public SourceFilesProvider SourceFilesProvider { get; }
+
+        public IStandaloneConfiguration Configuration { get; }
 
         private void Browse()
         {
@@ -77,16 +82,20 @@
 
             try
             {
-                using (var dlg = new CommonOpenFileDialog { IsFolderPicker = true, InitialDirectory = settings.StartupFolder, EnsurePathExists = true })
+                using var dlg = new CommonOpenFileDialog
                 {
-                    if (dlg.ShowDialog() != CommonFileDialogResult.Ok)
-                        return;
+                    IsFolderPicker = true,
+                    InitialDirectory = settings.StartupFolder,
+                    EnsurePathExists = true
+                };
 
-                    SourceFilesProvider.SolutionFolder = settings.StartupFolder = dlg.FileName;
-
-                    Load();
+                if (dlg.ShowDialog() != CommonFileDialogResult.Ok)
                     return;
-                }
+
+                SourceFilesProvider.SolutionFolder = settings.StartupFolder = dlg.FileName;
+
+                Load();
+                return;
             }
             catch (NotSupportedException)
             {
@@ -102,6 +111,15 @@
 
                 Load();
             }
+        }
+
+        private void SetSolutionFolder(string folder)
+        {
+            if (!Directory.Exists(folder))
+                return;
+
+            SourceFilesProvider.SolutionFolder = folder;
+            Load();
         }
 
         private async void Load()
@@ -154,7 +172,7 @@
                     if (culture == null)
                         return false; // no neutral culture => this should never happen.
 
-                    if (_configuration.ConfirmAddLanguageFile)
+                    if (Configuration.ConfirmAddLanguageFile)
                     {
                         message = string.Format(CultureInfo.CurrentCulture, Resources.ProjectHasNoResourceFile, culture.DisplayName);
 
@@ -211,17 +229,28 @@
     [Shared]
     internal class SourceFilesProvider : ObservableObject, ISourceFilesProvider
     {
-        private readonly IConfiguration _configuration;
+        private readonly IStandaloneConfiguration _configuration;
         private readonly PerformanceTracer _performanceTracer;
 
         [ImportingConstructor]
-        public SourceFilesProvider(IConfiguration configuration, PerformanceTracer performanceTracer)
+        public SourceFilesProvider(IStandaloneConfiguration configuration, PerformanceTracer performanceTracer)
         {
             _configuration = configuration;
             _performanceTracer = performanceTracer;
         }
 
+        [OnChangedMethod(nameof(OnSolutionFolderChanged))]
         public string? SolutionFolder { get; set; }
+
+        private void OnSolutionFolderChanged()
+        {
+            var solutionFolder = SolutionFolder;
+
+            if (Directory.Exists(solutionFolder))
+            {
+                Settings.Default.AddStartupFolder(solutionFolder);
+            }
+        }
 
         public async Task<IList<ProjectFile>> GetSourceFilesAsync(CancellationToken? cancellationToken)
         {

@@ -13,7 +13,6 @@
     using ResXManager.Model;
 
     using TomsToolbox.Essentials;
-    using TomsToolbox.Wpf;
 
     [Export(typeof(IConfiguration))]
     [Export(typeof(IStandaloneConfiguration))]

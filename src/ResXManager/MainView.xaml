@@ -6,6 +6,7 @@
              xmlns:resXManager="clr-namespace:ResXManager"
              xmlns:infrastructure="clr-namespace:ResXManager.Infrastructure;assembly=ResXManager.Infrastructure"
              xmlns:composition="urn:TomsToolbox.Composition"
+             xmlns:properties="clr-namespace:ResXManager.Properties"
              d:DataContext="{d:DesignInstance resXManager:MainViewModel}">
   <DockPanel>
     <Menu DockPanel.Dock="Top">
@@ -17,6 +18,22 @@
           </TextBlock>
         </MenuItem.Header>
         <MenuItem Header="Browse" Command="{Binding BrowseCommand}" />
+        <Separator />
+        <MenuItem Header="Recent" ItemsSource="{Binding RecentStartupFolders, Source={x:Static properties:Settings.Default}}">
+          <MenuItem.ItemContainerStyle>
+            <Style TargetType="MenuItem">
+              <Setter Property="Command" Value="{Binding Path=DataContext.SetSolutionFolderCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}" />
+              <Setter Property="CommandParameter" Value="{Binding}" />
+            </Style>
+          </MenuItem.ItemContainerStyle>
+          <MenuItem.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Margin="0,3">
+                <Run Text="{Binding Mode=OneWay}" />
+              </TextBlock>
+            </DataTemplate>
+          </MenuItem.ItemTemplate>
+        </MenuItem>
       </MenuItem>
     </Menu>
 
