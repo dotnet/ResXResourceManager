@@ -53,7 +53,6 @@
     <PackageReference Include="Fody" PrivateAssets="all" />
     <PackageReference Include="ILMerge.Fody" PrivateAssets="all" />
     <PackageReference Include="Microsoft.DeepDev.TokenizerLib" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" />
     <PackageReference Include="System.ComponentModel.Annotations" />
     <PackageReference Include="System.Net.Http" />

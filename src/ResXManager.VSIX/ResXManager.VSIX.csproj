@@ -72,7 +72,6 @@
     <PackageReference Include="Community.VisualStudio.Toolkit" />
     <PackageReference Include="DataGridExtensions" />
     <PackageReference Include="Fody" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.SDK" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" PrivateAssets="all" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" />

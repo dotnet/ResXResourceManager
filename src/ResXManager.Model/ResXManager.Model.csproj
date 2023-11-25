@@ -20,7 +20,6 @@
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all" />
     <PackageReference Include="DocumentFormat.OpenXml" />
     <PackageReference Include="Fody" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" />
     <PackageReference Include="System.ComponentModel.Annotations" />
     <PackageReference Include="System.Composition.AttributedModel" />
