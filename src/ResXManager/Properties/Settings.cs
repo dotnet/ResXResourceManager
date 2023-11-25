@@ -26,7 +26,7 @@
 
         internal static StringCollection AddStartupFolder(StringCollection originalItems, string? folder)
         {
-            if (folder is null)
+            if (folder is null || (originalItems.Count > 0 && string.Equals(originalItems[0], folder, StringComparison.OrdinalIgnoreCase)))
                 return originalItems;
 
             var items = new StringCollection();
