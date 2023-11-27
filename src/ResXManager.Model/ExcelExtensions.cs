@@ -284,7 +284,7 @@
 
             public SheetData AppendRow(SheetData sheetData, IEnumerable<string> rowData)
             {
-                var row = (sheetData.ChildElements.OfType<Row>()?.Count() ?? 0) + 1;
+                var row = (sheetData.ChildElements?.OfType<Row>()?.Count() ?? 0) + 1;
                 var column = 1;
                 return sheetData.AppendItem(rowData.Aggregate(new Row(), (seed, item) => seed.AppendItem(CreateCell(item, row, column++))));
             }
