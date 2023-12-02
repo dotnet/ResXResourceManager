@@ -82,61 +82,71 @@ stages:
         ArtifactName: signing
 
 - stage: CodeSign
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  dependsOn: Build
+  condition: and(succeeded('Build'), ne(variables['build.reason'], 'PullRequest'))
   jobs:
-  - deployment: CodeSign
+  - job: CodeSign
     displayName: Code Signing
     pool:
-      vmImage: windows-latest
-    environment: Code Signing
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: CmdLine@2
-            displayName: "AntiMalware Scan"
-            inputs:
-              script: |
-                Dir "$(Pipeline.Workspace)\BuildPackages"
-                "%ProgramFiles%\Windows Defender\MpCmdRun.exe" -Scan -ScanType 3 -File "$(Pipeline.Workspace)\BuildPackages"
-              failOnStderr: true
+      vmImage: windows-latest # Code signing must run on a Windows agent for Authenticode signing (dll/exe)
+    steps:
+    # Retreive unsigned artifacts and file list
+    - download: current
+      artifact: signing
+      displayName: Download signing file list
 
-          - task: DotNetCoreCLI@2
-            inputs:
-              command: custom
-              custom: tool
-              arguments: install --tool-path . SignClient
-            displayName: Install SignTool tool
+    - download: current
+      artifact: BuildPackages
+      displayName: Download build artifacts
 
-          - pwsh: Rename-Item -Path "$(Pipeline.Workspace)\BuildPackages\Publish.zip" -NewName Publish.clickonce
-            displayName: 'Rename click-once archive to .clickonce'
+    - task: CmdLine@2
+      displayName: "AntiMalware Scan"
+      inputs:
+        script: |
+          Dir "$(Pipeline.Workspace)\BuildPackages"
+          "%ProgramFiles%\Windows Defender\MpCmdRun.exe" -Scan -ScanType 3 -File "$(Pipeline.Workspace)\BuildPackages"
+        failOnStderr: true
 
-          - pwsh: |
-              .\SignClient "Sign" `
-              --baseDirectory "$(Pipeline.Workspace)\BuildPackages" `
-              --input "**/*.*" `
-              --config "$(Pipeline.Workspace)\signing\SignClient.json" `
-              --filelist "$(Pipeline.Workspace)\signing\filelist.txt" `
-              --user "$(SignClientUser)" `
-              --secret "$(SignClientSecret)" `
-              --name "ResX Resource Manager" `
-              --description "ResX Resource Manager" `
-              --descriptionUrl "https://github.com/dotnet/ResXResourceManager"
-            displayName: Sign packages
+    # Install the code signing tool
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: custom
+        custom: tool
+        arguments: install --tool-path . sign --version 0.9.1-beta.23530.1
+      displayName: Install SignTool tool
 
-          - pwsh: Rename-Item -Path "$(Pipeline.Workspace)\BuildPackages\Publish.clickonce" -NewName Publish.zip
-            displayName: 'Rename click-once archive back to .zip'
+    - pwsh: Rename-Item -Path "$(Pipeline.Workspace)\BuildPackages\Publish.zip" -NewName Publish.clickonce
+      displayName: 'Rename click-once archive to .clickonce'
 
-          - task: PowerShell@1
-            displayName: 'Publish to vsix-gallery'
-            inputs:
-              scriptType: inlineScript
-              inlineScript: |
-                (new-object Net.WebClient).DownloadString("https://raw.github.com/tom-englert/BuildScripts/master/BuildScripts.ps1") | iex
-                Vsix-PublishToGallery "$(Pipeline.Workspace)\BuildPackages\ResXManager.Vsix.vsix"
-            continueOnError: true
+    - pwsh: |
+        .\sign code azure-key-vault `
+        "**/*.*" `
+        --base-directory "$(Pipeline.Workspace)\BuildPackages" `
+        --file-list "$(Pipeline.Workspace)\signing\filelist.txt" `
+        --publisher-name "tom-englert" `
+        --description "ResX Resource Manager" `
+        --description-url "https://github.com/dotnet/ResXResourceManager" `
+        --azure-key-vault-tenant-id "$(SignTenantId)" `
+        --azure-key-vault-client-id "$(SignClientId)" `
+        --azure-key-vault-client-secret "$(SignClientSecret2)" `
+        --azure-key-vault-certificate "$(SignKeyVaultCertificate)" `
+        --azure-key-vault-url "$(SignKeyVaultUrl)"
+      displayName: Sign packages
 
-          - publish: $(Pipeline.Workspace)\BuildPackages
-            displayName: Publish Signed Packages
-            artifact: SignedPackages
+    - pwsh: Rename-Item -Path "$(Pipeline.Workspace)\BuildPackages\Publish.clickonce" -NewName Publish.zip
+      displayName: 'Rename click-once archive back to .zip'
+
+    - task: PowerShell@1
+      displayName: 'Publish to vsix-gallery'
+      inputs:
+        scriptType: inlineScript
+        inlineScript: |
+          (new-object Net.WebClient).DownloadString("https://raw.github.com/tom-englert/BuildScripts/master/BuildScripts.ps1") | iex
+          Vsix-PublishToGallery "$(Pipeline.Workspace)\BuildPackages\ResXManager.Vsix.vsix"
+      continueOnError: true
+
+    # Publish the signed packages
+    - publish: $(Pipeline.Workspace)/BuildPackages
+      displayName: Publish Signed Packages
+      artifact: SignedPackages
 
