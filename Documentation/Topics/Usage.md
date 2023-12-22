@@ -20,6 +20,8 @@ The first column displays the resource key, the second column the neutral resour
 You can add new languages and easily add translations by simply typing the localized string in the new columns that appear in the ResX Resource Manager. 
 All entries will be created as you type.
 
+You can input a multi-line entry by pressing Ctrl+Enter at the end of your line, creating a new line for your current entry.
+
 Empty, untranslated entries are marked red, so they are easy to find; you can also sort the columns by clicking the header of any column to move all empty entries to the top. 
 This project has integrated the [Data Grid Extensions](https://github.com/tom-englert/DataGridExtensions), so you can simply filter columns to search the view for something special to translate or verify.
 
