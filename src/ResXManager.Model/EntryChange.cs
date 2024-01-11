@@ -28,7 +28,11 @@ namespace ResXManager.Model
     {
         public static bool IsModified(this EntryChange entryChange)
         {
-            return (entryChange.OriginalText != entryChange.Text) && !string.IsNullOrEmpty(entryChange.Text);
+            if (entryChange.OriginalText == entryChange.Text)
+                return false;
+            if (entryChange.OriginalText == null && entryChange.Text != null)
+                return true;
+            return entryChange.OriginalText != entryChange.Text;
         }
     }
 }
