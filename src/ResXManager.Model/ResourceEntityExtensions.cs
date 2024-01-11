@@ -220,7 +220,7 @@
                 .ToArray();
 
             var changes = entries
-                .Where(entryChange => (entryChange.OriginalText != entryChange.Text) && !string.IsNullOrEmpty(entryChange.Text))
+                .Where(entryChange => entryChange.IsModified())
                 .ToArray();
 
             VerifyCultures(entity, changes.Select(c => c.Culture).Distinct());
