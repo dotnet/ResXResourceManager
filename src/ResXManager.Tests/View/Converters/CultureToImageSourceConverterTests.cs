@@ -23,7 +23,6 @@ using Xunit;
 
 public static class CultureToImageSourceConverterTests
 {
-    [UsesVerify]
     public sealed class The_Convert_Method
     {
         private readonly IConfiguration _configurationMock = Substitute.For<IConfiguration>();

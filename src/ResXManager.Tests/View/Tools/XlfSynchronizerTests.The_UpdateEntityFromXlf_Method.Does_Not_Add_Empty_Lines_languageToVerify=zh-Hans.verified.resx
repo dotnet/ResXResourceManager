@@ -119,10 +119,10 @@
   </resheader>
   <data name="MyProject.MyResource" xml:space="preserve">
     <value>De laatste keer dat ik iets leuks deed</value>
-    <comment>Choice will be shown after this, don't use \n in this one@Invariant</comment>
+    <comment>Choice will be shown after this, don't use \n in this one</comment>
   </data>
   <data name="MyProject.AnotherResource" xml:space="preserve">
     <value>Continue to\nnext item</value>
-    <comment>\n = new line@Invariant</comment>
+    <comment>\n = new line</comment>
   </data>
 </root>

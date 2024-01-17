@@ -200,7 +200,6 @@
             if (dataColumnHeaders.Distinct().Count() != dataColumnHeaders.Length)
                 throw new ImportException(Resources.ImportDuplicateLanguageError);
 
-            // ! mapping.Entry is checked in Where(...)
             var mappings = table.Skip(1)
                 .Select(columns => new { Key = columns[0], TextColumns = columns.Skip(fixedColumnHeadersCount).Take(dataColumnCount).ToArray() })
                 .Where(mapping => !string.IsNullOrEmpty(mapping.Key))
@@ -215,6 +214,7 @@
                     }))
                 .Where(mapping => mapping.Entry != null);
 
+            // ! mapping.Entry is checked in Where(...)
             var entries = mappings
                 .Select(mapping => new EntryChange(mapping.Entry!, mapping.Text, mapping.Culture, mapping.ColumnKind, mapping.Entry!.GetEntryData(mapping.Culture, mapping.ColumnKind)))
                 .ToArray();

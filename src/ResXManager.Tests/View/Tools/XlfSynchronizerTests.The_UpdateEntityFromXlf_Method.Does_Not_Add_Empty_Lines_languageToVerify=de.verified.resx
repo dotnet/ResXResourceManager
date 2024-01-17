@@ -119,10 +119,8 @@
   </resheader>
   <data name="MyProject.MyResource" xml:space="preserve">
     <value>De laatste keer dat ik iets leuks deed</value>
-    <comment>@Invariant</comment>
   </data>
   <data name="MyProject.AnotherResource" xml:space="preserve">
     <value>Continue to\nnext item</value>
-    <comment>@Invariant</comment>
   </data>
 </root>

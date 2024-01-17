@@ -510,11 +510,11 @@
 
         private void ExportExcel(IExportParameters? param)
         {
-            var fileName = param?.FileName;
-            if (fileName != null)
-            {
-                ResourceManager.ExportExcelFile(fileName, param.Scope, _configuration.ExcelExportMode);
-            }
+            if (param is not { FileName: { } fileName })
+                return;
+
+            ResourceManager.ExportExcelFile(fileName, param.Scope, _configuration.ExcelExportMode);
+
         }
 
         private void ImportExcel(string? fileName)

@@ -253,9 +253,14 @@
         {
             ThrowIfNotOnUIThread();
 
-            var textDocument = (TextDocument?)document?.Object(@"TextDocument");
+            if (document is null)
+                return null;
 
-            var topPoint = textDocument?.Selection?.TopPoint;
+            var textDocument = (TextDocument?)document.Object(@"TextDocument");
+            if (textDocument is null)
+                return null;
+
+            var topPoint = textDocument.Selection?.TopPoint;
             if (topPoint == null)
                 return null;
 

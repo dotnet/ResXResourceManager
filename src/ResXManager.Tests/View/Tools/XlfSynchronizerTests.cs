@@ -15,7 +15,6 @@ using Xunit;
 
 public static class XlfSynchronizerTests
 {
-    [UsesVerify]
     public class The_UpdateEntityFromXlf_Method
     {
         [Theory]
