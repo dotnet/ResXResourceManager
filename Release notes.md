@@ -1,4 +1,8 @@
-﻿1.79
+﻿1.80
+- Fix #623: Import from Excel with empty cell
+- #624: Consider blanks as changes in Excel import
+
+1.79
 - #589: add Greek Question Mark to NormalizePunctuation
 - #582: Add configuration option to append translation prefix to comment of target language(s)
 - #555: Flag for Frisian language
