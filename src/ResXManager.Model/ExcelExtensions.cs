@@ -146,10 +146,11 @@
             spreadsheetStream.Position = 0;
             using (var package = SpreadsheetDocument.Open(spreadsheetStream, false))
             {
-                var workbookPart = package.WorkbookPart;
-                var workbook = workbookPart?.Workbook;
-                var sharedStrings = workbookPart?.GetSharedStrings();
-                var sheets = workbook?.Sheets;
+                if (package.WorkbookPart is not { Workbook: { } workbook } workbookPart)
+                    return Array.Empty<EntryChange>();
+
+                var sharedStrings = workbookPart.GetSharedStrings();
+                var sheets = workbook.Sheets;
                 if (sheets == null)
                     return Array.Empty<EntryChange>();
 
@@ -254,10 +255,11 @@
         private static IEnumerable<Row> GetRows(this Sheet sheet, WorkbookPart workbookPart)
         {
             var sheetId = sheet.Id;
-            if (string.IsNullOrEmpty(sheetId))
+
+            if ((sheetId is not { Value: {} value}) || string.IsNullOrEmpty(value))
                 return Enumerable.Empty<Row>();
 
-            var worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheetId);
+            var worksheetPart = (WorksheetPart)workbookPart.GetPartById(value);
 
             return worksheetPart.Worksheet.ChildElements.OfType<SheetData>().FirstOrDefault()?.OfType<Row>() ?? Enumerable.Empty<Row>();
         }

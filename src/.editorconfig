@@ -68,3 +68,13 @@ dotnet_diagnostic.CA1003.severity = suggestion
 
 # IDE0057: Use range operator => not available in NetFramework
 dotnet_diagnostic.IDE0057.severity = silent
+
+# CA1859: Use concrete types when possible for improved performance
+dotnet_diagnostic.CA1859.severity = suggestion
+
+# CA1860: Avoid using 'Enumerable.Any()' extension method
+dotnet_diagnostic.CA1860.severity = suggestion
+
+# CA1861: Avoid constant arrays as arguments
+dotnet_diagnostic.CA1861.severity = suggestion
+
