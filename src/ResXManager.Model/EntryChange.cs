@@ -23,4 +23,16 @@ namespace ResXManager.Model
 
         public string? OriginalText { get; }
     }
+
+    public static partial class EntryChangeExtensions
+    {
+        public static bool IsModified(this EntryChange entryChange)
+        {
+            if (entryChange.OriginalText == entryChange.Text)
+                return false;
+            if (entryChange.OriginalText == null && entryChange.Text != null)
+                return true;
+            return entryChange.OriginalText != entryChange.Text;
+        }
+    }
 }

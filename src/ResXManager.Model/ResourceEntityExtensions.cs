@@ -213,12 +213,14 @@
                         Culture = dataColumnHeaders[index].ExtractCulture(),
                         ColumnKind = dataColumnHeaders[index].GetColumnKind()
                     }))
-                .Where(mapping => mapping.Entry != null)
+                .Where(mapping => mapping.Entry != null);
+
+            var entries = mappings
                 .Select(mapping => new EntryChange(mapping.Entry!, mapping.Text, mapping.Culture, mapping.ColumnKind, mapping.Entry!.GetEntryData(mapping.Culture, mapping.ColumnKind)))
                 .ToArray();
 
-            var changes = mappings
-                .Where(mapping => (mapping.OriginalText != mapping.Text) && !string.IsNullOrEmpty(mapping.Text))
+            var changes = entries
+                .Where(entryChange => entryChange.IsModified())
                 .ToArray();
 
             VerifyCultures(entity, changes.Select(c => c.Culture).Distinct());
