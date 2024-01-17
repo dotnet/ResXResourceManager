@@ -1,5 +1,6 @@
 namespace ResXManager.Model
 {
+    using System;
     using System.Globalization;
 
     public class EntryChange
@@ -24,15 +25,16 @@ namespace ResXManager.Model
         public string? OriginalText { get; }
     }
 
-    public static partial class EntryChangeExtensions
+    public static class EntryChangeExtensions
     {
         public static bool IsModified(this EntryChange entryChange)
         {
-            if (entryChange.OriginalText == entryChange.Text)
-                return false;
-            if (entryChange.OriginalText == null && entryChange.Text != null)
-                return true;
-            return entryChange.OriginalText != entryChange.Text;
+            return IsModified(entryChange.OriginalText, entryChange.Text);
+        }
+
+        public static bool IsModified(string? left, string? right)
+        {
+            return !string.Equals(left, right, StringComparison.Ordinal) && (!string.IsNullOrEmpty(left) || !string.IsNullOrEmpty(right));
         }
     }
 }
