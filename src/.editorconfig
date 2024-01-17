@@ -46,7 +46,7 @@ dotnet_style_prefer_inferred_tuple_names = true:suggestion
 dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
 dotnet_style_prefer_auto_properties = true:silent
 dotnet_style_prefer_conditional_expression_over_assignment = true:silent
-dotnet_style_prefer_conditional_expression_over_return = true:silent
+dotnet_style_prefer_conditional_expression_over_return = true:suggestion
 ###############################
 # Naming Conventions          #
 ###############################
@@ -119,9 +119,13 @@ csharp_space_between_method_call_empty_parameter_list_parentheses = false
 csharp_preserve_single_line_statements = true
 csharp_preserve_single_line_blocks = true
 
+csharp_style_namespace_declarations = file_scoped
+csharp_prefer_braces = when_multiline
+
 ###############################
 # Static Code Analysis        #
 ###############################
+[*.cs]
 
 dotnet_analyzer_diagnostic.severity = error
 
