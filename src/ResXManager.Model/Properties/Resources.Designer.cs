@@ -161,7 +161,7 @@ namespace ResXManager.Model.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Duplicate language in header."
+        ///   Looks up a localized string similar to "Duplicate language in headers {0} and {1} ('{2}')."
         /// </summary>
         public static string ImportDuplicateLanguageError {
             get {
@@ -617,7 +617,7 @@ namespace ResXManager.Model.Properties {
         /// </summary>
         ImportColumnMismatchError,
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate language in header..
+        ///   Looks up a localized string similar to Duplicate language in headers {0} and {1} ('{2}')..
         /// </summary>
         ImportDuplicateLanguageError,
         /// <summary>

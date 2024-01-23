@@ -150,7 +150,7 @@
     <value>At least three columns expected.</value>
   </data>
   <data name="ImportDuplicateLanguageError" xml:space="preserve">
-    <value>Duplicate language in header.</value>
+    <value>Duplicate language in headers {0} and {1} ('{2}').</value>
   </data>
   <data name="ImportFailedError" xml:space="preserve">
     <value>Import failed. Nothing has been imported.</value>

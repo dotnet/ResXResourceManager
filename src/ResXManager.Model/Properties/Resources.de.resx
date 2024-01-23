@@ -146,7 +146,7 @@
     <value>Mindestens drei Spalten erwartet.</value>
   </data>
   <data name="ImportDuplicateLanguageError">
-    <value>Doppelte Sprache gefunden.</value>
+    <value>Doppelte Sprache in den Headern {0} und {1} ('{2}').</value>
   </data>
   <data name="ImportFailedError">
     <value>Import fehlgeschlagen. Es wurde nichts importiert.</value>
