@@ -7,6 +7,7 @@
 
     using ResXManager.Infrastructure;
     using ResXManager.Model.Properties;
+    using TomsToolbox.Essentials;
 
     public static partial class ResourceEntityExtensions
     {
@@ -197,8 +198,16 @@
 
             dataColumnCount = dataColumnHeaders.Length;
 
-            if (dataColumnHeaders.Distinct().Count() != dataColumnHeaders.Length)
-                throw new ImportException(Resources.ImportDuplicateLanguageError);
+            var uniqueHeaders = new HashSet<string>();
+            var currentIndex = 0;
+            foreach (var columnHeader in dataColumnHeaders)
+            {
+                if (!uniqueHeaders.Add(columnHeader))
+                {
+                    throw new ImportException(string.Format(CultureInfo.CurrentCulture, Resources.ImportDuplicateLanguageError, uniqueHeaders.IndexOf(columnHeader) + 1, currentIndex + 1, columnHeader));
+                }
+                currentIndex++;
+            }
 
             var mappings = table.Skip(1)
                 .Select(columns => new { Key = columns[0], TextColumns = columns.Skip(fixedColumnHeadersCount).Take(dataColumnCount).ToArray() })

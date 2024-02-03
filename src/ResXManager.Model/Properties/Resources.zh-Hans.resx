@@ -147,7 +147,7 @@
     <value>预期至少三个列。</value>
   </data>
   <data name="ImportDuplicateLanguageError" xml:space="preserve">
-    <value>头部中有重复的语言。</value>
+    <value>标头 {0} 和 {1}（“{2}”）中的语言重复。</value>
   </data>
   <data name="ImportFailedError" xml:space="preserve">
     <value>导入失败，没有内容被导入。</value>
