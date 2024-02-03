@@ -1,13 +1,12 @@
-﻿namespace ResXManager.VSIX.Compatibility
+﻿namespace ResXManager.VSIX.Compatibility;
+
+using System.Threading.Tasks;
+
+using ResXManager.Model;
+
+public interface IRefactorings
 {
-    using System.Threading.Tasks;
+    bool CanMoveToResource();
 
-    using ResXManager.Model;
-
-    public interface IRefactorings
-    {
-        bool CanMoveToResource();
-
-        Task<ResourceTableEntry?> MoveToResourceAsync();
-    }
+    Task<ResourceTableEntry?> MoveToResourceAsync();
 }

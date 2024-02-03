@@ -1,8 +1,7 @@
-namespace ResXManager.Model
+namespace ResXManager.Model;
+
+public enum ColumnKind
 {
-    public enum ColumnKind
-    {
-        Text,
-        Comment
-    }
+    Text,
+    Comment
 }

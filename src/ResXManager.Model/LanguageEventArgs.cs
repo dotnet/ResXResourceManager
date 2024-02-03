@@ -1,14 +1,13 @@
-﻿namespace ResXManager.Model
+﻿namespace ResXManager.Model;
+
+using System;
+
+public class LanguageEventArgs : EventArgs
 {
-    using System;
-
-    public class LanguageEventArgs : EventArgs
+    public LanguageEventArgs(ResourceLanguage language)
     {
-        public LanguageEventArgs(ResourceLanguage language)
-        {
-            Language = language;
-        }
-
-        public ResourceLanguage Language { get; }
+        Language = language;
     }
+
+    public ResourceLanguage Language { get; }
 }

@@ -1,68 +1,67 @@
-﻿namespace ResXManager.View.Visuals
+﻿namespace ResXManager.View.Visuals;
+
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Composition;
+using System.Windows.Threading;
+
+using ResXManager.Infrastructure;
+using ResXManager.Model;
+
+using Throttle;
+
+using TomsToolbox.Wpf;
+using TomsToolbox.Wpf.Composition.AttributedModel;
+
+[Export, Shared]
+[VisualCompositionExport(RegionId.Shell)]
+public partial class ShellViewModel : INotifyPropertyChanged
 {
-    using System.Collections.Specialized;
-    using System.ComponentModel;
-    using System.Composition;
-    using System.Windows.Threading;
+    private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
 
-    using ResXManager.Infrastructure;
-    using ResXManager.Model;
-
-    using Throttle;
-
-    using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition.AttributedModel;
-
-    [Export, Shared]
-    [VisualCompositionExport(RegionId.Shell)]
-    public partial class ShellViewModel : INotifyPropertyChanged
+    [ImportingConstructor]
+    public ShellViewModel(ResourceViewModel resourceViewModel)
     {
-        private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
+        ResourceViewModel = resourceViewModel;
 
-        [ImportingConstructor]
-        public ShellViewModel(ResourceViewModel resourceViewModel)
+        resourceViewModel.SelectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
+    }
+
+    public ResourceViewModel ResourceViewModel { get; }
+
+    public bool IsLoading { get; set; }
+
+    public int SelectedTabIndex { get; set; }
+
+    public void SelectEntry(ResourceTableEntry entry)
+    {
+        SelectedTabIndex = 0;
+
+        _dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
         {
-            ResourceViewModel = resourceViewModel;
+            ResourceViewModel.SelectEntry(entry);
+        });
+    }
 
-            resourceViewModel.SelectedEntities.CollectionChanged += SelectedEntities_CollectionChanged;
-        }
+    private void SelectedEntities_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        Update();
 
-        public ResourceViewModel ResourceViewModel { get; }
+        IsLoading = true;
 
-        public bool IsLoading { get; set; }
-
-        public int SelectedTabIndex { get; set; }
-
-        public void SelectEntry(ResourceTableEntry entry)
+        try
         {
-            SelectedTabIndex = 0;
-
-            _dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
-            {
-                ResourceViewModel.SelectEntry(entry);
-            });
+            _dispatcher.ProcessMessages(DispatcherPriority.Render);
         }
-
-        private void SelectedEntities_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        catch
         {
-            Update();
-
-            IsLoading = true;
-
-            try
-            {
-                _dispatcher.ProcessMessages(DispatcherPriority.Render);
-            }
-            catch
-            {
-                // sometimes dispatcher processing is suspended, just ignore, as this is only used to improve UI responsiveness
-            }
+            // sometimes dispatcher processing is suspended, just ignore, as this is only used to improve UI responsiveness
         }
+    }
 
-        [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Background)]
-        private void Update()
-        {
-            IsLoading = false;
-        }
+    [Throttled(typeof(DispatcherThrottle), (int)DispatcherPriority.Background)]
+    private void Update()
+    {
+        IsLoading = false;
     }
 }

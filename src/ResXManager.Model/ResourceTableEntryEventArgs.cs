@@ -1,14 +1,13 @@
-﻿namespace ResXManager.Model
+﻿namespace ResXManager.Model;
+
+using System;
+
+public sealed class ResourceTableEntryEventArgs : EventArgs
 {
-    using System;
-
-    public sealed class ResourceTableEntryEventArgs : EventArgs
+    public ResourceTableEntryEventArgs(ResourceTableEntry entry)
     {
-        public ResourceTableEntryEventArgs(ResourceTableEntry entry)
-        {
-            Entry = entry;
-        }
-
-        public ResourceTableEntry Entry { get; }
+        Entry = entry;
     }
+
+    public ResourceTableEntry Entry { get; }
 }

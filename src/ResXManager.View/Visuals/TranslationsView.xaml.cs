@@ -1,51 +1,50 @@
-﻿namespace ResXManager.View.Visuals
+﻿namespace ResXManager.View.Visuals;
+
+using System;
+using System.Composition;
+using System.Windows;
+using System.Windows.Controls;
+
+using ResXManager.Infrastructure;
+
+using TomsToolbox.Composition;
+using TomsToolbox.Wpf;
+using TomsToolbox.Wpf.Composition;
+using TomsToolbox.Wpf.Composition.AttributedModel;
+
+/// <summary>
+/// Interaction logic for Translations.xaml
+/// </summary>
+[DataTemplate(typeof(TranslationsViewModel))]
+[Shared]
+public partial class TranslationsView
 {
-    using System;
-    using System.Composition;
-    using System.Windows;
-    using System.Windows.Controls;
-
-    using ResXManager.Infrastructure;
-
-    using TomsToolbox.Composition;
-    using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition;
-    using TomsToolbox.Wpf.Composition.AttributedModel;
-
-    /// <summary>
-    /// Interaction logic for Translations.xaml
-    /// </summary>
-    [DataTemplate(typeof(TranslationsViewModel))]
-    [Shared]
-    public partial class TranslationsView
+    [ImportingConstructor]
+    public TranslationsView(IExportProvider exportProvider)
     {
-        [ImportingConstructor]
-        public TranslationsView(IExportProvider exportProvider)
+        try
         {
-            try
-            {
-                this.SetExportProvider(exportProvider);
+            this.SetExportProvider(exportProvider);
 
-                InitializeComponent();
-            }
-            catch (Exception ex)
-            {
-                exportProvider.TraceXamlLoaderError(ex);
-            }
+            InitializeComponent();
         }
-
-        private void ComboBox_IsKeyboardFocusWithinChanged(object? sender, DependencyPropertyChangedEventArgs e)
+        catch (Exception ex)
         {
-            if (!true.Equals(e.NewValue))
-                return;
+            exportProvider.TraceXamlLoaderError(ex);
+        }
+    }
 
-            var element = sender as DependencyObject;
+    private void ComboBox_IsKeyboardFocusWithinChanged(object? sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (!true.Equals(e.NewValue))
+            return;
 
-            var row = element?.TryFindAncestor<DataGridRow>();
-            if (row != null)
-            {
-                row.IsSelected = true;
-            }
+        var element = sender as DependencyObject;
+
+        var row = element?.TryFindAncestor<DataGridRow>();
+        if (row != null)
+        {
+            row.IsSelected = true;
         }
     }
 }

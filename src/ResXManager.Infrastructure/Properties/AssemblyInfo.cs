@@ -2,9 +2,8 @@
 
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
 
-namespace ResXManager.Infrastructure.Properties
+namespace ResXManager.Infrastructure.Properties;
+
+public static class AssemblyKey
 {
-    public static class AssemblyKey
-    {
-    }
 }

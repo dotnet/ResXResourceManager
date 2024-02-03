@@ -1,632 +1,628 @@
-﻿namespace ResXManager.View.Visuals
+﻿namespace ResXManager.View.Visuals;
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Composition;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Threading;
+
+using DataGridExtensions;
+
+using ResXManager.Infrastructure;
+using ResXManager.Model;
+using ResXManager.View.ColumnHeaders;
+using ResXManager.View.Properties;
+using ResXManager.View.Tools;
+
+using Throttle;
+using TomsToolbox.Essentials;
+using TomsToolbox.ObservableCollections;
+using TomsToolbox.Wpf;
+using TomsToolbox.Wpf.Composition.AttributedModel;
+
+[Shared]
+[Export]
+[VisualCompositionExport(RegionId.Content, Sequence = 1)]
+public sealed partial class ResourceViewModel : INotifyPropertyChanged, IDisposable
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Composition;
-    using System.IO;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Input;
-    using System.Windows.Threading;
+    private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
+    private readonly IConfiguration _configuration;
+    private readonly ISourceFilesProvider _sourceFilesProvider;
+    private readonly ITracer _tracer;
+    private readonly CodeReferenceTracker _codeReferenceTracker;
+    private readonly PerformanceTracer _performanceTracer;
 
-    using DataGridExtensions;
+    private CancellationTokenSource? _loadingCancellationTokenSource;
 
-    using ResXManager.Infrastructure;
-    using ResXManager.Model;
-    using ResXManager.View.ColumnHeaders;
-    using ResXManager.View.Properties;
-    using ResXManager.View.Tools;
-
-    using Throttle;
-    using TomsToolbox.Essentials;
-    using TomsToolbox.ObservableCollections;
-    using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition.AttributedModel;
-
-    [Shared]
-    [Export]
-    [VisualCompositionExport(RegionId.Content, Sequence = 1)]
-    public sealed partial class ResourceViewModel : INotifyPropertyChanged, IDisposable
+    [ImportingConstructor]
+    public ResourceViewModel(ResourceManager resourceManager, IConfiguration configuration, ISourceFilesProvider sourceFilesProvider, CodeReferenceTracker codeReferenceTracker, ITracer tracer, PerformanceTracer performanceTracer)
     {
-        private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
-        private readonly IConfiguration _configuration;
-        private readonly ISourceFilesProvider _sourceFilesProvider;
-        private readonly ITracer _tracer;
-        private readonly CodeReferenceTracker _codeReferenceTracker;
-        private readonly PerformanceTracer _performanceTracer;
+        ResourceManager = resourceManager;
+        _configuration = configuration;
+        _sourceFilesProvider = sourceFilesProvider;
+        _codeReferenceTracker = codeReferenceTracker;
+        _tracer = tracer;
+        _performanceTracer = performanceTracer;
 
-        private CancellationTokenSource? _loadingCancellationTokenSource;
+        ResourceTableEntries = SelectedEntities.ObservableSelectMany(entity => entity.Entries);
+        ResourceTableEntries.CollectionChanged += (_, __) => ResourceTableEntries_CollectionChanged();
 
-        [ImportingConstructor]
-        public ResourceViewModel(ResourceManager resourceManager, IConfiguration configuration, ISourceFilesProvider sourceFilesProvider, CodeReferenceTracker codeReferenceTracker, ITracer tracer, PerformanceTracer performanceTracer)
+        resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
+    }
+
+    internal event EventHandler<ResourceTableEntryEventArgs>? ClearFiltersRequest;
+
+    public ResourceManager ResourceManager { get; }
+
+    public IObservableCollection<ResourceTableEntry> ResourceTableEntries { get; }
+
+    public ObservableCollection<ResourceEntity> SelectedEntities { get; } = new();
+
+    public ObservableCollection<ResourceTableEntry> SelectedTableEntries { get; } = new();
+
+    public bool IsLoading { get; private set; }
+
+    // Do not use CollectionViewSource in XAML, has huge performance impact when there are many items in the list.
+    public CollectionView GroupedResourceTableEntries
+    {
+        get
         {
-            ResourceManager = resourceManager;
-            _configuration = configuration;
-            _sourceFilesProvider = sourceFilesProvider;
-            _codeReferenceTracker = codeReferenceTracker;
-            _tracer = tracer;
-            _performanceTracer = performanceTracer;
+            CollectionView collectionView = new ListCollectionView((IList)ResourceTableEntries);
 
-            ResourceTableEntries = SelectedEntities.ObservableSelectMany(entity => entity.Entries);
-            ResourceTableEntries.CollectionChanged += (_, __) => ResourceTableEntries_CollectionChanged();
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Container"));
 
-            resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
+            return collectionView;
         }
+    }
 
-        internal event EventHandler<ResourceTableEntryEventArgs>? ClearFiltersRequest;
+    public string? LoadedSnapshot { get; set; }
 
-        public ResourceManager ResourceManager { get; }
+    public static ICommand ToggleCellSelectionCommand => new DelegateCommand(() => Settings.IsCellSelectionEnabled = !Settings.IsCellSelectionEnabled);
 
-        public IObservableCollection<ResourceTableEntry> ResourceTableEntries { get; }
+    public ICommand CopyCommand => new DelegateCommand<DataGrid>(CanCopy, CopySelected);
 
-        public ObservableCollection<ResourceEntity> SelectedEntities { get; } = new();
+    public ICommand CutCommand => new DelegateCommand<DataGrid>(CanCut, CutSelected);
 
-        public ObservableCollection<ResourceTableEntry> SelectedTableEntries { get; } = new();
+    public ICommand DeleteCommand => new DelegateCommand<DataGrid>(CanDelete, DeleteSelected);
 
-        public bool IsLoading { get; private set; }
+    public ICommand PasteCommand => new DelegateCommand<DataGrid>(CanPaste, Paste);
 
-        // Do not use CollectionViewSource in XAML, has huge performance impact when there are many items in the list.
-        public CollectionView GroupedResourceTableEntries
+    public ICommand TrimCommand => new DelegateCommand<DataGrid>(CanTrim, Trim);
+
+    public ICommand ExportExcelCommand => new DelegateCommand<IExportParameters>(CanExportExcel, ExportExcel);
+
+    public ICommand ImportExcelCommand => new DelegateCommand<string>(ImportExcel);
+
+    public ICommand ToggleInvariantCommand => new DelegateCommand(() => SelectedTableEntries.Any(), ToggleInvariant);
+
+    public static ICommand ToggleItemInvariantCommand => new DelegateCommand<DataGrid>(CanToggleItemInvariant, ToggleItemInvariant);
+
+    public ICommand ToggleConsistencyCheckCommand => new DelegateCommand<string>(CanToggleConsistencyCheck, ToggleConsistencyCheck);
+
+    public ICommand ReloadCommand => new DelegateCommand(Reload);
+
+    public ICommand SaveCommand => new DelegateCommand(() => ResourceManager.HasChanges, () => ResourceManager.Save());
+
+    public ICommand BeginFindCodeReferencesCommand => new DelegateCommand(BeginFindCodeReferences);
+
+    public ICommand CreateSnapshotCommand => new DelegateCommand<string>(CreateSnapshot);
+
+    public ICommand LoadSnapshotCommand => new DelegateCommand<string>(LoadSnapshot);
+
+    public ICommand UnloadSnapshotCommand => new DelegateCommand(() => LoadSnapshot(null));
+
+    public ICommand SelectEntityCommand => new DelegateCommand<ResourceEntity>(entity =>
+    {
+        var selectedEntities = SelectedEntities;
+
+        selectedEntities.Clear();
+        selectedEntities.Add(entity);
+    });
+
+    public int ResourceTableEntryCount => ResourceTableEntries.Count;
+
+    public void AddNewKey(ResourceEntity entity, string key)
+    {
+        if (!entity.CanEdit(null))
+            return;
+
+        var entry = entity.Add(key);
+        if (entry == null)
+            return;
+
+        ClearFiltersRequest?.Invoke(this, new ResourceTableEntryEventArgs(entry));
+
+        ResourceManager.ReloadSnapshot();
+
+        SelectedTableEntries.Clear();
+        SelectedTableEntries.Add(entry);
+    }
+
+    public void SelectEntry(ResourceTableEntry entry)
+    {
+        if (!ResourceManager.TableEntries.Contains(entry))
+            return;
+
+        var entity = entry.Container;
+
+        ClearFiltersRequest?.Invoke(this, new ResourceTableEntryEventArgs(entry));
+
+        if (!SelectedEntities.Contains(entity))
+            SelectedEntities.Add(entity);
+
+        SelectedTableEntries.Clear();
+        SelectedTableEntries.Add(entry);
+    }
+
+    private static Settings Settings => Settings.Default;
+
+    private void LoadSnapshot(string? fileName)
+    {
+        ResourceManager.LoadSnapshot(fileName.IsNullOrEmpty() ? null : File.ReadAllText(fileName));
+
+        LoadedSnapshot = fileName;
+    }
+
+    private void CreateSnapshot(string fileName)
+    {
+        var snapshot = ResourceManager.CreateSnapshot();
+
+        File.WriteAllText(fileName, snapshot);
+
+        LoadedSnapshot = fileName;
+    }
+
+    private bool CanCut(DataGrid? dataGrid)
+    {
+        return CanCopy(dataGrid) && CanDelete(dataGrid);
+    }
+
+    private void CutSelected(DataGrid? dataGrid)
+    {
+        CopySelected(dataGrid);
+        DeleteSelected(dataGrid);
+    }
+
+    private bool CanCopy(DataGrid? dataGrid)
+    {
+        if (dataGrid == null)
+            return false;
+
+        if (dataGrid.GetIsEditing())
+            return false;
+
+        if (Settings.IsCellSelectionEnabled)
+            return dataGrid.HasRectangularCellSelection(); // cell selection
+
+        var entries = SelectedTableEntries;
+        var totalNumberOfEntries = entries.Count;
+        // Only allow if all keys are different.
+        var numberOfDistinctEntries = entries.Select(e => e.Key).Distinct().Count();
+
+        return numberOfDistinctEntries == totalNumberOfEntries;
+    }
+
+    private void CopySelected(DataGrid? dataGrid)
+    {
+        if (dataGrid == null)
+            return;
+
+        if (Settings.IsCellSelectionEnabled)
         {
-            get
-            {
-                CollectionView collectionView = new ListCollectionView((IList)ResourceTableEntries);
-
-                collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Container"));
-
-                return collectionView;
-            }
+            dataGrid.GetCellSelection().SetClipboardData();
         }
-
-        public string? LoadedSnapshot { get; set; }
-
-        public static ICommand ToggleCellSelectionCommand => new DelegateCommand(() => Settings.IsCellSelectionEnabled = !Settings.IsCellSelectionEnabled);
-
-        public ICommand CopyCommand => new DelegateCommand<DataGrid>(CanCopy, CopySelected);
-
-        public ICommand CutCommand => new DelegateCommand<DataGrid>(CanCut, CutSelected);
-
-        public ICommand DeleteCommand => new DelegateCommand<DataGrid>(CanDelete, DeleteSelected);
-
-        public ICommand PasteCommand => new DelegateCommand<DataGrid>(CanPaste, Paste);
-
-        public ICommand TrimCommand => new DelegateCommand<DataGrid>(CanTrim, Trim);
-
-        public ICommand ExportExcelCommand => new DelegateCommand<IExportParameters>(CanExportExcel, ExportExcel);
-
-        public ICommand ImportExcelCommand => new DelegateCommand<string>(ImportExcel);
-
-        public ICommand ToggleInvariantCommand => new DelegateCommand(() => SelectedTableEntries.Any(), ToggleInvariant);
-
-        public static ICommand ToggleItemInvariantCommand => new DelegateCommand<DataGrid>(CanToggleItemInvariant, ToggleItemInvariant);
-
-        public ICommand ToggleConsistencyCheckCommand => new DelegateCommand<string>(CanToggleConsistencyCheck, ToggleConsistencyCheck);
-
-        public ICommand ReloadCommand => new DelegateCommand(Reload);
-
-        public ICommand SaveCommand => new DelegateCommand(() => ResourceManager.HasChanges, () => ResourceManager.Save());
-
-        public ICommand BeginFindCodeReferencesCommand => new DelegateCommand(BeginFindCodeReferences);
-
-        public ICommand CreateSnapshotCommand => new DelegateCommand<string>(CreateSnapshot);
-
-        public ICommand LoadSnapshotCommand => new DelegateCommand<string>(LoadSnapshot);
-
-        public ICommand UnloadSnapshotCommand => new DelegateCommand(() => LoadSnapshot(null));
-
-        public ICommand SelectEntityCommand => new DelegateCommand<ResourceEntity>(entity =>
+        else
         {
-            var selectedEntities = SelectedEntities;
+            var selectedItems = SelectedTableEntries;
 
-            selectedEntities.Clear();
-            selectedEntities.Add(entity);
-        });
-
-        public int ResourceTableEntryCount => ResourceTableEntries.Count;
-
-        public void AddNewKey(ResourceEntity entity, string key)
-        {
-            if (!entity.CanEdit(null))
-                return;
-
-            var entry = entity.Add(key);
-            if (entry == null)
-                return;
-
-            ClearFiltersRequest?.Invoke(this, new ResourceTableEntryEventArgs(entry));
-
-            ResourceManager.ReloadSnapshot();
-
-            SelectedTableEntries.Clear();
-            SelectedTableEntries.Add(entry);
+            selectedItems.ToTable().SetClipboardData();
         }
+    }
 
-        public void SelectEntry(ResourceTableEntry entry)
+    private bool CanDelete(DataGrid? dataGrid)
+    {
+        if (dataGrid == null)
+            return false;
+
+        if (dataGrid.GetIsEditing())
+            return false;
+
+        if (Settings.IsCellSelectionEnabled)
+            return dataGrid.GetSelectedVisibleCells().All(cellInfo => cellInfo.IsOfColumnType(ColumnType.Comment, ColumnType.Language));
+
+        return SelectedTableEntries.Any();
+    }
+
+    private void DeleteSelected(DataGrid? dataGrid)
+    {
+        if (dataGrid == null)
+            return;
+
+        if (Settings.IsCellSelectionEnabled)
         {
-            if (!ResourceManager.TableEntries.Contains(entry))
-                return;
-
-            var entity = entry.Container;
-
-            ClearFiltersRequest?.Invoke(this, new ResourceTableEntryEventArgs(entry));
-
-            if (!SelectedEntities.Contains(entity))
-                SelectedEntities.Add(entity);
-
-            SelectedTableEntries.Clear();
-            SelectedTableEntries.Add(entry);
-        }
-
-        private static Settings Settings => Settings.Default;
-
-        private void LoadSnapshot(string? fileName)
-        {
-            ResourceManager.LoadSnapshot(fileName.IsNullOrEmpty() ? null : File.ReadAllText(fileName));
-
-            LoadedSnapshot = fileName;
-        }
-
-        private void CreateSnapshot(string fileName)
-        {
-            var snapshot = ResourceManager.CreateSnapshot();
-
-            File.WriteAllText(fileName, snapshot);
-
-            LoadedSnapshot = fileName;
-        }
-
-        private bool CanCut(DataGrid? dataGrid)
-        {
-            return CanCopy(dataGrid) && CanDelete(dataGrid);
-        }
-
-        private void CutSelected(DataGrid? dataGrid)
-        {
-            CopySelected(dataGrid);
-            DeleteSelected(dataGrid);
-        }
-
-        private bool CanCopy(DataGrid? dataGrid)
-        {
-            if (dataGrid == null)
-                return false;
-
-            if (dataGrid.GetIsEditing())
-                return false;
-
-            if (Settings.IsCellSelectionEnabled)
-                return dataGrid.HasRectangularCellSelection(); // cell selection
-
-            var entries = SelectedTableEntries;
-            var totalNumberOfEntries = entries.Count;
-            // Only allow if all keys are different.
-            var numberOfDistinctEntries = entries.Select(e => e.Key).Distinct().Count();
-
-            return numberOfDistinctEntries == totalNumberOfEntries;
-        }
-
-        private void CopySelected(DataGrid? dataGrid)
-        {
-            if (dataGrid == null)
-                return;
-
-            if (Settings.IsCellSelectionEnabled)
-            {
-                dataGrid.GetCellSelection().SetClipboardData();
-            }
-            else
-            {
-                var selectedItems = SelectedTableEntries;
-
-                selectedItems.ToTable().SetClipboardData();
-            }
-        }
-
-        private bool CanDelete(DataGrid? dataGrid)
-        {
-            if (dataGrid == null)
-                return false;
-
-            if (dataGrid.GetIsEditing())
-                return false;
-
-            if (Settings.IsCellSelectionEnabled)
-                return dataGrid.GetSelectedVisibleCells().All(cellInfo => cellInfo.IsOfColumnType(ColumnType.Comment, ColumnType.Language));
-
-            return SelectedTableEntries.Any();
-        }
-
-        private void DeleteSelected(DataGrid? dataGrid)
-        {
-            if (dataGrid == null)
-                return;
-
-            if (Settings.IsCellSelectionEnabled)
-            {
-                var affectedEntries = new HashSet<ResourceTableEntry>();
-
-                foreach (var cellInfo in dataGrid.GetSelectedVisibleCells().ToArray())
-                {
-                    if (!cellInfo.IsOfColumnType(ColumnType.Comment, ColumnType.Language))
-                        continue;
-
-                    cellInfo.Column?.OnPastingCellClipboardContent(cellInfo.Item, string.Empty);
-
-                    if (cellInfo.Item is ResourceTableEntry resourceTableEntry)
-                    {
-                        affectedEntries.Add(resourceTableEntry);
-                    }
-                }
-
-                dataGrid.CommitEdit();
-                dataGrid.CommitEdit();
-
-                foreach (var entry in affectedEntries)
-                {
-                    entry?.Refresh();
-                }
-            }
-            else
-            {
-                var selectedItems = SelectedTableEntries.ToList();
-
-                if (selectedItems.Count == 0)
-                    return;
-
-                var resourceFiles = selectedItems.Select(item => item.Container).Distinct();
-
-                if (resourceFiles.Any(resourceFile => !ResourceManager.CanEdit(resourceFile, null)))
-                    return;
-
-                selectedItems.ForEach(item => item.Container.Remove(item));
-            }
-        }
-
-        private bool CanPaste(DataGrid? dataGrid)
-        {
-            if (dataGrid == null)
-                return false;
-
-            if (dataGrid.GetIsEditing())
-                return false;
-
-            if (!Clipboard.ContainsText())
-                return false;
-
-            if (Settings.IsCellSelectionEnabled)
-                return dataGrid.HasRectangularCellSelection();
-
-            return SelectedEntities.Count == 1;
-        }
-
-        private void Paste(DataGrid? dataGrid)
-        {
-            if (dataGrid == null)
-                return;
-
-            var table = ClipboardHelper.GetClipboardDataAsTable();
-            if (table == null)
-                throw new ImportException(Resources.ImportNormalizedTableExpected);
-
-            if (Settings.IsCellSelectionEnabled)
-            {
-                PasteCells(dataGrid, table);
-            }
-            else
-            {
-                PasteRows(table);
-            }
-        }
-
-        private void PasteRows(IList<IList<string>> table)
-        {
-            var selectedEntities = SelectedEntities.ToList();
-
-            if (selectedEntities.Count != 1)
-                return;
-
-            var entity = selectedEntities[0];
-
-            if (!ResourceManager.CanEdit(entity, null))
-                return;
-
-            try
-            {
-                if (table.HasValidTableHeaderRow())
-                {
-                    entity.ImportTable(table);
-                }
-                else
-                {
-                    throw new ImportException(Resources.PasteSelectionSizeMismatch);
-                }
-            }
-            catch (ImportException ex)
-            {
-                throw new ImportException(Resources.PasteFailed + " " + ex.Message);
-            }
-        }
-
-        private static void PasteCells(DataGrid dataGrid, IList<IList<string>> table)
-        {
-            if (dataGrid.GetSelectedVisibleCells().Any(cell => (cell.Item as ResourceTableEntry)?.Container.CanEdit((cell.Column?.Header as ILanguageColumnHeader)?.CultureKey) == false))
-                return;
-
-            if (!dataGrid.PasteCells(table))
-                throw new ImportException(Resources.PasteSelectionSizeMismatch);
-        }
-
-        private bool CanTrim(DataGrid? dataGrid)
-        {
-            if (dataGrid is null || dataGrid.GetIsEditing())
-                return false;
-
-            return Settings.IsCellSelectionEnabled
-                ? dataGrid.GetSelectedVisibleCells().Any()
-                : SelectedTableEntries.Any();
-        }
-
-        private static void Trim(DataGrid? dataGrid)
-        {
-            if (dataGrid is null)
-                return;
-
-            var affectedEntries = new List<ResourceTableEntry>();
+            var affectedEntries = new HashSet<ResourceTableEntry>();
 
             foreach (var cellInfo in dataGrid.GetSelectedVisibleCells().ToArray())
             {
-                var column = cellInfo.Column;
-
-                if (column.Header is not ILanguageColumnHeader languageColumnHeader)
+                if (!cellInfo.IsOfColumnType(ColumnType.Comment, ColumnType.Language))
                     continue;
 
-                if (languageColumnHeader.ColumnType is not (ColumnType.Comment or ColumnType.Language))
-                    continue;
+                cellInfo.Column?.OnPastingCellClipboardContent(cellInfo.Item, string.Empty);
 
-                if (cellInfo.Item is not ResourceTableEntry row)
-                    continue;
-
-                if (!row.CanEdit(languageColumnHeader.CultureKey))
-                    continue;
-
-                var cellContent = column.OnCopyingCellClipboardContent(row);
-                if (cellContent is not string cellText)
-                    continue;
-
-                var trimmedText = cellText.Trim();
-                if (cellText.Length == trimmedText.Length)
-                    continue;
-
-                column.OnPastingCellClipboardContent(row, trimmedText);
-
-                affectedEntries.Add(row);
+                if (cellInfo.Item is ResourceTableEntry resourceTableEntry)
+                {
+                    affectedEntries.Add(resourceTableEntry);
+                }
             }
 
             dataGrid.CommitEdit();
+            dataGrid.CommitEdit();
 
-            affectedEntries.ForEach(entry => entry.Refresh());
-        }
-
-        private void ToggleInvariant()
-        {
-            var items = SelectedTableEntries.ToArray();
-
-            if (!items.Any())
-                return;
-
-            var first = items.First();
-            if (first == null)
-                return;
-
-            var newValue = !first.IsInvariant;
-
-            foreach (var item in items)
+            foreach (var entry in affectedEntries)
             {
-                if (!item.CanEdit(item.NeutralLanguage.CultureKey))
-                    return;
-
-                item.IsInvariant = newValue;
+                entry?.Refresh();
             }
         }
-
-        private static void ToggleItemInvariant(DataGrid? dataGrid)
+        else
         {
-            if (dataGrid == null)
+            var selectedItems = SelectedTableEntries.ToList();
+
+            if (selectedItems.Count == 0)
                 return;
 
-            var cellInfos = dataGrid.GetSelectedVisibleCells().ToArray();
+            var resourceFiles = selectedItems.Select(item => item.Container).Distinct();
 
-            var isInvariant = !cellInfos.Any(item => item.IsItemInvariant());
+            if (resourceFiles.Any(resourceFile => !ResourceManager.CanEdit(resourceFile, null)))
+                return;
 
-            foreach (var info in cellInfos)
+            selectedItems.ForEach(item => item.Container.Remove(item));
+        }
+    }
+
+    private bool CanPaste(DataGrid? dataGrid)
+    {
+        if (dataGrid == null)
+            return false;
+
+        if (dataGrid.GetIsEditing())
+            return false;
+
+        if (!Clipboard.ContainsText())
+            return false;
+
+        if (Settings.IsCellSelectionEnabled)
+            return dataGrid.HasRectangularCellSelection();
+
+        return SelectedEntities.Count == 1;
+    }
+
+    private void Paste(DataGrid? dataGrid)
+    {
+        if (dataGrid == null)
+            return;
+
+        var table = ClipboardHelper.GetClipboardDataAsTable() ?? throw new ImportException(Resources.ImportNormalizedTableExpected);
+        if (Settings.IsCellSelectionEnabled)
+        {
+            PasteCells(dataGrid, table);
+        }
+        else
+        {
+            PasteRows(table);
+        }
+    }
+
+    private void PasteRows(IList<IList<string>> table)
+    {
+        var selectedEntities = SelectedEntities.ToList();
+
+        if (selectedEntities.Count != 1)
+            return;
+
+        var entity = selectedEntities[0];
+
+        if (!ResourceManager.CanEdit(entity, null))
+            return;
+
+        try
+        {
+            if (table.HasValidTableHeaderRow())
             {
-                var col = info.Column?.Header as ILanguageColumnHeader;
-
-                if (col?.ColumnType != ColumnType.Language)
-                    continue;
-
-                var item = info.Item as ResourceTableEntry;
-
-                if (item?.CanEdit(col.CultureKey) != true)
-                    return;
-
-                item.IsItemInvariant.SetValue(col.CultureKey, isInvariant);
+                entity.ImportTable(table);
+            }
+            else
+            {
+                throw new ImportException(Resources.PasteSelectionSizeMismatch);
             }
         }
-
-        private static bool CanToggleItemInvariant(DataGrid? dataGrid)
+        catch (ImportException ex)
         {
-            if (dataGrid == null)
-                return false;
+            throw new ImportException(Resources.PasteFailed + " " + ex.Message);
+        }
+    }
 
-            return dataGrid
-                .GetSelectedVisibleCells()
-                .Any(cell => (cell.Column?.Header as ILanguageColumnHeader)?.ColumnType == ColumnType.Language);
+    private static void PasteCells(DataGrid dataGrid, IList<IList<string>> table)
+    {
+        if (dataGrid.GetSelectedVisibleCells().Any(cell => (cell.Item as ResourceTableEntry)?.Container.CanEdit((cell.Column?.Header as ILanguageColumnHeader)?.CultureKey) == false))
+            return;
+
+        if (!dataGrid.PasteCells(table))
+            throw new ImportException(Resources.PasteSelectionSizeMismatch);
+    }
+
+    private bool CanTrim(DataGrid? dataGrid)
+    {
+        if (dataGrid is null || dataGrid.GetIsEditing())
+            return false;
+
+        return Settings.IsCellSelectionEnabled
+            ? dataGrid.GetSelectedVisibleCells().Any()
+            : SelectedTableEntries.Any();
+    }
+
+    private static void Trim(DataGrid? dataGrid)
+    {
+        if (dataGrid is null)
+            return;
+
+        var affectedEntries = new List<ResourceTableEntry>();
+
+        foreach (var cellInfo in dataGrid.GetSelectedVisibleCells().ToArray())
+        {
+            var column = cellInfo.Column;
+
+            if (column.Header is not ILanguageColumnHeader languageColumnHeader)
+                continue;
+
+            if (languageColumnHeader.ColumnType is not (ColumnType.Comment or ColumnType.Language))
+                continue;
+
+            if (cellInfo.Item is not ResourceTableEntry row)
+                continue;
+
+            if (!row.CanEdit(languageColumnHeader.CultureKey))
+                continue;
+
+            var cellContent = column.OnCopyingCellClipboardContent(row);
+            if (cellContent is not string cellText)
+                continue;
+
+            var trimmedText = cellText.Trim();
+            if (cellText.Length == trimmedText.Length)
+                continue;
+
+            column.OnPastingCellClipboardContent(row, trimmedText);
+
+            affectedEntries.Add(row);
         }
 
-        private bool CanToggleConsistencyCheck(string ruleId)
+        dataGrid.CommitEdit();
+
+        affectedEntries.ForEach(entry => entry.Refresh());
+    }
+
+    private void ToggleInvariant()
+    {
+        var items = SelectedTableEntries.ToArray();
+
+        if (!items.Any())
+            return;
+
+        var first = items.First();
+        if (first == null)
+            return;
+
+        var newValue = !first.IsInvariant;
+
+        foreach (var item in items)
         {
-            return SelectedTableEntries.Any() && _configuration.Rules.IsEnabled(ruleId);
+            if (!item.CanEdit(item.NeutralLanguage.CultureKey))
+                return;
+
+            item.IsInvariant = newValue;
         }
+    }
 
-        private void ToggleConsistencyCheck(string ruleId)
+    private static void ToggleItemInvariant(DataGrid? dataGrid)
+    {
+        if (dataGrid == null)
+            return;
+
+        var cellInfos = dataGrid.GetSelectedVisibleCells().ToArray();
+
+        var isInvariant = !cellInfos.Any(item => item.IsItemInvariant());
+
+        foreach (var info in cellInfos)
         {
-            var items = SelectedTableEntries.ToArray();
+            var col = info.Column?.Header as ILanguageColumnHeader;
 
-            if (!items.Any())
+            if (col?.ColumnType != ColumnType.Language)
+                continue;
+
+            var item = info.Item as ResourceTableEntry;
+
+            if (item?.CanEdit(col.CultureKey) != true)
                 return;
 
-            var first = items.First();
-            if (first == null)
+            item.IsItemInvariant.SetValue(col.CultureKey, isInvariant);
+        }
+    }
+
+    private static bool CanToggleItemInvariant(DataGrid? dataGrid)
+    {
+        if (dataGrid == null)
+            return false;
+
+        return dataGrid
+            .GetSelectedVisibleCells()
+            .Any(cell => cell.Column?.Header is ILanguageColumnHeader { ColumnType: ColumnType.Language });
+    }
+
+    private bool CanToggleConsistencyCheck(string ruleId)
+    {
+        return SelectedTableEntries.Any() && _configuration.Rules.IsEnabled(ruleId);
+    }
+
+    private void ToggleConsistencyCheck(string ruleId)
+    {
+        var items = SelectedTableEntries.ToArray();
+
+        if (!items.Any())
+            return;
+
+        var first = items.First();
+        if (first == null)
+            return;
+
+        var newValue = !first.IsRuleEnabled[ruleId];
+
+        foreach (var item in items)
+        {
+            if (!item.CanEdit(item.NeutralLanguage.CultureKey))
                 return;
 
-            var newValue = !first.IsRuleEnabled[ruleId];
+            item.IsRuleEnabled[ruleId] = newValue;
+        }
+    }
 
-            foreach (var item in items)
+    private static bool CanExportExcel(IExportParameters? param)
+    {
+        if (param == null)
+            return true; // param will be added by converter when exporting...
+
+        var scope = param.Scope;
+
+        return (scope == null) || (scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()));
+    }
+
+    private void ExportExcel(IExportParameters? param)
+    {
+        if (param is not { FileName: { } fileName })
+            return;
+
+        ResourceManager.ExportExcelFile(fileName, param.Scope, _configuration.ExcelExportMode);
+
+    }
+
+    private void ImportExcel(string? fileName)
+    {
+        if (fileName.IsNullOrEmpty())
+            return;
+
+        var changes = ResourceManager.ImportExcelFile(fileName);
+
+        changes.Apply();
+    }
+
+    private async void Reload()
+    {
+        try
+        {
+            await ReloadAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _tracer.TraceError(ex.ToString());
+        }
+    }
+
+    public async Task ReloadAsync()
+    {
+        var cancellationTokenSource = new CancellationTokenSource();
+        var cancellationToken = cancellationTokenSource.Token;
+
+        Interlocked.Exchange(ref _loadingCancellationTokenSource, cancellationTokenSource)?.Cancel();
+
+        try
+        {
+            IsLoading = true;
+
+            using (_performanceTracer.Start("ResourceManager.Load"))
             {
-                if (!item.CanEdit(item.NeutralLanguage.CultureKey))
+                var solutionFolder = _sourceFilesProvider.SolutionFolder;
+
+                var sourceFiles = await _sourceFilesProvider.GetSourceFilesAsync(cancellationToken).ConfigureAwait(true);
+
+                if (cancellationToken.IsCancellationRequested)
                     return;
 
-                item.IsRuleEnabled[ruleId] = newValue;
+                _codeReferenceTracker.StopFind();
+
+                await ResourceManager.ReloadAsync(solutionFolder, sourceFiles, cancellationToken).ConfigureAwait(true);
             }
         }
-
-        private static bool CanExportExcel(IExportParameters? param)
+        catch (OperationCanceledException)
         {
-            if (param == null)
-                return true; // param will be added by converter when exporting...
-
-            var scope = param.Scope;
-
-            return (scope == null) || (scope.Entries.Any() && (scope.Languages.Any() || scope.Comments.Any()));
         }
-
-        private void ExportExcel(IExportParameters? param)
+        catch (Exception ex)
         {
-            if (param is not { FileName: { } fileName })
-                return;
-
-            ResourceManager.ExportExcelFile(fileName, param.Scope, _configuration.ExcelExportMode);
-
+            _tracer.TraceError(ex.ToString());
         }
-
-        private void ImportExcel(string? fileName)
+        finally
         {
-            if (fileName.IsNullOrEmpty())
-                return;
+            if (Interlocked.CompareExchange(ref _loadingCancellationTokenSource, null, cancellationTokenSource) == cancellationTokenSource)
+            {
+                IsLoading = false;
+            }
 
-            var changes = ResourceManager.ImportExcelFile(fileName);
-
-            changes.Apply();
+            cancellationTokenSource.Dispose();
         }
+    }
 
-        private async void Reload()
+    private void BeginFindCodeReferences()
+    {
+        _codeReferenceTracker.BeginFind();
+    }
+
+    private void ResourceManager_LanguageChanged(object? sender, LanguageEventArgs e)
+    {
+        if (!_configuration.SaveFilesImmediatelyUponChange)
+            return;
+
+        var language = e.Language;
+
+        // Defer save to avoid repeated file access
+        _dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
         {
             try
             {
-                await ReloadAsync().ConfigureAwait(false);
+                if (!language.HasChanges)
+                    return;
+
+                language.Save();
             }
             catch (Exception ex)
             {
                 _tracer.TraceError(ex.ToString());
+
+                MessageBox.Show(ex.Message, Resources.Title);
             }
-        }
+        });
+    }
 
-        public async Task ReloadAsync()
-        {
-            var cancellationTokenSource = new CancellationTokenSource();
-            var cancellationToken = cancellationTokenSource.Token;
+    [Throttled(typeof(DispatcherThrottle))]
+    private void ResourceTableEntries_CollectionChanged()
+    {
+        OnPropertyChanged(nameof(ResourceTableEntryCount));
+    }
 
-            Interlocked.Exchange(ref _loadingCancellationTokenSource, cancellationTokenSource)?.Cancel();
+    public override string ToString()
+    {
+        return Resources.ShellTabHeader_Main;
+    }
 
-            try
-            {
-                IsLoading = true;
-
-                using (_performanceTracer.Start("ResourceManager.Load"))
-                {
-                    var solutionFolder = _sourceFilesProvider.SolutionFolder;
-
-                    var sourceFiles = await _sourceFilesProvider.GetSourceFilesAsync(cancellationToken).ConfigureAwait(true);
-
-                    if (cancellationToken.IsCancellationRequested)
-                        return;
-
-                    _codeReferenceTracker.StopFind();
-
-                    await ResourceManager.ReloadAsync(solutionFolder, sourceFiles, cancellationToken).ConfigureAwait(true);
-                }
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (Exception ex)
-            {
-                _tracer.TraceError(ex.ToString());
-            }
-            finally
-            {
-                if (Interlocked.CompareExchange(ref _loadingCancellationTokenSource, null, cancellationTokenSource) == cancellationTokenSource)
-                {
-                    IsLoading = false;
-                }
-
-                cancellationTokenSource.Dispose();
-            }
-        }
-
-        private void BeginFindCodeReferences()
-        {
-            _codeReferenceTracker.BeginFind();
-        }
-
-        private void ResourceManager_LanguageChanged(object? sender, LanguageEventArgs e)
-        {
-            if (!_configuration.SaveFilesImmediatelyUponChange)
-                return;
-
-            var language = e.Language;
-
-            // Defer save to avoid repeated file access
-            _dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
-            {
-                try
-                {
-                    if (!language.HasChanges)
-                        return;
-
-                    language.Save();
-                }
-                catch (Exception ex)
-                {
-                    _tracer.TraceError(ex.ToString());
-
-                    MessageBox.Show(ex.Message, Resources.Title);
-                }
-            });
-        }
-
-        [Throttled(typeof(DispatcherThrottle))]
-        private void ResourceTableEntries_CollectionChanged()
-        {
-            OnPropertyChanged(nameof(ResourceTableEntryCount));
-        }
-
-        public override string ToString()
-        {
-            return Resources.ShellTabHeader_Main;
-        }
-
-        public void Dispose()
-        {
-            Interlocked.Exchange(ref _loadingCancellationTokenSource, null)?.Dispose();
-        }
+    public void Dispose()
+    {
+        Interlocked.Exchange(ref _loadingCancellationTokenSource, null)?.Dispose();
     }
 }

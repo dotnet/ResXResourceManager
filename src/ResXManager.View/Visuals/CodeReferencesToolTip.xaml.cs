@@ -1,29 +1,28 @@
-﻿namespace ResXManager.View.Visuals
+﻿namespace ResXManager.View.Visuals;
+
+using System;
+
+using ResXManager.Infrastructure;
+
+using TomsToolbox.Composition;
+using TomsToolbox.Wpf.Composition;
+
+/// <summary>
+/// Interaction logic for CodeReferencesToolTip.xaml
+/// </summary>
+public partial class CodeReferencesToolTip
 {
-    using System;
-
-    using ResXManager.Infrastructure;
-
-    using TomsToolbox.Composition;
-    using TomsToolbox.Wpf.Composition;
-
-    /// <summary>
-    /// Interaction logic for CodeReferencesToolTip.xaml
-    /// </summary>
-    public partial class CodeReferencesToolTip
+    public CodeReferencesToolTip(IExportProvider exportProvider)
     {
-        public CodeReferencesToolTip(IExportProvider exportProvider)
+        try
         {
-            try
-            {
-                this.SetExportProvider(exportProvider);
+            this.SetExportProvider(exportProvider);
 
-                InitializeComponent();
-            }
-            catch (Exception ex)
-            {
-                exportProvider.TraceXamlLoaderError(ex);
-            }
+            InitializeComponent();
+        }
+        catch (Exception ex)
+        {
+            exportProvider.TraceXamlLoaderError(ex);
         }
     }
 }

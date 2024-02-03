@@ -1,29 +1,28 @@
-﻿namespace ResXManager.VSIX.Compatibility
+﻿namespace ResXManager.VSIX.Compatibility;
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows;
+
+using ResXManager.Model;
+
+public interface IVsixCompatibility
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Windows;
+    Task<ICollection<string>> GetSelectedFilesAsync();
 
-    using ResXManager.Model;
+    bool ContainsChildOfWinFormsDesignerItem(ResourceEntity entity, string? fileName);
 
-    public interface IVsixCompatibility
-    {
-        Task<ICollection<string>> GetSelectedFilesAsync();
+    void RunCustomTool(IEnumerable<ResourceEntity> entities, string fileName);
 
-        bool ContainsChildOfWinFormsDesignerItem(ResourceEntity entity, string? fileName);
+    void RunCustomTool(ResourceEntity entity);
 
-        void RunCustomTool(IEnumerable<ResourceEntity> entities, string fileName);
+    Task<bool> AffectsResourceFileAsync(string? fileName);
 
-        void RunCustomTool(ResourceEntity entity);
+    void SetFontSize(DependencyObject view);
 
-        Task<bool> AffectsResourceFileAsync(string? fileName);
+    string EvaluateMoveToResourcePattern(string pattern, string? key, bool reuseExisting, ResourceEntity? selectedResourceEntity, ResourceTableEntry? selectedResourceEntry);
 
-        void SetFontSize(DependencyObject view);
+    bool ActivateAlreadyOpenEditor(IEnumerable<ResourceLanguage> languages);
 
-        string EvaluateMoveToResourcePattern(string pattern, string? key, bool reuseExisting, ResourceEntity? selectedResourceEntity, ResourceTableEntry? selectedResourceEntry);
-
-        bool ActivateAlreadyOpenEditor(IEnumerable<ResourceLanguage> languages);
-
-        void AddProjectItems(ResourceEntity entity, ResourceLanguage neutralLanguage, string languageFileName);
-    }
+    void AddProjectItems(ResourceEntity entity, ResourceLanguage neutralLanguage, string languageFileName);
 }

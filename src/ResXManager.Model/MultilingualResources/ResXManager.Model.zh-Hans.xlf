@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="zh-Hans" original="RESXMANAGER.MODEL/PROPERTIES/RESOURCES.RESX">
+    <body>
+      <group id="RESXMANAGER.MODEL/PROPERTIES/RESOURCES.RESX" datatype="resx">
+        <trans-unit id="DuplicateKeyError" translate="yes" xml:space="preserve">
+          <source>Duplicate keys in '{0}':
+{1}
+</source>
+          <target state="new">“{0}”中的重复键：
+{1}
+</target>
+        </trans-unit>
+        <trans-unit id="DuplicateKeyHandling_Fail" translate="yes" xml:space="preserve">
+          <source>Show an error message and don't load the resource</source>
+          <target state="new">显示错误消息，不加载该资源</target>
+        </trans-unit>
+        <trans-unit id="DuplicateKeyHandling_Rename" translate="yes" xml:space="preserve">
+          <source>Postfix duplicate/empty keys with "_Duplicate[#]"/"_Empty[#]"</source>
+          <target state="new">在重复或空的资源前增加 "_Duplicate[#]"/"_Empty[#]" 后缀</target>
+        </trans-unit>
+        <trans-unit id="EmptyKeysError" translate="yes" xml:space="preserve">
+          <source>Empty keys in '{0}'</source>
+          <target state="new">“{0}”中的空键</target>
+        </trans-unit>
+        <trans-unit id="ExcelExport_MultipleSheets" translate="yes" xml:space="preserve">
+          <source>Multiple sheets</source>
+          <target state="new">多工作表</target>
+        </trans-unit>
+        <trans-unit id="ExcelExport_PlainTextTabDelimited" translate="yes" xml:space="preserve">
+          <source>Plain text, tab delimited</source>
+          <target state="new">纯文本，制表符分隔</target>
+        </trans-unit>
+        <trans-unit id="ExcelExport_SingleSheet" translate="yes" xml:space="preserve">
+          <source>Single sheet</source>
+          <target state="new">单工作表</target>
+        </trans-unit>
+        <trans-unit id="FileSaveError" translate="yes" xml:space="preserve">
+          <source>Error saving file '{0}':
+{1}
+</source>
+          <target state="new">保存文件“{0}”时出错：
+{1}
+</target>
+        </trans-unit>
+        <trans-unit id="ImportColumnMismatchError" translate="yes" xml:space="preserve">
+          <source>At least three columns expected.</source>
+          <target state="new">预期至少三个列。</target>
+        </trans-unit>
+        <trans-unit id="ImportDuplicateLanguageError" translate="yes" xml:space="preserve">
+          <source>Duplicate language in headers {0} and {1} ('{2}').</source>
+          <target state="new">标头 {0} 和 {1}（“{2}”）中的语言重复。</target>
+        </trans-unit>
+        <trans-unit id="ImportFailedError" translate="yes" xml:space="preserve">
+          <source>Import failed. Nothing has been imported.</source>
+          <target state="new">导入失败，没有内容被导入。</target>
+        </trans-unit>
+        <trans-unit id="ImportFailedPartiallyError" translate="yes" xml:space="preserve">
+          <source>Import failed partially. Some columns have been already imported, but not all.</source>
+          <target state="new">导入部分失败，仅部分列被导入。</target>
+        </trans-unit>
+        <trans-unit id="ImportHeaderMismatchError" translate="yes" xml:space="preserve">
+          <source>Standard header expected.</source>
+          <target state="new">预期的标准头。</target>
+        </trans-unit>
+        <trans-unit id="ImportLanguageNotEditable" translate="yes" xml:space="preserve">
+          <source>The language "{0}" can't be edited. The operation was aborted.</source>
+          <target state="new">不能编辑语言"{0}"。已中止操作。</target>
+        </trans-unit>
+        <trans-unit id="ImportMapSheetError" translate="yes" xml:space="preserve">
+          <source>The sheet "{0}" can't be imported; there is no matching resource file in the solution.</source>
+          <target state="new">表"{0}"不能导入;在解决方案中没有匹配的资源文件。</target>
+        </trans-unit>
+        <trans-unit id="InvalidResourceFileError" translate="yes" xml:space="preserve">
+          <source>{0} is not a valid RESX resource file: No xml root.</source>
+          <target state="new">{0} 不是有效的 RESX 资源文件︰没有 xml 根。</target>
+        </trans-unit>
+        <trans-unit id="InvalidResourceFileNameAttributeMissingError" translate="yes" xml:space="preserve">
+          <source>{0} is not a valid RESX resource file: Not all entries have a name attribute.</source>
+          <target state="new">{0} 不是有效的 RESX 资源文件︰并不是所有的条目具有名称属性。</target>
+        </trans-unit>
+        <trans-unit id="InvalidResourceFileValueAttributeMissingError" translate="yes" xml:space="preserve">
+          <source>{0} is not a valid RESX resource file: Not all entries have a value attribute.</source>
+          <target state="new">{0} 不是有效的 RESX 资源文件：并非所有条目都具有值属性。</target>
+        </trans-unit>
+        <trans-unit id="KeyAlreadyExists" translate="yes" xml:space="preserve">
+          <source>This key already exists: {0}</source>
+          <target state="new">名称 {0} 已经存在</target>
+        </trans-unit>
+        <trans-unit id="LanguageNotDefinedError" translate="yes" xml:space="preserve">
+          <source>Language is not defined: "{0}".</source>
+          <target state="new">未定义语言："{0}"。</target>
+        </trans-unit>
+        <trans-unit id="Neutral" translate="yes" xml:space="preserve">
+          <source>Neutral</source>
+          <target state="new">中立</target>
+        </trans-unit>
+        <trans-unit id="NotAllLanguagesAreEditable" translate="yes" xml:space="preserve">
+          <source>Not all resource files are editable</source>
+          <target state="new">某些资源文件是只读的</target>
+        </trans-unit>
+        <trans-unit id="PrefixFieldTypeAll" translate="yes" xml:space="preserve">
+          <source>All</source>
+          <target state="new">全部</target>
+        </trans-unit>
+        <trans-unit id="PrefixFieldTypeComment" translate="yes" xml:space="preserve">
+          <source>Comment</source>
+          <target state="new">评论</target>
+        </trans-unit>
+        <trans-unit id="PrefixFieldTypeTargetComment" translate="yes" xml:space="preserve">
+          <source>Target Comment</source>
+          <target state="new">目标注释</target>
+        </trans-unit>
+        <trans-unit id="PrefixFieldTypeValue" translate="yes" xml:space="preserve">
+          <source>Value</source>
+          <target state="new">价值</target>
+        </trans-unit>
+        <trans-unit id="PrefixFieldTypeValueAndNeutralComment" translate="yes" xml:space="preserve">
+          <source>Value and Neutral Comment</source>
+          <target state="new">价值和中性评论</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationLead_Description" translate="yes" xml:space="preserve">
+          <source>This rule verifies that the punctuation of the entry matches between all translations.</source>
+          <target state="new">此规则验证条目的标点在所有翻译之间都匹配。</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationLead_Error_Intro" translate="yes" xml:space="preserve">
+          <source>The punctuation at the start of the messages doesn't match up.</source>
+          <target state="new">条目开头的标点符号不匹配。</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationLead_Error_NoPunctuationExpected" translate="yes" xml:space="preserve">
+          <source>No punctuation was expected at the start of the message.</source>
+          <target state="new">条目开头不应出现标点符号。</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationLead_Error_PunctuationSeqExpected" translate="yes" xml:space="preserve">
+          <source>The expected leading punctuation sequence is: {0}</source>
+          <target state="new">预期的首标点序列为：{0}</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationLead_Name" translate="yes" xml:space="preserve">
+          <source>Leading punctuation</source>
+          <target state="new">首标点</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationTail_Description" translate="yes" xml:space="preserve">
+          <source>This rule verifies the punctuation at the end of the message.</source>
+          <target state="new">此规则验证条目末尾的标点符号。</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationTail_Error_Intro" translate="yes" xml:space="preserve">
+          <source>The punctuation at the end of the messages doesn't match up.</source>
+          <target state="new">条目末尾的标点符号不匹配。</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected" translate="yes" xml:space="preserve">
+          <source>No punctuation was expected at the end of the message.</source>
+          <target state="new">条目末尾不应出现标点符号。</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected" translate="yes" xml:space="preserve">
+          <source>The expected trailing punctuation sequence is: {0}</source>
+          <target state="new">预期的尾标点序列为：{0}</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationTail_Name" translate="yes" xml:space="preserve">
+          <source>Trailing punctuation</source>
+          <target state="new">尾标点</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleStringFormat_Description" translate="yes" xml:space="preserve">
+          <source>This rule verifies that the string format parameters match in all translations of a item.</source>
+          <target state="new">此规则验证字符串格式参数在项目的所有翻译中是否匹配。</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleStringFormat_Name" translate="yes" xml:space="preserve">
+          <source>Matching string format parameters</source>
+          <target state="new">匹配字符串格式参数</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceLead_Description" translate="yes" xml:space="preserve">
+          <source>This rule verifies that the whitespaces at the start of the messages match.</source>
+          <target state="new">此规则验证条目开头的空白是否匹配。</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceLead_Error_Intro" translate="yes" xml:space="preserve">
+          <source>The whitespaces at the start of the sequence don't match up.</source>
+          <target state="new">序列开头的空白不匹配。</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceLead_Error_NoWhiteSpaceExpected" translate="yes" xml:space="preserve">
+          <source>No whitespaces are expected at the start of the sequence.</source>
+          <target state="new">在序列开始处不应有空白。</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceLead_Error_WhiteSpaceSeqExpected" translate="yes" xml:space="preserve">
+          <source>The expected whitespace sequence is: {0}</source>
+          <target state="new">预期的空白序列为：{0}</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceLead_Name" translate="yes" xml:space="preserve">
+          <source>Leading whitespace</source>
+          <target state="new">起始空白</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceTail_Description" translate="yes" xml:space="preserve">
+          <source>This rule verifies that the trailing whitespaces of the messages match.</source>
+          <target state="new">此规则验证条目的尾空白是否匹配。</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceTail_Error_Intro" translate="yes" xml:space="preserve">
+          <source>The whitespaces at the end of the sequence don't match up.</source>
+          <target state="new">序列末尾的空白不匹配。</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceTail_Error_NoWhiteSpaceExpected" translate="yes" xml:space="preserve">
+          <source>No whitespaces are expected at the end of the sequence.</source>
+          <target state="new">序列末尾不应有空白。</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceTail_Error_WhiteSpaceSeqExpected" translate="yes" xml:space="preserve">
+          <source>The expected whitespace sequence is: {0}</source>
+          <target state="new">预期的空白序列为：{0}</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceTail_Name" translate="yes" xml:space="preserve">
+          <source>Trailing whitespace</source>
+          <target state="new">尾空白</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntry_Error_InvariantWithValue" translate="yes" xml:space="preserve">
+          <source>Item is invariant but contains a value</source>
+          <target state="new">项目无效但包含值</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntry_Error_MissingTranslation" translate="yes" xml:space="preserve">
+          <source>Missing translation</source>
+          <target state="new">缺少翻译</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntry_Error_StringFormatParameterMismatch" translate="yes" xml:space="preserve">
+          <source>Warning: This item contains string format parameter mismatches!</source>
+          <target state="new">警告︰ 此项目包含字符串格式参数不匹配！</target>
+        </trans-unit>
+        <trans-unit id="SnapshotAnnotation" translate="yes" xml:space="preserve">
+          <source>Snapshot: "{0}"</source>
+          <target state="new">快照：“{0}”</target>
+        </trans-unit>
+        <trans-unit id="Title" translate="yes" xml:space="preserve">
+          <source>ResX Resource Manager</source>
+          <target state="new"></target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>

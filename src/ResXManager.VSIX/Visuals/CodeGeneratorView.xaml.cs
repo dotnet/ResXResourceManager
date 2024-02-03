@@ -1,33 +1,32 @@
-﻿namespace ResXManager.VSIX.Visuals
+﻿namespace ResXManager.VSIX.Visuals;
+
+using System;
+using System.Composition;
+
+using ResXManager.Infrastructure;
+
+using TomsToolbox.Composition;
+using TomsToolbox.Wpf.Composition;
+using TomsToolbox.Wpf.Composition.AttributedModel;
+
+/// <summary>
+/// Interaction logic for CodeGeneratorView.xaml
+/// </summary>
+[VisualCompositionExport(RegionId.ProjectListItemDecorator)]
+public partial class CodeGeneratorView
 {
-    using System;
-    using System.Composition;
-
-    using ResXManager.Infrastructure;
-
-    using TomsToolbox.Composition;
-    using TomsToolbox.Wpf.Composition;
-    using TomsToolbox.Wpf.Composition.AttributedModel;
-
-    /// <summary>
-    /// Interaction logic for CodeGeneratorView.xaml
-    /// </summary>
-    [VisualCompositionExport(RegionId.ProjectListItemDecorator)]
-    public partial class CodeGeneratorView
+    [ImportingConstructor]
+    public CodeGeneratorView(IExportProvider exportProvider)
     {
-        [ImportingConstructor]
-        public CodeGeneratorView(IExportProvider exportProvider)
+        try
         {
-            try
-            {
-                this.SetExportProvider(exportProvider);
+            this.SetExportProvider(exportProvider);
 
-                InitializeComponent();
-            }
-            catch (Exception ex)
-            {
-                exportProvider.TraceXamlLoaderError(ex);
-            }
+            InitializeComponent();
+        }
+        catch (Exception ex)
+        {
+            exportProvider.TraceXamlLoaderError(ex);
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace ResXManager.VSIX.Compatibility
+﻿namespace ResXManager.VSIX.Compatibility;
+
+public interface IDteProjectFile
 {
-    public interface IDteProjectFile
-    {
-        CodeGenerator CodeGenerator { get; set; }
-    }
+    CodeGenerator CodeGenerator { get; set; }
 }

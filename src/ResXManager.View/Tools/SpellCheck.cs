@@ -1,70 +1,69 @@
-﻿namespace ResXManager.View.Tools
+﻿namespace ResXManager.View.Tools;
+
+using System;
+using System.Windows;
+using System.Windows.Controls.Primitives;
+using System.Windows.Threading;
+
+using ResXManager.Infrastructure;
+
+using TomsToolbox.Essentials;
+using TomsToolbox.Wpf;
+using TomsToolbox.Wpf.Composition;
+
+public static class Spellcheck
 {
-    using System;
-    using System.Windows;
-    using System.Windows.Controls.Primitives;
-    using System.Windows.Threading;
+    private static bool _exceptionTraced;
 
-    using ResXManager.Infrastructure;
-
-    using TomsToolbox.Essentials;
-    using TomsToolbox.Wpf;
-    using TomsToolbox.Wpf.Composition;
-
-    public static class Spellcheck
+    [AttachedPropertyBrowsableForType(typeof(TextBoxBase))]
+    public static bool GetIsEnabled(TextBoxBase item)
     {
-        private static bool _exceptionTraced;
-
-        [AttachedPropertyBrowsableForType(typeof(TextBoxBase))]
-        public static bool GetIsEnabled(TextBoxBase item)
-        {
-            return item.GetValue<bool>(IsEnabledProperty);
-        }
-        public static void SetIsEnabled(TextBoxBase item, bool value)
-        {
-            item.SetValue(IsEnabledProperty, value);
-        }
+        return item.GetValue<bool>(IsEnabledProperty);
+    }
+    public static void SetIsEnabled(TextBoxBase item, bool value)
+    {
+        item.SetValue(IsEnabledProperty, value);
+    }
 #pragma warning disable CA1200 // Avoid using cref tags with a prefix
-        /// <summary>
-        /// Identifies the <see cref="P:ResXManager.View.Tools.Spellcheck.IsEnabled"/> attached property
-        /// </summary>
-        /// <AttachedPropertyComments>
-        /// <summary>
-        /// A exception safe wrapper around <see cref="System.Windows.Controls.SpellCheck"/>
-        /// </summary>
-        /// </AttachedPropertyComments>
+    /// <summary>
+    /// Identifies the <see cref="P:ResXManager.View.Tools.Spellcheck.IsEnabled"/> attached property
+    /// </summary>
+    /// <AttachedPropertyComments>
+    /// <summary>
+    /// A exception safe wrapper around <see cref="System.Windows.Controls.SpellCheck"/>
+    /// </summary>
+    /// </AttachedPropertyComments>
 #pragma warning restore CA1200 // Avoid using cref tags with a prefix
-        public static readonly DependencyProperty IsEnabledProperty =
-            DependencyProperty.RegisterAttached("IsEnabled", typeof(bool), typeof(Spellcheck), new FrameworkPropertyMetadata(false, IsEnabled_Changed));
+    public static readonly DependencyProperty IsEnabledProperty =
+        DependencyProperty.RegisterAttached("IsEnabled", typeof(bool), typeof(Spellcheck), new FrameworkPropertyMetadata(false, IsEnabled_Changed));
 
-        private static void IsEnabled_Changed(DependencyObject? d, DependencyPropertyChangedEventArgs e)
+    private static void IsEnabled_Changed(DependencyObject? d, DependencyPropertyChangedEventArgs e)
+    {
+        var textBox = d as TextBoxBase;
+        if (textBox == null)
+            return;
+
+        try
         {
-            var textBox = d as TextBoxBase;
-            if (textBox == null)
+            textBox.SpellCheck.IsEnabled = e.NewValue.SafeCast<bool>();
+        }
+        catch (Exception ex)
+        {
+            textBox.SpellCheck.IsEnabled = false;
+
+            if (_exceptionTraced)
                 return;
 
-            try
+            var message = ex.Message;
+
+            textBox.BeginInvoke(DispatcherPriority.Background, () =>
             {
-                textBox.SpellCheck.IsEnabled = e.NewValue.SafeCast<bool>();
-            }
-            catch (Exception ex)
-            {
-                textBox.SpellCheck.IsEnabled = false;
+                var exportProvider = textBox.TryGetExportProvider();
+                var tracer = exportProvider?.GetExportedValueOrDefault<ITracer>();
+                tracer?.TraceError("Failed to enable the spell checker: " + message);
+            });
 
-                if (_exceptionTraced)
-                    return;
-
-                var message = ex.Message;
-
-                textBox.BeginInvoke(DispatcherPriority.Background, () =>
-                {
-                    var exportProvider = textBox.TryGetExportProvider();
-                    var tracer = exportProvider?.GetExportedValueOrDefault<ITracer>();
-                    tracer?.TraceError("Failed to enable the spell checker: " + message);
-                });
-
-                _exceptionTraced = true;
-            }
+            _exceptionTraced = true;
         }
     }
 }

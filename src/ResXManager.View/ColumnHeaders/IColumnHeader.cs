@@ -1,35 +1,34 @@
-﻿namespace ResXManager.View.ColumnHeaders
+﻿namespace ResXManager.View.ColumnHeaders;
+
+using System.Globalization;
+
+using ResXManager.Infrastructure;
+
+public enum ColumnType
 {
-    using System.Globalization;
+    Other,
+    Key,
+    Comment,
+    Language
+}
 
-    using ResXManager.Infrastructure;
-
-    public enum ColumnType
+public interface IColumnHeader
+{
+    ColumnType ColumnType
     {
-        Other,
-        Key,
-        Comment,
-        Language
+        get;
+    }
+}
+
+public interface ILanguageColumnHeader : IColumnHeader
+{
+    CultureKey CultureKey
+    {
+        get;
     }
 
-    public interface IColumnHeader
+    CultureInfo EffectiveCulture
     {
-        ColumnType ColumnType
-        {
-            get;
-        }
-    }
-
-    public interface ILanguageColumnHeader : IColumnHeader
-    {
-        CultureKey CultureKey
-        {
-            get;
-        }
-
-        CultureInfo EffectiveCulture
-        {
-            get;
-        }
+        get;
     }
 }

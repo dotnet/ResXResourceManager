@@ -1,35 +1,34 @@
-﻿namespace ResXManager.Model
+﻿namespace ResXManager.Model;
+
+using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+using ResXManager.Infrastructure;
+
+public class FileFilter : IFileFilter
 {
-    using System;
-    using System.Linq;
-    using System.Text.RegularExpressions;
+    private readonly string[] _extensions;
+    private readonly Regex? _fileExclusionFilter;
 
-    using ResXManager.Infrastructure;
-
-    public class FileFilter : IFileFilter
+    public FileFilter(IConfiguration configuration)
     {
-        private readonly string[] _extensions;
-        private readonly Regex? _fileExclusionFilter;
+        _extensions = configuration.CodeReferences
+            .Items.SelectMany(item => item.ParseExtensions())
+            .Concat(new[] { ".t4" })
+            .Distinct()
+            .ToArray();
 
-        public FileFilter(IConfiguration configuration)
-        {
-            _extensions = configuration.CodeReferences
-                .Items.SelectMany(item => item.ParseExtensions())
-                .Concat(new[] { ".t4" })
-                .Distinct()
-                .ToArray();
+        _fileExclusionFilter = configuration.FileExclusionFilter.TryCreateRegex();
+    }
 
-            _fileExclusionFilter = configuration.FileExclusionFilter.TryCreateRegex();
-        }
+    public bool IsSourceFile(ProjectFile file)
+    {
+        return _extensions.Contains(file.Extension, StringComparer.OrdinalIgnoreCase);
+    }
 
-        public bool IsSourceFile(ProjectFile file)
-        {
-            return _extensions.Contains(file.Extension, StringComparer.OrdinalIgnoreCase);
-        }
-
-        public bool IncludeFile(ProjectFile file)
-        {
-            return _fileExclusionFilter?.IsMatch(file.RelativeFilePath) != true;
-        }
+    public bool IncludeFile(ProjectFile file)
+    {
+        return _fileExclusionFilter?.IsMatch(file.RelativeFilePath) != true;
     }
 }

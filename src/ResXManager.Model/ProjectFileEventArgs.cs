@@ -1,17 +1,16 @@
-﻿namespace ResXManager.Model
+﻿namespace ResXManager.Model;
+
+using System;
+
+public class ProjectFileEventArgs : EventArgs
 {
-    using System;
-
-    public class ProjectFileEventArgs : EventArgs
+    public ProjectFileEventArgs(ResourceLanguage language, ProjectFile projectFile)
     {
-        public ProjectFileEventArgs(ResourceLanguage language, ProjectFile projectFile)
-        {
-            Language = language;
-            ProjectFile = projectFile;
-        }
-
-        public ResourceLanguage Language { get; }
-
-        public ProjectFile ProjectFile { get; }
+        Language = language;
+        ProjectFile = projectFile;
     }
+
+    public ResourceLanguage Language { get; }
+
+    public ProjectFile ProjectFile { get; }
 }

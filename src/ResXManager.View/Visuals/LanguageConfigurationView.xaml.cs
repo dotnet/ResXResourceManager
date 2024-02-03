@@ -1,66 +1,65 @@
-﻿namespace ResXManager.View.Visuals
+﻿namespace ResXManager.View.Visuals;
+
+using System;
+using System.ComponentModel;
+using System.Composition;
+using System.Globalization;
+using System.Linq;
+using System.Windows;
+using System.Windows.Input;
+
+using ResXManager.Infrastructure;
+using ResXManager.View.Tools;
+
+using TomsToolbox.Composition;
+using TomsToolbox.Essentials;
+using TomsToolbox.Wpf.Composition;
+using TomsToolbox.Wpf.Composition.AttributedModel;
+
+/// <summary>
+/// Interaction logic for LanguageConfigurationView.xaml
+/// </summary>
+[DataTemplate(typeof(LanguageConfigurationViewModel))]
+public partial class LanguageConfigurationView
 {
-    using System;
-    using System.ComponentModel;
-    using System.Composition;
-    using System.Globalization;
-    using System.Linq;
-    using System.Windows;
-    using System.Windows.Input;
+    private readonly CultureCountryOverrides _cultureCountryOverrides;
 
-    using ResXManager.Infrastructure;
-    using ResXManager.View.Tools;
-
-    using TomsToolbox.Composition;
-    using TomsToolbox.Essentials;
-    using TomsToolbox.Wpf.Composition;
-    using TomsToolbox.Wpf.Composition.AttributedModel;
-
-    /// <summary>
-    /// Interaction logic for LanguageConfigurationView.xaml
-    /// </summary>
-    [DataTemplate(typeof(LanguageConfigurationViewModel))]
-    public partial class LanguageConfigurationView
+    [ImportingConstructor]
+    public LanguageConfigurationView(IExportProvider exportProvider, CultureCountryOverrides cultureCountryOverrides)
     {
-        private readonly CultureCountryOverrides _cultureCountryOverrides;
+        _cultureCountryOverrides = cultureCountryOverrides;
 
-        [ImportingConstructor]
-        public LanguageConfigurationView(IExportProvider exportProvider, CultureCountryOverrides cultureCountryOverrides)
+        try
         {
-            _cultureCountryOverrides = cultureCountryOverrides;
+            this.SetExportProvider(exportProvider);
 
-            try
-            {
-                this.SetExportProvider(exportProvider);
-
-                InitializeComponent();
-            }
-            catch (Exception ex)
-            {
-                exportProvider.TraceXamlLoaderError(ex);
-            }
+            InitializeComponent();
         }
-
-        private void Language_MouseDoubleClick(object? sender, MouseButtonEventArgs e)
+        catch (Exception ex)
         {
-            if ((sender as FrameworkElement)?.DataContext is not CultureInfo specificCulture)
-                return;
-
-            var neutralCulture = specificCulture.Parent;
-
-            _cultureCountryOverrides[neutralCulture] = specificCulture;
-
-            ListBox.Items.Refresh();
+            exportProvider.TraceXamlLoaderError(ex);
         }
     }
 
-    public class CultureInfoGroupDescription : GroupDescription
+    private void Language_MouseDoubleClick(object? sender, MouseButtonEventArgs e)
     {
-        public override object? GroupNameFromItem(object? item, int level, CultureInfo culture)
-        {
-            var cultureItem = item as CultureInfo;
+        if ((sender as FrameworkElement)?.DataContext is not CultureInfo specificCulture)
+            return;
 
-            return cultureItem?.GetAncestors().LastOrDefault();
-        }
+        var neutralCulture = specificCulture.Parent;
+
+        _cultureCountryOverrides[neutralCulture] = specificCulture;
+
+        ListBox.Items.Refresh();
+    }
+}
+
+public class CultureInfoGroupDescription : GroupDescription
+{
+    public override object? GroupNameFromItem(object? item, int level, CultureInfo culture)
+    {
+        var cultureItem = item as CultureInfo;
+
+        return cultureItem?.GetAncestors().LastOrDefault();
     }
 }

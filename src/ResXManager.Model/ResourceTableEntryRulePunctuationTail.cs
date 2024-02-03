@@ -1,39 +1,37 @@
-﻿namespace ResXManager.Model
+﻿namespace ResXManager.Model;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using ResXManager.Model.Properties;
+using TomsToolbox.Essentials;
+
+[LocalizedDisplayName(StringResourceKey.ResourceTableEntryRulePunctuationTail_Name)]
+[LocalizedDescription(StringResourceKey.ResourceTableEntryRulePunctuationTail_Description)]
+public sealed class ResourceTableEntryRulePunctuationTail : ResourceTableEntryRulePunctuation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    public const string Id = "PunctuationTail";
 
-    using ResXManager.Infrastructure;
-    using ResXManager.Model.Properties;
-    using TomsToolbox.Essentials;
+    public override string RuleId => Id;
 
-    [LocalizedDisplayName(StringResourceKey.ResourceTableEntryRulePunctuationTail_Name)]
-    [LocalizedDescription(StringResourceKey.ResourceTableEntryRulePunctuationTail_Description)]
-    public sealed class ResourceTableEntryRulePunctuationTail : ResourceTableEntryRulePunctuation
+    protected override IEnumerable<char> GetCharIterator(string value) => value.Reverse();
+
+    protected override string GetErrorMessage(string reference)
     {
-        public const string Id = "PunctuationTail";
+        var intro = Resources.ResourceTableEntryRulePunctuationTail_Error_Intro;
+        if (reference.IsNullOrEmpty())
+            return intro + " " + Resources.ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected;
 
-        public override string RuleId => Id;
+        return intro + " " + string.Format(Resources.Culture,
+            Resources.ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected,
+            ReverseString(reference));
+    }
 
-        protected override IEnumerable<char> GetCharIterator(string value) => value.Reverse();
-
-        protected override string GetErrorMessage(string reference)
-        {
-            var intro = Resources.ResourceTableEntryRulePunctuationTail_Error_Intro;
-            if (reference.IsNullOrEmpty())
-                return intro + " " + Resources.ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected;
-
-            return intro + " " + string.Format(Resources.Culture,
-                       Resources.ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected,
-                       ReverseString(reference));
-        }
-
-        private static string ReverseString(string s)
-        {
-            var arr = s.ToCharArray();
-            Array.Reverse(arr);
-            return new string(arr);
-        }
+    private static string ReverseString(string s)
+    {
+        var arr = s.ToCharArray();
+        Array.Reverse(arr);
+        return new string(arr);
     }
 }

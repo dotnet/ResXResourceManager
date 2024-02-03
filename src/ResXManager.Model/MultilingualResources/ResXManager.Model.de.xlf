@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="de" original="RESXMANAGER.MODEL/PROPERTIES/RESOURCES.RESX">
+    <body>
+      <group id="RESXMANAGER.MODEL/PROPERTIES/RESOURCES.RESX" datatype="resx">
+        <trans-unit id="DuplicateKeyError" translate="yes" xml:space="preserve">
+          <source>Duplicate keys in '{0}':
+{1}
+</source>
+          <target state="new">Doppelte Schlüssel in '{0}':
+{1}
+</target>
+        </trans-unit>
+        <trans-unit id="DuplicateKeyHandling_Fail" translate="yes" xml:space="preserve">
+          <source>Show an error message and don't load the resource</source>
+          <target state="new">Eine Fehlermeldung anzeigen und die Datei nicht laden</target>
+        </trans-unit>
+        <trans-unit id="DuplicateKeyHandling_Rename" translate="yes" xml:space="preserve">
+          <source>Postfix duplicate/empty keys with "_Duplicate[#]"/"_Empty[#]"</source>
+          <target state="new">Doppelte/leere Schlüssel umbenennen ("_Duplicate[#]"/"_Empty[#]" anhängen)</target>
+        </trans-unit>
+        <trans-unit id="EmptyKeysError" translate="yes" xml:space="preserve">
+          <source>Empty keys in '{0}'</source>
+          <target state="new">Leere Schlüssel in '{0}'</target>
+        </trans-unit>
+        <trans-unit id="ExcelExport_MultipleSheets" translate="yes" xml:space="preserve">
+          <source>Multiple sheets</source>
+          <target state="new">In mehrere Arbeitsblätter</target>
+        </trans-unit>
+        <trans-unit id="ExcelExport_PlainTextTabDelimited" translate="yes" xml:space="preserve">
+          <source>Plain text, tab delimited</source>
+          <target state="new">Nur Text, Tabulator getrennt</target>
+        </trans-unit>
+        <trans-unit id="ExcelExport_SingleSheet" translate="yes" xml:space="preserve">
+          <source>Single sheet</source>
+          <target state="new">In ein einziges Arbeitsblatt</target>
+        </trans-unit>
+        <trans-unit id="FileSaveError" translate="yes" xml:space="preserve">
+          <source>Error saving file '{0}':
+{1}
+</source>
+          <target state="new">Fehler beim Speichern der Datei '{0}':
+{1}
+</target>
+        </trans-unit>
+        <trans-unit id="ImportColumnMismatchError" translate="yes" xml:space="preserve">
+          <source>At least three columns expected.</source>
+          <target state="new">Mindestens drei Spalten erwartet.</target>
+        </trans-unit>
+        <trans-unit id="ImportDuplicateLanguageError" translate="yes" xml:space="preserve">
+          <source>Duplicate language in headers {0} and {1} ('{2}').</source>
+          <target state="new">Doppelte Sprache in den Headern {0} und {1} ('{2}').</target>
+        </trans-unit>
+        <trans-unit id="ImportFailedError" translate="yes" xml:space="preserve">
+          <source>Import failed. Nothing has been imported.</source>
+          <target state="new">Import fehlgeschlagen. Es wurde nichts importiert.</target>
+        </trans-unit>
+        <trans-unit id="ImportFailedPartiallyError" translate="yes" xml:space="preserve">
+          <source>Import failed partially. Some columns have been already imported, but not all.</source>
+          <target state="new">Import teilweise fehlgeschlagen. Einige Spalten wurden überschrieben, aber nicht alle.</target>
+        </trans-unit>
+        <trans-unit id="ImportHeaderMismatchError" translate="yes" xml:space="preserve">
+          <source>Standard header expected.</source>
+          <target state="new">Kopfzeile entspricht nicht dem Standard.</target>
+        </trans-unit>
+        <trans-unit id="ImportLanguageNotEditable" translate="yes" xml:space="preserve">
+          <source>The language "{0}" can't be edited. The operation was aborted.</source>
+          <target state="new">Die Sprache "{0}" kann nicht bearbeitet werden. Der Vorgang wurde abgebrochen.</target>
+        </trans-unit>
+        <trans-unit id="ImportMapSheetError" translate="yes" xml:space="preserve">
+          <source>The sheet "{0}" can't be imported; there is no matching resource file in the solution.</source>
+          <target state="new">Das Arbeitsblatt "{0}" kann nicht importiert werden; es gibt keine passende Ressource in der Umgebung.</target>
+        </trans-unit>
+        <trans-unit id="InvalidResourceFileError" translate="yes" xml:space="preserve">
+          <source>{0} is not a valid RESX resource file: No xml root.</source>
+          <target state="new">{0} ist keine gültige Ressourcedatei: Kein xml root.</target>
+        </trans-unit>
+        <trans-unit id="InvalidResourceFileNameAttributeMissingError" translate="yes" xml:space="preserve">
+          <source>{0} is not a valid RESX resource file: Not all entries have a name attribute.</source>
+          <target state="new">{0} ist keine gültige Ressourcedatei: Nicht alle Einträge haben ein 'name' - Attribute.</target>
+        </trans-unit>
+        <trans-unit id="InvalidResourceFileValueAttributeMissingError" translate="yes" xml:space="preserve">
+          <source>{0} is not a valid RESX resource file: Not all entries have a value attribute.</source>
+          <target state="new">{0} ist keine gültige Ressourcedatei: Nicht alle Einträge haben ein 'value' - Attribute.</target>
+        </trans-unit>
+        <trans-unit id="KeyAlreadyExists" translate="yes" xml:space="preserve">
+          <source>This key already exists: {0}</source>
+          <target state="new">Der Schlüssel existiert bereits: {0}</target>
+        </trans-unit>
+        <trans-unit id="LanguageNotDefinedError" translate="yes" xml:space="preserve">
+          <source>Language is not defined: "{0}".</source>
+          <target state="new">Die Sprache "{0}" ist nicht definiert.</target>
+        </trans-unit>
+        <trans-unit id="Neutral" translate="yes" xml:space="preserve">
+          <source>Neutral</source>
+          <target state="new">Neutral</target>
+        </trans-unit>
+        <trans-unit id="NotAllLanguagesAreEditable" translate="yes" xml:space="preserve">
+          <source>Not all resource files are editable</source>
+          <target state="new">Nicht alle Ressourcendateien sind editierbar</target>
+        </trans-unit>
+        <trans-unit id="PrefixFieldTypeAll" translate="yes" xml:space="preserve">
+          <source>All</source>
+          <target state="new">Alle</target>
+        </trans-unit>
+        <trans-unit id="PrefixFieldTypeComment" translate="yes" xml:space="preserve">
+          <source>Comment</source>
+          <target state="new">Kommentar</target>
+        </trans-unit>
+        <trans-unit id="PrefixFieldTypeTargetComment" translate="yes" xml:space="preserve">
+          <source>Target Comment</source>
+          <target state="new">Zielkommentar</target>
+        </trans-unit>
+        <trans-unit id="PrefixFieldTypeValue" translate="yes" xml:space="preserve">
+          <source>Value</source>
+          <target state="new">Wert</target>
+        </trans-unit>
+        <trans-unit id="PrefixFieldTypeValueAndNeutralComment" translate="yes" xml:space="preserve">
+          <source>Value and Neutral Comment</source>
+          <target state="new">Wert und neutraler Kommentar</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationLead_Description" translate="yes" xml:space="preserve">
+          <source>This rule verifies that the punctuation of the entry matches between all translations.</source>
+          <target state="new">Diese Regel überprüft ob die Zeichensetzung am Anfang des Eintrages in jeder Übersetzung gleich ist.</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationLead_Error_Intro" translate="yes" xml:space="preserve">
+          <source>The punctuation at the start of the messages doesn't match up.</source>
+          <target state="new">Die Zeichensetzung am Anfang des Eintrages stimmen nicht überein.</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationLead_Error_NoPunctuationExpected" translate="yes" xml:space="preserve">
+          <source>No punctuation was expected at the start of the message.</source>
+          <target state="new">Am Anfang des Eintrages wurden keine Satzzeichen erwartet.</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationLead_Error_PunctuationSeqExpected" translate="yes" xml:space="preserve">
+          <source>The expected leading punctuation sequence is: {0}</source>
+          <target state="new">Der erwartete Folge von Satzzeichen ist: {0}</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationLead_Name" translate="yes" xml:space="preserve">
+          <source>Leading punctuation</source>
+          <target state="new">Zeichensetzung am Anfang</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationTail_Description" translate="yes" xml:space="preserve">
+          <source>This rule verifies the punctuation at the end of the message.</source>
+          <target state="new">Diese Regel überprüft ob die Zeichensetzung am Ende des Eintrages in jeder Übersetzung gleich ist.</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationTail_Error_Intro" translate="yes" xml:space="preserve">
+          <source>The punctuation at the end of the messages doesn't match up.</source>
+          <target state="new">Die Zeichensetzung am Ende des Eintrages stimmen nicht überein.</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected" translate="yes" xml:space="preserve">
+          <source>No punctuation was expected at the end of the message.</source>
+          <target state="new">Am Ende des Eintrages wurden keine Satzzeichen erwartet.</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected" translate="yes" xml:space="preserve">
+          <source>The expected trailing punctuation sequence is: {0}</source>
+          <target state="new">Der erwartete Folge von Satzzeichen ist: {0}</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRulePunctuationTail_Name" translate="yes" xml:space="preserve">
+          <source>Trailing punctuation</source>
+          <target state="new">Zeichensetzung am Ende</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleStringFormat_Description" translate="yes" xml:space="preserve">
+          <source>This rule verifies that the string format parameters match in all translations of a item.</source>
+          <target state="new">Diese Regel überprüft ob alle Übersetzungen die gleichen Parameter für String Format enthalten.</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleStringFormat_Name" translate="yes" xml:space="preserve">
+          <source>Matching string format parameters</source>
+          <target state="new">Passende String Format Parameter</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceLead_Description" translate="yes" xml:space="preserve">
+          <source>This rule verifies that the whitespaces at the start of the messages match.</source>
+          <target state="new">Diese Regel überprüft ob die Leerzeichen am Anfang des Eintrages in jeder Übersetzung gleich ist.</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceLead_Error_Intro" translate="yes" xml:space="preserve">
+          <source>The whitespaces at the start of the sequence don't match up.</source>
+          <target state="new">Die Leerzeichen am Anfang des Eintrages stimmen nicht überein.</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceLead_Error_NoWhiteSpaceExpected" translate="yes" xml:space="preserve">
+          <source>No whitespaces are expected at the start of the sequence.</source>
+          <target state="new">Am Anfang des Eintrages wurden keine Leerzeichen erwartet.</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceLead_Error_WhiteSpaceSeqExpected" translate="yes" xml:space="preserve">
+          <source>The expected whitespace sequence is: {0}</source>
+          <target state="new">Die erwartete Folge von Leerzeichen ist: {0}</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceLead_Name" translate="yes" xml:space="preserve">
+          <source>Leading whitespace</source>
+          <target state="new">Leerzeichen am Anfang</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceTail_Description" translate="yes" xml:space="preserve">
+          <source>This rule verifies that the trailing whitespaces of the messages match.</source>
+          <target state="new">Diese Regel überprüft ob die Leerzeichen am Ende des Eintrages in jeder Übersetzung gleich ist.</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceTail_Error_Intro" translate="yes" xml:space="preserve">
+          <source>The whitespaces at the end of the sequence don't match up.</source>
+          <target state="new">Die Leerzeichen am Ende des Eintrages stimmen nicht überein.</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceTail_Error_NoWhiteSpaceExpected" translate="yes" xml:space="preserve">
+          <source>No whitespaces are expected at the end of the sequence.</source>
+          <target state="new">Am Ende des Eintrages wurden keine Leerzeichen erwartet.</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceTail_Error_WhiteSpaceSeqExpected" translate="yes" xml:space="preserve">
+          <source>The expected whitespace sequence is: {0}</source>
+          <target state="new">Die erwartete Folge von Leerzeichen ist: {0}</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntryRuleWhiteSpaceTail_Name" translate="yes" xml:space="preserve">
+          <source>Trailing whitespace</source>
+          <target state="new">Leerzeichen am Ende</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntry_Error_InvariantWithValue" translate="yes" xml:space="preserve">
+          <source>Item is invariant but contains a value</source>
+          <target state="new">Invarianter Eintrag enthält Übersetzung</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntry_Error_MissingTranslation" translate="yes" xml:space="preserve">
+          <source>Missing translation</source>
+          <target state="new">Fehlende Übersetzung</target>
+        </trans-unit>
+        <trans-unit id="ResourceTableEntry_Error_StringFormatParameterMismatch" translate="yes" xml:space="preserve">
+          <source>Warning: This item contains string format parameter mismatches!</source>
+          <target state="new">Warnung: Dieser Text enthält String-Format Parameterinkonsistenzen!</target>
+        </trans-unit>
+        <trans-unit id="SnapshotAnnotation" translate="yes" xml:space="preserve">
+          <source>Snapshot: "{0}"</source>
+          <target state="new">Snapshot: "{0}"</target>
+        </trans-unit>
+        <trans-unit id="Title" translate="yes" xml:space="preserve">
+          <source>ResX Resource Manager</source>
+          <target state="new"></target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>

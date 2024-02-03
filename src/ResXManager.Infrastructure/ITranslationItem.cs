@@ -1,20 +1,19 @@
-﻿namespace ResXManager.Infrastructure
+﻿namespace ResXManager.Infrastructure;
+
+using System.Collections.Generic;
+using System.Globalization;
+
+public interface ITranslationItem
 {
-    using System.Collections.Generic;
-    using System.Globalization;
+    string Source { get; }
 
-    public interface ITranslationItem
-    {
-        string Source { get; }
+    public IList<(CultureInfo Culture, string Text, string? Comment)> GetAllItems(CultureInfo neutralCulture);
 
-        public IList<(CultureInfo Culture, string Text, string? Comment)> GetAllItems(CultureInfo neutralCulture);
+    IList<ITranslationMatch> Results { get; }
 
-        IList<ITranslationMatch> Results { get; }
+    CultureKey TargetCulture { get; }
 
-        CultureKey TargetCulture { get; }
+    string? Translation { get; }
 
-        string? Translation { get; }
-
-        bool Apply();
-    }
+    bool Apply();
 }

@@ -1,50 +1,50 @@
-﻿namespace ResXManager.Model
+﻿namespace ResXManager.Model;
+
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.Serialization;
+
+using TomsToolbox.Essentials;
+
+[DataContract]
+public sealed class CodeReferenceConfigurationItem : INotifyPropertyChanged
 {
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Runtime.Serialization;
+    [DataMember]
+    public string? Extensions { get; set; }
 
-    using TomsToolbox.Essentials;
+    [DataMember]
+    public bool IsCaseSensitive { get; set; }
 
-    [DataContract]
-    public sealed class CodeReferenceConfigurationItem : INotifyPropertyChanged
+    [DataMember]
+    public string? Expression { get; set; }
+
+    [DataMember]
+    public string? SingleLineComment { get; set; }
+
+    public IEnumerable<string> ParseExtensions()
     {
-        [DataMember]
-        public string? Extensions { get; set; }
+        if (Extensions.IsNullOrEmpty())
+            return Enumerable.Empty<string>();
 
-        [DataMember]
-        public bool IsCaseSensitive { get; set; }
-
-        [DataMember]
-        public string? Expression { get; set; }
-
-        [DataMember]
-        public string? SingleLineComment { get; set; }
-
-        public IEnumerable<string> ParseExtensions()
-        {
-            if (Extensions.IsNullOrEmpty())
-                return Enumerable.Empty<string>();
-
-            return Extensions
-                .Split(',')
-                .Select(ext => ext.Trim())
-                .Where(ext => !ext.IsNullOrEmpty());
-        }
-
-#pragma warning disable CS0067
-        public event PropertyChangedEventHandler? PropertyChanged;
-#pragma warning restore CS0067
+        return Extensions
+            .Split(',')
+            .Select(ext => ext.Trim())
+            .Where(ext => !ext.IsNullOrEmpty());
     }
 
+#pragma warning disable CS0067
+    public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
+}
 
-    [KnownType(typeof(CodeReferenceConfigurationItem))]
-    [DataContract]
-    [TypeConverter(typeof(JsonSerializerTypeConverter<CodeReferenceConfiguration>))]
-    public sealed class CodeReferenceConfiguration : ItemTrackingCollectionHost<CodeReferenceConfigurationItem>
-    {
-        public const string Default = @"{""Items"":[
+
+[KnownType(typeof(CodeReferenceConfigurationItem))]
+[DataContract]
+[TypeConverter(typeof(JsonSerializerTypeConverter<CodeReferenceConfiguration>))]
+public sealed class CodeReferenceConfiguration : ItemTrackingCollectionHost<CodeReferenceConfigurationItem>
+{
+    public const string Default = @"{""Items"":[
 {""Expression"":""\\W($File.$Key)\\W"",""Extensions"":"".cs,.xaml,.cshtml"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
 {""Expression"":""\\W($File.$Key)\\W"",""Extensions"":"".vbhtml"",""IsCaseSensitive"":false,""SingleLineComment"":null},
 {""Expression"":""ResourceManager.GetString\\(\""($Key)\""\\)"",""Extensions"":"".cs"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
@@ -55,5 +55,4 @@
 {""Expression"":""StringResourceKey\\.($Key)"",""Extensions"":"".cs"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
 {""Expression"":""\\.($Key)"",""Extensions"":"".ts,.html"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""}
 ]}";
-    }
 }

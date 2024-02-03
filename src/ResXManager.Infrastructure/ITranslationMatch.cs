@@ -1,11 +1,10 @@
-﻿namespace ResXManager.Infrastructure
+﻿namespace ResXManager.Infrastructure;
+
+public interface ITranslationMatch
 {
-    public interface ITranslationMatch
-    {
-        string? TranslatedText { get; }
+    string? TranslatedText { get; }
 
-        ITranslator? Translator { get; }
+    ITranslator? Translator { get; }
 
-        double Rating { get; }
-    }
+    double Rating { get; }
 }

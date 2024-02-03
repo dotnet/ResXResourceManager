@@ -1,122 +1,121 @@
-﻿namespace ResXManager.VSIX
+﻿namespace ResXManager.VSIX;
+
+using System;
+using System.Collections.Specialized;
+using System.Composition;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Threading;
+
+using Community.VisualStudio.Toolkit;
+
+using ResXManager.Infrastructure;
+using ResXManager.Model;
+using ResXManager.View.Tools;
+using ResXManager.View.Visuals;
+using ResXManager.VSIX.Compatibility;
+
+using static Microsoft.VisualStudio.Shell.ThreadHelper;
+
+[Shared]
+[Export(typeof(IService))]
+internal sealed class PreBuildService : IService, IDisposable
 {
-    using System;
-    using System.Collections.Specialized;
-    using System.Composition;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Windows.Threading;
+    private readonly IErrorListProvider _errorListProvider;
+    private readonly ResourceManager _resourceManager;
+    private readonly ResourceViewModel _resourceViewModel;
+    private readonly XlfSynchronizer _xlfSynchronizer;
+    private readonly IVsixShellViewModel _shellViewModel;
+    private readonly IDteConfiguration _configuration;
 
-    using Community.VisualStudio.Toolkit;
-
-    using ResXManager.Infrastructure;
-    using ResXManager.Model;
-    using ResXManager.View.Tools;
-    using ResXManager.View.Visuals;
-    using ResXManager.VSIX.Compatibility;
-
-    using static Microsoft.VisualStudio.Shell.ThreadHelper;
-
-    [Shared]
-    [Export(typeof(IService))]
-    internal sealed class PreBuildService : IService, IDisposable
+    [ImportingConstructor]
+    public PreBuildService(
+        ResourceManager resourceManager,
+        ResourceViewModel resourceViewModel,
+        XlfSynchronizer xlfSynchronizer,
+        IVsixShellViewModel shellViewModel,
+        IErrorListProvider errorListProvider,
+        IDteConfiguration configuration)
     {
-        private readonly IErrorListProvider _errorListProvider;
-        private readonly ResourceManager _resourceManager;
-        private readonly ResourceViewModel _resourceViewModel;
-        private readonly XlfSynchronizer _xlfSynchronizer;
-        private readonly IVsixShellViewModel _shellViewModel;
-        private readonly IDteConfiguration _configuration;
+        _errorListProvider = errorListProvider;
+        _resourceManager = resourceManager;
+        _resourceViewModel = resourceViewModel;
+        _xlfSynchronizer = xlfSynchronizer;
+        _shellViewModel = shellViewModel;
+        _configuration = configuration;
 
-        [ImportingConstructor]
-        public PreBuildService(
-            ResourceManager resourceManager,
-            ResourceViewModel resourceViewModel,
-            XlfSynchronizer xlfSynchronizer,
-            IVsixShellViewModel shellViewModel,
-            IErrorListProvider errorListProvider,
-            IDteConfiguration configuration)
+        resourceManager.TableEntries.CollectionChanged += TableEntries_CollectionChanged;
+        errorListProvider.Navigate += Provider_Navigate;
+
+        VS.Events.BuildEvents.SolutionBuildStarted += BuildEvents_SolutionBuildStarted;
+    }
+
+    public void Start()
+    {
+    }
+
+    private void TableEntries_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action != NotifyCollectionChangedAction.Remove)
+            return;
+
+        foreach (var entry in e.OldItems.OfType<ResourceTableEntry>())
         {
-            _errorListProvider = errorListProvider;
-            _resourceManager = resourceManager;
-            _resourceViewModel = resourceViewModel;
-            _xlfSynchronizer = xlfSynchronizer;
-            _shellViewModel = shellViewModel;
-            _configuration = configuration;
+            _errorListProvider.Remove(entry);
+        }
+    }
 
-            resourceManager.TableEntries.CollectionChanged += TableEntries_CollectionChanged;
-            errorListProvider.Navigate += Provider_Navigate;
+    private void Await(Func<Task> action)
+    {
+        var frame = new DispatcherFrame();
 
-            VS.Events.BuildEvents.SolutionBuildStarted += BuildEvents_SolutionBuildStarted;
+        void TaskCompleted()
+        {
+            frame.Continue = false;
         }
 
-        public void Start()
+        action().GetAwaiter().OnCompleted(TaskCompleted);
+
+        Dispatcher.PushFrame(frame);
+    }
+
+    private void BuildEvents_SolutionBuildStarted(object? sender, EventArgs e)
+    {
+        if (!_configuration.EnableXlifSync && !_configuration.ShowErrorsInErrorList)
+            return;
+
+        Await(_resourceViewModel.ReloadAsync);
+
+        if (_configuration.EnableXlifSync)
         {
+            Await(_xlfSynchronizer.UpdateFromXlfAsync);
         }
 
-        private void TableEntries_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        if (!_configuration.ShowErrorsInErrorList)
         {
-            if (e.Action != NotifyCollectionChangedAction.Remove)
-                return;
-
-            foreach (var entry in e.OldItems.OfType<ResourceTableEntry>())
-            {
-                _errorListProvider.Remove(entry);
-            }
+            _errorListProvider.Clear();
         }
-
-        private void Await(Func<Task> action)
+        else
         {
-            var frame = new DispatcherFrame();
+            var errorCategory = _configuration.TaskErrorCategory;
+            var cultures = _resourceManager.Cultures;
+            var entries = _resourceManager.TableEntries;
 
-            void TaskCompleted()
-            {
-                frame.Continue = false;
-            }
-
-            action().GetAwaiter().OnCompleted(TaskCompleted);
-
-            Dispatcher.PushFrame(frame);
+            _errorListProvider.SetEntries(entries, cultures, (int)errorCategory);
         }
+    }
 
-        private void BuildEvents_SolutionBuildStarted(object? sender, EventArgs e)
-        {
-            if (!_configuration.EnableXlifSync && !_configuration.ShowErrorsInErrorList)
-                return;
+    private void Provider_Navigate(ResourceTableEntry entry)
+    {
+        ThrowIfNotOnUIThread();
 
-            Await(_resourceViewModel.ReloadAsync);
+        _shellViewModel.SelectEntry(entry);
+    }
 
-            if (_configuration.EnableXlifSync)
-            {
-                Await(_xlfSynchronizer.UpdateFromXlfAsync);
-            }
+    public void Dispose()
+    {
+        _errorListProvider.Dispose();
 
-            if (!_configuration.ShowErrorsInErrorList)
-            {
-                _errorListProvider.Clear();
-            }
-            else
-            {
-                var errorCategory = _configuration.TaskErrorCategory;
-                var cultures = _resourceManager.Cultures;
-                var entries = _resourceManager.TableEntries;
-
-                _errorListProvider.SetEntries(entries, cultures, (int)errorCategory);
-            }
-        }
-
-        private void Provider_Navigate(ResourceTableEntry entry)
-        {
-            ThrowIfNotOnUIThread();
-
-            _shellViewModel.SelectEntry(entry);
-        }
-
-        public void Dispose()
-        {
-            _errorListProvider.Dispose();
-
-            VS.Events.BuildEvents.SolutionBuildStarted -= BuildEvents_SolutionBuildStarted;
-        }
+        VS.Events.BuildEvents.SolutionBuildStarted -= BuildEvents_SolutionBuildStarted;
     }
 }

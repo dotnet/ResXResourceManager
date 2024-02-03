@@ -1,15 +1,14 @@
-﻿namespace ResXManager.VSIX.Compatibility
+﻿namespace ResXManager.VSIX.Compatibility;
+
+using System.Collections.Generic;
+
+using ResXManager.Model;
+
+public interface IVsixShellViewModel
 {
-    using System.Collections.Generic;
+    void SelectEntry(ResourceTableEntry entry);
 
-    using ResXManager.Model;
-
-    public interface IVsixShellViewModel
-    {
-        void SelectEntry(ResourceTableEntry entry);
-
-        IMoveToResourceViewModel CreateMoveToResourceViewModel(ICollection<string> patterns,
-            ICollection<ResourceEntity> resourceEntities, string text, string extension, string? className,
-            string? functionName, string fileName);
-    }
+    IMoveToResourceViewModel CreateMoveToResourceViewModel(ICollection<string> patterns,
+        ICollection<ResourceEntity> resourceEntities, string text, string extension, string? className,
+        string? functionName, string fileName);
 }

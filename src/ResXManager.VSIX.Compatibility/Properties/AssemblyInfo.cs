@@ -1,6 +1,5 @@
-namespace ResXManager.VSIX.Compatibility.Properties
+namespace ResXManager.VSIX.Compatibility.Properties;
+
+public static class AssemblyKey
 {
-    public static class AssemblyKey
-    {
-    }
 }

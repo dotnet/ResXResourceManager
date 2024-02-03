@@ -1,10 +1,9 @@
-﻿namespace ResXManager.VSIX
-{
-    using System;
-    using System.Collections.Generic;
+﻿namespace ResXManager.VSIX;
 
-    public interface ICustomToolRunner : IDisposable
-    {
-        void Enqueue(IEnumerable<EnvDTE.ProjectItem>? projectItems);
-    }
+using System;
+using System.Collections.Generic;
+
+public interface ICustomToolRunner : IDisposable
+{
+    void Enqueue(IEnumerable<EnvDTE.ProjectItem>? projectItems);
 }

@@ -1,19 +1,18 @@
-﻿namespace ResXManager.View.ColumnHeaders
+﻿namespace ResXManager.View.ColumnHeaders;
+
+using System.Windows.Controls;
+
+public class ColumnHeader : ContentControl, IColumnHeader
 {
-    using System.Windows.Controls;
-
-    public class ColumnHeader : ContentControl, IColumnHeader
+    public ColumnHeader(object? content, ColumnType columnType)
     {
-        public ColumnHeader(object? content, ColumnType columnType)
-        {
-            Content = content;
-            ColumnType = columnType;
-            Focusable = false;
-        }
+        Content = content;
+        ColumnType = columnType;
+        Focusable = false;
+    }
 
-        public ColumnType ColumnType
-        {
-            get;
-        }
+    public ColumnType ColumnType
+    {
+        get;
     }
 }

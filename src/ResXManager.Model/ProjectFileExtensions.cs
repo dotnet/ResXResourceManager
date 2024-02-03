@@ -1,138 +1,137 @@
-﻿namespace ResXManager.Model
+﻿namespace ResXManager.Model;
+
+using System;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+
+using ResXManager.Infrastructure;
+using TomsToolbox.Essentials;
+
+public static class ProjectFileExtensions
 {
-    using System;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
+    private const string Resx = ".resx";
+    private const string Resw = ".resw";
+    private static readonly string[] _supportedFileExtensions = { Resx, Resw };
 
-    using ResXManager.Infrastructure;
-    using TomsToolbox.Essentials;
-
-    public static class ProjectFileExtensions
+    public static string GetBaseDirectory(this ProjectFile projectFile)
     {
-        private const string Resx = ".resx";
-        private const string Resw = ".resw";
-        private static readonly string[] _supportedFileExtensions = { Resx, Resw };
+        var extension = projectFile.Extension;
+        var filePath = projectFile.FilePath;
 
-        public static string GetBaseDirectory(this ProjectFile projectFile)
+        var directoryName = Path.GetDirectoryName(Resw.Equals(extension, StringComparison.OrdinalIgnoreCase) ? Path.GetDirectoryName(filePath) : filePath);
+
+        return directoryName ?? throw new InvalidOperationException();
+    }
+
+    public static bool IsSupportedFileExtension(string extension)
+    {
+        return _supportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase);
+    }
+
+    public static bool IsResourceFile(string filePath, string? extension = null)
+    {
+        extension ??= Path.GetExtension(filePath);
+
+        if (!IsSupportedFileExtension(extension))
+            return false;
+
+        if (!Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        var languageName = Path.GetFileName(Path.GetDirectoryName(filePath));
+
+        return CultureHelper.IsValidCultureName(languageName);
+    }
+
+    public static bool IsResourceFile(this ProjectFile projectFile)
+    {
+        var extension = projectFile.Extension;
+        var filePath = projectFile.FilePath;
+
+        return IsResourceFile(filePath, extension);
+    }
+
+    public static CultureKey GetCultureKey(this ProjectFile projectFile, CultureInfo neutralResourcesLanguage)
+    {
+        var extension = projectFile.Extension;
+        var filePath = projectFile.FilePath;
+
+        if (Resx.Equals(extension, StringComparison.OrdinalIgnoreCase))
         {
-            var extension = projectFile.Extension;
-            var filePath = projectFile.FilePath;
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
+            var cultureName = Path.GetExtension(fileNameWithoutExtension).TrimStart('.');
 
-            var directoryName = Path.GetDirectoryName(Resw.Equals(extension, StringComparison.OrdinalIgnoreCase) ? Path.GetDirectoryName(filePath) : filePath);
+            if (cultureName.IsNullOrEmpty())
+                return CultureKey.Neutral;
 
-            return directoryName ?? throw new InvalidOperationException();
+            if (!CultureHelper.IsValidCultureName(cultureName))
+                return CultureKey.Neutral;
+
+            return new CultureKey(cultureName);
         }
 
-        public static bool IsSupportedFileExtension(string extension)
+        if (Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
         {
-            return _supportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase);
+            var cultureName = Path.GetFileName(Path.GetDirectoryName(filePath));
+
+            if (!CultureHelper.IsValidCultureName(cultureName))
+                throw new ArgumentException(@"Invalid file. File name does not conform to the pattern '.\<cultureName>\<basename>.resw'");
+
+            var culture = cultureName.ToCulture();
+
+            return Equals(neutralResourcesLanguage, culture) ? CultureKey.Neutral : new CultureKey(culture);
         }
 
-        public static bool IsResourceFile(string filePath, string? extension = null)
+        throw new InvalidOperationException("Unsupported file format: " + extension);
+    }
+
+    public static string GetBaseName(this ProjectFile projectFile)
+    {
+        var extension = projectFile.Extension;
+        var filePath = projectFile.FilePath;
+
+        if (!Resx.Equals(extension, StringComparison.OrdinalIgnoreCase))
+            return Path.GetFileNameWithoutExtension(filePath);
+
+        var name = Path.GetFileNameWithoutExtension(filePath);
+        var innerExtension = Path.GetExtension(name);
+        var languageName = innerExtension.TrimStart('.');
+
+        return CultureHelper.IsValidCultureName(languageName) ? Path.GetFileNameWithoutExtension(name) : name;
+    }
+
+    public static string GetLanguageFileName(this ProjectFile projectFile, CultureInfo culture)
+    {
+        var extension = projectFile.Extension;
+        var filePath = projectFile.FilePath;
+
+        if (Resx.Equals(extension, StringComparison.OrdinalIgnoreCase))
         {
-            extension ??= Path.GetExtension(filePath);
-
-            if (!IsSupportedFileExtension(extension))
-                return false;
-
-            if (!Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
-                return true;
-
-            var languageName = Path.GetFileName(Path.GetDirectoryName(filePath));
-
-            return CultureHelper.IsValidCultureName(languageName);
+            return Path.ChangeExtension(filePath, culture.ToString()) + @".resx";
         }
 
-        public static bool IsResourceFile(this ProjectFile projectFile)
+        if (Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
         {
-            var extension = projectFile.Extension;
-            var filePath = projectFile.FilePath;
-
-            return IsResourceFile(filePath, extension);
+            var languageFileName = Path.Combine(projectFile.GetBaseDirectory(), culture.ToString(), Path.GetFileName(filePath));
+            return languageFileName;
         }
 
-        public static CultureKey GetCultureKey(this ProjectFile projectFile, CultureInfo neutralResourcesLanguage)
-        {
-            var extension = projectFile.Extension;
-            var filePath = projectFile.FilePath;
+        throw new InvalidOperationException("Extension not supported: " + extension);
+    }
 
-            if (Resx.Equals(extension, StringComparison.OrdinalIgnoreCase))
-            {
-                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
-                var cultureName = Path.GetExtension(fileNameWithoutExtension).TrimStart('.');
+    public static bool IsDesignerFile(this ProjectFile projectFile)
+    {
+        return projectFile.GetBaseName().EndsWith(".Designer", StringComparison.OrdinalIgnoreCase);
+    }
 
-                if (cultureName.IsNullOrEmpty())
-                    return CultureKey.Neutral;
+    public static bool IsVisualBasicFile(this ProjectFile projectFile)
+    {
+        return Path.GetExtension(projectFile.FilePath).Equals(".vb", StringComparison.OrdinalIgnoreCase);
+    }
 
-                if (!CultureHelper.IsValidCultureName(cultureName))
-                    return CultureKey.Neutral;
-
-                return new CultureKey(cultureName);
-            }
-
-            if (Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
-            {
-                var cultureName = Path.GetFileName(Path.GetDirectoryName(filePath));
-
-                if (!CultureHelper.IsValidCultureName(cultureName))
-                    throw new ArgumentException(@"Invalid file. File name does not conform to the pattern '.\<cultureName>\<basename>.resw'");
-
-                var culture = cultureName.ToCulture();
-
-                return Equals(neutralResourcesLanguage, culture) ? CultureKey.Neutral : new CultureKey(culture);
-            }
-
-            throw new InvalidOperationException("Unsupported file format: " + extension);
-        }
-
-        public static string GetBaseName(this ProjectFile projectFile)
-        {
-            var extension = projectFile.Extension;
-            var filePath = projectFile.FilePath;
-
-            if (!Resx.Equals(extension, StringComparison.OrdinalIgnoreCase))
-                return Path.GetFileNameWithoutExtension(filePath);
-
-            var name = Path.GetFileNameWithoutExtension(filePath);
-            var innerExtension = Path.GetExtension(name);
-            var languageName = innerExtension.TrimStart('.');
-
-            return CultureHelper.IsValidCultureName(languageName) ? Path.GetFileNameWithoutExtension(name) : name;
-        }
-
-        public static string GetLanguageFileName(this ProjectFile projectFile, CultureInfo culture)
-        {
-            var extension = projectFile.Extension;
-            var filePath = projectFile.FilePath;
-
-            if (Resx.Equals(extension, StringComparison.OrdinalIgnoreCase))
-            {
-                return Path.ChangeExtension(filePath, culture.ToString()) + @".resx";
-            }
-
-            if (Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
-            {
-                var languageFileName = Path.Combine(projectFile.GetBaseDirectory(), culture.ToString(), Path.GetFileName(filePath));
-                return languageFileName;
-            }
-
-            throw new InvalidOperationException("Extension not supported: " + extension);
-        }
-
-        public static bool IsDesignerFile(this ProjectFile projectFile)
-        {
-            return projectFile.GetBaseName().EndsWith(".Designer", StringComparison.OrdinalIgnoreCase);
-        }
-
-        public static bool IsVisualBasicFile(this ProjectFile projectFile)
-        {
-            return Path.GetExtension(projectFile.FilePath).Equals(".vb", StringComparison.OrdinalIgnoreCase);
-        }
-
-        public static bool IsCSharpFile(this ProjectFile projectFile)
-        {
-            return Path.GetExtension(projectFile.FilePath).Equals(".cs", StringComparison.OrdinalIgnoreCase);
-        }
+    public static bool IsCSharpFile(this ProjectFile projectFile)
+    {
+        return Path.GetExtension(projectFile.FilePath).Equals(".cs", StringComparison.OrdinalIgnoreCase);
     }
 }
