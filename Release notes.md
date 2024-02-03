@@ -1,4 +1,7 @@
-﻿1.80
+﻿1.81
+- Fix #626: ResX Resource Manager does not refresh UI after key removal
+
+1.80
 - Fix #623: Import from Excel with empty cell
 - #624: Consider blanks as changes in Excel import
 
