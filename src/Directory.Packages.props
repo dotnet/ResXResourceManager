@@ -8,7 +8,7 @@
     <PackageVersion Include="DocumentFormat.OpenXml" Version="[2.20.0]" />
     <PackageVersion Include="Community.VisualStudio.Toolkit" Version="[15.0.76.309]" />
     <PackageVersion Include="Fody" Version="6.8.0" />
-    <PackageVersion Include="HtmlAgilityPack" Version="1.11.57" />
+    <PackageVersion Include="HtmlAgilityPack" Version="1.11.58" />
     <PackageVersion Include="ILMerge.Fody" Version="1.24.0" />
     <PackageVersion Include="JetBrains.Annotations" Version="2023.3.0" />
     <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
@@ -39,7 +39,7 @@
     <PackageVersion Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.13.0" />
     <PackageVersion Include="TomsToolbox.Wpf.Composition.Styles" Version="2.13.0" />
     <PackageVersion Include="TomsToolbox.Wpf.Styles" Version="2.13.0" />
-    <PackageVersion Include="Verify.Xunit" Version="23.0.0" />
+    <PackageVersion Include="Verify.Xunit" Version="23.1.0" />
     <PackageVersion Include="VSIX-SdkProjectAdapter" Version="3.0.0" />
     <PackageVersion Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     <PackageVersion Include="xunit" Version="2.6.6" />
