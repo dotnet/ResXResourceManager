@@ -1,4 +1,4 @@
-namespace ResXManager.Translators;
+﻿namespace ResXManager.Translators;
 
 using global::Microsoft.DeepDev;
 using Newtonsoft.Json;
@@ -18,6 +18,8 @@ using JsonConvert = Newtonsoft.Json.JsonConvert;
 using PromptList = System.Collections.Generic.List<(Infrastructure.ITranslationItem item, string prompt)>;
 
 #pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple string/int concatenations
+#pragma warning disable IDE0057 // Use range operator (net472 does not support range operator)
+#pragma warning disable CA1865 // Use char overload (net472 does not support char overload)
 
 [Export(typeof(ITranslator)), Shared]
 public class AzureOpenAITranslator : TranslatorBase
@@ -36,7 +38,7 @@ public class AzureOpenAITranslator : TranslatorBase
     public bool IncludeCommentsInPrompt { get; set; } = true;
 
     [DataMember]
-    // default to max tokens for "text-davinci-003" model
+    // default to max tokens for "gpt-3.5-turbo-instruct" model
     public int MaxTokens { get; set; } = 4096;
 
     // use half of the tokens for prompting
@@ -93,14 +95,14 @@ public class AzureOpenAITranslator : TranslatorBase
         {
             client.BaseAddress = new Uri(Url, UriKind.Absolute);
         }
-        catch (Exception e) when (e is ArgumentNullException || e is ArgumentException || e is UriFormatException)
+        catch (Exception e) when (e is ArgumentNullException or ArgumentException or UriFormatException)
         {
             translationSession.AddMessage("Azure OpenAI Translator requires valid Azure resource endpoint URL.");
             return;
         }
 
         // determine if we are using a chat model
-        if (ModelName.StartsWith("gpt-", true, CultureInfo.InvariantCulture))
+        if (ModelName.StartsWith("gpt-", true, CultureInfo.InvariantCulture) && !ModelName.EndsWith("instruct", StringComparison.OrdinalIgnoreCase))
         {
             await TranslateUsingChatModel(translationSession, client).ConfigureAwait(false);
         }
@@ -138,6 +140,9 @@ public class AzureOpenAITranslator : TranslatorBase
     {
         const string ApiVersion = "2023-05-15";
         var endpointUri = new Uri($"/openai/deployments/{ModelDeploymentName}/chat/completions?api-version={ApiVersion}", UriKind.Relative);
+        var tokenizer = await TokenizerBuilder.CreateByModelNameAsync(
+            ModelName ?? throw new InvalidOperationException("No model name provided in configuration!")
+            ).ConfigureAwait(false);
 
         var retries = 0;
 
@@ -150,7 +155,7 @@ public class AzureOpenAITranslator : TranslatorBase
             var targetCulture = cultureKey.Culture ?? neutralResourcesLanguage;
             var cancellationToken = translationSession.CancellationToken;
 
-            foreach (var (message, items) in PackChatModelMessagesIntoBatches(translationSession, languageGroup.ToList(), targetCulture))
+            foreach (var (message, items) in PackChatModelMessagesIntoBatches(translationSession, languageGroup.ToList(), targetCulture, tokenizer))
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
@@ -194,11 +199,12 @@ public class AzureOpenAITranslator : TranslatorBase
         }
     }
 
-    private IEnumerable<(ChatMessage message, ICollection<ITranslationItem> items)> PackChatModelMessagesIntoBatches(ITranslationSession translationSession, IEnumerable<ITranslationItem> items, CultureInfo targetCulture)
+    private IEnumerable<(ChatMessage message, ICollection<ITranslationItem> items)> PackChatModelMessagesIntoBatches(
+        ITranslationSession translationSession, IEnumerable<ITranslationItem> items, CultureInfo targetCulture, ITokenizer tokenizer
+        )
     {
         var batchItems = new List<ITranslationItem>();
         var batchTokens = 0;
-        var tokenizer = TokenizerBuilder.CreateByModelName(ModelName ?? throw new InvalidOperationException("No model name provided in configuration!"));
         ChatMessage? batchMessage = null;
 
         foreach (var item in items)
@@ -325,8 +331,8 @@ public class AzureOpenAITranslator : TranslatorBase
         {
             // deserialize the message content from JSON
             var results = JsonConvert.DeserializeObject<List<string>>(
-                FixJsonArray(message.Content ?? throw new InvalidOperationException("Azure OpenAI API did not return any content."))
-            ) ?? throw new InvalidOperationException("Azure OpenAI API returned an empty result.");
+                FixJsonResponse(message.Content ?? throw new InvalidOperationException("Azure OpenAI API did not return any content."))
+                ) ?? throw new InvalidOperationException("Azure OpenAI API returned an empty result.");
 
             if (batchItems.Count != results.Count)
             {
@@ -343,20 +349,52 @@ public class AzureOpenAITranslator : TranslatorBase
     }
 
     // fix broken JSON by adding missing brackets around arrays
-    private static string FixJsonArray(string json)
+    private static string FixJsonResponse(string json)
     {
-        var sb = new StringBuilder(json);
+        // start by trimming whitespace
+        var fixedContent = json.Trim();
 
-        if (!json.StartsWith("[", StringComparison.InvariantCulture))
+        if (fixedContent.StartsWith("`", StringComparison.Ordinal) || fixedContent.EndsWith("`", StringComparison.Ordinal))
         {
-            sb.Insert(0, '[');
-        }
-        if (!json.EndsWith("]", StringComparison.InvariantCulture))
-        {
-            sb.Append(']');
+            // remove markdown code block
+            fixedContent = fixedContent.Trim('`');
+
+            // detect markdown code block language
+            if (fixedContent.StartsWith("json", StringComparison.OrdinalIgnoreCase))
+            {
+                // remove from start of content
+                fixedContent = fixedContent.Substring(4);
+            }
+
+            // trim any whitespace again
+            fixedContent = fixedContent.Trim();
         }
 
-        return sb.ToString();
+        if (fixedContent.StartsWith("{", StringComparison.Ordinal) || fixedContent.EndsWith("}", StringComparison.Ordinal))
+        {
+            // remove leading and trailing brackets
+            fixedContent = fixedContent.Trim('{', '}');
+
+            // trim any whitespace again
+            fixedContent = fixedContent.Trim();
+
+            // surround with brackets again
+            fixedContent = $"{{{fixedContent}}}";
+        }
+
+        if (fixedContent.StartsWith("[", StringComparison.Ordinal) || fixedContent.EndsWith("]", StringComparison.Ordinal))
+        {
+            // remove leading and trailing brackets
+            fixedContent = fixedContent.Trim('[', ']');
+
+            // trim any whitespace again
+            fixedContent = fixedContent.Trim();
+
+            // surround with brackets again
+            fixedContent = $"[{fixedContent}]";
+        }
+
+        return fixedContent;
     }
 
     private sealed class CompletionsChoice
@@ -378,12 +416,15 @@ public class AzureOpenAITranslator : TranslatorBase
     {
         const string ApiVersion = "2023-05-15";
         var endpointUri = new Uri($"/openai/deployments/{ModelDeploymentName}/completions?api-version={ApiVersion}", UriKind.Relative);
+        var tokenizer = await TokenizerBuilder.CreateByModelNameAsync(
+            ModelName ?? throw new InvalidOperationException("No model name provided in configuration!")
+            ).ConfigureAwait(false);
 
         var retries = 0;
 
         var cancellationToken = translationSession.CancellationToken;
 
-        foreach (var batch in PackCompletionModelPromptsIntoBatches(translationSession))
+        foreach (var batch in PackCompletionModelPromptsIntoBatches(translationSession, tokenizer))
         {
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -426,11 +467,10 @@ public class AzureOpenAITranslator : TranslatorBase
         }
     }
 
-    private IEnumerable<PromptList> PackCompletionModelPromptsIntoBatches(ITranslationSession translationSession)
+    private IEnumerable<PromptList> PackCompletionModelPromptsIntoBatches(ITranslationSession translationSession, ITokenizer tokenizer)
     {
         var batchItems = new PromptList();
         var batchTokens = 0;
-        var tokenizer = TokenizerBuilder.CreateByModelName(ModelName ?? throw new InvalidOperationException("No model name provided in configuration!"));
 
         foreach (var item in translationSession.Items)
         {
@@ -570,7 +610,7 @@ public class AzureOpenAITranslator : TranslatorBase
         set => Credentials[2].Value = value;
     }
 
-    // this translator is currently adapted to work the best with "text-davinci-003" or "gpt-3.5-turbo"
+    // this translator is currently adapted to work the best with "gpt-3.5-turbo-instruct", "gpt-3.5-turbo" or "gpt-4-turbo"
     [DataMember(Name = "ModelName")]
     public string? ModelName
     {
@@ -587,6 +627,7 @@ public class AzureOpenAITranslator : TranslatorBase
         return modelName switch
         {
             "gpt-35-turbo" => "gpt-3.5-turbo",
+            "gpt-35-turbo-instruct" => "gpt-3.5-turbo-instruct",
             _ => modelName,
         };
     }
