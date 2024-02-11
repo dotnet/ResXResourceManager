@@ -120,8 +120,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.VSIX.Compatibil
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.VSIX.Compatibility.x64", "ResXManager.VSIX.Compatibility.x64\ResXManager.VSIX.Compatibility.x64.csproj", "{330FADF0-80F3-4B2A-8F11-79F528AFA1DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.VSIX.Compatibility.arm64", "ResXManager.VSIX.Compatibility.arm64\ResXManager.VSIX.Compatibility.arm64.csproj", "{07C243CC-4EBA-4DF4-B88D-76D2D8EDE9A0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -172,10 +170,6 @@ Global
 		{330FADF0-80F3-4B2A-8F11-79F528AFA1DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{330FADF0-80F3-4B2A-8F11-79F528AFA1DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{330FADF0-80F3-4B2A-8F11-79F528AFA1DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{07C243CC-4EBA-4DF4-B88D-76D2D8EDE9A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{07C243CC-4EBA-4DF4-B88D-76D2D8EDE9A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{07C243CC-4EBA-4DF4-B88D-76D2D8EDE9A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{07C243CC-4EBA-4DF4-B88D-76D2D8EDE9A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -187,7 +181,6 @@ Global
 		SolutionGuid = {04A160C5-3AA5-4A9E-9D73-A227A07E3EE4}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{07c243cc-4eba-4df4-b88d-76d2d8ede9a0}*SharedItemsImports = 5
 		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{330fadf0-80f3-4b2a-8f11-79f528afa1dd}*SharedItemsImports = 5
 		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{c59e23b4-6acd-43dc-bfc7-fcb667155eb3}*SharedItemsImports = 5
 		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{cc3f887f-9602-43f4-aa73-7557b7c6ab1d}*SharedItemsImports = 13
