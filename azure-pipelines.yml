@@ -15,7 +15,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
-        version: '7.0.400'
+        version: '8.0.201'
 
     - script: '"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\msbuild.exe" -version'
       displayName: 'log msbuild version'

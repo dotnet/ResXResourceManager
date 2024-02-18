@@ -1,4 +1,7 @@
-﻿1.81
+﻿1.82
+- support newer OpenAI models
+
+1.81
 - Fix #626: ResX Resource Manager does not refresh UI after key removal
 
 1.80
