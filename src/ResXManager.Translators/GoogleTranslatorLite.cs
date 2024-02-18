@@ -29,7 +29,7 @@ public class GoogleTranslatorLite : TranslatorBase
 {
     private static readonly Uri _uri = new("https://translate.google.com/");
 
-    public GoogleTranslatorLite( )
+    public GoogleTranslatorLite()
         : base("GoogleLite", "Google Lite", _uri, null)
     {
     }
@@ -54,16 +54,15 @@ public class GoogleTranslatorLite : TranslatorBase
                 // ReSharper disable once PossibleNullReferenceException
                 parameters.AddRange(new[]
                 {
-                    "client", "gtx",
+                    "client", "dict-chrome-ex",
                     "sl", GoogleLangCode(translationSession.SourceLanguage),
                     "tl", GoogleLangCode(targetCulture),
-                    "dt", "t",
                     "q", RemoveKeyboardShortcutIndicators(sourceItems[0].Source)
                 });
 
                 // ReSharper disable once AssignNullToNotNullAttribute
                 var response = await GetHttpResponse(
-                    "https://translate.googleapis.com/translate_a/single",
+                    "https://clients5.google.com/translate_a/t",
                     parameters,
                     translationSession.CancellationToken).ConfigureAwait(false);
 
@@ -102,8 +101,7 @@ public class GoogleTranslatorLite : TranslatorBase
 
 #pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods => not available in .NET Framework
         var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        // Using string.Substring => System.Index or System.Range not available in .NET Framework
-        result = result.Substring(4, result.IndexOf("\",\"", 4, StringComparison.Ordinal) - 4);
+        result = result.Substring(2, result.Length - 4);
         return Regex.Unescape(result);
     }
 
