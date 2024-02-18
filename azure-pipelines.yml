@@ -136,17 +136,29 @@ stages:
     - pwsh: Rename-Item -Path "$(Pipeline.Workspace)\BuildPackages\Publish.clickonce" -NewName Publish.zip
       displayName: 'Rename click-once archive back to .zip'
 
+    # Publish the signed packages
+    - publish: $(Pipeline.Workspace)/BuildPackages
+      displayName: Publish Signed Packages
+      artifact: SignedPackages
+
+- stage: Upload
+  dependsOn: CodeSign
+  jobs:
+  - job: Upload
+    displayName: Upload to VSIX gallery
+    pool:
+      vmImage: windows-latest
+    steps:
+    - download: current
+      artifact: SignedPackages
+      displayName: Download build artifacts
     - task: PowerShell@1
       displayName: 'Publish to vsix-gallery'
       inputs:
         scriptType: inlineScript
         inlineScript: |
           (new-object Net.WebClient).DownloadString("https://raw.github.com/tom-englert/BuildScripts/master/BuildScripts.ps1") | iex
-          Vsix-PublishToGallery "$(Pipeline.Workspace)\BuildPackages\ResXManager.Vsix.vsix"
+          Vsix-PublishToGallery "$(Pipeline.Workspace)\SignedPackages\ResXManager.Vsix.vsix"
       continueOnError: true
 
-    # Publish the signed packages
-    - publish: $(Pipeline.Workspace)/BuildPackages
-      displayName: Publish Signed Packages
-      artifact: SignedPackages
 
