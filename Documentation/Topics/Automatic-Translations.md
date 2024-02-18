@@ -27,7 +27,8 @@ All results can be reviewed by opening the combo box in the target column. The r
 
 #### Configuration
 - Add a new Azure OpenAI resource using the portal or CLI.
-- Deploy the "gpt-3.5-turbo-instruct" (completion based) or "gpt-3.5-turbo"/"gpt-4-turbo" (chat based) model.
+- Model availability may vary depending on e.g. region, check the model availabilty [here](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models#gpt-4-and-gpt-4-turbo-preview-model-availability)
+- Deploy the "gpt-3.5-turbo-instruct" (completion based) or "gpt-3.5-turbo"/"gpt-4-turbo" (chat based) model. 
 - Copy the API key, URL to the endpoint and name of the deployment and model into the settings of the translator
 
 #### Addtional Settings
