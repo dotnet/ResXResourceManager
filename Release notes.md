@@ -1,4 +1,8 @@
-﻿1.82
+﻿1.83
+- Fix #616: Added GoogleLite endpoint that doesn't halt translation on certain punctuation. 
+- Fix broken upload on VS Marketplace
+
+1.82
 - support newer OpenAI models
 
 1.81
