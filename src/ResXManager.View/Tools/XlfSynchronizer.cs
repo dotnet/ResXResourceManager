@@ -256,7 +256,7 @@ public sealed class XlfSynchronizer : FileWatcher, IService
             var neutralResourcesLanguage = entity.NeutralResourcesLanguage;
 
             xlfFiles ??= Array.Empty<XlfFile>();
-            xlfFile = document.Files.FirstOrDefault(file => file.TargetLanguage == targetCulture.Name);
+            xlfFile = document.Files.FirstOrDefault(file => file.TargetLanguage == targetCulture.Name && string.Equals(file.Original, original, StringComparison.OrdinalIgnoreCase));
 
             if (xlfFile == null)
             {
