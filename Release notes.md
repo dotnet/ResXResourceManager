@@ -1,4 +1,7 @@
-﻿1.83
+﻿1.84
+- Fix #634: XlfSynchronizer does not generate separate file entries for different resources in the same project
+
+1.83
 - Fix #616: Added GoogleLite endpoint that doesn't halt translation on certain punctuation. 
 - Fix broken upload on VS Marketplace
 
