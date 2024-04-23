@@ -31,7 +31,8 @@ public class DeepLTranslator : TranslatorBase
     private static readonly IList<ICredentialItem> _credentialItems = new ICredentialItem[]
     {
         new CredentialItem("APIKey", "API Key"),
-        new CredentialItem("Url", "Api Url", false)
+        new CredentialItem("Url", "Api Url", false),
+        new CredentialItem("GlossaryId", "Glossary Id", false)
     };
 
     public DeepLTranslator()
@@ -53,6 +54,14 @@ public class DeepLTranslator : TranslatorBase
         set => Credentials[1].Value = value;
     }
 
+
+    [DataMember(Name = "GlossaryId")]
+    public string? GlossaryId
+    {
+        get => Credentials[2].Value;
+        set => Credentials[2].Value = value;
+    }
+
     private string? ApiKey => Credentials[0].Value;
 
     protected override async Task Translate(ITranslationSession translationSession)
@@ -60,6 +69,15 @@ public class DeepLTranslator : TranslatorBase
         if (ApiKey.IsNullOrEmpty())
         {
             translationSession.AddMessage("DeepL Translator requires API Key.");
+            return;
+        }
+
+        var targetLanguages = translationSession.Items.GroupBy(item => item.TargetCulture);
+        var targetLangCount = targetLanguages.Count();
+
+        if (!GlossaryId.IsNullOrWhiteSpace() && targetLangCount >= 2)
+        {
+            translationSession.AddMessage("A glossary id can only be used with a single target language.");
             return;
         }
 
@@ -89,7 +107,8 @@ public class DeepLTranslator : TranslatorBase
                 {
                     "target_lang", DeepLLangCode(targetCulture),
                     "source_lang", DeepLLangCode(translationSession.SourceLanguage),
-                    "auth_key", ApiKey
+                    "auth_key", ApiKey,
+                    "glossary_id", GlossaryId
                 });
 
                 var apiUrl = ApiUrl;
