@@ -1,4 +1,7 @@
-﻿1.84
+﻿1.85
+- #639: Support for DeepL glossaries
+
+1.84
 - Fix #634: XlfSynchronizer does not generate separate file entries for different resources in the same project
 
 1.83
