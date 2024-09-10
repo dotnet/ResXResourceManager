@@ -171,7 +171,6 @@ public class OpenAITranslator : TranslatorBase
                     }},
                     max_tokens = CompletionTokens,
                     temperature = Temperature,
-                    stop = new[] { "\n" },
                     model = ModelName
                 };
 
