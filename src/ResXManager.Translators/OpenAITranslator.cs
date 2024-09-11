@@ -52,6 +52,8 @@ public class OpenAITranslator : TranslatorBase
     // additional text to be embedded into the prompt for all translations
     public string CustomPrompt { get; set; } = "";
 
+    private readonly string Url = "https://api.openai.com";
+
     protected override async Task Translate(ITranslationSession translationSession)
     {
         if (AuthenticationKey.IsNullOrWhiteSpace())
@@ -312,18 +314,11 @@ public class OpenAITranslator : TranslatorBase
         set => Credentials[0].Value = value;
     }
 
-    [DataMember(Name = "Url")]
-    public string? Url
-    {
-        get => Credentials[1].Value;
-        set => Credentials[1].Value = value;
-    }
-
     // this translator is currently adapted to work the best with "gpt-3.5-turbo-instruct", "gpt-3.5-turbo" or "gpt-4-turbo"
     [DataMember(Name = "ModelName")]
     public string? ModelName
     {
-        get => ExpandModelNameAliases(Credentials[2].Value);
+        get => ExpandModelNameAliases(Credentials[1].Value);
         set => Credentials[2].Value = value;
     }
 
@@ -346,7 +341,6 @@ public class OpenAITranslator : TranslatorBase
         return new ICredentialItem[]
         {
             new CredentialItem("AuthenticationKey", "Key"),
-            new CredentialItem("Url", "Endpoint Url", false),
             new CredentialItem("ModelName", "Model Name", false),
         };
     }
