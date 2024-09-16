@@ -62,12 +62,6 @@ public class OpenAITranslator : TranslatorBase
             return;
         }
 
-        if (Url.IsNullOrWhiteSpace())
-        {
-            translationSession.AddMessage("OpenAI Translator requires URL to the resource endpoint.");
-            return;
-        }
-
         if (ModelName.IsNullOrWhiteSpace())
         {
             translationSession.AddMessage($"OpenAI Translator requires name of the model used in the deployment.");
@@ -159,7 +153,7 @@ public class OpenAITranslator : TranslatorBase
 
         var cancellationToken = translationSession.CancellationToken;
 
-        foreach (var batch in PackCompletionModelPromptsIntoBatches(translationSession, tokenizer))
+        foreach (var batch in PackCompletionModelPrompts(translationSession, tokenizer))
         {
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -206,7 +200,7 @@ public class OpenAITranslator : TranslatorBase
         }
     }
 
-    private IEnumerable<(ITranslationItem item, string prompt)> PackCompletionModelPromptsIntoBatches(ITranslationSession translationSession, ITokenizer tokenizer)
+    private IEnumerable<(ITranslationItem item, string prompt)> PackCompletionModelPrompts(ITranslationSession translationSession, ITokenizer tokenizer)
     {
         foreach (var item in translationSession.Items)
         {
@@ -225,11 +219,7 @@ public class OpenAITranslator : TranslatorBase
                 continue;
             }
 
-            if (true)
-            {
-                yield return (item, prompt);
-                continue;
-            }
+            yield return (item, prompt);
         }
     }
 
