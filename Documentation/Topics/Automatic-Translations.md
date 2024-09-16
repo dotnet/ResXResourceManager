@@ -46,7 +46,7 @@ All results can be reviewed by opening the combo box in the target column. The r
 
 #### Configuration
 - Go to [here](https://platform.openai.com/signup) to sign up and get an API key from [here](https://platform.openai.com/api-keys)
-- Copy the API key and model a mode of your choosing into the settings of the translator
+- Copy the API key and a model of your choosing (e.g. "gpt-3.5-turbo"/"gpt-4-turbo") into the settings of the translator
 
 #### Addtional Settings
 - You can add a custom prompt to your request to improve the translation quality or behavior, e.g. "preserve the html tags in the results"
