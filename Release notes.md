@@ -1,4 +1,7 @@
-﻿1.85
+﻿1.86
+- Add OpenAI translator
+
+1.85
 - #639: Support for DeepL glossaries
 
 1.84
