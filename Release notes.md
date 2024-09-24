@@ -1,4 +1,7 @@
-﻿1.86
+﻿1.87
+- Stick with System.Composition.AttributedModel Version="[1.4.1]" for compatibility with older VS versions.
+
+1.86
 - Add OpenAI translator
 
 1.85
