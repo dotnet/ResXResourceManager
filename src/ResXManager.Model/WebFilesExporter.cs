@@ -92,7 +92,7 @@ internal sealed class WebFilesExporter : IService
                             key += FormatTemplateSuffix;
                         }
 
-                        node.Add(key, JToken.FromObject(resourceNode.Text));
+                        node.Add(key, JToken.FromObject(resourceNode.Text ?? string.Empty));
                     }
 
                     jsonObjects

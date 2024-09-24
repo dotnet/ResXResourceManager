@@ -180,19 +180,19 @@ public class AzureOpenAITranslator : TranslatorBase
                         // keep retrying
                         continue;
                     }
-                    else
+
+                    completionsResponse.EnsureSuccessStatusCode();
+
+                    var responseContent = await completionsResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                    var completions = JsonConvert.DeserializeObject<ChatCompletionsResponse>(responseContent);
+                    if (completions != null)
                     {
-                        completionsResponse.EnsureSuccessStatusCode();
-
-                        var responseContent = await completionsResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-                        var completions = JsonConvert.DeserializeObject<ChatCompletionsResponse>(responseContent);
-
                         await translationSession.MainThread.StartNew(() => ReturnResults(items, completions), cancellationToken).ConfigureAwait(false);
-
-                        // break out of the retry loop
-                        break;
                     }
+
+                    // break out of the retry loop
+                    break;
 
                 }
             }
@@ -450,19 +450,19 @@ public class AzureOpenAITranslator : TranslatorBase
                     // keep retrying
                     continue;
                 }
-                else
+
+                completionsResponse.EnsureSuccessStatusCode();
+
+                var responseContent = await completionsResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                var completions = JsonConvert.DeserializeObject<CompletionsResponse>(responseContent);
+                if (completions != null)
                 {
-                    completionsResponse.EnsureSuccessStatusCode();
-
-                    var responseContent = await completionsResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-                    var completions = JsonConvert.DeserializeObject<CompletionsResponse>(responseContent);
-
                     await translationSession.MainThread.StartNew(() => ReturnResults(batch, completions), cancellationToken).ConfigureAwait(false);
-
-                    // break out of the retry loop
-                    break;
                 }
+
+                // break out of the retry loop
+                break;
             }
         }
     }
