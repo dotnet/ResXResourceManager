@@ -1,6 +1,6 @@
 ﻿namespace ResXManager.Translators;
 
-using global::Microsoft.DeepDev;
+using global::Microsoft.ML.Tokenizers;
 using Newtonsoft.Json;
 using ResXManager.Infrastructure;
 using System;
@@ -138,11 +138,11 @@ public class AzureOpenAITranslator : TranslatorBase
 
     private async Task TranslateUsingChatModel(ITranslationSession translationSession, HttpClient client)
     {
-        const string ApiVersion = "2023-05-15";
+        const string ApiVersion = "2024-06-01";
         var endpointUri = new Uri($"/openai/deployments/{ModelDeploymentName}/chat/completions?api-version={ApiVersion}", UriKind.Relative);
-        var tokenizer = await TokenizerBuilder.CreateByModelNameAsync(
+        var tokenizer = TiktokenTokenizer.CreateForModel(
             ModelName ?? throw new InvalidOperationException("No model name provided in configuration!")
-            ).ConfigureAwait(false);
+            );
 
         var retries = 0;
 
@@ -200,7 +200,7 @@ public class AzureOpenAITranslator : TranslatorBase
     }
 
     private IEnumerable<(ChatMessage message, ICollection<ITranslationItem> items)> PackChatModelMessagesIntoBatches(
-        ITranslationSession translationSession, IEnumerable<ITranslationItem> items, CultureInfo targetCulture, ITokenizer tokenizer
+        ITranslationSession translationSession, IEnumerable<ITranslationItem> items, CultureInfo targetCulture, TiktokenTokenizer tokenizer
         )
     {
         var batchItems = new List<ITranslationItem>();
@@ -209,7 +209,7 @@ public class AzureOpenAITranslator : TranslatorBase
 
         foreach (var item in items)
         {
-            var currentBatch = batchItems.Concat(new[] { item }).ToList();
+            var currentBatch = batchItems.Concat([item]).ToList();
 
             var currentMessage = GenerateChatModelMessageForTranslations(translationSession, currentBatch, targetCulture);
             if (currentMessage?.Content is null)
@@ -218,7 +218,7 @@ public class AzureOpenAITranslator : TranslatorBase
                 continue;
             }
 
-            var tokens = tokenizer.Encode(currentMessage.Content, new List<string>()).Count;
+            var tokens = tokenizer.CountTokens(currentMessage.Content);
             if (tokens > PromptTokens)
             {
                 translationSession.AddMessage($"Prompt for resource would exceed {PromptTokens} tokens: {item.Source.Substring(0, 20)}...");
@@ -235,7 +235,7 @@ public class AzureOpenAITranslator : TranslatorBase
             {
                 yield return (batchMessage, batchItems);
 
-                batchItems = new List<ITranslationItem>();
+                batchItems = [];
                 batchTokens = 0;
             }
 
@@ -414,11 +414,11 @@ public class AzureOpenAITranslator : TranslatorBase
 
     private async Task TranslateUsingCompletionsModel(ITranslationSession translationSession, HttpClient client)
     {
-        const string ApiVersion = "2023-05-15";
+        const string ApiVersion = "2024-06-01";
         var endpointUri = new Uri($"/openai/deployments/{ModelDeploymentName}/completions?api-version={ApiVersion}", UriKind.Relative);
-        var tokenizer = await TokenizerBuilder.CreateByModelNameAsync(
+        var tokenizer = TiktokenTokenizer.CreateForModel(
             ModelName ?? throw new InvalidOperationException("No model name provided in configuration!")
-            ).ConfigureAwait(false);
+            );
 
         var retries = 0;
 
@@ -467,7 +467,7 @@ public class AzureOpenAITranslator : TranslatorBase
         }
     }
 
-    private IEnumerable<PromptList> PackCompletionModelPromptsIntoBatches(ITranslationSession translationSession, ITokenizer tokenizer)
+    private IEnumerable<PromptList> PackCompletionModelPromptsIntoBatches(ITranslationSession translationSession, TiktokenTokenizer tokenizer)
     {
         var batchItems = new PromptList();
         var batchTokens = 0;
@@ -481,7 +481,7 @@ public class AzureOpenAITranslator : TranslatorBase
                 continue;
             }
 
-            var tokens = tokenizer.Encode(prompt, new List<string>()).Count;
+            var tokens = tokenizer.CountTokens(prompt);
 
             if (tokens > PromptTokens)
             {
@@ -499,7 +499,7 @@ public class AzureOpenAITranslator : TranslatorBase
             {
                 yield return batchItems;
 
-                batchItems = new PromptList();
+                batchItems = [];
                 batchTokens = 0;
             }
 
@@ -634,12 +634,12 @@ public class AzureOpenAITranslator : TranslatorBase
 
     private static IList<ICredentialItem> GetCredentials()
     {
-        return new ICredentialItem[]
-        {
+        return
+        [
             new CredentialItem("AuthenticationKey", "Key"),
             new CredentialItem("Url", "Endpoint Url", false),
             new CredentialItem("ModelDeploymentName", "Model Deployment Name", false),
             new CredentialItem("ModelName", "Model Name", false),
-        };
+        ];
     }
 }

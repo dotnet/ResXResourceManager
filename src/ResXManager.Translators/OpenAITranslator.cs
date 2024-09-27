@@ -1,6 +1,6 @@
 ﻿namespace ResXManager.Translators;
 
-using global::Microsoft.DeepDev;
+using global::Microsoft.ML.Tokenizers;
 using Newtonsoft.Json;
 using ResXManager.Infrastructure;
 using System;
@@ -145,9 +145,9 @@ public class OpenAITranslator : TranslatorBase
     private async Task TranslateUsingCompletionsModel(ITranslationSession translationSession, HttpClient client)
     {
         var endpointUri = new Uri($"/v1/chat/completions", UriKind.Relative);
-        var tokenizer = await TokenizerBuilder.CreateByModelNameAsync(
+        var tokenizer = TiktokenTokenizer.CreateForModel(
             ModelName ?? throw new InvalidOperationException("No model name provided in configuration!")
-            ).ConfigureAwait(false);
+            );
 
         var retries = 0;
 
@@ -200,7 +200,7 @@ public class OpenAITranslator : TranslatorBase
         }
     }
 
-    private IEnumerable<(ITranslationItem item, string prompt)> PackCompletionModelPrompts(ITranslationSession translationSession, ITokenizer tokenizer)
+    private IEnumerable<(ITranslationItem item, string prompt)> PackCompletionModelPrompts(ITranslationSession translationSession, TiktokenTokenizer tokenizer)
     {
         foreach (var item in translationSession.Items)
         {
@@ -211,7 +211,7 @@ public class OpenAITranslator : TranslatorBase
                 continue;
             }
 
-            var tokens = tokenizer.Encode(prompt, new List<string>()).Count;
+            var tokens = tokenizer.CountTokens(prompt);
 
             if (tokens > PromptTokens)
             {
@@ -328,10 +328,10 @@ public class OpenAITranslator : TranslatorBase
 
     private static IList<ICredentialItem> GetCredentials()
     {
-        return new ICredentialItem[]
-        {
+        return
+        [
             new CredentialItem("AuthenticationKey", "Key"),
             new CredentialItem("ModelName", "Model Name", false),
-        };
+        ];
     }
 }
