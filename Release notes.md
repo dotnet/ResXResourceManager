@@ -1,4 +1,7 @@
-﻿1.87
+﻿1.88
+- Azure OpenAI translator: Use new tokenizer from Microsoft to support newer gpt4o model
+
+1.87
 - Stick with System.Composition.AttributedModel Version="[1.4.1]" for compatibility with older VS versions.
 
 1.86
