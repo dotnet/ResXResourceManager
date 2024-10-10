@@ -42,6 +42,12 @@ public sealed class XlfSynchronizer : FileWatcher, IService
         resourceManager.Loaded += ResourceManager_Loaded;
         resourceManager.ProjectFileSaved += ResourceManager_ProjectFileSaved;
 
+        if (!resourceManager.IsLoading &&
+            !string.IsNullOrWhiteSpace(resourceManager.SolutionFolder))
+        {
+            ResourceManager_SolutionFolderChanged(null, new TextEventArgs(resourceManager.SolutionFolder!));
+        }
+
         configuration.PropertyChanged += Configuration_PropertyChanged;
     }
 
@@ -145,6 +151,8 @@ public sealed class XlfSynchronizer : FileWatcher, IService
                 return documents;
             }).ConfigureAwait(true);
 
+            CheckForDuplicateLanguages();
+
             var filesByOriginal = GetFilesByOriginal(_documentsByPath.Values);
 
             foreach (var entity in _resourceManager.ResourceEntities)
@@ -155,6 +163,39 @@ public sealed class XlfSynchronizer : FileWatcher, IService
         finally
         {
             Interlocked.Decrement(ref _isUpdateFromXlfRunning);
+        }
+    }
+
+    private void CheckForDuplicateLanguages()
+    {
+        // Note: created for GH #666
+
+        // Group by directory, we don't want same language to be used
+        // multiple times in the same directory
+        var directoryGroups = (from x in _documentsByPath
+                               from xlfFile in x.Value.Files
+                               group xlfFile by xlfFile.Document.Directory into g
+                               select new
+                               {
+                                   Directory = g.Key,
+                                   Files = g.Select(m => m)
+                               });
+
+        foreach (var directoryGroup in directoryGroups)
+        {
+            var xlfFilesByTargetLanguage = new Dictionary<string?, string?>();
+
+            foreach (var xlfFile in directoryGroup.Files)
+            {
+                if (xlfFilesByTargetLanguage.TryGetValue(xlfFile.TargetLanguage, out var wrongXlfFile))
+                {
+                    _tracer.TraceError($"Xlf file '{xlfFile.Document.FilePath}' targets '{xlfFile.TargetLanguage}', but this is already targeted by a different xlf file '{wrongXlfFile}'");
+                }
+                else
+                {
+                    xlfFilesByTargetLanguage.Add(xlfFile.TargetLanguage, xlfFile.Document.FilePath);
+                }
+            }
         }
     }
 
