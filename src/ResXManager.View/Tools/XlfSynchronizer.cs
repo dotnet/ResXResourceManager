@@ -251,7 +251,7 @@ public sealed class XlfSynchronizer : FileWatcher, IService
         }
     }
 
-    private bool UpdateXlfFile(ResourceEntity entity, CultureKey language, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
+    private bool UpdateXlfFile(ResourceEntity entity, CultureKey language, Dictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
     {
         var neutralProjectFile = entity.NeutralProjectFile;
         if (neutralProjectFile == null)
@@ -297,7 +297,7 @@ public sealed class XlfSynchronizer : FileWatcher, IService
             if (xlfFile == null)
             {
                 xlfFile = document.AddFile(original, neutralResourcesLanguage.Name, targetCulture.Name);
-                xlfFilesByOriginal[original] = xlfFiles.Append(xlfFile).ToArray();
+                xlfFilesByOriginal[original] = [.. xlfFiles, xlfFile];
             }
 
             document.Save();
@@ -326,7 +326,7 @@ public sealed class XlfSynchronizer : FileWatcher, IService
             .SelectMany(doc => doc.Files)
             .GroupBy(file => file.Original, StringComparer.OrdinalIgnoreCase)
             .Where(group => !group.Key.IsNullOrEmpty())
-            .ToDictionary(group => group.Key!, ICollection<XlfFile> (group) => group.ToArray(), StringComparer.OrdinalIgnoreCase);
+            .ToDictionary(group => group.Key!, ICollection<XlfFile> (group) => [.. group], StringComparer.OrdinalIgnoreCase);
     }
 
     private void ResourceManager_ProjectFileSaved(object? sender, ProjectFileEventArgs e)

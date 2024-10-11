@@ -1,14 +1,15 @@
-﻿namespace ResXManager.View.Tools.Tests;
+﻿namespace ResXManager.Tests.View.Tools;
 
 using NSubstitute;
 using ResXManager.Infrastructure;
 using ResXManager.Model;
-using ResXManager.Tests;
 using ResXManager.View.Tools;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Documents;
+
+using ResXManager.Tests.Helpers;
+
 using VerifyXunit;
 using Xunit;
 
