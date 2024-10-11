@@ -21,7 +21,7 @@ using TomsToolbox.Wpf;
 [Export, Export(typeof(IService)), Shared]
 public sealed class XlfSynchronizer : FileWatcher, IService
 {
-    private static readonly HashSet<string> _supportedExtension = new(new[] { ".xlf", ".xliff" }, StringComparer.OrdinalIgnoreCase);
+    private static readonly HashSet<string> _supportedExtension = new([".xlf", ".xliff"], StringComparer.OrdinalIgnoreCase);
 
     private readonly ResourceManager _resourceManager;
     private readonly ITracer _tracer;
@@ -41,6 +41,11 @@ public sealed class XlfSynchronizer : FileWatcher, IService
         resourceManager.SolutionFolderChanged += ResourceManager_SolutionFolderChanged;
         resourceManager.Loaded += ResourceManager_Loaded;
         resourceManager.ProjectFileSaved += ResourceManager_ProjectFileSaved;
+
+        if (!resourceManager.IsLoading && !resourceManager.SolutionFolder.IsNullOrWhiteSpace())
+        {
+            ResourceManager_SolutionFolderChanged(null, new(resourceManager.SolutionFolder));
+        }
 
         configuration.PropertyChanged += Configuration_PropertyChanged;
     }
@@ -145,6 +150,8 @@ public sealed class XlfSynchronizer : FileWatcher, IService
                 return documents;
             }).ConfigureAwait(true);
 
+            CheckForDuplicateLanguages();
+
             var filesByOriginal = GetFilesByOriginal(_documentsByPath.Values);
 
             foreach (var entity in _resourceManager.ResourceEntities)
@@ -155,6 +162,35 @@ public sealed class XlfSynchronizer : FileWatcher, IService
         finally
         {
             Interlocked.Decrement(ref _isUpdateFromXlfRunning);
+        }
+    }
+
+    private void CheckForDuplicateLanguages()
+    {
+        // Note: created for GH #666
+
+        // Group by directory, we don't want same language to be used
+        // multiple times in the same directory
+        var directoryGroups = _documentsByPath.Values
+            .SelectMany(document => document.Files)
+            .GroupBy(file => file.Document.Directory)
+            .Select(group => new { Directory = group.Key, Files = group });
+
+        foreach (var directoryGroup in directoryGroups)
+        {
+            var xlfFilesByTargetLanguage = new Dictionary<string?, string?>();
+
+            foreach (var xlfFile in directoryGroup.Files)
+            {
+                if (xlfFilesByTargetLanguage.TryGetValue(xlfFile.TargetLanguage, out var wrongXlfFile))
+                {
+                    _tracer.TraceError($"Xlf file '{xlfFile.Document.FilePath}' targets '{xlfFile.TargetLanguage}', but this is already targeted by a different xlf file '{wrongXlfFile}'");
+                }
+                else
+                {
+                    xlfFilesByTargetLanguage.Add(xlfFile.TargetLanguage, xlfFile.Document.FilePath);
+                }
+            }
         }
     }
 
@@ -215,7 +251,7 @@ public sealed class XlfSynchronizer : FileWatcher, IService
         }
     }
 
-    private bool UpdateXlfFile(ResourceEntity entity, CultureKey language, IDictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
+    private bool UpdateXlfFile(ResourceEntity entity, CultureKey language, Dictionary<string, ICollection<XlfFile>> xlfFilesByOriginal)
     {
         var neutralProjectFile = entity.NeutralProjectFile;
         if (neutralProjectFile == null)
@@ -261,7 +297,7 @@ public sealed class XlfSynchronizer : FileWatcher, IService
             if (xlfFile == null)
             {
                 xlfFile = document.AddFile(original, neutralResourcesLanguage.Name, targetCulture.Name);
-                xlfFilesByOriginal[original] = xlfFiles.Append(xlfFile).ToArray();
+                xlfFilesByOriginal[original] = [.. xlfFiles, xlfFile];
             }
 
             document.Save();
@@ -283,14 +319,14 @@ public sealed class XlfSynchronizer : FileWatcher, IService
             .ToUpperInvariant();
     }
 
-    private static IDictionary<string, ICollection<XlfFile>> GetFilesByOriginal(IEnumerable<XlfDocument> documents)
+    private static Dictionary<string, ICollection<XlfFile>> GetFilesByOriginal(IEnumerable<XlfDocument> documents)
     {
         // ! group.Key is checked in Where clause.
         return documents
             .SelectMany(doc => doc.Files)
             .GroupBy(file => file.Original, StringComparer.OrdinalIgnoreCase)
             .Where(group => !group.Key.IsNullOrEmpty())
-            .ToDictionary(group => group.Key!, group => (ICollection<XlfFile>)group.ToArray(), StringComparer.OrdinalIgnoreCase);
+            .ToDictionary(group => group.Key!, ICollection<XlfFile> (group) => [.. group], StringComparer.OrdinalIgnoreCase);
     }
 
     private void ResourceManager_ProjectFileSaved(object? sender, ProjectFileEventArgs e)
