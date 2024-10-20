@@ -13,7 +13,7 @@
     <Tags>WPF, WinForms, resx, resources, Editor, localization, Productivity, Visual Studio, internationalization, string, resource, l10n, i18n</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
-    <InstallationTarget Version="[15.0,17.0)" Id="Microsoft.VisualStudio.Community">
+    <InstallationTarget Version="[16.0,17.0)" Id="Microsoft.VisualStudio.Community">
       <ProductArchitecture>x86</ProductArchitecture>
     </InstallationTarget>
     <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Community">
