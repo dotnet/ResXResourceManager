@@ -39,7 +39,7 @@
     <PackageVersion Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.20.0" />
     <PackageVersion Include="TomsToolbox.Wpf.Composition.Styles" Version="2.20.0" />
     <PackageVersion Include="TomsToolbox.Wpf.Styles" Version="2.20.0" />
-    <PackageVersion Include="Verify.Xunit" Version="26.6.0" />
+    <PackageVersion Include="Verify.Xunit" Version="27.0.1" />
     <PackageVersion Include="VSIX-SdkProjectAdapter" Version="3.0.0" />
     <PackageVersion Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     <PackageVersion Include="xunit" Version="2.9.2" />

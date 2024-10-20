@@ -1,14 +1,17 @@
-﻿1.88
-- Azure OpenAI translator: Use new tokenizer from Microsoft to support newer gpt4o model
+﻿1.89
+- Fix #666: Add tests and solution for duplicate target language usage in same directory for xlf files (contributed by Geert van Horrik <geert@catenalogic.com>)
+
+1.88
+- Azure OpenAI translator: Use new tokenizer from Microsoft to support newer gpt4o model (contributed by Joakim Riedel <joakim.riedel@gmail.com>)
 
 1.87
 - Stick with System.Composition.AttributedModel Version="[1.4.1]" for compatibility with older VS versions.
 
 1.86
-- Add OpenAI translator
+- Add OpenAI translator (contributed by Attila Greguss <attila.greguss@netduma.com>)
 
 1.85
-- #639: Support for DeepL glossaries
+- #639: Support for DeepL glossaries (contributed by Philip Kyburz <ph.kyburz@gmail.com>)
 
 1.84
 - Fix #634: XlfSynchronizer does not generate separate file entries for different resources in the same project
