@@ -143,13 +143,16 @@
                 <Setter Property="Template">
                   <Setter.Value>
                     <ControlTemplate TargetType="{x:Type GroupItem}">
-                      <StackPanel Background="Transparent" d:DataContext="{d:DesignInstance GroupItem}">
-                        <interactions:Interaction.Behaviors>
-                          <toms:SelectGroupOnGroupHeaderClickBehavior />
-                        </interactions:Interaction.Behaviors>
-                        <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Margin="0,5,0,3" />
+                      <Expander Background="Transparent" d:DataContext="{d:DesignInstance GroupItem}">
+                        <Expander.Header>
+                          <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Margin="0,5,0,3">
+        <interactions:Interaction.Behaviors>
+          <toms:SelectGroupOnGroupHeaderClickBehavior />
+        </interactions:Interaction.Behaviors>
+                          </TextBlock>
+                        </Expander.Header>
                         <ItemsPresenter Margin="4,0,0,0" />
-                      </StackPanel>
+                      </Expander>
                     </ControlTemplate>
                   </Setter.Value>
                 </Setter>
