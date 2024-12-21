@@ -7,109 +7,171 @@
              xmlns:properties="clr-namespace:ResXManager.View.Properties"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              xmlns:infrastructure="clr-namespace:ResXManager.Infrastructure;assembly=ResXManager.Infrastructure"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
-  <TabControl TabStripPlacement="Left" Loaded="TabControl_Loaded"
-              HorizontalContentAlignment="Stretch"
-              Style="{DynamicResource {x:Static styles:ResourceKeys.TabControlStyle}}"
-              ItemsSource="{Binding Translators, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}">
-    <TabControl.ItemTemplate>
-      <DataTemplate>
-        <DockPanel HorizontalAlignment="Stretch">
-          <DockPanel.Resources>
-            <wpf:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" VisibilityWhenBooleanIsFalse="Hidden" />
-            <Storyboard x:Key="RotationStoryboard" RepeatBehavior="Forever">
-              <DoubleAnimation By="360" Duration="00:00:02" Storyboard.TargetName="spinner" Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)" />
-            </Storyboard>
-          </DockPanel.Resources>
-          <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsEnabled}" VerticalAlignment="Center" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
-          <Rectangle x:Name="spinner"
-                     DockPanel.Dock="Right" VerticalAlignment="Center"
-                     Visibility="{Binding IsActive, Converter={StaticResource BooleanToVisibilityConverter}}"
-                     Width="8" Height="8"
-                     RenderTransformOrigin="0.5,0.5"
-                     StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}">
-            <Rectangle.RenderTransform>
-              <RotateTransform />
-            </Rectangle.RenderTransform>
-            <Rectangle.Triggers>
-              <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                <BeginStoryboard Storyboard="{StaticResource RotationStoryboard}" />
-              </EventTrigger>
-            </Rectangle.Triggers>
-          </Rectangle>
-          <TextBlock Text="{Binding DisplayName}" Margin="4" VerticalAlignment="Center" />
-        </DockPanel>
-      </DataTemplate>
-    </TabControl.ItemTemplate>
-    <TabControl.ContentTemplate>
-      <DataTemplate DataType="infrastructure:ITranslator">
-        <StackPanel Margin="5">
-          <DockPanel Margin="8,0">
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-              <TextBlock VerticalAlignment="Center">
-                <Run Text="{x:Static properties:Resources.Ranking}" />
-                <Run Text=" " />
-              </TextBlock>
-              <TextBox Width="35" Text="{Binding Ranking, StringFormat=F1}" VerticalAlignment="Center" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
-            </StackPanel>
-            <Button Tag="{Binding Uri, Mode=OneWay}" DockPanel.Dock="Right" VerticalAlignment="Center">
-              <Button.Template>
-                <ControlTemplate>
-                  <TextBlock TextTrimming="CharacterEllipsis">
-                    <Hyperlink Focusable="False" NavigateUri="{Binding Uri, Mode=OneWay}">
-                      <Run Text="{Binding Uri, Mode=OneWay}" />
-                    </Hyperlink>
-                  </TextBlock>
-                </ControlTemplate>
-              </Button.Template>
-            </Button>
-            <ContentControl DockPanel.Dock="Left" Content="{Binding}" Margin="20,0" VerticalAlignment="Center" />
-          </DockPanel>
-          <Decorator Height="4" />
-          <GroupBox x:Name="AuthenticationGroup" Header="{x:Static properties:Resources.Authentication}"
-                    Grid.IsSharedSizeScope="True" Style="{DynamicResource {x:Static styles:ResourceKeys.GroupBoxStyle}}">
-            <StackPanel>
-              <ItemsControl ItemsSource="{Binding Credentials}" Margin="2" Focusable="False">
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate DataType="infrastructure:ICredentialItem">
-                    <wpf:SharedWidthHeaderedContentControl Margin="2">
-                      <wpf:SharedWidthHeaderedContentControl.Header>
-                        <TextBlock DockPanel.Dock="Left">
-                          <Run Text="{Binding Description, Mode=OneWay}" /><Run Text=": " />
-                        </TextBlock>
-                      </wpf:SharedWidthHeaderedContentControl.Header>
-                      <Grid>
-                        <PasswordBox x:Name="PasswordBox" Style="{DynamicResource {x:Static styles:ResourceKeys.PasswordBoxStyle}}" >
-                          <i:Interaction.Behaviors>
-                            <wpf:PasswordBoxBindingBehavior Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
-                          </i:Interaction.Behaviors>
-                        </PasswordBox>
-                        <TextBox x:Name="TextBox" Visibility="Collapsed"
-                                 Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}"
-                                 Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
-                      </Grid>
-                    </wpf:SharedWidthHeaderedContentControl>
-                    <DataTemplate.Triggers>
-                      <DataTrigger Binding="{Binding IsPassword}" Value="False">
-                        <Setter TargetName="PasswordBox" Property="Visibility" Value="Collapsed" />
-                        <Setter TargetName="TextBox" Property="Visibility" Value="Visible" />
-                      </DataTrigger>
-                    </DataTemplate.Triggers>
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
-              <wpf:SharedWidthHeaderedContentControl Margin="2,0">
-                <CheckBox Margin="1" Content="{x:Static properties:Resources.TranslatorConfiguration_SaveCredentials}" IsChecked="{Binding SaveCredentials, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
-              </wpf:SharedWidthHeaderedContentControl>
-            </StackPanel>
-          </GroupBox>
-        </StackPanel>
-        <DataTemplate.Triggers>
-          <DataTrigger Binding="{Binding Credentials.Count, FallbackValue=0}" Value="0">
-            <Setter TargetName="AuthenticationGroup" Property="Visibility" Value="Hidden" />
-          </DataTrigger>
-        </DataTemplate.Triggers>
-      </DataTemplate>
-    </TabControl.ContentTemplate>
-  </TabControl>
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors">
+  <UserControl.Resources>
+    <wpf:BooleanToVisibilityConverter x:Key="BooleanToVisibleOrHiddenConverter"
+                                      VisibilityWhenBooleanIsFalse="Hidden" />
+    <wpf:CompositeConverter x:Key="BooleanToNotVisibilityConverter">
+      <wpf:UnaryOperationConverter Operation="Negation" />
+      <wpf:BooleanToVisibilityConverter />
+    </wpf:CompositeConverter>
+    <DataTemplate DataType="{x:Type infrastructure:ITranslator}" x:Key="ItemTemplate">
+      <DockPanel HorizontalAlignment="Stretch">
+        <DockPanel.Resources>
+          <Storyboard x:Key="RotationStoryboard" RepeatBehavior="Forever">
+            <DoubleAnimation By="360" Duration="00:00:02" Storyboard.TargetName="spinner"
+                             Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)" />
+          </Storyboard>
+        </DockPanel.Resources>
+        <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsEnabled}" VerticalAlignment="Center"
+                  Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+        <Rectangle x:Name="spinner"
+                   DockPanel.Dock="Right" VerticalAlignment="Center"
+                   Visibility="{Binding IsActive, Converter={StaticResource BooleanToVisibleOrHiddenConverter}}"
+                   Width="8" Height="8"
+                   RenderTransformOrigin="0.5,0.5"
+                   StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}">
+          <Rectangle.RenderTransform>
+            <RotateTransform />
+          </Rectangle.RenderTransform>
+          <Rectangle.Triggers>
+            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+              <BeginStoryboard Storyboard="{StaticResource RotationStoryboard}" />
+            </EventTrigger>
+          </Rectangle.Triggers>
+        </Rectangle>
+        <TextBlock Text="{Binding DisplayName}" Margin="4" VerticalAlignment="Center" />
+      </DockPanel>
+    </DataTemplate>
+    <Style x:Key="ExpanderToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="{x:Type ToggleButton}">
+            <Border BorderBrush="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderThickness="0,0,0,1"
+                    Width="24" Height="24">
+              <Grid Background="Transparent" SnapsToDevicePixels="False" Margin="0,4,4,3">
+                <Path x:Name="arrow" Data="M 2.5,2 L 6,5.5 L 2.5,9" HorizontalAlignment="Center"
+                      SnapsToDevicePixels="false"
+                      Stroke="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" StrokeThickness="2"
+                      VerticalAlignment="Center" />
+              </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsChecked" Value="true">
+                <Setter Property="Data" TargetName="arrow" Value="M 1,1.5 L 4.5,5 L 8,1.5" />
+              </Trigger>
+              <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Stroke" TargetName="arrow"
+                        Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+              </Trigger>
+              <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Stroke" TargetName="arrow"
+                        Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+              </Trigger>
+              <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Stroke" TargetName="arrow"
+                        Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+  </UserControl.Resources>
+
+  <DockPanel>
+    <ToggleButton x:Name="Expander" IsChecked="{Binding IsTranslatorConfigurationExpanded, Source={x:Static properties:Settings.Default}}"
+                  Style="{StaticResource ExpanderToggleButtonStyle}"
+                  DockPanel.Dock="Left" VerticalAlignment="Top" />
+    <TabControl TabStripPlacement="Left" Loaded="TabControl_Loaded"
+                HorizontalContentAlignment="Stretch"
+                Style="{DynamicResource {x:Static styles:ResourceKeys.TabControlStyle}}"
+                ItemsSource="{Binding Translators, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
+                ItemTemplate="{StaticResource ItemTemplate}"
+                Visibility="{Binding IsChecked, ElementName=Expander, Converter={x:Static wpf:BooleanToVisibilityConverter.Default}}">
+      <TabControl.ContentTemplate>
+        <DataTemplate DataType="infrastructure:ITranslator">
+          <StackPanel Margin="5">
+            <DockPanel Margin="8,0">
+              <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                <TextBlock VerticalAlignment="Center">
+                  <Run Text="{x:Static properties:Resources.Ranking}" />
+                  <Run Text=" " />
+                </TextBlock>
+                <TextBox Width="35" Text="{Binding Ranking, StringFormat=F1}" VerticalAlignment="Center" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
+              </StackPanel>
+              <Button Tag="{Binding Uri, Mode=OneWay}" DockPanel.Dock="Right" VerticalAlignment="Center">
+                <Button.Template>
+                  <ControlTemplate>
+                    <TextBlock TextTrimming="CharacterEllipsis">
+                      <Hyperlink Focusable="False" NavigateUri="{Binding Uri, Mode=OneWay}">
+                        <Run Text="{Binding Uri, Mode=OneWay}" />
+                      </Hyperlink>
+                    </TextBlock>
+                  </ControlTemplate>
+                </Button.Template>
+              </Button>
+              <ContentControl DockPanel.Dock="Left" Content="{Binding}" Margin="20,0" VerticalAlignment="Center" />
+            </DockPanel>
+            <Decorator Height="4" />
+            <GroupBox x:Name="AuthenticationGroup" Header="{x:Static properties:Resources.Authentication}"
+                      Grid.IsSharedSizeScope="True" Style="{DynamicResource {x:Static styles:ResourceKeys.GroupBoxStyle}}">
+              <StackPanel>
+                <ItemsControl ItemsSource="{Binding Credentials}" Margin="2" Focusable="False">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="infrastructure:ICredentialItem">
+                      <wpf:SharedWidthHeaderedContentControl Margin="2">
+                        <wpf:SharedWidthHeaderedContentControl.Header>
+                          <TextBlock DockPanel.Dock="Left">
+                            <Run Text="{Binding Description, Mode=OneWay}" /><Run Text=": " />
+                          </TextBlock>
+                        </wpf:SharedWidthHeaderedContentControl.Header>
+                        <Grid>
+                          <PasswordBox x:Name="PasswordBox" Style="{DynamicResource {x:Static styles:ResourceKeys.PasswordBoxStyle}}">
+                            <behaviors:Interaction.Behaviors>
+                              <wpf:PasswordBoxBindingBehavior Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                            </behaviors:Interaction.Behaviors>
+                          </PasswordBox>
+                          <TextBox x:Name="TextBox" Visibility="Collapsed"
+                                   Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}"
+                                   Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                      </wpf:SharedWidthHeaderedContentControl>
+                      <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsPassword}" Value="False">
+                          <Setter TargetName="PasswordBox" Property="Visibility" Value="Collapsed" />
+                          <Setter TargetName="TextBox" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                      </DataTemplate.Triggers>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <wpf:SharedWidthHeaderedContentControl Margin="2,0">
+                  <CheckBox Margin="1"
+                            Content="{x:Static properties:Resources.TranslatorConfiguration_SaveCredentials}"
+                            IsChecked="{Binding SaveCredentials, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
+                </wpf:SharedWidthHeaderedContentControl>
+              </StackPanel>
+            </GroupBox>
+          </StackPanel>
+          <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding Credentials.Count, FallbackValue=0}" Value="0">
+              <Setter TargetName="AuthenticationGroup" Property="Visibility" Value="Hidden" />
+            </DataTrigger>
+          </DataTemplate.Triggers>
+        </DataTemplate>
+      </TabControl.ContentTemplate>
+    </TabControl>
+    <ItemsControl ItemsSource="{Binding Translators, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
+                  ItemTemplate="{StaticResource ItemTemplate}"
+                  Visibility="{Binding IsChecked, ElementName=Expander, Converter={StaticResource BooleanToNotVisibilityConverter}}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <StackPanel Orientation="Horizontal" />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+    </ItemsControl>
+  </DockPanel>
 </UserControl>

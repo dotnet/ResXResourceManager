@@ -25,7 +25,7 @@ public partial class TranslatorConfiguration
     /// Identifies the <see cref="Translators"/> dependency property
     /// </summary>
     public static readonly DependencyProperty TranslatorsProperty =
-        DependencyProperty.Register("Translators", typeof(IEnumerable<ITranslator>), typeof(TranslatorConfiguration));
+        DependencyProperty.Register(nameof(Translators), typeof(IEnumerable<ITranslator>), typeof(TranslatorConfiguration));
 
     private void TabControl_Loaded(object? sender, RoutedEventArgs e)
     {

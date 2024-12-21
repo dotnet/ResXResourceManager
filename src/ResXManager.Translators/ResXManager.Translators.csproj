@@ -53,6 +53,7 @@
     <PackageReference Include="Fody" PrivateAssets="all" />
     <PackageReference Include="ILMerge.Fody" PrivateAssets="all" />
     <PackageReference Include="Microsoft.ML.Tokenizers" />
+    <PackageReference Include="Newtonsoft.Json" VersionOverride="[9.0.1]" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" />
     <PackageReference Include="System.ComponentModel.Annotations" />
     <PackageReference Include="System.Net.Http" />

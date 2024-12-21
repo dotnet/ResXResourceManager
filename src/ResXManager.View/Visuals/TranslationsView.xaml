@@ -10,7 +10,7 @@
              xmlns:infrastructure="clr-namespace:ResXManager.Infrastructure;assembly=ResXManager.Infrastructure"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
-             xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:composition="urn:TomsToolbox.Composition"
              d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
   <UserControl.Resources>
@@ -148,9 +148,9 @@
                       <Popup IsOpen="{Binding Path=IsChecked, ElementName=TargetCulturesButton, Mode=OneWay}"
                              StaysOpen="False"
                              Placement="Bottom" PlacementTarget="{Binding ElementName=TargetCulturesButton}">
-                        <Interactions:Interaction.Behaviors>
+                        <behaviors:Interaction.Behaviors>
                           <toms:PopupFocusManagerBehavior ToggleButton="{Binding ElementName=TargetCulturesButton}" />
-                        </Interactions:Interaction.Behaviors>
+                        </behaviors:Interaction.Behaviors>
                         <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
                           <ListBox ItemsSource="{Binding AllTargetCultures}"
                                    Style="{DynamicResource {x:Static styles:ResourceKeys.ListBoxStyle}}"
@@ -217,9 +217,9 @@
       <toms:LoadingIndicator IsActive="{Binding TranslatorHost.ActiveSession.IsActive}" Header="Translating..." d:IsHidden="True" />
     </Grid>
   </DockPanel>
-  <Interactions:Interaction.Triggers>
-    <Interactions:EventTrigger EventName="Loaded">
-      <Interactions:InvokeCommandAction Command="{Binding InitCommand}" />
-    </Interactions:EventTrigger>
-  </Interactions:Interaction.Triggers>
+  <behaviors:Interaction.Triggers>
+    <behaviors:EventTrigger EventName="Loaded">
+      <behaviors:InvokeCommandAction Command="{Binding InitCommand}" />
+    </behaviors:EventTrigger>
+  </behaviors:Interaction.Triggers>
 </UserControl>

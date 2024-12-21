@@ -1,25 +1,26 @@
-  <Project>
+<Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="AutoProperties.Fody" Version="1.25.0" />
     <PackageVersion Include="DataGridExtensions" Version="2.6.0" />
     <PackageVersion Include="DocumentFormat.OpenXml" Version="[2.20.0]" />
     <PackageVersion Include="Community.VisualStudio.Toolkit" Version="[15.0.76.309]" />
-    <PackageVersion Include="Fody" Version="6.8.2" />
-    <PackageVersion Include="HtmlAgilityPack" Version="1.11.67" />
+    <PackageVersion Include="Fody" Version="6.9.1" />
+    <PackageVersion Include="HtmlAgilityPack" Version="1.11.71" />
     <PackageVersion Include="ILMerge.Fody" Version="1.24.0" />
-    <PackageVersion Include="JetBrains.Annotations" Version="2024.2.0" />
+    <PackageVersion Include="JetBrains.Annotations" Version="2024.3.0" />
     <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageVersion Include="Microsoft.ML.Tokenizers" Version="0.22.0-preview.24378.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Microsoft.VisualStudio.SDK" Version="[15.0.1]" />
     <PackageVersion Include="Microsoft.VSSDK.BuildTools" Version="[17.6.2164]" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageVersion Include="NSubstitute" Version="5.1.0" />
-    <PackageVersion Include="Nullable.Extended.Analyzer" Version="1.15.6169" />
+    <PackageVersion Include="NSubstitute" Version="5.3.0" />
+    <PackageVersion Include="Nullable.Extended.Analyzer" Version="1.15.6495" />
     <PackageVersion Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageVersion Include="Resourcer.Fody" Version="1.8.1" />
     <PackageVersion Include="System.Composition.AttributedModel" Version="[1.4.1]" />
@@ -30,20 +31,25 @@
     <PackageVersion Include="System.ServiceModel.Primitives" Version="[4.10.2]" />
     <PackageVersion Include="System.ServiceModel.Http" Version="[4.10.2]" />
     <PackageVersion Include="Throttle.Fody" Version="1.7.0" />
-    <PackageVersion Include="TomsToolbox.Composition" Version="2.20.0" />
-    <PackageVersion Include="TomsToolbox.Composition.Ninject" Version="2.20.0" />
-    <PackageVersion Include="TomsToolbox.Essentials" Version="2.20.0" />
-    <PackageVersion Include="TomsToolbox.ObservableCollections" Version="2.20.0" />
-    <PackageVersion Include="TomsToolbox.Wpf" Version="2.20.0" />
-    <PackageVersion Include="TomsToolbox.Wpf.Composition" Version="2.20.0" />
-    <PackageVersion Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.20.0" />
-    <PackageVersion Include="TomsToolbox.Wpf.Composition.Styles" Version="2.20.0" />
-    <PackageVersion Include="TomsToolbox.Wpf.Styles" Version="2.20.0" />
-    <PackageVersion Include="Verify.Xunit" Version="27.0.1" />
+    <PackageVersion Include="TomsToolbox.Composition" Version="2.21.0" />
+    <PackageVersion Include="TomsToolbox.Composition.Ninject" Version="2.21.0" />
+    <PackageVersion Include="TomsToolbox.Essentials" Version="2.21.0" />
+    <PackageVersion Include="TomsToolbox.ObservableCollections" Version="2.21.0" />
+    <PackageVersion Include="TomsToolbox.Wpf" Version="2.21.0" />
+    <PackageVersion Include="TomsToolbox.Wpf.Composition" Version="2.21.0" />
+    <PackageVersion Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.21.0" />
+    <PackageVersion Include="TomsToolbox.Wpf.Composition.Styles" Version="2.21.0" />
+    <PackageVersion Include="TomsToolbox.Wpf.Styles" Version="2.21.0" />
+    <PackageVersion Include="Verify.Xunit" Version="28.6.1" />
     <PackageVersion Include="VSIX-SdkProjectAdapter" Version="3.0.0" />
     <PackageVersion Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     <PackageVersion Include="xunit" Version="2.9.2" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageMitigation Include="Newtonsoft.Json" Version="8.0.3" Justification="VS 2019 requirement" />
+    <PackageMitigation Include="MessagePack" Version="2.2.85" Justification="VS Sdk dependency" />
   </ItemGroup>
 </Project>
 
