@@ -187,7 +187,8 @@ public sealed class VsPackage : AsyncPackage
 
         var length = resourceStream.Length;
         var data = new byte[length];
-        resourceStream.Read(data, 0, (int)length);
+        if (length != resourceStream.Read(data, 0, (int)length))
+            throw new InvalidOperationException("Failed to read compatibility layer.");
 
         var compatibilityLayer = System.Reflection.Assembly.Load(data);
 
@@ -253,10 +254,7 @@ public sealed class VsPackage : AsyncPackage
         try
         {
             var window = FindToolWindow();
-
-            var windowFrame = (IVsWindowFrame?)window?.Frame;
-            if (windowFrame == null)
-                throw new NotSupportedException(Resources.CanNotCreateWindow);
+            var windowFrame = (IVsWindowFrame?)window?.Frame ?? throw new NotSupportedException(Resources.CanNotCreateWindow);
 
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
             return true;
@@ -353,7 +351,7 @@ public sealed class VsPackage : AsyncPackage
 
         var resourceEntities = _resourceManager?.ResourceEntities;
 
-        return resourceEntities?.AsEnumerable() ?? Array.Empty<ResourceEntity>();
+        return resourceEntities?.AsEnumerable() ?? [];
     }
 
     private async Task EnsureLoadedAsync()
@@ -480,8 +478,8 @@ public sealed class VsPackage : AsyncPackage
 
     private sealed class LoaderMessages
     {
-        public IList<string> Messages { get; } = new List<string>();
-        public IList<string> Errors { get; } = new List<string>();
+        public IList<string> Messages { get; } = [];
+        public IList<string> Errors { get; } = [];
     }
 
     public async void ToolWindowLoaded()
