@@ -53,16 +53,17 @@ public class GoogleTranslatorLite : TranslatorBase
                 var parameters = new List<string?>(30);
                 // ReSharper disable once PossibleNullReferenceException
                 parameters.AddRange(new[]
-                {
-                    "client", "dict-chrome-ex",
+                    {
+                    "client", "gtx",
+                    "dt", "t",
                     "sl", GoogleLangCode(translationSession.SourceLanguage),
                     "tl", GoogleLangCode(targetCulture),
                     "q", RemoveKeyboardShortcutIndicators(sourceItems[0].Source)
-                });
+                    });
 
                 // ReSharper disable once AssignNullToNotNullAttribute
                 var response = await GetHttpResponse(
-                    "https://clients5.google.com/translate_a/t",
+                    "https://translate.googleapis.com/translate_a/single",
                     parameters,
                     translationSession.CancellationToken).ConfigureAwait(false);
 
@@ -101,8 +102,37 @@ public class GoogleTranslatorLite : TranslatorBase
 
 #pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods => not available in .NET Framework
         var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        result = result.Substring(2, result.Length - 4);
-        return Regex.Unescape(result);
+        var sb = new StringBuilder();
+        var str_count = 0;
+        var array_start_count = 0;
+        using var reader = new JsonTextReader(new StringReader(result));
+        while (reader.Read())
+        {
+            if (reader.Value != null)
+            {
+                if (reader.TokenType == JsonToken.String && array_start_count == 3)
+                {
+                    if (str_count % 2 == 0)
+                    {
+                        sb.Append(reader.Value.ToString());
+                    }
+                    str_count++;
+                }
+            }
+            else
+            {
+                if (reader.TokenType == JsonToken.StartArray)
+                {
+                    array_start_count++;
+                }
+                else if (reader.TokenType == JsonToken.EndArray)
+                {
+                    array_start_count--;
+
+                }
+            }
+        }
+        return Regex.Unescape(sb.ToString());
     }
 
     [DataContract]
