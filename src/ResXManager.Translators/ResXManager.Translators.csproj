@@ -58,6 +58,7 @@
     <PackageReference Include="System.ComponentModel.Annotations" />
     <PackageReference Include="System.Net.Http" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" />
+    <PackageReference Include="System.Text.Json" />
     <PackageReference Include="Throttle.Fody" PrivateAssets="all" />
     <PackageReference Include="System.ServiceModel.Primitives" />
     <PackageReference Include="System.ServiceModel.Http" />

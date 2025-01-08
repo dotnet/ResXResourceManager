@@ -4,18 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-
-using Newtonsoft.Json;
 
 using ResXManager.Infrastructure;
 
@@ -56,13 +54,13 @@ public class GoogleTranslatorLite : TranslatorBase
                 var parameters = new List<string?>(30);
                 // ReSharper disable once PossibleNullReferenceException
                 parameters.AddRange(new[]
-                    {
+                {
                     "client", "gtx",
                     "dt", "t",
                     "sl", GoogleLangCode(translationSession.SourceLanguage),
                     "tl", GoogleLangCode(targetCulture),
                     "q", RemoveKeyboardShortcutIndicators(sourceItems[0].Source)
-                    });
+                });
 
                 // ReSharper disable once AssignNullToNotNullAttribute
                 var response = await GetHttpResponse(
@@ -105,35 +103,26 @@ public class GoogleTranslatorLite : TranslatorBase
 
 #pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods => not available in .NET Framework
         var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        var sb = new StringBuilder();
-        var str_count = 0;
-        var array_start_count = 0;
-        using var reader = new JsonTextReader(new StringReader(result));
-        while (reader.Read())
-        {
-            if (reader.Value != null)
-            {
-                if (reader.TokenType == JsonToken.String && array_start_count == 3)
-                {
-                    if (str_count % 2 == 0)
-                    {
-                        sb.Append(reader.Value.ToString());
-                    }
-                    str_count++;
-                }
-            }
-            else
-            {
-                if (reader.TokenType == JsonToken.StartArray)
-                {
-                    array_start_count++;
-                }
-                else if (reader.TokenType == JsonToken.EndArray)
-                {
-                    array_start_count--;
 
-                }
+        if (JsonNode.Parse(result) is not { } jn0 ||
+            jn0.AsArray() is not { } jarr0 ||
+            jarr0.FirstOrDefault() is not { } jn1 ||
+            jn1.AsArray() is not { } jarr1)
+        {
+            return result;
+        }
+        var sb = new StringBuilder();
+        for (var i = 0; i < jarr1.Count; i++)
+        {
+            if (jarr1.ElementAt(i) is not { } item_i ||
+                item_i.AsArray() is not { } item_i_arr ||
+                !item_i_arr.Any() ||
+                item_i_arr.FirstOrDefault() is not { } item_i_0 ||
+                item_i_0.ToString() is not { } text)
+            {
+                continue;
             }
+            sb.Append(text);
         }
         return Regex.Unescape(sb.ToString());
     }
