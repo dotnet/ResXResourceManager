@@ -104,27 +104,19 @@ public class GoogleTranslatorLite : TranslatorBase
 #pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods => not available in .NET Framework
         var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        if (JsonNode.Parse(result) is not { } jn0 ||
-            jn0.AsArray() is not { } jarr0 ||
-            jarr0.FirstOrDefault() is not { } jn1 ||
-            jn1.AsArray() is not { } jarr1)
+        return ParseResponse(result);
+    }
+
+    public static string ParseResponse(string result)
+    {
+        var node = JsonNode.Parse(result);
+
+        if ((node is JsonArray level1) && (level1.FirstOrDefault() is JsonArray level2))
         {
-            return result;
+            return string.Concat(level2.OfType<JsonArray>().Select(item => item.FirstOrDefault()));
         }
-        var sb = new StringBuilder();
-        for (var i = 0; i < jarr1.Count; i++)
-        {
-            if (jarr1.ElementAt(i) is not { } item_i ||
-                item_i.AsArray() is not { } item_i_arr ||
-                !item_i_arr.Any() ||
-                item_i_arr.FirstOrDefault() is not { } item_i_0 ||
-                item_i_0.ToString() is not { } text)
-            {
-                continue;
-            }
-            sb.Append(text);
-        }
-        return Regex.Unescape(sb.ToString());
+
+        return string.Empty;
     }
 
     [DataContract]

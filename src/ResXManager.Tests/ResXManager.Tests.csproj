@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj" />
+    <ProjectReference Include="..\ResXManager.Translators\ResXManager.Translators.csproj" />
     <ProjectReference Include="..\ResXManager.View\ResXManager.View.csproj" />
     <ProjectReference Include="..\ResXManager\ResXManager.csproj" />
   </ItemGroup>
