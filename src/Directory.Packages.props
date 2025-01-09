@@ -30,6 +30,7 @@
     <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="[6.0.4]" />
     <PackageVersion Include="System.ServiceModel.Primitives" Version="[4.10.2]" />
     <PackageVersion Include="System.ServiceModel.Http" Version="[4.10.2]" />
+    <PackageVersion Include="System.Text.Json" Version="8.0.5" />
     <PackageVersion Include="Throttle.Fody" Version="1.7.0" />
     <PackageVersion Include="TomsToolbox.Composition" Version="2.21.0" />
     <PackageVersion Include="TomsToolbox.Composition.Ninject" Version="2.21.0" />
