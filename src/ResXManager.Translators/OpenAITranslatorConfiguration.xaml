@@ -12,6 +12,7 @@
     <StackPanel Orientation="Horizontal">
     <CheckBox Content="{x:Static properties:Resources.IncludeCommentsInPrompt}" IsChecked="{Binding IncludeCommentsInPrompt}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center" />
     <Decorator Width="20" />
+    <CheckBox Content="" IsChecked="{Binding CountTokens}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center" />
     <TextBlock Text="{x:Static properties:Resources.MaxTokens}" VerticalAlignment="Center" />
     <Decorator Width="5" />
     <TextBox Text="{Binding MaxTokens}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />

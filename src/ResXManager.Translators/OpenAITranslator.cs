@@ -36,6 +36,10 @@ public class OpenAITranslator : TranslatorBase
     public bool IncludeCommentsInPrompt { get; set; } = true;
 
     [DataMember]
+    // whether to count the number of tokens sent. Users can disable token counting to use models not supported by the TiktokenTokenizer.
+    public bool CountTokens { get; set; } = true;
+
+    [DataMember]
     // default to max tokens for "gpt-3.5-turbo-instruct" model
     public int MaxTokens { get; set; } = 4096;
 
@@ -51,8 +55,6 @@ public class OpenAITranslator : TranslatorBase
     [DataMember]
     // additional text to be embedded into the prompt for all translations
     public string CustomPrompt { get; set; } = "";
-
-    private readonly string Url = "https://api.openai.com";
 
     protected override async Task Translate(ITranslationSession translationSession)
     {
@@ -145,9 +147,13 @@ public class OpenAITranslator : TranslatorBase
     private async Task TranslateUsingCompletionsModel(ITranslationSession translationSession, HttpClient client)
     {
         var endpointUri = new Uri($"/v1/chat/completions", UriKind.Relative);
-        var tokenizer = TiktokenTokenizer.CreateForModel(
-            ModelName ?? throw new InvalidOperationException("No model name provided in configuration!")
-            );
+        TiktokenTokenizer? tokenizer = null;
+        if (CountTokens)
+        {
+            tokenizer = TiktokenTokenizer.CreateForModel(
+                ModelName ?? throw new InvalidOperationException("No model name provided in configuration!")
+                );
+        }
 
         var retries = 0;
 
@@ -200,7 +206,7 @@ public class OpenAITranslator : TranslatorBase
         }
     }
 
-    private IEnumerable<(ITranslationItem item, string prompt)> PackCompletionModelPrompts(ITranslationSession translationSession, TiktokenTokenizer tokenizer)
+    private IEnumerable<(ITranslationItem item, string prompt)> PackCompletionModelPrompts(ITranslationSession translationSession, TiktokenTokenizer? tokenizer)
     {
         foreach (var item in translationSession.Items)
         {
@@ -211,12 +217,14 @@ public class OpenAITranslator : TranslatorBase
                 continue;
             }
 
-            var tokens = tokenizer.CountTokens(prompt);
-
-            if (tokens > PromptTokens)
+            if (tokenizer is not null)
             {
-                translationSession.AddMessage($"Prompt for resource would exceed {PromptTokens} tokens: {item.Source.Substring(0, 20)}...");
-                continue;
+                var tokens = tokenizer.CountTokens(prompt);
+                if (tokens > PromptTokens)
+                {
+                    translationSession.AddMessage($"Prompt for resource would exceed {PromptTokens} tokens: {item.Source.Substring(0, 20)}...");
+                    continue;
+                }
             }
 
             yield return (item, prompt);
@@ -304,11 +312,18 @@ public class OpenAITranslator : TranslatorBase
         set => Credentials[0].Value = value;
     }
 
+    [DataMember(Name = "Url")]
+    public string? Url
+    {
+        get => Credentials[1].Value;
+        set => Credentials[1].Value = value;
+    }
+
     // this translator is currently adapted to work the best with "gpt-3.5-turbo-instruct", "gpt-3.5-turbo" or "gpt-4-turbo"
     [DataMember(Name = "ModelName")]
     public string? ModelName
     {
-        get => ExpandModelNameAliases(Credentials[1].Value);
+        get => ExpandModelNameAliases(Credentials[2].Value);
         set => Credentials[2].Value = value;
     }
 
@@ -331,6 +346,7 @@ public class OpenAITranslator : TranslatorBase
         return
         [
             new CredentialItem("AuthenticationKey", "Key"),
+            new CredentialItem("Url", "Endpoint Url", false) { Value = "https://api.openai.com" },
             new CredentialItem("ModelName", "Model Name", false),
         ];
     }

@@ -51,3 +51,4 @@ All results can be reviewed by opening the combo box in the target column. The r
 #### Addtional Settings
 - You can add a custom prompt to your request to improve the translation quality or behavior, e.g. "preserve the html tags in the results"
 - You can include the comments in your resources in the prompt, to guide the model with additional hints about the context
+- If you need to use other LLM services compatible with the OpenAI API (such as DeepSeek), you can modify the URL to the corresponding service address (for example: https://api.deepseek.com). Since the internal token counting function supports a limited number of models, you may need to disable token counting (uncheck Max Tokens) to use other models properly.
