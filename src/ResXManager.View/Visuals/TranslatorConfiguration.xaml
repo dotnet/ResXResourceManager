@@ -94,7 +94,7 @@
         <DataTemplate DataType="infrastructure:ITranslator">
           <StackPanel Margin="5">
             <DockPanel Margin="8,0">
-              <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+              <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Top">
                 <TextBlock VerticalAlignment="Center">
                   <Run Text="{x:Static properties:Resources.Ranking}" />
                   <Run Text=" " />
