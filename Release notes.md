@@ -1,4 +1,9 @@
-﻿1.89
+﻿1.90
+- Translator configuration can be collapsed.
+- #678: Improve Google Lite translator multi-part response parsing.
+- #682: OpenAI translator endpoint is configurable to support also e.g. local deployments.
+
+1.89
 - Fix #666: Add tests and solution for duplicate target language usage in same directory for xlf files (contributed by Geert van Horrik <geert@catenalogic.com>)
 
 1.88
