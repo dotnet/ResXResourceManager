@@ -214,3 +214,9 @@ dotnet_diagnostic.CA1861.severity = suggestion
 # IDE0290: Use primary constructor
 dotnet_diagnostic.IDE0290.severity = suggestion
 
+# IDE0305: Collection initializer can be simplified
+dotnet_diagnostic.IDE0305.severity = suggestion
+
+# CA1515: Because an application's API isn't typically referenced from outside the assembly, types can be made internal
+dotnet_diagnostic.CA1515.severity = suggestion
+

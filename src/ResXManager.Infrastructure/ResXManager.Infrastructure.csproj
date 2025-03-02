@@ -14,7 +14,7 @@
     <PackageReference Include="HtmlAgilityPack" PrivateAssets="all" />
     <PackageReference Include="ILMerge.Fody" PrivateAssets="all" />
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all" />
-    <PackageReference Include="Newtonsoft.Json" VersionOverride="[9.0.1]" />
+    <PackageReference Include="Newtonsoft.Json" VersionOverride="[9.0.1]" Justification="VS2019" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" />
     <PackageReference Include="TomsToolbox.Composition" />
   </ItemGroup>

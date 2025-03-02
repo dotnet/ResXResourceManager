@@ -6,6 +6,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ using ResXManager.Model;
 using ResXManager.View.Tools;
 using ResXManager.View.Visuals;
 using ResXManager.VSIX.Compatibility;
+using ResXManager.VSIX.Properties;
 
 using Throttle;
 
@@ -38,7 +40,6 @@ using Task = System.Threading.Tasks.Task;
 using MessageBox = System.Windows.MessageBox;
 
 using static Microsoft.VisualStudio.Shell.ThreadHelper;
-using ResXManager.VSIX.Properties;
 
 
 #pragma warning disable VSTHRD100 // Avoid async void methods
@@ -179,27 +180,35 @@ public sealed class VsPackage : AsyncPackage
         //    .Select(assembly => string.Format(CultureInfo.CurrentCulture, "Found assembly '{0}' already loaded from {1}.", assembly.FullName, assembly.CodeBase))
         //    .ToList();
 
-        var is64BitProcess = Environment.Is64BitProcess;
+        try
+        {
+            var is64BitProcess = Environment.Is64BitProcess;
 
-        using var resourceStream = is64BitProcess
-            ? Resource.AsStream("ResXManager.VSIX.Compatibility.x64.dll")
-            : Resource.AsStream("ResXManager.VSIX.Compatibility.x86.dll");
+            using var resourceStream = is64BitProcess
+                ? Resource.AsStream("ResXManager.VSIX.Compatibility.x64.dll")
+                : Resource.AsStream("ResXManager.VSIX.Compatibility.x86.dll");
 
-        var length = resourceStream.Length;
-        var data = new byte[length];
-        if (length != resourceStream.Read(data, 0, (int)length))
-            throw new InvalidOperationException("Failed to read compatibility layer.");
+            var length = resourceStream.Length;
+            var data = new byte[length];
+            if (length != resourceStream.Read(data, 0, (int)length))
+                throw new InvalidOperationException("Failed to read compatibility layer.");
 
-        var compatibilityLayer = System.Reflection.Assembly.Load(data);
+            var compatibilityLayer = Assembly.Load(data);
 
-        _kernel.BindExports(assembly,
-            typeof(Infrastructure.Properties.AssemblyKey).Assembly,
-            typeof(Model.Properties.AssemblyKey).Assembly,
-            typeof(Translators.Properties.AssemblyKey).Assembly,
-            typeof(View.Properties.AssemblyKey).Assembly,
-            compatibilityLayer);
+            _kernel.BindExports(assembly,
+                typeof(Infrastructure.Properties.AssemblyKey).Assembly,
+                typeof(Model.Properties.AssemblyKey).Assembly,
+                typeof(Translators.Properties.AssemblyKey).Assembly,
+                typeof(View.Properties.AssemblyKey).Assembly,
+                compatibilityLayer);
 
-        _kernel.Bind<IExportProvider>().ToConstant(ExportProvider);
+            _kernel.Bind<IExportProvider>().ToConstant(ExportProvider);
+        }
+        catch (ReflectionTypeLoadException ex)
+        {
+            MessageBox.Show($"Failed to load dependencies: {string.Join("\r\n", ex.LoaderExceptions.Select(item => item.ToString()))}", "ResX Resource Manager");
+            throw;
+        }
 
         return messages;
     }
