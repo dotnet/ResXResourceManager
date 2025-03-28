@@ -109,15 +109,6 @@ public class DeepLTranslator : TranslatorBase
                     model.Text[idx] = RemoveKeyboardShortcutIndicators(sourceItems[idx].Source);
                 }
 
-                // (Obsolete)
-                ////parameters.AddRange(new[]
-                ////{
-                ////    "target_lang", DeepLLangCode(targetCulture),
-                ////    "source_lang", DeepLLangCode(translationSession.SourceLanguage),
-                ////    "Authorization", ApiKey,
-                ////    "glossary_id", GlossaryId
-                ////});
-
                 var apiUrl = ApiUrl;
                 if (apiUrl.IsNullOrWhiteSpace())
                 {
@@ -125,15 +116,11 @@ public class DeepLTranslator : TranslatorBase
                 }
 
                 // Call the DeepL API (Obsolete)
-                ////var response = await GetHttpResponse<TranslationRootObject>(
-                ////    apiUrl,
-                ////    parameters,
-                ////    translationSession.CancellationToken).ConfigureAwait(false);
-
                 var response = await PostHttpResponse<TranslationRootObject>(
                     apiUrl,
                     model,
-                    translationSession.CancellationToken);
+                    translationSession.CancellationToken)
+                    .ConfigureAwait(false);
 
                 await translationSession.MainThread.StartNew(() =>
                 {
