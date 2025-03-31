@@ -6,9 +6,7 @@ using System.Composition;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
@@ -26,7 +24,7 @@ public class DeepLTranslatorConfiguration : Decorator
 }
 
 [Export(typeof(ITranslator)), Shared]
-public class DeepLTranslator : TranslatorBase
+public class DeepLTranslator() : TranslatorBase("DeepL", "DeepL", _uri, _credentialItems)
 {
     private static readonly Uri _uri = new("https://deepl.com/translator");
     private static readonly IList<ICredentialItem> _credentialItems = new ICredentialItem[]
@@ -35,11 +33,6 @@ public class DeepLTranslator : TranslatorBase
         new CredentialItem("Url", "Api Url", false),
         new CredentialItem("GlossaryId", "Glossary Id", false)
     };
-
-    public DeepLTranslator()
-        : base("DeepL", "DeepL", _uri, _credentialItems)
-    {
-    }
 
     [DataMember(Name = "ApiKey")]
     public string? SerializedApiKey
@@ -101,12 +94,8 @@ public class DeepLTranslator : TranslatorBase
                     GlossaryId = GlossaryId,
                     SourceLang = DeepLLangCode(translationSession.SourceLanguage),
                     TargetLang = DeepLLangCode(targetCulture),
+                    Text = sourceItems.Select(item => RemoveKeyboardShortcutIndicators(item.Source)).ToArray()
                 };
-
-                foreach (var t in sourceItems)
-                {
-                    model.Text.Add(RemoveKeyboardShortcutIndicators(t.Source));
-                }
 
                 var apiUrl = ApiUrl;
                 if (apiUrl.IsNullOrWhiteSpace())
@@ -124,10 +113,10 @@ public class DeepLTranslator : TranslatorBase
 
                 await translationSession.MainThread.StartNew(() =>
                 {
-                    foreach (var tuple in sourceItems.Zip(response.Translations ?? Array.Empty<Translation>(),
+                    foreach (var (translationItem, text) in sourceItems.Zip(response.Translations ?? [],
                                  (a, b) => new Tuple<ITranslationItem, string?>(a, b.Text)))
                     {
-                        tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2, Ranking));
+                        translationItem.Results.Add(new TranslationMatch(this, text, Ranking));
                     }
                 }).ConfigureAwait(false);
             }
@@ -157,9 +146,9 @@ public class DeepLTranslator : TranslatorBase
         using var httpClient = new HttpClient();
 
         var json = JsonConvert.SerializeObject(model);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        using var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("DeepL-Auth-Key", apiKey);
+        httpClient.DefaultRequestHeaders.Authorization = new("DeepL-Auth-Key", apiKey);
 
         var response = await httpClient.PostAsync(new Uri(baseUrl), content, cancellationToken).ConfigureAwait(false);
 
@@ -199,7 +188,7 @@ public class DeepLTranslator : TranslatorBase
     private class DeepLTranslationModel
     {
         [DataMember(Name = "text")]
-        public List<string> Text { get; set; } = new();
+        public string[]? Text { get; set; }
 
         [DataMember(Name = "target_lang")]
         public string? TargetLang { get; set; }
