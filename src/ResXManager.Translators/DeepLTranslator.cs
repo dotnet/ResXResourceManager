@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
@@ -95,21 +96,17 @@ public class DeepLTranslator : TranslatorBase
                 if (translationSession.IsCanceled || !sourceItems.Any())
                     break;
 
-                // Build out list of parameters
-                var parameters = new List<string?>(30);
-                foreach (var item in sourceItems)
+                var model = new DeepLTranslationModel()
                 {
-                    // ReSharper disable once PossibleNullReferenceException
-                    parameters.AddRange(new[] { "text", RemoveKeyboardShortcutIndicators(item.Source) });
-                }
+                    GlossaryId = GlossaryId,
+                    SourceLang = DeepLLangCode(translationSession.SourceLanguage),
+                    TargetLang = DeepLLangCode(targetCulture),
+                };
 
-                parameters.AddRange(new[]
+                foreach (var t in sourceItems)
                 {
-                    "target_lang", DeepLLangCode(targetCulture),
-                    "source_lang", DeepLLangCode(translationSession.SourceLanguage),
-                    "auth_key", ApiKey,
-                    "glossary_id", GlossaryId
-                });
+                    model.Text.Add(RemoveKeyboardShortcutIndicators(t.Source));
+                }
 
                 var apiUrl = ApiUrl;
                 if (apiUrl.IsNullOrWhiteSpace())
@@ -120,8 +117,10 @@ public class DeepLTranslator : TranslatorBase
                 // Call the DeepL API
                 var response = await GetHttpResponse<TranslationRootObject>(
                     apiUrl,
-                    parameters,
-                    translationSession.CancellationToken).ConfigureAwait(false);
+                    model,
+                    ApiKey,
+                    translationSession.CancellationToken)
+                    .ConfigureAwait(false);
 
                 await translationSession.MainThread.StartNew(() =>
                 {
@@ -141,13 +140,28 @@ public class DeepLTranslator : TranslatorBase
         return iso1;
     }
 
-    private static async Task<T> GetHttpResponse<T>(string baseUrl, ICollection<string?> parameters, CancellationToken cancellationToken)
+    /// <summary>
+    /// Sending a POST Request to <paramref name="baseUrl"/>
+    /// with the HttpContent of <paramref name="model"/> as JSON.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="baseUrl"></param>
+    /// <param name="model"></param>
+    /// <param name="apiKey"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Returns the Translation result.</returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    private static async Task<T> GetHttpResponse<T>(string? baseUrl, DeepLTranslationModel model, string? apiKey, CancellationToken cancellationToken)
         where T : class
     {
-        var url = BuildUrl(baseUrl, parameters);
-
         using var httpClient = new HttpClient();
-        var response = await httpClient.GetAsync(new Uri(url), cancellationToken).ConfigureAwait(false);
+
+        var json = JsonConvert.SerializeObject(model);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("DeepL-Auth-Key", apiKey);
+
+        var response = await httpClient.PostAsync(new Uri(baseUrl), content, cancellationToken).ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
 
@@ -177,27 +191,23 @@ public class DeepLTranslator : TranslatorBase
         public Translation[]? Translations { get; set; }
     }
 
-    /// <summary>Builds the URL from a base, method name, and name/value paired parameters. All parameters are encoded.</summary>
-    /// <param name="url">The base URL.</param>
-    /// <param name="pairs">The name/value paired parameters.</param>
-    /// <returns>Resulting URL.</returns>
-    /// <exception cref="ArgumentException">There must be an even number of strings supplied for parameters.</exception>
-    private static string BuildUrl(string url, ICollection<string?> pairs)
+    /// <summary>
+    /// Model for translating with DeepL.
+    /// For POST Request as of March 14, 2025.
+    /// </summary>
+    [DataContract]
+    private class DeepLTranslationModel
     {
-        if (pairs.Count % 2 != 0)
-            throw new ArgumentException("There must be an even number of strings supplied for parameters.");
+        [DataMember(Name = "text")]
+        public List<string> Text { get; set; } = new();
 
-        var sb = new StringBuilder(url);
-        if (pairs.Count > 0)
-        {
-            sb.Append('?');
-            sb.Append(string.Join("&", pairs.Where((s, i) => i % 2 == 0).Zip(pairs.Where((s, i) => i % 2 == 1), Format)));
-        }
-        return sb.ToString();
+        [DataMember(Name = "target_lang")]
+        public string? TargetLang { get; set; }
 
-        static string Format(string? a, string? b)
-        {
-            return string.Concat(WebUtility.UrlEncode(a), "=", WebUtility.UrlEncode(b));
-        }
+        [DataMember(Name = "source_lang")]
+        public string? SourceLang { get; set; }
+
+        [DataMember(Name = "glossary_id")]
+        public string? GlossaryId { get; set; }
     }
 }
