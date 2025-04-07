@@ -27,12 +27,12 @@ public class DeepLTranslatorConfiguration : Decorator
 public class DeepLTranslator() : TranslatorBase("DeepL", "DeepL", _uri, _credentialItems)
 {
     private static readonly Uri _uri = new("https://deepl.com/translator");
-    private static readonly IList<ICredentialItem> _credentialItems = new ICredentialItem[]
-    {
+    private static readonly IList<ICredentialItem> _credentialItems =
+    [
         new CredentialItem("APIKey", "API Key"),
         new CredentialItem("Url", "Api Url", false),
         new CredentialItem("GlossaryId", "Glossary Id", false)
-    };
+    ];
 
     [DataMember(Name = "ApiKey")]
     public string? SerializedApiKey
@@ -185,7 +185,7 @@ public class DeepLTranslator() : TranslatorBase("DeepL", "DeepL", _uri, _credent
     /// For POST Request as of March 14, 2025.
     /// </summary>
     [DataContract]
-    private class DeepLTranslationModel
+    private sealed class DeepLTranslationModel
     {
         [DataMember(Name = "text")]
         public string[]? Text { get; set; }
