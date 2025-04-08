@@ -1,4 +1,7 @@
-﻿1.90
+﻿1.91
+- #691: DeepL API Upade from GET to POST Requests (contributed by Simon Müller https://github.com/Appli4Ever)
+
+1.90
 - Translator configuration can be collapsed.
 - #678: Improve Google Lite translator multi-part response parsing.
 - #682: OpenAI translator endpoint is configurable to support also e.g. local deployments.
