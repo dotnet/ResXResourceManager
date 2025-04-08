@@ -267,7 +267,7 @@ public class OpenAITranslator : TranslatorBase
                 .ForEach(s => promptBuilder.Append(s));
         }
 
-        promptBuilder.Append($"Here is a list of words or sentences with the same meaning in different languages. Continue the list of translations for the target language \"{targetCulture}\".\n");
+        promptBuilder.Append($"Here is a list of words or sentences with the same meaning in different languages. Please translate the following word or sentence into \"{targetCulture}\" only. Do not provide any additional information.\n");
         promptBuilder.Append("TRANSLATIONS:\n");
 
         // add all existing translations to prompt
