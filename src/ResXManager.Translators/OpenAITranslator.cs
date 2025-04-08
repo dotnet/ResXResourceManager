@@ -346,7 +346,7 @@ public class OpenAITranslator : TranslatorBase
         return
         [
             new CredentialItem("AuthenticationKey", "Key"),
-            new CredentialItem("Url", "Endpoint Url", false) { Value = "https://api.openai.com" },
+            new CredentialItem("Url", "Endpoint Url", false) { Value = "https://api.openai.com/v1/" },
             new CredentialItem("ModelName", "Model Name", false),
         ];
     }
