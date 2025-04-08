@@ -146,7 +146,7 @@ public class OpenAITranslator : TranslatorBase
 
     private async Task TranslateUsingCompletionsModel(ITranslationSession translationSession, HttpClient client)
     {
-        var endpointUri = new Uri($"/v1/chat/completions", UriKind.Relative);
+        var endpointUri = new Uri("chat/completions", UriKind.Relative);
         TiktokenTokenizer? tokenizer = null;
         if (CountTokens)
         {
@@ -267,7 +267,7 @@ public class OpenAITranslator : TranslatorBase
                 .ForEach(s => promptBuilder.Append(s));
         }
 
-        promptBuilder.Append($"Here is a list of words or sentences with the same meaning in different languages. Continue the list of translations for the target language \"{targetCulture}\".\n");
+        promptBuilder.Append($"Here is a list of words or sentences with the same meaning in different languages. Please translate the following word or sentence into \"{targetCulture}\" only. Do not provide any additional information.\n");
         promptBuilder.Append("TRANSLATIONS:\n");
 
         // add all existing translations to prompt
@@ -346,7 +346,7 @@ public class OpenAITranslator : TranslatorBase
         return
         [
             new CredentialItem("AuthenticationKey", "Key"),
-            new CredentialItem("Url", "Endpoint Url", false) { Value = "https://api.openai.com" },
+            new CredentialItem("Url", "Endpoint Url", false) { Value = "https://api.openai.com/v1/" },
             new CredentialItem("ModelName", "Model Name", false),
         ];
     }
