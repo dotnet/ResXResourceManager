@@ -146,7 +146,7 @@ public class OpenAITranslator : TranslatorBase
 
     private async Task TranslateUsingCompletionsModel(ITranslationSession translationSession, HttpClient client)
     {
-        var endpointUri = new Uri($"/v1/chat/completions", UriKind.Relative);
+        var endpointUri = new Uri("chat/completions", UriKind.Relative);
         TiktokenTokenizer? tokenizer = null;
         if (CountTokens)
         {
