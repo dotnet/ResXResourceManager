@@ -1,5 +1,6 @@
 ﻿1.91
 - #691: DeepL API Upade from GET to POST Requests (contributed by Simon Müller https://github.com/Appli4Ever)
+- #695: Fix compatibility issues related to OpenAI.
 
 1.90
 - Translator configuration can be collapsed.
