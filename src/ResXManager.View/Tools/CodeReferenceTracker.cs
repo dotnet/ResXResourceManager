@@ -237,7 +237,6 @@ public class CodeReferenceTracker : IService
 
     private sealed class FileInfo
     {
-        private static readonly Regex _regex = new(@"\W+", RegexOptions.Compiled);
         private readonly ProjectFile _projectFile;
         private readonly Dictionary<string, HashSet<int>> _keyLinesLookup = new();
         private readonly CodeReferenceConfigurationItem[] _configurations;
@@ -256,9 +255,15 @@ public class CodeReferenceTracker : IService
                 _lines = _projectFile.ReadAllLines();
 
                 _lines.ForEach((line, index) =>
-                    _regex.Split(line)
-                        .Where(keys.Contains)
-                        .ForEach(key => _keyLinesLookup.ForceValue(key, _ => new HashSet<int>()).Add(index)));
+                {
+                    keys.ForEach(key =>
+                    {
+                        if (line.Contains(key))
+                        {
+                            _keyLinesLookup.ForceValue(key, _ => new HashSet<int>()).Add(index);
+                        }
+                    });
+                });
             }
 
             Interlocked.Increment(ref visited);
