@@ -158,6 +158,7 @@ public class CodeReferenceTracker : IService
             finally
             {
                 stopwatch.Stop();
+                Debug.WriteLine($"Find code references took {stopwatch.Elapsed}");
             }
         }
 
