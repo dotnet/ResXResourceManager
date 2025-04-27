@@ -141,7 +141,13 @@ internal sealed class VsixCompatibility : IVsixCompatibility
         dte?.SetFontSize(view);
     }
 
-    public string EvaluateMoveToResourcePattern(string pattern, string? key, bool reuseExisting, ResourceEntity? selectedResourceEntity, ResourceTableEntry? selectedResourceEntry)
+    public string EvaluateMoveToResourcePattern(
+        string pattern,
+        string text,
+        string? key,
+        bool reuseExisting,
+        ResourceEntity? selectedResourceEntity,
+        ResourceTableEntry? selectedResourceEntry)
     {
         ThrowIfNotOnUIThread();
 
@@ -150,6 +156,7 @@ internal sealed class VsixCompatibility : IVsixCompatibility
         var localNamespace = GetLocalNamespace((entity?.NeutralProjectFile as DteProjectFile)?.DefaultProjectItem);
 
         return pattern.Replace(@"$File", entity?.BaseName)
+            .Replace(@"$Text", text)
             .Replace(@"$Key", effectiveKey)
             .Replace(@"$Namespace", localNamespace);
     }

@@ -20,7 +20,13 @@ public interface IVsixCompatibility
 
     void SetFontSize(DependencyObject view);
 
-    string EvaluateMoveToResourcePattern(string pattern, string? key, bool reuseExisting, ResourceEntity? selectedResourceEntity, ResourceTableEntry? selectedResourceEntry);
+    string EvaluateMoveToResourcePattern(
+        string pattern,
+        string text,
+        string? key,
+        bool reuseExisting,
+        ResourceEntity? selectedResourceEntity,
+        ResourceTableEntry? selectedResourceEntry);
 
     bool ActivateAlreadyOpenEditor(IEnumerable<ResourceLanguage> languages);
 

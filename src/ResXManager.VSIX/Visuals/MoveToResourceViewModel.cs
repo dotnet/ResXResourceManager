@@ -43,7 +43,16 @@ internal sealed partial class MoveToResourceViewModel : INotifyPropertyChanged, 
         SelectedResourceEntry = ExistingEntries.FirstOrDefault();
         _extension = extension;
 
-        Replacements = patterns.Select(p => new Replacement(p, pattern => vsixCompatibility.EvaluateMoveToResourcePattern(pattern, Key, ReuseExisting, SelectedResourceEntity, SelectedResourceEntry))).ToArray();
+        Replacements = patterns.Select(p => new Replacement(
+            p,
+            pattern => vsixCompatibility.EvaluateMoveToResourcePattern(
+                pattern,
+                text,
+                Key,
+                ReuseExisting,
+                SelectedResourceEntity,
+                SelectedResourceEntry)))
+            .ToArray();
         Keys = new[] { CreateKey(text, null, null), CreateKey(text, null, functionName), CreateKey(text, className ?? fileName, functionName) }.Distinct().ToArray();
         Key = Keys.Skip(SelectedKeyIndex).FirstOrDefault() ?? Keys.FirstOrDefault();
         Value = text;
