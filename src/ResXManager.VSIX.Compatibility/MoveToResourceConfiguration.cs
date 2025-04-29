@@ -51,6 +51,7 @@ public class MoveToResourceConfiguration : ItemTrackingCollectionHost<MoveToReso
     public const string Default = @"{""Items"":
 [{""Extensions"":"".cs,.vb"",""Patterns"":""$Namespace.$File.$Key|$File.$Key|StringResourceKey.$Key|$Namespace.StringResourceKey.$Key|nameof($File.$Key), ResourceType = typeof($File)|ErrorMessageResourceType = typeof($File), ErrorMessageResourceName = nameof($File.$Key)""}
 ,{""Extensions"":"".cshtml,.vbhtml"",""Patterns"":""@$Namespace.$File.$Key|@$File.$Key|@StringResourceKey.$Key|@$Namespace.StringResourceKey.$Key""}
+,{""Extensions"":"".razor"",""Patterns"":""@$Namespace.$File.$Key|@$File.$Key|@StringResourceKey.$Key|@$Namespace.StringResourceKey.$Key|@localizer[\""$Text\""]""}
 ,{""Extensions"":"".cpp,.c,.hxx,.h"",""Patterns"":""$File::$Key""}
 ,{""Extensions"":"".aspx,.ascx"",""Patterns"":""<%$ Resources:$File,$Key %>|<%= $File.$Key %>|<%= $Namespace.$File.$Key %>""}
 ,{""Extensions"":"".xaml"",""Patterns"":""\""{x:Static properties:$File.$Key}\""""}
