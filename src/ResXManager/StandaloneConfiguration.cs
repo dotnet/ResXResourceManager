@@ -32,10 +32,6 @@ internal class StandaloneConfiguration : Configuration, IStandaloneConfiguration
         Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Normal, OnColorThemeChanged);
     }
 
-    public override bool IsScopeSupported => false;
-
-    public override ConfigurationScope Scope => ConfigurationScope.Global;
-
     [DefaultValue(nameof(ColorTheme.Light))]
     [OnChangedMethod(nameof(OnColorThemeChanged))]
     public ColorTheme ColorTheme { get; set; }

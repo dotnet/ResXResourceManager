@@ -41,4 +41,4 @@ using Microsoft.VisualStudio.Shell;
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.Text.Encodings.Web.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.Text.Json.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.Threading.Tasks.Extensions.dll")]
-[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.ValueTuple.dll")]
+// [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.ValueTuple.dll")]

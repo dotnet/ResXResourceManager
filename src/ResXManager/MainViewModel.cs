@@ -122,7 +122,7 @@ internal class MainViewModel : ObservableObject
             if (MessageBoxResult.Yes == MessageBox.Show(View.Properties.Resources.WarningUnsavedChanges, View.Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Hand, MessageBoxResult.No))
                 return;
         }
-        
+
         SetSolutionFolder(string.Empty);
     }
 

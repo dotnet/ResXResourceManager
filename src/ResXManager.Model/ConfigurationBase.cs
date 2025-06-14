@@ -9,6 +9,8 @@ using System.Reflection;
 
 using AutoProperties;
 
+using PropertyChanged;
+
 using ResXManager.Infrastructure;
 
 using Throttle;
@@ -25,43 +27,46 @@ public sealed class ForceGlobalAttribute : Attribute
 /// </summary>
 public abstract class ConfigurationBase : INotifyPropertyChanged
 {
-    private const string FileName = "Configuration.xml";
+    private const string GlobalConfigFileName = "Configuration.xml";
+    private const string SolutionConfigFileName = "ResXManager.config.xml";
 
-    private static readonly string _directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "tom-englert.de", "ResXManager");
+    private static readonly string _appDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "tom-englert.de", "ResXManager");
 
-    private readonly string _filePath;
-    private readonly XmlConfiguration _configuration;
+    private readonly string _globalConfigFilePath;
+    private readonly XmlConfiguration _globalConfiguration;
     private readonly Dictionary<string, object> _cachedObjects = new();
+
+    private XmlConfiguration? _solutionConfiguration;
+    private string? _solutionConfigFilePath;
+    private readonly PropertyInfo[] _allPublicProperties;
 
     protected ConfigurationBase(ITracer tracer)
     {
         Tracer = tracer;
-        _filePath = Path.Combine(_directory, FileName);
+        _allPublicProperties = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-        try
-        {
-            Directory.CreateDirectory(_directory);
-
-            using var reader = new StreamReader(File.OpenRead(_filePath));
-
-            _configuration = new XmlConfiguration(tracer, reader);
-
-            return;
-        }
-        catch
-        {
-            // can't read configuration, just go with default.
-        }
-
-        _configuration = new XmlConfiguration(tracer);
+        _globalConfigFilePath = Path.Combine(_appDataFolder, GlobalConfigFileName);
+        _globalConfiguration = LoadConfiguration(_globalConfigFilePath, tracer);
     }
 
-    public abstract bool IsScopeSupported { get; }
+    [InterceptIgnore]
+    public bool IsScopeSupported => true;
 
-    public abstract ConfigurationScope Scope { get; }
+    [InterceptIgnore]
+    public ConfigurationScope Scope { get; private set; }
+
+    [InterceptIgnore]
+    public XmlConfiguration EffectiveConfiguration => _solutionConfiguration ?? _globalConfiguration;
+
+    [InterceptIgnore]
+    public string EffectiveConfigFilePath => _solutionConfigFilePath ?? _globalConfigFilePath;
 
     [InterceptIgnore]
     protected ITracer Tracer { get; }
+
+    [InterceptIgnore]
+    [OnChangedMethod(nameof(OnSolutionFolderChanged))]
+    public string? SolutionFolder { get; set; }
 
     [GetInterceptor]
     protected T? GetProperty<T>(string key, PropertyInfo propertyInfo)
@@ -107,7 +112,7 @@ public abstract class ConfigurationBase : INotifyPropertyChanged
 
     protected virtual T? InternalGetValue<T>(T? defaultValue, string key)
     {
-        return ConvertFromString(_configuration.GetValue(key, null), defaultValue);
+        return ConvertFromString(EffectiveConfiguration.GetValue(key, null), defaultValue);
     }
 
     [SetInterceptor]
@@ -122,7 +127,9 @@ public abstract class ConfigurationBase : INotifyPropertyChanged
     {
         try
         {
-            _configuration.SetValue(key, ConvertToString(value));
+            var configuration = forceGlobal ? _globalConfiguration : EffectiveConfiguration;
+
+            configuration.SetValue(key, ConvertToString(value));
 
             Save();
         }
@@ -137,13 +144,13 @@ public abstract class ConfigurationBase : INotifyPropertyChanged
     {
         try
         {
-            using var writer = new StreamWriter(File.Create(_filePath));
+            using var writer = new StreamWriter(File.Create(EffectiveConfigFilePath));
 
-            _configuration.Save(writer);
+            EffectiveConfiguration.Save(writer);
         }
         catch (Exception ex)
         {
-            Tracer.TraceError($"Fatal error writing configuration file: {_filePath} - {ex.Message}");
+            Tracer.TraceError($"Fatal error writing configuration file: {EffectiveConfigFilePath} - {ex.Message}");
         }
     }
 
@@ -212,6 +219,50 @@ public abstract class ConfigurationBase : INotifyPropertyChanged
 
     protected virtual void OnPropertyChanged(string propertyName)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(this, new(propertyName));
+    }
+
+    private void OnSolutionFolderChanged(string oldValue, string newValue)
+    {
+        if (newValue.IsNullOrEmpty())
+        {
+            _solutionConfigFilePath = null;
+            _solutionConfiguration = null;
+            Scope = ConfigurationScope.Global;
+        }
+        else
+        {
+            _solutionConfigFilePath = Path.Combine(newValue, SolutionConfigFileName);
+            _solutionConfiguration = LoadConfiguration(_solutionConfigFilePath, Tracer);
+            Scope = ConfigurationScope.Solution;
+        }
+
+        NotifyAll();
+    }
+
+    private static XmlConfiguration LoadConfiguration(string filePath, ITracer tracer)
+    {
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+            using var reader = new StreamReader(File.OpenRead(filePath));
+
+            return new(tracer, reader);
+        }
+        catch
+        {
+            // can't read configuration, just go with default.
+        }
+
+        return new(tracer);
+    }
+
+    private void NotifyAll()
+    {
+        foreach (var property in _allPublicProperties)
+        {
+            OnPropertyChanged(property.Name);
+        }
     }
 }

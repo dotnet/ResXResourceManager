@@ -178,7 +178,6 @@ Global
 		{E3F92F55-65D9-4D83-83B0-F236D6A7012A} = {DFF87A7B-E7F1-4AB2-BDB2-5587BAC30015}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_FileExclusionFilter = ResXManager.Tests
 		SolutionGuid = {04A160C5-3AA5-4A9E-9D73-A227A07E3EE4}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

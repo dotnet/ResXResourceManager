@@ -166,6 +166,8 @@ public sealed class Host : IDisposable
 [Shared]
 public class Configuration : IConfiguration
 {
+    public string? SolutionFolder { get; set; }
+
     public bool IsScopeSupported { get; set; }
 
     public ConfigurationScope Scope { get; set; }

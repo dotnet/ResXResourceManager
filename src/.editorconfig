@@ -220,3 +220,5 @@ dotnet_diagnostic.IDE0305.severity = suggestion
 # CA1515: Because an application's API isn't typically referenced from outside the assembly, types can be made internal
 dotnet_diagnostic.CA1515.severity = suggestion
 
+# IDE0028: Simplify collection initialization
+dotnet_diagnostic.IDE0028.severity = suggestion

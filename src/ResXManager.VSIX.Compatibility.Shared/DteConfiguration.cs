@@ -12,6 +12,8 @@ using ResXManager.VSIX.Compatibility;
 
 using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
+using Configuration = ResXManager.Model.Configuration;
+
 [Shared]
 [Export(typeof(IConfiguration))]
 [Export(typeof(IDteConfiguration))]
@@ -38,38 +40,26 @@ internal sealed class DteConfiguration : Configuration, IDteConfiguration
     [DefaultValue(TaskErrorCategory.Warning)]
     public TaskErrorCategory TaskErrorCategory { get; set; }
 
-    public override bool IsScopeSupported => true;
-
-    public override ConfigurationScope Scope
-    {
-        get
-        {
-            ThrowIfNotOnUIThread();
-            return _solution.Globals != null ? ConfigurationScope.Solution : ConfigurationScope.Global;
-        }
-    }
-
     protected override T? InternalGetValue<T>(T? defaultValue, string key) where T : default
     {
         ThrowIfNotOnUIThread();
 
-        return TryGetValue(GetKey(key), defaultValue, out var value) ? value : base.InternalGetValue(defaultValue, key);
+        // Convert old solution settings to new ones.
+        if (!TryGetValue(GetKey(key), defaultValue, out var value)) 
+            return base.InternalGetValue(defaultValue, key);
+
+        TryClearValue<T>(_solution.Globals, GetKey(key));
+        base.InternalSetValue(value, key, false);
+        return value;
     }
 
     protected override void InternalSetValue<T>(T? value, string key, bool forceGlobal) where T : default
     {
         ThrowIfNotOnUIThread();
 
-        var globals = _solution.Globals;
-
-        if (globals != null && !forceGlobal)
-        {
-            TrySetValue(globals, GetKey(key), value);
-        }
-        else
-        {
-            base.InternalSetValue(value, key, forceGlobal);
-        }
+        TryClearValue<T>(_solution.Globals, GetKey(key));
+        
+        base.InternalSetValue(value, key, forceGlobal);
     }
 
     private bool TryGetValue<T>(string? key, T? defaultValue, out T? value)
@@ -101,14 +91,16 @@ internal sealed class DteConfiguration : Configuration, IDteConfiguration
         return false;
     }
 
-    private void TrySetValue<T>(EnvDTE.Globals globals, string? internalKey, T? value)
+    private void TryClearValue<T>(EnvDTE.Globals? globals, string? internalKey)
     {
         ThrowIfNotOnUIThread();
 
+        if (globals == null || string.IsNullOrEmpty(internalKey))
+            return;
+
         try
         {
-            globals[internalKey] = ConvertToString(value);
-            globals.VariablePersists[internalKey] = true;
+            globals.VariablePersists[internalKey] = false;
         }
         catch (Exception ex)
         {

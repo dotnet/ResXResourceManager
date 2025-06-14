@@ -6,6 +6,8 @@ using System.Globalization;
 
 public interface IConfiguration : INotifyPropertyChanged
 {
+    string? SolutionFolder { get; set; }
+
     bool IsScopeSupported { get; }
 
     ConfigurationScope Scope { get; }
@@ -34,28 +36,28 @@ public interface IConfiguration : INotifyPropertyChanged
 
     StringComparison ResXSortingComparison { get; }
 
-    public bool PrefixTranslations { get; }
+    bool PrefixTranslations { get; }
 
-    public string? TranslationPrefix { get; }
+    string? TranslationPrefix { get; }
 
-    public string? EffectiveTranslationPrefix { get; }
+    string? EffectiveTranslationPrefix { get; }
 
     /// <summary>
     /// Apply translation prefix to the value
     /// </summary>
-    public bool PrefixValue { get; }
+    bool PrefixValue { get; }
 
     /// <summary>
     /// Apply translation prefix to comment of neutral language
     /// </summary>
-    public bool PrefixNeutralComment { get; }
+    bool PrefixNeutralComment { get; }
 
     /// <summary>
     /// Apply translation prefix to comment of target language
     /// </summary>
-    public bool PrefixTargetComment { get; }
+    bool PrefixTargetComment { get; }
 
-    public ExcelExportMode ExcelExportMode { get; }
+    ExcelExportMode ExcelExportMode { get; }
 
     bool ShowPerformanceTraces { get; }
 

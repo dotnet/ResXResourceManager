@@ -101,6 +101,7 @@ public sealed class ResourceManager : INotifyPropertyChanged
 
     private void OnSolutionFolderChanged()
     {
+        Configuration.SolutionFolder = SolutionFolder;
         SolutionFolderChanged?.Invoke(this, new TextEventArgs(SolutionFolder ?? string.Empty));
     }
 

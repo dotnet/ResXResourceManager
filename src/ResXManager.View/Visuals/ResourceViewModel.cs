@@ -111,7 +111,7 @@ public sealed partial class ResourceViewModel : INotifyPropertyChanged, IDisposa
 
     public ICommand ReloadCommand => new DelegateCommand(Reload);
 
-    public ICommand SaveCommand => new DelegateCommand(() => ResourceManager.HasChanges, () => ResourceManager.Save());
+    public ICommand SaveCommand => new DelegateCommand(() => ResourceManager.HasChanges, ResourceManager.Save);
 
     public ICommand BeginFindCodeReferencesCommand => new DelegateCommand(BeginFindCodeReferences);
 
