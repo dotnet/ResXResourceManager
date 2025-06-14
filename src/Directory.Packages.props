@@ -14,13 +14,13 @@
     <PackageVersion Include="JetBrains.Annotations" Version="2024.3.0" />
     <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageVersion Include="Microsoft.ML.Tokenizers" Version="[0.22.0-preview.24378.1]" Justification="VS2019" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Microsoft.VisualStudio.SDK" Version="[15.0.1]" />
     <PackageVersion Include="Microsoft.VSSDK.BuildTools" Version="[17.6.2164]" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
-    <PackageVersion Include="Nullable.Extended.Analyzer" Version="1.15.6495" />
+    <PackageVersion Include="Nullable.Extended.Analyzer" Version="1.15.6581" />
     <PackageVersion Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageVersion Include="Resourcer.Fody" Version="1.8.1" />
     <PackageVersion Include="System.Composition.AttributedModel" Version="[1.4.1]" />
@@ -32,20 +32,20 @@
     <PackageVersion Include="System.ServiceModel.Http" Version="[4.10.2]" />
     <PackageVersion Include="System.Text.Json" Version="[8.0.5]" Justification="VS2019" />
     <PackageVersion Include="Throttle.Fody" Version="1.7.0" />
-    <PackageVersion Include="TomsToolbox.Composition" Version="2.22.0" />
-    <PackageVersion Include="TomsToolbox.Composition.Ninject" Version="2.22.0" />
-    <PackageVersion Include="TomsToolbox.Essentials" Version="2.22.0" />
-    <PackageVersion Include="TomsToolbox.ObservableCollections" Version="2.22.0" />
-    <PackageVersion Include="TomsToolbox.Wpf" Version="2.22.0" />
-    <PackageVersion Include="TomsToolbox.Wpf.Composition" Version="2.22.0" />
-    <PackageVersion Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.22.0" />
-    <PackageVersion Include="TomsToolbox.Wpf.Composition.Styles" Version="2.22.0" />
-    <PackageVersion Include="TomsToolbox.Wpf.Styles" Version="2.22.0" />
-    <PackageVersion Include="Verify.Xunit" Version="29.2.0" />
+    <PackageVersion Include="TomsToolbox.Composition" Version="2.22.1" />
+    <PackageVersion Include="TomsToolbox.Composition.Ninject" Version="2.22.1" />
+    <PackageVersion Include="TomsToolbox.Essentials" Version="2.22.1" />
+    <PackageVersion Include="TomsToolbox.ObservableCollections" Version="2.22.1" />
+    <PackageVersion Include="TomsToolbox.Wpf" Version="2.22.1" />
+    <PackageVersion Include="TomsToolbox.Wpf.Composition" Version="2.22.1" />
+    <PackageVersion Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.22.1" />
+    <PackageVersion Include="TomsToolbox.Wpf.Composition.Styles" Version="2.22.1" />
+    <PackageVersion Include="TomsToolbox.Wpf.Styles" Version="2.22.1" />
+    <PackageVersion Include="Verify.Xunit" Version="30.4.0" />
     <PackageVersion Include="VSIX-SdkProjectAdapter" Version="3.0.0" />
     <PackageVersion Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     <PackageVersion Include="xunit" Version="2.9.3" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
