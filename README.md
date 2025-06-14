@@ -3,7 +3,6 @@
 # ResX Resource Manager 
 [![Build Status](https://dev.azure.com/tom-englert/Open%20Source/_apis/build/status/ResXResourceManager?branchName=master)](https://dev.azure.com/tom-englert/Open%20Source/_build/latest?definitionId=35&branchName=master)
 [![Sponsor](https://img.shields.io/badge/-Sponsor-fafbfc?logo=GitHub%20Sponsors)](https://github.com/sponsors/tom-englert)
-[<img src="https://api.gitsponsors.com/api/badge/img?id=60344691" height="20">](https://api.gitsponsors.com/api/badge/link?p=FvTYDNU2vjlfIiyQ/Xt3lqNu5WSkM2nBDdrkEbFn9pwUyJlQPy8xa2x0whq4DmesGdh2TpAH5F2xZKY5empjmZ3MbhPCdsTkhNkgdI9YKm3KVT0gfaRMVCZOXNBHcgVnOufMOKJY1SZmAswXshqfBg==)
 
 The most popular tool to manage localization of all kind of applications with resx-based resources; one of the highest rated extensions on the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager).
 
