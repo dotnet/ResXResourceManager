@@ -18,6 +18,7 @@
           </TextBlock>
         </MenuItem.Header>
         <MenuItem Header="Browse" Command="{Binding BrowseCommand}" />
+        <MenuItem Header="Close solution" Command="{Binding CloseSolutionCommand}" />
         <Separator />
         <MenuItem Header="Recent" ItemsSource="{Binding RecentStartupFolders, Source={x:Static properties:Settings.Default}}">
           <MenuItem.ItemContainerStyle>

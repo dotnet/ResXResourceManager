@@ -66,6 +66,8 @@ internal class MainViewModel : ObservableObject
 
     public ICommand BrowseCommand => new DelegateCommand(Browse);
 
+    public ICommand CloseSolutionCommand => new DelegateCommand(CloseSolution);
+
     public ICommand SetSolutionFolderCommand => new DelegateCommand<string>(SetSolutionFolder);
 
     public ResourceManager ResourceManager { get; }
@@ -113,9 +115,20 @@ internal class MainViewModel : ObservableObject
         }
     }
 
+    private void CloseSolution()
+    {
+        if (ResourceManager.HasChanges)
+        {
+            if (MessageBoxResult.Yes == MessageBox.Show(View.Properties.Resources.WarningUnsavedChanges, View.Properties.Resources.Title, MessageBoxButton.YesNo, MessageBoxImage.Hand, MessageBoxResult.No))
+                return;
+        }
+        
+        SetSolutionFolder(string.Empty);
+    }
+
     private void SetSolutionFolder(string folder)
     {
-        if (!Directory.Exists(folder))
+        if (!string.IsNullOrEmpty(folder) && !Directory.Exists(folder))
             return;
 
         SourceFilesProvider.SolutionFolder = folder;
