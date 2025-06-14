@@ -44,10 +44,10 @@ internal sealed class DteConfiguration : Configuration, IDteConfiguration
     {
         ThrowIfNotOnUIThread();
 
-        // Convert old solution settings to new ones.
         if (!TryGetValue(GetKey(key), defaultValue, out var value)) 
             return base.InternalGetValue(defaultValue, key);
 
+        // Convert old solution settings to new ones.
         TryClearValue<T>(_solution.Globals, GetKey(key));
         base.InternalSetValue(value, key, false);
         return value;
@@ -101,6 +101,7 @@ internal sealed class DteConfiguration : Configuration, IDteConfiguration
         try
         {
             globals.VariablePersists[internalKey] = false;
+            globals[internalKey] = null;
         }
         catch (Exception ex)
         {
