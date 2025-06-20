@@ -1,4 +1,4 @@
-namespace ResXManager.Translators;
+﻿namespace ResXManager.Translators;
 
 using System;
 using System.Collections.Generic;
@@ -22,6 +22,8 @@ public class AzureTranslator : TranslatorBase
 {
     private static readonly Uri _uri = new("https://www.microsoft.com/en-us/translator/");
 
+    const string DefaultEndpoint = "https://api.cognitive.microsofttranslator.com";
+
     // Azure has a 5000-character translation limit across all Texts in a single request
     private const int MaxCharsPerApiCall = 5000;
     private const int MaxItemsPerApiCall = 100;
@@ -29,7 +31,12 @@ public class AzureTranslator : TranslatorBase
     public AzureTranslator()
         : base("Azure", "Azure", _uri, GetCredentials())
     {
+        if (Endpoint.IsNullOrEmpty())
+        {
+            Endpoint = DefaultEndpoint;
+        }
     }
+
 
     [DataMember]
     public bool AutoDetectHtml { get; set; } = true;
@@ -47,62 +54,66 @@ public class AzureTranslator : TranslatorBase
             return;
         }
 
-        using (var client = new HttpClient())
+        if (!Uri.TryCreate(Endpoint, UriKind.Absolute, out var endpoint))
         {
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", authenticationKey);
-            if (!Region.IsNullOrEmpty())
+            translationSession.AddMessage($"Azure Translator: Invalid end point URL: {DefaultEndpoint}");
+            return;
+        }
+
+        using var client = new HttpClient();
+
+        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", authenticationKey);
+        if (!Region.IsNullOrEmpty())
+        {
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Region", Region);
+        }
+
+        var throttle = new Throttle(MaxCharactersPerMinute, translationSession.CancellationToken);
+
+        var itemsByLanguage = translationSession.Items.GroupBy(item => item.TargetCulture);
+
+        foreach (var languageGroup in itemsByLanguage)
+        {
+            var cultureKey = languageGroup.Key;
+            var targetLanguage = cultureKey.Culture ?? translationSession.NeutralResourcesLanguage;
+
+            var itemsByTextType = languageGroup.GroupBy(GetTextType);
+
+            foreach (var textTypeGroup in itemsByTextType)
             {
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Region", Region);
-            }
+                var textType = textTypeGroup.Key;
 
-            var throttle = new Throttle(MaxCharactersPerMinute, translationSession.CancellationToken);
-
-            var itemsByLanguage = translationSession.Items.GroupBy(item => item.TargetCulture);
-
-            foreach (var languageGroup in itemsByLanguage)
-            {
-                var cultureKey = languageGroup.Key;
-                var targetLanguage = cultureKey.Culture ?? translationSession.NeutralResourcesLanguage;
-
-                var itemsByTextType = languageGroup.GroupBy(GetTextType);
-
-                foreach (var textTypeGroup in itemsByTextType)
+                foreach (var sourceItems in SplitIntoChunks(translationSession, textTypeGroup))
                 {
-                    var textType = textTypeGroup.Key;
+                    if (!sourceItems.Any())
+                        break;
 
-                    foreach (var sourceItems in SplitIntoChunks(translationSession, textTypeGroup))
+                    var sourceStrings = sourceItems
+                        .Select(item => item.Source)
+                        .Select(RemoveKeyboardShortcutIndicators)
+                        .ToList();
+
+                    await throttle.Tick(sourceItems).ConfigureAwait(false);
+
+                    if (translationSession.IsCanceled)
+                        return;
+
+                    var uri = new Uri(endpoint, $"translate?api-version=3.0&from={translationSession.SourceLanguage.IetfLanguageTag}&to={targetLanguage.IetfLanguageTag}&textType={textType}");
+
+                    using var content = CreateRequestContent(sourceStrings);
+
+                    var response = await client.PostAsync(uri, content, translationSession.CancellationToken).ConfigureAwait(false);
+
+                    response.EnsureSuccessStatusCode();
+
+                    var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+                    using var reader = new StreamReader(stream, Encoding.UTF8);
+
+                    var translations = JsonConvert.DeserializeObject<List<AzureTranslationResponse>>(await reader.ReadToEndAsync().ConfigureAwait(false));
+                    if (translations != null)
                     {
-                        if (!sourceItems.Any())
-                            break;
-
-                        var sourceStrings = sourceItems
-                            .Select(item => item.Source)
-                            .Select(RemoveKeyboardShortcutIndicators)
-                            .ToList();
-
-                        await throttle.Tick(sourceItems).ConfigureAwait(false);
-
-                        if (translationSession.IsCanceled)
-                            return;
-
-                        var uri = new Uri($"https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={translationSession.SourceLanguage.IetfLanguageTag}&to={targetLanguage.IetfLanguageTag}&textType={textType}");
-
-                        using var content = CreateRequestContent(sourceStrings);
-
-                        var response = await client.PostAsync(uri, content, translationSession.CancellationToken).ConfigureAwait(false);
-
-                        response.EnsureSuccessStatusCode();
-
-                        var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-                        using (var reader = new StreamReader(stream, Encoding.UTF8))
-                        {
-                            var translations = JsonConvert.DeserializeObject<List<AzureTranslationResponse>>(await reader.ReadToEndAsync().ConfigureAwait(false));
-                            if (translations != null)
-                            {
-                                await translationSession.MainThread.StartNew(() => ReturnResults(sourceItems, translations)).ConfigureAwait(false);
-                            }
-                        }
+                        await translationSession.MainThread.StartNew(() => ReturnResults(sourceItems, translations)).ConfigureAwait(false);
                     }
                 }
             }
@@ -121,6 +132,13 @@ public class AzureTranslator : TranslatorBase
     {
         get => Credentials[1].Value;
         set => Credentials[1].Value = value;
+    }
+
+    [DataMember(Name = "Endpoint")]
+    public string? Endpoint
+    {
+        get => Credentials[2].Value;
+        set => Credentials[2].Value = value;
     }
 
     private string? AuthenticationKey => Credentials[0].Value;
@@ -147,7 +165,8 @@ public class AzureTranslator : TranslatorBase
         return new ICredentialItem[]
         {
             new CredentialItem("AuthenticationKey", "Key"),
-            new CredentialItem("Region", "Region", false)
+            new CredentialItem("Region", "Region", false),
+            new CredentialItem("Endpoint", "Endpoint", false)
         };
     }
 
@@ -202,17 +221,9 @@ public class AzureTranslator : TranslatorBase
         yield return chunk;
     }
 
-    private sealed class Throttle
+    private sealed class Throttle(int maxCharactersPerMinute, CancellationToken cancellationToken)
     {
-        private readonly int _maxCharactersPerMinute;
-        private readonly CancellationToken _cancellationToken;
         private readonly List<Tuple<DateTime, int>> _characterCounts = new();
-
-        public Throttle(int maxCharactersPerMinute, CancellationToken cancellationToken)
-        {
-            _maxCharactersPerMinute = maxCharactersPerMinute;
-            _cancellationToken = cancellationToken;
-        }
 
         public async Task Tick(ICollection<ITranslationItem> sourceItems)
         {
@@ -227,13 +238,13 @@ public class AzureTranslator : TranslatorBase
             for (var i = _characterCounts.Count - 1; i >= 0; i--)
             {
                 var tuple = _characterCounts[i];
-                if (totalCharacterCount + tuple.Item2 > _maxCharactersPerMinute)
+                if (totalCharacterCount + tuple.Item2 > maxCharactersPerMinute)
                 {
                     var nextCallTime = tuple.Item1.AddMinutes(1);
                     var millisecondsToDelay = (int)Math.Ceiling((nextCallTime - DateTime.Now).TotalMilliseconds);
                     if (millisecondsToDelay > 0)
                     {
-                        await Task.Delay(millisecondsToDelay, _cancellationToken).ConfigureAwait(false);
+                        await Task.Delay(millisecondsToDelay, cancellationToken).ConfigureAwait(false);
                     }
 
                     break;
