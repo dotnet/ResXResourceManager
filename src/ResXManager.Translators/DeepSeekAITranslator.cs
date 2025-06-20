@@ -20,24 +20,15 @@ using JsonConvert = Newtonsoft.Json.JsonConvert;
 #pragma warning disable CA1865 // Use char overload (net472 does not support char overload)
 
 [Export(typeof(ITranslator)), Shared]
-public class DeepSeekAITranslator : TranslatorBase
+public class DeepSeekAITranslator() : TranslatorBase("DeepSeekAI", "DeepSeekAI", new("https://deepseek.com/"), GetCredentials())
 {
-    public DeepSeekAITranslator()
-        : base(
-            "DeepseekAI", "DeepseekAI",
-            new Uri("https://api.deepseek.com/"),
-            GetCredentials()
-        )
-    {
-    }
-
     [DataMember]
     // embeds comments inside prompt for further AI guidance per language
-    public bool IncludeCommentsInPrompt { get; set; } = false;
+    public bool IncludeCommentsInPrompt { get; set; }
 
     [DataMember]
     // whether to count the number of tokens sent. Users can disable token counting to use models not supported by the TiktokenTokenizer.
-    public bool CountTokens { get; set; } = false;
+    public bool CountTokens { get; set; }
 
     [DataMember]
     // default to max tokens for "gpt-3.5-turbo-instruct" model
@@ -45,7 +36,7 @@ public class DeepSeekAITranslator : TranslatorBase
 
     // use half of the tokens for prompting
     private int PromptTokens => MaxTokens / 2;
-    // .. and the rest for for completion
+    // ... and the rest for completion
     private int CompletionTokens => MaxTokens - PromptTokens;
 
     [DataMember]
@@ -60,13 +51,13 @@ public class DeepSeekAITranslator : TranslatorBase
     {
         if (AuthenticationKey.IsNullOrWhiteSpace())
         {
-            translationSession.AddMessage("DeepseekAI Translator requires API key.");
+            translationSession.AddMessage("DeepSeekAI Translator requires API key.");
             return;
         }
 
         if (ModelName.IsNullOrWhiteSpace())
         {
-            translationSession.AddMessage($"DeepseekAI Translator requires name of the model used in the deployment.");
+            translationSession.AddMessage($"DeepSeekAI Translator requires name of the model used in the deployment.");
             return;
         }
 
@@ -82,7 +73,7 @@ public class DeepSeekAITranslator : TranslatorBase
         }
         catch (Exception e) when (e is ArgumentNullException or ArgumentException or UriFormatException)
         {
-            translationSession.AddMessage("DeepseekAI Translator requires valid resource endpoint URL.");
+            translationSession.AddMessage("DeepSeekAI Translator requires valid resource endpoint URL.");
             return;
         }
 
@@ -163,7 +154,7 @@ public class DeepSeekAITranslator : TranslatorBase
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                // call DeepseekAI API with all prompts in batch
+                // call DeepSeekAI API with all prompts in batch
                 var requestBody = new
                 {
                     messages = new List<ChatMessage>() { new()
@@ -183,7 +174,7 @@ public class DeepSeekAITranslator : TranslatorBase
                 if (completionsResponse.StatusCode == (System.Net.HttpStatusCode)429)
                 {
                     var backOffSeconds = 1 << retries++;
-                    translationSession.AddMessage($"DeepseekAI call failed with too many requests. Retrying in {backOffSeconds} second(s).");
+                    translationSession.AddMessage($"DeepSeekAI call failed with too many requests. Retrying in {backOffSeconds} second(s).");
                     await Task.Delay(backOffSeconds * 1000, cancellationToken).ConfigureAwait(false);
 
                     // keep retrying
@@ -280,16 +271,16 @@ public class DeepSeekAITranslator : TranslatorBase
         return promptBuilder.ToString();
     }
 
-    private void ReturnResults((ITranslationItem item, string prompt) batch, CompletionsResponse completions)
+    private void ReturnResults((ITranslationItem item, string prompt) batch, CompletionsResponse? completions)
     {
         if (completions?.Choices is null)
         {
-            throw new InvalidOperationException("DeepseekAI API returned no completion choices.");
+            throw new InvalidOperationException("DeepSeekAI API returned no completion choices.");
         }
 
         if (completions.Choices.Count == 0)
         {
-            throw new InvalidOperationException("DeepseekAI API returned a different number of results than requested.");
+            throw new InvalidOperationException("DeepSeekAI API returned a different number of results than requested.");
         }
 
 
@@ -323,23 +314,11 @@ public class DeepSeekAITranslator : TranslatorBase
     [DataMember(Name = "ModelName")]
     public string? ModelName
     {
-        get => ExpandModelNameAliases(Credentials[2].Value);
+        get => Credentials[2].Value;
         set => Credentials[2].Value = value;
     }
 
     private string? AuthenticationKey => Credentials[0].Value;
-
-    private static string? ExpandModelNameAliases(string? modelName)
-    {
-        // expand alternative model names to known model names
-
-        return modelName switch
-        {
-            "deepseek-chat" => "deepseek-chat",
-            "deepseek-reasoner" => "deepseek-reasoner",
-            _ => modelName,
-        };
-    }
 
     private static IList<ICredentialItem> GetCredentials()
     {

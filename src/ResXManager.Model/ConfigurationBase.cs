@@ -142,15 +142,24 @@ public abstract class ConfigurationBase : INotifyPropertyChanged
     [Throttled(typeof(AsyncThrottle))]
     private void Save()
     {
+        Save(_globalConfiguration, _globalConfigFilePath);
+        Save(_solutionConfiguration, _solutionConfigFilePath);
+    }
+
+    private void Save(XmlConfiguration? configuration, string? filePath)
+    {
+        if (configuration == null || filePath.IsNullOrEmpty())
+            return;
+
         try
         {
-            using var writer = new StreamWriter(File.Create(EffectiveConfigFilePath));
-
-            EffectiveConfiguration.Save(writer);
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            using var writer = new StreamWriter(File.Create(filePath));
+            configuration.Save(writer);
         }
         catch (Exception ex)
         {
-            Tracer.TraceError($"Fatal error writing configuration file: {EffectiveConfigFilePath} - {ex.Message}");
+            Tracer.TraceError($"Fatal error writing configuration file: {filePath} - {ex.Message}");
         }
     }
 

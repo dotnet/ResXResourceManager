@@ -18,7 +18,7 @@ using ResXManager.Infrastructure;
 using TomsToolbox.Essentials;
 
 [Export(typeof(ITranslator)), Shared]
-public class AzureTranslator : TranslatorBase
+public class AzureTranslator() : TranslatorBase("Azure", "Azure", _uri, GetCredentials())
 {
     private static readonly Uri _uri = new("https://www.microsoft.com/en-us/translator/");
 
@@ -27,15 +27,6 @@ public class AzureTranslator : TranslatorBase
     // Azure has a 5000-character translation limit across all Texts in a single request
     private const int MaxCharsPerApiCall = 5000;
     private const int MaxItemsPerApiCall = 100;
-
-    public AzureTranslator()
-        : base("Azure", "Azure", _uri, GetCredentials())
-    {
-        if (Endpoint.IsNullOrEmpty())
-        {
-            Endpoint = DefaultEndpoint;
-        }
-    }
 
 
     [DataMember]
@@ -166,7 +157,7 @@ public class AzureTranslator : TranslatorBase
         {
             new CredentialItem("AuthenticationKey", "Key"),
             new CredentialItem("Region", "Region", false),
-            new CredentialItem("Endpoint", "Endpoint", false)
+            new CredentialItem("Endpoint", "Endpoint", false) { Value = DefaultEndpoint }
         };
     }
 

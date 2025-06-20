@@ -1,4 +1,4 @@
-namespace ResXManager.Translators;
+﻿namespace ResXManager.Translators;
 
 using System;
 using System.Collections.Generic;
@@ -14,25 +14,18 @@ using ResXManager.Infrastructure;
 using TomsToolbox.Essentials;
 
 [DataContract]
-public abstract class TranslatorBase : ITranslator
+public abstract partial class TranslatorBase(string id, string displayName, Uri? uri, IList<ICredentialItem>? credentials)
+    : ITranslator, INotifyPropertyChanged
 {
     private static readonly Regex _removeKeyboardShortcutIndicatorsRegex = new(@"[&_](?=[\w\d])", RegexOptions.Compiled);
 
     protected static readonly IWebProxy WebProxy = TryGetDefaultProxy();
 
-    protected TranslatorBase(string id, string displayName, Uri? uri, IList<ICredentialItem>? credentials)
-    {
-        Id = id;
-        DisplayName = displayName;
-        Uri = uri;
-        Credentials = credentials ?? Array.Empty<ICredentialItem>();
-    }
+    public string Id { get; } = id;
 
-    public string Id { get; }
+    public string DisplayName { get; } = displayName;
 
-    public string DisplayName { get; }
-
-    public Uri? Uri { get; }
+    public Uri? Uri { get; } = uri;
 
     [DataMember]
     public bool IsEnabled { get; set; } = true;
@@ -45,7 +38,7 @@ public abstract class TranslatorBase : ITranslator
     [DataMember]
     public double Ranking { get; set; } = 1.0;
 
-    public IList<ICredentialItem> Credentials { get; }
+    public IList<ICredentialItem> Credentials { get; } = credentials ?? Array.Empty<ICredentialItem>();
 
     async Task ITranslator.Translate(ITranslationSession translationSession)
     {
@@ -85,8 +78,4 @@ public abstract class TranslatorBase : ITranslator
             return new WebProxy();
         }
     }
-
-#pragma warning disable CS0067
-    public event PropertyChangedEventHandler? PropertyChanged;
-#pragma warning restore CS0067
 }
