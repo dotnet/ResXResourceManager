@@ -66,9 +66,9 @@ public sealed partial class ResourceViewModel : INotifyPropertyChanged, IDisposa
 
     public IObservableCollection<ResourceTableEntry> ResourceTableEntries { get; }
 
-    public ObservableCollection<ResourceEntity> SelectedEntities { get; } = new();
+    public ObservableCollection<ResourceEntity> SelectedEntities { get; } = [];
 
-    public ObservableCollection<ResourceTableEntry> SelectedTableEntries { get; } = new();
+    public ObservableCollection<ResourceTableEntry> SelectedTableEntries { get; } = [];
 
     public bool IsLoading { get; private set; }
 

@@ -483,8 +483,7 @@
                       dgx:DataGridFilter.StartFilteringKeyGesture="Ctrl+F"
                       VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                       EnableColumnVirtualization="True"
-                      EnableRowVirtualization="True"
-                      toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedTableEntries}">
+                      EnableRowVirtualization="True">
               <DataGrid.Resources>
 
                 <DataTemplate DataType="{x:Type columnHeaders:LanguageHeader}">
@@ -666,6 +665,7 @@
                 <Style TargetType="DataGrid" BasedOn="{StaticResource {x:Static styles:ResourceKeys.DataGridStyle}}">
                   <Setter Property="ItemsSource" Value="{Binding ResourceTableEntries}" />
                   <Setter Property="dgx:DataGridFilter.IsAutoFilterEnabled" Value="True" />
+                  <Setter Property="toms:MultiSelectorExtensions.SelectionBinding" Value="{Binding SelectedTableEntries}" />
                   <Style.Triggers>
                     <DataTrigger Binding="{Binding Path=IsChecked, ElementName=GroupedViewButton}" Value="True">
                       <Setter Property="ItemsSource" Value="{Binding GroupedResourceTableEntries}" />
