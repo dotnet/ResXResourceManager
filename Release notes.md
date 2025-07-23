@@ -1,4 +1,10 @@
-﻿1.91
+﻿1.92
+- #698: Added support to "Move to resource" for .razor files
+- #700: Local configuration not saved when slnx solution file is used
+- #701: AzureTranslator endpoint is configurable
+- #702: Added DeepSeek AI support
+
+1.91
 - #691: DeepL API Upade from GET to POST Requests (contributed by Simon Müller https://github.com/Appli4Ever)
 - #695: Fix compatibility issues related to OpenAI (contributed by ye4241: https://github.com/ye4241)
 

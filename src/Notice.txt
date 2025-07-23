@@ -193,7 +193,7 @@ License:   MIT
 Tom's Toolbox Composition - Core Module
 
 Id:        TomsToolbox.Composition
-Version:   2.22.0
+Version:   2.22.1
 Project:   https://github.com/tom-englert/TomsToolbox
 Copyright: © 2012-2025 tom-englert.de
 License:   MIT
@@ -203,7 +203,7 @@ License:   MIT
 Tom's Toolbox Composition - Ninject Module
 
 Id:        TomsToolbox.Composition.Ninject
-Version:   2.22.0
+Version:   2.22.1
 Project:   https://github.com/tom-englert/TomsToolbox
 Copyright: © 2012-2025 tom-englert.de
 License:   MIT
@@ -213,7 +213,7 @@ License:   MIT
 Tom's Toolbox ObservableCollections Module
 
 Id:        TomsToolbox.ObservableCollections
-Version:   2.22.0
+Version:   2.22.1
 Project:   https://github.com/tom-englert/TomsToolbox
 Copyright: © 2012-2025 tom-englert.de
 License:   MIT
@@ -223,7 +223,7 @@ License:   MIT
 Tom's Toolbox WPF Module
 
 Id:        TomsToolbox.Wpf
-Version:   2.22.0
+Version:   2.22.1
 Project:   https://github.com/tom-englert/TomsToolbox
 Copyright: © 2012-2025 tom-englert.de
 License:   MIT
@@ -233,7 +233,7 @@ License:   MIT
 Tom's Toolbox WPF Composition - Core Module
 
 Id:        TomsToolbox.Wpf.Composition
-Version:   2.22.0
+Version:   2.22.1
 Project:   https://github.com/tom-englert/TomsToolbox
 Copyright: © 2012-2025 tom-englert.de
 License:   MIT
@@ -243,7 +243,7 @@ License:   MIT
 Tom's Toolbox WPF Composition - Attributed Model Module
 
 Id:        TomsToolbox.Wpf.Composition.AttributedModel
-Version:   2.22.0
+Version:   2.22.1
 Project:   https://github.com/tom-englert/TomsToolbox
 Copyright: © 2012-2025 tom-englert.de
 License:   MIT
@@ -253,7 +253,7 @@ License:   MIT
 Tom's Toolbox WPF Composition - Styles Module
 
 Id:        TomsToolbox.Wpf.Composition.Styles
-Version:   2.22.0
+Version:   2.22.1
 Project:   https://github.com/tom-englert/TomsToolbox
 Copyright: © 2012-2025 tom-englert.de
 License:   MIT
@@ -263,7 +263,7 @@ License:   MIT
 Tom's Toolbox WPF Styles Module
 
 Id:        TomsToolbox.Wpf.Styles
-Version:   2.22.0
+Version:   2.22.1
 Project:   https://github.com/tom-englert/TomsToolbox
 Copyright: © 2012-2025 tom-englert.de
 License:   MIT
