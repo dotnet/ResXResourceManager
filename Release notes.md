@@ -1,4 +1,7 @@
-﻿1.92
+﻿1.93:
+- Fix: configuration reading does not fall back to global configuration if no local value is present.
+
+1.92
 - #698: Added support to "Move to resource" for .razor files
 - #700: Local configuration not saved when slnx solution file is used
 - #701: AzureTranslator endpoint is configurable
