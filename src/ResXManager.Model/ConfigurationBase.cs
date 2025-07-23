@@ -112,7 +112,7 @@ public abstract class ConfigurationBase : INotifyPropertyChanged
 
     protected virtual T? InternalGetValue<T>(T? defaultValue, string key)
     {
-        return ConvertFromString(EffectiveConfiguration.GetValue(key, null), defaultValue);
+        return ConvertFromString(_solutionConfiguration?.GetValue(key, null) ?? _globalConfiguration.GetValue(key, null), defaultValue);
     }
 
     [SetInterceptor]
