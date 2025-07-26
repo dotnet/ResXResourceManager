@@ -47,19 +47,15 @@ public abstract class ConfigurationBase : INotifyPropertyChanged
 
         _globalConfigFilePath = Path.Combine(_appDataFolder, GlobalConfigFileName);
         _globalConfiguration = LoadConfiguration(_globalConfigFilePath, tracer);
-    }
 
-    [InterceptIgnore]
-    public bool IsScopeSupported => true;
+        tracer.WriteLine("Configuration loaded.");
+    }
 
     [InterceptIgnore]
     public ConfigurationScope Scope { get; private set; }
 
     [InterceptIgnore]
     public XmlConfiguration EffectiveConfiguration => _solutionConfiguration ?? _globalConfiguration;
-
-    [InterceptIgnore]
-    public string EffectiveConfigFilePath => _solutionConfigFilePath ?? _globalConfigFilePath;
 
     [InterceptIgnore]
     protected ITracer Tracer { get; }
@@ -150,6 +146,8 @@ public abstract class ConfigurationBase : INotifyPropertyChanged
     {
         if (configuration == null || filePath.IsNullOrEmpty())
             return;
+
+        Tracer.WriteLine("Saving configuration to {0}", filePath);
 
         try
         {
@@ -245,6 +243,8 @@ public abstract class ConfigurationBase : INotifyPropertyChanged
             _solutionConfiguration = LoadConfiguration(_solutionConfigFilePath, Tracer);
             Scope = ConfigurationScope.Solution;
         }
+
+        Tracer.WriteLine("Solution folder changed: {0} ({1})", newValue, Scope);
 
         NotifyAll();
     }

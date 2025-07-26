@@ -8,8 +8,6 @@ public interface IConfiguration : INotifyPropertyChanged
 {
     string? SolutionFolder { get; set; }
 
-    bool IsScopeSupported { get; }
-
     ConfigurationScope Scope { get; }
 
     CodeReferenceConfiguration CodeReferences { get; }

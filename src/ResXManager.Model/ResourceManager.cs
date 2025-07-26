@@ -18,7 +18,7 @@ using TomsToolbox.Essentials;
 using TomsToolbox.ObservableCollections;
 
 /// <summary>
-/// Represents all resources found in a folder and it's sub folders.
+/// Represents all resources found in a folder, and it's sub folders.
 /// </summary>
 [Shared]
 [Export]
@@ -102,7 +102,7 @@ public sealed class ResourceManager : INotifyPropertyChanged
     private void OnSolutionFolderChanged()
     {
         Configuration.SolutionFolder = SolutionFolder;
-        SolutionFolderChanged?.Invoke(this, new TextEventArgs(SolutionFolder ?? string.Empty));
+        SolutionFolderChanged?.Invoke(this, new(SolutionFolder ?? string.Empty));
     }
 
     public void ReloadSnapshot()
