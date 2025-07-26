@@ -157,7 +157,7 @@ public abstract class ConfigurationBase : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            Tracer.TraceError($"Fatal error writing configuration file: {filePath} - {ex.Message}");
+            Tracer.TraceError($"Fatal error writing configuration file: {filePath} - {ex}");
         }
     }
 

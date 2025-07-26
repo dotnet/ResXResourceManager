@@ -10,6 +10,8 @@ using ResXManager.Infrastructure;
 using ResXManager.Model;
 using ResXManager.VSIX.Compatibility;
 
+using TomsToolbox.Essentials;
+
 using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
 using Configuration = ResXManager.Model.Configuration;
@@ -44,12 +46,18 @@ internal sealed class DteConfiguration : Configuration, IDteConfiguration
     {
         ThrowIfNotOnUIThread();
 
-        if (!TryGetValue(GetKey(key), defaultValue, out var value)) 
+        var solutionKey = GetSolutionKey(key);
+
+        if (!TryGetValueFromSolutionGlobals<T>(solutionKey, out var value)) 
             return base.InternalGetValue(defaultValue, key);
 
+        Tracer.WriteLine("Convert old solution settings to new file based settings for key {0}, value {1}", solutionKey, value);
+
         // Convert old solution settings to new ones.
-        TryClearValue<T>(_solution.Globals, GetKey(key));
+        TryClearValueFromSolutionGlobals(solutionKey);
+        
         base.InternalSetValue(value, key, false);
+        
         return value;
     }
 
@@ -57,60 +65,65 @@ internal sealed class DteConfiguration : Configuration, IDteConfiguration
     {
         ThrowIfNotOnUIThread();
 
-        TryClearValue<T>(_solution.Globals, GetKey(key));
+        TryClearValueFromSolutionGlobals(GetSolutionKey(key));
         
         base.InternalSetValue(value, key, forceGlobal);
     }
 
-    private bool TryGetValue<T>(string? key, T? defaultValue, out T? value)
+    private bool TryGetValueFromSolutionGlobals<T>(string key, out T? value)
     {
         ThrowIfNotOnUIThread();
 
-        value = defaultValue;
-
-        return TryGetValue(_solution.Globals, key, ref value);
-    }
-
-    private static bool TryGetValue<T>(EnvDTE.Globals? globals, string? key, ref T? value)
-    {
-        ThrowIfNotOnUIThread();
+        value = default;
 
         try
         {
-            if ((globals != null) && globals.VariableExists[key])
-            {
-                value = ConvertFromString(globals[key] as string, value);
-                return true;
-            }
-        }
-        catch
-        {
-            // Just return false in case of errors. If there is some garbage in the solution, fallback to the default.
-        }
+            var globals = _solution.Globals;
 
-        return false;
-    }
+            if ((globals == null) || !globals.VariableExists[key])
+                return false;
 
-    private void TryClearValue<T>(EnvDTE.Globals? globals, string? internalKey)
-    {
-        ThrowIfNotOnUIThread();
+            var rawValue = globals[key] as string;
 
-        if (globals == null || string.IsNullOrEmpty(internalKey))
-            return;
+            if (rawValue.IsNullOrEmpty())
+                return false;
 
-        try
-        {
-            globals.VariablePersists[internalKey] = false;
-            globals[internalKey] = null;
+            value = ConvertFromString(rawValue, value);
+
+            return true;
         }
         catch (Exception ex)
         {
-            Tracer.TraceError("Error saving configuration value to solution: {0}", ex.Message);
+            // Just return false in case of errors. If there is some garbage in the solution, fallback to the default.
+            Tracer.WriteLine("Error reading configuration value for {0} from solution file: {1}", key, ex.Message);
+            return false;
         }
     }
 
-    private static string GetKey(string? propertyName)
+    private void TryClearValueFromSolutionGlobals(string key)
     {
-        return @"RESX_" + propertyName;
+        ThrowIfNotOnUIThread();
+
+        try
+        {
+            var globals = _solution.Globals;
+            if (globals == null)
+                return;
+
+            if (!globals.VariableExists[key])
+                return;
+
+            globals.VariablePersists[key] = false;
+            globals[key] = null;
+        }
+        catch (Exception ex)
+        {
+            Tracer.TraceError("Error clearing configuration value for {0} in solution file: {1}", key, ex.Message);
+        }
+    }
+
+    private static string GetSolutionKey(string? propertyName)
+    {
+        return "RESX_" + propertyName;
     }
 }

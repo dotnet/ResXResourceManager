@@ -24,25 +24,25 @@ public interface ITracer
 public static class TracerExtensions
 {
     [StringFormatMethod("format")]
-    public static void TraceError(this ITracer tracer, [Localizable(false)] string format, params object[] args)
+    public static void TraceError(this ITracer tracer, [Localizable(false)] string format, params object?[] args)
     {
         tracer.TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
     }
 
     [StringFormatMethod("format")]
-    public static void TraceWarning(this ITracer tracer, [Localizable(false)] string format, params object[] args)
+    public static void TraceWarning(this ITracer tracer, [Localizable(false)] string format, params object?[] args)
     {
         tracer.TraceWarning(string.Format(CultureInfo.CurrentCulture, format, args));
     }
 
     [StringFormatMethod("format")]
-    public static void WriteLine(this ITracer tracer, [Localizable(false)] string format, params object[] args)
+    public static void WriteLine(this ITracer tracer, [Localizable(false)] string format, params object?[] args)
     {
         tracer.WriteLine(string.Format(CultureInfo.CurrentCulture, format, args));
     }
 
     [StringFormatMethod("format")]
-    public static void TraceError(this IExportProvider exportProvider, [Localizable(false)] string format, params object[] args)
+    public static void TraceError(this IExportProvider exportProvider, [Localizable(false)] string format, params object?[] args)
     {
         exportProvider.GetExportedValue<ITracer>().TraceError(string.Format(CultureInfo.CurrentCulture, format, args));
     }
