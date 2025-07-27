@@ -45,9 +45,13 @@ The latest build of the Visual Studio Extension is available at the [Open VsixGa
 
 The standalone version can be installed as click-once application [here](https://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/ResXManager.application).
 
+----------------------------------------------------------------------------------------------
+
 ### Visual Studio Extension:
 ![Visual Studio Extension](Assets/VisualStudioMainScreen.png)
 ![MoveToResource](Documentation/Topics/MoveToResource.gif)
+
+----------------------------------------------------------------------------------------------
 
 ### Standalone Application:
 ![Standalone Application](Assets/StandaloneMainScreen.png)
@@ -58,11 +62,14 @@ cd | clip
 explorer https://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/ResXManager.application
 
 ```
-<img style="float: right;" src="Assets/VS2017%20Launch%20Partner%20Logo%20Small.png">
+
+----------------------------------------------------------------------------------------------
+
+![VS2017 Launch Partner Logo](Assets/VS2017%20Launch%20Partner%20Logo%20Small.png)
 
 ### Support this Project: 
 
-<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TQQR8AKGNHELQ"><img title="Donate" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="Donate" /></a>
+<a href="https://github.com/dotnet/ResXResourceManager/blob/1.94/Documentation/Topics/Donate.md"><img title="Donate" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="Donate" /></a>
 
 ### Powered by 
 
