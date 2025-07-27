@@ -45,17 +45,23 @@ internal class MainViewModel : ObservableObject
 
         try
         {
-            var folder = Settings.Default.StartupFolder;
+            var folder = Clipboard.GetText();
 
-            if (folder.IsNullOrEmpty())
-                return;
+            if (!folder.IsNullOrEmpty() && Directory.Exists(folder))
+            {
+                Settings.Default.AddStartupFolder(folder);
+            }
+            else
+            {
+                folder = Settings.Default.StartupFolder;
+
+                if (folder.IsNullOrEmpty() || !Directory.Exists(folder))
+                    return;
+            }
 
             SourceFilesProvider.SolutionFolder = folder;
 
-            if (Directory.Exists(folder))
-            {
-                Load();
-            }
+            Load();
         }
         catch (Exception ex)
         {
