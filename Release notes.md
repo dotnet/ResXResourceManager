@@ -1,4 +1,8 @@
-﻿1.93:
+﻿1.94:
+- Add possibility to pass a folder to the standalone application via clipboard
+- Add some more checks and logs when migrating the configuration from solution globals to file
+
+1.93:
 - Fix: configuration reading does not fall back to global configuration if no local value is present.
 
 1.92

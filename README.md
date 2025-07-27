@@ -52,6 +52,12 @@ The standalone version can be installed as click-once application [here](https:/
 ### Standalone Application:
 ![Standalone Application](Assets/StandaloneMainScreen.png)
 
+To start the standalone application with a specific solution loaded, rather than the last one, you need to copy the solutions folder to the clipboard:
+```cmd
+cd | clip
+explorer https://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/ResXManager.application
+
+```
 <img style="float: right;" src="Assets/VS2017%20Launch%20Partner%20Logo%20Small.png">
 
 ### Support this Project: 
