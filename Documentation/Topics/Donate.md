@@ -1,6 +1,6 @@
 ### Supporting the project
 
-If you think this is a great project, and want to help keeping it alive, you can show your appreciation by donating a small amount:
+If you think this is a great project, and want to help keeping it alive, you can show your appreciation by donating a small amount
 
 ---
 

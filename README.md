@@ -69,7 +69,7 @@ explorer https://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/Res
 
 ### Support this Project: 
 
-<a href="https://github.com/dotnet/ResXResourceManager/blob/1.94/Documentation/Topics/Donate.md"><img title="Donate" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="Donate" /></a>
+<a href="https://github.com/dotnet/ResXResourceManager/tree/master/Documentation/Topics/Donate.md"><img title="Donate" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="Donate" /></a>
 
 ### Powered by 
 
