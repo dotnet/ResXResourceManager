@@ -90,18 +90,17 @@ internal class MainViewModel : ObservableObject
 
         try
         {
-            using var dlg = new CommonOpenFileDialog
+            using var commonDialog = new CommonOpenFileDialog
             {
                 IsFolderPicker = true,
                 InitialDirectory = settings.StartupFolder,
                 EnsurePathExists = true
             };
 
-            if (dlg.ShowDialog() != CommonFileDialogResult.Ok)
+            if (commonDialog.ShowDialog() != CommonFileDialogResult.Ok)
                 return;
 
-            SourceFilesProvider.SolutionFolder = settings.StartupFolder = dlg.FileName;
-
+            SourceFilesProvider.SolutionFolder = commonDialog.FileName;
             Load();
             return;
         }
@@ -110,15 +109,16 @@ internal class MainViewModel : ObservableObject
             // CommonOpenFileDialog not supported on current platform.
         }
 
-        using (var dlg = new System.Windows.Forms.FolderBrowserDialog { SelectedPath = Settings.Default.StartupFolder })
+        using var browserDialog = new System.Windows.Forms.FolderBrowserDialog
         {
-            if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
-                return;
+            SelectedPath = Settings.Default.StartupFolder
+        };
+        
+        if (browserDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            return;
 
-            SourceFilesProvider.SolutionFolder = Settings.Default.StartupFolder = dlg.SelectedPath;
-
-            Load();
-        }
+        SourceFilesProvider.SolutionFolder = browserDialog.SelectedPath;
+        Load();
     }
 
     private void CloseSolution()
@@ -265,10 +265,10 @@ internal class SourceFilesProvider : ObservableObject, ISourceFilesProvider
     {
         var solutionFolder = SolutionFolder;
 
-        if (Directory.Exists(solutionFolder))
-        {
-            Settings.Default.AddStartupFolder(solutionFolder);
-        }
+        if (!Directory.Exists(solutionFolder)) 
+            return;
+
+        Settings.Default.StartupFolder = solutionFolder;
     }
 
     public async Task<IList<ProjectFile>> GetSourceFilesAsync(CancellationToken? cancellationToken)

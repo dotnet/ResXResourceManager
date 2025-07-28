@@ -15,12 +15,15 @@ public sealed partial class Settings
 
     public Settings()
     {
-        RecentStartupFolders ??= new StringCollection();
-    }
+        RecentStartupFolders ??= new();
 
-    public void AddStartupFolder(string? folder)
-    {
-        RecentStartupFolders = AddStartupFolder(RecentStartupFolders, folder);
+        PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(StartupFolder))
+            {
+                RecentStartupFolders = AddStartupFolder(RecentStartupFolders, StartupFolder);
+            }
+        };
     }
 
     internal static StringCollection AddStartupFolder(StringCollection originalItems, string? folder)
