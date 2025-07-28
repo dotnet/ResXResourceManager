@@ -1,4 +1,7 @@
-﻿1.94:
+﻿1.95:
+- Fix: Startup folder in standalone is not preserved when changing the folder via recent file list.
+
+1.94:
 - Add possibility to pass a folder to the standalone application via clipboard
 - Add some more checks and logs when migrating the configuration from solution globals to file
 
