@@ -47,11 +47,7 @@ internal class MainViewModel : ObservableObject
         {
             var folder = Clipboard.GetText();
 
-            if (!folder.IsNullOrEmpty() && Directory.Exists(folder))
-            {
-                Settings.Default.AddStartupFolder(folder);
-            }
-            else
+            if (folder.IsNullOrEmpty() || !Directory.Exists(folder))
             {
                 folder = Settings.Default.StartupFolder;
 
