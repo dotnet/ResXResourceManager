@@ -45,7 +45,7 @@ internal class MainViewModel : ObservableObject
 
         try
         {
-            var folder = Clipboard.GetText();
+            var folder = Clipboard.GetText()?.Trim();
 
             if (folder.IsNullOrEmpty() || !Directory.Exists(folder))
             {
