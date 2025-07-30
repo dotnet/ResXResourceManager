@@ -1,4 +1,7 @@
-﻿1.95:
+﻿1.96:
+- Fix passing startup folder via clipboard: If text contains trailing whitespace (e.g. \n), loading fails
+
+1.95:
 - Fix: Startup folder in standalone is not preserved when changing the folder via recent file list.
 
 1.94:
