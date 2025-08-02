@@ -35,6 +35,7 @@ public abstract class ItemTrackingCollectionHost<T> : INotifyChanged
                 throw new InvalidOperationException("Items must only be set once, either by the constructor or by the serializer!");
 
             _items = value;
+            _items.CollectionChanged += (sender, e) => Changed?.Invoke(this, EventArgs.Empty);
             _changeTracker = new ObservablePropertyChangeTracker<T>(_items);
             _changeTracker.ItemPropertyChanged += (sender, e) => Changed?.Invoke(this, e);
         }
