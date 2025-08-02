@@ -31,6 +31,9 @@ For more information see the [.NET Foundation Code of Conduct](https://dotnetfou
 ## .NET Foundation
 This project is supported by the [.NET Foundation](https://dotnetfoundation.org).
 
+## Gold Sponsors
+<a href = "https://www.locize.com/"><img src="https://cdn.prod.website-files.com/67a323e323a50df7f24f0a6f/67b5d88b343bc08e2cb7d252_locize_color.svg" width=300px alt="locize.com"></a>
+
 ## Documentation
 Can be found in the [Documentation folder](Documentation/Readme.md).
 
@@ -73,7 +76,7 @@ explorer https://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/Res
 
 ### Powered by 
 
-<a href="http://www.jetbrains.com/resharper/"><img src="http://www.tom-englert.de/Images/icon_ReSharper.png" alt="ReSharper" width="64" height="64" /></a>
+<a href="http://www.jetbrains.com/resharper/"><img src="https://www.tom-englert.de/Images/icon_ReSharper.png" alt="ReSharper" width="64" height="64" /></a>
 
 ### Contributors
 
