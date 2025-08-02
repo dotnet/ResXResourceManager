@@ -126,7 +126,7 @@ internal sealed class WebFilesExporter : IService
     }
 
     private const string FormatTemplateSuffix = @"_TEMPLATE";
-    private static readonly Regex _formatPlaceholderExpression = new(@"\$\{\s*(\w[.\w\d_]*)\s*\}");
+    private static readonly Regex _formatPlaceholderExpression = new(@"\$\{\s*(\w[.\w]*)\s*\}");
 
     private static Regex? GetFilterRegex(string? config)
     {
