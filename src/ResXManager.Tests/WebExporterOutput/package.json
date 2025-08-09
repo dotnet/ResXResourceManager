@@ -1,0 +1,25 @@
+{
+  "name": "web-exporter-output",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc && npm run copy-assets",
+    "copy-assets": "copy src\\resources*.json dist\\",
+    "start": "node dist/index.js",
+    "build-and-run": "npm run build && npm run start"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "keywords": [
+    "typescript",
+    "web",
+    "export",
+    "test"
+  ],
+  "author": "ResXResourceManager",
+  "license": "MIT"
+}

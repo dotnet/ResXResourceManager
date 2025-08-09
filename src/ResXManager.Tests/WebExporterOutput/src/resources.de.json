@@ -1,0 +1,8 @@
+{
+  "_comment": "Auto-generated; do not modify!",
+  "WebExportTest": {
+    "SimpleString": "Einfacher Text",
+    "WithInterpolation_TEMPLATE": "Spannung: {{ voltage }}, Strom: ${current}.",
+    "WithBadInterpolation_TEMPLATE": "Spannung: {{ spannung }}, Strom: ${ strom }."
+  }
+}
