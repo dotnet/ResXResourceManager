@@ -238,7 +238,7 @@ public class CodeReferenceTracker : IService
 
     private sealed class FileInfo
     {
-        private static readonly Regex _regex = new(@"\W+", RegexOptions.Compiled);
+        private static readonly Regex _regex = new(@"[^\w.]+", RegexOptions.Compiled);
         private readonly ProjectFile _projectFile;
         private readonly Dictionary<string, HashSet<int>> _keyLinesLookup = new();
         private readonly CodeReferenceConfigurationItem[] _configurations;
