@@ -125,5 +125,6 @@
   </data>
   <data name="WithBadInterpolation" xml:space="preserve">
     <value>Voltage: {{ voltage }}, Current: ${current}.</value>
+    <comment>@MutedRule(StringFormat)</comment>
   </data>
 </root>

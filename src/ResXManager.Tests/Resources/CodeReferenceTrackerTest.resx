@@ -119,8 +119,10 @@
   </resheader>
   <data name="Some.Special.Key.With.Dots" xml:space="preserve">
     <value>Sample</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="Some special key with spaces" xml:space="preserve">
     <value>Some special key with spaces</value>
+    <comment>@Invariant</comment>
   </data>
 </root>
