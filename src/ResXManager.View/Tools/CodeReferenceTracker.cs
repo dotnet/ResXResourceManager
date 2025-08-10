@@ -23,6 +23,8 @@ using TomsToolbox.Wpf;
 [Export(typeof(IService))]
 public class CodeReferenceTracker : IService
 {
+    private static readonly Regex _splitWordsRegex = new(@"\W+", RegexOptions.Compiled);
+
     private readonly ResourceManager _resourceManager;
     private readonly IConfiguration _configuration;
     private readonly ITracer _tracer;
@@ -37,7 +39,7 @@ public class CodeReferenceTracker : IService
         _tracer = tracer;
 
         resourceManager.Loaded += ResourceManager_Loaded;
-        resourceManager.TableEntries.CollectionChanged += (_, __) => BeginFind();
+        resourceManager.TableEntries.CollectionChanged += (_, _) => BeginFind();
     }
 
     public void Start()
@@ -118,7 +120,7 @@ public class CodeReferenceTracker : IService
 
                 resourceTableEntries.ForEach(entry => entry.CodeReferences = null);
 
-                var keys = new HashSet<string>(resourceTableEntries.Select(entry => entry.Key));
+                var keys = resourceTableEntries.Select(entry => entry.Key).Distinct().ToDictionary(key => key, key => _splitWordsRegex.Split(key));
 
                 var sourceFileTasks = projectFiles
                     .Select(file => Task.Run(() => new FileInfo(file, configuration.Items, keys, ref _visited), _cancellationToken));
@@ -238,13 +240,12 @@ public class CodeReferenceTracker : IService
 
     private sealed class FileInfo
     {
-        private static readonly Regex _regex = new(@"[^\w.]+", RegexOptions.Compiled);
         private readonly ProjectFile _projectFile;
         private readonly Dictionary<string, HashSet<int>> _keyLinesLookup = new();
         private readonly CodeReferenceConfigurationItem[] _configurations;
         private readonly string[]? _lines;
 
-        public FileInfo(ProjectFile projectFile, IEnumerable<CodeReferenceConfigurationItem> configurations, ICollection<string> keys, ref long visited)
+        public FileInfo(ProjectFile projectFile, IEnumerable<CodeReferenceConfigurationItem> configurations, Dictionary<string, string[]> keys, ref long visited)
         {
             _projectFile = projectFile;
 
@@ -256,10 +257,23 @@ public class CodeReferenceTracker : IService
             {
                 _lines = _projectFile.ReadAllLines();
 
-                _lines.ForEach((line, index) =>
-                    _regex.Split(line)
-                        .Where(keys.Contains)
-                        .ForEach(key => _keyLinesLookup.ForceValue(key, _ => new HashSet<int>()).Add(index)));
+                var index = 0;
+
+                foreach (var line in _lines)
+                {
+                    var wordsInLine = _splitWordsRegex.Split(line).ToHashSet();
+
+                    foreach (var key in keys)
+                    {
+                        var wordsInKey = key.Value;
+                        if (!wordsInKey.All(wordsInLine.Contains)) 
+                            continue;
+
+                        _keyLinesLookup.ForceValue(key.Key, _ => []).Add(index);
+                    }
+
+                    index++;
+                }
             }
 
             Interlocked.Increment(ref visited);

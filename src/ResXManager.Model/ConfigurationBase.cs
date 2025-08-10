@@ -273,5 +273,7 @@ public abstract class ConfigurationBase : INotifyPropertyChanged
         {
             OnPropertyChanged(property.Name);
         }
+
+        _cachedObjects.Clear();
     }
 }

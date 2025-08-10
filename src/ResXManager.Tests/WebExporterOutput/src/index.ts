@@ -7,7 +7,8 @@ import * as path from 'path';
 const webExportTest = new WebExportTest();
 
 // Code refrence tracker should find this line
-const resourceKey = 'Some.Special.Key.With.Dots';
+const resourceKeyWithDots = 'Some.Special.Key.With.Dots';
+const resourceKeyWithSpaces = 'Some special key with spaces';
 
 console.log(webExportTest.SimpleString);
 console.log(webExportTest.WithInterpolation({ voltage: 220, current: 5 }));

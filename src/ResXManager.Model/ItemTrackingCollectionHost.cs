@@ -22,7 +22,7 @@ public abstract class ItemTrackingCollectionHost<T> : INotifyChanged
 
     protected ItemTrackingCollectionHost()
     {
-        Items = new ObservableCollection<T>();
+        Items = [];
     }
 
     [DataMember(Name = "Items")]

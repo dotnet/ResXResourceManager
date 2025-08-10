@@ -551,6 +551,8 @@ public sealed partial class ResourceViewModel : INotifyPropertyChanged, IDisposa
             {
                 var solutionFolder = _sourceFilesProvider.SolutionFolder;
 
+                _configuration.SolutionFolder = solutionFolder;
+
                 var sourceFiles = await _sourceFilesProvider.GetSourceFilesAsync(cancellationToken).ConfigureAwait(true);
 
                 if (cancellationToken.IsCancellationRequested)

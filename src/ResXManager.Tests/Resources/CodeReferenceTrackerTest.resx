@@ -120,4 +120,7 @@
   <data name="Some.Special.Key.With.Dots" xml:space="preserve">
     <value>Sample</value>
   </data>
+  <data name="Some special key with spaces" xml:space="preserve">
+    <value>Some special key with spaces</value>
+  </data>
 </root>
