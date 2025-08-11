@@ -73,7 +73,7 @@ explorer https://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/Res
 
 ### Powered by 
 
-<a href="http://www.jetbrains.com/resharper/"><img src="http://www.tom-englert.de/Images/icon_ReSharper.png" alt="ReSharper" width="64" height="64" /></a>
+<a href="https://www.jetbrains.com/resharper/"><img src="https://www.tom-englert.de/Images/icon_ReSharper.png" alt="ReSharper" width="64" height="64" /></a>
 
 ### Contributors
 
