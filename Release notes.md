@@ -1,4 +1,9 @@
-﻿1.96:
+﻿1.97:
+- Fix #711: CodeReferences and MoveToResources not updated in ResXManager.config.xml when removing items in UI
+- Support both string format interpolation notations "${key}" and "{{key}}" for web export
+- Fix #694: CodeReferenceTracker does not detect keys with <space>, also dots are now supported
+
+1.96:
 - Fix passing startup folder via clipboard: If text contains trailing whitespace (e.g. \n), loading fails
 
 1.95:
