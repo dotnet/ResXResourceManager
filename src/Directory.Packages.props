@@ -15,12 +15,10 @@
     <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageVersion Include="Microsoft.ML.Tokenizers" Version="[0.22.0-preview.24378.1]" Justification="VS2019" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Microsoft.VisualStudio.SDK" Version="[15.0.1]" />
     <PackageVersion Include="Microsoft.VSSDK.BuildTools" Version="[17.6.2164]" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
-    <PackageVersion Include="Nullable.Extended.Analyzer" Version="1.15.6581" />
     <PackageVersion Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageVersion Include="Resourcer.Fody" Version="1.8.1" />
     <PackageVersion Include="System.Composition.AttributedModel" Version="[1.4.1]" />
