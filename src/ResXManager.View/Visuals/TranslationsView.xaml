@@ -61,15 +61,15 @@
       <DockPanel>
         <visuals:TranslatorConfiguration DockPanel.Dock="Top" IsEnabled="{Binding TranslatorHost.ActiveSession.IsComplete}" Translators="{Binding TranslatorHost.Translators}" />
         <Decorator Height="10" DockPanel.Dock="Top" />
-        <DataGrid ItemsSource="{Binding Items}" Style="{DynamicResource {x:Static styles:ResourceKeys.DataGridStyle}}"
+        <visuals:DataGridAutomationWrapped ItemsSource="{Binding Items}" Style="{DynamicResource {x:Static styles:ResourceKeys.DataGridStyle}}"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
                   IsEnabled="{Binding TranslatorHost.ActiveSession.IsComplete}" toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedItems}">
-          <DataGrid.RowHeaderTemplate>
+          <visuals:DataGridAutomationWrapped.RowHeaderTemplate>
             <DataTemplate DataType="DataGridRowHeader">
               <CheckBox Style="{StaticResource {x:Static toms:ResourceKeys.DataGridRowCheckBoxStyle}}" />
             </DataTemplate>
-          </DataGrid.RowHeaderTemplate>
-          <DataGrid.Columns>
+          </visuals:DataGridAutomationWrapped.RowHeaderTemplate>
+          <visuals:DataGridAutomationWrapped.Columns>
             <DataGridTextColumn Width="2*" Binding="{Binding Source}" IsReadOnly="True">
               <DataGridTextColumn.ElementStyle>
                 <Style TargetType="TextBlock">
@@ -211,8 +211,8 @@
                 </DataTemplate>
               </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>
-          </DataGrid.Columns>
-        </DataGrid>
+          </visuals:DataGridAutomationWrapped.Columns>
+        </visuals:DataGridAutomationWrapped>
       </DockPanel>
       <toms:LoadingIndicator IsActive="{Binding TranslatorHost.ActiveSession.IsActive}" Header="Translating..." d:IsHidden="True" />
     </Grid>
