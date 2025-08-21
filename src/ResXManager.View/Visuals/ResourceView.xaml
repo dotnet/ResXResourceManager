@@ -18,6 +18,7 @@
              xmlns:themes="clr-namespace:ResXManager.View.Themes"
              xmlns:composition="urn:TomsToolbox.Composition"
              xmlns:interactions="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:wrappers="clr-namespace:ResXManager.View.Visuals.Wrappers"
              d:DataContext="{d:DesignInstance visuals:ResourceViewModel}"
              Padding="4">
   <UserControl.Resources>
@@ -474,7 +475,7 @@
             </DockPanel>
           </Border>
           <Grid>
-            <DataGrid x:Name="DataGrid" FrozenColumnCount="1" BorderThickness="0"
+            <wrappers:DataGrid x:Name="DataGrid" FrozenColumnCount="1" BorderThickness="0"
                       AutoGenerateColumns="False" CanUserAddRows="False"
                       CanUserDeleteRows="False" CanUserResizeRows="False"
                       dgx:DataGridFilter.ContentFilterFactory="{StaticResource RegexContentFilterFactory}"
@@ -484,7 +485,7 @@
                       VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                       EnableColumnVirtualization="True"
                       EnableRowVirtualization="True">
-              <DataGrid.Resources>
+              <wrappers:DataGrid.Resources>
 
                 <DataTemplate DataType="{x:Type columnHeaders:LanguageHeader}">
                   <DockPanel>
@@ -544,18 +545,18 @@
                   <Setter Property="MinHeight" Value="12" />
                 </Style>
 
-              </DataGrid.Resources>
+              </wrappers:DataGrid.Resources>
 
-              <DataGrid.InputBindings>
+              <wrappers:DataGrid.InputBindings>
                 <KeyBinding Key="Delete" Command="{Binding DeleteCommand, Converter={StaticResource DeleteCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
                 <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
                 <KeyBinding Key="X" Modifiers="Control" Command="{Binding CutCommand, Converter={StaticResource CutCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
                 <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
                 <KeyBinding Key="T" Modifiers="Control" Command="{Binding TrimCommand, Converter={StaticResource ErrorHandlerCommandConverter}}" CommandParameter="{Binding ElementName=DataGrid}" />
-              </DataGrid.InputBindings>
+              </wrappers:DataGrid.InputBindings>
 
-              <DataGrid.ItemsPanel>
+              <wrappers:DataGrid.ItemsPanel>
                 <ItemsPanelTemplate>
                   <DataGridRowsPresenter x:Name="PART_RowsPresenter"
                                          TextElement.FontSize="{Binding Path=(view:Appearance.TextFontSize), RelativeSource={RelativeSource Self}}">
@@ -578,9 +579,9 @@
                     </interactions:Interaction.Behaviors>
                   </DataGridRowsPresenter>
                 </ItemsPanelTemplate>
-              </DataGrid.ItemsPanel>
+              </wrappers:DataGrid.ItemsPanel>
 
-              <DataGrid.RowStyle>
+              <wrappers:DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Static styles:ResourceKeys.DataGridRowStyle}}">
                   <Setter Property="MaxHeight" Value="100" />
                   <Style.Triggers>
@@ -593,9 +594,9 @@
                     </Trigger>
                   </Style.Triggers>
                 </Style>
-              </DataGrid.RowStyle>
+              </wrappers:DataGrid.RowStyle>
 
-              <DataGrid.CellStyle>
+              <wrappers:DataGrid.CellStyle>
                 <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Static styles:ResourceKeys.DataGridCellStyle}}">
 
                   <Setter Property="BorderThickness" Value="1" />
@@ -659,9 +660,9 @@
                     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                   </Style.Triggers>
                 </Style>
-              </DataGrid.CellStyle>
+              </wrappers:DataGrid.CellStyle>
 
-              <DataGrid.Style>
+              <wrappers:DataGrid.Style>
                 <Style TargetType="DataGrid" BasedOn="{StaticResource {x:Static styles:ResourceKeys.DataGridStyle}}">
                   <Setter Property="ItemsSource" Value="{Binding ResourceTableEntries}" />
                   <Setter Property="dgx:DataGridFilter.IsAutoFilterEnabled" Value="True" />
@@ -676,7 +677,7 @@
                     </DataTrigger>
                   </Style.Triggers>
                 </Style>
-              </DataGrid.Style>
+              </wrappers:DataGrid.Style>
 
               <interactions:Interaction.Behaviors>
                 <dgx:BeginEditOnCtrlEnterBehavior />
@@ -692,7 +693,7 @@
                   </interactions:PropertyChangedTrigger.Actions>
                 </interactions:PropertyChangedTrigger>
               </interactions:Interaction.Triggers>
-            </DataGrid>
+            </wrappers:DataGrid>
           </Grid>
         </DockPanel>
       </Border>

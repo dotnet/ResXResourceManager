@@ -12,6 +12,7 @@
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:composition="urn:TomsToolbox.Composition"
+             xmlns:wrappers="clr-namespace:ResXManager.View.Visuals.Wrappers"
              d:DataContext="{d:DesignInstance visuals:TranslationsViewModel}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
   <UserControl.Resources>
     <DataTemplate DataType="{x:Type infrastructure:CultureKey}">
@@ -61,15 +62,15 @@
       <DockPanel>
         <visuals:TranslatorConfiguration DockPanel.Dock="Top" IsEnabled="{Binding TranslatorHost.ActiveSession.IsComplete}" Translators="{Binding TranslatorHost.Translators}" />
         <Decorator Height="10" DockPanel.Dock="Top" />
-        <DataGrid ItemsSource="{Binding Items}" Style="{DynamicResource {x:Static styles:ResourceKeys.DataGridStyle}}"
+        <wrappers:DataGrid ItemsSource="{Binding Items}" Style="{DynamicResource {x:Static styles:ResourceKeys.DataGridStyle}}"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
                   IsEnabled="{Binding TranslatorHost.ActiveSession.IsComplete}" toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedItems}">
-          <DataGrid.RowHeaderTemplate>
+          <wrappers:DataGrid.RowHeaderTemplate>
             <DataTemplate DataType="DataGridRowHeader">
               <CheckBox Style="{StaticResource {x:Static toms:ResourceKeys.DataGridRowCheckBoxStyle}}" />
             </DataTemplate>
-          </DataGrid.RowHeaderTemplate>
-          <DataGrid.Columns>
+          </wrappers:DataGrid.RowHeaderTemplate>
+          <wrappers:DataGrid.Columns>
             <DataGridTextColumn Width="2*" Binding="{Binding Source}" IsReadOnly="True">
               <DataGridTextColumn.ElementStyle>
                 <Style TargetType="TextBlock">
@@ -211,8 +212,8 @@
                 </DataTemplate>
               </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>
-          </DataGrid.Columns>
-        </DataGrid>
+          </wrappers:DataGrid.Columns>
+        </wrappers:DataGrid>
       </DockPanel>
       <toms:LoadingIndicator IsActive="{Binding TranslatorHost.ActiveSession.IsActive}" Header="Translating..." d:IsHidden="True" />
     </Grid>
