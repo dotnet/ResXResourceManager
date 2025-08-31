@@ -1,4 +1,7 @@
-﻿1.97:
+﻿1.98:
+- Fix #430: Crash on windows scroll after an automatic translation (contributed by https://github.com/nik2143)
+
+1.97:
 - Fix #711: CodeReferences and MoveToResources not updated in ResXManager.config.xml when removing items in UI
 - Support both string format interpolation notations "${key}" and "{{key}}" for web export
 - Fix #694: CodeReferenceTracker does not detect keys with <space>, also dots are now supported
