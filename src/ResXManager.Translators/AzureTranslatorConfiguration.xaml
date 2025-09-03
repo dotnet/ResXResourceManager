@@ -8,11 +8,18 @@
              xmlns:styles="urn:TomsToolbox.Wpf.Styles"
              d:DataContext="{d:DesignInstance local:AzureTranslator}"
              d:DesignWidth="500">
-  <StackPanel Orientation="Horizontal">
-    <CheckBox Content="{x:Static properties:Resources.AutoDetectHtml}" IsChecked="{Binding AutoDetectHtml}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center" />
-    <Decorator Width="20" />
-    <TextBlock Text="{x:Static properties:Resources.MaxCharactersPerMinute}" VerticalAlignment="Center" />
-    <Decorator Width="5" />
-    <TextBox Text="{Binding MaxCharactersPerMinute}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
+  <StackPanel Orientation="Vertical">
+    <StackPanel Orientation="Horizontal">
+      <CheckBox Content="{x:Static properties:Resources.AutoDetectHtml}" IsChecked="{Binding AutoDetectHtml}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center" />
+      <Decorator Width="20" />
+      <TextBlock Text="{x:Static properties:Resources.MaxCharactersPerMinute}" VerticalAlignment="Center" />
+      <Decorator Width="5" />
+      <TextBox Text="{Binding MaxCharactersPerMinute}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
+    </StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <TextBlock Text="{x:Static properties:Resources.CustomCategoryId}" VerticalAlignment="Center" />
+      <Decorator Width="50" />
+      <TextBox Text="{Binding CustomCategoryId}" ToolTip="{x:Static properties:Resources.CustomCategoryIdDescription}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" Width="200" />
+    </StackPanel>
   </StackPanel>
 </UserControl>

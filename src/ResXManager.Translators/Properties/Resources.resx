@@ -123,6 +123,13 @@
   <data name="BatchRequests" xml:space="preserve">
     <value>Batch requests</value>
   </data>
+  <data name="CustomCategoryId" xml:space="preserve">
+    <value>Custom Model Category ID</value>
+    <comment>Category ID for custom trained models on the Azure Translator</comment>
+  </data>
+  <data name="CustomCategoryIdDescription" xml:space="preserve">
+    <value>Azure offers custom trained models which can be grouped with a category ID. This is optional, if you do not want to use a custom category, leave this field empty</value>
+  </data>
   <data name="CustomPrompt" xml:space="preserve">
     <value>Custom prompt to append to all translation requests</value>
   </data>
