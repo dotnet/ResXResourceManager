@@ -120,17 +120,23 @@
   <data name="AutoDetectHtml" xml:space="preserve">
     <value>Html automatisch erkennen</value>
   </data>
-  <data name="MaxCharactersPerMinute" xml:space="preserve">
-    <value>Max. Zeichen pro Minute</value>
-  </data>
   <data name="BatchRequests" xml:space="preserve">
     <value>Anfragen zu Batches zusammenfassen</value>
+  </data>
+  <data name="CustomCategoryId" xml:space="preserve">
+    <value>Eigene Modellkategorie (Category ID)</value>
+  </data>
+  <data name="CustomCategoryIdDescription" xml:space="preserve">
+    <value>Azure bietet die Möglichkeit selbsttrainierte Modelle über eine Category ID zu referenzieren. Dies ist optional, wenn Sie keine selbsttrainierten Modelle nutzen möchten, lassen Sie das Eingabefeld einfach frei</value>
   </data>
   <data name="CustomPrompt" xml:space="preserve">
     <value>Benutzerdefinierter Prompt, der allen Übersetzungsanfragen angehängt wird</value>
   </data>
   <data name="IncludeCommentsInPrompt" xml:space="preserve">
     <value>Kommentare in Prompt einbeziehen</value>
+  </data>
+  <data name="MaxCharactersPerMinute" xml:space="preserve">
+    <value>Max. Zeichen pro Minute</value>
   </data>
   <data name="MaxTokens" xml:space="preserve">
     <value>Max. Tokens</value>

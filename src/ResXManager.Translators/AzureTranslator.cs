@@ -1,9 +1,9 @@
-﻿namespace ResXManager.Translators;
-
+﻿using ResXManager.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -12,10 +12,9 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
-using ResXManager.Infrastructure;
-
 using TomsToolbox.Essentials;
+
+namespace ResXManager.Translators;
 
 [Export(typeof(ITranslator)), Shared]
 public class AzureTranslator() : TranslatorBase("Azure", "Azure", _uri, GetCredentials())
@@ -34,6 +33,12 @@ public class AzureTranslator() : TranslatorBase("Azure", "Azure", _uri, GetCrede
 
     [DataMember]
     public int MaxCharactersPerMinute { get; set; } = 33300;
+
+    /// <summary>
+    /// Category ID for custom trained Models on Azure
+    /// </summary>
+    [DataMember]
+    public string CustomCategoryId { get; set; } = string.Empty;
 
     protected override async Task Translate(ITranslationSession translationSession)
     {
@@ -89,7 +94,7 @@ public class AzureTranslator() : TranslatorBase("Azure", "Azure", _uri, GetCrede
                     if (translationSession.IsCanceled)
                         return;
 
-                    var uri = new Uri(endpoint, $"translate?api-version=3.0&from={translationSession.SourceLanguage.IetfLanguageTag}&to={targetLanguage.IetfLanguageTag}&textType={textType}");
+                    var uri = CreateUriWithSettings(translationSession, endpoint, targetLanguage, textType);
 
                     using var content = CreateRequestContent(sourceStrings);
 
@@ -109,6 +114,20 @@ public class AzureTranslator() : TranslatorBase("Azure", "Azure", _uri, GetCrede
                 }
             }
         }
+    }
+
+    private Uri CreateUriWithSettings(ITranslationSession translationSession, Uri endpoint, CultureInfo targetLanguage, string textType)
+    {
+        var argumentStringBuilder = new StringBuilder("translate?api-version=3.0");
+        argumentStringBuilder.Append($"&from={Uri.EscapeDataString(translationSession.SourceLanguage.IetfLanguageTag)}");
+        argumentStringBuilder.Append($"&to={Uri.EscapeDataString(targetLanguage.IetfLanguageTag)}");
+        argumentStringBuilder.Append($"&textType={Uri.EscapeDataString(textType)}");
+        if (!string.IsNullOrWhiteSpace(CustomCategoryId))
+        {
+            argumentStringBuilder.Append($"&category={Uri.EscapeDataString(CustomCategoryId)}");
+        }
+        var uri = new Uri(endpoint, argumentStringBuilder.ToString());
+        return uri;
     }
 
     [DataMember(Name = "AuthenticationKey")]

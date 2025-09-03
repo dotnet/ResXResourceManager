@@ -89,6 +89,27 @@ namespace ResXManager.Translators.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Custom Model Category ID"
+        /// </summary>
+        /// <remarks>
+        /// Category ID for custom trained models on the Azure Translator
+        /// </remarks>
+        public static string CustomCategoryId {
+            get {
+                return ResourceManager.GetString("CustomCategoryId", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Azure offers custom trained models which can be gr..."
+        /// </summary>
+        public static string CustomCategoryIdDescription {
+            get {
+                return ResourceManager.GetString("CustomCategoryIdDescription", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Custom prompt to append to all translation request..."
         /// </summary>
         public static string CustomPrompt {
@@ -149,6 +170,17 @@ namespace ResXManager.Translators.Properties {
         ///   Looks up a localized string similar to Batch requests.
         /// </summary>
         BatchRequests,
+        /// <summary>
+        ///   Looks up a localized string similar to Custom Model Category ID.
+        /// </summary>
+        /// <remarks>
+        /// Category ID for custom trained models on the Azure Translator
+        /// </remarks>
+        CustomCategoryId,
+        /// <summary>
+        ///   Looks up a localized string similar to Azure offers custom trained models which can be gr....
+        /// </summary>
+        CustomCategoryIdDescription,
         /// <summary>
         ///   Looks up a localized string similar to Custom prompt to append to all translation request....
         /// </summary>
