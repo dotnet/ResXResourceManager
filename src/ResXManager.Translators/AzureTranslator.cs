@@ -119,12 +119,12 @@ public class AzureTranslator() : TranslatorBase("Azure", "Azure", _uri, GetCrede
     private Uri CreateUriWithSettings(ITranslationSession translationSession, Uri endpoint, CultureInfo targetLanguage, string textType)
     {
         var argumentStringBuilder = new StringBuilder("translate?api-version=3.0");
-        argumentStringBuilder.Append($"&from={translationSession.SourceLanguage.IetfLanguageTag}");
-        argumentStringBuilder.Append($"&to={targetLanguage.IetfLanguageTag}");
-        argumentStringBuilder.Append($"&textType={textType}");
+        argumentStringBuilder.Append($"&from={Uri.EscapeDataString(translationSession.SourceLanguage.IetfLanguageTag)}");
+        argumentStringBuilder.Append($"&to={Uri.EscapeDataString(targetLanguage.IetfLanguageTag)}");
+        argumentStringBuilder.Append($"&textType={Uri.EscapeDataString(textType)}");
         if (!string.IsNullOrWhiteSpace(CustomCategoryId))
         {
-            argumentStringBuilder.Append($"&category={CustomCategoryId}");
+            argumentStringBuilder.Append($"&category={Uri.EscapeDataString(CustomCategoryId)}");
         }
         var uri = new Uri(endpoint, argumentStringBuilder.ToString());
         return uri;
