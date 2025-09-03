@@ -1,9 +1,6 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
-namespace ResXManager.Translators;
-
+﻿using ResXManager.Infrastructure;
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Composition;
 using System.Diagnostics;
@@ -12,14 +9,14 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
-using ResXManager.Infrastructure;
-
 using TomsToolbox.Essentials;
+
+namespace ResXManager.Translators;
 
 [Export(typeof(ITranslator)), Shared]
 public class AzureTranslator() : TranslatorBase("Azure", "Azure", _uri, GetCredentials())
