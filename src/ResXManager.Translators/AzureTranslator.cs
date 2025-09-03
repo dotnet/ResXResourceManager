@@ -1,6 +1,5 @@
 ﻿using ResXManager.Infrastructure;
 using System;
-using System.ComponentModel;
 using System.Collections.Generic;
 using System.Composition;
 using System.Diagnostics;
@@ -9,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
