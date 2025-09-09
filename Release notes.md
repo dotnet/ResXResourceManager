@@ -1,4 +1,8 @@
-﻿1.98:
+﻿1.99:
+- Feature: Add custom category ID for Azure translator.
+- Fix #715: Default flag for neutral language ko should be KR, not KP.
+
+1.98:
 - Fix #430: Crash on windows scroll after an automatic translation (contributed by https://github.com/nik2143)
 
 1.97:
