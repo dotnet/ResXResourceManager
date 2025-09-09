@@ -15,7 +15,7 @@ using TomsToolbox.Essentials;
 [Export]
 public class CultureCountryOverrides
 {
-    private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,fy=fy,";
+    private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,fy=fy,ko=ko-KR";
 
     private static readonly IEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>> _comparer = new DelegateEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>>(item => item.Key);
     private static readonly IEnumerable<KeyValuePair<CultureInfo, CultureInfo>> _defaultOverrides = ReadSettings(DefaultOverrides);
