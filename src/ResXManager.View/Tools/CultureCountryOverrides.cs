@@ -15,7 +15,7 @@ using TomsToolbox.Essentials;
 [Export]
 public class CultureCountryOverrides
 {
-    private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,fy=fy,ko=ko-KR";
+    private const string DefaultOverrides = "en=en-US,zh=zh-CN,zh-CHT=zh-CN,zh-HANT=zh-CN,fy=fy,ko=ko-KR,";
 
     private static readonly IEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>> _comparer = new DelegateEqualityComparer<KeyValuePair<CultureInfo, CultureInfo>>(item => item.Key);
     private static readonly IEnumerable<KeyValuePair<CultureInfo, CultureInfo>> _defaultOverrides = ReadSettings(DefaultOverrides);
@@ -41,7 +41,7 @@ public class CultureCountryOverrides
 
     private Dictionary<CultureInfo, CultureInfo> LoadOverrides()
     {
-        return new Dictionary<CultureInfo, CultureInfo>(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
+        return new(ReadSettings().Distinct(_comparer).ToDictionary(item => item.Key, item => item.Value));
     }
 
 #pragma warning disable CA1043 // Use Integral Or String Argument For Indexers
@@ -55,11 +55,9 @@ public class CultureCountryOverrides
                 return specificCulture;
 
             if (!neutralCulture.IsNeutralCulture)
-                return specificCulture;
+                return null;
 
-            specificCulture = GetDefaultSpecificCulture(neutralCulture);
-
-            return specificCulture;
+            return GetDefaultSpecificCulture(neutralCulture);
         }
         set
         {
