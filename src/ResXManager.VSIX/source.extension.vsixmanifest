@@ -16,10 +16,10 @@
     <InstallationTarget Version="[16.0,17.0)" Id="Microsoft.VisualStudio.Community">
       <ProductArchitecture>x86</ProductArchitecture>
     </InstallationTarget>
-    <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Community">
+    <InstallationTarget Version="[17.0,19.0)" Id="Microsoft.VisualStudio.Community">
       <ProductArchitecture>amd64</ProductArchitecture>
     </InstallationTarget>
-    <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Community">
+    <InstallationTarget Version="[17.0,19.0)" Id="Microsoft.VisualStudio.Community">
       <ProductArchitecture>arm64</ProductArchitecture>
     </InstallationTarget>
   </Installation>
@@ -31,6 +31,6 @@
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
   </Assets>
   <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0.25824.0,18.0)" DisplayName="Visual Studio core editor" />
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0.25824.0,19.0)" DisplayName="Visual Studio core editor" />
   </Prerequisites>
 </PackageManifest>
