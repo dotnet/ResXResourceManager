@@ -1,4 +1,7 @@
-﻿1.99:
+﻿1.100:
+- Support for VS 2026
+
+1.99:
 - Feature: Add custom category ID for Azure translator.
 - Fix #715: Default flag for neutral language ko should be KR, not KP.
 
