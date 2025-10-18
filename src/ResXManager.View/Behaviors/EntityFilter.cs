@@ -8,7 +8,11 @@ using System.Windows.Controls;
 using Microsoft.Xaml.Behaviors;
 
 using ResXManager.Infrastructure;
+
+using Throttle;
+
 using TomsToolbox.Essentials;
+using TomsToolbox.Wpf;
 
 public class EntityFilter : Behavior<ListBox>
 {
@@ -21,14 +25,17 @@ public class EntityFilter : Behavior<ListBox>
     /// Identifies the <see cref="FilterText"/> dependency property
     /// </summary>
     public static readonly DependencyProperty FilterTextProperty =
-        DependencyProperty.Register("FilterText", typeof(string), typeof(EntityFilter),
-            new FrameworkPropertyMetadata(null, (sender, e) => ((EntityFilter)sender).FilterText_Changed((string)e.NewValue)));
+        DependencyProperty.Register(nameof(FilterText), typeof(string), typeof(EntityFilter),
+            new FrameworkPropertyMetadata(null, (sender, _) => ((EntityFilter)sender).FilterText_Changed()));
 
-    private void FilterText_Changed(string? value)
+    [Throttled(typeof(Throttle), 300)]
+    private void FilterText_Changed()
     {
         var listBox = AssociatedObject;
         if (listBox == null)
             return;
+
+        var value = FilterText;
 
         listBox.Items.Filter = BuildFilter(value);
     }
@@ -43,7 +50,7 @@ public class EntityFilter : Behavior<ListBox>
         try
         {
             var regex = new Regex(value, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            return item => regex.Match(item.ToString() ?? string.Empty).Success;
+            return item => regex.Match(item?.ToString() ?? string.Empty).Success;
         }
         catch (ArgumentException)
         {
@@ -52,7 +59,7 @@ public class EntityFilter : Behavior<ListBox>
         try
         {
             var regex = new Regex(value.Replace(@"\", @"\\", StringComparison.Ordinal), RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            return item => regex.Match(item.ToString() ?? string.Empty).Success;
+            return item => regex.Match(item?.ToString() ?? string.Empty).Success;
         }
         catch (ArgumentException)
         {
@@ -65,6 +72,6 @@ public class EntityFilter : Behavior<ListBox>
     {
         base.OnAttached();
 
-        FilterText_Changed(FilterText);
+        FilterText_Changed();
     }
 }
