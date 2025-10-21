@@ -477,4 +477,10 @@ ResXManager 团队
   <data name="WebProjectFileExport_Title" xml:space="preserve">
     <value>Web 项目文件导出</value>
   </data>
+  <data name="AutoApplyExistingTranslations" xml:space="preserve">
+    <value>自动为匹配字符串添加现有翻译</value>
+  </data>
+  <data name="TrimToolTip" xml:space="preserve">
+    <value>去除选定单元格中的空白字符（Ctrl+T）</value>
+  </data>
 </root>
