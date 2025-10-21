@@ -351,7 +351,7 @@
     <value>显示索引列</value>
   </data>
   <data name="IndexColumnToolTip" xml:space="preserve">
-    <value>资源文件中条目的索引。Use fractional values to reorder the entries.</value>
+    <value>资源文件中条目的索引。用分数值重新排列条目顺序。</value>
   </data>
   <data name="Invariant" xml:space="preserve">
     <value>不变</value>
