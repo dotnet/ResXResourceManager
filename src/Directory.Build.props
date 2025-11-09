@@ -18,7 +18,7 @@
     <AnalysisMode>All</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
-    <NoWarn>CVSTBLD002;NU1608;CS8002;VSIXCompatibility1001</NoWarn>
+    <NoWarn>CVSTBLD002;NU1608;NU1903;CS8002;VSIXCompatibility1001</NoWarn>
     <SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)</SolutionDir>
   </PropertyGroup>
 

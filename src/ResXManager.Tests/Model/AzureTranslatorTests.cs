@@ -36,13 +36,13 @@ public class AzureTranslatorTests
             CustomCategoryId = "my-custom-category"
         };
 
-        var session = CreateSession(CultureInfo.GetCultureInfo("en"));
+        using var session = CreateSession(CultureInfo.GetCultureInfo("en"));
         var endpoint = new Uri("https://example.com/");
         var target = CultureInfo.GetCultureInfo("de-DE");
 
         var uri = InvokeCreateUriWithSettings(sut, session, endpoint, target, "plain");
 
-        Assert.Contains("category=my-custom-category", uri.Query);
+        Assert.Contains("category=my-custom-category", uri.Query, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -53,13 +53,13 @@ public class AzureTranslatorTests
             CustomCategoryId = string.Empty
         };
 
-        var session = CreateSession(CultureInfo.GetCultureInfo("en"));
+        using var session = CreateSession(CultureInfo.GetCultureInfo("en"));
         var endpoint = new Uri("https://example.com/");
         var target = CultureInfo.GetCultureInfo("fr-FR");
 
         var uri = InvokeCreateUriWithSettings(sut, session, endpoint, target, "plain");
 
-        Assert.DoesNotContain("category=", uri.Query);
+        Assert.DoesNotContain("category=", uri.Query, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -70,40 +70,40 @@ public class AzureTranslatorTests
             CustomCategoryId = "  \t  "
         };
 
-        var session = CreateSession(CultureInfo.GetCultureInfo("en"));
+        using var session = CreateSession(CultureInfo.GetCultureInfo("en"));
         var endpoint = new Uri("https://example.com/");
         var target = CultureInfo.GetCultureInfo("it-IT");
 
         var uri = InvokeCreateUriWithSettings(sut, session, endpoint, target, "plain");
 
-        Assert.DoesNotContain("category=", uri.Query);
+        Assert.DoesNotContain("category=", uri.Query, StringComparison.Ordinal);
     }
 
     [Fact]
     public void WhenTextTypeIsHtml_ShouldAddTextTypeHtml()
     {
         var sut = new AzureTranslator();
-        var session = CreateSession(CultureInfo.GetCultureInfo("en"));
+        using var session = CreateSession(CultureInfo.GetCultureInfo("en"));
         var endpoint = new Uri("https://example.com/");
         var target = CultureInfo.GetCultureInfo("es-ES");
 
         var uri = InvokeCreateUriWithSettings(sut, session, endpoint, target, "html");
 
-        Assert.Contains("textType=html", uri.Query);
+        Assert.Contains("textType=html", uri.Query, StringComparison.Ordinal);
     }
 
     [Fact]
     public void WhenLanguagesProvided_ShouldUseIetfLanguageTagsForFromAndTo()
     {
         var sut = new AzureTranslator();
-        var session = CreateSession(CultureInfo.GetCultureInfo("en-US"));
+        using var session = CreateSession(CultureInfo.GetCultureInfo("en-US"));
         var endpoint = new Uri("https://example.com/");
         var target = CultureInfo.GetCultureInfo("de-DE");
 
         var uri = InvokeCreateUriWithSettings(sut, session, endpoint, target, "plain");
 
-        Assert.Contains("from=en-US", uri.Query);
-        Assert.Contains("to=de-DE", uri.Query);
+        Assert.Contains("from=en-US", uri.Query, StringComparison.Ordinal);
+        Assert.Contains("to=de-DE", uri.Query, StringComparison.Ordinal);
     }
 
     [Fact]
