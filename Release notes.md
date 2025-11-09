@@ -1,4 +1,9 @@
-﻿1.100:
+﻿1.101:
+- Fix  #721: UI freeze on keyboard input in resource file filter (large project)
+- Update Chinese translation (#723)
+- Fix #725: update DGX to fix interfering of virtualized columns.
+
+1.100:
 - Support for VS 2026
 
 1.99:
