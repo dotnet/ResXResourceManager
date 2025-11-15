@@ -1,4 +1,8 @@
-﻿1.101:
+﻿1.102:
+- Add option to enable beta languages when using DeepL api (#729) Co-authored-by: Adrian Turcanu <adrian.turcanu@cometanalysis.com>
+- Relax regex pattern to find all code references using ResourceManager.GetString(... (#728)
+
+1.101:
 - Fix  #721: UI freeze on keyboard input in resource file filter (large project)
 - Update Chinese translation (#723)
 - Fix #725: update DGX to fix interfering of virtualized columns.
