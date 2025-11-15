@@ -144,4 +144,7 @@
   <data name="Temperature" xml:space="preserve">
     <value>Temperatur</value>
   </data>
+  <data name="EnableBetaLanguages" xml:space="preserve">
+    <value>Beta-Sprachen aktivieren</value>
+  </data>
 </root>

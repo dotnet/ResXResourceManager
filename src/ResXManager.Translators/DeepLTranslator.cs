@@ -1,6 +1,4 @@
-﻿namespace ResXManager.Translators;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Globalization;
@@ -11,17 +9,10 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-
 using ResXManager.Infrastructure;
-
 using TomsToolbox.Essentials;
-using TomsToolbox.Wpf.Composition.AttributedModel;
 
-[DataTemplate(typeof(DeepLTranslator))]
-public class DeepLTranslatorConfiguration : Decorator
-{
-}
+namespace ResXManager.Translators;
 
 [Export(typeof(ITranslator)), Shared]
 public class DeepLTranslator() : TranslatorBase("DeepL", "DeepL", _uri, _credentialItems)
@@ -55,6 +46,9 @@ public class DeepLTranslator() : TranslatorBase("DeepL", "DeepL", _uri, _credent
         get => Credentials[2].Value;
         set => Credentials[2].Value = value;
     }
+
+    [DataMember]
+    public bool EnableBetaLanguages { get; set; } = false;
 
     private string? ApiKey => Credentials[0].Value;
 
@@ -94,7 +88,8 @@ public class DeepLTranslator() : TranslatorBase("DeepL", "DeepL", _uri, _credent
                     GlossaryId = GlossaryId,
                     SourceLang = DeepLLangCode(translationSession.SourceLanguage),
                     TargetLang = DeepLLangCode(targetCulture),
-                    Text = sourceItems.Select(item => RemoveKeyboardShortcutIndicators(item.Source)).ToArray()
+                    Text = sourceItems.Select(item => RemoveKeyboardShortcutIndicators(item.Source)).ToArray(),
+                    EnableBetaLanguages = EnableBetaLanguages
                 };
 
                 var apiUrl = ApiUrl;
@@ -198,5 +193,8 @@ public class DeepLTranslator() : TranslatorBase("DeepL", "DeepL", _uri, _credent
 
         [DataMember(Name = "glossary_id")]
         public string? GlossaryId { get; set; }
+
+        [DataMember(Name = "enable_beta_languages")]
+        public bool EnableBetaLanguages { get; set; }
     }
 }

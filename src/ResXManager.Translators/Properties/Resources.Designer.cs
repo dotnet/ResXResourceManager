@@ -119,6 +119,15 @@ namespace ResXManager.Translators.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Enable beta languages"
+        /// </summary>
+        public static string EnableBetaLanguages {
+            get {
+                return ResourceManager.GetString("EnableBetaLanguages", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Include comments in prompt"
         /// </summary>
         public static string IncludeCommentsInPrompt {
@@ -185,6 +194,10 @@ namespace ResXManager.Translators.Properties {
         ///   Looks up a localized string similar to Custom prompt to append to all translation request....
         /// </summary>
         CustomPrompt,
+        /// <summary>
+        ///   Looks up a localized string similar to Enable beta languages.
+        /// </summary>
+        EnableBetaLanguages,
         /// <summary>
         ///   Looks up a localized string similar to Include comments in prompt.
         /// </summary>

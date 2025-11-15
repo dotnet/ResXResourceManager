@@ -123,4 +123,7 @@
   <data name="MaxCharactersPerMinute" xml:space="preserve">
     <value>每分钟最大字符数</value>
   </data>
+  <data name="EnableBetaLanguages" xml:space="preserve">
+    <value>启用测试版语言</value>
+  </data>
 </root>
