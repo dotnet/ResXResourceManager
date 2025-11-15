@@ -44,15 +44,17 @@ public sealed class CodeReferenceConfigurationItem : INotifyPropertyChanged
 [TypeConverter(typeof(JsonSerializerTypeConverter<CodeReferenceConfiguration>))]
 public sealed class CodeReferenceConfiguration : ItemTrackingCollectionHost<CodeReferenceConfigurationItem>
 {
-    public const string Default = @"{""Items"":[
-{""Expression"":""\\W($File.$Key)\\W"",""Extensions"":"".cs,.xaml,.cshtml"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
-{""Expression"":""\\W($File.$Key)\\W"",""Extensions"":"".vbhtml"",""IsCaseSensitive"":false,""SingleLineComment"":null},
-{""Expression"":""ResourceManager.GetString\\(\""($Key)\""\\)"",""Extensions"":"".cs"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
-{""Expression"":""typeof\\((\\w+\\.)*($File)\\).+\""($Key)\""|\""($Key)\"".+typeof\\((\\w+\\.)*($File)\\)"",""Extensions"":"".cs"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
-{""Expression"":""\\W($Key)\\W"",""Extensions"":"".vb"",""IsCaseSensitive"":false,""SingleLineComment"":""'""},
-{""Expression"":""\\W($File::$Key)\\W"",""Extensions"":"".cpp,.c,.hxx,.h"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
-{""Expression"":""&lt;%\\$\\s+Resources:\\s*($File)\\s*,\\s*($Key)\\s*%&gt;"",""Extensions"":"".aspx,.ascx,.master"",""IsCaseSensitive"":true,""SingleLineComment"":null},
-{""Expression"":""StringResourceKey\\.($Key)"",""Extensions"":"".cs"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""},
-{""Expression"":""\\.($Key)"",""Extensions"":"".ts,.html"",""IsCaseSensitive"":true,""SingleLineComment"":""\/\/""}
-]}";
+    public const string Default = /*lang=json,strict*/ """
+       {"Items":[
+       {"Expression":"\\W($File.$Key)\\W","Extensions":".cs,.xaml,.cshtml","IsCaseSensitive":true,"SingleLineComment":"\/\/"},
+       {"Expression":"\\W($File.$Key)\\W","Extensions":".vbhtml","IsCaseSensitive":false,"SingleLineComment":null},
+       {"Expression":"ResourceManager.GetString\\(\"($Key)\"","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},
+       {"Expression":"typeof\\((\\w+\\.)*($File)\\).+\"($Key)\"|\"($Key)\".+typeof\\((\\w+\\.)*($File)\\)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},
+       {"Expression":"\\W($Key)\\W","Extensions":".vb","IsCaseSensitive":false,"SingleLineComment":"'"},
+       {"Expression":"\\W($File::$Key)\\W","Extensions":".cpp,.c,.hxx,.h","IsCaseSensitive":true,"SingleLineComment":"\/\/"},
+       {"Expression":"&lt;%\\$\\s+Resources:\\s*($File)\\s*,\\s*($Key)\\s*%&gt;","Extensions":".aspx,.ascx,.master","IsCaseSensitive":true,"SingleLineComment":null},
+       {"Expression":"StringResourceKey\\.($Key)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},
+       {"Expression":"\\.($Key)","Extensions":".ts,.html","IsCaseSensitive":true,"SingleLineComment":"\/\/"}
+       ]}
+       """;
 }
