@@ -1,8 +1,5 @@
 ﻿namespace ResXManager.Translators;
 
-using global::Microsoft.ML.Tokenizers;
-using Newtonsoft.Json;
-using ResXManager.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Composition;
@@ -12,6 +9,10 @@ using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using global::Microsoft.ML.Tokenizers;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ResXManager.Infrastructure;
 using TomsToolbox.Essentials;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 
@@ -146,13 +147,10 @@ public class OpenAITranslator : TranslatorBase
 
     private async Task TranslateUsingCompletionsModel(ITranslationSession translationSession, HttpClient client)
     {
-        var endpointUri = new Uri("chat/completions", UriKind.Relative);
         TiktokenTokenizer? tokenizer = null;
         if (CountTokens)
         {
-            tokenizer = TiktokenTokenizer.CreateForModel(
-                ModelName ?? throw new InvalidOperationException("No model name provided in configuration!")
-                );
+            tokenizer = TiktokenTokenizer.CreateForEncoding("o200k_base");
         }
 
         var retries = 0;
@@ -163,21 +161,25 @@ public class OpenAITranslator : TranslatorBase
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                // call OpenAI API with all prompts in batch
                 var requestBody = new
                 {
-                    messages = new List<ChatMessage>() { new()
-                    {
-                        Role = "user",
-                        Content = batch.prompt
-                    }},
-                    max_tokens = CompletionTokens,
-                    temperature = Temperature,
-                    model = ModelName
+                    model = ModelName,            
+                    input = batch.prompt,          
+                    max_output_tokens = CompletionTokens,
+                    temperature = Temperature
                 };
 
-                using var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
-                var completionsResponse = await client.PostAsync(endpointUri, content, cancellationToken).ConfigureAwait(false);
+                using var content = new StringContent(
+                    JsonConvert.SerializeObject(requestBody),
+                    Encoding.UTF8,
+                    "application/json"
+                );
+
+                var completionsResponse = await client.PostAsync(
+                    "https://api.openai.com/v1/responses",
+                    content,
+                    cancellationToken
+                ).ConfigureAwait(false);
 
                 // note: net472 does not support System.Net.HttpStatusCode.TooManyRequests
                 if (completionsResponse.StatusCode == (System.Net.HttpStatusCode)429)
@@ -194,11 +196,20 @@ public class OpenAITranslator : TranslatorBase
 
                 var responseContent = await completionsResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                var completions = JsonConvert.DeserializeObject<CompletionsResponse>(responseContent);
-                if (completions != null)
-                {
-                    await translationSession.MainThread.StartNew(() => ReturnResults(batch, completions), cancellationToken).ConfigureAwait(false);
-                }
+                var root = JToken.Parse(responseContent);
+
+                // safe lookup with null checking
+                string? text =
+                    root["output"]?
+                        .First?["content"]?
+                        .First?["text"]?
+                        .ToString();
+
+                // fallback if no text found
+                if (string.IsNullOrWhiteSpace(text))
+                    text = string.Empty;
+
+                await translationSession.MainThread.StartNew(() => batch.item.Results.Add(new TranslationMatch(this, text, Ranking)), cancellationToken).ConfigureAwait(false);
 
                 // break out of the retry loop
                 break;
@@ -278,31 +289,6 @@ public class OpenAITranslator : TranslatorBase
         promptBuilder.Append($"{targetCulture}:");
 
         return promptBuilder.ToString();
-    }
-
-    private void ReturnResults((ITranslationItem item, string prompt) batch, CompletionsResponse completions)
-    {
-        if (completions?.Choices is null)
-        {
-            throw new InvalidOperationException("OpenAI API returned no completion choices.");
-        }
-
-        if (completions.Choices.Count == 0)
-        {
-            throw new InvalidOperationException("OpenAI API returned a different number of results than requested.");
-        }
-
-
-        if (completions.Choices[0] is { FinishReason: null or "stop" } choice && choice.Message != null &&
-            !choice.Message.Content.IsNullOrWhiteSpace())
-        {
-            batch.item.Results.Add(new TranslationMatch(this, choice.Message.Content, Ranking));
-        }
-        else
-        {
-            // todo: log the unsuccessful finish reason somewhere for the user to see why this translation failed?
-            // expected reasons to get here are "content_filter" or empty response
-        }
     }
 
     [DataMember(Name = "AuthenticationKey")]
