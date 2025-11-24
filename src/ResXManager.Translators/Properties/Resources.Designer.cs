@@ -146,6 +146,15 @@ namespace ResXManager.Translators.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Max. parallel requests"
+        /// </summary>
+        public static string MaxParallelRequests {
+            get {
+                return ResourceManager.GetString("MaxParallelRequests", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Max tokens"
         /// </summary>
         public static string MaxTokens {
@@ -206,6 +215,10 @@ namespace ResXManager.Translators.Properties {
         ///   Looks up a localized string similar to Max characters per minute.
         /// </summary>
         MaxCharactersPerMinute,
+        /// <summary>
+        ///   Looks up a localized string similar to Max. parallel requests.
+        /// </summary>
+        MaxParallelRequests,
         /// <summary>
         ///   Looks up a localized string similar to Max tokens.
         /// </summary>
