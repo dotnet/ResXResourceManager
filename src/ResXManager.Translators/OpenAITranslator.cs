@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using global::Microsoft.ML.Tokenizers;
 using Newtonsoft.Json;
@@ -87,6 +88,15 @@ public class OpenAITranslator : TranslatorBase
             return;
         }
 
+        var tpm = await GetTokenLimitPerMinuteAsync(client, ModelName, translationSession.CancellationToken);
+
+        if (tpm == null)
+        {
+            translationSession.AddMessage("OpenAI Translator response with no token per minutes");
+            return;
+        }
+
+        _tokenPerMinute = (int)tpm;
 
         await TranslateUsingCompletionsModel(translationSession, client).ConfigureAwait(false);
     }
@@ -176,7 +186,7 @@ public class OpenAITranslator : TranslatorBase
                 );
 
                 var completionsResponse = await client.PostAsync(
-                    "https://api.openai.com/v1/responses",
+                    "responses",
                     content,
                     cancellationToken
                 ).ConfigureAwait(false);
@@ -240,6 +250,47 @@ public class OpenAITranslator : TranslatorBase
 
             yield return (item, prompt);
         }
+    }
+
+    private int _tokenPerMinute = 0;
+
+    public async Task<int?> GetTokenLimitPerMinuteAsync(HttpClient client, string modelName, CancellationToken cancellationToken)
+    {
+        // Mini-Request, der kaum Tokens verbraucht
+        var body = new
+        {
+            model = modelName,
+            input = "ping",
+            max_output_tokens = 1
+        };
+
+        using var content = new StringContent(
+            Newtonsoft.Json.JsonConvert.SerializeObject(body),
+            Encoding.UTF8,
+            "application/json"
+        );
+
+        var response = await client.PostAsync(
+            "https://api.openai.com/v1/responses",
+            content,
+            cancellationToken
+        );
+
+        // Fehler werfen, falls etwas schief geht
+        response.EnsureSuccessStatusCode();
+
+        // Header lesen
+        if (response.Headers.TryGetValues("x-ratelimit-limit-tokens", out var values))
+        {
+            var value = values.FirstOrDefault();
+            if (int.TryParse(value, out int limit))
+            {
+                return limit;
+            }
+        }
+
+        // Fallback falls Header fehlt
+        return null;
     }
 
     private string? GenerateCompletionModelPromptForTranslation(ITranslationSession translationSession, ITranslationItem translationItem)
