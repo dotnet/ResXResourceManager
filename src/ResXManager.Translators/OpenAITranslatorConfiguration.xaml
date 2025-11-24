@@ -17,6 +17,10 @@
     <Decorator Width="5" />
     <TextBox Text="{Binding MaxTokens}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" IsEnabled="{Binding CountTokens, Mode=OneWay}" />
     <Decorator Width="20" />
+    <TextBlock Text="{x:Static properties:Resources.MaxParallelRequests}" VerticalAlignment="Center" />
+    <Decorator Width="5" />
+    <TextBox Text="{Binding MaxParallelRequests}" MinWidth="20" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" IsEnabled="{Binding CountTokens, Mode=OneWay}" />
+    <Decorator Width="20" />
     <TextBlock Text="{x:Static properties:Resources.Temperature}" VerticalAlignment="Center" />
     <Decorator Width="5" />
     <TextBox Text="{Binding Temperature}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
