@@ -13,6 +13,18 @@ public class CultureKey : IComparable<CultureKey>, IEquatable<CultureKey>, IComp
     public CultureKey(string? cultureName)
     {
         Culture = cultureName?.ToCulture();
+
+        // Assumption: if the culture was created from a number, it was an LCID.
+        if (Culture != null && int.TryParse(cultureName, out var _))
+        {
+            UseLCID = true;
+        }
+    }
+
+    public CultureKey(CultureInfo? culture, bool useLCID)
+    {
+        Culture = culture;
+        UseLCID = useLCID;
     }
 
     public CultureKey(CultureInfo? culture)
@@ -21,6 +33,12 @@ public class CultureKey : IComparable<CultureKey>, IEquatable<CultureKey>, IComp
     }
 
     public CultureInfo? Culture { get; }
+
+    /// <summary>
+    /// Use LCID indicates whether the culture was created from an LCID (true) or from a name (false).
+    /// Windows Language Code Identifier (LCID)
+    /// </summary>
+    public bool UseLCID { get; }
 
     public bool IsNeutral => Culture == null;
 

@@ -26,7 +26,14 @@ public static class ExtensionMethods
         {
             cultureKeyName = cultureKeyName?.TrimStart('.');
 
-            return cultureKeyName.IsNullOrEmpty() ? null : CultureInfo.GetCultureInfo(cultureKeyName);
+            if (cultureKeyName.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            return int.TryParse(cultureKeyName, out var lcid)
+                ? CultureInfo.GetCultureInfo(lcid)
+                : CultureInfo.GetCultureInfo(cultureKeyName);
         }
         catch (ArgumentException)
         {
@@ -48,7 +55,23 @@ public static class ExtensionMethods
         {
             cultureKeyName = cultureKeyName?.TrimStart('.');
 
-            return new CultureKey(cultureKeyName.IsNullOrEmpty() ? null : CultureInfo.GetCultureInfo(cultureKeyName));
+            CultureInfo? culture = null;
+            var useLcid = false;
+
+            if (!cultureKeyName.IsNullOrEmpty())
+            {
+                if (int.TryParse(cultureKeyName, out var lcid))
+                {
+                    culture = CultureInfo.GetCultureInfo(lcid);
+                    useLcid = true;
+                }
+                else
+                {
+                    culture = CultureInfo.GetCultureInfo(cultureKeyName);
+                }
+            }
+
+            return new CultureKey(culture, useLcid);
         }
         catch (ArgumentException)
         {

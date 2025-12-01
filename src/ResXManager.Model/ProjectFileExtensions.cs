@@ -103,12 +103,37 @@ public static class ProjectFileExtensions
 
     public static string GetLanguageFileName(this ProjectFile projectFile, CultureInfo culture)
     {
+        return GetLanguageFileName(projectFile, null, culture);
+    }
+
+    public static string GetLanguageFileName(this ProjectFile projectFile, CultureKey? projectFileCultureKey, CultureInfo culture)
+    {
         var extension = projectFile.Extension;
         var filePath = projectFile.FilePath;
 
         if (Resx.Equals(extension, StringComparison.OrdinalIgnoreCase))
         {
-            return Path.ChangeExtension(filePath, culture.ToString()) + @".resx";
+            if (projectFileCultureKey != null && projectFileCultureKey.UseLCID)
+            {
+                // LCID based resource might not have a resource without any file extension. Therefore we need to remove two file extensions.
+                // Example project file resource file: `Strings.1033.resx`.
+                var fileNameWithoutResxExtension = Path.GetFileNameWithoutExtension(filePath);
+                // Only remove second extension when it is a number (LCID).
+                if (Path.HasExtension(fileNameWithoutResxExtension)
+                    && int.TryParse(Path.GetExtension(fileNameWithoutResxExtension).TrimStart('.'), out var _))
+                {
+                    // Remove both extensions before adding the LCID extension.
+                    return Path.ChangeExtension(Path.ChangeExtension(filePath, null), culture.LCID.ToString("D", CultureInfo.InvariantCulture)) + @".resx";
+                }
+                else
+                {
+                    return Path.ChangeExtension(filePath, culture.LCID.ToString("D", CultureInfo.InvariantCulture)) + @".resx";
+                }
+            }
+            else
+            {
+                return Path.ChangeExtension(filePath, culture.ToString()) + @".resx";
+            }
         }
 
         if (Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))

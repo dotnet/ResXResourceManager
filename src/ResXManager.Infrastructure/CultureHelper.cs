@@ -9,6 +9,18 @@ using TomsToolbox.Essentials;
 
 public static class CultureHelper
 {
+    public static CultureInfo CreateCultureInfo(string? languageName)
+    {
+        if (int.TryParse(languageName, out var lcid))
+        {
+            return new CultureInfo(lcid);
+        }
+        else
+        {
+            return new CultureInfo(languageName);
+        }
+    }
+
     public static bool IsValidCultureName(string? languageName)
     {
         try
@@ -21,7 +33,7 @@ public static class CultureHelper
                 return true;
 
             // #376: support Custom dialect resource
-            var culture = new CultureInfo(languageName);
+            var culture = CreateCultureInfo(languageName);
             while (!culture.IsNeutralCulture)
             {
                 culture = culture.Parent;
