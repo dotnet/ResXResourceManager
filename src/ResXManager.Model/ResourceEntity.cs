@@ -36,7 +36,7 @@ public sealed class ResourceEntity : IComparable, IComparable<ResourceEntity>
         RelativePath = GetRelativePath(files);
         DisplayName = projectName + @" - " + RelativePath + baseName;
 
-        NeutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey(neutralResourcesLanguage) == CultureKey.Neutral);
+        NeutralProjectFile = files.FirstOrDefault(file => file.GetCultureDefinition(neutralResourcesLanguage).CultureKey == CultureKey.Neutral);
         NeutralResourcesLanguage = neutralResourcesLanguage;
 
         var entriesQuery = _languages.Values
@@ -56,7 +56,7 @@ public sealed class ResourceEntity : IComparable, IComparable<ResourceEntity>
         if (!MergeItems(GetResourceLanguages(files, neutralResourcesLanguage, duplicateKeyHandling)))
             return false; // nothing has changed, no need to continue
 
-        var neutralProjectFile = files.FirstOrDefault(file => file.GetCultureKey(neutralResourcesLanguage) == CultureKey.Neutral);
+        var neutralProjectFile = files.FirstOrDefault(file => file.GetCultureDefinition(neutralResourcesLanguage).CultureKey == CultureKey.Neutral);
 
         UpdateResourceTableEntries();
 
@@ -69,7 +69,7 @@ public sealed class ResourceEntity : IComparable, IComparable<ResourceEntity>
     {
         var duplicateKeyHandling = Container.Configuration.DuplicateKeyHandling;
 
-        updatedLanguage = new ResourceLanguage(this, file.GetCultureKey(NeutralResourcesLanguage), file, duplicateKeyHandling);
+        updatedLanguage = new ResourceLanguage(this, file.GetCultureDefinition(NeutralResourcesLanguage), file, duplicateKeyHandling);
         if (!UpdateEntry(updatedLanguage))
         {
             updatedLanguage = null;
@@ -216,10 +216,10 @@ public sealed class ResourceEntity : IComparable, IComparable<ResourceEntity>
     /// <param name="file">The file.</param>
     public void AddLanguage(ProjectFile file)
     {
-        var cultureKey = file.GetCultureKey(NeutralResourcesLanguage);
-        var resourceLanguage = new ResourceLanguage(this, cultureKey, file, Container.Configuration.DuplicateKeyHandling);
+        var cultureKeyInfo = file.GetCultureDefinition(NeutralResourcesLanguage);
+        var resourceLanguage = new ResourceLanguage(this, cultureKeyInfo, file, Container.Configuration.DuplicateKeyHandling);
 
-        _languages.Add(cultureKey, resourceLanguage);
+        _languages.Add(cultureKeyInfo.CultureKey, resourceLanguage);
         _resourceTableEntries.ForEach(entry => entry.Refresh());
 
         Container.OnLanguageAdded(resourceLanguage, file);
@@ -295,11 +295,11 @@ public sealed class ResourceEntity : IComparable, IComparable<ResourceEntity>
 
     private IDictionary<CultureKey, ResourceLanguage> GetResourceLanguages(IEnumerable<ProjectFile> files, CultureInfo neutralResourcesLanguage, DuplicateKeyHandling duplicateKeyHandling)
     {
-        var languageQuery =
-            from file in files
-            let cultureKey = file.GetCultureKey(neutralResourcesLanguage)
-            orderby cultureKey
-            select new ResourceLanguage(this, cultureKey, file, duplicateKeyHandling);
+        var languageQuery = files
+            .Select(file => new { file, cultureKeyInfo = file.GetCultureDefinition(neutralResourcesLanguage) })
+            .OrderBy(item => item.cultureKeyInfo.CultureKey.IsNeutral ? 0 : 1)
+            .ThenBy(item => item.cultureKeyInfo.CultureKey)
+            .Select(item => new ResourceLanguage(this, item.cultureKeyInfo, item.file, duplicateKeyHandling));
 
         var languages = languageQuery.ToDictionary(language => language.CultureKey);
 

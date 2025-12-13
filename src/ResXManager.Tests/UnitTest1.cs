@@ -21,6 +21,11 @@ public class UnitTest1
     [InlineData("en-dummy", false)]
     [InlineData("some", false)]
     [InlineData("qps-ploc", true)] // pseudo locale
+    [InlineData("1031", true)]
+    [InlineData("1033", true)]
+    [InlineData("0", false)]
+    [InlineData("-1", false)]
+    [InlineData("256", false)]
     public void IsValidLanguageNameTest(string cultureName, bool expected)
     {
         Assert.Equal(expected, CultureHelper.IsValidCultureName(cultureName));

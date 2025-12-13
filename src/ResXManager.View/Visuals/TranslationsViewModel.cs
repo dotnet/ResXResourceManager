@@ -139,7 +139,7 @@ internal sealed partial class TranslationsViewModel : INotifyPropertyChanged
     private static IEnumerable<CultureKey> UnselectedTargetCultures
     {
         get => (Settings.Default.TranslationUnselectedTargetCultures ?? string.Empty)
-            .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+            .Split([','], StringSplitOptions.RemoveEmptyEntries)
             .Select(c => c.ToCultureKey())
             .ExceptNullItems();
         set => Settings.Default.TranslationUnselectedTargetCultures = string.Join(",", value.Select(c => c.ToString(".")));

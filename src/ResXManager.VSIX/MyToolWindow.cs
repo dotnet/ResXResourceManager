@@ -25,6 +25,7 @@ using Microsoft.Win32;
 using ResXManager.Infrastructure;
 using ResXManager.Model;
 using ResXManager.VSIX.Compatibility;
+using ResXManager.VSIX.Properties;
 using ResXManager.VSIX.Visuals;
 
 using TomsToolbox.Composition;
@@ -35,7 +36,6 @@ using TomsToolbox.Wpf.Composition.XamlExtensions;
 using MessageBoxResult = Microsoft.VisualStudio.VSConstants.MessageBoxResult;
 
 using static Microsoft.VisualStudio.Shell.ThreadHelper;
-using ResXManager.VSIX.Properties;
 
 /// <summary>
 /// This class implements the tool window exposed by this package and hosts a user control.
@@ -279,7 +279,7 @@ public sealed class MyToolWindow : ToolWindowPane
         ThrowIfNotOnUIThread();
 
         var resourceLanguages = entity.Languages;
-        if (!resourceLanguages.Any())
+        if (resourceLanguages.Count == 0)
             return false;
 
         if (_configuration.ConfirmAddLanguageFile)
@@ -291,7 +291,7 @@ public sealed class MyToolWindow : ToolWindowPane
         }
 
         var neutralLanguage = resourceLanguages.First();
-        var languageFileName = neutralLanguage.ProjectFile.GetLanguageFileName(culture);
+        var languageFileName = neutralLanguage.GetLanguageFileName(culture);
 
         if (!File.Exists(languageFileName))
         {

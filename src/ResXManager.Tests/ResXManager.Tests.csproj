@@ -34,4 +34,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Resources\Lcid\Lcid.1033.resx">
+      <Generator></Generator>
+    </Content>
+  </ItemGroup>
 </Project>

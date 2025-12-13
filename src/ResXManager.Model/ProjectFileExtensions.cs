@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 
 using ResXManager.Infrastructure;
-using TomsToolbox.Essentials;
 
 public static class ProjectFileExtensions
 {
@@ -52,7 +51,7 @@ public static class ProjectFileExtensions
         return IsResourceFile(filePath, extension);
     }
 
-    public static CultureKey GetCultureKey(this ProjectFile projectFile, CultureInfo neutralResourcesLanguage)
+    public static CultureDefinition GetCultureDefinition(this ProjectFile projectFile, CultureInfo neutralResourcesLanguage)
     {
         var extension = projectFile.Extension;
         var filePath = projectFile.FilePath;
@@ -62,13 +61,21 @@ public static class ProjectFileExtensions
             var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
             var cultureName = Path.GetExtension(fileNameWithoutExtension).TrimStart('.');
 
-            if (cultureName.IsNullOrEmpty())
-                return CultureKey.Neutral;
-
             if (!CultureHelper.IsValidCultureName(cultureName))
-                return CultureKey.Neutral;
+                return new(CultureKey.Neutral, CultureRepresentation.Name);
 
-            return new CultureKey(cultureName);
+            var cultureKey = new CultureKey(cultureName);
+
+            if (!int.TryParse(cultureName, NumberStyles.Integer, CultureInfo.InvariantCulture, out var lcid))
+                return new(cultureKey, CultureRepresentation.Name);
+
+            if (Equals(neutralResourcesLanguage, CultureInfo.GetCultureInfo(lcid)))
+            {
+                return new(CultureKey.Neutral, CultureRepresentation.Lcid);
+            }
+
+            return new(cultureKey, CultureRepresentation.Lcid);
+
         }
 
         if (Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
@@ -80,7 +87,9 @@ public static class ProjectFileExtensions
 
             var culture = cultureName.ToCulture();
 
-            return Equals(neutralResourcesLanguage, culture) ? CultureKey.Neutral : new CultureKey(culture);
+            var cultureKey = Equals(neutralResourcesLanguage, culture) ? CultureKey.Neutral : new CultureKey(culture);
+
+            return new(cultureKey, CultureRepresentation.Name);
         }
 
         throw new InvalidOperationException("Unsupported file format: " + extension);
@@ -101,14 +110,30 @@ public static class ProjectFileExtensions
         return CultureHelper.IsValidCultureName(languageName) ? Path.GetFileNameWithoutExtension(name) : name;
     }
 
-    public static string GetLanguageFileName(this ProjectFile projectFile, CultureInfo culture)
+    public static string GetLanguageFileName(this ResourceLanguage neutralLanguage, CultureInfo culture)
     {
+        var projectFile = neutralLanguage.ProjectFile;
+
         var extension = projectFile.Extension;
         var filePath = projectFile.FilePath;
 
         if (Resx.Equals(extension, StringComparison.OrdinalIgnoreCase))
         {
-            return Path.ChangeExtension(filePath, culture.ToString()) + @".resx";
+            var baseName = Path.ChangeExtension(filePath, null);
+            string cultureTag;
+
+            if (neutralLanguage.CultureRepresentation == CultureRepresentation.Lcid)
+            {
+                // Neutral LCID based resource also includes a language tag in the file, e.g. "Strings.1033.resx" - else we would not have classified it as LCID based.
+                baseName = Path.ChangeExtension(baseName, null);
+                cultureTag = culture.LCID.ToString("D", CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                cultureTag = culture.Name;
+            }
+
+            return $"{baseName}.{cultureTag}.resx";
         }
 
         if (Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))

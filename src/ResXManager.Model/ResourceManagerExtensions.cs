@@ -27,7 +27,7 @@ public static class ResourceManagerExtensions
 
         var allProjectFiles = fileInfos
             .Select(item => item.Intercept(_ => EnumerationShouldContinue()))
-            .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, @"<unknown>", null))
+            .Select(fileInfo => new ProjectFile(fileInfo.FullName, solutionFolder.FullName, "<unknown>", null))
             .Where(fileFilter.Matches)
             .ToList();
 
