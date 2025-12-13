@@ -34,11 +34,10 @@ public static class ExtensionMethods
         {
             return CultureHelper.CreateCultureInfo(cultureKeyName?.TrimStart('.').NullIfEmpty());
         }
-        catch (ArgumentException)
+        catch 
         {
+            throw new InvalidOperationException("Error parsing language: " + cultureKeyName);
         }
-
-        throw new InvalidOperationException("Error parsing language: " + cultureKeyName);
     }
 
     /// <summary>
@@ -54,8 +53,9 @@ public static class ExtensionMethods
         {
             return ToCulture(cultureKeyName);
         }
-        catch (ArgumentException)
+        catch
         {
+            // invalid culture, ignore...
         }
 
         return null;
