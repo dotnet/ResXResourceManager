@@ -43,16 +43,17 @@ public class ResourceLanguage
     /// Initializes a new instance of the <see cref="ResourceLanguage" /> class.
     /// </summary>
     /// <param name="container">The containing resource entity.</param>
-    /// <param name="cultureKey">The culture key.</param>
+    /// <param name="cultureDefinition">Culture key and representation.</param>
     /// <param name="file">The .resx file having all the localization.</param>
     /// <param name="duplicateKeyHandling">The duplicate key handling.</param>
     /// <exception cref="InvalidOperationException">
     /// </exception>
     /// <exception cref="InvalidOperationException"></exception>
-    internal ResourceLanguage(ResourceEntity container, CultureKey cultureKey, ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
+    internal ResourceLanguage(ResourceEntity container, CultureDefinition cultureDefinition, ProjectFile file, DuplicateKeyHandling duplicateKeyHandling)
     {
         Container = container;
-        CultureKey = cultureKey;
+        CultureKey = cultureDefinition.CultureKey;
+        CultureRepresentation = cultureDefinition.CultureRepresentation;
         ProjectFile = file;
         _configuration = container.Container.Configuration;
 
@@ -129,6 +130,8 @@ public class ResourceLanguage
     public ProjectFile ProjectFile { get; }
 
     public bool IsNeutralLanguage => Container.Languages.FirstOrDefault() == this;
+
+    public CultureRepresentation CultureRepresentation { get; }
 
     public CultureKey CultureKey { get; }
 

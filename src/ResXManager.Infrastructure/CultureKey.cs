@@ -3,6 +3,24 @@
 using System;
 using System.Globalization;
 
+public enum CultureRepresentation
+{
+    /// <summary>
+    /// BCP 47 language tag (e.g. "en-US") 
+    /// </summary>
+    Name,
+    /// <summary>
+    /// Windows Language Code Identifier (Lcid)
+    /// </summary>
+    Lcid
+}
+
+public sealed class CultureDefinition(CultureKey cultureKey, CultureRepresentation cultureRepresentation)
+{
+    public CultureKey CultureKey { get; } = cultureKey;
+    public CultureRepresentation CultureRepresentation { get; } = cultureRepresentation;
+}
+
 /// <summary>
 /// A class encapsulating a <see cref="CultureInfo"/>, usable as a key to a dictionary to allow also indexing a <c>null</c> <see cref="CultureInfo"/>.
 /// </summary>
@@ -29,9 +47,9 @@ public class CultureKey : IComparable<CultureKey>, IEquatable<CultureKey>, IComp
         return ToString(string.Empty);
     }
 
-    public string ToString(string neutralCultureKey)
+    public string ToString(string neutralCultureName)
     {
-        return Culture != null ? "." + Culture.Name : neutralCultureKey;
+        return Culture != null ? "." + Culture.Name : neutralCultureName;
     }
 
     #region IComparable/IEquatable implementation

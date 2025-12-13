@@ -109,7 +109,7 @@ internal class MainViewModel : ObservableObject
         {
             SelectedPath = Settings.Default.StartupFolder
         };
-        
+
         if (browserDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
             return;
 
@@ -199,7 +199,7 @@ internal class MainViewModel : ObservableObject
                 if (neutralLanguage == null)
                     return false;
 
-                var languageFileName = neutralLanguage.ProjectFile.GetLanguageFileName(culture);
+                var languageFileName = neutralLanguage.GetLanguageFileName(culture);
 
                 if (!File.Exists(languageFileName))
                 {
@@ -261,7 +261,7 @@ internal class SourceFilesProvider : ObservableObject, ISourceFilesProvider
     {
         var solutionFolder = SolutionFolder;
 
-        if (!Directory.Exists(solutionFolder)) 
+        if (!Directory.Exists(solutionFolder))
             return;
 
         Settings.Default.StartupFolder = solutionFolder;
@@ -278,7 +278,7 @@ internal class SourceFilesProvider : ObservableObject, ISourceFilesProvider
             var fileFilter = new FileFilter(_configuration);
             var directoryInfo = new DirectoryInfo(folder);
 
-            return await Task.Run(() => directoryInfo.GetAllSourceFiles(fileFilter, cancellationToken), cancellationToken ?? new CancellationToken()).ConfigureAwait(false);
+            return await Task.Run(() => directoryInfo.GetAllSourceFiles(fileFilter, cancellationToken), cancellationToken ?? CancellationToken.None).ConfigureAwait(false);
         }
     }
 }

@@ -12,6 +12,14 @@ using TomsToolbox.Essentials;
 
 public static class ExtensionMethods
 {
+    public static string? NullIfEmpty(this string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return null;
+
+        return value;
+    }
+
     /// <summary>
     /// Converts the culture key name to the corresponding culture. The key name is the ieft language tag with an optional '.' prefix.
     /// </summary>
@@ -24,15 +32,12 @@ public static class ExtensionMethods
     {
         try
         {
-            cultureKeyName = cultureKeyName?.TrimStart('.');
-
-            return cultureKeyName.IsNullOrEmpty() ? null : CultureInfo.GetCultureInfo(cultureKeyName);
+            return CultureHelper.CreateCultureInfo(cultureKeyName?.TrimStart('.').NullIfEmpty());
         }
-        catch (ArgumentException)
+        catch 
         {
+            throw new InvalidOperationException("Error parsing language: " + cultureKeyName);
         }
-
-        throw new InvalidOperationException("Error parsing language: " + cultureKeyName);
     }
 
     /// <summary>
@@ -46,12 +51,11 @@ public static class ExtensionMethods
     {
         try
         {
-            cultureKeyName = cultureKeyName?.TrimStart('.');
-
-            return new CultureKey(cultureKeyName.IsNullOrEmpty() ? null : CultureInfo.GetCultureInfo(cultureKeyName));
+            return ToCulture(cultureKeyName);
         }
-        catch (ArgumentException)
+        catch
         {
+            // invalid culture, ignore...
         }
 
         return null;

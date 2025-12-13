@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 
@@ -9,6 +10,15 @@ using TomsToolbox.Essentials;
 
 public static class CultureHelper
 {
+    [return: NotNullIfNotNull("languageName")]
+    public static CultureInfo? CreateCultureInfo(string? languageName)
+    {
+        if (languageName is null)
+            return null;
+
+        return int.TryParse(languageName, out var lcid) ? new CultureInfo(lcid) : new CultureInfo(languageName);
+    }
+
     public static bool IsValidCultureName(string? languageName)
     {
         try
@@ -21,7 +31,7 @@ public static class CultureHelper
                 return true;
 
             // #376: support Custom dialect resource
-            var culture = new CultureInfo(languageName);
+            var culture = CreateCultureInfo(languageName);
             while (!culture.IsNeutralCulture)
             {
                 culture = culture.Parent;

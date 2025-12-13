@@ -142,7 +142,7 @@ public sealed class Host : IDisposable
         if (neutralLanguage == null)
             return false;
 
-        var languageFileName = neutralLanguage.ProjectFile.GetLanguageFileName(culture);
+        var languageFileName = neutralLanguage.GetLanguageFileName(culture);
 
         if (!File.Exists(languageFileName))
         {
