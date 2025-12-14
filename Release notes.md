@@ -1,4 +1,8 @@
-﻿1.102:
+﻿1.103:
+- Fix #731: Support language representation as LCID used by PFC projects (#734)
+- Adjustments to the Translation API for OpenAI (#730) Co-authored-by: Klemens Körner <klemens.koerner@sentech.de>
+
+1.102:
 - Add option to enable beta languages when using DeepL api (#729) Co-authored-by: Adrian Turcanu <adrian.turcanu@cometanalysis.com>
 - Relax regex pattern to find all code references using ResourceManager.GetString(... (#728)
 
