@@ -136,7 +136,7 @@ internal sealed class Refactorings : IRefactorings
         var projectResources = new HashSet<ResourceEntity>(GetResourceEntriesFromProject(document, entities));
 
         // put resources from the same project on top
-        entities.RemoveAll(entity => projectResources.Contains(entity));
+        entities.RemoveAll(projectResources.Contains);
         entities.InsertRange(0, projectResources);
 
         // put the last used entry on top, if it's in the same project, or the last access was cross-project.
@@ -197,7 +197,7 @@ internal sealed class Refactorings : IRefactorings
         }
         catch (Exception)
         {
-            return Enumerable.Empty<ResourceEntity>();
+            return [];
         }
     }
 
@@ -256,7 +256,7 @@ internal sealed class Refactorings : IRefactorings
         if (document is null)
             return null;
 
-        var textDocument = (TextDocument?)document.Object(@"TextDocument");
+        var textDocument = (TextDocument?)document.Object("TextDocument");
         if (textDocument is null)
             return null;
 
@@ -396,56 +396,42 @@ internal sealed class Refactorings : IRefactorings
             return locator.Locate(@"""") ?? locator.Locate("'") ?? locator.Locate("`");
         }
 
-        private sealed class Locator
+        private sealed class Locator(string line, int column, Selection? selection)
         {
-            private readonly string _line;
-            private readonly int _column;
-            private readonly Selection? _selection;
-
-            public Locator(string line, int column, Selection? selection)
-            {
-                _line = line;
-                _column = column;
-                _selection = selection;
-            }
-
             public string? Locate(string quote)
             {
                 ThrowIfNotOnUIThread();
 
                 var secondQuote = -1;
 
-                while (secondQuote < _line.Length)
+                while (secondQuote < line.Length)
                 {
-                    var firstQuote = _line.IndexOf(quote, secondQuote + 1, StringComparison.Ordinal);
+                    var firstQuote = line.IndexOf(quote, secondQuote + 1, StringComparison.Ordinal);
                     if (firstQuote == -1)
                         return null;
 
-                    if (_line.Length <= firstQuote + 1)
+                    var startIndex = firstQuote + 1;
+
+                    if (line.Length <= startIndex)
                         return null;
 
-                    if (_column < firstQuote)
+                    if (column < firstQuote)
                         return null;
 
-                    secondQuote = _line.IndexOf(quote, firstQuote + 1, StringComparison.Ordinal);
+                    secondQuote = line.IndexOf(quote, startIndex, StringComparison.Ordinal);
                     if (secondQuote == -1)
                         return null;
 
-                    if (_column >= secondQuote)
+                    var endIndex = secondQuote + 2;
+
+                    if (column >= endIndex)
                         continue;
 
-                    var startIndex = firstQuote + 1;
-                    var length = secondQuote - firstQuote - 1;
+                    var length = secondQuote - startIndex;
 
-                    if (_selection != null)
-                    {
-                        var startColumn = firstQuote + 1;
-                        var endColumn = secondQuote + 2;
+                    selection?.MoveTo(startIndex, endIndex);
 
-                        _selection.MoveTo(startColumn, endColumn);
-                    }
-
-                    return _line.Substring(startIndex, length);
+                    return line.Substring(startIndex, length);
                 }
 
                 return null;

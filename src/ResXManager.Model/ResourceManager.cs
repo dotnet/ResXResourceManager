@@ -22,7 +22,7 @@ using TomsToolbox.ObservableCollections;
 /// </summary>
 [Shared]
 [Export]
-public sealed class ResourceManager : INotifyPropertyChanged
+public sealed partial class ResourceManager : INotifyPropertyChanged
 {
     private string? _snapshot;
 
@@ -309,12 +309,5 @@ public sealed class ResourceManager : INotifyPropertyChanged
     public string CreateSnapshot()
     {
         return _snapshot = ResourceEntities.CreateSnapshot();
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

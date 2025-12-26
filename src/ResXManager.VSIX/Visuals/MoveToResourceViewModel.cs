@@ -57,7 +57,7 @@ internal sealed partial class MoveToResourceViewModel : INotifyPropertyChanged, 
         Key = Keys.Skip(SelectedKeyIndex).FirstOrDefault() ?? Keys.FirstOrDefault();
         Value = text;
 
-        PropertyChanged += ((_, _) => Update());
+        PropertyChanged += (_, _) => Update();
     }
 
     private static string BaseFileName(string fileName)
@@ -197,28 +197,12 @@ internal sealed partial class MoveToResourceViewModel : INotifyPropertyChanged, 
     string? IDataErrorInfo.Error => null;
 }
 
-public sealed class Replacement : INotifyPropertyChanged
+public sealed partial class Replacement(string pattern, Func<string, string> evaluator) : INotifyPropertyChanged
 {
-    private readonly string _pattern;
-    private readonly Func<string, string> _evaluator;
-
-    public Replacement(string pattern, Func<string, string> evaluator)
-    {
-        _pattern = pattern;
-        _evaluator = evaluator;
-    }
-
-    public string? Value => _evaluator(_pattern);
-
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public string? Value => evaluator(pattern);
 
     public void Update()
     {
         OnPropertyChanged(nameof(Value));
-    }
-
-    private void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

@@ -77,14 +77,14 @@ internal static class DteExtensions
             if ((hierarchyPtr == IntPtr.Zero) || (itemId == VSConstants.VSITEMID_ROOT))
                 return Array.Empty<VSITEMSELECTION>();
 
-            return new[]
-            {
+            return
+            [
                 new VSITEMSELECTION
                 {
                     pHier = Marshal.GetObjectForIUnknown(hierarchyPtr) as IVsHierarchy,
                     itemid = itemId
                 }
-            };
+            ];
         }
         finally
         {
@@ -144,12 +144,12 @@ internal static class DteExtensions
 
     public static IEnumerable<EnvDTE.ProjectItem> Children(this EnvDTE.ProjectItem? projectItem)
     {
-        return projectItem?.TryGetProjectItems() ?? Enumerable.Empty<EnvDTE.ProjectItem>();
+        return projectItem?.TryGetProjectItems() ?? [];
     }
 
     public static IEnumerable<EnvDTE.ProjectItem> Descendants(this EnvDTE.ProjectItem? projectItem)
     {
-        return projectItem?.TryGetProjectItems()?.SelectMany(p => p.DescendantsAndSelf()) ?? Enumerable.Empty<EnvDTE.ProjectItem>();
+        return projectItem?.TryGetProjectItems()?.SelectMany(p => p.DescendantsAndSelf()) ?? [];
     }
 
     public static IEnumerable<EnvDTE.ProjectItem> DescendantsAndSelf(this EnvDTE.ProjectItem? projectItem)
@@ -167,7 +167,7 @@ internal static class DteExtensions
 
     public static IEnumerable<SolutionItem> Descendants(this SolutionItem? projectItem)
     {
-        return projectItem?.Children.SelectMany(p => p.DescendantsAndSelf()) ?? Enumerable.Empty<SolutionItem>();
+        return projectItem?.Children.SelectMany(p => p.DescendantsAndSelf()) ?? [];
     }
 
     public static IEnumerable<SolutionItem> DescendantsAndSelf(this SolutionItem? projectItem)
