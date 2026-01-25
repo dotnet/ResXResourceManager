@@ -4,9 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
              xmlns:local="clr-namespace:ResXManager.Translators"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              d:DataContext="{d:DesignInstance local:LibreTranslateTranslator}"
              d:DesignWidth="500">
   <StackPanel Orientation="Vertical">
-    <!-- No additional configuration options needed beyond the standard credentials -->
+    <StackPanel Orientation="Horizontal">
+      <!-- No additional configuration options needed beyond the credentials -->
+      <TextBlock Text="Alternatives:" Margin="0,0,10, 0" VerticalAlignment="Center"/>
+      <ComboBox SelectedValue="{Binding Alternatives, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="Preferred number of alternative translations (optional)"
+                Width="50">
+        <system:Int32>0</system:Int32>
+        <system:Int32>1</system:Int32>
+        <system:Int32>2</system:Int32>
+        <system:Int32>3</system:Int32>
+      </ComboBox>
+    </StackPanel>
   </StackPanel>
 </UserControl>

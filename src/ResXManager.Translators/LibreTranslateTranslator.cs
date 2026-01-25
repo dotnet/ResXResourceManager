@@ -17,7 +17,7 @@ using ResXManager.Infrastructure;
 
 using TomsToolbox.Essentials;
 
-using JsonConvert = ResXManager.Infrastructure.JsonConvert;
+using JsonConvert = Infrastructure.JsonConvert;
 
 /// <summary>
 /// A translator implementation that uses the LibreTranslate API for translating resources.
@@ -42,6 +42,11 @@ public class LibreTranslateTranslator : TranslatorBase
         new CredentialItem("Url", "API Url", false),
         new CredentialItem("ApiKey", "API Key")
     ];
+
+    /// <summary>
+    /// Backing-field for <see cref="Alternatives"/>.
+    /// </summary>
+    private int _alternatives;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LibreTranslateTranslator"/> class.
@@ -75,6 +80,25 @@ public class LibreTranslateTranslator : TranslatorBase
     {
         get => SaveCredentials ? Credentials[1].Value : null;
         set => Credentials[1].Value = value;
+    }
+
+    /// <summary>
+    /// Gets or sets the serialized preferred number of alternative translations.
+    /// </summary>
+    [DataMember(Name = "Alternatives")]
+    public int Alternatives
+    {
+        get => _alternatives;
+        set
+        {
+            if (value == _alternatives)
+            {
+                return;
+            }
+
+            _alternatives = value;
+            OnPropertyChanged();
+        }
     }
 
     /// <summary>
@@ -118,15 +142,19 @@ public class LibreTranslateTranslator : TranslatorBase
                     RemoveKeyboardShortcutIndicators(item.Source),
                     translationSession.SourceLanguage,
                     targetCulture,
+                    Alternatives,
                     translationSession.CancellationToken).ConfigureAwait(false);
 
-                await translationSession.MainThread.StartNew(() =>
+                if (result is { Length: > 0 })
                 {
-                    if (!result.IsNullOrEmpty())
+                    await translationSession.MainThread.StartNew(() =>
                     {
-                        item.Results.Add(new TranslationMatch(this, result, Ranking));
-                    }
-                }).ConfigureAwait(false);
+                        for (var index = 0; index < result.Length; index++)
+                        {
+                            item.Results.Add(new TranslationMatch(this, result[index], Ranking));
+                        }
+                    }).ConfigureAwait(false);
+                }
             }
         }
     }
@@ -141,12 +169,13 @@ public class LibreTranslateTranslator : TranslatorBase
     /// <param name="targetLanguage">The target language.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The translated text.</returns>
-    public static async Task<string?> TranslateAsync(
+    public static async Task<string[]?> TranslateAsync(
         string url,
         string? apiKey,
         string text,
         CultureInfo sourceLanguage,
         CultureInfo targetLanguage,
+        int? alternatives,
         CancellationToken cancellationToken)
     {
         using var httpClient = new HttpClient();
@@ -158,7 +187,8 @@ public class LibreTranslateTranslator : TranslatorBase
             Text = text,
             Source = sourceLanguage.TwoLetterISOLanguageName,
             Target = targetLanguage.TwoLetterISOLanguageName,
-            ApiKey = apiKey
+            ApiKey = apiKey,
+            Alternatives = alternatives
         };
 
         var json = JsonConvert.SerializeObject(requestModel);
@@ -176,10 +206,15 @@ public class LibreTranslateTranslator : TranslatorBase
     /// </summary>
     /// <param name="json">The JSON response from the LibreTranslate API.</param>
     /// <returns>The translated text, or <see langword="null"/> if parsing fails.</returns>
-    public static string? ParseResponse(string json)
+    public static string[]? ParseResponse(string json)
     {
         var result = JsonConvert.DeserializeObject<LibreTranslateResponse>(json);
-        return result?.TranslatedText;
+        if (result?.TranslatedText is null)
+        {
+            return null;
+        }
+
+        return new[] { result.TranslatedText }.Concat(result.Alternatives ?? Array.Empty<string>()).ToArray();
     }
 
     /// <summary>
@@ -210,6 +245,12 @@ public class LibreTranslateTranslator : TranslatorBase
         /// </summary>
         [JsonProperty("format")]
         public string? Format { get; set; } = "text";
+
+        /// <summary>
+        /// Gets or sets the preferred number of alternative translations.
+        /// </summary>
+        [JsonProperty("alternatives")]
+        public int? Alternatives { get; set; }
 
         /// <summary>
         /// Gets or sets the API key used to authenticate with the LibreTranslate instance.

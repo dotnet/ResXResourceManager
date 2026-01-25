@@ -51,6 +51,16 @@ public class LibreTranslateTranslatorTests
     }
 
     [Fact]
+    public void LibreTranslateParsesResponseWithAlternativesCorrectly()
+    {
+        const string input = "{\"translatedText\":\"Hi\",\"alternatives\":[\"Hello\",\"Hey\"]}";
+
+        var result = Translators.LibreTranslateTranslator.ParseResponse(input);
+
+        Assert.Equal(new string[] { "Hi", "Hello", "Hey" }, result);
+    }
+
+    [Fact]
     public void LibreTranslateThrowsOnBadJson()
     {
         const string input = """
@@ -93,6 +103,7 @@ public class LibreTranslateTranslatorTests
             text: "Good morning",
             sourceLanguage: CultureInfo.GetCultureInfo("en"),
             targetLanguage: CultureInfo.GetCultureInfo("de"),
+            alternatives: null,
             cancellationToken: CancellationToken.None);
 
         Assert.NotNull(result);
@@ -121,6 +132,7 @@ public class LibreTranslateTranslatorTests
                 text: "Hello",
                 sourceLanguage: CultureInfo.GetCultureInfo("en"),
                 targetLanguage: CultureInfo.GetCultureInfo("es"),
+                alternatives: null,
                 cancellationToken: cts.Token));
     }
 
