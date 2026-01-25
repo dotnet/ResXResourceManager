@@ -10,8 +10,8 @@ public class TranslatorTests
     public void GoogleLiteParsesFragmentedResponseCorrectly()
     {
         const string input = """
-        [[["Ei! ","Hey there! ",null,null,10],["Como tá indo? ","How's it going? ",null,null,10],["Isso é ótimo! ","That's great! ",null,null,10],["K, tchau","K, bye",null,null,3,null,null,[[]],[[["66379e56ded86dd057796dbeaebad517","en_pt_2023q1.md"]]]]],null,"en",null,null,null,null,[]]
-        """;
+                             [[["Ei! ","Hey there! ",null,null,10],["Como tá indo? ","How's it going? ",null,null,10],["Isso é ótimo! ","That's great! ",null,null,10],["K, tchau","K, bye",null,null,3,null,null,[[]],[[["66379e56ded86dd057796dbeaebad517","en_pt_2023q1.md"]]]]],null,"en",null,null,null,null,[]]
+                             """;
 
         var result = Translators.GoogleTranslatorLite.ParseResponse(input);
 
@@ -22,8 +22,8 @@ public class TranslatorTests
     public void GoogleLiteParsesInvalidResponseCorrectly()
     {
         const string input = $$"""
-        {"x":[["Ei! "]]}
-        """;
+                               {"x":[["Ei! "]]}
+                               """;
 
         var result = Translators.GoogleTranslatorLite.ParseResponse(input);
 
@@ -34,8 +34,8 @@ public class TranslatorTests
     public void GoogleLiteThrowsOnBadJson()
     {
         const string input = $$"""
-        {"x":Ei!"]]}
-        """;
+                               {"x":Ei!"]]}
+                               """;
 
         Assert.ThrowsAny<Exception>(() => Translators.GoogleTranslatorLite.ParseResponse(input));
     }
