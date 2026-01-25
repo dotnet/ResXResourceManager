@@ -2,6 +2,7 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ public class LibreTranslateTranslatorTests
     {
         const string input = "{\"translatedText\":\"¡Hola!\"}";
 
-        var result = Translators.LibreTranslateTranslator.ParseResponse(input);
+        var result = Translators.LibreTranslateTranslator.ParseResponse(input).First();
 
         Assert.Equal("¡Hola!", result);
     }
@@ -25,7 +26,7 @@ public class LibreTranslateTranslatorTests
     {
         const string input = "{\"detectedLanguage\":{\"confidence\":90.0,\"language\":\"fr\"},\"translatedText\":\"Hello!\"}";
 
-        var result = Translators.LibreTranslateTranslator.ParseResponse(input);
+        var result = Translators.LibreTranslateTranslator.ParseResponse(input).First();
 
         Assert.Equal("Hello!", result);
     }
@@ -57,7 +58,7 @@ public class LibreTranslateTranslatorTests
 
         var result = Translators.LibreTranslateTranslator.ParseResponse(input);
 
-        Assert.Equal(new string[] { "Hi", "Hello", "Hey" }, result);
+        Assert.Equal(["Hi", "Hello", "Hey"], result);
     }
 
     [Fact]
@@ -108,9 +109,10 @@ public class LibreTranslateTranslatorTests
 
         Assert.NotNull(result);
         Assert.NotEmpty(result);
+        Assert.NotEmpty(result[0]);
 
         // "Good morning" in German is typically "Guten Morgen"
-        Assert.Contains("Guten Morgen", result, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("Guten Morgen", result[0], StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
