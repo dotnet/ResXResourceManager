@@ -197,6 +197,7 @@ public class LibreTranslateTranslator : TranslatorBase
         var response = await httpClient.PostAsync(new Uri(translateUrl), content, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
+#pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods => not available in NetFramework
         var jsonResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         return ParseResponse(jsonResponse);
     }
