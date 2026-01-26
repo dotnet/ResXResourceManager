@@ -9,7 +9,6 @@
              d:DesignWidth="500">
   <StackPanel Orientation="Vertical">
     <StackPanel Orientation="Horizontal">
-      <!-- No additional configuration options needed beyond the credentials -->
       <TextBlock Text="Alternatives:" Margin="0,0,10, 0" VerticalAlignment="Center"/>
       <ComboBox SelectedValue="{Binding Alternatives, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 ToolTip="Preferred number of alternative translations (optional)"
