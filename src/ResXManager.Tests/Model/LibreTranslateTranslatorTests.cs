@@ -73,14 +73,14 @@ public class LibreTranslateTranslatorTests
 
     #region Integration Tests (require local LibreTranslate instance on localhost:5000)
 
-    private const string LocalLibreTranslateUrl = "http://localhost:5000";
+    private const string LocalLibreUrl = "http://localhost:5000";
 
     private static async Task<bool> IsLibreTranslateAvailableAsync()
     {
         try
         {
             using var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(2) };
-            var response = await httpClient.GetAsync($"{LocalLibreTranslateUrl}/languages");
+            var response = await httpClient.GetAsync($"{LocalLibreUrl}/languages");
             return response.IsSuccessStatusCode;
         }
         catch
@@ -99,7 +99,7 @@ public class LibreTranslateTranslatorTests
         }
 
         var result = await Translators.LibreTranslateTranslator.TranslateAsync(
-            LocalLibreTranslateUrl,
+            $"{LocalLibreUrl}/translate",
             apiKey: null,
             text: "Good morning",
             sourceLanguage: CultureInfo.GetCultureInfo("en"),
@@ -129,7 +129,7 @@ public class LibreTranslateTranslatorTests
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(async () =>
             await Translators.LibreTranslateTranslator.TranslateAsync(
-                LocalLibreTranslateUrl,
+                LocalLibreUrl,
                 apiKey: null,
                 text: "Hello",
                 sourceLanguage: CultureInfo.GetCultureInfo("en"),

@@ -32,7 +32,7 @@ public class LibreTranslateTranslator : TranslatorBase
     /// <summary>
     /// The default URI of the LibreTranslate instance.
     /// </summary>
-    private static readonly Uri _uri = new("http://localhost:5000/");
+    private static readonly Uri _uri = new("http://localhost:5000/translate");
 
     /// <summary>
     /// The credential items required by this translator (URL and optional API key).
@@ -180,8 +180,6 @@ public class LibreTranslateTranslator : TranslatorBase
     {
         using var httpClient = new HttpClient();
 
-        var translateUrl = url.TrimEnd('/') + "/translate";
-
         var requestModel = new LibreTranslateRequest
         {
             Text = text,
@@ -194,7 +192,7 @@ public class LibreTranslateTranslator : TranslatorBase
         var json = JsonConvert.SerializeObject(requestModel);
         using var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await httpClient.PostAsync(new Uri(translateUrl), content, cancellationToken).ConfigureAwait(false);
+        var response = await httpClient.PostAsync(new Uri(url), content, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
 #pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods => not available in NetFramework
