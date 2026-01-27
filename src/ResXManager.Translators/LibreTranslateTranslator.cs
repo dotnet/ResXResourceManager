@@ -32,7 +32,7 @@ public class LibreTranslateTranslator : TranslatorBase
     /// <summary>
     /// The default URI of the LibreTranslate instance.
     /// </summary>
-    private static readonly Uri _uri = new("http://localhost:5000/translate");
+    private static readonly Uri _uri = new("https://github.com/LibreTranslate/LibreTranslate");
 
     /// <summary>
     /// The credential items required by this translator (URL and optional API key).
