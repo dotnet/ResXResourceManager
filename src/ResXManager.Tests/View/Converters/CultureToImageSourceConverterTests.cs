@@ -55,6 +55,9 @@ public static class CultureToImageSourceConverterTests
         [InlineData("sv", "se.gif")]
         [InlineData("ca-ES", "es.gif")]
         [InlineData("ca-ES-valencia", "es.gif")]
+        [InlineData("sr", "rs.gif")]
+        [InlineData("sr-Cyrl", "rs.gif")]
+        [InlineData("sr-Latn", "rs.gif")]
         public void Should_Use_Region_As_Primary_Source_For_Flags(string culture, string expectedImageName)
         {
             var imageName = GetImageFileName(CultureInfo.GetCultureInfo(culture));
