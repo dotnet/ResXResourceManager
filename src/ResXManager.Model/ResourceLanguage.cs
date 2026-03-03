@@ -25,6 +25,7 @@ public class ResourceLanguage
     private const string WinFormsAssemblyAlias = "System.Windows.Forms";
     private const string WinFormsAssemblyName = "System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
     private const string NullValueTypeName = $"System.Resources.ResXNullRef, {WinFormsAssemblyAlias}";
+    private const string SpaceAttributeValue = "preserve";
 
     private static readonly XName _spaceAttributeName = XNamespace.Xml.GetName("space");
     private static readonly XName _typeAttributeName = XNamespace.None.GetName("type");
@@ -327,39 +328,41 @@ public class ResourceLanguage
 
             dataElement.SetAttributeValue(_typeAttributeName, null);
 
-            if (string.IsNullOrEmpty(node.Text))
+            if (string.IsNullOrEmpty(dataElement.Attribute(_spaceAttributeName)?.Value))
             {
-                if (!IsNeutralLanguage)
+                dataElement.SetAttributeValue(_spaceAttributeName, SpaceAttributeValue);
+            }
+
+            if (string.IsNullOrEmpty(node.Text) && !IsNeutralLanguage)
+            {
+                if (_configuration.RemoveEmptyEntries && string.IsNullOrEmpty(node.Comment))
                 {
-                    if (_configuration.RemoveEmptyEntries && string.IsNullOrEmpty(node.Comment))
-                    {
-                        dataElement.Remove();
-                        _nodes.Remove(key);
-                    }
-                    else
-                    {
-                        var rootElement = DocumentRoot;
+                    dataElement.Remove();
+                    _nodes.Remove(key);
+                }
+                else
+                {
+                    var rootElement = DocumentRoot;
 
-                        // Ensure that the assembly alias for WinForms is present, otherwise the compiler will not be able to compile the resource file 
-                        bool hasWinFormsAssemblyAlias = rootElement.Elements(_assemblyNodeName).Any(item => string.Equals(item.Attribute(_aliasAttributeName)?.Value, WinFormsAssemblyAlias, StringComparison.Ordinal));
-                        if (!hasWinFormsAssemblyAlias)
+                    // Ensure that the assembly alias for WinForms is present, otherwise the compiler will not be able to compile the resource file 
+                    var hasWinFormsAssemblyAlias = rootElement.Elements(_assemblyNodeName).Any(item => string.Equals(item.Attribute(_aliasAttributeName)?.Value, WinFormsAssemblyAlias, StringComparison.Ordinal));
+                    if (!hasWinFormsAssemblyAlias)
+                    {
+                        var firstDataElement = rootElement.Element(_dataNodeName);
+                        var assemblyAliasElement = new XElement(_assemblyNodeName, new XAttribute(_aliasAttributeName, WinFormsAssemblyAlias), new XAttribute(_nameAttributeName, WinFormsAssemblyName));
+
+                        if (firstDataElement != null)
                         {
-                            var firstDataElement = rootElement.Element(_dataNodeName);
-                            var assemblyAliasElement = new XElement(_assemblyNodeName, new XAttribute(_aliasAttributeName, WinFormsAssemblyAlias), new XAttribute(_nameAttributeName, WinFormsAssemblyName));
-
-                            if (firstDataElement != null)
-                            {
-                                firstDataElement.AddBeforeSelf(assemblyAliasElement);
-                            }
-                            else
-                            {
-                                rootElement.Add(assemblyAliasElement);
-                            }
+                            firstDataElement.AddBeforeSelf(assemblyAliasElement);
                         }
-
-                        // Set the type of the empty value to ResXNullRef, otherwise it will be treated as an empty string, which is not the same
-                        dataElement.SetAttributeValue(_typeAttributeName, NullValueTypeName);
+                        else
+                        {
+                            rootElement.Add(assemblyAliasElement);
+                        }
                     }
+
+                    // Set the type of the empty value to ResXNullRef, otherwise it will be treated as an empty string, which is not the same
+                    dataElement.SetAttributeValue(_typeAttributeName, NullValueTypeName);
                 }
             }
 
@@ -377,7 +380,7 @@ public class ResourceLanguage
         var content = new XElement(_valueNodeName);
         content.Add(new XText(string.Empty));
 
-        var entry = new XElement(_dataNodeName, new XAttribute(_nameAttributeName, key), new XAttribute(_spaceAttributeName, "preserve"));
+        var entry = new XElement(_dataNodeName, new XAttribute(_nameAttributeName, key), new XAttribute(_spaceAttributeName, SpaceAttributeValue));
         entry.Add(content, new XText("\n  "));
 
         var fileContentSorting = _configuration.EffectiveResXSortingComparison;
