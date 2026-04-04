@@ -116,6 +116,24 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "All Projects"
+        /// </summary>
+        public static string AllProjects {
+            get {
+                return ResourceManager.GetString("AllProjects", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Filter resource files by project"
+        /// </summary>
+        public static string ProjectFilterToolTip {
+            get {
+                return ResourceManager.GetString("ProjectFilterToolTip", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Append the translation prefix to"
         /// </summary>
         public static string AppendPrefixValueFieldTypeLabel {
@@ -1169,6 +1187,14 @@ namespace ResXManager.View.Properties {
         ///   Looks up a localized string similar to All languages.
         /// </summary>
         AllLanguages,
+        /// <summary>
+        ///   Looks up a localized string similar to All Projects.
+        /// </summary>
+        AllProjects,
+        /// <summary>
+        ///   Looks up a localized string similar to Filter resource files by project.
+        /// </summary>
+        ProjectFilterToolTip,
         /// <summary>
         ///   Looks up a localized string similar to Append the translation prefix to.
         /// </summary>

@@ -459,6 +459,12 @@ Your ResXManager team.
   <data name="AllLanguages" xml:space="preserve">
     <value>All languages</value>
   </data>
+  <data name="AllProjects" xml:space="preserve">
+    <value>All Projects</value>
+  </data>
+  <data name="ProjectFilterToolTip" xml:space="preserve">
+    <value>Filter resource files by project</value>
+  </data>
   <data name="AllComments" xml:space="preserve">
     <value>All comments</value>
   </data>

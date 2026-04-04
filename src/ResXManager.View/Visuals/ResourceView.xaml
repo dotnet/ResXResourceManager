@@ -89,6 +89,8 @@
       <Grid.RowDefinitions>
         <RowDefinition Height="24" MinHeight="24" />
         <RowDefinition Height="4" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="4" />
         <RowDefinition Height="*" />
       </Grid.RowDefinitions>
       <DockPanel Grid.Row="0">
@@ -113,7 +115,31 @@
         </Border>
       </DockPanel>
 
-      <ListBox x:Name="ListBox" Grid.Row="2"
+      <ComboBox x:Name="ProjectFilterComboBox" Grid.Row="2"
+                ItemsSource="{Binding ProjectNames}"
+                SelectedItem="{Binding SelectedProject}"
+                IsEditable="False"
+                ToolTip="{x:Static properties:Resources.ProjectFilterToolTip}"
+                Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
+        <ComboBox.ItemTemplate>
+          <DataTemplate DataType="{x:Type visuals:ProjectFilterItem}">
+            <TextBlock>
+              <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                  <Setter Property="Text" Value="{Binding ProjectName}" />
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding ProjectName}" Value="{x:Null}">
+                      <Setter Property="Text" Value="{x:Static properties:Resources.AllProjects}" />
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </TextBlock.Style>
+            </TextBlock>
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+
+      <ListBox x:Name="ListBox" Grid.Row="4"
                ItemsSource="{Binding Source={StaticResource ResourceEntitiesSource}}"
                Padding="5,0" BorderThickness="1" SelectionMode="Extended"
                toms:MultiSelectorExtensions.SelectionBinding="{Binding SelectedEntities}"
@@ -165,7 +191,7 @@
           </ContextMenu>
         </ListBox.ContextMenu>
         <interactions:Interaction.Behaviors>
-          <behaviors:EntityFilter FilterText="{Binding Text, ElementName=EntityFilter}" />
+          <behaviors:EntityFilter FilterText="{Binding Text, ElementName=EntityFilter}" ProjectFilter="{Binding EffectiveProjectFilter}" />
           <behaviors:SelectAllBehavior x:Name="SelectAllBehavior" />
         </interactions:Interaction.Behaviors>
       </ListBox>

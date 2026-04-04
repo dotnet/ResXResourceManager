@@ -18,6 +18,8 @@ using System.Windows.Threading;
 
 using DataGridExtensions;
 
+using PropertyChanged;
+
 using ResXManager.Infrastructure;
 using ResXManager.Model;
 using ResXManager.View.ColumnHeaders;
@@ -58,6 +60,7 @@ public sealed partial class ResourceViewModel : INotifyPropertyChanged, IDisposa
         ResourceTableEntries.CollectionChanged += (_, __) => ResourceTableEntries_CollectionChanged();
 
         resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
+        resourceManager.ResourceEntities.CollectionChanged += (_, __) => UpdateProjectNames();
     }
 
     internal event EventHandler<ResourceTableEntryEventArgs>? ClearFiltersRequest;
@@ -69,6 +72,34 @@ public sealed partial class ResourceViewModel : INotifyPropertyChanged, IDisposa
     public ObservableCollection<ResourceEntity> SelectedEntities { get; } = [];
 
     public ObservableCollection<ResourceTableEntry> SelectedTableEntries { get; } = [];
+
+    public ObservableCollection<ProjectFilterItem> ProjectNames { get; } = [];
+
+    private void UpdateProjectNames()
+    {
+        var selectedProjectName = SelectedProject?.ProjectName;
+
+        var names = ResourceManager.ResourceEntities
+            .Select(e => e.ProjectName)
+            .Distinct()
+            .OrderBy(n => n, StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
+
+        ProjectNames.Clear();
+        ProjectNames.Add(ProjectFilterItem.AllProjects);
+        foreach (var name in names)
+            ProjectNames.Add(new ProjectFilterItem(name));
+
+        // Restore selection if the project still exists, otherwise reset to All Projects
+        SelectedProject = (selectedProjectName != null
+            ? ProjectNames.FirstOrDefault(p => p.ProjectName == selectedProjectName)
+            : null) ?? ProjectNames[0];
+    }
+
+    public ProjectFilterItem? SelectedProject { get; set; }
+
+    [DependsOn(nameof(SelectedProject))]
+    public string? EffectiveProjectFilter => SelectedProject?.ProjectName;
 
     public bool IsLoading { get; private set; }
 
@@ -627,4 +658,11 @@ public sealed partial class ResourceViewModel : INotifyPropertyChanged, IDisposa
     {
         Interlocked.Exchange(ref _loadingCancellationTokenSource, null)?.Dispose();
     }
+}
+
+public sealed class ProjectFilterItem(string? projectName)
+{
+    public static readonly ProjectFilterItem AllProjects = new(null);
+
+    public string? ProjectName { get; } = projectName;
 }
