@@ -77,13 +77,17 @@ public sealed partial class ResourceViewModel : INotifyPropertyChanged, IDisposa
     {
         get
         {
-            CollectionView collectionView = new ListCollectionView((IList)ResourceTableEntries);
+            if (_groupedResourceTableEntries == null)
+            {
+                _groupedResourceTableEntries = new ListCollectionView((IList)ResourceTableEntries);
+                _groupedResourceTableEntries.GroupDescriptions.Add(new PropertyGroupDescription("Container"));
+            }
 
-            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Container"));
-
-            return collectionView;
+            return _groupedResourceTableEntries;
         }
     }
+
+    private ListCollectionView? _groupedResourceTableEntries;
 
     public string? LoadedSnapshot { get; set; }
 
