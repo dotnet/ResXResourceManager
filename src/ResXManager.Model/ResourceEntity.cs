@@ -82,22 +82,22 @@ public sealed class ResourceEntity : IComparable, IComparable<ResourceEntity>
 
     private void UpdateResourceTableEntries()
     {
-        var unmatchedTableEntries = _resourceTableEntries.ToList();
+        var entriesByKey = _resourceTableEntries.ToDictionary(entry => entry.Key);
 
         var keys = _languages.Values
             .SelectMany(language => language.ResourceKeys)
             .Distinct()
             .ToArray();
 
+        var matchedKeys = new HashSet<string>();
         var index = 0;
 
         foreach (var key in keys)
         {
-            var existingEntry = _resourceTableEntries.FirstOrDefault(entry => entry.Key == key);
-            if (existingEntry != null)
+            if (entriesByKey.TryGetValue(key, out var existingEntry))
             {
                 existingEntry.Update(index);
-                unmatchedTableEntries.Remove(existingEntry);
+                matchedKeys.Add(key);
             }
             else
             {
@@ -107,6 +107,9 @@ public sealed class ResourceEntity : IComparable, IComparable<ResourceEntity>
             index += 1;
         }
 
+        var unmatchedTableEntries = _resourceTableEntries
+            .Where(entry => !matchedKeys.Contains(entry.Key))
+            .ToList();
         _resourceTableEntries.RemoveRange(unmatchedTableEntries);
     }
 
