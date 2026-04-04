@@ -167,8 +167,10 @@ public sealed class OpenAITranslator() : TranslatorBase("OpenAI", "OpenAI", new 
     private HttpClient ConfigureHttpClient()
     {
 #pragma warning disable CA2000 // HttpClient is disposed with the client
+#pragma warning disable CA5399 // HttpClient is created without enabling CheckCertificateRevocationList 
         var client = new HttpClient(new HttpClientHandler { MaxConnectionsPerServer = MaxParallelRequests });
 #pragma warning restore CA2000
+#pragma warning restore CA5399
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         client.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthenticationKey}");
         client.Timeout = TimeSpan.FromMinutes(5);

@@ -54,12 +54,14 @@ public sealed class TranslatorHost : IDisposable
 
             try
             {
+#pragma warning disable CA2025 // Do not pass 'IDisposable' instances into unawaited tasks
                 var translatorTasks = Translators
                     .Where(t => t.IsEnabled)
                     .Select(t => t.Translate(session))
                     .ToArray();
 
                 Task.WaitAll(translatorTasks);
+#pragma warning restore CA2025 // Do not pass 'IDisposable' instances into unawaited tasks
             }
             finally
             {

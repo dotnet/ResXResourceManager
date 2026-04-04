@@ -1,4 +1,7 @@
-﻿1.104:
+﻿1.105:
+- Fix #741: Support the System.Resources.ResXNullRef type as valid string type attribute; ensure elements have the xml:space="preserve" attribute
+
+1.104:
 - Fix #736: "Move to Resource" does not work at the end of the string literal
 - Implemented Translator for LibreTranslate (#739)
 - Use Serbian flag for neutral cultures (sr, Sr-Cyrl, sr-Latn) (#740)
