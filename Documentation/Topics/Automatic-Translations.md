@@ -13,6 +13,10 @@ All results can be reviewed by opening the combo box in the target column. The r
 
 ![Translations](Automatic%20Translations_Translations.png)
 
+### Deepl
+#### API Url
+The API URL for Deepl is https://api.deepl.com/v2/translate, but for the free version it's https://api-free.deepl.com/v2/translate
+
 ### Azure Open AI
 
 #### Pros
