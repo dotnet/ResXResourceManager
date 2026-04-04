@@ -49,7 +49,7 @@ public class EntityFilter : Behavior<ListBox>
 
         try
         {
-            var regex = new Regex(value, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var regex = new Regex(value, RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
             return item => regex.IsMatch(item?.ToString() ?? string.Empty);
         }
         catch (ArgumentException)
@@ -58,7 +58,7 @@ public class EntityFilter : Behavior<ListBox>
 
         try
         {
-            var regex = new Regex(value.Replace(@"\", @"\\", StringComparison.Ordinal), RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var regex = new Regex(value.Replace(@"\", @"\\", StringComparison.Ordinal), RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
             return item => regex.IsMatch(item?.ToString() ?? string.Empty);
         }
         catch (ArgumentException)
