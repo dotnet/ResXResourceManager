@@ -4,12 +4,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Composition;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,6 +25,7 @@ using ResXManager.View.Properties;
 using ResXManager.View.Tools;
 
 using Throttle;
+
 using TomsToolbox.Essentials;
 using TomsToolbox.ObservableCollections;
 using TomsToolbox.Wpf;
@@ -72,14 +71,14 @@ public sealed partial class ResourceViewModel : INotifyPropertyChanged, IDisposa
             .Select(entity => entity.ProjectName)
             .Distinct()
             .OrderBy(name => name)
-            .Select(name => $"^{Regex.Escape(name)}$"));
+            .Select(name => new ProjectFilterItem(name)));
     }
 
     internal event EventHandler<ResourceTableEntryEventArgs>? ClearFiltersRequest;
 
     public ResourceManager ResourceManager { get; }
 
-    public ObservableCollection<string> ProjectNames { get; } = new ObservableCollection<string>();
+    public ObservableCollection<ProjectFilterItem> ProjectNames { get; } = [];
 
     public IObservableCollection<ResourceTableEntry> ResourceTableEntries { get; }
 
