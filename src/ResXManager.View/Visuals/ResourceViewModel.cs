@@ -4,10 +4,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Composition;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -55,14 +57,29 @@ public sealed partial class ResourceViewModel : INotifyPropertyChanged, IDisposa
         _performanceTracer = performanceTracer;
 
         ResourceTableEntries = SelectedEntities.ObservableSelectMany(entity => entity.Entries);
-        ResourceTableEntries.CollectionChanged += (_, __) => ResourceTableEntries_CollectionChanged();
+        ResourceTableEntries.CollectionChanged += (_, _) => ResourceTableEntries_CollectionChanged();
+
+        ResourceManager.ResourceEntities.CollectionChanged += (_, _) => ResourceEntities_OnCollectionChanged();
 
         resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
+    }
+
+    [Throttled(typeof(DispatcherThrottle))]
+    private void ResourceEntities_OnCollectionChanged()
+    {
+        ProjectNames.Clear();
+        ProjectNames.AddRange(ResourceManager.ResourceEntities
+            .Select(entity => entity.ProjectName)
+            .Distinct()
+            .OrderBy(name => name)
+            .Select(name => $"^{Regex.Escape(name)}$"));
     }
 
     internal event EventHandler<ResourceTableEntryEventArgs>? ClearFiltersRequest;
 
     public ResourceManager ResourceManager { get; }
+
+    public ObservableCollection<string> ProjectNames { get; } = new ObservableCollection<string>();
 
     public IObservableCollection<ResourceTableEntry> ResourceTableEntries { get; }
 
