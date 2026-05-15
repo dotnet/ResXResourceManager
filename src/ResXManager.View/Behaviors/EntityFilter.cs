@@ -41,7 +41,7 @@ public class EntityFilter : Behavior<ListBox>
         listBox.Items.Filter = BuildFilter(value);
     }
 
-    public static Predicate<object>? BuildFilter(string? value)
+    private static Predicate<object>? BuildFilter(string? value)
     {
         value = value?.Trim();
 

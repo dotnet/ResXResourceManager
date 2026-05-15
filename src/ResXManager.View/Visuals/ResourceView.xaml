@@ -114,6 +114,11 @@
                       ToolTip="{x:Static properties:Resources.ResourceFilterToolTip}" 
                       BorderThickness="0" 
                       Style="{DynamicResource {x:Static styles:ResourceKeys.ComboBoxStyle}}">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
             </ComboBox>
           </DockPanel>
         </Border>
