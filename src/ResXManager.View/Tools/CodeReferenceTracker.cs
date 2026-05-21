@@ -258,15 +258,29 @@ public class CodeReferenceTracker : IService
                 _lines = _projectFile.ReadAllLines();
 
                 var index = 0;
+                var wordsInLine = new HashSet<string>();
 
                 foreach (var line in _lines)
                 {
-                    var wordsInLine = _splitWordsRegex.Split(line).ToHashSet();
+                    wordsInLine.Clear();
+                    foreach (var word in _splitWordsRegex.Split(line))
+                    {
+                        wordsInLine.Add(word);
+                    }
 
                     foreach (var key in keys)
                     {
                         var wordsInKey = key.Value;
-                        if (!wordsInKey.All(wordsInLine.Contains)) 
+                        var allContained = true;
+                        foreach (var word in wordsInKey)
+                        {
+                            if (!wordsInLine.Contains(word))
+                            {
+                                allContained = false;
+                                break;
+                            }
+                        }
+                        if (!allContained)
                             continue;
 
                         _keyLinesLookup.ForceValue(key.Key, _ => []).Add(index);
