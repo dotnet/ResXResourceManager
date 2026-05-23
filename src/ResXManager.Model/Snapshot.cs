@@ -56,13 +56,27 @@ public static class Snapshot
 
     private static void Load(this IEnumerable<ResourceEntity> resourceEntities, IEnumerable<EntitySnapshot> entitySnapshots)
     {
+        var entitySnapshotMap = entitySnapshots
+            .GroupBy(snapshot => (snapshot.ProjectName?.ToUpperInvariant(), snapshot.UniqueName?.ToUpperInvariant()))
+            .ToDictionary(g => g.Key, g => g.First());
+
         resourceEntities.ForEach(entity =>
         {
-            var entrySnapshots = entitySnapshots.Where(snapshot => Equals(entity, snapshot)).Select(s => s.Entries).FirstOrDefault() ?? Array.Empty<EntrySnapshot>();
+            var entityKey = (entity.ProjectName?.ToUpperInvariant(), entity.UniqueName?.ToUpperInvariant());
+            var entrySnapshots = entitySnapshotMap.TryGetValue(entityKey, out var entitySnapshot)
+                ? entitySnapshot.Entries ?? Array.Empty<EntrySnapshot>()
+                : Array.Empty<EntrySnapshot>();
+
+            var entrySnapshotMap = entrySnapshots
+                .Where(s => s.Key != null)
+                .GroupBy(s => s.Key ?? string.Empty, StringComparer.Ordinal)
+                .ToDictionary(g => g.Key, g => g.First().Data ?? Array.Empty<DataSnapshot>(), StringComparer.Ordinal);
 
             entity.Entries.ForEach(entry =>
             {
-                var data = entrySnapshots.Where(s => string.Equals(entry.Key, s.Key, StringComparison.Ordinal)).Select(s => s.Data).FirstOrDefault() ?? Array.Empty<DataSnapshot>();
+                var data = entrySnapshotMap.TryGetValue(entry.Key, out var snapData)
+                    ? snapData
+                    : Array.Empty<DataSnapshot>();
 
                 entry.Snapshot = data.ToDictionary(item => new CultureKey(item.Language), item => new ResourceData { Text = item.Text, Comment = item.Comment });
             });
