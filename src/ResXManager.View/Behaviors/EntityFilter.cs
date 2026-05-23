@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using Microsoft.Xaml.Behaviors;
 
 using ResXManager.Infrastructure;
+using ResXManager.Model;
 
 using Throttle;
 
@@ -40,7 +41,7 @@ public class EntityFilter : Behavior<ListBox>
         listBox.Items.Filter = BuildFilter(value);
     }
 
-    public static Predicate<object>? BuildFilter(string? value)
+    private static Predicate<object>? BuildFilter(string? value)
     {
         value = value?.Trim();
 
@@ -50,7 +51,7 @@ public class EntityFilter : Behavior<ListBox>
         try
         {
             var regex = new Regex(value, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            return item => regex.IsMatch(item?.ToString() ?? string.Empty);
+            return item => Filter(item, regex);
         }
         catch (ArgumentException)
         {
@@ -59,13 +60,18 @@ public class EntityFilter : Behavior<ListBox>
         try
         {
             var regex = new Regex(value.Replace(@"\", @"\\", StringComparison.Ordinal), RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            return item => regex.IsMatch(item?.ToString() ?? string.Empty);
+            return item => Filter(item, regex);
         }
         catch (ArgumentException)
         {
         }
 
         return null;
+    }
+
+    private static bool Filter(object item, Regex regex)
+    {
+        return item is ResourceEntity entity && (regex.IsMatch(entity.DisplayName) || regex.IsMatch(entity.ProjectName));
     }
 
     protected override void OnAttached()

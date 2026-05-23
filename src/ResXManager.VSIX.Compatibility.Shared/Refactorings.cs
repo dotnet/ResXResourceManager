@@ -127,12 +127,6 @@ internal sealed class Refactorings : IRefactorings
             .Where(entity => !entity.IsWinFormsDesignerResource)
             .ToList();
 
-        var filter = EntityFilter.BuildFilter(Settings.Default.ResourceFilter);
-        if (filter != null)
-        {
-            entities.RemoveAll(item => !filter(item.ToString()));
-        }
-
         var projectResources = new HashSet<ResourceEntity>(GetResourceEntriesFromProject(document, entities));
 
         // put resources from the same project on top

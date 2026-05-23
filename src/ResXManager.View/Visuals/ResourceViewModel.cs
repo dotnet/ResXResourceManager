@@ -25,6 +25,7 @@ using ResXManager.View.Properties;
 using ResXManager.View.Tools;
 
 using Throttle;
+
 using TomsToolbox.Essentials;
 using TomsToolbox.ObservableCollections;
 using TomsToolbox.Wpf;
@@ -55,14 +56,29 @@ public sealed partial class ResourceViewModel : INotifyPropertyChanged, IDisposa
         _performanceTracer = performanceTracer;
 
         ResourceTableEntries = SelectedEntities.ObservableSelectMany(entity => entity.Entries);
-        ResourceTableEntries.CollectionChanged += (_, __) => ResourceTableEntries_CollectionChanged();
+        ResourceTableEntries.CollectionChanged += (_, _) => ResourceTableEntries_CollectionChanged();
+
+        ResourceManager.ResourceEntities.CollectionChanged += (_, _) => ResourceEntities_OnCollectionChanged();
 
         resourceManager.LanguageChanged += ResourceManager_LanguageChanged;
+    }
+
+    [Throttled(typeof(DispatcherThrottle))]
+    private void ResourceEntities_OnCollectionChanged()
+    {
+        ProjectNames.Clear();
+        ProjectNames.AddRange(ResourceManager.ResourceEntities
+            .Select(entity => entity.ProjectName)
+            .Distinct()
+            .OrderBy(name => name)
+            .Select(name => new ProjectFilterItem(name)));
     }
 
     internal event EventHandler<ResourceTableEntryEventArgs>? ClearFiltersRequest;
 
     public ResourceManager ResourceManager { get; }
+
+    public ObservableCollection<ProjectFilterItem> ProjectNames { get; } = [];
 
     public IObservableCollection<ResourceTableEntry> ResourceTableEntries { get; }
 
