@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddEntryToWinFormsResourceWarning" xml:space="preserve">
+    <value>Stai per aggiungere nuove voci a una risorsa del designer WinForms.
+Se si modifica il modulo eventuali voci aggiuntive andranno perse.
+Vuoi aggiungere comunque una nuova voce?</value>
+  </data>
+  <data name="AddKeyToolTip" xml:space="preserve">
+    <value>Aggiungi nuova chiave (Maiusc+Ins)</value>
+  </data>
+  <data name="AddLanguageToolTip" xml:space="preserve">
+    <value>Aggiungi nuova lingua</value>
+  </data>
+  <data name="Authentication" xml:space="preserve">
+    <value>Autenticazione</value>
+  </data>
+  <data name="AutoCreateNewLanguageFiles" xml:space="preserve">
+    <value>Quando aggiungi una nuova risorsa lingua crea tutti i file risorse</value>
+  </data>
+  <data name="AutoApplyExistingTranslations" xml:space="preserve">
+    <value>Aggiungi automaticamente le traduzioni esistenti per le stringhe corrispondenti</value>
+  </data>
+  <data name="CaseSensitive" xml:space="preserve">
+    <value>Case Sens.</value>
+    <comment>@Invariant</comment>
+  </data>
+  <data name="CellSelection" xml:space="preserve">
+    <value>Selezione cella</value>
+  </data>
+  <data name="CellSelectionToolTip" xml:space="preserve">
+    <value>Consenti selezione singole celle per copiare/incollare il contenuto.</value>
+  </data>
+  <data name="ChooseColumnsToolTip" xml:space="preserve">
+    <value>Scegli colonne</value>
+  </data>
+  <data name="CodeReferencesToolTip" xml:space="preserve">
+    <value>Il numero di riferimenti trovati nei file del codice. Questo è solo un suggerimento per i possibili usi, per maggiori dettagli consulta la documentazione.</value>
+  </data>
+  <data name="CodeReferencesTooManyDetailsToolTip" xml:space="preserve">
+    <value>Troppi riferimenti per visualizzare i dettagli.</value>
+  </data>
+  <data name="CodeReferenceTrackingInProgress" xml:space="preserve">
+    <value>Il rilevamento del riferimento al codice è in corso ({0} %)</value>
+  </data>
+  <data name="ColumnHeaderGripperToolTip" xml:space="preserve">
+    <value>+Ctrl =&gt; Applica dimensione stella alla colonna di destra
++Maiusc =&gt; Estendi oltre le dimensioni disponibili</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Commento</value>
+  </data>
+  <data name="CommentColumnHeader" xml:space="preserve">
+    <value>Commento</value>
+  </data>
+  <data name="CommentToken" xml:space="preserve">
+    <value>Token comment</value>
+  </data>
+  <data name="Configuration_DuplicateKeyHandling" xml:space="preserve">
+    <value>Gestione chiavi risorse duplicate/vuote</value>
+  </data>
+  <data name="Configuration_ExcelExportModeHeader" xml:space="preserve">
+    <value>Modo esportazione Excel</value>
+  </data>
+  <data name="Configuration_FileCreationHeader" xml:space="preserve">
+    <value>Creazione file</value>
+  </data>
+  <data name="Configuration_General" xml:space="preserve">
+    <value>Generale</value>
+  </data>
+  <data name="Configuration_LoadSaveHeader" xml:space="preserve">
+    <value>Carica &amp; salva</value>
+  </data>
+  <data name="ConfigurationScopeHeader" xml:space="preserve">
+    <value>Scopo</value>
+  </data>
+  <data name="ConfirmAddLanguage" xml:space="preserve">
+    <value>Conferma aggiunta nuovi file risorse</value>
+  </data>
+  <data name="ConfirmCutItems" xml:space="preserve">
+    <value>Vuoi tagliare le righe selezionate?</value>
+  </data>
+  <data name="ConfirmDeleteItems" xml:space="preserve">
+    <value>Vuoi eliminare gli elementi selezionati?</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copia (Ctrl+C)</value>
+  </data>
+  <data name="CopyToolTip" xml:space="preserve">
+    <value>Copia righe o le celle selezionate (Ctrl+C)</value>
+  </data>
+  <data name="CreateSnapshot" xml:space="preserve">
+    <value>Crea istantanea</value>
+  </data>
+  <data name="Cut" xml:space="preserve">
+    <value>Taglia (Ctrl+X)</value>
+  </data>
+  <data name="CutToolTip" xml:space="preserve">
+    <value>Taglia righe selezionate (Ctrl+X)</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Elimina (Canc)</value>
+  </data>
+  <data name="DeleteToolTip" xml:space="preserve">
+    <value>Elimina elementi selezionati (Canc)</value>
+  </data>
+  <data name="DetectCodeReferences_Header" xml:space="preserve">
+    <value>Rileva riferimenti al codice</value>
+  </data>
+  <data name="Diagnostics" xml:space="preserve">
+    <value>Diagnostica</value>
+  </data>
+  <data name="DonateButtonToolTip" xml:space="preserve">
+    <value>Sostieni questo progetto con una donazione</value>
+  </data>
+  <data name="EditDefaultConfigurationNotification" xml:space="preserve">
+    <value>Stai modificando la configurazione predefinita. Se vuoi modificare le impostazioni che si applicano solo a una soluzione specifica, apri semplicemente la soluzione.</value>
+  </data>
+  <data name="EditSolutionConfigurationNotification" xml:space="preserve">
+    <value>Stai modificando la configurazione specifica per la soluzione attiva. Se vuoi modificare la configurazione predefinita, chiudi semplicemente la soluzione.</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Abilitato</value>
+  </data>
+  <data name="ErrorAddingNewResourceFile" xml:space="preserve">
+    <value>Errore durante l'aggiunta del nuovo file risorse '{0}'</value>
+  </data>
+  <data name="ExportExcelAll" xml:space="preserve">
+    <value>Esporta tutto</value>
+  </data>
+  <data name="ExportExcelSelection" xml:space="preserve">
+    <value>Esporta selezione</value>
+  </data>
+  <data name="FileExtensions" xml:space="preserve">
+    <value>Estensione file</value>
+  </data>
+  <data name="FindCodeReferencesButtonToolTip" xml:space="preserve">
+    <value>Rileva riferimenti al codice.</value>
+  </data>
+  <data name="FlatViewToolTip" xml:space="preserve">
+    <value>Vista piatta</value>
+  </data>
+  <data name="GroupedViewToolTip" xml:space="preserve">
+    <value>Vista raggruppata</value>
+  </data>
+  <data name="HelpButtonToolTip" xml:space="preserve">
+    <value>Documentazione</value>
+  </data>
+  <data name="ImportExcel" xml:space="preserve">
+    <value>Importa</value>
+  </data>
+  <data name="ImportNormalizedTableExpected" xml:space="preserve">
+    <value>È prevista una tabella normalizzata.</value>
+  </data>
+  <data name="IndexColumnHeaderToolTip" xml:space="preserve">
+    <value>Indice della voce nel file risorse.</value>
+  </data>
+  <data name="IndexColumnToggleButtonToolTip" xml:space="preserve">
+    <value>Visualizza colonna indice</value>
+  </data>
+  <data name="IndexColumnToolTip" xml:space="preserve">
+    <value>Indice della voce nel file risorse. Usa valori frazionari per riordinare le voci.</value>
+  </data>
+  <data name="Invariant" xml:space="preserve">
+    <value>Invariant</value>
+  </data>
+  <data name="Key" xml:space="preserve">
+    <value>Chiave</value>
+  </data>
+  <data name="LanguageConfiguration_Description" xml:space="preserve">
+    <value>Questa è una panoramica delle lingue supportate dal sistema. Visualizza le lingue specifiche (ad esempio "en-US") raggruppate in base alla loro lingua neutra (ad esempio "en"). Per modificare la bandiera visualizzata per una lingua neutra, fai doppio clic sulla lingua specifica con la bandiera desiderata.</value>
+  </data>
+  <data name="LikeButtonToolTip" xml:space="preserve">
+    <value>Ti piace? Sostieni il progetto scrivendo una breve recensione!</value>
+  </data>
+  <data name="LoadSnapshot" xml:space="preserve">
+    <value>Carica istantanea</value>
+  </data>
+  <data name="MultipleSelection" xml:space="preserve">
+    <value>Selezione multipla.</value>
+  </data>
+  <data name="NeedSingleEntitySelection" xml:space="preserve">
+    <value>Per aggiungere voci è necessario selezionare nell'elenco a sinistra una singola risorsa.</value>
+  </data>
+  <data name="Neutral" xml:space="preserve">
+    <value>Neutra</value>
+  </data>
+  <data name="NeutralResourceLanguageHeader" xml:space="preserve">
+    <value>Lingua neutra risorse:</value>
+  </data>
+  <data name="NewKeyPrompt" xml:space="preserve">
+    <value>Inserisci nuova chiave risorsa:</value>
+  </data>
+  <data name="NewLanguageIdPrompt" xml:space="preserve">
+    <value>Seleziona la nuova lingua:</value>
+  </data>
+  <data name="NoCodeReferencesToolTip" xml:space="preserve">
+    <value>Nessun riferimento al codice trovato da questo algoritmo. Tuttavia potrebbero esistere riferimenti indiretti a questa stringa.</value>
+  </data>
+  <data name="NoResourceFileForResource" xml:space="preserve">
+    <value>Non esiste alcun file risorse per questa risorsa.</value>
+  </data>
+  <data name="NoSelection" xml:space="preserve">
+    <value>Nessuna selezione.</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>Incolla (Ctrl+V)</value>
+  </data>
+  <data name="PasteFailed" xml:space="preserve">
+    <value>Errore durante l'analisi dei dati dagli appunti:</value>
+  </data>
+  <data name="PasteSelectionSizeMismatch" xml:space="preserve">
+    <value>I dati che stai incollando non hanno le stesse dimensioni della selezione.</value>
+  </data>
+  <data name="PasteToolTip" xml:space="preserve">
+    <value>Incolla il contenuto degli appunti (Ctrl+V)</value>
+  </data>
+  <data name="Patterns" xml:space="preserve">
+    <value>Modelli</value>
+  </data>
+  <data name="RefreshViewToolTip" xml:space="preserve">
+    <value>Aggiorna vista</value>
+  </data>
+  <data name="RegularExpression" xml:space="preserve">
+    <value>Espressione regolare</value>
+  </data>
+  <data name="ResourceFilterToolTip" xml:space="preserve">
+    <value>Un'espressione regolare per filtrare i file risorse.
+Il modello verrà confrontato con la stringa "{project} - {folder}\{file}",
+che è uguale all'intestazione del gruppo nella vista raggruppata.
+Usa ad es. ".* - (?!Migrazioni)" per nascondere le migrazioni EF.</value>
+  </data>
+  <data name="SaveFilesImmediatelyUponChange" xml:space="preserve">
+    <value>Salva i file immediatamente dopo la modifica</value>
+  </data>
+  <data name="SelectedTotalToolTip" xml:space="preserve">
+    <value>Selezionati/totali</value>
+  </data>
+  <data name="ShellTabHeader_Configuration" xml:space="preserve">
+    <value>Configurazione</value>
+  </data>
+  <data name="ShellTabHeader_Languages" xml:space="preserve">
+    <value>Lingue</value>
+  </data>
+  <data name="ShellTabHeader_Main" xml:space="preserve">
+    <value>Principale</value>
+  </data>
+  <data name="ShellTabHeader_Translate" xml:space="preserve">
+    <value>Traduci</value>
+  </data>
+  <data name="ShowOnlyMissingToolTip" xml:space="preserve">
+    <value>Visualizza solo righe con avvisi o modifiche</value>
+  </data>
+  <data name="ShowPerformanceTraces" xml:space="preserve">
+    <value>Visualizza nella finestra di output i messaggi di tracciamento prestazioni</value>
+  </data>
+  <data name="SortAllFilesNow" xml:space="preserve">
+    <value>Ordina tutti file</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Ordina usando:</value>
+  </data>
+  <data name="SortNodesByKey" xml:space="preserve">
+    <value>Quando si salva un file RESX, ordina i nodi dati XML in base alla chiave</value>
+  </data>
+  <data name="SortNodesByKey_Confirmation" xml:space="preserve">
+    <value>Vuoi ordinare tutti i nodi di tutti i file risorse in base alla chiave?</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>ResX Resource Manager</value>
+    <comment>@Invariant</comment>
+  </data>
+  <data name="Translations_ApplyAll" xml:space="preserve">
+    <value>Applica a tutti</value>
+  </data>
+  <data name="Translations_ApplySelected" xml:space="preserve">
+    <value>Applica a selezionati</value>
+  </data>
+  <data name="Translations_Start" xml:space="preserve">
+    <value>Avvia</value>
+  </data>
+  <data name="Translations_Source" xml:space="preserve">
+    <value>Sorgente:</value>
+  </data>
+  <data name="Translations_Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Translations_Targets" xml:space="preserve">
+    <value>Destinazioni:</value>
+  </data>
+  <data name="TranslationsPrefixHeader" xml:space="preserve">
+    <value>Prefisso traduzioni con</value>
+    <comment>@MutedRule(PunctuationTail)</comment>
+  </data>
+  <data name="TranslatorConfiguration_SaveCredentials" xml:space="preserve">
+    <value>Salva credenziali (le credenziali verranno archiviate come testo non crittografato nel profilo locale!)</value>
+  </data>
+  <data name="TrimToolTip" xml:space="preserve">
+    <value>Taglia spazi bianchi nelle celle selezionate (Ctrl+T)</value>
+  </data>
+  <data name="UnloadSnapshot" xml:space="preserve">
+    <value>Scarica istantanea</value>
+  </data>
+  <data name="FileExclusionFilters_Header" xml:space="preserve">
+    <value>Filtro esclusione file</value>
+  </data>
+  <data name="WrapLongLinesToolTip" xml:space="preserve">
+    <value>A capo automatico linee lunghe</value>
+  </data>
+  <data name="Configuration_EmptyValueHandling" xml:space="preserve">
+    <value>Rimuovi voci vuote nelle risorse</value>
+  </data>
+  <data name="Configuration_EmptyValueHandlingHeader" xml:space="preserve">
+    <value>Gestione valore risorsa vuota</value>
+  </data>
+  <data name="OpenSourceOverlay_Message" xml:space="preserve">
+    <value>&lt;StackPanel xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"&gt;
+&lt;TextBlock FontWeight="Bold" FontSize="20"&gt;
+Questo è un progetto Open Source guidato dalla comunità.
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+In quanto tale ha bisogno del tuo supporto per mantenerlo vivo e in evoluzione.
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+Il modo migliore per contribuire è aiutare &lt;Hyperlink NavigateUri="https://github.com/dotnet/ResXResourceManager/issues"&gt;a correggere bug o aggiungere nuove funzionalità.&lt;/Hyperlink&gt;
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+Tuttavia, se non puoi aiutare con il codice, considera di farlo &lt;Hyperlink NavigateUri="https://github.com/dotnet/ResXResourceManager/blob/master/Documentation/Topics/Donate.md"&gt;donando una piccola somma&lt;/Hyperlink&gt; per garantire che ResX&amp;#160;Resource&amp;#160;Manager continuerà ad essere un grande progetto che potrà aiutarti nel lavoro quotidiano.
+&lt;/TextBlock&gt;&lt;Decorator Height="10"/&gt;&lt;TextBlock&gt;
+Il team ResXManager.
+&lt;/TextBlock&gt;
+&lt;/StackPanel&gt;</value>
+  </data>
+  <data name="OpenSourceOverlay_Confirmation" xml:space="preserve">
+    <value>OK: non visualizzare più questa notifica..</value>
+  </data>
+  <data name="Configuration_Rules" xml:space="preserve">
+    <value>Controlli coerenza</value>
+  </data>
+  <data name="Translations_Discard" xml:space="preserve">
+    <value>Scarta</value>
+  </data>
+  <data name="Ranking" xml:space="preserve">
+    <value>Classifica:</value>
+  </data>
+  <data name="AllLanguages" xml:space="preserve">
+    <value>Tutte le lingue</value>
+  </data>
+  <data name="AllComments" xml:space="preserve">
+    <value>Tutti commenti</value>
+  </data>
+  <data name="WebProjectFileExport_Title" xml:space="preserve">
+    <value>Esporta file progetto WebWeb</value>
+  </data>
+  <data name="WebProjectFileExport_SolutionFolder" xml:space="preserve">
+    <value>Cartella soluzione:</value>
+  </data>
+  <data name="WebProjectFileExport_TypescriptFilesTargetFolder" xml:space="preserve">
+    <value>Cartella destinazione file TypeScript:</value>
+  </data>
+  <data name="WebProjectFileExport_JSONFilesTargetFolder" xml:space="preserve">
+    <value>Cartella destinazione file JSON:</value>
+  </data>
+  <data name="WebProjectFileExport_ResourceFileFilterRegEx" xml:space="preserve">
+    <value>Filtro file risorse (RegEx):</value>
+  </data>
+  <data name="WebProjectFileExport_ExportNeutralResourcesAsJSON" xml:space="preserve">
+    <value>Esporta risorse neutre come JSON</value>
+  </data>
+  <data name="Configuration_XlifSupport" xml:space="preserve">
+    <value>Supporto XLIF</value>
+  </data>
+  <data name="Configuration_EnableXlifSynchronization" xml:space="preserve">
+    <value>Abilita sincronizzazione XLIF</value>
+  </data>
+  <data name="WarningUnsavedChanges" xml:space="preserve">
+    <value>Sono presenti modifiche non salvate; ricaricare tutte le risorse annullerà tutte le modifiche. Vuoi continuare?</value>
+  </data>
+  <data name="AppendPrefixValueFieldTypeLabel" xml:space="preserve">
+    <value>Aggiungi il prefisso traduzione a</value>
+  </data>
+</root>
