@@ -128,7 +128,7 @@
     <comment>Category ID for custom trained models on the Azure Translator</comment>
   </data>
   <data name="CustomCategoryIdDescription" xml:space="preserve">
-    <value>Azure offre modelli con training personalizzati che possono essere raggruppati con un ID di categoria. Questo è facoltativo, se non vuoi usare una categoria personalizzata, lascia vuoto questo campo.</value>
+    <value>Azure offre modelli con training personalizzati che possono essere raggruppati con un ID di categoria. Questo è facoltativo, se non vuoi usare una categoria personalizzata, lascia vuoto questo campo</value>
   </data>
   <data name="CustomPrompt" xml:space="preserve">
     <value>Richiesta personalizzata da aggiungere a tutte le richieste di traduzione</value>
