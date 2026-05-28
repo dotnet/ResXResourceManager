@@ -137,10 +137,10 @@ Vuoi aggiungere comunque una nuova voce?</value>
   <data name="AutoApplyExistingTranslations" xml:space="preserve">
     <value>Aggiungi automaticamente le traduzioni esistenti per le stringhe corrispondenti</value>
   </data>
-  <data name="CaseSensitive" xml:space="preserve">
-    <value>Case Sens.</value>
-    <comment>@Invariant</comment>
-  </data>
+
+
+
+
   <data name="CellSelection" xml:space="preserve">
     <value>Selezione cella</value>
   </data>
@@ -382,10 +382,10 @@ Usa ad es. ".* - (?!Migrazioni)" per nascondere le migrazioni EF.</value>
   <data name="SortNodesByKey_Confirmation" xml:space="preserve">
     <value>Vuoi ordinare tutti i nodi di tutti i file risorse in base alla chiave?</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>ResX Resource Manager</value>
-    <comment>@Invariant</comment>
-  </data>
+
+
+
+
   <data name="Translations_ApplyAll" xml:space="preserve">
     <value>Applica a tutti</value>
   </data>
@@ -445,7 +445,7 @@ Il team ResXManager.
 &lt;/StackPanel&gt;</value>
   </data>
   <data name="OpenSourceOverlay_Confirmation" xml:space="preserve">
-    <value>OK: non visualizzare più questa notifica..</value>
+    <value>OK - non visualizzare più questa notifica.</value>
   </data>
   <data name="Configuration_Rules" xml:space="preserve">
     <value>Controlli coerenza</value>
