@@ -137,7 +137,7 @@
     <value>Generatore codice ModelloTesto.</value>
   </data>
   <data name="MoveToResource" xml:space="preserve">
-    <value>Sposta nelal risorsa</value>
+    <value>Sposta nella risorsa</value>
   </data>
   <data name="CodeGenerator_WinForms" xml:space="preserve">
     <value>Designer WinForms</value>
