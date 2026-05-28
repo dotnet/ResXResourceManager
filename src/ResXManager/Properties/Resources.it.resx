@@ -137,9 +137,9 @@ Nella versione standalone il file non viene aggiunto automaticamente al progetto
 
 {0}</value>
   </data>
-  <data name="Version" xml:space="preserve">
-    <value>Versione: {0}</value>
-  <comment>@Invariant</comment></data>
+
+
+
   <data name="QuerySaveChanges" xml:space="preserve">
     <value>Vuoi salvare le modifiche?</value>
   </data>
@@ -153,6 +153,6 @@ Nella versione standalone il file non viene aggiunto automaticamente al progetto
     <value>Chiaro</value>
   </data>
   <data name="ColorTheme_Title" xml:space="preserve">
-    <value>Tema colorato</value>
+    <value>Tema a colori</value>
   </data>
 </root>
