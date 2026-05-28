@@ -147,7 +147,7 @@
 </value>
   </data>
   <data name="ImportColumnMismatchError" xml:space="preserve">
-    <value>>Sono previste almeno tre colonne.</value>
+    <value>&gt;Sono previste almeno tre colonne.</value>
   </data>
   <data name="ImportDuplicateLanguageError" xml:space="preserve">
     <value>Lingua duplicata nelle intestazioni {0} e {1} ('{2}').</value>
@@ -180,7 +180,7 @@
     <value>La lingua non è definita: '{0}'.</value>
   </data>
   <data name="Neutral" xml:space="preserve">
-    <value>Neutrale</value>
+    <value>Neutro</value>
   </data>
   <data name="SnapshotAnnotation" xml:space="preserve">
     <value>Snapshot: "{0}"</value>
@@ -188,10 +188,10 @@
   <data name="ResourceTableEntry_Error_StringFormatParameterMismatch" xml:space="preserve">
     <value>Attenzione: questo elemento contiene discrepanze nei parametri del formato stringa!</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>ResX Resource Manager</value>
-    <comment>@Invariant</comment>
-  </data>
+
+
+
+
   <data name="NotAllLanguagesAreEditable" xml:space="preserve">
     <value>Non tutti i file risorse sono modificabili</value>
   </data>
