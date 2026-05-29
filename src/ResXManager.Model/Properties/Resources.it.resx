@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DuplicateKeyError" xml:space="preserve">
+    <value>Chiavi duplicate in '{0}':
+{1}
+</value>
+  </data>
+  <data name="DuplicateKeyHandling_Fail" xml:space="preserve">
+    <value>Visualizza un messaggio di errore e non caricare la risorsa</value>
+  </data>
+  <data name="DuplicateKeyHandling_Rename" xml:space="preserve">
+    <value>Suffisso chiavi duplicate/vuote con "_Duplicate[#]"/"_Empty[#]"</value>
+  </data>
+  <data name="EmptyKeysError" xml:space="preserve">
+    <value>Chiavi vuote in '{0}'</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="EmptyResxTemplate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>EmptyResxTemplate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="ExcelExport_MultipleSheets" xml:space="preserve">
+    <value>Fogli multipli</value>
+  </data>
+  <data name="ExcelExport_SingleSheet" xml:space="preserve">
+    <value>Foglio singolo</value>
+  </data>
+  <data name="FileSaveError" xml:space="preserve">
+    <value>Errore nel salvtaggio del file '{0}':
+{1}
+</value>
+  </data>
+  <data name="ImportColumnMismatchError" xml:space="preserve">
+    <value>&gt;Sono previste almeno tre colonne.</value>
+  </data>
+  <data name="ImportDuplicateLanguageError" xml:space="preserve">
+    <value>Lingua duplicata nelle intestazioni {0} e {1} ('{2}').</value>
+  </data>
+  <data name="ImportFailedError" xml:space="preserve">
+    <value>Importazione non riuscita. Non è stato importato nulla.</value>
+  </data>
+  <data name="ImportFailedPartiallyError" xml:space="preserve">
+    <value>L'importazione non è riuscita parzialmente. Alcune colonne sono già state importate, ma non tutte.</value>
+  </data>
+  <data name="ImportHeaderMismatchError" xml:space="preserve">
+    <value>Prevista intestazione standard.</value>
+  </data>
+  <data name="ImportLanguageNotEditable" xml:space="preserve">
+    <value>La lingua '{0}' non può essere modificata. L'operazione è stata interrotta.</value>
+  </data>
+  <data name="ImportMapSheetError" xml:space="preserve">
+    <value>Il foglio "{0}" non può essere importato; non esiste alcun file di risorse corrispondente nella soluzione.</value>
+  </data>
+  <data name="InvalidResourceFileError" xml:space="preserve">
+    <value>{0} non è un file di risorse RESX valido: nessuna radice xml.</value>
+  </data>
+  <data name="InvalidResourceFileNameAttributeMissingError" xml:space="preserve">
+    <value>{0} non è un file di risorse RESX valido: non tutte le voci hanno un attributo name.</value>
+  </data>
+  <data name="InvalidResourceFileValueAttributeMissingError" xml:space="preserve">
+    <value>{0} non è un file di risorse RESX valido: non tutte le voci hanno un attributo valore.</value>
+  </data>
+  <data name="LanguageNotDefinedError" xml:space="preserve">
+    <value>La lingua non è definita: '{0}'.</value>
+  </data>
+  <data name="Neutral" xml:space="preserve">
+    <value>Neutro</value>
+  </data>
+  <data name="SnapshotAnnotation" xml:space="preserve">
+    <value>Snapshot: "{0}"</value>
+  </data>
+  <data name="ResourceTableEntry_Error_StringFormatParameterMismatch" xml:space="preserve">
+    <value>Attenzione: questo elemento contiene discrepanze nei parametri del formato stringa!</value>
+  </data>
+  <data name="NotAllLanguagesAreEditable" xml:space="preserve">
+    <value>Non tutti i file risorse sono modificabili</value>
+  </data>
+  <data name="KeyAlreadyExists" xml:space="preserve">
+    <value>Questa chiave esiste già: {0}</value>
+  </data>
+  <data name="ResourceTableEntry_Error_MissingTranslation" xml:space="preserve">
+    <value>Traduzione mancante</value>
+  </data>
+  <data name="ResourceTableEntry_Error_InvariantWithValue" xml:space="preserve">
+    <value>L'elemento è invariante ma contiene un valore</value>
+  </data>
+  <data name="ExcelExport_PlainTextTabDelimited" xml:space="preserve">
+    <value>Testo normale, delimitato da tabulazioni</value>
+  </data>
+  <data name="ResourceTableEntryRuleStringFormat_Name" xml:space="preserve">
+    <value>Parametri formato stringa corrispondenti</value>
+  </data>
+  <data name="ResourceTableEntryRuleStringFormat_Description" xml:space="preserve">
+    <value>Questa regola verifica che i parametri del formato stringa corrispondano in tutte le traduzioni di un elemento.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Name" xml:space="preserve">
+    <value>Punteggiatura principale</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Description" xml:space="preserve">
+    <value>Questa regola verifica che la punteggiatura della voce corrisponda in tutte le traduzioni.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Name" xml:space="preserve">
+    <value>Punteggiatura finale</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Description" xml:space="preserve">
+    <value>Questa regola verifica la punteggiatura alla fine del messaggio.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Name" xml:space="preserve">
+    <value>Spazio bianco principale</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Description" xml:space="preserve">
+    <value>Questa regola verifica che gli spazi bianchi all'inizio dei messaggi corrispondano.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Error_Intro" xml:space="preserve">
+    <value>Gli spazi bianchi all'inizio della sequenza non corrispondono.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Error_NoWhiteSpaceExpected" xml:space="preserve">
+    <value>Non sono previsti spazi bianchi all'inizio della sequenza.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceLead_Error_WhiteSpaceSeqExpected" xml:space="preserve">
+    <value>La sequenza di spazi bianchi prevista è: {0}</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Name" xml:space="preserve">
+    <value>Spazio bianco finale</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Description" xml:space="preserve">
+    <value>Questa regola verifica che gli spazi finali dei messaggi corrispondano.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Error_Intro" xml:space="preserve">
+    <value>Gli spazi bianchi alla fine della sequenza non corrispondono.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Error_NoWhiteSpaceExpected" xml:space="preserve">
+    <value>Non sono previsti spazi bianchi alla fine della sequenza.</value>
+  </data>
+  <data name="ResourceTableEntryRuleWhiteSpaceTail_Error_WhiteSpaceSeqExpected" xml:space="preserve">
+    <value>La sequenza di spazi bianchi prevista è: {0}</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Error_Intro" xml:space="preserve">
+    <value>La punteggiatura all'inizio dei messaggi non corrisponde.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Error_NoPunctuationExpected" xml:space="preserve">
+    <value>Non era prevista la punteggiatura all'inizio del messaggio.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationLead_Error_PunctuationSeqExpected" xml:space="preserve">
+    <value>La sequenza di punteggiatura iniziale prevista è: {0}</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Error_Intro" xml:space="preserve">
+    <value>La punteggiatura alla fine dei messaggi non corrisponde.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Error_NoPunctuationExpected" xml:space="preserve">
+    <value>La punteggiatura alla fine dei messaggi non corrisponde.</value>
+  </data>
+  <data name="ResourceTableEntryRulePunctuationTail_Error_PunctuationSeqExpected" xml:space="preserve">
+    <value>La sequenza di punteggiatura finale prevista è: {0}</value>
+  </data>
+  <data name="PrefixFieldTypeComment" xml:space="preserve">
+    <value>Commento</value>
+  </data>
+  <data name="PrefixFieldTypeValue" xml:space="preserve">
+    <value>Valore</value>
+  </data>
+  <data name="PrefixFieldTypeValueAndNeutralComment" xml:space="preserve">
+    <value>Valore e commento neutrale</value>
+  </data>
+  <data name="PrefixFieldTypeTargetComment" xml:space="preserve">
+    <value>Commento destinazione</value>
+  </data>
+  <data name="PrefixFieldTypeAll" xml:space="preserve">
+    <value>Tutti</value>
+  </data>
+</root>
