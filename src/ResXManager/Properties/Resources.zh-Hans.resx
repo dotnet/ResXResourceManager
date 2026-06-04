@@ -153,4 +153,16 @@
   <data name="ColorTheme_Title" xml:space="preserve">
     <value>配色方案</value>
   </data>
+  <data name="MenuEntry_Directory" xml:space="preserve">
+    <value>目录：</value>
+  </data>
+  <data name="MenuEntry_Browse" xml:space="preserve">
+    <value>浏览</value>
+  </data>
+  <data name="MenuEntry_CloseSolution" xml:space="preserve">
+    <value>关闭解决方案</value>
+  </data>
+  <data name="MenuEntry_Recent" xml:space="preserve">
+    <value>最近</value>
+  </data>
 </root>

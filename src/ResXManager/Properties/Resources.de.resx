@@ -152,4 +152,16 @@ Die Datei wird nicht automatisch dem Visual Studio-Projekt hinzugefügt.</value>
   <data name="ColorTheme_Title" xml:space="preserve">
     <value>Farbschema</value>
   </data>
+  <data name="MenuEntry_CloseSolution" xml:space="preserve">
+    <value>Entwicklungumgebung schließen</value>
+  </data>
+  <data name="MenuEntry_Recent" xml:space="preserve">
+    <value>Zuletzt verwendet</value>
+  </data>
+  <data name="MenuEntry_Browse" xml:space="preserve">
+    <value>Durchsuchen</value>
+  </data>
+  <data name="MenuEntry_Directory" xml:space="preserve">
+    <value>Verzeichnis:</value>
+  </data>
 </root>

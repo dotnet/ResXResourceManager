@@ -125,6 +125,42 @@ namespace ResXManager.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Browse"
+        /// </summary>
+        public static string MenuEntry_Browse {
+            get {
+                return ResourceManager.GetString("MenuEntry_Browse", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Close solution"
+        /// </summary>
+        public static string MenuEntry_CloseSolution {
+            get {
+                return ResourceManager.GetString("MenuEntry_CloseSolution", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Directory:"
+        /// </summary>
+        public static string MenuEntry_Directory {
+            get {
+                return ResourceManager.GetString("MenuEntry_Directory", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Recent"
+        /// </summary>
+        public static string MenuEntry_Recent {
+            get {
+                return ResourceManager.GetString("MenuEntry_Recent", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "The project has no resource file for the language ..."
         /// </summary>
         public static string ProjectHasNoResourceFile {
@@ -195,6 +231,22 @@ namespace ResXManager.Properties {
         ///   Looks up a localized string similar to ResX Resource Manager loaded.&amp;#13;&amp;#10;Hom....
         /// </summary>
         IntroMessage,
+        /// <summary>
+        ///   Looks up a localized string similar to Browse.
+        /// </summary>
+        MenuEntry_Browse,
+        /// <summary>
+        ///   Looks up a localized string similar to Close solution.
+        /// </summary>
+        MenuEntry_CloseSolution,
+        /// <summary>
+        ///   Looks up a localized string similar to Directory:.
+        /// </summary>
+        MenuEntry_Directory,
+        /// <summary>
+        ///   Looks up a localized string similar to Recent.
+        /// </summary>
+        MenuEntry_Recent,
         /// <summary>
         ///   Looks up a localized string similar to The project has no resource file for the language ....
         /// </summary>

@@ -13,14 +13,14 @@
       <MenuItem>
         <MenuItem.Header>
           <TextBlock Margin="3">
-            <Run Text="Directory:" TextBlock.FontWeight="Bold" />
+            <Run Text="{x:Static properties:Resources.MenuEntry_Directory}" TextBlock.FontWeight="Bold" />
             <Run Text="{Binding SourceFilesProvider.SolutionFolder, Mode=OneWay}" />
           </TextBlock>
         </MenuItem.Header>
-        <MenuItem Header="Browse" Command="{Binding BrowseCommand}" />
-        <MenuItem Header="Close solution" Command="{Binding CloseSolutionCommand}" />
+        <MenuItem Header="{x:Static properties:Resources.MenuEntry_Browse}" Command="{Binding BrowseCommand}" />
+        <MenuItem Header="{x:Static properties:Resources.MenuEntry_CloseSolution}" Command="{Binding CloseSolutionCommand}" />
         <Separator />
-        <MenuItem Header="Recent" ItemsSource="{Binding RecentStartupFolders, Source={x:Static properties:Settings.Default}}">
+        <MenuItem Header="{x:Static properties:Resources.MenuEntry_Recent}" ItemsSource="{Binding RecentStartupFolders, Source={x:Static properties:Settings.Default}}">
           <MenuItem.ItemContainerStyle>
             <Style TargetType="MenuItem">
               <Setter Property="Command" Value="{Binding Path=DataContext.SetSolutionFolderCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}" />
