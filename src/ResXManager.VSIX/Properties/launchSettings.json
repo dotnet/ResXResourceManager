@@ -1,18 +1,23 @@
 {
   "profiles": {
-    "VS 2022 Preview": {
+    "VS 2026 Insider": {
       "commandName": "Executable",
-      "executablePath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Preview\\Common7\\IDE\\devenv.exe",
+      "executablePath": "C:\\Program Files\\Microsoft Visual Studio\\18\\Insiders\\Common7\\IDE\\devenv.exe",
+      "commandLineArgs": "/RootSuffix Exp"
+    },
+    "VS 2026": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Microsoft Visual Studio\\18\\Enterprise\\Common7\\IDE\\devenv.exe",
+      "commandLineArgs": "/RootSuffix Exp"
+    },
+    "VS 2022": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\Common7\\IDE\\devenv.exe",
       "commandLineArgs": "/RootSuffix Exp"
     },
     "VS 2019": {
       "commandName": "Executable",
       "executablePath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE\\devenv.exe",
-      "commandLineArgs": "/RootSuffix Exp"
-    },
-    "VS 2026": {
-      "commandName": "Executable",
-      "executablePath": "C:\\Program Files\\Microsoft Visual Studio\\18\\Insiders\\Common7\\IDE\\devenv.exe",
       "commandLineArgs": "/RootSuffix Exp"
     }
   }

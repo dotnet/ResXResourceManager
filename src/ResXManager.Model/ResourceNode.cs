@@ -10,6 +10,10 @@ public class ResourceNode
     }
 
     public string Key { get; }
+
     public string? Text { get; }
+
     public string? Comment { get; }
+
+    public bool IsInvariant => Comment.GetIsInvariant();
 }

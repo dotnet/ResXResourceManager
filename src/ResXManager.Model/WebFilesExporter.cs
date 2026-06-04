@@ -69,11 +69,18 @@ internal sealed class WebFilesExporter : IService
                 if (neutralLanguage == null)
                     continue;
 
+                var keysOfInvariantStrings = new HashSet<string>();
+
 #pragma warning disable CA1305 // Specify IFormatProvider
                 typescript.AppendLine($"export class {entityName} {{");
 
                 foreach (var node in neutralLanguage.GetNodes())
                 {
+                    if (node.IsInvariant)
+                    {
+                        keysOfInvariantStrings.Add(node.Key);
+                    }
+
                     AppendTypescript(node, typescript, formatTemplates);
                 }
 
@@ -86,6 +93,9 @@ internal sealed class WebFilesExporter : IService
 
                     foreach (var resourceNode in language.GetNodes())
                     {
+                        if ((keysOfInvariantStrings.Contains(resourceNode.Key) || resourceNode.IsInvariant) && string.IsNullOrEmpty(resourceNode.Text))
+                            continue;
+
                         var key = resourceNode.Key;
                         if (formatTemplates.Contains(key))
                         {
