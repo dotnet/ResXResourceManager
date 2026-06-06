@@ -25,6 +25,7 @@ using Microsoft.VisualStudio.Shell;
 
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.Bcl.AsyncInterfaces.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.Bcl.HashCode.dll")]
+[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.Bcl.Memory.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.ML.Tokenizers.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.Xaml.Behaviors.dll")]
 

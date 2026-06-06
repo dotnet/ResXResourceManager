@@ -13,7 +13,9 @@
     <PackageVersion Include="ILMerge.Fody" Version="1.24.0" />
     <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4" />
     <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageVersion Include="Microsoft.ML.Tokenizers" Version="[0.22.0-preview.24378.1]" Justification="VS2019" />
+    <PackageVersion Include="Microsoft.ML.Tokenizers" Version="2.0.0" />
+    <PackageVersion Include="Microsoft.ML.Tokenizers.Data.CL100KBase" Version="2.0.0" />
+    <PackageVersion Include="Microsoft.ML.Tokenizers.Data.O200kBase" Version="2.0.0" />
     <PackageVersion Include="Microsoft.VisualStudio.SDK" Version="[15.0.1]" />
     <PackageVersion Include="Microsoft.VSSDK.BuildTools" Version="[17.6.2164]" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
@@ -27,7 +29,7 @@
     <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="[6.0.4]" />
     <PackageVersion Include="System.ServiceModel.Primitives" Version="[4.10.2]" />
     <PackageVersion Include="System.ServiceModel.Http" Version="[4.10.2]" />
-    <PackageVersion Include="System.Text.Json" Version="[8.0.5]" Justification="VS2019" />
+    <PackageVersion Include="System.Text.Json" Version="9.0.4" />
     <PackageVersion Include="Throttle.Fody" Version="1.7.0" />
     <PackageVersion Include="TomsToolbox.Composition" Version="2.23.0" />
     <PackageVersion Include="TomsToolbox.Composition.Ninject" Version="2.23.0" />

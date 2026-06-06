@@ -1,8 +1,4 @@
 {
   "_comment": "Auto-generated; do not modify!",
-  "WebExportTest": {
-    "SimpleString": "",
-    "WithInterpolation_TEMPLATE": "",
-    "WithBadInterpolation_TEMPLATE": ""
-  }
+  "WebExportTest": {}
 }

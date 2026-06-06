@@ -32,10 +32,34 @@ The API URL for Deepl is https://api.deepl.com/v2/translate, but for the free ve
 #### Configuration
 - Add a new Azure OpenAI resource using the portal or CLI.
 - Model availability may vary depending on e.g. region, check the model availabilty [here](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models#gpt-4-and-gpt-4-turbo-preview-model-availability)
-- Deploy the "gpt-3.5-turbo-instruct" (completion based) or "gpt-3.5-turbo"/"gpt-4-turbo" (chat based) model.
-- Copy the API key, URL to the endpoint and name of the deployment and model into the settings of the translator
+- Deploy one of the supported models (see below).
+- Copy the API key, URL to the endpoint, deployment name, and model name into the settings of the translator.
 
-#### Addtional Settings
+**Important: Understanding Model Name vs. Model Deployment Name**
+- **Model Name**: This is the base model identifier used by OpenAI (e.g., "gpt-3.5-turbo", "gpt-4", "gpt-4o"). This is used internally for tokenization and determining which API endpoint to use.
+- **Model Deployment Name**: This is the custom name YOU chose when deploying the model in Azure (e.g., "my-gpt4-deployment"). This is what Azure uses to route your API requests.
+
+> A list of supported models names can be found [here](https://github.com/dotnet/machinelearning/blob/4c8b3579d1053257b213ca54be2681359b66cf65/src/Microsoft.ML.Tokenizers/Model/TiktokenTokenizer.cs#L1069-L1146)
+
+**Supported Models**:
+- **GPT-3.5 Models**:
+  - `gpt-3.5-turbo-instruct` (completion-based, legacy)
+  - `gpt-3.5-turbo` (chat-based, recommended for GPT-3.5)
+  - Note: You can also use `gpt-35-turbo` or `gpt-35-turbo-instruct` (Azure naming), which will be automatically mapped.
+
+- **GPT-4 Models**:
+  - `gpt-4` (chat-based)
+  - `gpt-4-turbo` (chat-based, faster and more cost-effective)
+  - `gpt-4o` (chat-based, latest multimodal model)
+  - `gpt-4o-mini` (chat-based, smaller and faster variant)
+
+**Example Configuration**:
+- If you deployed GPT-4 Turbo in Azure with deployment name "my-translation-model":
+  - **Model Name**: `gpt-4-turbo`
+  - **Model Deployment Name**: `my-translation-model`
+  - **Endpoint URL**: `https://your-resource-name.openai.azure.com`
+
+#### Additional Settings
 - You can add a custom prompt to your request to improve the translation quality or behavior, e.g. "preserve the html tags in the results"
 - You can include the comments in your resources in the prompt, to guide the model with additional hints about the context
 
