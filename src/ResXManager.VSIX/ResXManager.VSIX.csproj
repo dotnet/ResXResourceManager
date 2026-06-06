@@ -5,6 +5,7 @@
     <TargetFramework>net472</TargetFramework>
     <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
     <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
+    <VSSDKBuildToolsAutoSetup>true</VSSDKBuildToolsAutoSetup>
   </PropertyGroup>
   <PropertyGroup Label="Debug">
     <StartAction>Program</StartAction>
