@@ -16,9 +16,9 @@
     <PackageVersion Include="Microsoft.ML.Tokenizers" Version="2.0.0" />
     <PackageVersion Include="Microsoft.ML.Tokenizers.Data.CL100KBase" Version="2.0.0" />
     <PackageVersion Include="Microsoft.ML.Tokenizers.Data.O200kBase" Version="2.0.0" />
-    <PackageVersion Include="Microsoft.VisualStudio.SDK" Version="[15.0.1]" />
+    <PackageVersion Include="Microsoft.VisualStudio.SDK" Version="17.0.31902.203" />
     <PackageVersion Include="Microsoft.VSSDK.BuildTools" Version="[17.6.2164]" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
     <PackageVersion Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageVersion Include="Resourcer.Fody" Version="1.8.1" />
@@ -47,7 +47,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageMitigation Include="Newtonsoft.Json" Version="8.0.3" Justification="VS 2019 requirement" />
     <PackageMitigation Include="MessagePack" Version="2.2.85" Justification="VS Sdk dependency" />
   </ItemGroup>
 </Project>

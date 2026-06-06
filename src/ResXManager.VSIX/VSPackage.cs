@@ -20,8 +20,6 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 using Ninject;
 
-using Resourcer;
-
 using ResXManager.Infrastructure;
 using ResXManager.Model;
 using ResXManager.View.Tools;
@@ -95,6 +93,22 @@ public sealed class VsPackage : AsyncPackage
     public IExportProvider ExportProvider { get; }
 
     private ITracer Tracer { get; }
+
+    public override IVsAsyncToolWindowFactory? GetAsyncToolWindowFactory(Guid toolWindowType)
+    {
+        return toolWindowType == typeof(MyToolWindow).GUID ? this : null;
+    }
+
+    protected override string GetToolWindowTitle(Type toolWindowType, int id)
+    {
+        return toolWindowType == typeof(MyToolWindow) ? "ResX Manager" : base.GetToolWindowTitle(toolWindowType, id);
+    }
+
+    protected override Task<object?> InitializeToolWindowAsync(Type toolWindowType, int id, CancellationToken cancellationToken)
+    {
+        // Perform any async initialization here that the tool window needs
+        return Task.FromResult<object?>(null);
+    }
 
     protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
     {
@@ -182,25 +196,12 @@ public sealed class VsPackage : AsyncPackage
 
         try
         {
-            var is64BitProcess = Environment.Is64BitProcess;
-
-            using var resourceStream = is64BitProcess
-                ? Resource.AsStream("ResXManager.VSIX.Compatibility.x64.dll")
-                : Resource.AsStream("ResXManager.VSIX.Compatibility.x86.dll");
-
-            var length = resourceStream.Length;
-            var data = new byte[length];
-            if (length != resourceStream.Read(data, 0, (int)length))
-                throw new InvalidOperationException("Failed to read compatibility layer.");
-
-            var compatibilityLayer = Assembly.Load(data);
-
             _kernel.BindExports(assembly,
                 typeof(Infrastructure.Properties.AssemblyKey).Assembly,
                 typeof(Model.Properties.AssemblyKey).Assembly,
                 typeof(Translators.Properties.AssemblyKey).Assembly,
                 typeof(View.Properties.AssemblyKey).Assembly,
-                compatibilityLayer);
+                typeof(Compatibility.x64.Properties.AssemblyKey).Assembly);
 
             _kernel.Bind<IExportProvider>().ToConstant(ExportProvider);
         }

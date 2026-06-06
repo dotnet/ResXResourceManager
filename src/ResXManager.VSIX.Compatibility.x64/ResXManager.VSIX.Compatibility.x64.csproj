@@ -3,11 +3,10 @@
     <TargetFramework>net472</TargetFramework>
     <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
   </PropertyGroup>
-  <Import Project="..\ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems" Label="Shared" />
   <ItemGroup>
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all" />
     <PackageReference Include="Community.VisualStudio.Toolkit" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK" VersionOverride="[17.0.31902.203]" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" />
     <PackageReference Include="Newtonsoft.Json" VersionOverride="[13.0.1]" />
     <PackageReference Include="Fody" PrivateAssets="all" />
     <PackageReference Include="Throttle.Fody" PrivateAssets="all" />
@@ -17,5 +16,8 @@
     <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj" />
     <ProjectReference Include="..\ResXManager.View\ResXManager.View.csproj" />
     <ProjectReference Include="..\ResXManager.VSIX.Compatibility\ResXManager.VSIX.Compatibility.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 </Project>

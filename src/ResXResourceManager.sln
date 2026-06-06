@@ -23,7 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.View", "ResXMan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.VSIX", "ResXManager.VSIX\ResXManager.VSIX.csproj", "{41E0911D-7C82-4B4F-B905-BF0B549BC9C4}"
 	ProjectSection(ProjectDependencies) = postProject
-		{C59E23B4-6ACD-43DC-BFC7-FCB667155EB3} = {C59E23B4-6ACD-43DC-BFC7-FCB667155EB3}
 		{330FADF0-80F3-4B2A-8F11-79F528AFA1DD} = {330FADF0-80F3-4B2A-8F11-79F528AFA1DD}
 	EndProjectSection
 EndProject
@@ -114,10 +113,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Signing", "Signing", "{8B04
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.VSIX.Compatibility", "ResXManager.VSIX.Compatibility\ResXManager.VSIX.Compatibility.csproj", "{7812E1AE-8AD7-42F1-ADD7-216BD28E4A88}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ResXManager.VSIX.Compatibility.Shared", "ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.shproj", "{CC3F887F-9602-43F4-AA73-7557B7C6AB1D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.VSIX.Compatibility.x86", "ResXManager.VSIX.Compatibility.x86\ResXManager.VSIX.Compatibility.x86.csproj", "{C59E23B4-6ACD-43DC-BFC7-FCB667155EB3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResXManager.VSIX.Compatibility.x64", "ResXManager.VSIX.Compatibility.x64\ResXManager.VSIX.Compatibility.x64.csproj", "{330FADF0-80F3-4B2A-8F11-79F528AFA1DD}"
 EndProject
 Global
@@ -162,10 +157,6 @@ Global
 		{7812E1AE-8AD7-42F1-ADD7-216BD28E4A88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7812E1AE-8AD7-42F1-ADD7-216BD28E4A88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7812E1AE-8AD7-42F1-ADD7-216BD28E4A88}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C59E23B4-6ACD-43DC-BFC7-FCB667155EB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C59E23B4-6ACD-43DC-BFC7-FCB667155EB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C59E23B4-6ACD-43DC-BFC7-FCB667155EB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C59E23B4-6ACD-43DC-BFC7-FCB667155EB3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{330FADF0-80F3-4B2A-8F11-79F528AFA1DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{330FADF0-80F3-4B2A-8F11-79F528AFA1DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{330FADF0-80F3-4B2A-8F11-79F528AFA1DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -179,10 +170,5 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {04A160C5-3AA5-4A9E-9D73-A227A07E3EE4}
-	EndGlobalSection
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{330fadf0-80f3-4b2a-8f11-79f528afa1dd}*SharedItemsImports = 5
-		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{c59e23b4-6acd-43dc-bfc7-fcb667155eb3}*SharedItemsImports = 5
-		ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems*{cc3f887f-9602-43f4-aa73-7557b7c6ab1d}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
