@@ -22,6 +22,7 @@ using Microsoft.VisualStudio.Shell;
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Community.VisualStudio.Toolkit.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\DataGridExtensions.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\DocumentFormat.OpenXml.dll")]
+[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\DocumentFormat.OpenXml.Framework.dll")]
 
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.Bcl.AsyncInterfaces.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.Bcl.HashCode.dll")]

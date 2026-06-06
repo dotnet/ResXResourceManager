@@ -1,4 +1,4 @@
-﻿namespace ResXManager.VSIX;
+﻿namespace ResXManager.VSIX.Compatibility.x64;
 
 using System.Collections.Generic;
 using System.Composition;

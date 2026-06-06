@@ -1,4 +1,4 @@
-﻿namespace ResXManager.VSIX;
+﻿namespace ResXManager.VSIX.Compatibility.x64;
 
 using System;
 using System.ComponentModel;
@@ -14,7 +14,7 @@ using TomsToolbox.Essentials;
 
 using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
-using Configuration = ResXManager.Model.Configuration;
+using Configuration = Model.Configuration;
 
 [Shared]
 [Export(typeof(IConfiguration))]
@@ -48,16 +48,16 @@ internal sealed class DteConfiguration : Configuration, IDteConfiguration
 
         var solutionKey = GetSolutionKey(key);
 
-        if (!TryGetValueFromSolutionGlobals<T>(solutionKey, out var value)) 
+        if (!TryGetValueFromSolutionGlobals<T>(solutionKey, out var value))
             return base.InternalGetValue(defaultValue, key);
 
         Tracer.WriteLine("Convert old solution settings to new file based settings for key {0}, value {1}", solutionKey, value);
 
         // Convert old solution settings to new ones.
         TryClearValueFromSolutionGlobals(solutionKey);
-        
+
         base.InternalSetValue(value, key, false);
-        
+
         return value;
     }
 
@@ -66,7 +66,7 @@ internal sealed class DteConfiguration : Configuration, IDteConfiguration
         ThrowIfNotOnUIThread();
 
         TryClearValueFromSolutionGlobals(GetSolutionKey(key));
-        
+
         base.InternalSetValue(value, key, forceGlobal);
     }
 

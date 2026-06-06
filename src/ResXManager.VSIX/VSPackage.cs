@@ -48,10 +48,10 @@ using static Microsoft.VisualStudio.Shell.ThreadHelper;
 // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is a package.
 [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Package already handles this.")]
 [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-// This attribute is used to register the information needed to show the this package in the Help/About dialog of Visual Studio.
-[InstalledProductRegistration(@"#110", @"#112", "ResXManager", IconResourceID = 400)]
+// This attribute is used to register the information needed to show this package in the Help/About dialog of Visual Studio.
+[InstalledProductRegistration("#110", "#112", "ResXManager", IconResourceID = 400)]
 // This attribute is needed to let the shell know that this package exposes some menus.
-[ProvideMenuResource(@"Menus.ctmenu", 1)]
+[ProvideMenuResource("Menus.ctmenu", 1)]
 // This attribute registers a tool window exposed by this package.
 [ProvideToolWindow(typeof(MyToolWindow))]
 [Guid(GuidList.guidResXManager_VSIXPkgString)]

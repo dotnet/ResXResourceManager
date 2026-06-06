@@ -1,4 +1,4 @@
-﻿namespace ResXManager.VSIX;
+﻿namespace ResXManager.VSIX.Compatibility.x64;
 
 using System;
 using System.Collections.Generic;
@@ -10,13 +10,12 @@ using System.Windows;
 using Community.VisualStudio.Toolkit;
 
 using Microsoft.VisualStudio;
-
 using Microsoft.VisualStudio.Shell.Interop;
-
-using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
 using ResXManager.View;
 using ResXManager.VSIX.Compatibility;
+
+using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
 internal static class DteExtensions
 {

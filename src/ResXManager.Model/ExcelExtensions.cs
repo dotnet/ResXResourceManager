@@ -27,7 +27,7 @@
 
     public static partial class ResourceEntityExtensions
     {
-        private static readonly string[] _singleSheetFixedColumnHeaders = { "Project", "File", "Key" };
+        private static readonly string[] _singleSheetFixedColumnHeaders = ["Project", "File", "Key"];
 
         public static void ExportExcelFile(this ResourceManager resourceManager, string filePath, IResourceScope? scope, ExcelExportMode exportMode)
         {
@@ -256,12 +256,12 @@
         {
             var sheetId = sheet.Id;
 
-            if ((sheetId is not { Value: {} value}) || string.IsNullOrEmpty(value))
-                return Enumerable.Empty<Row>();
+            if ((sheetId is not { Value: { } value }) || string.IsNullOrEmpty(value))
+                return [];
 
             var worksheetPart = (WorksheetPart)workbookPart.GetPartById(value);
 
-            return worksheetPart.Worksheet.ChildElements.OfType<SheetData>().FirstOrDefault()?.OfType<Row>() ?? Enumerable.Empty<Row>();
+            return worksheetPart.Worksheet?.ChildElements.OfType<SheetData>().FirstOrDefault()?.OfType<Row>() ?? [];
         }
 
         private static ResourceEntity FindResourceEntity(this IEnumerable<MultipleSheetEntity> entities, Sheet sheet)
@@ -286,7 +286,7 @@
 
             public SheetData AppendRow(SheetData sheetData, IEnumerable<string> rowData)
             {
-                var row = (sheetData.ChildElements?.OfType<Row>()?.Count() ?? 0) + 1;
+                var row = (sheetData.ChildElements.OfType<Row>()?.Count() ?? 0) + 1;
                 var column = 1;
                 return sheetData.AppendItem(rowData.Aggregate(new Row(), (seed, item) => seed.AppendItem(CreateCell(item, row, column++))));
             }

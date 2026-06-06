@@ -27,7 +27,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <GlobalPackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.201" />
+    <GlobalPackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.300" />
     <GlobalPackageReference Include="Nullable.Extended.Analyzer" Version="1.15.6581" />
   </ItemGroup>
 

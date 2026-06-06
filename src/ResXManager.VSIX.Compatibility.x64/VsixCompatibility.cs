@@ -1,4 +1,4 @@
-﻿namespace ResXManager.VSIX.Compatibility.Shared;
+﻿namespace ResXManager.VSIX.Compatibility.x64;
 
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ using TomsToolbox.Essentials;
 using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
 using MessageBox = System.Windows.MessageBox;
-using Resources = Properties.Resources;
+using Resources = Compatibility.Properties.Resources;
 
 [Export(typeof(IVsixCompatibility))]
 internal sealed class VsixCompatibility : IVsixCompatibility
@@ -241,7 +241,7 @@ internal sealed class VsixCompatibility : IVsixCompatibility
         ThrowIfNotOnUIThread();
 
         if (ServiceProvider.GlobalProvider?.GetService(typeof(DTE)) is not DTE2 dte)
-            return Array.Empty<Tuple<string, EnvDTE.Window>>();
+            return [];
 
         try
         {
@@ -254,19 +254,19 @@ internal sealed class VsixCompatibility : IVsixCompatibility
                 .ToDictionary(window => window.Document);
 
             var items = from l in languages
-                let file = l.FileName
-                let projectFile = l.ProjectFile as DteProjectFile
-                let documents = projectFile?.ProjectItems.Select(item => item.TryGetDocument()).Where(doc => doc != null)
-                let window = documents?.Select(doc => openDocuments?.GetValueOrDefault(doc)).FirstOrDefault(win => win != null)
-                where window != null
-                select Tuple.Create(file, window);
+                        let file = l.FileName
+                        let projectFile = l.ProjectFile as DteProjectFile
+                        let documents = projectFile?.ProjectItems.Select(item => item.TryGetDocument()).Where(doc => doc != null)
+                        let window = documents?.Select(doc => openDocuments?.GetValueOrDefault(doc)).FirstOrDefault(win => win != null)
+                        where window != null
+                        select Tuple.Create(file, window);
 #pragma warning restore VSTHRD010 // Accessing ... should only be done on the main thread.
 
             return items.ToArray();
         }
         catch
         {
-            return Array.Empty<Tuple<string, EnvDTE.Window>>();
+            return [];
         }
     }
 
