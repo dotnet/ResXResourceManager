@@ -31,7 +31,7 @@ The API URL for Deepl is https://api.deepl.com/v2/translate, but for the free ve
 
 #### Configuration
 - Add a new Azure OpenAI resource using the portal or CLI.
-- Model availability may vary depending on e.g. region, check the model availabilty [here](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models#gpt-4-and-gpt-4-turbo-preview-model-availability)
+- Model availability may vary depending on e.g. region, check the model availability [here](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models#gpt-4-and-gpt-4-turbo-preview-model-availability)
 - Deploy one of the supported models (see below).
 - Copy the API key, URL to the endpoint, deployment name, and model name into the settings of the translator.
 
@@ -39,7 +39,7 @@ The API URL for Deepl is https://api.deepl.com/v2/translate, but for the free ve
 - **Model Name**: This is the base model identifier used by OpenAI (e.g., "gpt-3.5-turbo", "gpt-4", "gpt-4o"). This is used internally for tokenization and determining which API endpoint to use.
 - **Model Deployment Name**: This is the custom name YOU chose when deploying the model in Azure (e.g., "my-gpt4-deployment"). This is what Azure uses to route your API requests.
 
-> A list of supported models names can be found [here](https://github.com/dotnet/machinelearning/blob/4c8b3579d1053257b213ca54be2681359b66cf65/src/Microsoft.ML.Tokenizers/Model/TiktokenTokenizer.cs#L1069-L1146)
+> A list of supported model names can be found [here](https://github.com/dotnet/machinelearning/blob/4c8b3579d1053257b213ca54be2681359b66cf65/src/Microsoft.ML.Tokenizers/Model/TiktokenTokenizer.cs#L1069-L1146)
 
 **Supported Models**:
 - **GPT-3.5 Models**:
