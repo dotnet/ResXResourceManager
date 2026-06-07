@@ -1,4 +1,4 @@
-﻿namespace ResXManager.VSIX;
+﻿namespace ResXManager.VSIX.Compatibility.x64;
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,6 @@ using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 
 using ResXManager.Model;
-using ResXManager.View.Behaviors;
 using ResXManager.View.Visuals;
 using ResXManager.VSIX.Compatibility;
 
@@ -23,7 +22,6 @@ using TomsToolbox.Essentials;
 
 using static Microsoft.VisualStudio.Shell.ThreadHelper;
 
-using Settings = View.Properties.Settings;
 using Resources = Compatibility.Properties.Resources;
 
 [Export(typeof(IRefactorings))]

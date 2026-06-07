@@ -53,13 +53,13 @@
     <PackageReference Include="Fody" PrivateAssets="all" />
     <PackageReference Include="ILMerge.Fody" PrivateAssets="all" />
     <PackageReference Include="Microsoft.ML.Tokenizers" />
+    <PackageReference Include="Microsoft.ML.Tokenizers.Data.CL100KBase" />
+    <PackageReference Include="Microsoft.ML.Tokenizers.Data.O200kBase" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" />
     <PackageReference Include="System.Net.Http" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" />
+    <PackageReference Include="System.ServiceModel.Primitives" />
     <PackageReference Include="System.Text.Json" />
     <PackageReference Include="Throttle.Fody" PrivateAssets="all" />
-    <PackageReference Include="System.ServiceModel.Primitives" />
-    <PackageReference Include="System.ServiceModel.Http" />
     <PackageReference Include="TomsToolbox.Wpf" />
     <PackageReference Include="TomsToolbox.Wpf.Composition.AttributedModel" />
     <PackageReference Include="TomsToolbox.Wpf.Styles" />

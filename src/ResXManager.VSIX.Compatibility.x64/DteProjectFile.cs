@@ -1,11 +1,9 @@
-﻿namespace ResXManager.VSIX;
+﻿namespace ResXManager.VSIX.Compatibility.x64;
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
-using EnvDTE;
 
 using ResXManager.Model;
 using ResXManager.VSIX.Compatibility;
@@ -186,6 +184,9 @@ internal sealed class DteProjectFile : ProjectFile, IDteProjectFile
                     case CodeGenerator.Unknown:
                     case CodeGenerator.WinForms:
                         break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(value), value, null);
                 }
             }
         }
@@ -233,12 +234,12 @@ internal sealed class DteProjectFile : ProjectFile, IDteProjectFile
         item.RunCustomTool();
     }
 
-    private static void ReferenceDataAnnotations(ProjectItem projectItem)
+    private static void ReferenceDataAnnotations(EnvDTE.ProjectItem projectItem)
     {
         try
         {
             ThrowIfNotOnUIThread();
-                
+
             const string dataAnnotations = "System.ComponentModel.DataAnnotations";
 
             ThrowIfNotOnUIThread();

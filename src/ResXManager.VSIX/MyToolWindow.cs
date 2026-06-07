@@ -98,7 +98,7 @@ public sealed class MyToolWindow : ToolWindowPane
             var folder = Path.GetDirectoryName(executingAssembly.Location);
 
             // ReSharper disable once AssignNullToNotNullAttribute
-            _tracer.WriteLine(Resources.AssemblyLocation, folder);
+            _tracer.WriteLine(Resources.AssemblyLocation, $"{folder}, {File.GetCreationTime(executingAssembly.Location)}");
             _tracer.WriteLine(Resources.Version, new AssemblyName(executingAssembly.FullName).Version);
             _tracer.WriteLine(".NET Framework Version: {0} (https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed)", FrameworkVersion());
 

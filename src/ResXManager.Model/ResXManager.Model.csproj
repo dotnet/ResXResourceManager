@@ -22,7 +22,7 @@
     <PackageReference Include="Fody" PrivateAssets="all" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" />
     <PackageReference Include="System.ComponentModel.Annotations" />
-    <PackageReference Include="System.Composition.AttributedModel" />
+    <PackageReference Include="System.Composition.AttributedModel" VersionOverride="1.4.1" IsPinned="True" Justification="Ensure compatibility with other packages" />
     <PackageReference Include="Throttle.Fody" PrivateAssets="all" />
     <PackageReference Include="TomsToolbox.ObservableCollections" />
   </ItemGroup>

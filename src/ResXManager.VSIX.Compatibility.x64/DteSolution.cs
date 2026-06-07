@@ -1,4 +1,4 @@
-﻿namespace ResXManager.VSIX;
+﻿namespace ResXManager.VSIX.Compatibility.x64;
 
 using System;
 using System.Collections.Generic;
@@ -116,7 +116,14 @@ internal sealed class DteSolution
     }
 
     // ReSharper disable once SuspiciousTypeConversion.Global
-    private Solution2? Solution => _dte.Solution as Solution2;
+    private Solution2? Solution
+    {
+        get
+        {
+            ThrowIfNotOnUIThread();
+            return _dte.Solution as Solution2;
+        }
+    }
 
     public Globals? Globals
     {
