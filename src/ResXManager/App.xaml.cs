@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Windows;
 
 using Ninject;
@@ -25,7 +26,7 @@ public sealed partial class App : IDisposable
     public App()
     {
 #if DEBUG && TEST_L10N
-        System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("de-DE");
+        Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("de-DE");
 #endif
     }
 
@@ -54,6 +55,7 @@ public sealed partial class App : IDisposable
         tracer.WriteLine(ResXManager.Properties.Resources.IntroMessage);
         tracer.WriteLine(ResXManager.Properties.Resources.AssemblyLocation, Path.GetDirectoryName(assembly.Location) ?? "unknown");
         tracer.WriteLine(ResXManager.Properties.Resources.Version, new AssemblyName(assembly.FullName).Version ?? new Version());
+        tracer.WriteLine("UICulture: {0}", Thread.CurrentThread.CurrentUICulture);
 
         VisualComposition.Error += (_, args) => tracer.TraceError(args.Text);
 
