@@ -121,6 +121,22 @@ public class DeepLTranslator() : TranslatorBase("DeepL", "DeepL", _uri, _credent
     private static string DeepLLangCode(CultureInfo cultureInfo)
     {
         var iso1 = cultureInfo.TwoLetterISOLanguageName;
+        // DeepL does not accept region codes for every language, but distinguishes between
+        // simplified and traditional Chinese with the same language code.
+        // Instead of using the API to get a full list of supported languages, we check for
+        // the most common region codes for traditional Chinese here, for now.
+        if (iso1.Equals("ZH", StringComparison.OrdinalIgnoreCase))
+        {
+            var name = cultureInfo.Name;
+            if (name.EndsWith("TW", StringComparison.OrdinalIgnoreCase) ||
+                name.EndsWith("HK", StringComparison.OrdinalIgnoreCase) ||
+                name.EndsWith("MO", StringComparison.OrdinalIgnoreCase) ||
+                name.EndsWith("HANT", StringComparison.OrdinalIgnoreCase))
+            {
+                return "ZH-HANT";
+            }
+            return "ZH-HANS";
+        }
         return iso1;
     }
 
