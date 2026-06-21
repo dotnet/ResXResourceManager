@@ -2,19 +2,21 @@
 
 using global::Microsoft.ML.Tokenizers;
 using Newtonsoft.Json;
+using OpenAI;
+using OpenAI.Chat;
 using ResXManager.Infrastructure;
 using System;
+using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Composition;
 using System.Globalization;
 using System.Linq;
-using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using TomsToolbox.Essentials;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
-using PromptList = System.Collections.Generic.List<(Infrastructure.ITranslationItem item, string prompt)>;
 
 #pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple string/int concatenations
 #pragma warning disable IDE0057 // Use range operator (net472 does not support range operator)
@@ -23,6 +25,40 @@ using PromptList = System.Collections.Generic.List<(Infrastructure.ITranslationI
 [Export(typeof(ITranslator)), Shared]
 public class AzureOpenAITranslator() : TranslatorBase("AzureOpenAI", "AzureOpenAI", new("https://azure.microsoft.com/en-us/products/cognitive-services/openai-service/"), GetCredentials())
 {
+    [DataMember(Name = "AuthenticationKey")]
+    public string? SerializedAuthenticationKey
+    {
+        get => SaveCredentials ? Credentials[0].Value : null;
+        set => Credentials[0].Value = value;
+    }
+
+    [DataMember(Name = "Url")]
+    public string? Url
+    {
+        get => Credentials[1].Value;
+        set => Credentials[1].Value = value;
+    }
+
+    [DataMember(Name = "ModelDeploymentName")]
+    public string? ModelDeploymentName
+    {
+        get => Credentials[2].Value;
+        set => Credentials[2].Value = value;
+    }
+
+    // model name used for tokenizer creation; use the canonical name (e.g. "gpt-4o")
+    [DataMember(Name = "ModelName")]
+    public string? ModelName
+    {
+        get => Credentials[3].Value;
+        set => Credentials[3].Value = value;
+    }
+
+    [DataMember]
+    // Azure OpenAI API version; bump this for newer models that require it
+    public string ApiVersion { get; set; } = "2024-12-01-preview";
+
+
     [DataMember]
     // embeds comments inside prompt for further AI guidance per language
     public bool IncludeCommentsInPrompt { get; set; } = true;
@@ -74,16 +110,10 @@ public class AzureOpenAITranslator() : TranslatorBase("AzureOpenAI", "AzureOpenA
             return;
         }
 
-        // using HttpClient instead of Azure.AI.OpenAI package since it won't load in VSIX
-        // todo: should reuse sockets or use IHttpClientFactory to avoid socket exhaustion
-        using var client = new HttpClient();
-        client.DefaultRequestHeaders.Accept.Clear();
-        client.DefaultRequestHeaders.Accept.Add(new("application/json"));
-        client.DefaultRequestHeaders.Add("api-key", AuthenticationKey);
-
+        ChatClient? chatClient;
         try
         {
-            client.BaseAddress = new Uri(Url, UriKind.Absolute);
+            chatClient = CreateAzureOpenAIChatClient(new(Url), AuthenticationKey, ModelDeploymentName);
         }
         catch (Exception e) when (e is ArgumentNullException or ArgumentException or UriFormatException)
         {
@@ -91,49 +121,51 @@ public class AzureOpenAITranslator() : TranslatorBase("AzureOpenAI", "AzureOpenA
             return;
         }
 
-        // determine if we are using a chat model
-        if (ModelName.StartsWith("gpt-", true, CultureInfo.InvariantCulture) && !ModelName.EndsWith("instruct", StringComparison.OrdinalIgnoreCase))
+        await TranslateUsingChatModel(translationSession, chatClient).ConfigureAwait(false);
+    }
+
+    private ChatClient CreateAzureOpenAIChatClient(Uri baseUrl, string authenticationKey, string modelDeploymentName)
+    {
+        // ! Url and ModelDeploymentName are validated non-null before this method is called
+        var endpoint = new Uri(baseUrl, $"openai/deployments/{modelDeploymentName}/");
+        var options = new OpenAIClientOptions { Endpoint = endpoint };
+        // ! AuthenticationKey is validated non-null before this method is called
+        options.AddPolicy(new AzureOpenAIPipelinePolicy(authenticationKey, ApiVersion), PipelinePosition.PerCall);
+        // ! ModelDeploymentName is validated non-null before this method is called
+        return new OpenAIClient(new ApiKeyCredential("placeholder"), options).GetChatClient(modelDeploymentName);
+    }
+
+    private sealed class AzureOpenAIPipelinePolicy(string apiKey, string apiVersion) : PipelinePolicy
+    {
+        public override void Process(PipelineMessage message, IReadOnlyList<PipelinePolicy> pipeline, int currentIndex)
         {
-            await TranslateUsingChatModel(translationSession, ModelName, client).ConfigureAwait(false);
+            ApplyAzureHeaders(message);
+            ProcessNext(message, pipeline, currentIndex);
         }
-        else
+
+        public override async ValueTask ProcessAsync(PipelineMessage message, IReadOnlyList<PipelinePolicy> pipeline, int currentIndex)
         {
-            await TranslateUsingCompletionsModel(translationSession, ModelName, client).ConfigureAwait(false);
+            ApplyAzureHeaders(message);
+            await ProcessNextAsync(message, pipeline, currentIndex).ConfigureAwait(false);
+        }
+
+        private void ApplyAzureHeaders(PipelineMessage message)
+        {
+            message.Request.Headers.Remove("Authorization");
+            message.Request.Headers.Set("api-key", apiKey);
+
+            var builder = new UriBuilder(message.Request.Uri);
+            var query = builder.Query.TrimStart('?');
+            builder.Query = string.IsNullOrEmpty(query)
+                ? $"api-version={apiVersion}"
+                : $"{query}&api-version={apiVersion}";
+            message.Request.Uri = builder.Uri;
         }
     }
 
-    private sealed class ChatMessage
+    private async Task TranslateUsingChatModel(ITranslationSession translationSession, ChatClient chatClient)
     {
-        [JsonProperty("role")]
-        public string? Role { get; set; }
-
-        [JsonProperty("content")]
-        public string? Content { get; set; }
-    }
-
-    private sealed class ChatCompletionsChoice
-    {
-        [JsonProperty("message")]
-        public ChatMessage? Message { get; set; }
-
-        [JsonProperty("finish_reason")]
-        public string? FinishReason { get; set; }
-    }
-
-    private sealed class ChatCompletionsResponse
-    {
-        [JsonProperty("choices")]
-        public IList<ChatCompletionsChoice>? Choices { get; set; }
-    }
-
-    private async Task TranslateUsingChatModel(ITranslationSession translationSession, string modelName, HttpClient client)
-    {
-        const string apiVersion = "2024-06-01";
-        var endpointUri = new Uri($"/openai/deployments/{ModelDeploymentName}/chat/completions?api-version={apiVersion}", UriKind.Relative);
-
-        var tokenizer = TiktokenTokenizer.CreateForModel(modelName);
-
-        var retries = 0;
+        var tokenizer = TryCreateTokenizerForModel(ModelName);
 
         var itemsByLanguage = translationSession.Items.GroupBy(item => item.TargetCulture);
 
@@ -144,68 +176,55 @@ public class AzureOpenAITranslator() : TranslatorBase("AzureOpenAI", "AzureOpenA
             var targetCulture = cultureKey.Culture ?? neutralResourcesLanguage;
             var cancellationToken = translationSession.CancellationToken;
 
-            foreach (var (message, items) in PackChatModelMessagesIntoBatches(translationSession, languageGroup.ToList(), targetCulture, tokenizer))
+            foreach (var (content, items) in PackChatModelMessagesIntoBatches(translationSession, languageGroup.ToList(), targetCulture, tokenizer))
             {
-                while (!cancellationToken.IsCancellationRequested)
+                var chatOptions = new ChatCompletionOptions
                 {
-                    // call Azure OpenAI API with all prompts in batch
-                    var requestBody = new
-                    {
-                        temperature = Temperature,
-                        max_tokens = CompletionTokens,
-                        messages = new[] { message }
-                    };
+                    MaxOutputTokenCount = CompletionTokens,
+                    Temperature = Temperature,
+                };
 
-                    using var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
-                    var completionsResponse = await client.PostAsync(endpointUri, content, cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    var result = await chatClient.CompleteChatAsync(
+                        [ChatMessage.CreateUserMessage(content)],
+                        chatOptions,
+                        cancellationToken).ConfigureAwait(false);
 
-                    // note: net472 does not support System.Net.HttpStatusCode.TooManyRequests
-                    if ((int)completionsResponse.StatusCode == 429)
-                    {
-                        var backOffSeconds = 1 << retries++;
-                        translationSession.AddMessage($"Azure OpenAI call failed with too many requests. Retrying in {backOffSeconds} second(s).");
-                        await Task.Delay(backOffSeconds * 1000, cancellationToken).ConfigureAwait(false);
-
-                        // keep retrying
-                        continue;
-                    }
-
-                    completionsResponse.EnsureSuccessStatusCode();
-
-                    var responseContent = await completionsResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-                    var completions = JsonConvert.DeserializeObject<ChatCompletionsResponse>(responseContent);
-                    if (completions != null)
-                    {
-                        await translationSession.MainThread.StartNew(() => ReturnResults(items, completions), cancellationToken).ConfigureAwait(false);
-                    }
-
-                    // break out of the retry loop
-                    break;
-
+                    await translationSession.MainThread.StartNew(
+                        () => ReturnResults(items, result.Value),
+                        cancellationToken).ConfigureAwait(false);
+                }
+                catch (ClientResultException ex) when (ex.Status == 429)
+                {
+                    translationSession.AddMessage("Azure OpenAI call failed with too many requests. Consider reducing batch size or waiting before retrying.");
+                }
+                catch (ClientResultException ex)
+                {
+                    translationSession.AddMessage($"Azure OpenAI call failed: {ex.Message}");
                 }
             }
         }
     }
 
-    private IEnumerable<(ChatMessage message, ICollection<ITranslationItem> items)> PackChatModelMessagesIntoBatches(ITranslationSession translationSession, IEnumerable<ITranslationItem> items, CultureInfo targetCulture, TiktokenTokenizer tokenizer)
+    private IEnumerable<(string content, ICollection<ITranslationItem> items)> PackChatModelMessagesIntoBatches(ITranslationSession translationSession, IEnumerable<ITranslationItem> items, CultureInfo targetCulture, TiktokenTokenizer? tokenizer)
     {
         var batchItems = new List<ITranslationItem>();
         var batchTokens = 0;
-        ChatMessage? batchMessage = null;
+        string? batchContent = null;
 
         foreach (var item in items)
         {
             var currentBatch = batchItems.Concat([item]).ToList();
 
-            var currentMessage = GenerateChatModelMessageForTranslations(translationSession, currentBatch, targetCulture);
-            if (currentMessage?.Content is null)
+            var currentContent = GenerateChatModelMessageForTranslations(translationSession, currentBatch, targetCulture);
+            if (currentContent is null)
             {
                 translationSession.AddMessage($"No prompt were generated for resource: {item.Source.Substring(0, 20)}...");
                 continue;
             }
 
-            var tokens = tokenizer.CountTokens(currentMessage.Content);
+            var tokens = tokenizer?.CountTokens(currentContent) ?? 0;
             if (tokens > PromptTokens)
             {
                 translationSession.AddMessage($"Prompt for resource would exceed {PromptTokens} tokens: {item.Source.Substring(0, 20)}...");
@@ -214,30 +233,30 @@ public class AzureOpenAITranslator() : TranslatorBase("AzureOpenAI", "AzureOpenA
 
             if (!BatchRequests)
             {
-                yield return (currentMessage, currentBatch);
+                yield return (currentContent, currentBatch);
                 continue;
             }
 
-            if (batchMessage is not null && (batchTokens + tokens) > PromptTokens)
+            if (batchContent is not null && (batchTokens + tokens) > PromptTokens)
             {
-                yield return (batchMessage, batchItems);
+                yield return (batchContent, batchItems);
 
                 batchItems = [];
                 batchTokens = 0;
             }
 
-            batchMessage = currentMessage;
+            batchContent = currentContent;
             batchItems.Add(item);
             batchTokens += tokens;
         }
 
-        if (batchMessage is not null && batchItems.Any())
+        if (batchContent is not null && batchItems.Any())
         {
-            yield return (batchMessage, batchItems);
+            yield return (batchContent, batchItems);
         }
     }
 
-    private ChatMessage? GenerateChatModelMessageForTranslations(ITranslationSession translationSession, List<ITranslationItem> items, CultureInfo targetCulture)
+    private string? GenerateChatModelMessageForTranslations(ITranslationSession translationSession, List<ITranslationItem> items, CultureInfo targetCulture)
     {
         if (items.Count == 0)
             return null;
@@ -300,24 +319,16 @@ public class AzureOpenAITranslator() : TranslatorBase("AzureOpenAI", "AzureOpenA
             contentBuilder.Append($"Respond only with a JSON string array containing the single translation to the target language \"{targetCulture.Name}\" of the source item. Do not include the target language property, only respond with a flat JSON array containing a single string item.\n\n");
         }
 
-        return new()
-        {
-            Role = "user",
-            Content = contentBuilder.ToString()
-        };
+        return contentBuilder.ToString();
     }
 
-    private void ReturnResults(ICollection<ITranslationItem> batchItems, ChatCompletionsResponse completions)
+    private void ReturnResults(ICollection<ITranslationItem> batchItems, ChatCompletion completion)
     {
-        if (completions.Choices?.Any() != true)
+        if (completion.FinishReason == ChatFinishReason.Stop)
         {
-            throw new InvalidOperationException("Azure OpenAI API returned no results.");
-        }
-
-        if (completions.Choices[0] is { FinishReason: null or "stop", Message: { Role: "assistant" } message })
-        {
-            // deserialize the message content from JSON
-            var messageContent = message.Content ?? throw new InvalidOperationException("Azure OpenAI API did not return any content.");
+            var messageContent = completion.Content.Count > 0
+                ? completion.Content[0].Text
+                : throw new InvalidOperationException("Azure OpenAI API did not return any content.");
 
             var results = JsonConvert.DeserializeObject<List<string>>(FixJsonResponse(messageContent)) ?? throw new InvalidOperationException("Azure OpenAI API returned an empty result.");
 
@@ -330,8 +341,7 @@ public class AzureOpenAITranslator() : TranslatorBase("AzureOpenAI", "AzureOpenA
         }
         else
         {
-            // todo: log the unsuccessful finish reason somewhere for the user to see why this translation failed?
-            // expected reasons to get here are "content_filter" or empty response
+            // expected finish reasons here are "content_filter" or "length"
         }
     }
 
@@ -384,238 +394,35 @@ public class AzureOpenAITranslator() : TranslatorBase("AzureOpenAI", "AzureOpenA
         return fixedContent;
     }
 
-    private sealed class CompletionsChoice
-    {
-        [JsonProperty("text")]
-        public string? Text { get; set; }
-
-        [JsonProperty("finish_reason")]
-        public string? FinishReason { get; set; }
-    }
-
-    private sealed class CompletionsResponse
-    {
-        [JsonProperty("choices")]
-        public IList<CompletionsChoice>? Choices { get; set; }
-    }
-
-    private async Task TranslateUsingCompletionsModel(ITranslationSession translationSession, string modelName, HttpClient client)
-    {
-        const string apiVersion = "2024-06-01";
-
-        var endpointUri = new Uri($"/openai/deployments/{ModelDeploymentName}/completions?api-version={apiVersion}", UriKind.Relative);
-
-        var tokenizer = TiktokenTokenizer.CreateForModel(modelName);
-
-        var retries = 0;
-
-        var cancellationToken = translationSession.CancellationToken;
-
-        foreach (var batch in PackCompletionModelPromptsIntoBatches(translationSession, tokenizer))
-        {
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                // call Azure OpenAI API with all prompts in batch
-                var requestBody = new
-                {
-                    prompt = batch.Select(b => b.prompt),
-                    max_tokens = CompletionTokens,
-                    temperature = Temperature,
-                    stop = new[] { "\n" },
-                };
-
-                using var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
-                var completionsResponse = await client.PostAsync(endpointUri, content, cancellationToken).ConfigureAwait(false);
-
-                // note: net472 does not support System.Net.HttpStatusCode.TooManyRequests
-                if (completionsResponse.StatusCode == (System.Net.HttpStatusCode)429)
-                {
-                    var backOffSeconds = 1 << retries++;
-                    translationSession.AddMessage($"Azure OpenAI call failed with too many requests. Retrying in {backOffSeconds} second(s).");
-                    await Task.Delay(backOffSeconds * 1000, cancellationToken).ConfigureAwait(false);
-
-                    // keep retrying
-                    continue;
-                }
-
-                completionsResponse.EnsureSuccessStatusCode();
-
-                var responseContent = await completionsResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-                var completions = JsonConvert.DeserializeObject<CompletionsResponse>(responseContent);
-                if (completions != null)
-                {
-                    await translationSession.MainThread.StartNew(() => ReturnResults(batch, completions), cancellationToken).ConfigureAwait(false);
-                }
-
-                // break out of the retry loop
-                break;
-            }
-        }
-    }
-
-    private IEnumerable<PromptList> PackCompletionModelPromptsIntoBatches(ITranslationSession translationSession, TiktokenTokenizer tokenizer)
-    {
-        var batchItems = new PromptList();
-        var batchTokens = 0;
-
-        foreach (var item in translationSession.Items)
-        {
-            var prompt = GenerateCompletionModelPromptForTranslation(translationSession, item);
-            if (prompt is null)
-            {
-                translationSession.AddMessage($"No prompt were generated for resource: {item.Source.Substring(0, 20)}...");
-                continue;
-            }
-
-            var tokens = tokenizer.CountTokens(prompt);
-
-            if (tokens > PromptTokens)
-            {
-                translationSession.AddMessage($"Prompt for resource would exceed {PromptTokens} tokens: {item.Source.Substring(0, 20)}...");
-                continue;
-            }
-
-            if (!BatchRequests)
-            {
-                yield return [(item, prompt)];
-                continue;
-            }
-
-            if ((batchTokens + tokens) > PromptTokens)
-            {
-                yield return batchItems;
-
-                batchItems = [];
-                batchTokens = 0;
-            }
-
-            batchItems.Add((item, prompt));
-            batchTokens += tokens;
-        }
-
-        if (batchItems.Count != 0)
-        {
-            yield return batchItems;
-        }
-    }
-
-    private string? GenerateCompletionModelPromptForTranslation(ITranslationSession translationSession, ITranslationItem translationItem)
-    {
-        var neutralResourcesLanguage = translationSession.NeutralResourcesLanguage;
-
-        var allItems = translationItem.GetAllItems(neutralResourcesLanguage);
-
-        if (!allItems.Any())
-            return null;
-
-        // target language for translation
-        var targetCulture = (translationItem.TargetCulture.Culture ?? neutralResourcesLanguage).Name;
-
-        var promptBuilder = new StringBuilder();
-        promptBuilder.Append($"You are a professional translator fluent in all languages, able to understand and convey both literal and nuanced meanings. You are an expert in the target language \"{targetCulture}\", adapting the style and tone to different types of texts.\n");
-
-        // optionally add custom prompt
-        if (!CustomPrompt.IsNullOrWhiteSpace())
-        {
-            promptBuilder.Append(CustomPrompt);
-            promptBuilder.Append('\n');
-        }
-
-        // optionally add comments to prompt
-        var allComments = allItems
-            .Select(item => (item.Culture, item.Comment))
-            .Where(item => !item.Comment.IsNullOrWhiteSpace())
-            .ToArray();
-
-        if (IncludeCommentsInPrompt && allComments.Any())
-        {
-            promptBuilder.Append("CONTEXT:\n");
-            allComments
-                .Select(s => $"{s.Culture.Name}: {s.Comment}\n")
-                .ForEach(s => promptBuilder.Append(s));
-        }
-
-        promptBuilder.Append($"Here is a list of words or sentences with the same meaning in different languages. Continue the list of translations for the target language \"{targetCulture}\".\n");
-        promptBuilder.Append("TRANSLATIONS:\n");
-
-        // add all existing translations to prompt
-        allItems.Select(s => $"{s.Culture.Name}: {s.Text}\n")
-            .ForEach(s => promptBuilder.Append(s));
-
-        // the target language is the last language in the prompt, note that the prompt must not end with a space due to tokenization issues
-        promptBuilder.Append($"{targetCulture}:");
-
-        return promptBuilder.ToString();
-    }
-
-    private void ReturnResults(PromptList batch, CompletionsResponse? completions)
-    {
-        if (completions?.Choices is null)
-        {
-            throw new InvalidOperationException("Azure OpenAI API returned no completion choices.");
-        }
-
-        if (batch.Count != completions.Choices.Count)
-        {
-            throw new InvalidOperationException("Azure OpenAI API returned a different number of results than requested.");
-        }
-
-        for (var i = 0; i < batch.Count; i++)
-        {
-            if (completions.Choices[i] is { FinishReason: null or "stop" } choice && !choice.Text.IsNullOrWhiteSpace())
-            {
-                batch[i].item.Results.Add(new TranslationMatch(this, choice.Text, Ranking));
-            }
-            else
-            {
-                // todo: log the unsuccessful finish reason somewhere for the user to see why this translation failed?
-                // expected reasons to get here are "content_filter" or empty response
-            }
-        }
-    }
-
-    [DataMember(Name = "AuthenticationKey")]
-    public string? SerializedAuthenticationKey
-    {
-        get => SaveCredentials ? Credentials[0].Value : null;
-        set => Credentials[0].Value = value;
-    }
-
-    [DataMember(Name = "Url")]
-    public string? Url
-    {
-        get => Credentials[1].Value;
-        set => Credentials[1].Value = value;
-    }
-
-    [DataMember(Name = "ModelDeploymentName")]
-    public string? ModelDeploymentName
-    {
-        get => Credentials[2].Value;
-        set => Credentials[2].Value = value;
-    }
-
-    // this translator is currently adapted to work the best with "gpt-3.5-turbo-instruct", "gpt-3.5-turbo" or "gpt-4-turbo"
-    [DataMember(Name = "ModelName")]
-    public string? ModelName
-    {
-        get => ExpandModelNameAliases(Credentials[3].Value);
-        set => Credentials[3].Value = value;
-    }
-
     private string? AuthenticationKey => Credentials[0].Value;
 
-    private static string? ExpandModelNameAliases(string? modelName)
+    private static TiktokenTokenizer? TryCreateFallbackTokenizer()
     {
-        // expand alternative model names to known model names
-
-        return modelName switch
+        try
         {
-            "gpt-35-turbo" => "gpt-3.5-turbo",
-            "gpt-35-turbo-instruct" => "gpt-3.5-turbo-instruct",
-            _ => modelName,
-        };
+            return TiktokenTokenizer.CreateForEncoding("o200k_base");
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static TiktokenTokenizer? TryCreateTokenizerForModel(string? modelName)
+    {
+        if (modelName.IsNullOrWhiteSpace())
+        {
+            return TryCreateFallbackTokenizer();
+        }
+
+        try
+        {
+            return TiktokenTokenizer.CreateForModel(modelName);
+        }
+        catch
+        {
+            return TryCreateFallbackTokenizer();
+        }
     }
 
     private static IList<ICredentialItem> GetCredentials()

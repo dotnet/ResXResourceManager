@@ -10,21 +10,29 @@
              d:DesignWidth="500">
   <StackPanel>
     <StackPanel Orientation="Horizontal">
-    <CheckBox Content="{x:Static properties:Resources.IncludeCommentsInPrompt}" IsChecked="{Binding IncludeCommentsInPrompt}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center" />
-    <Decorator Width="20" />
-    <TextBlock Text="{x:Static properties:Resources.MaxTokens}" VerticalAlignment="Center" />
-    <Decorator Width="5" />
-    <TextBox Text="{Binding MaxTokens}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
-    <Decorator Width="20" />
-    <TextBlock Text="{x:Static properties:Resources.Temperature}" VerticalAlignment="Center" />
-    <Decorator Width="5" />
-    <TextBox Text="{Binding Temperature}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" />
-    <Decorator Width="20" />
-    <CheckBox Content="{x:Static properties:Resources.BatchRequests}" IsChecked="{Binding BatchRequests}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center" />
+      <CheckBox Content="{x:Static properties:Resources.IncludeCommentsInPrompt}" IsChecked="{Binding IncludeCommentsInPrompt}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center" />
+      <Decorator Width="20" />
+      <TextBlock Text="{x:Static properties:Resources.MaxTokens}" VerticalAlignment="Center" />
+      <Decorator Width="5" />
+      <TextBox Text="{Binding MaxTokens}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" MinWidth="50"/>
+      <Decorator Width="20" />
+      <TextBlock Text="{x:Static properties:Resources.Temperature}" VerticalAlignment="Center" />
+      <Decorator Width="5" />
+      <TextBox Text="{Binding Temperature}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" MinWidth="50"/>
     </StackPanel>
-  <StackPanel Orientation="Vertical">
+    <Decorator Height="5" />
+    <StackPanel Orientation="Horizontal">
+      <CheckBox Content="{x:Static properties:Resources.BatchRequests}" IsChecked="{Binding BatchRequests}" Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" VerticalAlignment="Center" />
+      <Decorator Width="20" />
+      <TextBlock Text="API Version" VerticalAlignment="Center" />
+      <Decorator Width="5" />
+      <TextBox Text="{Binding ApiVersion}" Style="{DynamicResource {x:Static styles:ResourceKeys.TextBoxStyle}}" MinWidth="100"/>
+    </StackPanel>
+    <Decorator Height="5" />
+    <StackPanel Orientation="Vertical">
       <TextBlock Text="{x:Static properties:Resources.CustomPrompt}" VerticalAlignment="Center" />
+      <Decorator Height="2" />
       <TextBox Text="{Binding CustomPrompt}" AcceptsReturn="True" MinLines="3" />
-  </StackPanel>
+    </StackPanel>
   </StackPanel>
 </UserControl>

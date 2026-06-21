@@ -51,8 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Fody" PrivateAssets="all" />
-    <PackageReference Include="ILMerge.Fody" PrivateAssets="all" />
     <PackageReference Include="Microsoft.ML.Tokenizers" />
+    <PackageReference Include="OpenAI" />
     <PackageReference Include="Microsoft.ML.Tokenizers.Data.CL100KBase" />
     <PackageReference Include="Microsoft.ML.Tokenizers.Data.O200kBase" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="all" />

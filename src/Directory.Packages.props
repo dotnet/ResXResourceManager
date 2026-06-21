@@ -11,9 +11,10 @@
     <PackageVersion Include="Fody" Version="6.9.3" />
     <PackageVersion Include="HtmlAgilityPack" Version="1.12.4" />
     <PackageVersion Include="ILMerge.Fody" Version="1.24.0" />
-    <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4" />
+    <PackageVersion Include="JetBrains.Annotations" Version="2026.2.0" />
     <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageVersion Include="Microsoft.ML.Tokenizers" Version="2.0.0" />
+    <PackageVersion Include="OpenAI" Version="2.11.0" />
     <PackageVersion Include="Microsoft.ML.Tokenizers.Data.CL100KBase" Version="2.0.0" />
     <PackageVersion Include="Microsoft.ML.Tokenizers.Data.O200kBase" Version="2.0.0" />
     <PackageVersion Include="Microsoft.VisualStudio.SDK" Version="17.14.40265" />
@@ -26,7 +27,7 @@
     <PackageVersion Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
     <PackageVersion Include="System.ServiceModel.Primitives" Version="10.0.652802" />
-    <PackageVersion Include="System.Text.Json" Version="10.0.8" />
+    <PackageVersion Include="System.Text.Json" Version="10.0.9" />
     <PackageVersion Include="Throttle.Fody" Version="1.7.0" />
     <PackageVersion Include="TomsToolbox.Composition" Version="2.24.0" />
     <PackageVersion Include="TomsToolbox.Composition.Ninject" Version="2.24.0" />
@@ -36,12 +37,13 @@
     <PackageVersion Include="TomsToolbox.Wpf.Composition.AttributedModel" Version="2.24.0" />
     <PackageVersion Include="TomsToolbox.Wpf.Composition.Styles" Version="2.24.0" />
     <PackageVersion Include="TomsToolbox.Wpf.Styles" Version="2.24.0" />
-    <PackageVersion Include="Verify.XunitV3" Version="31.19.0" />
+    <PackageVersion Include="Verify.XunitV3" Version="31.20.0" />
     <PackageVersion Include="VSIX-SdkProjectAdapter" Version="4.0.0" />
     <PackageVersion Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     <PackageVersion Include="xunit.v3" Version="3.2.2" />
   </ItemGroup>
   <ItemGroup>
     <PackageMitigation Include="Microsoft.Bcl.Memory" Version="9.0.4" Justification="Microsoft.ML.Tokenizers@2.0.0 won't load with another version" />
+    <PackageMitigation Include="MessagePack" Version="2.5.192" Justification="Dependency of VSSDK, we do not ship this." />
   </ItemGroup>
 </Project>

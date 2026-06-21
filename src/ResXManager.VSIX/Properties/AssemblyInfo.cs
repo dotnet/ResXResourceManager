@@ -27,16 +27,23 @@ using Microsoft.VisualStudio.Shell;
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.Bcl.AsyncInterfaces.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.Bcl.HashCode.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.Bcl.Memory.dll")]
+
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.ML.Tokenizers.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.ML.Tokenizers.Data.CL100KBase.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.ML.Tokenizers.Data.O200KBase.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\Microsoft.Xaml.Behaviors.dll")]
 
+[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\OpenAI.dll")]
+
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.Buffers.dll")]
+[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.ClientModel.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.Collections.Immutable.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.ComponentModel.Annotations.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.Composition.AttributedModel.dll")]
+[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.IO.Hashing.dll")]
+[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.IO.Pipelines.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.Memory.dll")]
+[assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.Memory.Data.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.Numerics.Vectors.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.Runtime.CompilerServices.Unsafe.dll")]
 [assembly: ProvideCodeBase(CodeBase = "$PackageFolder$\\System.ServiceModel.Primitives.dll")]

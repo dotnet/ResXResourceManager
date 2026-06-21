@@ -104,7 +104,7 @@
               <Button Tag="{Binding Uri, Mode=OneWay}" DockPanel.Dock="Right" VerticalAlignment="Center">
                 <Button.Template>
                   <ControlTemplate>
-                    <TextBlock TextTrimming="CharacterEllipsis">
+                    <TextBlock TextTrimming="CharacterEllipsis" MaxWidth="200" ToolTip="{Binding Uri}">
                       <Hyperlink Focusable="False" NavigateUri="{Binding Uri, Mode=OneWay}">
                         <Run Text="{Binding Uri, Mode=OneWay}" />
                       </Hyperlink>
