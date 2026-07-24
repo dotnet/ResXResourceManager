@@ -77,7 +77,7 @@ public class GoogleTranslator : TranslatorBase
                 parameters.AddRange(new[]
                 {
                     "target", GoogleLangCode(targetCulture),
-                    "format", "text",
+                    "format", "html",
                     "source", GoogleLangCode(translationSession.SourceLanguage),
                     "model", "nmt",
                     "key", ApiKey
