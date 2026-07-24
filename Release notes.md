@@ -1,4 +1,17 @@
-﻿1.105:
+﻿1.106:
+- Use OpenAI library for AzureOpenAITranslator to support newer chat models (GPT 4.0+)
+- Enable DeepL translations for Traditional Chinese (zh-Hant)
+- Fix capitalization in Web project export title
+- Show UI culture in startup log
+- Drop VS2019 support
+- Update Microsoft.ML.Tokenizers package to support newer AI models
+- Add missing Italian translations and mark Italian test resources as invariant
+- WebFilesExporter: skip invariant strings
+- Add missing translations in main view
+- Performance improvements: reduce allocations in CodeReferenceTracker file scanning
+- Add filter drop-down for project selection when filtering RESX file names
+
+1.105:
 - Fix #741: Support the System.Resources.ResXNullRef type as valid string type attribute; ensure elements have the xml:space="preserve" attribute
 
 1.104:
