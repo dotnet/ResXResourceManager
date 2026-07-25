@@ -10,6 +10,7 @@
 - Add missing translations in main view
 - Performance improvements: reduce allocations in CodeReferenceTracker file scanning
 - Add filter drop-down for project selection when filtering RESX file names
+- GoogleTranslator: Use HTML as default text type for translation to avoid issues with special characters
 
 1.105:
 - Fix #741: Support the System.Resources.ResXNullRef type as valid string type attribute; ensure elements have the xml:space="preserve" attribute
