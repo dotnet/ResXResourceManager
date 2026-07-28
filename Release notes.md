@@ -1,4 +1,7 @@
-﻿1.106:
+﻿1.107:
+- Fix #764: Include assemblies required for VS2022
+
+1.106:
 - Use OpenAI library for AzureOpenAITranslator to support newer chat models (GPT 4.0+)
 - Enable DeepL translations for Traditional Chinese (zh-Hant)
 - Fix capitalization in Web project export title
