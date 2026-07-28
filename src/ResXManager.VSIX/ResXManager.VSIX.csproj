@@ -80,6 +80,11 @@
     <PackageReference Include="TomsToolbox.Composition.Ninject" />
     <PackageReference Include="VSIX-SdkProjectAdapter" PrivateAssets="all" />
   </ItemGroup>
+  <ItemGroup Label="VS 2022 Dependencies">
+    <Content Include="$(OutDir)System.Memory.dll" IncludeInVSIX="true" TargetPath="\System.Memory.dll" />
+    <Content Include="$(OutDir)System.Numerics.Vectors.dll" IncludeInVSIX="true" TargetPath="\System.Numerics.Vectors.dll" />
+    <Content Include="$(OutDir)System.Threading.Tasks.Extensions.dll" IncludeInVSIX="true" TargetPath="\System.Threading.Tasks.Extensions.dll" />
+  </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)'=='Release'" Outputs="$(SolutionDir)Deploy\ResXManager.VSIX.vsix">
     <MakeDir Directories="$(SolutionDir)Deploy" />
     <Copy SourceFiles="$(OutDir)ResXManager.VSIX.vsix" DestinationFolder="$(SolutionDir)Deploy" />

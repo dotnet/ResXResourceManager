@@ -12,7 +12,7 @@
     },
     "VS 2022": {
       "commandName": "Executable",
-      "executablePath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\Common7\\IDE\\devenv.exe",
+      "executablePath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\devenv.exe",
       "commandLineArgs": "/RootSuffix Exp"
     },
     "VS 2019": {
