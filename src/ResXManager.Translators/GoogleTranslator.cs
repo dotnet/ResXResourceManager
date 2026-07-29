@@ -67,11 +67,19 @@ public class GoogleTranslator : TranslatorBase
                     break;
 
                 // Build out list of parameters
+                var payloadSoFar = 0;
                 var parameters = new List<string?>(30);
                 foreach (var item in sourceItems)
                 {
+                    var sourceText = RemoveKeyboardShortcutIndicators(item.Source);
+
+                    if (sourceText.Length + payloadSoFar > 4990)
+                        continue;
+
+                    payloadSoFar += sourceText.Length;
+
                     // ReSharper disable once PossibleNullReferenceException
-                    parameters.AddRange(new[] { "q", RemoveKeyboardShortcutIndicators(item.Source) });
+                    parameters.AddRange(new[] { "q", sourceText });
                 }
 
                 parameters.AddRange(new[]
