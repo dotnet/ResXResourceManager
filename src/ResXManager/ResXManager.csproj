@@ -6,7 +6,6 @@
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>ResourceManager.ico</ApplicationIcon>
-    <PublishProfile>ClickOnce.pubxml</PublishProfile>
   </PropertyGroup>
   <PropertyGroup Condition="Exists('$(USERPROFILE)\tom-englert.de')">
     <DefineConstants>$(DefineConstants);TEST_L10N</DefineConstants>
@@ -37,7 +36,8 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <Target Name="CompressFiles" AfterTargets="Publish" Condition="'$(Configuration)'=='Release'" Outputs="$(SolutionDir)Deploy\Publish.zip">
+  <Target Name="PackageRelease" AfterTargets="Build" Condition="'$(Configuration)'=='Release'" Outputs="$(SolutionDir)Deploy\ResXManager-$(Version).zip">
     <MakeDir Directories="$(SolutionDir)Deploy" />
-    <ZipDirectory DestinationFile="$(SolutionDir)Deploy\Publish.zip" Overwrite="True" SourceDirectory="$(ClickOncePublishDir)" />
-  </Target></Project>
+    <ZipDirectory DestinationFile="$(SolutionDir)Deploy\ResXManager-$(Version).zip" Overwrite="True" SourceDirectory="$(OutputPath)" />
+  </Target>
+</Project>

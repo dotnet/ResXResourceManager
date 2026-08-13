@@ -1,0 +1,18 @@
+PackageIdentifier: dotnet.ResXResourceManager
+PackageVersion: 1.107.0
+Platform:
+- Windows.Desktop
+MinimumOSVersion: 10.0.17134.0
+InstallerType: zip
+NestedInstallerType: portable
+NestedInstallerFiles:
+- RelativeFilePath: ResXManager.exe
+  PortableCommandAlias: ResXManager
+InstallModes:
+- silent
+Installers:
+- Architecture: neutral
+  InstallerUrl: https://github.com/dotnet/ResXResourceManager/releases/download/v1.107.0/ResXManager-1.107.0.zip
+  InstallerSha256: PLACEHOLDER_SHA256_WILL_BE_COMPUTED_BY_WINGETCREATE
+ManifestType: installer
+ManifestVersion: 1.9.0
