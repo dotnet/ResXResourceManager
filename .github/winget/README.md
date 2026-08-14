@@ -4,21 +4,11 @@ After the Azure DevOps pipeline completes, the `SignedPackages` artifact contain
 `ResXManager.zip`. Follow the steps below to publish that ZIP to the
 [Windows Package Manager Community Repository](https://github.com/microsoft/winget-pkgs).
 
-## Prerequisites
-
-```powershell
-winget install Microsoft.WingetCreate
-```
-
-No GitHub token is required for the manifest-generation step below. A token is only needed
-if you want `wingetcreate` to submit the pull request for you.
-
 ## Steps
 
 ### 1 — Download the signed ZIP
 
-Download `ResXManager.zip` from the Azure DevOps pipeline's `SignedPackages`
-artifact.
+Download `ResXManager.zip` from the Azure DevOps pipeline's `SignedPackages` artifact.
 
 ### 2 — Create a GitHub Release
 
@@ -27,58 +17,47 @@ Upload the ZIP as an asset to a new GitHub Release tagged `v<version>`
 
 ```powershell
 gh release create v<version> ResXManager.zip `
-  --title "<version>" `
+  --title "v<version>" `
   --notes-file "Release notes.md"
-```
-
-This produces a publicly accessible download URL:
-
-```
-https://github.com/dotnet/ResXResourceManager/releases/download/<version>/ResXManager.zip
 ```
 
 ### 3 — Generate the updated manifest files
 
-Run `wingetcreate update` in prepare-only mode to compute the SHA-256 and generate the
-updated manifest files locally without opening a pull request:
+Before running the script, make sure your fork of
+[`microsoft/winget-pkgs`](https://github.com/microsoft/winget-pkgs) is cloned at:
 
-```powershell
-wingetcreate update dotnet.ResXResourceManager `
-  --version <version> `
-  --urls "https://github.com/dotnet/ResXResourceManager/releases/download/<version>/ResXManager.zip" `
-  --out .\winget-manifests
+```
+D:\dev\GitHub\winget-pkgs
 ```
 
-This creates the updated YAML files in `./winget-manifests`.
+Run the helper script from the repo root. It reads the version from
+`src/Directory.Build.props`, downloads the release ZIP to compute its SHA-256, and writes
+ready-to-use manifest YAMLs directly into your fork at:
+
+```
+D:\dev\GitHub\winget-pkgs\manifests\d\dotnet\ResXResourceManager\<version>\
+```
+
+```powershell
+.\.github\winget\Update-WingetManifest.ps1
+```
+
+To override the version:
+
+```powershell
+.\.github\winget\Update-WingetManifest.ps1 -Version 1.108.0
+```
 
 ### 4 — Submit the PR manually
 
-1. Fork `microsoft/winget-pkgs`.
-2. Copy the generated manifest files into the matching package path in your fork.
-3. Commit and push the changes.
-4. Open a pull request against `microsoft/winget-pkgs`.
+Commit the generated files in your `winget-pkgs` fork, push, and open a pull request
+against `microsoft/winget-pkgs`.
 
 The WinGet team typically reviews and merges community PRs within a few days.
 
----
-
-## First-time submission
-
-If the package `dotnet.ResXResourceManager` does not yet exist in `microsoft/winget-pkgs`,
-use `wingetcreate new` instead:
-
-```powershell
-wingetcreate new `
-  "https://github.com/dotnet/ResXResourceManager/releases/download/<version>/ResXManager.zip" `
-  --out .\winget-manifests
-```
-
-Then review and adjust the generated manifests (use the templates in this folder as a
-reference), copy them into your fork of `microsoft/winget-pkgs`, and open the pull request
-manually.
-
 ## Manifest templates
 
-The YAML files in this folder are version-independent templates. `wingetcreate` fills in
-the exact version and SHA-256 automatically; the templates are provided as a reference for
-the initial submission.
+The `*.yaml` files in this folder are the version-independent templates that
+`Update-WingetManifest.ps1` uses as its source. The script stamps the correct
+`PackageVersion`, `InstallerUrl` and `InstallerSha256` into the output copies;
+the templates themselves are never modified.
