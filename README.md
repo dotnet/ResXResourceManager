@@ -43,7 +43,13 @@ All versions can be downloaded from the [releases](../../releases) page.
 The Visual Studio Extension is also available at the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=TomEnglert.ResXManager), or by searching for RESX in the Visual Studio extension manager.
 The latest build of the Visual Studio Extension is available at the [Open VsixGallery](http://vsixgallery.com/extension/43b35fe0-1f30-48de-887a-68256474202a)
 
-The standalone version can be installed as click-once application [here](https://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/ResXManager.application).
+The standalone version is available via WinGet:
+
+```powershell
+winget install dotnet.ResXResourceManager
+```
+
+After installation, start `ResXManager` from the command line or from the Start menu.
 
 ----------------------------------------------------------------------------------------------
 
@@ -56,11 +62,10 @@ The standalone version can be installed as click-once application [here](https:/
 ### Standalone Application:
 ![Standalone Application](Assets/StandaloneMainScreen.png)
 
-To start the standalone application with a specific solution loaded, rather than the last one, you need to copy the solutions folder to the clipboard:
+To start the standalone application with a specific solution loaded, copy the solution folder to the clipboard and run `ResXManager`:
 ```cmd
 cd | clip
-explorer https://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/ResXManager.application
-
+ResXManager
 ```
 
 ----------------------------------------------------------------------------------------------
