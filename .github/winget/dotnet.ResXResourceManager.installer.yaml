@@ -12,7 +12,7 @@ InstallModes:
 - silent
 Installers:
 - Architecture: neutral
-  InstallerUrl: https://github.com/dotnet/ResXResourceManager/releases/download/v1.107.0/ResXManager-1.107.0.zip
+  InstallerUrl: https://github.com/dotnet/ResXResourceManager/releases/download/1.107/ResXManager.zip
   InstallerSha256: PLACEHOLDER_SHA256_WILL_BE_COMPUTED_BY_WINGETCREATE
 ManifestType: installer
 ManifestVersion: 1.9.0

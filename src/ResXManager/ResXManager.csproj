@@ -36,8 +36,8 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <Target Name="PackageRelease" AfterTargets="Build" Condition="'$(Configuration)'=='Release'" Outputs="$(SolutionDir)Deploy\ResXManager-$(Version).zip">
+  <Target Name="PackageRelease" AfterTargets="Build" Condition="'$(Configuration)'=='Release'" Outputs="$(SolutionDir)Deploy\ResXManager.zip">
     <MakeDir Directories="$(SolutionDir)Deploy" />
-    <ZipDirectory DestinationFile="$(SolutionDir)Deploy\ResXManager-$(Version).zip" Overwrite="True" SourceDirectory="$(OutputPath)" />
+    <ZipDirectory DestinationFile="$(SolutionDir)Deploy\ResXManager.zip" Overwrite="True" SourceDirectory="$(OutputPath)" />
   </Target>
 </Project>
