@@ -32,7 +32,7 @@ stages:
          $replacement = "`$1.$buildId`$3"
          $version = $version -replace '(\d+\.\d+)(\.\d+)?(.*)', $replacement
          Write-Host "##vso[task.setvariable variable=PRODUCT_VERSION]$version"
-         Write-Host "##vso[build.updatebuildnumber]" + $env:BUILD_DEFINITIONNAME + "_" + $version
+         Write-Host "##vso[build.updatebuildnumber]$env:BUILD_DEFINITIONNAME_$version"
       displayName: 'Get build version'
 
     - pwsh: |
