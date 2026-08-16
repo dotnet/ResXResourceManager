@@ -156,7 +156,12 @@ stages:
       displayName: Download build artifacts
     
     - pwsh: |
-        Invoke-Expression (Invoke-RestMethod "https://raw.githubusercontent.com/tom-englert/BuildScripts/master/BuildScripts.ps1")
-        Vsix-PublishToGallery "$(Pipeline.Workspace)\SignedPackages\ResXManager.Vsix.vsix"
+        $vsixFile = "$(Pipeline.Workspace)\SignedPackages\ResXManager.Vsix.vsix"
+        $repository = "https://github.com/$env:BUILD_REPOSITORY_NAME"
+        $issueTracker = "$repository/issues"
+        $uploadUri = "https://www.vsixgallery.com/api/upload?repo=$([uri]::EscapeDataString($repository))&issuetracker=$([uri]::EscapeDataString($issueTracker))"
+
+        Write-Host "Uploading $vsixFile to VSIX Gallery for $repository"
+        Invoke-WebRequest -Uri $uploadUri -Method Post -InFile $vsixFile -ContentType 'application/octet-stream' | Out-Null
       displayName: 'Publish to vsix-gallery'
       continueOnError: true
