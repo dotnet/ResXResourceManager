@@ -162,6 +162,6 @@ stages:
         $uploadUri = "https://www.vsixgallery.com/api/upload?repo=$([uri]::EscapeDataString($repository))&issuetracker=$([uri]::EscapeDataString($issueTracker))"
 
         Write-Host "Uploading $vsixFile to VSIX Gallery for $repository"
-        Invoke-WebRequest -Uri $uploadUri -Method Post -InFile $vsixFile -ContentType 'application/octet-stream' | Out-Null
+        Invoke-WebRequest -Uri $uploadUri -Method Post -Form @{ file = Get-Item $vsixFile } | Out-Null
       displayName: 'Publish to vsix-gallery'
       continueOnError: true
