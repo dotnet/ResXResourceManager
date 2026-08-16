@@ -105,6 +105,9 @@ stages:
         arguments: install --tool-path . sign --version 0.9.1-beta.23530.1
       displayName: Install SignTool tool
 
+    - pwsh: Rename-Item -Path "$(Pipeline.Workspace)\BuildPackages\Publish.zip" -NewName Publish.clickonce
+      displayName: 'Rename click-once archive to .clickonce'
+
     - pwsh: |
         .\sign code azure-key-vault `
         "**/*.*" `
@@ -119,6 +122,9 @@ stages:
         --azure-key-vault-certificate "$(SignKeyVaultCertificate)" `
         --azure-key-vault-url "$(SignKeyVaultUrl)"
       displayName: Sign packages
+
+    - pwsh: Rename-Item -Path "$(Pipeline.Workspace)\BuildPackages\Publish.clickonce" -NewName Publish.zip
+      displayName: 'Rename click-once archive back to .zip'
 
     # Publish the signed packages
     - publish: $(Pipeline.Workspace)/BuildPackages

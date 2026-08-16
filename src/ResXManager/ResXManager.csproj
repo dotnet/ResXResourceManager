@@ -6,6 +6,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>ResourceManager.ico</ApplicationIcon>
+    <PublishProfile>ClickOnce.pubxml</PublishProfile>
   </PropertyGroup>
   <PropertyGroup Condition="Exists('$(USERPROFILE)\tom-englert.de')">
     <DefineConstants>$(DefineConstants);TEST_L10N</DefineConstants>
@@ -37,7 +38,16 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Target Name="PackageRelease" AfterTargets="Build" Condition="'$(Configuration)'=='Release'" Outputs="$(SolutionDir)Deploy\ResXManager.zip">
+    <Message Importance="High" Text="Packaging release build from $(OutputPath) ..." />
     <MakeDir Directories="$(SolutionDir)Deploy" />
     <ZipDirectory DestinationFile="$(SolutionDir)Deploy\ResXManager.zip" Overwrite="True" SourceDirectory="$(OutputPath)" />
+  </Target>
+  <Target Name="PublishOnBuild" AfterTargets="Build" Condition="'$(Configuration)'=='Release'" DependsOnTargets="Publish">
+    <Message Importance="High" Text="Published release build from $(ClickOncePublishDir) ..." />
+  </Target>
+  <Target Name="CompressClickOnce" AfterTargets="Publish" Condition="'$(Configuration)'=='Release'" Outputs="$(SolutionDir)Deploy\Publish.zip">
+    <Message Importance="High" Text="Compressing ClickOnce publish directory from $(ClickOncePublishDir) ..." />
+    <MakeDir Directories="$(SolutionDir)Deploy" />
+    <ZipDirectory DestinationFile="$(SolutionDir)Deploy\Publish.zip" Overwrite="True" SourceDirectory="$(ClickOncePublishDir)" />
   </Target>
 </Project>
