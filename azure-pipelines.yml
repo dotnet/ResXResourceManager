@@ -165,3 +165,32 @@ stages:
         Invoke-WebRequest -Uri $uploadUri -Method Post -Form @{ file = Get-Item $vsixFile } | Out-Null
       displayName: 'Publish to vsix-gallery'
       continueOnError: true
+
+- stage: Deploy
+  displayName: Deploy ClickOnce package
+  dependsOn: CodeSign
+  condition: and(succeeded('CodeSign'), ne(variables['build.reason'], 'PullRequest'))
+  jobs:
+  - deployment: DeployClickOnce
+    displayName: Deploy ClickOnce package to Azure Web App
+    environment: Deployment # requires approval checks configured on the 'Deployment' environment in Azure DevOps
+    pool:
+      vmImage: windows-latest
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          # publish the signed click-once package to the Azure App Service
+          - task: AzureRmWebAppDeployment@5
+            displayName: 'Azure App Service Deploy: clickonce-tom-englert'
+            inputs:
+              azureSubscription: ClickOnceNew
+              WebAppName: clickonce-tom-englert
+              deployToSlotOrASE: true
+              ResourceGroupName: ClickOnce
+              VirtualApplication: ResXResourceManager
+              packageForLinux: '$(Pipeline.Workspace)/SignedPackages/Publish.zip'
+              enableCustomDeployment: true
+              TakeAppOfflineFlag: false
+              RemoveAdditionalFilesFlag: true
+              ExcludeFilesFromAppDataFlag: false
