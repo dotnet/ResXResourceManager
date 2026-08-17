@@ -167,9 +167,9 @@ stages:
       continueOnError: true
 
 - stage: Deploy
-  displayName: Deploy ClickOnce package
+  displayName: Deploy
   dependsOn: CodeSign
-  condition: and(succeeded('CodeSign'), ne(variables['build.reason'], 'PullRequest'))
+  condition: and(succeeded('CodeSign'), eq(variables['Build.Reason'], 'Manual'), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
   jobs:
   - deployment: DeployClickOnce
     displayName: Deploy ClickOnce package to Azure Web App
