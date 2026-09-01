@@ -7,12 +7,11 @@ assignees: ''
 ---
 ## Important
 
-- Update Visual Studio before reporting any loading issue.
-- Read https://github.com/dotnet/ResXResourceManager/blob/master/Documentation/Topics/Troubleshooting.md first.
+- Update Visual Studio before reporting any loading issue. Using an outdated build of VS often causes dependency conflicts with newer extensions.
+- Check also the closed issues to see if your problem was already reported before and a fix was provided.
+- Read the [Troubleshooting guide](https://github.com/dotnet/ResXResourceManager/blob/master/Documentation/Topics/Troubleshooting.md) first.
 
-Problems listed there are bugs in Visual Studio and should be reported to Microsoft, not here.
-
-## Describe the bug
+## Description of the bug
 
 A clear and concise description of what the bug is.
 
