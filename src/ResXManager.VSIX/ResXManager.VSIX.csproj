@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <UseWPF>true</UseWPF>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
     <ApplicationIcon>..\ResourceManager.ico</ApplicationIcon>
     <VSSDKBuildToolsAutoSetup>true</VSSDKBuildToolsAutoSetup>
@@ -70,7 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all" />
-    <PackageReference Include="Community.VisualStudio.Toolkit" />
+    <PackageReference Include="Community.VisualStudio.Toolkit.17" />
     <PackageReference Include="Fody" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.SDK" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" PrivateAssets="all" />

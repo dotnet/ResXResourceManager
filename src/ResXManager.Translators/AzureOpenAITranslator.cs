@@ -1,10 +1,5 @@
 ﻿namespace ResXManager.Translators;
 
-using global::Microsoft.ML.Tokenizers;
-using Newtonsoft.Json;
-using OpenAI;
-using OpenAI.Chat;
-using ResXManager.Infrastructure;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -15,12 +10,23 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+
+using global::Microsoft.ML.Tokenizers;
+
+using Newtonsoft.Json;
+
+using OpenAI;
+using OpenAI.Chat;
+
+using ResXManager.Infrastructure;
+
 using TomsToolbox.Essentials;
+
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 #pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple string/int concatenations
-#pragma warning disable IDE0057 // Use range operator (net472 does not support range operator)
-#pragma warning disable CA1865 // Use char overload (net472 does not support char overload)
+#pragma warning disable IDE0057 // Use range operator (net48 does not support range operator)
+#pragma warning disable CA1865 // Use char overload (net48 does not support char overload)
 
 [Export(typeof(ITranslator)), Shared]
 public class AzureOpenAITranslator() : TranslatorBase("AzureOpenAI", "AzureOpenAI", new("https://azure.microsoft.com/en-us/products/cognitive-services/openai-service/"), GetCredentials())
@@ -126,12 +132,10 @@ public class AzureOpenAITranslator() : TranslatorBase("AzureOpenAI", "AzureOpenA
 
     private ChatClient CreateAzureOpenAIChatClient(Uri baseUrl, string authenticationKey, string modelDeploymentName)
     {
-        // ! Url and ModelDeploymentName are validated non-null before this method is called
         var endpoint = new Uri(baseUrl, $"openai/deployments/{modelDeploymentName}/");
         var options = new OpenAIClientOptions { Endpoint = endpoint };
-        // ! AuthenticationKey is validated non-null before this method is called
         options.AddPolicy(new AzureOpenAIPipelinePolicy(authenticationKey, ApiVersion), PipelinePosition.PerCall);
-        // ! ModelDeploymentName is validated non-null before this method is called
+
         return new OpenAIClient(new ApiKeyCredential("placeholder"), options).GetChatClient(modelDeploymentName);
     }
 

@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoProperties.Fody" PrivateAssets="all" />
-    <PackageReference Include="Community.VisualStudio.Toolkit" />
+    <PackageReference Include="Community.VisualStudio.Toolkit.17" />
     <PackageReference Include="Microsoft.VisualStudio.SDK" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Fody" PrivateAssets="all" />

@@ -33,9 +33,8 @@ using TomsToolbox.Essentials;
 using TomsToolbox.Wpf;
 using TomsToolbox.Wpf.Composition.XamlExtensions;
 
-using MessageBoxResult = Microsoft.VisualStudio.VSConstants.MessageBoxResult;
-
 using static Microsoft.VisualStudio.Shell.ThreadHelper;
+using MessageBoxResult = Microsoft.VisualStudio.VSConstants.MessageBoxResult;
 
 /// <summary>
 /// This class implements the tool window exposed by this package and hosts a user control.
@@ -102,7 +101,7 @@ public sealed class MyToolWindow : ToolWindowPane
             _tracer.WriteLine(Resources.Version, new AssemblyName(executingAssembly.FullName).Version);
             _tracer.WriteLine(".NET Framework Version: {0} (https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed)", FrameworkVersion());
 
-            const string switchName = @"Switch.System.Windows.Baml2006.AppendLocalAssemblyVersionForSourceUri";
+            const string switchName = "Switch.System.Windows.Baml2006.AppendLocalAssemblyVersionForSourceUri";
             AppContext.TryGetSwitch(switchName, out var isEnabled);
             _tracer.WriteLine("{0}={1} (https://github.com/Microsoft/dotnet/blob/master/releases/net472/dotnet472-changes.md#wpf)", switchName, isEnabled);
 

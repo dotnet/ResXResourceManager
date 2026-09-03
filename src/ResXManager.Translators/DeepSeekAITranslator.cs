@@ -1,8 +1,5 @@
 ﻿namespace ResXManager.Translators;
 
-using global::Microsoft.ML.Tokenizers;
-using Newtonsoft.Json;
-using ResXManager.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Composition;
@@ -12,12 +9,15 @@ using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using global::Microsoft.ML.Tokenizers;
+using Newtonsoft.Json;
+using ResXManager.Infrastructure;
 using TomsToolbox.Essentials;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 #pragma warning disable CA1305 // Specify IFormatProvider not necessary due to simple string/int concatenations
-#pragma warning disable IDE0057 // Use range operator (net472 does not support range operator)
-#pragma warning disable CA1865 // Use char overload (net472 does not support char overload)
+#pragma warning disable IDE0057 // Use range operator (net48 does not support range operator)
+#pragma warning disable CA1865 // Use char overload (net48 does not support char overload)
 
 [Export(typeof(ITranslator)), Shared]
 public class DeepSeekAITranslator() : TranslatorBase("DeepSeekAI", "DeepSeekAI", new("https://deepseek.com/"), GetCredentials())
@@ -170,7 +170,7 @@ public class DeepSeekAITranslator() : TranslatorBase("DeepSeekAI", "DeepSeekAI",
                 using var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
                 var completionsResponse = await client.PostAsync(endpointUri, content, cancellationToken).ConfigureAwait(false);
 
-                // note: net472 does not support System.Net.HttpStatusCode.TooManyRequests
+                // note: net48 does not support System.Net.HttpStatusCode.TooManyRequests
                 if (completionsResponse.StatusCode == (System.Net.HttpStatusCode)429)
                 {
                     var backOffSeconds = 1 << retries++;
