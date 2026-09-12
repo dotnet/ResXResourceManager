@@ -31,6 +31,19 @@ public class TranslatorTests
     }
 
     [Fact]
+    public void GoogleLiteParsesBatchedResponseCorrectly()
+    {
+        const string separator = "<resxmanager-batch-8d5f5a34-1/>";
+        const string input = """
+        [[["hallo\n","hello\n",null,null,3],["\u003cresxmanager-batch-8d5f5a34-1/\u003e\n","\u003cresxmanager-batch-8d5f5a34-1/\u003e\n",null,null,3],["Welt","world",null,null,3]],null,"en",null,null,null,null,[]]
+        """;
+
+        var result = Translators.GoogleTranslatorLite.ParseBatchResponse(input, [separator]);
+
+        Assert.Equal(["hallo", "Welt"], result);
+    }
+
+    [Fact]
     public void GoogleLiteThrowsOnBadJson()
     {
         const string input = $$"""
