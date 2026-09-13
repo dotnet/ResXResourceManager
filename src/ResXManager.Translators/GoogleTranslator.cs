@@ -25,15 +25,10 @@ public class GoogleTranslatorConfiguration : Decorator
 }
 
 [Export(typeof(ITranslator)), Shared]
-public class GoogleTranslator : TranslatorBase
+public class GoogleTranslator() : TranslatorBase("Google", "Google", _uri, _credentialItems)
 {
     private static readonly Uri _uri = new("https://developers.google.com/translate/");
-    private static readonly IList<ICredentialItem> _credentialItems = new ICredentialItem[] { new CredentialItem("APIKey", "API Key") };
-
-    public GoogleTranslator()
-        : base("Google", "Google", _uri, _credentialItems)
-    {
-    }
+    private static readonly IList<ICredentialItem> _credentialItems = [new CredentialItem("APIKey", "API Key")];
 
     [DataMember(Name = "ApiKey")]
     public string? SerializedApiKey
@@ -59,6 +54,7 @@ public class GoogleTranslator : TranslatorBase
 
             var targetCulture = languageGroup.Key.Culture ?? translationSession.NeutralResourcesLanguage;
 
+            using var httpClient = new HttpClient();
             using var itemsEnumerator = languageGroup.GetEnumerator();
             while (true)
             {
@@ -70,29 +66,27 @@ public class GoogleTranslator : TranslatorBase
                 var parameters = new List<string?>(30);
                 foreach (var item in sourceItems)
                 {
-                    // ReSharper disable once PossibleNullReferenceException
-                    parameters.AddRange(new[] { "q", RemoveKeyboardShortcutIndicators(item.Source) });
+                    parameters.AddRange(["q", RemoveKeyboardShortcutIndicators(item.Source)]);
                 }
 
-                parameters.AddRange(new[]
-                {
+                parameters.AddRange([
                     "target", GoogleLangCode(targetCulture),
                     "format", "html",
                     "source", GoogleLangCode(translationSession.SourceLanguage),
                     "model", "nmt",
                     "key", ApiKey
-                });
+                ]);
 
                 // Call the Google API
                 // ReSharper disable once AssignNullToNotNullAttribute
-                var response = await GetHttpResponse<TranslationRootObject>(
+                var response = await GetHttpResponse<TranslationRootObject>(httpClient,
                     "https://translation.googleapis.com/language/translate/v2",
                     parameters,
                     translationSession.CancellationToken).ConfigureAwait(false);
 
                 await translationSession.MainThread.StartNew(() =>
                 {
-                    foreach (var tuple in sourceItems.Zip(response.Data?.Translations ?? Array.Empty<Translation>(), (a, b) => new Tuple<ITranslationItem, Translation>(a, b)))
+                    foreach (var tuple in sourceItems.Zip(response.Data?.Translations ?? [], (a, b) => new Tuple<ITranslationItem, Translation>(a, b)))
                     {
                         tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2.TranslatedText, Ranking));
                     }
@@ -116,12 +110,11 @@ public class GoogleTranslator : TranslatorBase
         return iso1;
     }
 
-    private static async Task<T> GetHttpResponse<T>(string baseUrl, ICollection<string?> parameters, CancellationToken cancellationToken)
+    private static async Task<T> GetHttpResponse<T>(HttpClient httpClient, string baseUrl, ICollection<string?> parameters, CancellationToken cancellationToken)
         where T : class
     {
         var url = BuildUrl(baseUrl, parameters);
 
-        using var httpClient = new HttpClient();
         var response = await httpClient.GetAsync(new Uri(url), cancellationToken).ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
@@ -173,7 +166,7 @@ public class GoogleTranslator : TranslatorBase
         if (pairs.Count > 0)
         {
             sb.Append('?');
-            sb.Append(string.Join("&", pairs.Where((s, i) => i % 2 == 0).Zip(pairs.Where((s, i) => i % 2 == 1), Format)));
+            sb.Append(string.Join("&", pairs.Where((_, i) => i % 2 == 0).Zip(pairs.Where((_, i) => i % 2 == 1), Format)));
         }
         return sb.ToString();
 

@@ -48,14 +48,15 @@ public class GoogleTranslatorLite() : TranslatorBase("GoogleLite", "Google Lite"
                     break;
 
                 var separators = Enumerable.Range(1, sourceItems.Count - 1)
-                    .Select(index => $"<resxmanager-batch-{Guid.NewGuid():N}-{index}/>")
-                    .ToList();
-                var source = string.Concat(
-                    sourceItems.Select(item => RemoveKeyboardShortcutIndicators(item.Source)).Zip(
-                        separators.Append(null),
-                        (text, separator) => separator is null ? text : text + BatchSeparatorNewLine + separator + BatchSeparatorNewLine));
+                    .Select(index => BatchSeparatorNewLine + $"<resxmanager-batch-{Guid.NewGuid():N}-{index}/>" + BatchSeparatorNewLine)
+                    .ToArray();
 
-                var parameters = new List<string?>(30);
+                var source = string.Concat(
+                    sourceItems
+                        .Select(item => RemoveKeyboardShortcutIndicators(item.Source))
+                        .Zip(separators.Append(null), (text, separator) => text + separator));
+
+                var parameters = new List<string>(30);
                 parameters.AddRange(
                 [
                     "client", "gtx",
@@ -120,7 +121,7 @@ public class GoogleTranslatorLite() : TranslatorBase("GoogleLite", "Google Lite"
         return iso1;
     }
 
-    private static async Task<string> GetHttpResponse(HttpClient httpClient, string baseUrl, ICollection<string?> parameters, CancellationToken cancellationToken)
+    private static async Task<string> GetHttpResponse(HttpClient httpClient, string baseUrl, ICollection<string> parameters, CancellationToken cancellationToken)
     {
         var url = BuildUrl(baseUrl, parameters);
 
@@ -130,10 +131,10 @@ public class GoogleTranslatorLite() : TranslatorBase("GoogleLite", "Google Lite"
 
         var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        return ParseResponse(result);
+        return ParseHttpResponse(result);
     }
 
-    public static string ParseResponse(string result)
+    public static string ParseHttpResponse(string result)
     {
         var node = JsonNode.Parse(result);
 
@@ -145,29 +146,27 @@ public class GoogleTranslatorLite() : TranslatorBase("GoogleLite", "Google Lite"
         return string.Empty;
     }
 
-    public static IReadOnlyList<string> ParseBatchResponse(string result, IReadOnlyList<string> separators)
+    public static IReadOnlyList<string> ParseBatchResponse(string result, string[] separators)
     {
-        return ParseResponse(result).Split(
-            separators.Select(separator => BatchSeparatorNewLine + separator + BatchSeparatorNewLine).ToArray(),
-            StringSplitOptions.None);
+        return result.Split(separators, StringSplitOptions.None);
     }
 
     /// <summary>Builds the URL from a base, method name, and name/value paired parameters. All parameters are encoded.</summary>
     /// <param name="url">The base URL.</param>
-    /// <param name="pairs">The name/value paired parameters.</param>
+    /// <param name="parameterPairs">The name/value paired parameters.</param>
     /// <returns>Resulting URL.</returns>
     /// <exception cref="ArgumentException">There must be an even number of strings supplied for parameters.</exception>
-    private static string BuildUrl(string url, ICollection<string?> pairs)
+    private static string BuildUrl(string url, ICollection<string> parameterPairs)
     {
-        if (pairs.Count % 2 != 0)
+        if (parameterPairs.Count % 2 != 0)
             throw new ArgumentException("There must be an even number of strings supplied for parameters.");
 
-        if (pairs.Count <= 0) 
+        if (parameterPairs.Count <= 0)
             return string.Empty;
 
         var sb = new StringBuilder(url);
         sb.Append('?');
-        sb.Append(string.Join("&", pairs.Where((s, i) => i % 2 == 0).Zip(pairs.Where((s, i) => i % 2 == 1), Format)));
+        sb.Append(string.Join("&", parameterPairs.Where((_, i) => i % 2 == 0).Zip(parameterPairs.Where((_, i) => i % 2 == 1), Format)));
         return sb.ToString();
 
         static string Format(string? a, string? b)
