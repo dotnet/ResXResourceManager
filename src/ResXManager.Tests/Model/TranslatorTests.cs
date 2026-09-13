@@ -13,7 +13,7 @@ public class TranslatorTests
         [[["Ei! ","Hey there! ",null,null,10],["Como tá indo? ","How's it going? ",null,null,10],["Isso é ótimo! ","That's great! ",null,null,10],["K, tchau","K, bye",null,null,3,null,null,[[]],[[["66379e56ded86dd057796dbeaebad517","en_pt_2023q1.md"]]]]],null,"en",null,null,null,null,[]]
         """;
 
-        var result = Translators.GoogleTranslatorLite.ParseResponse(input);
+        var result = Translators.GoogleTranslatorLite.ParseHttpResponse(input);
 
         Assert.Equal("Ei! Como tá indo? Isso é ótimo! K, tchau", result);
     }
@@ -25,7 +25,7 @@ public class TranslatorTests
         {"x":[["Ei! "]]}
         """;
 
-        var result = Translators.GoogleTranslatorLite.ParseResponse(input);
+        var result = Translators.GoogleTranslatorLite.ParseHttpResponse(input);
 
         Assert.Equal("", result);
     }
@@ -33,12 +33,12 @@ public class TranslatorTests
     [Fact]
     public void GoogleLiteParsesBatchedResponseCorrectly()
     {
-        const string separator = "<resxmanager-batch-8d5f5a34-1/>";
-        const string input = """
+        const string separator = "\n<resxmanager-batch-8d5f5a34-1/>\n";
+        const string rawResponse = """
         [[["hallo\n","hello\n",null,null,3],["\u003cresxmanager-batch-8d5f5a34-1/\u003e\n","\u003cresxmanager-batch-8d5f5a34-1/\u003e\n",null,null,3],["Welt","world",null,null,3]],null,"en",null,null,null,null,[]]
         """;
 
-        var result = Translators.GoogleTranslatorLite.ParseBatchResponse(input, [separator]);
+        var result = Translators.GoogleTranslatorLite.ParseBatchResponse(Translators.GoogleTranslatorLite.ParseHttpResponse(rawResponse), [separator]);
 
         Assert.Equal(["hallo", "Welt"], result);
     }
@@ -50,6 +50,6 @@ public class TranslatorTests
         {"x":Ei!"]]}
         """;
 
-        Assert.ThrowsAny<Exception>(() => Translators.GoogleTranslatorLite.ParseResponse(input));
+        Assert.ThrowsAny<Exception>(() => Translators.GoogleTranslatorLite.ParseHttpResponse(input));
     }
 }
