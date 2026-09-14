@@ -37,6 +37,7 @@ stages:
 
     - pwsh: |
          Write-Host "PRODUCT_VERSION: $env:PRODUCT_VERSION"
+         Write-Host "BUILD_SOURCEBRANCH: $env:BUILD_SOURCEBRANCH"
          Write-Host "BUILD_REASON: $env:BUILD_REASON"
       displayName: 'Show build info'
 
@@ -82,7 +83,7 @@ stages:
 
 - stage: CodeSign
   dependsOn: Build
-  condition: and(succeeded('Build'), ne(variables['build.reason'], 'PullRequest'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/tags/')))
+  condition: and(succeeded('Build'), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/tags/')))
   jobs:
   - job: CodeSign
     displayName: Code Signing
