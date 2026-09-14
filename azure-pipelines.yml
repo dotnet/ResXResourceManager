@@ -23,15 +23,22 @@ stages:
     - script: 'dotnet --info'
       displayName: 'log dotnet version'
 
-    - task: PowerShell@1
-      displayName: 'Set build version'
-      inputs:
-        scriptType: inlineScript
-        inlineScript: |
-         (new-object Net.WebClient).DownloadString("https://raw.github.com/tom-englert/BuildScripts/master/BuildScripts.ps1") | iex
-         $version = Project-SetVersion "src\Directory.Build.props"
-         $version | Build-AppendVersionToBuildNumber
-      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    - pwsh: |
+         [int]$buildId = $env:BUILD_BUILDID
+         $buildId = $buildId % [uint16]::MaxValue
+         [xml]$projectXml=Get-Content "src\Directory.Build.props"
+         $propertyGroup = $projectXml.Project.PropertyGroup | Select -First 1
+         $version = $propertyGroup.Version.'#text'
+         $replacement = "`$1.$buildId`$3"
+         $version = $version -replace '(\d+\.\d+)(\.\d+)?(.*)', $replacement
+         Write-Host "##vso[task.setvariable variable=PRODUCT_VERSION]$version"
+         Write-Host "##vso[build.updatebuildnumber]$env:BUILD_DEFINITIONNAME_$version"
+      displayName: 'Get build version'
+
+    - pwsh: |
+         Write-Host "PRODUCT_VERSION: $env:PRODUCT_VERSION"
+         Write-Host "BUILD_REASON: $env:BUILD_REASON"
+      displayName: 'Show build info'
 
     - task: NuGetToolInstaller@1
       inputs:
@@ -50,16 +57,8 @@ stages:
         configuration: '$(BuildConfiguration)'
         logProjectEvents: true
         createLogFile: true
-
-    - task: MSBuild@1
-      displayName: 'Publish Click Once'
-      inputs:
-        solution: 'src\ResxManager\ResxManager.csproj'
-        platform: AnyCPU
-        configuration: release
-        msbuildArguments: '/target:publish'
-        logProjectEvents: true
-        createLogFile: true
+      env:
+        Version: $(PRODUCT_VERSION)
 
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
@@ -72,25 +71,27 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: BuildPackages'
       inputs:
-        PathtoPublish: '$(build.artifactstagingdirectory)'
+        PathToPublish: '$(build.artifactstagingdirectory)'
         ArtifactName: BuildPackages
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: signing scripts'
       inputs:
-        PathtoPublish: 'signing'
+        PathToPublish: 'signing'
         ArtifactName: signing
 
 - stage: CodeSign
   dependsOn: Build
-  condition: and(succeeded('Build'), ne(variables['build.reason'], 'PullRequest'))
+  condition: and(succeeded('Build'), ne(variables['build.reason'], 'PullRequest'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/tags/')))
   jobs:
   - job: CodeSign
     displayName: Code Signing
     pool:
       vmImage: windows-latest # Code signing must run on a Windows agent for Authenticode signing (dll/exe)
     steps:
-    # Retreive unsigned artifacts and file list
+    - checkout: none
+    
+    # Retrieve unsigned artifacts and file list
     - download: current
       artifact: signing
       displayName: Download signing file list
@@ -112,7 +113,7 @@ stages:
       inputs:
         command: custom
         custom: tool
-        arguments: install --tool-path . sign --version 0.9.1-beta.23530.1
+        arguments: install --tool-path . sign --version 0.9.1-beta.26431.1
       displayName: Install SignTool tool
 
     - pwsh: Rename-Item -Path "$(Pipeline.Workspace)\BuildPackages\Publish.zip" -NewName Publish.clickonce
@@ -149,16 +150,48 @@ stages:
     pool:
       vmImage: windows-latest
     steps:
+    - checkout: none
+    
     - download: current
       artifact: SignedPackages
       displayName: Download build artifacts
-    - task: PowerShell@1
+    
+    - pwsh: |
+        $vsixFile = "$(Pipeline.Workspace)\SignedPackages\ResXManager.Vsix.vsix"
+        $repository = "https://github.com/$env:BUILD_REPOSITORY_NAME"
+        $issueTracker = "$repository/issues"
+        $uploadUri = "https://www.vsixgallery.com/api/upload?repo=$([uri]::EscapeDataString($repository))&issuetracker=$([uri]::EscapeDataString($issueTracker))"
+
+        Write-Host "Uploading $vsixFile to VSIX Gallery for $repository"
+        Invoke-WebRequest -Uri $uploadUri -Method Post -Form @{ file = Get-Item $vsixFile } | Out-Null
       displayName: 'Publish to vsix-gallery'
-      inputs:
-        scriptType: inlineScript
-        inlineScript: |
-          (new-object Net.WebClient).DownloadString("https://raw.github.com/tom-englert/BuildScripts/master/BuildScripts.ps1") | iex
-          Vsix-PublishToGallery "$(Pipeline.Workspace)\SignedPackages\ResXManager.Vsix.vsix"
       continueOnError: true
 
-
+- stage: Deploy
+  displayName: Deploy
+  dependsOn: CodeSign
+  condition: and(succeeded('CodeSign'), eq(variables['Build.Reason'], 'Manual'), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  jobs:
+  - deployment: DeployClickOnce
+    displayName: Deploy ClickOnce package to Azure Web App
+    environment: Deployment # requires approval checks configured on the 'Deployment' environment in Azure DevOps
+    pool:
+      vmImage: windows-latest
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          # publish the signed click-once package to the Azure App Service
+          - task: AzureRmWebAppDeployment@5
+            displayName: 'Azure App Service Deploy: clickonce-tom-englert'
+            inputs:
+              azureSubscription: ClickOnceNew
+              WebAppName: clickonce-tom-englert
+              deployToSlotOrASE: true
+              ResourceGroupName: ClickOnce
+              VirtualApplication: ResXResourceManager
+              packageForLinux: '$(Pipeline.Workspace)/SignedPackages/Publish.zip'
+              enableCustomDeployment: true
+              TakeAppOfflineFlag: false
+              RemoveAdditionalFilesFlag: true
+              ExcludeFilesFromAppDataFlag: false
