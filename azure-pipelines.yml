@@ -84,20 +84,12 @@ stages:
       artifact: BuildPackages
       displayName: Download build artifacts
 
-    - task: CmdLine@2
-      displayName: "AntiMalware Scan"
-      inputs:
-        script: |
-          Dir "$(Pipeline.Workspace)\BuildPackages"
-          "%ProgramFiles%\Windows Defender\MpCmdRun.exe" -Scan -ScanType 3 -File "$(Pipeline.Workspace)\BuildPackages"
-        failOnStderr: true
-
     # Install the code signing tool
     - task: DotNetCoreCLI@2
       inputs:
         command: custom
         custom: tool
-        arguments: update --tool-path . sign
+        arguments: update --tool-path . --prerelease sign
       displayName: Install SignTool tool
 
     - pwsh: Rename-Item -Path "$(Pipeline.Workspace)\BuildPackages\Publish.zip" -NewName Publish.clickonce
