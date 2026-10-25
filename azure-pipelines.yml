@@ -5,18 +5,13 @@ stages:
   jobs:
   - job: Build
     pool:
-      vmImage: windows-2022
+      vmImage: windows-latest
 
     variables:
       BuildPlatform: 'any cpu'
       BuildConfiguration: 'release'
 
     steps:
-    - task: UseDotNet@2
-      inputs:
-        packageType: 'sdk'
-        version: '10.x'
-
     - script: 'dotnet --info'
       displayName: 'log dotnet version'
 
@@ -38,16 +33,6 @@ stages:
          Write-Host "BUILD_REASON: $env:BUILD_REASON"
       displayName: 'Show build info'
 
-    - task: NuGetToolInstaller@1
-      inputs:
-        versionSpec: '6.7.0'
-
-    - task: NuGetCommand@2
-      inputs:
-        command: 'restore'
-        restoreSolution: '**/*.sln'
-        feedsToUse: 'config'
-
     - task: MSBuild@1
       displayName: 'Build solution'
       inputs:
@@ -55,6 +40,7 @@ stages:
         configuration: '$(BuildConfiguration)'
         logProjectEvents: true
         createLogFile: true
+        msbuildArguments: '-restore'
       env:
         Version: $(PRODUCT_VERSION)
 
