@@ -1,2 +1,0 @@
-**/ResXManager.*
-**/setup.exe

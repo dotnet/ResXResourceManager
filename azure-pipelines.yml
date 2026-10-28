@@ -58,15 +58,14 @@ stages:
         PathToPublish: '$(build.artifactstagingdirectory)'
         ArtifactName: BuildPackages
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: signing scripts'
-      inputs:
-        PathToPublish: 'signing'
-        ArtifactName: signing
-
 - stage: CodeSign
   dependsOn: Build
   condition: and(succeeded('Build'), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/tags/')))
+  variables:
+    SignTenantId: 16076fdc-fcc1-4a15-b1ca-32c9a255900e
+    SignClientId: 037435da-cc79-4d64-83e6-96de49f031ca
+    SignKeyVaultUrl: https://sc-resxrm-a4a18888c12d4e.vault.azure.net/
+    SignKeyVaultCertificate: ResX-SC
   jobs:
   - job: CodeSign
     displayName: Code Signing
@@ -75,11 +74,7 @@ stages:
     steps:
     - checkout: none
     
-    # Retrieve unsigned artifacts and file list
-    - download: current
-      artifact: signing
-      displayName: Download signing file list
-
+    # Retrieve unsigned artifacts
     - download: current
       artifact: BuildPackages
       displayName: Download build artifacts
@@ -92,6 +87,10 @@ stages:
         arguments: update --tool-path . --prerelease sign
       displayName: Install SignTool tool
 
+    - pwsh: |
+        @('**/ResXManager.*', '**/setup.exe') | Set-Content -Path "$(Pipeline.Workspace)\filelist.txt"
+      displayName: 'Create signing file list'
+
     - pwsh: Rename-Item -Path "$(Pipeline.Workspace)\BuildPackages\Publish.zip" -NewName Publish.clickonce
       displayName: 'Rename click-once archive to .clickonce'
 
@@ -99,7 +98,7 @@ stages:
         .\sign code azure-key-vault `
         "**/*.*" `
         --base-directory "$(Pipeline.Workspace)\BuildPackages" `
-        --file-list "$(Pipeline.Workspace)\signing\filelist.txt" `
+        --file-list "$(Pipeline.Workspace)\filelist.txt" `
         --publisher-name "tom-englert" `
         --description "ResX Resource Manager" `
         --description-url "https://github.com/dotnet/ResXResourceManager" `
