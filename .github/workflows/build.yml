@@ -16,7 +16,7 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Log dotnet version
       run: dotnet --info
@@ -41,7 +41,7 @@ jobs:
         Write-Host "GITHUB_EVENT_NAME: $env:GITHUB_EVENT_NAME"
 
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v2
+      uses: microsoft/setup-msbuild@v3
 
     - name: Build solution
       shell: pwsh
@@ -50,7 +50,7 @@ jobs:
         Version: ${{ env.PRODUCT_VERSION }}
 
     - name: 'Publish Artifact: BuildPackages'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: BuildPackages
         path: src/Deploy/*.*
@@ -68,7 +68,7 @@ jobs:
       SignClientSecret: ${{ secrets.SIGN_CLIENT_SECRET }}
     steps:
     - name: Download build artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: BuildPackages
         path: BuildPackages
@@ -106,7 +106,7 @@ jobs:
       run: Rename-Item -Path "BuildPackages\Publish.clickonce" -NewName Publish.zip
 
     - name: Publish Signed Packages
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: SignedPackages
         path: BuildPackages/*
@@ -128,13 +128,13 @@ jobs:
       SignKeyVaultCertificate: ResX-SC
     steps:
     - name: Download build artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: BuildPackages
         path: BuildPackages
 
-    - name: Azure login (OIDC)
-      uses: azure/login@v2
+    - name: Azure login
+      uses: azure/login@v3
       with:
         client-id: ${{ env.SignClientId }}
         tenant-id: ${{ env.SignTenantId }}
@@ -171,7 +171,7 @@ jobs:
       run: Rename-Item -Path "BuildPackages\Publish.clickonce" -NewName Publish.zip
 
     - name: Publish Signed Packages
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: SignedPackages2
         path: BuildPackages/*
@@ -183,7 +183,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Download signed packages
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: SignedPackages
         path: SignedPackages
