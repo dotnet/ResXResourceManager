@@ -1,0 +1,138 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  BuildPlatform: Any CPU
+  BuildConfiguration: Release
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Log dotnet version
+      run: dotnet --info
+
+    - name: Get build version
+      shell: pwsh
+      run: |
+        [int]$buildId = $env:GITHUB_RUN_NUMBER
+        $buildId = $buildId % [uint16]::MaxValue
+        [xml]$projectXml = Get-Content "src\Directory.Build.props"
+        $propertyGroup = $projectXml.Project.PropertyGroup | Select -First 1
+        $version = $propertyGroup.Version.'#text'
+        $replacement = "`$1.$buildId`$3"
+        $version = $version -replace '(\d+\.\d+)(\.\d+)?(.*)', $replacement
+        "PRODUCT_VERSION=$version" >> $env:GITHUB_ENV
+
+    - name: Show build info
+      shell: pwsh
+      run: |
+        Write-Host "PRODUCT_VERSION: $env:PRODUCT_VERSION"
+        Write-Host "GITHUB_REF: $env:GITHUB_REF"
+        Write-Host "GITHUB_EVENT_NAME: $env:GITHUB_EVENT_NAME"
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Build solution
+      shell: pwsh
+      run: msbuild src\ResXResourceManager.sln -restore "-p:Configuration=$env:BuildConfiguration" "-p:Platform=$env:BuildPlatform"
+      env:
+        Version: ${{ env.PRODUCT_VERSION }}
+
+    - name: 'Publish Artifact: BuildPackages'
+      uses: actions/upload-artifact@v4
+      with:
+        name: BuildPackages
+        path: src/Deploy/*.*
+        if-no-files-found: error
+
+  codesign:
+    needs: build
+    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
+    runs-on: windows-latest # Code signing must run on a Windows agent for Authenticode signing (dll/exe)
+    env:
+      SignTenantId: 16076fdc-fcc1-4a15-b1ca-32c9a255900e
+      SignClientId: 037435da-cc79-4d64-83e6-96de49f031ca
+      SignKeyVaultUrl: https://sc-resxrm-a4a18888c12d4e.vault.azure.net/
+      SignKeyVaultCertificate: ResX-SC
+      SignClientSecret: ${{ secrets.SIGN_CLIENT_SECRET }}
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: BuildPackages
+        path: BuildPackages
+
+    - name: Install SignTool tool
+      run: dotnet tool update --tool-path . --prerelease sign
+
+    - name: Create signing file list
+      shell: pwsh
+      run: |
+        @('**/ResXManager.*', '**/setup.exe') | Set-Content -Path "$env:GITHUB_WORKSPACE\filelist.txt"
+
+    - name: Rename click-once archive to .clickonce
+      shell: pwsh
+      run: Rename-Item -Path "BuildPackages\Publish.zip" -NewName Publish.clickonce
+
+    - name: Sign packages
+      shell: pwsh
+      run: |
+        .\sign code azure-key-vault `
+        "**/*.*" `
+        --base-directory "$env:GITHUB_WORKSPACE\BuildPackages" `
+        --file-list "$env:GITHUB_WORKSPACE\filelist.txt" `
+        --publisher-name "tom-englert" `
+        --description "ResX Resource Manager" `
+        --description-url "https://github.com/dotnet/ResXResourceManager" `
+        --azure-key-vault-tenant-id "$env:SignTenantId" `
+        --azure-key-vault-client-id "$env:SignClientId" `
+        --azure-key-vault-client-secret "$env:SignClientSecret" `
+        --azure-key-vault-certificate "$env:SignKeyVaultCertificate" `
+        --azure-key-vault-url "$env:SignKeyVaultUrl"
+
+    - name: Rename click-once archive back to .zip
+      shell: pwsh
+      run: Rename-Item -Path "BuildPackages\Publish.clickonce" -NewName Publish.zip
+
+    - name: Publish Signed Packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: SignedPackages
+        path: BuildPackages/*
+        if-no-files-found: error
+
+  upload:
+    name: Upload to VSIX gallery
+    needs: codesign
+    runs-on: windows-latest
+    steps:
+    - name: Download signed packages
+      uses: actions/download-artifact@v4
+      with:
+        name: SignedPackages
+        path: SignedPackages
+
+    - name: Publish to vsix-gallery
+      shell: pwsh
+      continue-on-error: true
+      run: |
+        $vsixFile = "$env:GITHUB_WORKSPACE\SignedPackages\ResXManager.Vsix.vsix"
+        $repository = "https://github.com/$env:GITHUB_REPOSITORY"
+        $issueTracker = "$repository/issues"
+        $uploadUri = "https://www.vsixgallery.com/api/upload?repo=$([uri]::EscapeDataString($repository))&issuetracker=$([uri]::EscapeDataString($issueTracker))"
+
+        Write-Host "Uploading $vsixFile to VSIX Gallery for $repository"
+        Invoke-WebRequest -Uri $uploadUri -Method Post -Form @{ file = Get-Item $vsixFile } | Out-Null
+
+  # TODO: port the ClickOnce deployment (Azure App Service) from azure-pipelines.yml

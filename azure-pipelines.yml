@@ -119,6 +119,7 @@ stages:
 
 - stage: Upload
   dependsOn: CodeSign
+  condition: false # disabled for now, to not conflict with the gh-actions workflow that also uploads to the VSIX gallery
   jobs:
   - job: Upload
     displayName: Upload to VSIX gallery
