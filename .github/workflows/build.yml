@@ -163,7 +163,7 @@ jobs:
         --description "ResX Resource Manager" `
         --description-url "https://github.com/dotnet/ResXResourceManager" `
         --azure-credential-type azure-cli `
-        --azure-key-vault-certificate
+        --azure-key-vault-certificate "$env:SignKeyVaultCertificate" `
         --azure-key-vault-url "$env:SignKeyVaultUrl"
 
     - name: Rename click-once archive back to .zip
