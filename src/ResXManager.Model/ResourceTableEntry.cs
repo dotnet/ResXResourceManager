@@ -36,6 +36,8 @@ public sealed class ResourceTableEntry : INotifyPropertyChanged, IDataErrorInfo
 
     private ISet<string>? _mutedRuleIds;
 
+    private bool _isApplyingMachineTranslation;
+
     private IConfiguration Configuration => Container.Container.Configuration;
 
     /// <summary>
@@ -60,7 +62,7 @@ public sealed class ResourceTableEntry : INotifyPropertyChanged, IDataErrorInfo
 
         _languages = languages;
 
-        Values = new ResourceTableValues<string?>(_languages, lang => lang.GetValue(Key), (lang, value) => lang.SetValue(Key, value));
+        Values = new ResourceTableValues<string?>(_languages, lang => lang.GetValue(Key), SetValueAndClearReviewState);
         Values.ValueChanged += Values_ValueChanged;
 
         Comments = new ResourceTableValues<string?>(_languages, lang => lang.GetComment(Key), (lang, value) => lang.SetComment(Key, value));
@@ -83,7 +85,7 @@ public sealed class ResourceTableEntry : INotifyPropertyChanged, IDataErrorInfo
     private void ResetTableValues()
     {
         Values.ValueChanged -= Values_ValueChanged;
-        Values = new ResourceTableValues<string?>(_languages, lang => lang.GetValue(Key), (lang, value) => lang.SetValue(Key, value));
+        Values = new ResourceTableValues<string?>(_languages, lang => lang.GetValue(Key), SetValueAndClearReviewState);
         Values.ValueChanged += Values_ValueChanged;
 
         Comments.ValueChanged -= Comments_ValueChanged;
@@ -310,6 +312,35 @@ public sealed class ResourceTableEntry : INotifyPropertyChanged, IDataErrorInfo
 
         Refresh();
         return true;
+    }
+
+    public void SetValueAndTranslationState(CultureKey culture, string? value, TranslationState state)
+    {
+        _isApplyingMachineTranslation = true;
+        try
+        {
+            Values.SetValue(culture, value);
+            TranslationState.SetValue(culture, state);
+        }
+        finally
+        {
+            _isApplyingMachineTranslation = false;
+        }
+    }
+
+    private bool SetValueAndClearReviewState(ResourceLanguage lang, string? value)
+    {
+        var changed = lang.SetValue(Key, value);
+
+        if (changed
+            && !_isApplyingMachineTranslation
+            && Configuration.MarkMachineTranslationsAsNeedsReview
+            && TranslationState.GetValue(lang.CultureKey) == Model.TranslationState.NeedsReview)
+        {
+            TranslationState.SetValue(lang.CultureKey, Model.TranslationState.Approved);
+        }
+
+        return changed;
     }
 
     public string? GetCommentText(CultureKey culture)
