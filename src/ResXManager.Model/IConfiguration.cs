@@ -36,6 +36,8 @@ public interface IConfiguration : INotifyPropertyChanged
 
     bool PrefixTranslations { get; }
 
+    bool MarkMachineTranslationsAsNeedsReview { get; }
+
     string? TranslationPrefix { get; }
 
     string? EffectiveTranslationPrefix { get; }

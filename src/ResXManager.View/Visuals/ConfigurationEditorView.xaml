@@ -162,6 +162,10 @@
                       IsChecked="{Binding Configuration.PrefixTargetComment}"
                       Margin="0,2"/>
           </StackPanel>
+          <Decorator Height="5" />
+          <CheckBox IsChecked="{Binding Configuration.MarkMachineTranslationsAsNeedsReview}"
+                    Content="{x:Static properties:Resources.MarkMachineTranslationsAsNeedsReview}"
+                    Style="{DynamicResource {x:Static styles:ResourceKeys.CheckBoxStyle}}" />
         </StackPanel>
       </GroupBox>
 

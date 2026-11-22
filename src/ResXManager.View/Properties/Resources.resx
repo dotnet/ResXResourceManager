@@ -408,6 +408,9 @@ Use e.g. ".* - (?!Migrations)" to hide EF migrations.</value>
     <value>Prefix translations with</value>
     <comment>@MutedRule(PunctuationTail)</comment>
   </data>
+  <data name="MarkMachineTranslationsAsNeedsReview" xml:space="preserve">
+    <value>Mark machine translations as "Needs Review"</value>
+  </data>
   <data name="TranslatorConfiguration_SaveCredentials" xml:space="preserve">
     <value>Save credentials (Credentials will be stored as clear text in your local profile!)</value>
   </data>

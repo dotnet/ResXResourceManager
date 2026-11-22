@@ -196,6 +196,8 @@ public class Configuration : IConfiguration
 
     public bool PrefixTranslations { get; set; }
 
+    public bool MarkMachineTranslationsAsNeedsReview { get; set; }
+
     public string? TranslationPrefix { get; set; }
 
     public string? EffectiveTranslationPrefix { get; set; }

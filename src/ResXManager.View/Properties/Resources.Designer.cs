@@ -1043,6 +1043,15 @@ namespace ResXManager.View.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Mark machine translations as &quot;Needs Review&quot;"
+        /// </summary>
+        public static string MarkMachineTranslationsAsNeedsReview {
+            get {
+                return ResourceManager.GetString("MarkMachineTranslationsAsNeedsReview", resourceCulture) ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Save credentials (Credentials will be stored as cl..."
         /// </summary>
         public static string TranslatorConfiguration_SaveCredentials {

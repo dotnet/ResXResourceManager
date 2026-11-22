@@ -47,6 +47,9 @@ public abstract class Configuration : ConfigurationBase, IConfiguration
     [DefaultValue(false)]
     public bool PrefixTranslations { get; set; }
 
+    [DefaultValue(false)]
+    public bool MarkMachineTranslationsAsNeedsReview { get; set; }
+
     [DefaultValue("#TODO#_")]
     public string? TranslationPrefix { get; set; }
 
