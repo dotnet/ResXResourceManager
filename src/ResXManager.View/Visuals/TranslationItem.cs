@@ -1,4 +1,4 @@
-namespace ResXManager.View.Visuals;
+﻿namespace ResXManager.View.Visuals;
 
 using System;
 using System.Collections;
@@ -67,10 +67,16 @@ public partial class TranslationItem : INotifyPropertyChanged, ITranslationItem
         var prefix = configuration.EffectiveTranslationPrefix;
         var valuePrefix = configuration.PrefixValue ? prefix : null;
 
-        _entry.Values.SetValue(TargetCulture, $"{valuePrefix}{Translation}");
+        var value = $"{valuePrefix}{Translation}";
 
+        if (configuration.MarkMachineTranslationsAsNeedsReview)
+        {
+            _entry.SetValueAndTranslationState(TargetCulture, value, TranslationState.NeedsReview);
+        }
+        else
+            _entry.Values.SetValue(TargetCulture, value);
         return prefix.IsNullOrEmpty()
-               || ((!configuration.PrefixNeutralComment || UpdateCommentPrefix(_entry.NeutralLanguage.CultureKey, prefix))
+               || (!configuration.PrefixNeutralComment || UpdateCommentPrefix(_entry.NeutralLanguage.CultureKey, prefix)
                    && (!configuration.PrefixTargetComment) || UpdateCommentPrefix(TargetCulture, prefix));
     }
 
